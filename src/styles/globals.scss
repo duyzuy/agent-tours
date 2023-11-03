@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./fonts/stylesheet.css";
+
+:root {
+    --main-1: #00b8ef;
+    --main-2: #10bcaf;
+    --main-3: #fec124;
+    --secondary-2: #ec1c24;
+    --secondary-3: #00b43d;
+    --secondary-5: #eafaff;
+    --secondary-6: #ffe3e3;
+    --neutrals-01: #141416;
+    --neutrals-04: #777e90;
+    --neutrals-05: #b1b5c3;
+    --neutrals-06: #e6e8ec;
+    --neutrals-07: #f4f5f6;
+    --neutrals-08: #fcfcfd;
+    --main-text-6: #5c6480;
+}
+
+.bg-page-gray {
+    background: linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.3) 0%,
+            rgba(255, 255, 255, 0.3) 100%
+        ),
+        #eef2f6;
+}
+
+.main-menu {
+    .ant-menu-submenu-selected,
+    .ant-menu-item-selected {
+        svg {
+            path[fill] {
+                fill: var(--main-1);
+            }
+            path[stroke] {
+                stroke: var(--main-1);
+            }
+        }
+    }
+    > li {
+        > .ant-menu-title-content {
+            font-weight: bold;
+        }
+        > .ant-menu-submenu-title {
+            > .ant-menu-title-content {
+                font-weight: bold;
+            }
+        }
+    }
+
+    //  &.ant-menu-inline {
+    //    .ant-menu-item, .ant-menu-submenu-title {
+    //      margin: 0;
+    //      width: 100%;
+    //      height: 48px;
+    //      border-radius: 0;
+    //    }
+    //    .ant-menu-item.ant-menu-item-only-child {
+    //      padding-left: 62px!important;
+    //    }
+    //    a {
+    //      color: var(--neutrals-04);
+    //    }
+    //    .ant-menu-submenu-title {
+    //      a {
+    //        color: var(--neutrals-01);
+    //      }
+    //    }
+    //    .ant-menu-item-selected {
+    //      a {
+    //        color: var(--main-1);
+    //        font-weight: 500;
+    //      }
+    //    }
+    //  }
+    //  .ant-menu-sub {
+    //    > .ant-menu-item {
+    //      height: 40px;
+    //    }
+    //  }
+}
+
+.ant-menu-light.ant-menu-root.ant-menu-inline {
+    border-inline-end: none;
+}
+.items-radio-group .ant-radio-wrapper {
+    border-bottom: 1px solid #f4f5f6;
+    padding: 10px 0;
+}
+.paragraph-items {
+    .ant-typography,
+    .ant-typography p {
+        margin-bottom: 0;
+    }
+}
