@@ -1,6 +1,8 @@
 import { locales } from "@/constants/locale.constant";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
+import Header from "./_components/commons/Header";
+import Footer from "./_components/commons/Footer";
 
 interface Props {
     children: React.ReactNode;
@@ -8,7 +10,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-    return locales.map((locale) => ({ locale: locale.locale }));
+    return locales.map((locale) => ({ locale: locale.key }));
 }
 
 export async function generateMetadata({ params: { locale } }: Props) {
@@ -18,7 +20,7 @@ export async function generateMetadata({ params: { locale } }: Props) {
     };
 }
 
-export default async function RootLayout({ children, params }: Props) {
+export default async function RootClientLayout({ children, params }: Props) {
     let messages;
     try {
         messages = (await import(`@/i18n/${params.locale}/message.json`))
@@ -28,13 +30,10 @@ export default async function RootLayout({ children, params }: Props) {
     }
 
     return (
-        <html lang={params.locale}>
-            <head />
-            <body>
-                <NextIntlClientProvider locale={params.locale}>
-                    {children}
-                </NextIntlClientProvider>
-            </body>
-        </html>
+        <NextIntlClientProvider locale={params.locale}>
+            <Header />
+            {children}
+            <Footer />
+        </NextIntlClientProvider>
     );
 }

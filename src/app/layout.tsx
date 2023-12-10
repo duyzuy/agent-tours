@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+
 import config from "@/configs";
 import ThemeProvider from "@/providers/ThemeProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+import { RQClientProvider } from "@/providers/RQClientProvider";
+import { Inter } from "next/font/google";
+
 import "@/styles/globals.scss";
+const inter = Inter({ subsets: ["latin"] });
+
 export const metadata: Metadata = {
     metadataBase: new URL(config.DOMAIN_ROOT),
     openGraph: {
@@ -23,9 +27,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html>
-            <body className={inter.className}>
-                <ThemeProvider>{children}</ThemeProvider>
+        <html suppressHydrationWarning={true}>
+            <body className={inter.className} suppressHydrationWarning={true}>
+                <ThemeProvider>
+                    <RQClientProvider>{children}</RQClientProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

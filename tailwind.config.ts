@@ -17,8 +17,8 @@ module.exports = {
         colors: {
             primary: {
                 light: "#0ea5e9",
-                default: "#0284c7",
-                dark: "#0369a1",
+                default: "#124ba5",
+                dark: "#00b8ef",
             },
             slate: {
                 50: "#f8fafc",

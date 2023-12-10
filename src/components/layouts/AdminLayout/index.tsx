@@ -1,132 +1,76 @@
-import React, { useState } from "react";
-import { Layout, Menu, Button, theme, Avatar, Space, MenuProps } from "antd";
+"use client";
+import React, { memo, useEffect, useState } from "react";
+import { Layout, Button, theme, Avatar, MenuProps, Dropdown } from "antd";
 import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
     UserOutlined,
-    DashboardOutlined,
-    FileOutlined,
-    FolderOutlined,
-    ShoppingCartOutlined,
-    ContainerOutlined,
-    SettingOutlined,
-    TeamOutlined,
+    MoreOutlined,
+    SwapRightOutlined,
+    LogoutOutlined,
 } from "@ant-design/icons";
-import Link from "next/link";
-
-type MenuItem = Required<MenuProps>["items"][number] & {
-    children?: MenuItem[];
-    group?: string;
-    pathname?: string;
-};
-
+import { usePathname, useRouter } from "next/navigation";
+import classNames from "classnames";
+import { travelLogo } from "@/assets";
+import Image from "next/image";
+import { removeAgToken } from "@/utils/common";
+import { LINKS } from "@/constants/links.constant";
+import AdminMenuLink from "./AdminMenuLink";
+import useLocalUserProfile from "@/hooks/useLocalProfile";
+import { useLogoutPortal } from "@/app/(adminAuth)/ag/hooks/useAgAuth";
 interface Props {
     children: React.ReactNode;
 }
 
-const ADMIN_MENU_ITEMS: MenuItem[] = [
-    {
-        key: "dasboard",
-        icon: React.createElement(DashboardOutlined),
-        label: <Link href={"/portal/dashboard"}>Dashboard</Link>,
-    },
-    {
-        key: "booking",
-        icon: React.createElement(ContainerOutlined),
-        label: "Quản lý booking",
-        children: [
-            {
-                key: "all",
-                label: <Link href={"/portal/dashboard"}>Quản lý đặt tour</Link>,
-            },
-            {
-                key: "add-post",
-                label: "In vé",
-            },
-        ],
-    },
-    {
-        key: "product",
-        icon: React.createElement(ShoppingCartOutlined),
-        label: "Quản lý Sản phẩm",
-        children: [
-            {
-                key: "all",
-                label: "Tất cả sản phẩm",
-            },
-            {
-                key: "add-post",
-                label: "Tạo sản phẩm mới",
-            },
-        ],
-    },
-    {
-        key: "post",
-        icon: React.createElement(FileOutlined),
-        label: "Blog",
-        children: [
-            {
-                key: "all",
-                label: <Link href={"/portal/post"}>Tất cả bài viết</Link>,
-            },
-            {
-                key: "add-post",
-                label: "Tạo bài viết mới",
-            },
-            {
-                key: "postCategory",
-                label: "Chuyên mục",
-            },
-            {
-                key: "tags",
-                label: "Thẻ",
-            },
-        ],
-    },
-    {
-        key: "media",
-        icon: React.createElement(FolderOutlined),
-        label: "Media",
-    },
-    {
-        key: "account",
-        icon: React.createElement(UserOutlined),
-        label: "Quản lý tài khoản",
-    },
-    {
-        key: "member",
-        icon: React.createElement(TeamOutlined),
-        label: "Quản lý thành viên",
-    },
-    {
-        key: "system",
-        icon: React.createElement(SettingOutlined),
-        label: "Cấu hình hệ thống",
-    },
-];
-
 const AdminLayout = ({ children }: Props) => {
     const { Header, Sider, Content, Footer } = Layout;
 
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const userProfile = useLocalUserProfile();
+
     const [collapsed, setCollapsed] = useState(false);
+    const onLogoutPortal = useLogoutPortal();
     const {
         token: { colorBgContainer },
     } = theme.useToken();
 
-    const [openKeys, setOpenKeys] = useState(["sub1"]);
+    const [openKeys, setOpenKeys] = useState(["dashboard"]);
+    const [activeKeys, setActiveKeys] = useState(["dashboard"]);
 
-    const onMenuClick: MenuProps["onClick"] = (data) => {
-        console.log(data);
+    const onMenuNavigation: MenuProps["onClick"] = (menuInfo) => {
+        let fullPathname = "/portal";
+
+        fullPathname = fullPathname.concat("/", menuInfo.key);
+
+        router.push(fullPathname);
+    };
+
+    const onOpenChange: MenuProps["onOpenChange"] = (data: any) =>
+        setOpenKeys(() => [...data]);
+
+    useEffect(() => {
+        const formatPathname = pathname.replace("/portal/", "");
+
+        setActiveKeys(() => [formatPathname]);
+
+        const arrFormatPathname = formatPathname.split("/");
+        if (arrFormatPathname.length > 1) {
+            setOpenKeys(() => [arrFormatPathname[0]]);
+        }
+    }, [pathname]);
+
+    const onNavigation = (path: string) => {
+        router.push(`${path}`);
     };
     return (
-        <Layout style={{ minHeight: "100vh", background: "#ffffff" }}>
+        <Layout hasSider style={{ minHeight: "100vh", background: "#ffffff" }}>
             <Sider
                 trigger={null}
                 collapsible
                 collapsed={collapsed}
                 width={240}
                 theme="light"
-                className="border-r"
+                className="border-r z-10"
                 style={{
                     position: "fixed",
                     left: 0,
@@ -135,11 +79,22 @@ const AdminLayout = ({ children }: Props) => {
                 }}
             >
                 <div className="logo h-16 flex items-center justify-center">
-                    {!collapsed ? <p className="text-center font-semibold uppercase text-gray-400">Tour Management</p> : null}
-
+                    {!collapsed ? (
+                        <Image
+                            src={travelLogo}
+                            alt="logo"
+                            width={180}
+                            priority
+                        />
+                    ) : null}
                     <Button
                         type="text"
-                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        className={classNames({
+                            "absolute right-0": !collapsed,
+                        })}
+                        icon={
+                            collapsed ? <SwapRightOutlined /> : <MoreOutlined />
+                        }
                         onClick={() => setCollapsed(!collapsed)}
                         style={{
                             fontSize: "16px",
@@ -154,34 +109,67 @@ const AdminLayout = ({ children }: Props) => {
                         height: "calc(100% - 64px)",
                     }}
                 >
-                    <Menu
-                        theme="light"
-                        mode="inline"
-                        // onOpenChange={onOpenChange}
-                        onClick={onMenuClick}
-                        inlineCollapsed={collapsed}
-                        defaultSelectedKeys={["dasboard"]}
-                        // defaultOpenKeys={["dasboard"]}
-                        items={ADMIN_MENU_ITEMS}
-                        style={{
-                            borderWidth: 0,
-                        }}
+                    <AdminMenuLink
+                        onNavigation={(menuInfo) => onMenuNavigation(menuInfo)}
+                        onOpenChange={onOpenChange}
+                        openKeys={openKeys}
+                        defaultSelectedKeys={["dashboard"]}
+                        selectedKeys={activeKeys}
                     />
                 </div>
             </Sider>
-            <Layout className="site-layout bg-white" style={{ marginLeft: 240 }}>
+            <Layout
+                className="bg-white"
+                style={{ marginLeft: collapsed ? 80 : 240 }}
+            >
                 <Header
                     style={{
                         padding: "0 24px",
                         background: colorBgContainer,
                     }}
-                    className="flex justify-between border-b sticky top-0 z-10 items-center"
+                    className="flex justify-between border-b sticky top-0 z-10  items-center"
                 >
-                    <p className="font-semibold text-lg">Agent Hub - Cổng Quản lý Tours</p>
-                    <Space>
-                        <p className="text-sm">NGUYEN VAN A</p>
-                        <Avatar shape="circle" size={30} icon={<UserOutlined />} style={{ background: "var(--secondary-3)" }} />
-                    </Space>
+                    <p className="font-semibold text-lg">
+                        Agent Hub - Cổng Quản lý Tours
+                    </p>
+                    <div className="avata ">
+                        <Dropdown
+                            menu={{
+                                items: [
+                                    {
+                                        label: "Thông tin cá nhân",
+                                        key: "1",
+                                        icon: <UserOutlined />,
+                                        onClick: () =>
+                                            onNavigation(LINKS.MyAccount),
+                                    },
+                                    {
+                                        label: "Đăng xuất",
+                                        key: "2",
+                                        icon: <LogoutOutlined />,
+                                        onClick: onLogoutPortal,
+                                    },
+                                ],
+                            }}
+                        >
+                            <div className="flex items-center">
+                                <p className="text-sm mr-2 leading-none">
+                                    <span className="block text-xs">
+                                        {userProfile?.fullname}
+                                    </span>
+                                    <span className="text-xs text-gray-400">
+                                        {userProfile?.email}
+                                    </span>
+                                </p>
+                                <Avatar
+                                    shape="circle"
+                                    size={28}
+                                    icon={<UserOutlined />}
+                                    style={{ backgroundColor: "#87d068" }}
+                                />
+                            </div>
+                        </Dropdown>
+                    </div>
                 </Header>
                 <Content
                     style={{
@@ -201,23 +189,12 @@ const AdminLayout = ({ children }: Props) => {
                     }}
                     className="bg-white border-t"
                 >
-                    <p className="text-sm">Tour Management ©2023 Created by DVU</p>
+                    <p className="text-sm">
+                        Tour Management ©2023 Created by DVU
+                    </p>
                 </Footer>
             </Layout>
         </Layout>
     );
 };
-export default AdminLayout;
-
-const getOpenKeys = (items: MenuItem[], key: string): string | undefined => {
-    for (let i = 0; i < items.length; i++) {
-        const item: any = items[i];
-        if (item?.children?.length) {
-            const res = getOpenKeys(item.children, key);
-            if (res) return res;
-        }
-        if (item?.key === key) {
-            return item.group || item.key;
-        }
-    }
-};
+export default memo(AdminLayout);

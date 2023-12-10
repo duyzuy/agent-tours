@@ -2,15 +2,17 @@
 
 import { PropsWithChildren } from "react";
 
-import { ConfigProvider } from "antd";
+import { ConfigProvider, theme, App } from "antd";
 import StyledComponentsRegistry from "@/lib/AntRegistry";
 import { antdTheme } from "@/styles/themes/antTheme";
 
 export function AntdConfigProvider({ children }: PropsWithChildren) {
     return (
-        <ConfigProvider theme={antdTheme}>
-            <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
-        </ConfigProvider>
+        <StyledComponentsRegistry>
+            <ConfigProvider theme={antdTheme} prefixCls="travel">
+                <App>{children}</App>
+            </ConfigProvider>
+        </StyledComponentsRegistry>
     );
 }
 

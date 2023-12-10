@@ -1,0 +1,17 @@
+.pagination {
+    :global {
+        .swiper-pagination-bullet {
+            border-radius: 10px;
+            margin-left: 3px;
+            margin-right: 3px;
+            transition: all linear 240ms;
+            cursor: pointer;
+        }
+        .swiper-pagination-bullet {
+            .swiper-pagination-bullet-active {
+                width: 30px;
+                background-color: #dc2627;
+            }
+        }
+    }
+}
