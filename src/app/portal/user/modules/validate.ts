@@ -4,7 +4,7 @@ import {
     ILocalUserPayload,
     ILocalUserChangePasswordPayLoad,
     ELocalUserType,
-} from "@/model/management/localUser.interface";
+} from "@/model/management/localUser";
 
 type TLocalUserObjectSchema = ILocalUserPayload & {
     isRequirePassword?: boolean;

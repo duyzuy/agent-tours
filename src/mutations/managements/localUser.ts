@@ -3,7 +3,7 @@ import {
     ILocalUserPayload,
     ILocalUser,
     ILocalUserChangePasswordPayLoad,
-} from "@/model/management/localUser.interface";
+} from "@/model/management/localUser";
 import { localUserAPIs } from "@/services/management/localUser.service";
 import { BaseResponse } from "@/model/management/common.interface";
 

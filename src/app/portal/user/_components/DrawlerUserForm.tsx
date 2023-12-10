@@ -15,7 +15,7 @@ import {
     ELocalUserType,
     ILocalUserList,
     LocalUserPayLoad,
-} from "@/model/management/localUser.interface";
+} from "@/model/management/localUser";
 import ModalChangePassword from "./ModalChangePassword";
 import FormItem from "@/components/base/FormItem";
 import TextArea from "antd/es/input/TextArea";
