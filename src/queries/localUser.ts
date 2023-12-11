@@ -6,12 +6,12 @@ import {
 } from "./var";
 import { localAuthAPIs } from "@/services/management/localAuth.service";
 import { localUserAPIs } from "@/services/management/localUser.service";
-import { IRolesPermissionsRs } from "@/model/management/role.interface";
+import { IRolesPermissionsRs } from "@/models/management/role.interface";
 import {
     ILocalUserProfileRs,
     ILocalProfileErr,
-} from "@/model/management/localAuth.interface";
-import { ILocalUserList } from "@/model/management/localUser.interface";
+} from "@/models/management/localAuth.interface";
+import { ILocalUserList } from "@/models/management/localUser.interface";
 import { getAgToken } from "@/utils/common";
 
 export const useLocalUserGetProfileQuery = () => {

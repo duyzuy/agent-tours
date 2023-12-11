@@ -6,7 +6,7 @@ import {
     GET_LOCAL_PERMISSION,
 } from "./var";
 import { roleAndPermissionAPIs } from "@/services/management/roles.service";
-import { IRolesPermissionsRs } from "@/model/management/role.interface";
+import { IRolesPermissionsRs } from "@/models/management/role.interface";
 import { getAgToken } from "@/utils/common";
 
 export const useGetPermissions = () => {

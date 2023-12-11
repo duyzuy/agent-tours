@@ -1,7 +1,7 @@
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { GET_LOCAL_ROLE_PERMISSION } from "@/queries/var";
-import { TRolePermissionPayload } from "@/model/management/role.interface";
+import { TRolePermissionPayload } from "@/models/management/role.interface";
 import { useDeleteRolePermissionsMutation } from "@/mutations/managements/rolePermission";
 
 type IRolePersFieldsErrors = Partial<

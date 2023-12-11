@@ -5,7 +5,7 @@ import { useGetLocalUserList } from "@/queries/localUser";
 import {
     ILocalUserPayload,
     ILocalUserList,
-} from "@/model/management/localUser.interface";
+} from "@/models/management/localUser.interface";
 
 import TableListPage from "@/components/admin/TableListPage";
 

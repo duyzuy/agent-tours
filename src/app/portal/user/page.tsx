@@ -15,7 +15,7 @@ import { EActionType, TDrawlerAction } from "./components/DrawlerUserForm";
 import {
     ILocalUserPayload,
     ILocalUserList,
-} from "@/model/management/localUser.interface";
+} from "@/models/management/localUser.interface";
 
 const UserPage: React.FC = () => {
     const { data: localUsers, isLoading } = useGetLocalUserList();

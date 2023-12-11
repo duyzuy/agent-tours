@@ -1,7 +1,7 @@
 import {
     IRolesPermissionsRs,
     TRolePayload,
-} from "@/model/management/role.interface";
+} from "@/models/management/role.interface";
 
 import { useDeleteRoleMutation } from "@/mutations/managements/rolePermission";
 import { message } from "antd";

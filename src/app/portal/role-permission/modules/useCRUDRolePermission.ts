@@ -3,7 +3,7 @@ import useMessage from "@/hooks/useMessage";
 import { ValidationError } from "yup";
 import { useQueryClient } from "@tanstack/react-query";
 import { GET_LOCAL_ROLE_PERMISSION } from "@/queries/var";
-import { TRolePermissionPayload } from "@/model/management/role.interface";
+import { TRolePermissionPayload } from "@/models/management/role.interface";
 import {
     useCreateRolePermissionsMutation,
     useDeleteRolePermissionsMutation,

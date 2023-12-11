@@ -1,4 +1,4 @@
-import { IMediaFolderPayload } from "@/model/management/media.interface";
+import { IMediaFolderPayload } from "@/models/management/media.interface";
 
 const useCreateFolder = () => {
     const onCreateFolder = async (payload: IMediaFolderPayload) => {

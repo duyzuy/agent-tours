@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/es/table";
-import { IRolesPermissionsRs } from "@/model/management/role.interface";
+import { IRolesPermissionsRs } from "@/models/management/role.interface";
 import { Tag } from "antd";
 export const columnRoleGroups: ColumnsType<
     IRolesPermissionsRs["result"]["roleList"][0]

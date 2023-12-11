@@ -3,9 +3,9 @@ import {
     ILocalUserPayload,
     ILocalUser,
     ILocalUserChangePasswordPayLoad,
-} from "@/model/management/localUser.interface";
+} from "@/models/management/localUser.interface";
 import { localUserAPIs } from "@/services/management/localUser.service";
-import { BaseResponse } from "@/model/management/common.interface";
+import { BaseResponse } from "@/models/management/common.interface";
 
 export const useCreateLocalUserMutation = () => {
     return useMutation<ILocalUser, BaseResponse<null>, ILocalUserPayload>({

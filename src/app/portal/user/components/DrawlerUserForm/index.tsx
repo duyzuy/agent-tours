@@ -15,11 +15,11 @@ import {
     ELocalUserType,
     ILocalUserList,
     LocalUserPayLoad,
-} from "@/model/management/localUser.interface";
+} from "@/models/management/localUser.interface";
 import ModalChangePassword from "../ModalChangePassword";
 import FormItem from "@/components/base/FormItem";
 import TextArea from "antd/es/input/TextArea";
-import { IRolesPermissionsRs } from "@/model/management/role.interface";
+import { IRolesPermissionsRs } from "@/models/management/role.interface";
 import { generateStrings } from "@/utils/helper";
 import { TCreateUserErrorFields } from "../../hooks/useCreateLocalUser";
 
