@@ -15,15 +15,15 @@ import {
     ELocalUserType,
     ILocalUserList,
     LocalUserPayLoad,
-} from "@/model/management/localUser";
-import ModalChangePassword from "./ModalChangePassword";
+} from "@/model/management/localUser.interface";
+import ModalChangePassword from "../ModalChangePassword";
 import FormItem from "@/components/base/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import { IRolesPermissionsRs } from "@/model/management/role.interface";
 import { generateStrings } from "@/utils/helper";
-import { TCreateUserErrorFields } from "../modules/useCreateLocalUser";
+import { TCreateUserErrorFields } from "../../modules/useCreateLocalUser";
 
-import useChangePasswordLocalUser from "../modules/useChangePasswordLocalUser";
+import useChangePasswordLocalUser from "../../modules/useChangePasswordLocalUser";
 import { isEmpty } from "lodash";
 
 export enum EActionType {

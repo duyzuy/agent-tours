@@ -18,7 +18,7 @@ import {
 
 import TourInformationPanel from "../_components/tourPanels/TourInformationPanel";
 import TourShedulePanel from "../_components/tourPanels/TourShedulePanel";
-import BookingBreakDownBox from "../_components/BookingSummary";
+import BookingBreakDownBox from "../_components/BookingBreakDownBox";
 import TourRelateds from "../_components/TourRelateds";
 import TourReviews from "../_components/TourReviews";
 

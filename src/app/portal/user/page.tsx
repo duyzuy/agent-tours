@@ -2,10 +2,7 @@
 import React, { useMemo, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetLocalUserList } from "@/queries/localUser";
-import {
-    ILocalUserPayload,
-    ILocalUserList,
-} from "@/model/management/localUser";
+
 import DrawlerUserForm from "./_components/DrawlerUserForm";
 import TableListPage from "@/components/admin/TableListPage";
 import { userColumns } from "./userColumns";
@@ -14,6 +11,11 @@ import { useGetRoles } from "@/queries/role";
 import useCreateLocalUser from "./modules/useCreateLocalUser";
 import useUpdateLocalUser from "./modules/useUpdateLocalUser";
 import { EActionType, TDrawlerAction } from "./_components/DrawlerUserForm";
+
+import {
+    ILocalUserPayload,
+    ILocalUserList,
+} from "@/model/management/localUser.interface";
 
 const UserPage: React.FC = () => {
     const { data: localUsers, isLoading } = useGetLocalUserList();

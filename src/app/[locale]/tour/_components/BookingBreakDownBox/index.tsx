@@ -33,7 +33,13 @@ const BookingBreakDownBox: React.FC<Props> = ({ className = "" }) => {
                         <p className="text-lg font-semibold">Đài loan</p>
                     </div>
                 </div>
-                <div className="schedules mb-3">
+                <div className="py-2">
+                    <p className="text-xs">Chỉ từ</p>
+                    <p className="text-red-600 font-semibold text-2xl">
+                        2.500.000 <span className="text-lg">VND</span>
+                    </p>
+                </div>
+                <div className="schedules mb-6">
                     <div className="label mb-3">
                         <p>Ngày khởi hành</p>
                     </div>
@@ -44,19 +50,15 @@ const BookingBreakDownBox: React.FC<Props> = ({ className = "" }) => {
                                     <span className="block text-[16px] font-semibold">
                                         16/12
                                     </span>
-                                    <span className="text-xs">
-                                        AL: 16/12/2024
-                                    </span>
+                                    <span className="text-xs">16/12/2024</span>
                                 </p>
                             </li>
                             <li className="w-1/3 h-16 border rounded-md flex items-center px-2">
                                 <p>
                                     <span className="block text-[16px] font-semibold">
-                                        10/01/2024
+                                        10/01
                                     </span>
-                                    <span className="text-xs">
-                                        AL: 16/12/2024
-                                    </span>
+                                    <span className="text-xs">16/12/2024</span>
                                 </p>
                             </li>
                             <li className="w-1/3 h-16 border rounded-md flex items-center px-2">
@@ -64,9 +66,7 @@ const BookingBreakDownBox: React.FC<Props> = ({ className = "" }) => {
                                     <span className="block text-[16px] font-semibold">
                                         20/02
                                     </span>
-                                    <span className="text-xs">
-                                        AL: 16/12/2024
-                                    </span>
+                                    <span className="text-xs">16/12/2024</span>
                                 </p>
                             </li>
                         </ul>
@@ -155,7 +155,9 @@ const BookingBreakDownBox: React.FC<Props> = ({ className = "" }) => {
                             danger
                             className="h-11 w-20 flex items-center justify-center"
                         >
-                            <IconShippingCart className="w-6 h-6" />
+                            <span className="icon">
+                                <IconShippingCart />
+                            </span>
                         </Button>
                     </Flex>
                 </div>
