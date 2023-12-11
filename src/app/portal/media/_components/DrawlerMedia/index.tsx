@@ -3,7 +3,7 @@ import { Drawer, Space, Button, Form, Row, Col, Input, TreeSelect } from "antd";
 
 import FormItem from "@/components/base/FormItem";
 import { CarryOutOutlined } from "@ant-design/icons";
-import { IMediaFolderPayload } from "@/model/Management/media.interface";
+import { IMediaFolderPayload } from "@/Model/Management/media.interface";
 
 // import { EActionType } from "../../page";
 import { stringToSlug } from "@/utils/stringToSlug";

@@ -7,7 +7,7 @@ import { useLocalUserChangePasswordMutation } from "@/mutations/managements/loca
 import {
     ILocalUserChangePasswordPayLoad,
     ILocalUserChangePasswordFormData,
-} from "@/model/Management/localUser.interface";
+} from "@/Model/Management/localUser.interface";
 
 export type TLocalUserChangePasswordErrorsField = Partial<
     Record<keyof ILocalUserChangePasswordFormData, string>

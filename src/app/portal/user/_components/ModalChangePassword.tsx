@@ -5,7 +5,7 @@ import FormItem from "@/components/base/FormItem";
 import {
     ILocalUserChangePasswordFormData,
     ILocalUserList,
-} from "@/model/Management/localUser.interface";
+} from "@/Model/Management/localUser.interface";
 import styled from "styled-components";
 interface Props {
     isOpen: boolean;

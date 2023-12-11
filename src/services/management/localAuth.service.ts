@@ -1,5 +1,5 @@
 import { client } from "../api";
-import { ILocalUserProfileRs } from "@/model/Management/localAuth.interface";
+import { ILocalUserProfileRs } from "@/Model/Management/localAuth.interface";
 export const localAuthAPIs = {
     getRoles: async <T>(token: string) => {
         return await client.post<T, any>("local/CurrentUser_getRoles", {

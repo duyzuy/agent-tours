@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/es/table";
-import { ILocalUserList } from "@/model/Management/localUser.interface";
+import { ILocalUserList } from "@/Model/Management/localUser.interface";
 import { Tag } from "antd";
 import { formatDate } from "@/utils/date";
 export const userColumns: ColumnsType<ILocalUserList["result"][0]> = [

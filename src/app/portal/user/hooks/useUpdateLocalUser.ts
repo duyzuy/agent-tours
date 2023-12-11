@@ -10,7 +10,7 @@ import {
 import {
     ELocalUserType,
     ILocalUserPayload,
-} from "@/model/Management/localUser.interface";
+} from "@/Model/Management/localUser.interface";
 import { useQueryClient } from "@tanstack/react-query";
 import { GET_LOCAL_USER_LIST } from "@/queries/var";
 export type TLocalUserErrorsField = Partial<

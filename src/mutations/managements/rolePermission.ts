@@ -5,7 +5,7 @@ import {
     TRolePermissionPayload,
     IRolesPermissionsRs,
     TRolePayload,
-} from "@/model/Management/role.interface";
+} from "@/Model/Management/role.interface";
 
 export const useCreateRolePermissionsMutation = () => {
     const token = getAgToken() || "";
