@@ -2,7 +2,7 @@
 import React, { useMemo, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetLocalUserList } from "@/queries/localUser";
-import { ILocalUserPayload, ILocalUserList } from "@/model/localUser.interface";
+import { ILocalUserPayload, ILocalUserList } from "@/model/LocalUser.interface";
 
 import TableListPage from "@/components/admin/TableListPage";
 

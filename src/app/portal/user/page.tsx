@@ -12,7 +12,7 @@ import useCreateLocalUser from "./hooks/useCreateLocalUser";
 import useUpdateLocalUser from "./hooks/useUpdateLocalUser";
 import { EActionType, TDrawlerAction } from "./_components/DrawlerUserForm";
 
-import { ILocalUserPayload, ILocalUserList } from "@/model/localUser.interface";
+import { ILocalUserPayload, ILocalUserList } from "@/model/LocalUser.interface";
 
 const UserPage: React.FC = () => {
     const { data: localUsers, isLoading } = useGetLocalUserList();

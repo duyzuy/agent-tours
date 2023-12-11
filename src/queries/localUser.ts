@@ -11,7 +11,7 @@ import {
     ILocalUserProfileRs,
     ILocalProfileErr,
 } from "@/model/Management/localAuth.interface";
-import { ILocalUserList } from "@/model/localUser.interface";
+import { ILocalUserList } from "@/model/LocalUser.interface";
 import { getAgToken } from "@/utils/common";
 
 export const useLocalUserGetProfileQuery = () => {

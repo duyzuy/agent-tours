@@ -4,7 +4,7 @@ import {
     ILocalUserChangePasswordPayLoad,
     ILocalUserList,
     ILocalUserPayload,
-} from "@/model/localUser.interface";
+} from "@/model/LocalUser.interface";
 export const localUserAPIs = {
     getUserList: async <T>() => {
         const token = getAgToken() || "";

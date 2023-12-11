@@ -4,7 +4,7 @@ import { ValidationError } from "yup";
 import { localUserSchema } from "./validate";
 import useMessage from "@/hooks/useMessage";
 import { useCreateLocalUserMutation } from "@/mutations/managements/localUser";
-import { ILocalUserPayload } from "@/model/localUser.interface";
+import { ILocalUserPayload } from "@/model/LocalUser.interface";
 import { useQueryClient } from "@tanstack/react-query";
 import { GET_LOCAL_USER_LIST } from "@/queries/var";
 
