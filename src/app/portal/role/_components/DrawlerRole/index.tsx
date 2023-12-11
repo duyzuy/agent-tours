@@ -16,7 +16,7 @@ import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
     IRolesPermissionsRs,
     TRolePayload,
-} from "@/model/Management/role.interface";
+} from "@/model/management/role.interface";
 import { isEqual } from "lodash";
 
 import { ICreateRoleFieldsErrors } from "../../modules/useCreateRole";

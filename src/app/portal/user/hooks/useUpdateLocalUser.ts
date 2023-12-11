@@ -7,7 +7,10 @@ import {
     useUpdateLocalUserMutation,
     useUpdateStatusLocalUserMutation,
 } from "@/mutations/managements/localUser";
-import { ELocalUserType, ILocalUserPayload } from "@/model/LocalUser.interface";
+import {
+    ELocalUserType,
+    ILocalUserPayload,
+} from "@/model/management/localUser.interface";
 import { useQueryClient } from "@tanstack/react-query";
 import { GET_LOCAL_USER_LIST } from "@/queries/var";
 export type TLocalUserErrorsField = Partial<
