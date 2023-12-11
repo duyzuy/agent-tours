@@ -1,4 +1,4 @@
-import { object, string, number, date, ObjectSchema, boolean, ref } from "yup";
+import { object, string, ObjectSchema, boolean, ref } from "yup";
 
 import {
     ILocalUserPayload,
