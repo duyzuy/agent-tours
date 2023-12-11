@@ -7,7 +7,7 @@ import { columnRoleGroups } from "./columns";
 import {
     IRolesPermissionsRs,
     TRolePayload,
-} from "@/model/management/role.interface";
+} from "@/model/Management/role.interface";
 import DrawlerRole from "./_components/DrawlerRole";
 
 import useCreateRole from "./modules/useCreateRole";

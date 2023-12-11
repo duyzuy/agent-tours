@@ -7,7 +7,7 @@ import {
     ObjectSchema,
     InferType,
 } from "yup";
-import { TRolePermissionPayload } from "@/model/management/role.interface";
+import { TRolePermissionPayload } from "@/model/Management/role.interface";
 
 export const createRolePermissionsSchema: ObjectSchema<TRolePermissionPayload> =
     object({

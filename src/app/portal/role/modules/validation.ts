@@ -7,7 +7,7 @@ import {
     ObjectSchema,
     InferType,
 } from "yup";
-import { TRolePayload } from "@/model/management/role.interface";
+import { TRolePayload } from "@/model/Management/role.interface";
 
 export const createRoleSchema: ObjectSchema<TRolePayload> = object({
     localUser_RoleValue: string().required("Tên quyền không được bỏ trống"),

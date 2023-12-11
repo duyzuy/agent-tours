@@ -15,7 +15,7 @@ import { message, Upload } from "antd";
 import DrawlerMedia from "./_components/DrawlerMedia";
 
 import useCreateFolder from "./modules/useCreateFolder";
-import { IMediaFolderPayload } from "@/model/management/media.interface";
+import { IMediaFolderPayload } from "@/model/Management/media.interface";
 
 const MediaPage = () => {
     const [isOpen, setOpen] = useState(false);

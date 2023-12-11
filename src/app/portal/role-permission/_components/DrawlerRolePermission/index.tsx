@@ -14,8 +14,8 @@ import { isEqual } from "lodash";
 import FormItem from "@/components/base/FormItem";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
-import { IRolesPermissionsRs } from "@/model/management/role.interface";
-import { TRolePermissionPayload } from "@/model/management/role.interface";
+import { IRolesPermissionsRs } from "@/model/Management/role.interface";
+import { TRolePermissionPayload } from "@/model/Management/role.interface";
 import { TRolePersErrorsFields } from "../../modules/useCreateRolePermission";
 import styled from "styled-components";
 
