@@ -21,9 +21,9 @@ import FormItem from "@/components/base/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import { IRolesPermissionsRs } from "@/model/management/role.interface";
 import { generateStrings } from "@/utils/helper";
-import { TCreateUserErrorFields } from "../../modules/useCreateLocalUser";
+import { TCreateUserErrorFields } from "../../hooks/useCreateLocalUser";
 
-import useChangePasswordLocalUser from "../../modules/useChangePasswordLocalUser";
+import useChangePasswordLocalUser from "../../hooks/useChangePasswordLocalUser";
 import { isEmpty } from "lodash";
 
 export enum EActionType {

@@ -8,8 +8,8 @@ import TableListPage from "@/components/admin/TableListPage";
 import { userColumns } from "./userColumns";
 
 import { useGetRoles } from "@/queries/role";
-import useCreateLocalUser from "./modules/useCreateLocalUser";
-import useUpdateLocalUser from "./modules/useUpdateLocalUser";
+import useCreateLocalUser from "./hooks/useCreateLocalUser";
+import useUpdateLocalUser from "./hooks/useUpdateLocalUser";
 import { EActionType, TDrawlerAction } from "./_components/DrawlerUserForm";
 
 import {

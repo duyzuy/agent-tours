@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Input, Modal, Row, Space } from "antd";
-import { TLocalUserChangePasswordErrorsField } from "../modules/useChangePasswordLocalUser";
+import { TLocalUserChangePasswordErrorsField } from "../hooks/useChangePasswordLocalUser";
 import FormItem from "@/components/base/FormItem";
 import {
     ILocalUserChangePasswordFormData,
