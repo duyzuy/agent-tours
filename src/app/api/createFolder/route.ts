@@ -2,7 +2,7 @@ import { writeFile, mkdir, access } from "fs/promises";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { stringToSlug } from "@/utils/stringToSlug";
-import { IMediaFolderPayload } from "@/Model/Management/media.interface";
+import { IMediaFolderPayload } from "@/model/Management/media.interface";
 
 export async function POST(request: NextRequest) {
     // console.log({ request, formData });

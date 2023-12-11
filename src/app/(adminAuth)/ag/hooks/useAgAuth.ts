@@ -7,7 +7,7 @@ import {
     IAgLoginErr,
     IAgLoginPayload,
     IAgLoginRs,
-} from "@/Model/Management/localAuth.interface";
+} from "@/model/Management/localAuth.interface";
 
 const useLoginPortal = () => {
     return useMutation<IAgLoginRs, IAgLoginErr, IAgLoginPayload, unknown>({

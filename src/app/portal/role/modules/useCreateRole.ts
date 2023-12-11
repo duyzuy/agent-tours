@@ -1,4 +1,4 @@
-import { TRolePayload } from "@/Model/Management/role.interface";
+import { TRolePayload } from "@/model/Management/role.interface";
 
 import { useCreateRoleMutation } from "@/mutations/managements/rolePermission";
 import { createRoleSchema } from "./validation";

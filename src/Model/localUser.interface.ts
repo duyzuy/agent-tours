@@ -1,4 +1,4 @@
-import { BaseResponse } from "./common.interface";
+import { BaseResponse } from "./Management/common.interface";
 
 export enum ELocalUserType {
     ADMIN = "ADMIN",

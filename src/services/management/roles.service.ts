@@ -3,8 +3,8 @@ import {
     TRolePermissionPayload,
     IRolesPermissionsRs,
     TRolePayload,
-} from "@/Model/Management/role.interface";
-import { BaseResponse } from "@/Model/management/common.interface";
+} from "@/model/Management/role.interface";
+import { BaseResponse } from "@/model/management/common.interface";
 export const roleAndPermissionAPIs = {
     getPermissions: async (token: string) => {
         return await client.post<IRolesPermissionsRs, BaseResponse<null>>(

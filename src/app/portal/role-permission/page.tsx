@@ -7,7 +7,7 @@ import { useGetPermissions } from "@/queries/role";
 import {
     IRolesPermissionsRs,
     TRolePermissionPayload,
-} from "@/Model/Management/role.interface";
+} from "@/model/Management/role.interface";
 import { useGetRolePermission } from "@/queries/role";
 import TableListPage from "@/components/admin/TableListPage";
 import { columnRoleGroups } from "./columns";
