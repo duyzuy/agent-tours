@@ -199,7 +199,7 @@ const TourDetailPage = () => {
                         <TourRelateds className="mb-8" />
                         <TourReviews />
                     </div>
-                    <BookingBreakDownBox className="w-full max-w-[380px]" />
+                    <BookingBreakDownBox className="w-full max-w-[380px] lg:block hidden" />
                 </div>
             </div>
         </div>

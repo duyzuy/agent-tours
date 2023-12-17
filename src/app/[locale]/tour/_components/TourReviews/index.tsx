@@ -12,7 +12,7 @@ import {
     Avatar,
 } from "antd";
 import styled from "styled-components";
-import FormItem from "antd/es/form/FormItem";
+import FormItem from "@/components/base/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import { UserOutlined, MailOutlined } from "@ant-design/icons";
 
@@ -133,12 +133,11 @@ const TourReviews: React.FC<Props> = ({ className = "" }) => {
                             <TextArea
                                 rows={3}
                                 placeholder="Nhận xét"
-                                className="resize-none"
                                 style={{ resize: "none" }}
-                            ></TextArea>
+                            />
                         </FormItem>
-                        <Row gutter={16}>
-                            <Col span="10">
+                        <Row gutter={{ xs: 8, md: 16 }}>
+                            <Col span="24" sm={24} md={10}>
                                 <FormItem required>
                                     <Input
                                         placeholder="Họ tên"
@@ -150,7 +149,7 @@ const TourReviews: React.FC<Props> = ({ className = "" }) => {
                                     />
                                 </FormItem>
                             </Col>
-                            <Col span="10">
+                            <Col span="24" sm={24} md={10}>
                                 <FormItem>
                                     <Input
                                         placeholder="Họ tên"
@@ -162,7 +161,7 @@ const TourReviews: React.FC<Props> = ({ className = "" }) => {
                                     />
                                 </FormItem>
                             </Col>
-                            <Col span={4}>
+                            <Col span="24" sm={24} md={4}>
                                 <Button type="primary" block>
                                     Gửi
                                 </Button>

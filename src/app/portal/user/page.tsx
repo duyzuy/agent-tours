@@ -108,8 +108,8 @@ const UserPage: React.FC = () => {
                 actionType={actionType}
                 initialValues={editRecord}
                 onSubmit={handleSubmitFormData}
-                onChangeLocalUserStatus={(recordId) =>
-                    onUpdateLocalUserStatus(recordId, "OX")
+                onChangeLocalUserStatus={(recordId, status) =>
+                    onUpdateLocalUserStatus(recordId, status)
                 }
                 roles={roleList}
                 errors={

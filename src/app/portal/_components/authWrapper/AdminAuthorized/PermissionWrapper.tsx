@@ -41,7 +41,7 @@ const PermissionWrapper: React.FC<Props> = ({ children, token }) => {
 
     const checkPermission = useCallback(
         (conditions: TRoleCondition) => {
-            console.log({ localUserPermissionsList });
+            // console.log({ localUserPermissionsList });
             return conditions.reduce((hasPerm, cond) => {
                 return (
                     hasPerm &&
@@ -65,7 +65,9 @@ const PermissionWrapper: React.FC<Props> = ({ children, token }) => {
         }
     }, [roles, path]);
     return (
-        <LocalUserPermissionContext.Provider value={localUserPermissionsList}>
+        <LocalUserPermissionContext.Provider
+            value={[localUserPermissionsList, checkPermission]}
+        >
             {children}
         </LocalUserPermissionContext.Provider>
     );

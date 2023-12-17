@@ -8,7 +8,6 @@ import { Pagination, Navigation } from "swiper/modules";
 import classNames from "classnames";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 import { Swiper as SwiperType } from "swiper/types";
 import IconChevronRight from "@/assets/icons/IconChevronRight";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft";
@@ -84,7 +83,7 @@ const SliderTourItems = () => {
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <div className={styles.pagination}></div>
+            <div className={`swiper-pagination ${styles.pagination}`}></div>
             <div className="swiper-navigation">
                 <ButtonNavigation
                     className="-left-5 top-[50%]"

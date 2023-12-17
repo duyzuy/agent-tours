@@ -1,3 +1,8 @@
-import { ERolesFunctions } from "@/constants/permission.constant";
+import {
+    ERolesFunctions,
+    TRoleCondition,
+} from "@/constants/permission.constant";
 import { createContext } from "react";
-export const LocalUserPermissionContext = createContext<ERolesFunctions[]>([]);
+export const LocalUserPermissionContext = createContext<
+    [ERolesFunctions[], checkPers: (condition: TRoleCondition) => boolean] | []
+>([]);

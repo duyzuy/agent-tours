@@ -17,6 +17,9 @@ const nextConfig = {
     compiler: {
         styledComponents: true,
     },
+    api: {
+        bodyParser: false,
+    },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
         config.plugins.push(
             new CopyPlugin({

@@ -88,16 +88,17 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
     const { onLocalUserChangePassword, errors: changePasswordErrors } =
         useChangePasswordLocalUser();
     const onChangeStatus = (checked: boolean) => {
-        actionType === EActionType.CREATE
-            ? setFormData((prev) => ({
-                  ...prev,
-                  status: checked ? "OK" : "OX",
-              }))
-            : initialValues &&
-              onChangeLocalUserStatus(
-                  initialValues.recId,
-                  checked ? "OK" : "OX",
-              );
+        setFormData((prev) => ({
+            ...prev,
+            status: checked ? "OK" : "OX",
+        }));
+        if (actionType === EActionType.EDIT) {
+            initialValues &&
+                onChangeLocalUserStatus(
+                    initialValues.recId,
+                    checked ? "OK" : "OX",
+                );
+        }
     };
 
     const optionsRole = useMemo(() => {

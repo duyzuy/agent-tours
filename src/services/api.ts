@@ -1,4 +1,5 @@
 import { objectToQueryString } from "@/utils/helper";
+import { getAgToken } from "@/utils/common";
 enum METHODS {
     Post = "POST",
     Get = "GET",
@@ -8,6 +9,7 @@ enum METHODS {
 type Options = RequestInit & {
     params?: { [key: string]: any };
     headers?: HeadersInit;
+    isAuth?: boolean;
 };
 const request = async <TSuccess, TError>(
     url: string,
@@ -22,10 +24,17 @@ const request = async <TSuccess, TError>(
         },
     };
 
-    const { params, next } = options;
+    const { params, isAuth = false } = options;
 
     let baseUrl = `${process.env.API_ROOT}/${url}`;
 
+    if (isAuth) {
+        const token = getAgToken() || "";
+        config.headers = {
+            ...config.headers,
+            Authorization: `Bearer ${encodeURIComponent(token)}`,
+        };
+    }
     if (
         method === METHODS.Post ||
         method === METHODS.Put ||
@@ -60,35 +69,17 @@ const request = async <TSuccess, TError>(
 };
 
 export const client = {
-    get: <Success, Error>(
-        url: string,
-        options?: {
-            params?: { [key: string]: any };
-            headers?: HeadersInit;
-        },
-    ) => {
+    get: <Success, Error>(url: string, options: Options) => {
         return request<Success, Error>(url, METHODS.Get, {
             ...(options || {}),
         });
     },
-    post: <Success, Error>(
-        url: string,
-        options?: {
-            params?: { [key: string]: any };
-            headers?: HeadersInit;
-        },
-    ) => {
+    post: <Success, Error>(url: string, options: Options) => {
         return request<Success, Error>(url, METHODS.Post, {
             ...(options || {}),
         });
     },
-    put: <Success, Error>(
-        url: string,
-        options?: {
-            params?: { [key: string]: any };
-            headers?: HeadersInit;
-        },
-    ) => {
+    put: <Success, Error>(url: string, options: Options) => {
         return request<Success, Error>(url, METHODS.Put, {
             ...(options || {}),
         });
