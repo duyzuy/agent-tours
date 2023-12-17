@@ -1,5 +1,6 @@
 import { BaseResponse } from "@/models/management/common.interface";
 import { client } from "../api";
+import config from "@/configs";
 import {
     IMediaFileListRs,
     IMediaFilePayload,
@@ -106,7 +107,7 @@ export const mediaApis = {
         token: string,
         payload: IMediaFolderPayload,
     ) => {
-        const response = await fetch(`${process.env.LOCAL_API}/mediaFolder`, {
+        const response = await fetch(`${config.LOCAL_API_URL}/mediaFolder`, {
             headers: {
                 Authorization: `Bearer ${encodeURIComponent(token)}`,
             },
@@ -127,7 +128,7 @@ export const mediaApis = {
         payload: IMediaFolderPayload,
     ) => {
         const response = await fetch(
-            `${process.env.LOCAL_API}/mediaFolder/${id}`,
+            `${config.LOCAL_API_URL}/mediaFolder/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${encodeURIComponent(token)}`,
@@ -145,7 +146,7 @@ export const mediaApis = {
     },
 
     uploadMediaFilesFromLocal: async (token: string, payload: FormData) => {
-        const response = await fetch(`${process.env.LOCAL_API}/mediaUpload`, {
+        const response = await fetch(`${config.LOCAL_API_URL}/mediaUpload`, {
             headers: {
                 Authorization: `Bearer ${encodeURIComponent(token)}`,
             },
