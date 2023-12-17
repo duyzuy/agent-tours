@@ -1,7 +1,7 @@
 const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
-
+// const { express } = require("express");
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
 const port = 3001;
@@ -10,6 +10,9 @@ const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
+    // const server = express();
+    // server.use("/upload", express.static(__dirname + "/public/uploads"));
+
     createServer(async (req, res) => {
         try {
             // Be sure to pass `true` as the second argument to `url.parse`.

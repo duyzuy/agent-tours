@@ -8,24 +8,19 @@ import {
     EditOutlined,
 } from "@ant-design/icons";
 import { IMediaFolderListRs } from "@/models/management/media.interface";
-import styled from "styled-components";
 import classNames from "classnames";
 import { isEmpty } from "lodash";
 
 interface Props {
     items: IMediaFolderListRs["result"];
-    current?: number;
     isLoading?: boolean;
-    defaultSelect?: string;
     openedFolder?: IMediaFolderListRs["result"][0];
     onEdit?: (item: IMediaFolderListRs["result"][0]) => void;
     onOpen?: (item: IMediaFolderListRs["result"][0]) => void;
 }
 const MediaFolder: React.FC<Props> = ({
     items,
-    current,
     isLoading,
-    defaultSelect = "",
     onEdit,
     onOpen,
     openedFolder,

@@ -1,26 +1,22 @@
 "use client";
 import React, { useCallback, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-import DrawlerMedia from "./_components/DrawlerMedia";
-import useCRUDMediaFolder from "./hooks/useCRUDFolder";
+import MediaFiles from "@/components/admin/MediaContainer/MediaFiles";
+import MediaFolder from "@/components/admin/MediaContainer/MediaFolder";
+import DrawlerMedia, { EActionType } from "./_components/DrawlerMedia";
+import { TDrawlerActions } from "./_components/DrawlerMedia";
 
+import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
+import useUploadMedia from "./hooks/useUploadMedia";
+import useCRUDMediaFolder from "./hooks/useCRUDFolder";
+import { useGetMediaFolders, useGetMediaFiles } from "@/queries/media";
+import { mediaConfig } from "@/configs";
 import {
     IMediaFolderListRs,
     IMediaFolderPayload,
     QueryParamsMediaFiles,
 } from "@/models/management/media.interface";
-import { useGetMediaFolders } from "@/queries/media";
-import MediaFolder from "@/components/admin/MediaContainer/MediaFolder";
-import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
-import { EActionType } from "./_components/DrawlerMedia";
-import MediaFiles from "@/components/admin/MediaContainer/MediaFiles";
-import { TDrawlerActions } from "./_components/DrawlerMedia";
-import { useGetMediaFiles } from "@/queries/media";
-import { UploadFile } from "antd";
-import { RcFile } from "antd/es/upload";
-import { mediaConfig } from "@/configs";
-import { TFolderSelect } from "@/components/admin/MediaContainer/_components/MediaFileUploadTab";
-import useUploadMedia from "./hooks/useUploadMedia";
+
 const MediaPage = () => {
     const [isOpenDrawler, setOpenDrawler] = useState(false);
 
@@ -30,11 +26,10 @@ const MediaPage = () => {
 
     const [queryMediaFileParams, setQueryMediaFileParams] =
         useState(defaultQueryParams);
-    const {
-        data: fileList,
-        isLoading: isLoadingFile,
-        refetch,
-    } = useGetMediaFiles(queryMediaFileParams);
+
+    const { data: fileList, isLoading: isLoadingFile } =
+        useGetMediaFiles(queryMediaFileParams);
+
     const { onCreateFolder, onUpdateFolder, errors, onResetFieldsErrors } =
         useCRUDMediaFolder();
 
@@ -99,17 +94,6 @@ const MediaPage = () => {
         }));
     };
 
-    const handleUploadMediaFile = (
-        { folder, fileList }: { folder: TFolderSelect; fileList: UploadFile[] },
-        cb?: () => void,
-    ) => {
-        const formData = new FormData();
-        fileList.forEach((file) => {
-            formData.append("files[]", file as RcFile);
-        });
-        formData.append("folder", JSON.stringify(folder));
-        onUploadMediaFile(formData, cb);
-    };
     return (
         <PageContainer
             name="Quản lý Media"
@@ -135,7 +119,7 @@ const MediaPage = () => {
                 <MediaFiles
                     items={fileList || []}
                     isLoading={isLoadingFile}
-                    onUpload={handleUploadMediaFile}
+                    onUpload={onUploadMediaFile}
                     folderList={folderList || []}
                     accept={mediaConfig.accept}
                     maxfileSize={mediaConfig.maxfileSize}

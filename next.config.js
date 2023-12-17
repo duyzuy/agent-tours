@@ -4,6 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 const nextConfig = {
     // reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
+    useFileSystemPublicRoutes: true,
     reactStrictMode: false,
     env: {
         API_ROOT: "https://fahapi.com",

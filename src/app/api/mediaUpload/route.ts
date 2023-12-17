@@ -10,8 +10,7 @@ import { IMediaFilePayload } from "@/models/management/media.interface";
 import { getMediaFileType, isValidMediaFileTypes } from "@/helpers/mediaFiles";
 import { localMediaAPIs } from "@/services/management/localMedia.service";
 import { headers } from "next/headers";
-import { BaseResponse } from "@/models/management/common.interface";
-import { error } from "console";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: NextRequest) {
     // const {writeFile} = fs

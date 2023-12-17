@@ -21,7 +21,7 @@ export const useGetMediaFiles = (params: TQueryParamsMediaFiles) => {
     const token = getAgToken() || "";
 
     return useQuery({
-        queryKey: [GET_MEDIA_FILES, params],
+        queryKey: [GET_MEDIA_FILES, params.mediaInFolderRecid],
         queryFn: () => localMediaAPIs.getFiles(params),
         enabled: Boolean(token),
         select: (data) => {
