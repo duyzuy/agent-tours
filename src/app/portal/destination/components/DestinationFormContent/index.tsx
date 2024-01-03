@@ -27,6 +27,7 @@ export interface DestinationFormContentProps {
     errors?: TDestinationsCMSContentErrorField;
     initValues?: IDestinationContentsRs["result"][0];
     codeKey: string;
+    basePath: string;
     codeName: string;
     provinceList: IDestinationRs["result"]["listStateProvince"];
     isDisableButton?: boolean;
@@ -42,6 +43,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
     setFormData,
     initValues,
     codeKey,
+    basePath,
     codeName,
     isDisableButton = false,
     provinceList,
@@ -133,7 +135,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                     help={errors?.slug || ""}
                 >
                     <div className="slug text-xs text-gray-400  flex items-center">
-                        <span>/nhom-diem-den/</span>
+                        <span>{basePath}</span>
                         <div className="slug-edit flex items-center">
                             {isEditSlug ? (
                                 <Space>

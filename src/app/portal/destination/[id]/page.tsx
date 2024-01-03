@@ -136,6 +136,7 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
                     className="border-b"
                 />
                 <DestinationFormContent
+                    basePath={`/${locale.key}/destination/`}
                     initValues={initDestinationCMSContent}
                     isDisableButton={isDisableButton}
                     setFormData={setFormData}
