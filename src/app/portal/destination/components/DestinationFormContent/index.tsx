@@ -13,6 +13,7 @@ import { IMediaUploadProps } from "@/app/portal/media/_components/MediaUploadDra
 import { mediaConfig } from "@/configs";
 import MediaUploadDrawler from "@/app/portal/media/_components/MediaUploadDrawler";
 import { TDestinationsCMSContentErrorField } from "../../hooks/useCRUDContentDestination";
+import { isEqual } from "lodash";
 
 const TextArea = Input.TextArea;
 
@@ -91,11 +92,13 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
         setSlug(formData.slug);
     };
     const onUpdateSlug = () => {
+        if (isDisableButtonApproveSlug) return;
         setEditSlug(false);
-
         setFormData((prev) => ({ ...prev, slug: stringToSlug(slug) }));
     };
-
+    const isDisableButtonApproveSlug = useMemo(() => {
+        return isEqual(formData.slug, slug);
+    }, [slug]);
     useEffect(() => {
         if (initValues) {
             setPreviewImageUrl(
@@ -134,7 +137,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                     validateStatus={errors?.slug ? "error" : ""}
                     help={errors?.slug || ""}
                 >
-                    <div className="slug text-xs text-gray-400  flex items-center">
+                    <div className="slug  text-gray-500  flex items-center">
                         <span>{basePath}</span>
                         <div className="slug-edit flex items-center">
                             {isEditSlug ? (
@@ -151,6 +154,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                                         type="primary"
                                         size="small"
                                         ghost
+                                        disabled={isDisableButtonApproveSlug}
                                         onClick={onUpdateSlug}
                                     >
                                         Cập nhật
