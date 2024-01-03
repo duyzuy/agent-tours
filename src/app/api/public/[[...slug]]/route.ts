@@ -21,14 +21,15 @@ export async function GET(
             if (filePath?.includes(".svg")) {
                 response.headers.set("content-type", "image/svg+xml");
             }
-            if (
-                filePath?.includes(".gif") ||
-                filePath?.includes(".jpe") ||
-                filePath?.includes(".jpeg") ||
-                filePath?.includes(".png") ||
-                filePath?.includes(".jpg")
-            ) {
-                response.headers.set("content-type", "image/*");
+            if (filePath?.includes(".png")) {
+                response.headers.set("content-type", "image/png");
+            }
+
+            if (filePath?.includes(".gif")) {
+                response.headers.set("content-type", "image/gif");
+            }
+            if (filePath?.includes(".jpe") || filePath?.includes(".jpg")) {
+                response.headers.set("content-type", "image/jpeg");
             }
 
             // if(filePath?.includes(".jpe") || filePath?.includes(".jpeg")){
