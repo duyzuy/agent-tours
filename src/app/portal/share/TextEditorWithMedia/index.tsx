@@ -73,11 +73,11 @@ const TextEditorWithMedia = () => {
     return (
         <React.Fragment>
             <TextEditor
-                content={""}
+                value={""}
                 onEditorChange={() => {}}
                 onFilePickerCallback={onFilePickerMediaCallback}
-                onOpenMediaFileUpload={() => setOpenDrawler(true)}
-                onCallbackFilePicker={onCallbackPickerFile}
+                // onOpenMediaFileUpload={() => setOpenDrawler(true)}
+                // onCallbackFilePicker={onCallbackPickerFile}
                 file={file?.fullPath}
             />
             <MediaUploadDrawler

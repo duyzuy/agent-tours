@@ -14,8 +14,8 @@ export interface LocaleContainerProps {
     initvalue?: TLocale;
     className?: string;
     label?: string;
-    currentData: any;
-    newData: any;
+    currentData?: any;
+    newData?: any;
 }
 const LocaleContainer: React.FC<LocaleContainerProps> = ({
     onChange,
@@ -37,7 +37,12 @@ const LocaleContainer: React.FC<LocaleContainerProps> = ({
         /**
          * Compare two data
          */
-        if (isEqual(JSON.stringify(currentData), JSON.stringify(newData))) {
+        if (
+            isEqual(
+                JSON.stringify(currentData || {}),
+                JSON.stringify(newData || {}),
+            )
+        ) {
             onChange(lc);
         } else {
             onShowModalConfirm(lc);

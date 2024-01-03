@@ -17,8 +17,8 @@ const LayoutMenuPage: React.FC<Props> = ({ children }) => {
                 <h1 className="text-xl font-semibold">Quản lý Menu</h1>
             </div>
             <LocaleContainer
-                selectedLocale={locale}
-                onChangeLocale={(lc) => setLocale(lc)}
+                value={locale}
+                onChange={(lc) => setLocale(lc)}
                 className="border-b"
             />
             <Row className="page-body flex flex-wrap">

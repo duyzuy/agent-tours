@@ -1,6 +1,19 @@
 "use client";
 import React, { useState } from "react";
-import { Input, Typography, Radio, Space, Button, Select, Upload, DatePicker, TimePicker, Form, RadioChangeEvent, message } from "antd";
+import {
+    Input,
+    Typography,
+    Radio,
+    Space,
+    Button,
+    Select,
+    Upload,
+    DatePicker,
+    TimePicker,
+    Form,
+    RadioChangeEvent,
+    message,
+} from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { SelectProps } from "antd";
 import TextEditor from "@/components/base/TextEditor";
@@ -46,14 +59,19 @@ const PageCreatePost = () => {
 
     const getBase64 = (img: RcFile, callback: (url: string) => void) => {
         const reader = new FileReader();
-        reader.addEventListener("load", () => callback(reader.result as string));
+        reader.addEventListener("load", () =>
+            callback(reader.result as string),
+        );
         reader.readAsDataURL(img);
     };
 
     const beforeUploadImage = (file: RcFile) => {
         console.log(file);
         // const fileTypes = ["image/jpeg", "image/png"]
-        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png" || file.type === "";
+        const isJpgOrPng =
+            file.type === "image/jpeg" ||
+            file.type === "image/png" ||
+            file.type === "";
         if (!isJpgOrPng) {
             setUploadError("You can only upload JPG/PNG file!");
         }
@@ -63,7 +81,9 @@ const PageCreatePost = () => {
         }
         return isJpgOrPng && isLt2M;
     };
-    const handleUploadImage: UploadProps["onChange"] = (info: UploadChangeParam<UploadFile>) => {
+    const handleUploadImage: UploadProps["onChange"] = (
+        info: UploadChangeParam<UploadFile>,
+    ) => {
         console.log(info);
         if (info.file.status === "uploading") {
             setLoading(true);
@@ -87,10 +107,13 @@ const PageCreatePost = () => {
 
     return (
         <PageContainer name="Tạo bài viết mới" hideAddButton>
-            <LocaleContainer onChangeLocale={(lc) => setLocale(lc)} selectedLocale={locale} />
+            <LocaleContainer onChange={(lc) => setLocale(lc)} value={locale} />
             <Form layout="vertical">
                 <div className="flex w-full">
-                    <div className="post-left flex-1 mr-8" style={{ width: "calc(100% - 380px)" }}>
+                    <div
+                        className="post-left flex-1 mr-8"
+                        style={{ width: "calc(100% - 380px)" }}
+                    >
                         <FormItem>
                             <Input placeholder="Tên bài viết" />
                             <div className="post-slug text-xs py-2 w-full">
@@ -119,18 +142,33 @@ const PageCreatePost = () => {
                                         </div>
                                         <div className="buttons w-fit">
                                             {isEditSlug && (
-                                                <Button type="primary" size="small" ghost className="ml-2">
+                                                <Button
+                                                    type="primary"
+                                                    size="small"
+                                                    ghost
+                                                    className="ml-2"
+                                                >
                                                     Lưu
                                                 </Button>
                                             )}
                                             <Button
-                                                type={isEditSlug ? "text" : "primary"}
+                                                type={
+                                                    isEditSlug
+                                                        ? "text"
+                                                        : "primary"
+                                                }
                                                 size="small"
-                                                ghost={isEditSlug ? false : true}
+                                                ghost={
+                                                    isEditSlug ? false : true
+                                                }
                                                 className="ml-2"
-                                                onClick={() => setEditSlug((edt) => !edt)}
+                                                onClick={() =>
+                                                    setEditSlug((edt) => !edt)
+                                                }
                                             >
-                                                {isEditSlug ? "Huỷ bỏ" : "Chỉnh sửa"}
+                                                {isEditSlug
+                                                    ? "Huỷ bỏ"
+                                                    : "Chỉnh sửa"}
                                             </Button>
                                         </div>
                                     </div>
@@ -138,14 +176,22 @@ const PageCreatePost = () => {
                             </div>
                         </FormItem>
                         <FormItem label="Mô tả ngắn">
-                            <TextArea className="resize-none" rows={3}></TextArea>
+                            <TextArea
+                                className="resize-none"
+                                rows={3}
+                            ></TextArea>
                         </FormItem>
 
                         <FormItem label="Chi tiết">
-                            <TextEditor onEditorChange={() => {}} content={"test content"} />
+                            <TextEditor
+                                onEditorChange={() => {}}
+                                value={"test content"}
+                            />
                         </FormItem>
                         <div className="section">
-                            <Typography.Title level={4}>SEO Meta</Typography.Title>
+                            <Typography.Title level={4}>
+                                SEO Meta
+                            </Typography.Title>
                             <div className="box border rounded-[4px] px-4 py-6">
                                 <FormItem label="Meta title">
                                     <Input placeholder="Meta title" />
@@ -169,8 +215,19 @@ const PageCreatePost = () => {
                                     <div className="post-times px-4 py-4 input-control">
                                         <FormItem label="Ngày hiển thị">
                                             <div className="flex items-center gap-x-4">
-                                                <DatePicker onChange={() => {}} onOk={() => {}} placeholder="Chọn ngày" picker="date" className="flex-1" />
-                                                <TimePicker onChange={() => {}} onOk={() => {}} placeholder="Chọn giờ" format={timeFormat} />
+                                                <DatePicker
+                                                    onChange={() => {}}
+                                                    onOk={() => {}}
+                                                    placeholder="Chọn ngày"
+                                                    picker="date"
+                                                    className="flex-1"
+                                                />
+                                                <TimePicker
+                                                    onChange={() => {}}
+                                                    onOk={() => {}}
+                                                    placeholder="Chọn giờ"
+                                                    format={timeFormat}
+                                                />
                                             </div>
                                         </FormItem>
                                     </div>
@@ -178,7 +235,11 @@ const PageCreatePost = () => {
                                         <Button className="flex-1" block>
                                             Lưu nháp
                                         </Button>
-                                        <Button type="primary" className=" bg-primary-default flex-1" block>
+                                        <Button
+                                            type="primary"
+                                            className=" bg-primary-default flex-1"
+                                            block
+                                        >
                                             Đăng
                                         </Button>
                                     </div>
@@ -208,16 +269,35 @@ const PageCreatePost = () => {
                                         <p className="font-bold">Danh muc</p>
                                     </div>
                                     <div className="category-list h-[250px] overflow-hidden overflow-y-auto px-4 py-4">
-                                        <Radio.Group onChange={onChange} value={value}>
+                                        <Radio.Group
+                                            onChange={onChange}
+                                            value={value}
+                                        >
                                             <Space direction="vertical">
-                                                <Radio value={1}>Danh muc 1</Radio>
-                                                <Radio value={1}>Danh muc 1</Radio>
-                                                <Radio value={2}>Danh muc 2</Radio>
-                                                <Radio value={3}>Danh muc 3</Radio>
-                                                <Radio value={4}>Danh muc 1</Radio>
-                                                <Radio value={5}>Danh muc 1</Radio>
-                                                <Radio value={6}>Danh muc 2</Radio>
-                                                <Radio value={7}>Danh muc 3</Radio>
+                                                <Radio value={1}>
+                                                    Danh muc 1
+                                                </Radio>
+                                                <Radio value={1}>
+                                                    Danh muc 1
+                                                </Radio>
+                                                <Radio value={2}>
+                                                    Danh muc 2
+                                                </Radio>
+                                                <Radio value={3}>
+                                                    Danh muc 3
+                                                </Radio>
+                                                <Radio value={4}>
+                                                    Danh muc 1
+                                                </Radio>
+                                                <Radio value={5}>
+                                                    Danh muc 1
+                                                </Radio>
+                                                <Radio value={6}>
+                                                    Danh muc 2
+                                                </Radio>
+                                                <Radio value={7}>
+                                                    Danh muc 3
+                                                </Radio>
                                             </Space>
                                         </Radio.Group>
                                     </div>
@@ -226,7 +306,9 @@ const PageCreatePost = () => {
                             <div className="box border rounded-[4px] mb-6">
                                 <div className="category">
                                     <div className="py-4 border-b px-4">
-                                        <p className="font-bold">Thẻ bài viết</p>
+                                        <p className="font-bold">
+                                            Thẻ bài viết
+                                        </p>
                                     </div>
                                     <div className="category-list overflow-hidden overflow-y-auto px-4 py-4">
                                         <FormItem>
@@ -241,7 +323,9 @@ const PageCreatePost = () => {
                                             />
                                         </FormItem>
                                         <div className="footer pt-4">
-                                            <p className="text-xs">Thẻ bài viết</p>
+                                            <p className="text-xs">
+                                                Thẻ bài viết
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
