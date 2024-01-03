@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IDestinationPayload } from "@/models/management/country.interface";
+import { IDestinationPayload } from "@/models/management/region.interface";
 import { destinationSchema } from "./validate";
 import { ValidationError } from "yup";
 import {
@@ -9,6 +9,7 @@ import {
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryMisc } from "@/queries/var";
+import { Status } from "@/models/management/common.interface";
 export type TDestinationErrorsField = Partial<
     Record<
         keyof Pick<
@@ -93,7 +94,6 @@ const useCRUDDestination = () => {
                 if (error instanceof ValidationError) {
                     let errors: TDestinationErrorsField = {};
                     error.inner.forEach((err) => {
-                        console.log(err);
                         if (
                             !errors[err.path as keyof TDestinationErrorsField]
                         ) {
@@ -106,11 +106,7 @@ const useCRUDDestination = () => {
             });
     };
 
-    const onUpdateStatus = (
-        id: number,
-        status: "OX" | "XX" | "OK",
-        cb?: () => void,
-    ) => {
+    const onUpdateStatus = (id: number, status: Status, cb?: () => void) => {
         makeUpdateDestination(
             {
                 id: id,
@@ -120,8 +116,8 @@ const useCRUDDestination = () => {
                 onSuccess: (data, variables) => {
                     message.success(
                         `${
-                            (status === "OK" && "Kích hoạt") ||
-                            (status === "OX" && "Ngừng kích hoạt") ||
+                            (status === Status.OK && "Kích hoạt") ||
+                            (status === Status.OX && "Ngừng kích hoạt") ||
                             "Xoá"
                         } thành công`,
                     );
@@ -132,7 +128,6 @@ const useCRUDDestination = () => {
                     cb?.();
                 },
                 onError: (error, variables) => {
-                    console.log({ error, variables });
                     message.error(error.message);
                 },
             },

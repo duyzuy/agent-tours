@@ -1,9 +1,9 @@
 import { BaseResponse } from "@/models/management/common.interface";
 import { coreApi } from "../coreApi";
-import { ICountryListRs } from "@/models/management/country.interface";
+import { IStateProvinceListRs } from "@/models/management/region.interface";
 export const regionAPIs = {
     getCountryList: async () => {
-        return await coreApi.post<ICountryListRs, BaseResponse<null>>(
+        return await coreApi.post<IStateProvinceListRs, BaseResponse<null>>(
             "core/CountryListGetall",
             {
                 requestObject: { type: "REGIONLIST" },

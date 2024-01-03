@@ -10,11 +10,7 @@ import { useRouter, notFound } from "next/navigation";
 import DestinationFormContent, {
     DestinationFormContentProps,
 } from "../components/DestinationFormContent";
-import {
-    IDestinationContentFormData,
-    DestinationContentFormData,
-    IDestinationContentsRs,
-} from "@/models/management/country.interface";
+import { DestinationContentFormData } from "@/models/management/region.interface";
 import useCRUDContentDestination from "../hooks/useCRUDContentDestination";
 import {
     useGetDestinationDetailMICSQuery,
@@ -45,8 +41,7 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
     );
     const router = useRouter();
     const [initData, setInitData] = useState(initFormData);
-    const [formData, setFormData] =
-        useState<IDestinationContentFormData>(initFormData);
+    const [formData, setFormData] = useState(initFormData);
 
     const initDestinationCMSContent = useMemo(() => {
         return destinationCMSContents?.find(
@@ -62,7 +57,7 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
         return isEqual(JSON.stringify(initData), JSON.stringify(formData));
     }, [formData]);
 
-    const onSubmitFormData: DestinationFormContentProps["onSubmit"] = (
+    const handleSubmitFormData: DestinationFormContentProps["onSubmit"] = (
         action,
         payload,
         id,
@@ -149,7 +144,7 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
                     codeKey={destinationDetail.codeKey}
                     provinceList={destinationDetail.listStateProvince}
                     codeName={destinationDetail.codeName}
-                    onSubmit={onSubmitFormData}
+                    onSubmit={handleSubmitFormData}
                     className="form-wrapper max-w-4xl pt-6"
                 />
             </PageContainer>

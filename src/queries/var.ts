@@ -10,6 +10,8 @@ export const GET_MEDIA_FILES = "GET_MEDIA_FILES";
 
 export const queryCore = {
     GET_LIST_REGION: "GET_LIST_REGION",
+    GET_INVENTORY_TYPE_LIST: "GET_INVENTORY_TYPE_LIST",
+    GET_PRODUCT_TYPE_LIST: "GET_PRODUCT_TYPE_LIST",
 };
 
 export const queryMisc = {

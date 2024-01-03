@@ -14,15 +14,16 @@ import {
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
-    ICountryListRs,
+    IStateProvinceListRs,
     IDestinationPayload,
-    DestinationPayload,
+    DestinationFormData,
     IDestinationListRs,
-} from "@/models/management/country.interface";
+} from "@/models/management/region.interface";
 
 import FormItem from "@/components/base/FormItem";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 import { isEmpty, isEqual } from "lodash";
+import { Status } from "@/models/management/common.interface";
 
 export enum EActionType {
     CREATE = "create",
@@ -37,17 +38,17 @@ export type TDrawlerEditAction = {
 };
 export type TDrawlerDestination = TDrawlerEditAction | TDrawlerCreateAction;
 
-type TCountryGroup = ICountryListRs["result"][0] & {
-    children: TCountryGroup[];
+type TStateProvinceGrouping = IStateProvinceListRs["result"][0] & {
+    children: TStateProvinceGrouping[];
 };
 interface DrawlerRoleProps {
     isOpen?: boolean;
     onClose: () => void;
     actionType?: EActionType;
-    onUpdateStatus: (id: number, status: "OX" | "OK") => void;
+    onUpdateStatus: (id: number, status: Status.OK | Status.OX) => void;
     initialValues?: IDestinationListRs["result"][0];
     onSubmit?: (actionType: EActionType, data: IDestinationPayload) => void;
-    items: ICountryListRs["result"];
+    items: IStateProvinceListRs["result"];
     errors?: any;
 }
 const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
@@ -60,13 +61,13 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
     errors,
     onUpdateStatus,
 }) => {
-    const initFormData = new DestinationPayload("", "", []);
+    const initFormData = new DestinationFormData("", "", []);
 
     const [formData, setFormData] = useState<IDestinationPayload>(initFormData);
 
     const provincesGrouping = useMemo(() => {
         const itemMap = items.reduce<{
-            [key: string]: ICountryListRs["result"];
+            [key: string]: IStateProvinceListRs["result"];
         }>((acc, item) => {
             acc = {
                 ...acc,
@@ -75,22 +76,22 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
             return acc;
         }, {});
 
-        let output: TCountryGroup[] = [];
+        let output: TStateProvinceGrouping[] = [];
 
         itemMap["REGIONLIST"]?.forEach((region) => {
-            let childsOfRegion: TCountryGroup[] = [];
-            let restOfChildRegion: ICountryListRs["result"] = [];
+            let childsOfRegion: TStateProvinceGrouping[] = [];
+            let restOfChildRegion: IStateProvinceListRs["result"] = [];
             itemMap["SUBREGIONLIST"].forEach((subRegion) => {
                 if (subRegion.regionKey === region.regionKey) {
-                    let countries: TCountryGroup[] = [];
-                    let restCountries: ICountryListRs["result"] = [];
+                    let countries: TStateProvinceGrouping[] = [];
+                    let restCountries: IStateProvinceListRs["result"] = [];
                     itemMap["COUNTRYLIST"].forEach((country) => {
                         if (
                             country.regionKey === region.regionKey &&
                             country.subRegionKey === subRegion.subRegionKey
                         ) {
-                            let states: TCountryGroup[] = [];
-                            let restStates: ICountryListRs["result"] = [];
+                            let states: TStateProvinceGrouping[] = [];
+                            let restStates: IStateProvinceListRs["result"] = [];
 
                             itemMap["STATEPROVINCELIST"].forEach((state) => {
                                 if (
@@ -127,7 +128,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                 }
             });
             itemMap["SUBREGIONLIST"] = restOfChildRegion;
-            const regionItem: TCountryGroup = {
+            const regionItem: TStateProvinceGrouping = {
                 ...region,
                 children: childsOfRegion,
             };
@@ -138,8 +139,8 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
     }, [items]);
 
     const getIndex = (
-        value: ICountryListRs["result"][0],
-        values: ICountryListRs["result"],
+        value: IStateProvinceListRs["result"][0],
+        values: IStateProvinceListRs["result"],
     ) => {
         return values.findIndex(
             (item) =>
@@ -150,7 +151,10 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
         );
     };
 
-    const onChangeState = (ev: CheckboxChangeEvent, state: TCountryGroup) => {
+    const onChangeState = (
+        ev: CheckboxChangeEvent,
+        state: TStateProvinceGrouping,
+    ) => {
         let newList = [...formData.listStateProvince];
 
         const regionOfState = items.find(
@@ -274,7 +278,10 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
         }));
     };
 
-    const onChangeRegion = (ev: CheckboxChangeEvent, region: TCountryGroup) => {
+    const onChangeRegion = (
+        ev: CheckboxChangeEvent,
+        region: TStateProvinceGrouping,
+    ) => {
         let newList = [...formData.listStateProvince];
 
         const currentChidsKeys = formData.listStateProvince.reduce<number[]>(
@@ -314,7 +321,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
 
     const onChangeSubRegion = (
         ev: CheckboxChangeEvent,
-        subRegion: TCountryGroup,
+        subRegion: TStateProvinceGrouping,
     ) => {
         let newList = [...formData.listStateProvince];
         const childItemsOfSubRegion = items.filter(
@@ -393,7 +400,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
 
     const onChangeCountry = (
         ev: CheckboxChangeEvent,
-        country: TCountryGroup,
+        country: TStateProvinceGrouping,
     ) => {
         let newList = [...formData.listStateProvince];
         const childItemsOfCountry = items.filter(
@@ -509,12 +516,15 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
     };
 
     const onUpdateDestinationStatus: SwitchProps["onChange"] = (checked) => {
-        setFormData((prev) => ({ ...prev, status: checked ? "OK" : "OX" }));
+        setFormData((prev) => ({
+            ...prev,
+            status: checked ? Status.OK : Status.OX,
+        }));
         if (actionType === EActionType.EDIT && initialValues) {
-            onUpdateStatus(initialValues.id, checked ? "OK" : "OX");
+            onUpdateStatus(initialValues.id, checked ? Status.OK : Status.OX);
         }
     };
-    const checkedState = (state: TCountryGroup) => {
+    const checkedState = (state: TStateProvinceGrouping) => {
         return formData.listStateProvince.some(
             (item) =>
                 item.stateProvinceKey === state.stateProvinceKey &&

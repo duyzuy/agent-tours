@@ -1,12 +1,9 @@
 "use client";
 import React, { useCallback, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-
 import TableListPage from "@/components/admin/TableListPage";
 import { columnRoleGroups } from "./columns";
-
 import DrawlerDestination from "./components/DrawlerDestination";
-
 import {
     EActionType,
     TDrawlerDestination,
@@ -17,7 +14,8 @@ import { useGetDestinationsQuery } from "@/queries/misc/destination";
 import {
     IDestinationListRs,
     IDestinationPayload,
-} from "@/models/management/country.interface";
+} from "@/models/management/region.interface";
+import { Status } from "@/models/management/common.interface";
 
 const GroupDestinationPage = () => {
     const [editRecord, setEditRecord] =
@@ -44,7 +42,6 @@ const GroupDestinationPage = () => {
 
     const handleSubmitFormData = useCallback(
         (actionType: EActionType, payload: IDestinationPayload) => {
-            console.log(payload);
             if (actionType === EActionType.CREATE) {
                 onCreate(payload, () => {
                     onCloseDrawlerAndReset();
@@ -61,7 +58,7 @@ const GroupDestinationPage = () => {
     );
 
     const onDelete = (record: IDestinationListRs["result"][0]) => {
-        onUpdateStatus(record.id, "XX");
+        onUpdateStatus(record.id, Status.XX);
     };
 
     const onCloseDrawlerAndReset = () => {

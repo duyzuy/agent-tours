@@ -1,7 +1,8 @@
 import { ColumnsType } from "antd/es/table";
 import Link from "next/link";
 import { Space, Tag } from "antd";
-import { IDestinationListRs } from "@/models/management/country.interface";
+import { IDestinationListRs } from "@/models/management/region.interface";
+import { Status } from "@/models/management/common.interface";
 export const columnRoleGroups: ColumnsType<IDestinationListRs["result"][0]> = [
     {
         title: "Tên nhóm",
@@ -65,10 +66,10 @@ export const columnRoleGroups: ColumnsType<IDestinationListRs["result"][0]> = [
         width: 400,
         render: (_, record) => {
             return (
-                <Tag color={record.status === "OK" ? "green" : "red"}>
-                    {(record.status === "OK" && "Đang kích hoạt") ||
-                        (record.status === "XX" && "Tài khoản bị xoá") ||
-                        "Chờ kích hoạt"}
+                <Tag color={record.status === Status.OK ? "green" : "red"}>
+                    {(record.status === Status.OK && "Đang kích hoạt") ||
+                        (record.status === Status.OX && "Chờ kích hoạt") ||
+                        "Đã xoá"}
                 </Tag>
             );
         },

@@ -8,7 +8,7 @@ import {
     IDestinationEditPayload,
     IDestinationPayload,
     IDestinationRs,
-} from "@/models/management/country.interface";
+} from "@/models/management/region.interface";
 
 //create folder in public/uploads folder.
 

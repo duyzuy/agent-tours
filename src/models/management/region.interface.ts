@@ -1,7 +1,7 @@
-import { BaseResponse } from "./common.interface";
+import { BaseResponse, Status } from "./common.interface";
 import { IMediaFile } from "./media.interface";
 
-export interface ICountry {
+export interface IStateProvince {
     id: number;
     cat: "REGIONLIST" | "SUBREGIONLIST" | "COUNTRYLIST" | "STATEPROVINCELIST";
     countryKey: string;
@@ -15,14 +15,14 @@ export interface IDestination {
     id: number;
     codeKey: string;
     codeName: string;
-    status: "OK" | "XX" | "OX";
-    listStateProvince: ICountry[];
+    status: Status;
+    listStateProvince: IStateProvince[];
 }
 export interface IDestinationPayload {
     codeName: string;
     codeKey: string;
-    status: "OK" | "XX" | "OX"; // status: "OK" => đang sử dụng (active) | "XX" => bị xoá | "OX" => de-active
-    listStateProvince: ICountry[];
+    status: Status; // status: "OK" => đang sử dụng (active) | "XX" => bị xoá | "OX" => de-active
+    listStateProvince: IStateProvince[];
 }
 
 export interface IDestinationEditPayload
@@ -30,24 +30,24 @@ export interface IDestinationEditPayload
     id: number;
 }
 
-export class DestinationPayload implements IDestinationPayload {
+export class DestinationFormData implements IDestinationPayload {
     codeName: string;
     codeKey: string;
-    status: "OK" | "XX" | "OX";
-    listStateProvince: ICountry[];
+    status: Status;
+    listStateProvince: IStateProvince[];
 
     constructor(
         codeName: string,
         codeKey: string,
-        listStateProvince: ICountry[],
+        listStateProvince: IStateProvince[],
     ) {
         this.codeKey = codeKey;
         this.codeName = codeName;
-        this.status = "OX";
+        this.status = Status.OX;
         this.listStateProvince = listStateProvince;
     }
 }
-export interface ICountryListRs extends BaseResponse<ICountry[]> {}
+export interface IStateProvinceListRs extends BaseResponse<IStateProvince[]> {}
 export interface IDestinationListRs extends BaseResponse<IDestination[]> {}
 export interface IDestinationRs extends BaseResponse<IDestination> {}
 
@@ -67,7 +67,7 @@ export interface IDestinationContentDetail {
     status: string;
 }
 
-export interface IDestinationContentFormData
+export interface IDestinationContentPayload
     extends Pick<
         IDestinationContentDetail,
         | "codeKey"
@@ -79,7 +79,7 @@ export interface IDestinationContentFormData
         | "lang"
     > {}
 
-export class DestinationContentFormData implements IDestinationContentFormData {
+export class DestinationContentFormData implements IDestinationContentPayload {
     codeKey: string;
     title: string;
     descriptions: string;

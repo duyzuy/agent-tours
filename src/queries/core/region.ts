@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
-import { regionAPIs } from "@/services/management/cores/region.service";
+import { regionAPIs } from "@/services/management/cores/region";
 
 export const useGetRegionList = () => {
     return useQuery({

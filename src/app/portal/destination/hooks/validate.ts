@@ -2,7 +2,8 @@ import { ObjectSchema, object, string, number, array } from "yup";
 import {
     IDestinationContentPayload,
     IDestinationPayload,
-} from "@/models/management/country.interface";
+} from "@/models/management/region.interface";
+import { Status } from "@/models/management/common.interface";
 
 const vietnameseNamePattern =
     /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s ]+$/;
@@ -36,7 +37,7 @@ export const destinationSchema: ObjectSchema<IDestinationPayload> = object({
         }),
     ).required("Vui lòng chọn tỉnh thành"),
     status: string()
-        .oneOf<IDestinationPayload["status"]>(["OK", "OX", "XX"])
+        .oneOf<IDestinationPayload["status"]>([Status.OK, Status.OX, Status.XX])
         .required("Trạng thái không bỏ trống."),
 });
 

@@ -3,18 +3,17 @@ import TextEditor from "@/components/base/TextEditor";
 import FormItem from "@/components/base/FormItem";
 import React, { useState, useEffect, useMemo } from "react";
 import {
-    IDestinationContentFormData,
     IDestinationContentPayload,
     IDestinationContentsRs,
     IDestinationRs,
-} from "@/models/management/country.interface";
+} from "@/models/management/region.interface";
 import { stringToSlug } from "@/utils/stringToSlug";
 import Image from "next/image";
 import { IMediaUploadProps } from "@/app/portal/media/_components/MediaUploadDrawler";
 import { mediaConfig } from "@/configs";
 import MediaUploadDrawler from "@/app/portal/media/_components/MediaUploadDrawler";
 import { TDestinationsCMSContentErrorField } from "../../hooks/useCRUDContentDestination";
-import { isEqual } from "lodash";
+
 const TextArea = Input.TextArea;
 
 export interface DestinationFormContentProps {
@@ -24,7 +23,7 @@ export interface DestinationFormContentProps {
         payload: IDestinationContentPayload,
         id?: number,
     ) => void;
-    formData: IDestinationContentFormData;
+    formData: IDestinationContentPayload;
     errors?: TDestinationsCMSContentErrorField;
     initValues?: IDestinationContentsRs["result"][0];
     codeKey: string;
@@ -32,7 +31,7 @@ export interface DestinationFormContentProps {
     provinceList: IDestinationRs["result"]["listStateProvince"];
     isDisableButton?: boolean;
     setFormData: React.Dispatch<
-        React.SetStateAction<IDestinationContentFormData>
+        React.SetStateAction<IDestinationContentPayload>
     >;
 }
 const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
@@ -53,7 +52,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
     const [isOpenDrawler, setOpenDrawler] = useState(false);
 
     const onChangeFormData = (
-        key: keyof IDestinationContentFormData,
+        key: keyof IDestinationContentPayload,
         value: string,
     ) => {
         let newFormData = { ...formData };

@@ -12,7 +12,7 @@ import {
 import { Tag, Form, Space, Dropdown } from "antd";
 import { MenuProps } from "antd";
 import { useGetRegionList } from "@/queries/core/region";
-import { ICountryListRs } from "@/models/management/country.interface";
+import { IStateProvinceListRs } from "@/models/management/region.interface";
 interface RegionDataType {
     key: string;
     name: string;
@@ -101,7 +101,7 @@ const RegionPage = () => {
     };
 
     // console.log(countryList);
-    // const countryListFormat: ICountryListRs["result"] = useMemo(() => {
+    // const countryListFormat: IStateProvinceListRs["result"] = useMemo(() => {
     //     if (!countryList) return [];
     //     return countryList.map((country) => {});
     // }, [countryList]);

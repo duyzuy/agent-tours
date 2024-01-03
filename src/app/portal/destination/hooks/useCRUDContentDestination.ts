@@ -1,7 +1,4 @@
-import {
-    IDestinationContentFormData,
-    IDestinationContentPayload,
-} from "@/models/management/country.interface";
+import { IDestinationContentPayload } from "@/models/management/region.interface";
 import {
     useCreateDestinationCMSContentMutation,
     useUpdateDestinationCMSContentMutation,
@@ -28,7 +25,7 @@ const useCRUDContentDestination = () => {
 
     const queryClient = useQueryClient();
     const onCreateCMSDestinationContent = (
-        payload: IDestinationContentFormData,
+        payload: IDestinationContentPayload,
         cb?: () => void,
     ) => {
         destinationContentSchema
@@ -56,7 +53,6 @@ const useCRUDContentDestination = () => {
                 if (error instanceof ValidationError) {
                     let errors: TDestinationsCMSContentErrorField = {};
                     error.inner.forEach((err) => {
-                        console.log(err);
                         if (
                             !errors[
                                 err.path as keyof TDestinationsCMSContentErrorField
@@ -74,7 +70,7 @@ const useCRUDContentDestination = () => {
 
     const onUpdateCMSDestinationContent = (
         id: number,
-        payload: IDestinationContentFormData,
+        payload: IDestinationContentPayload,
         cb?: () => void,
     ) => {
         destinationContentSchema

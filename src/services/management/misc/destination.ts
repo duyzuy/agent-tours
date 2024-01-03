@@ -10,7 +10,7 @@ import {
     IDestinationGetContentQueryParams,
     IDestinationContentDetail,
     IDestination,
-} from "@/models/management/country.interface";
+} from "@/models/management/region.interface";
 import { client } from "@/services/api";
 
 export const destinationAPIs = {
