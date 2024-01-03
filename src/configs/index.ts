@@ -3,7 +3,7 @@ const config = {
     DOMAIN_ROOT: process.env.DOMAIN_ROOT || "http://localhost:3000",
     LOCAL_API_URL:
         process.env.NODE_ENV === "production"
-            ? "https://tours.frdev.asia/api"
+            ? "http://localhost:3001/api" //"https://tours.frdev.asia/api"
             : "http://localhost:3000/api",
     isMultipleLanguage: true,
 };
@@ -12,6 +12,11 @@ export const mediaConfig = {
     depth: 2,
     accept: ".jpg, .jpeg, .png, .pdf, .svg, .docx, .xlsx, .gif",
     rootPath: "/uploads",
+    rootApiPath: `${
+        process.env.NODE_ENV === "production"
+            ? "http://localhost:3001/api/public"
+            : "http://localhost:3000/api/public"
+    }`,
     rootFolder: "uploads",
     maxfileSize: 2, //mb 2,
     maxCount: 6, // number of file uploads
@@ -26,3 +31,10 @@ export const mediaConfig = {
     },
 };
 export default config;
+
+export const coreAccountConfig = {
+    privateKey: "OiH3bdXyJun1iEFbNMpkqaVIPhTAa8JSVGwsbBXL",
+    username: "admin",
+    password: "test123",
+    userId: "ANTHAI_DEMO",
+};

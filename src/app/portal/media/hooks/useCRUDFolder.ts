@@ -1,7 +1,4 @@
-import {
-    IMediaFolderPayload,
-    IMediaFolderUpdatePayload,
-} from "@/models/management/media.interface";
+import { IMediaFolderPayload } from "@/models/management/media.interface";
 import useMessage from "@/hooks/useMessage";
 import {
     useCreateMediaFoldersMutation,
@@ -48,8 +45,12 @@ const useCRUDMediaFolder = () => {
                 if (error instanceof ValidationError) {
                     let errors: TMediaFolderErrorsField = {};
                     error.inner.forEach((err) => {
-                        errors[err.path as keyof TMediaFolderErrorsField] =
-                            err.message;
+                        if (
+                            !errors[err.path as keyof TMediaFolderErrorsField]
+                        ) {
+                            errors[err.path as keyof TMediaFolderErrorsField] =
+                                err.message;
+                        }
                     });
                     setErrors(errors);
                 }
@@ -88,8 +89,12 @@ const useCRUDMediaFolder = () => {
                 if (error instanceof ValidationError) {
                     let errors: TMediaFolderErrorsField = {};
                     error.inner.forEach((err) => {
-                        errors[err.path as keyof TMediaFolderErrorsField] =
-                            err.message;
+                        if (
+                            !errors[err.path as keyof TMediaFolderErrorsField]
+                        ) {
+                            errors[err.path as keyof TMediaFolderErrorsField] =
+                                err.message;
+                        }
                     });
                     setErrors(errors);
                 }

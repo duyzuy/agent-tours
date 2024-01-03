@@ -42,12 +42,7 @@ const RolePermissionPage = () => {
 
     const rolePermissionList = useMemo(() => {
         return rolesPermisions
-            ? rolesPermisions["result"]["rolePermissionList"].map(
-                  (rolePers) => ({
-                      ...rolePers,
-                      key: rolePers.localUser_RolePermissionKey,
-                  }),
-              )
+            ? rolesPermisions["result"]["rolePermissionList"]
             : [];
     }, [rolesPermisions]);
 
@@ -97,6 +92,7 @@ const RolePermissionPage = () => {
                         action: EActionType.CREATE,
                     })
                 }
+                breadCrumItems={[{ title: "Nhóm chức năng" }]}
             >
                 <TableListPage<
                     IRolesPermissionsRs["result"]["rolePermissionList"][0]
@@ -104,6 +100,7 @@ const RolePermissionPage = () => {
                     scroll={{ x: 1000 }}
                     modelName="Nhóm chức năng"
                     dataSource={rolePermissionList}
+                    rowKey={"localUser_RolePermissionKey"}
                     columns={columnRoleGroups}
                     isLoading={isLoading}
                     onEdit={(record) =>

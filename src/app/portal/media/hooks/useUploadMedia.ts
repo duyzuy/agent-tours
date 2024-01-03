@@ -2,7 +2,7 @@ import { useUploadMediaFilesMutation } from "@/mutations/managements/media";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { GET_MEDIA_FILES } from "@/queries/var";
-import { TFolderSelect } from "@/components/admin/MediaContainer/_components/MediaFileUploadTab";
+import { TFolderSelect } from "../_components/MediaUploadContainer/UploadFileForm";
 import { UploadFile } from "antd";
 import { RcFile } from "antd/es/upload";
 

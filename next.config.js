@@ -13,7 +13,9 @@ const nextConfig = {
         SECRET: "YOUR_SECRET_VALUE_HERE",
     },
     // transpilePackages: ["antd"],
-
+    images: {
+        domains: ["localhost"],
+    },
     swcMinify: true,
     compiler: {
         styledComponents: true,

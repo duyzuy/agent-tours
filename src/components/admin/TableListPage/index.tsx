@@ -46,7 +46,7 @@ function TableListPage<T extends object>(props: ITableListPage<T>) {
     const mergeColumns: ColumnsType<T> = [
         ...columns,
         {
-            title: "Actions",
+            title: "Hành động",
             dataIndex: "action",
             key: "action",
             width: 100,
@@ -60,34 +60,38 @@ function TableListPage<T extends object>(props: ITableListPage<T>) {
                         >
                             <EditOutlined className="p-[8px] block" />
                         </span>
-                        <Dropdown
-                            menu={{
-                                items: [
-                                    {
-                                        key: "delete",
-                                        label: (
-                                            <div
-                                                className="item text-red-600"
-                                                onClick={() =>
-                                                    onShowModalConfirm(record)
-                                                }
-                                            >
-                                                <DeleteOutlined />
-                                                <span className="ml-2">
-                                                    Xoá
-                                                </span>
-                                            </div>
-                                        ),
-                                    },
-                                ],
-                            }}
-                            placement="bottomRight"
-                            arrow
-                        >
-                            <span className="edit-btn flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 cursor-pointer">
-                                <EllipsisOutlined className="p-[8px]" />
-                            </span>
-                        </Dropdown>
+                        {onDelete ? (
+                            <Dropdown
+                                menu={{
+                                    items: [
+                                        {
+                                            key: "delete",
+                                            label: (
+                                                <div
+                                                    className="item text-red-600"
+                                                    onClick={() =>
+                                                        onShowModalConfirm(
+                                                            record,
+                                                        )
+                                                    }
+                                                >
+                                                    <DeleteOutlined />
+                                                    <span className="ml-2">
+                                                        Xoá
+                                                    </span>
+                                                </div>
+                                            ),
+                                        },
+                                    ],
+                                }}
+                                placement="bottomRight"
+                                arrow
+                            >
+                                <span className="edit-btn flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 cursor-pointer">
+                                    <EllipsisOutlined className="p-[8px]" />
+                                </span>
+                            </Dropdown>
+                        ) : null}
                     </Space>
                 );
             },

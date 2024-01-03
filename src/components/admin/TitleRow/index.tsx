@@ -11,7 +11,15 @@ interface Props {
     className?: string;
     onCanel?: () => void;
 }
-const TitleRow: React.FC<Props> = ({ title, modelName, hideAddButton, onClickAdd, between = false, className = "", onCanel }) => {
+const TitleRow: React.FC<Props> = ({
+    title,
+    modelName,
+    hideAddButton,
+    onClickAdd,
+    between = false,
+    className = "",
+    onCanel,
+}) => {
     return (
         <Space
             className={classnames("w-full", {
@@ -20,11 +28,25 @@ const TitleRow: React.FC<Props> = ({ title, modelName, hideAddButton, onClickAdd
             })}
         >
             <div className="title flex items-center">
-                {onCanel && <CancelButton type="default" size="small" className="mr-2" icon={<LeftOutlined />} onClick={onCanel} />}
+                {onCanel && (
+                    <CancelButton
+                        type="default"
+                        size="small"
+                        className="mr-2"
+                        icon={<LeftOutlined />}
+                        onClick={onCanel}
+                    />
+                )}
                 <p className="font-semibold text-lg">{title}</p>
             </div>
             {!hideAddButton && (
-                <Button type="primary" size="small" ghost icon={<PlusOutlined />} onClick={onClickAdd}>
+                <Button
+                    type="primary"
+                    size="small"
+                    ghost
+                    icon={<PlusOutlined />}
+                    onClick={onClickAdd}
+                >
                     {`Thêm ${modelName}`}
                 </Button>
             )}

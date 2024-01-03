@@ -32,6 +32,9 @@ export const antdTheme: ThemeConfig = {
         Input: {
             // paddingLG: 14,
             // fontSize: 16,
+            fontSizeSM: 12,
+            paddingInlineSM: 8,
+            paddingBlockSM: 2,
             fontSizeLG: 16,
             paddingInlineLG: 16,
             borderRadiusSM: 3,

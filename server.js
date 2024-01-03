@@ -1,14 +1,16 @@
 const { createServer } = require("http");
+// const { createReadStream, existsSync } = require("fs");
 const { parse } = require("url");
 const next = require("next");
-// const { express } = require("express");
+// const express = require('express')
+
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
 const port = 3001;
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
-
+// const path = require("path");
 app.prepare().then(() => {
     // const server = express();
     // server.use("/upload", express.static(__dirname + "/public/uploads"));

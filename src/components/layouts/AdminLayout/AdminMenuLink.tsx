@@ -10,6 +10,7 @@ import {
     TeamOutlined,
     SettingOutlined,
     EnvironmentOutlined,
+    ClusterOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 
@@ -52,6 +53,21 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
             {
                 key: "product/create",
                 label: "Tạo sản phẩm mới",
+            },
+        ],
+    },
+    {
+        key: "destination",
+        icon: React.createElement(ClusterOutlined),
+        label: "Nhóm điểm đến",
+        children: [
+            {
+                key: "destination/",
+                label: "Danh sách nhóm",
+            },
+            {
+                key: "destination/create-content",
+                label: "Tạo nội dung",
             },
         ],
     },

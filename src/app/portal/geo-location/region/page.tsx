@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import DrawlerRegion from "../_components/DrawlerRegion";
 import CustomTable from "@/components/admin/CustomTable";
@@ -11,6 +11,8 @@ import {
 } from "@ant-design/icons";
 import { Tag, Form, Space, Dropdown } from "antd";
 import { MenuProps } from "antd";
+import { useGetRegionList } from "@/queries/core/region";
+import { ICountryListRs } from "@/models/management/country.interface";
 interface RegionDataType {
     key: string;
     name: string;
@@ -92,11 +94,17 @@ const RegionPage = () => {
     const [data, setData] = useState(REGIONS);
     const [editingKey, setEditingKey] = useState("");
 
+    const { data: countryList, isLoading } = useGetRegionList();
     const edit = (record: Partial<RegionDataType> & { key: React.Key }) => {
         form.setFieldsValue({ name: "", age: "", address: "", ...record });
         setEditingKey(record.key);
     };
 
+    // console.log(countryList);
+    // const countryListFormat: ICountryListRs["result"] = useMemo(() => {
+    //     if (!countryList) return [];
+    //     return countryList.map((country) => {});
+    // }, [countryList]);
     const save = async (key: React.Key) => {
         try {
             const row = (await form.validateFields()) as RegionDataType;

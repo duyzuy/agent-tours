@@ -1,5 +1,5 @@
-import { writeFile, mkdir, readFile } from "fs/promises";
-import { existsSync, mkdirSync } from "fs";
+import { writeFile } from "fs/promises";
+import { existsSync } from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
@@ -10,7 +10,6 @@ import { IMediaFilePayload } from "@/models/management/media.interface";
 import { getMediaFileType, isValidMediaFileTypes } from "@/helpers/mediaFiles";
 import { localMediaAPIs } from "@/services/management/localMedia.service";
 import { headers } from "next/headers";
-import { revalidatePath } from "next/cache";
 
 export async function POST(request: NextRequest) {
     // const {writeFile} = fs
@@ -78,8 +77,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
         const fileExtension = file.name.split(".")[1];
         const fileSlugName = stringToSlug(file.name.split(".")[0]).concat(
             "-",
@@ -113,20 +110,31 @@ export async function POST(request: NextRequest) {
             });
 
             // saving file to local public
-            const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
-            const croppedImageBuffer = await sharp(buffer)
-                .resize({
-                    height: 150,
-                    fit: "contain",
-                    background: { r: 0, g: 0, b: 0, alpha: 0 },
-                })
-                .toBuffer();
-
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
             await writeFile(path.join(process.cwd(), originalFilePath), buffer);
-            await writeFile(
-                path.join(process.cwd(), thumbPath),
-                croppedImageBuffer,
-            );
+            if (
+                fileExtension === "jpg" ||
+                fileExtension === "jpeg" ||
+                fileExtension === "png" ||
+                "gif"
+            ) {
+                //accept: ".jpg, .jpeg, .png, .pdf, .svg, .docx, .xlsx, .gif",
+
+                const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
+
+                const croppedImageBuffer = await sharp(buffer)
+                    .resize({
+                        height: 150,
+                        fit: "contain",
+                        background: { r: 0, g: 0, b: 0, alpha: 0 },
+                    })
+                    .toBuffer();
+                await writeFile(
+                    path.join(process.cwd(), thumbPath),
+                    croppedImageBuffer,
+                );
+            }
         } catch (error) {
             console.log("Error occured ", error);
             return NextResponse.json(

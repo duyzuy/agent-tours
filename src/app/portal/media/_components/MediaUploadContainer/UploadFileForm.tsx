@@ -17,7 +17,8 @@ import useMessage from "@/hooks/useMessage";
 
 import { isEmpty } from "lodash";
 import { mediaConfig } from "@/configs";
-interface Props {
+
+export interface UploadFileFormProps {
     uploading?: boolean;
     accept?: string;
     onUpload: (
@@ -37,7 +38,7 @@ export type TFolderSelect = {
     children: TFolderSelect[];
 };
 
-const MediaUploadTab: React.FC<Props> = ({
+const UploadFileForm: React.FC<UploadFileFormProps> = ({
     uploading,
     accept,
     onUpload,
@@ -221,7 +222,7 @@ const MediaUploadTab: React.FC<Props> = ({
         </React.Fragment>
     );
 };
-export default memo(MediaUploadTab);
+export default UploadFileForm;
 
 const isValidMediaFileTypes = (fileType: string) => {
     let isValid = false;

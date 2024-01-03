@@ -42,12 +42,7 @@ const UserPage: React.FC = () => {
     }, [roles]);
 
     const userList = useMemo(() => {
-        return localUsers
-            ? localUsers.result.map((item) => ({
-                  ...item,
-                  key: item.recId,
-              }))
-            : [];
+        return localUsers ? localUsers["result"] : [];
     }, [localUsers]);
 
     const onHandleDrawler = (drawler: TDrawlerAction) => {
@@ -95,6 +90,7 @@ const UserPage: React.FC = () => {
                 scroll={{ x: 1200 }}
                 modelName="Tài khoản"
                 columns={userColumns}
+                rowKey={"recId"}
                 dataSource={userList}
                 isLoading={isLoading}
                 onEdit={(record) =>

@@ -1,26 +1,27 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-import MediaFiles from "@/components/admin/MediaContainer/MediaFiles";
-import MediaFolder from "@/components/admin/MediaContainer/MediaFolder";
-import DrawlerMedia, { EActionType } from "./_components/DrawlerMedia";
-import { TDrawlerActions } from "./_components/DrawlerMedia";
-
 import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
 import useUploadMedia from "./hooks/useUploadMedia";
 import useCRUDMediaFolder from "./hooks/useCRUDFolder";
 import { useGetMediaFolders, useGetMediaFiles } from "@/queries/media";
-import { mediaConfig } from "@/configs";
 import {
     IMediaFolderListRs,
     IMediaFolderPayload,
     QueryParamsMediaFiles,
 } from "@/models/management/media.interface";
+import MediaFolder from "./_components/MediaUploadContainer/MediaFolder";
+import MediaFiles from "./_components/MediaUploadContainer/MediaFiles";
+import { mediaConfig } from "@/configs";
+
+enum EActionType {
+    CREATE = "create",
+    EDIT = "edit",
+}
 
 const MediaPage = () => {
-    const [isOpenDrawler, setOpenDrawler] = useState(false);
-
-    const { data: folderList, isLoading } = useGetMediaFolders();
+    const { data: folderList, isLoading: isLoadingFolder } =
+        useGetMediaFolders();
 
     const defaultQueryParams = new QueryParamsMediaFiles(0, 1, 50);
 
@@ -35,51 +36,33 @@ const MediaPage = () => {
 
     const onUploadMediaFile = useUploadMedia();
 
-    const [actionType, setActionType] = useState<EActionType>(
-        EActionType.CREATE,
-    );
-    const [editRecord, setEditRecord] =
-        useState<IMediaFolderListRs["result"][0]>();
-
-    const [openedFolder, setOpenedFolder] =
-        useState<IMediaFolderListRs["result"][0]>();
-
     const [pers, checkPermission] = useLocalUserPermissions();
 
-    const handleSubmitFormData = (
-        action: EActionType,
-        payload: IMediaFolderPayload,
-    ) => {
+    const handleSubmitFormData = ({
+        action,
+        payload,
+        id,
+        cb,
+    }: {
+        action: EActionType;
+        payload: IMediaFolderPayload;
+        id?: number;
+        cb?: () => void;
+    }) => {
+        console.log(action, payload);
         if (action === EActionType.CREATE) {
             onCreateFolder(payload, () => {
-                setOpenDrawler(false);
+                cb?.();
             });
         }
 
-        if (action === EActionType.EDIT) {
-            editRecord &&
-                onUpdateFolder(editRecord.id, payload, () => {
-                    setOpenDrawler(false);
-                });
+        if (action === EActionType.EDIT && id) {
+            onUpdateFolder(id, payload, () => {
+                cb?.();
+            });
         }
     };
 
-    const onCancel = () => {
-        setOpenDrawler(false);
-        setEditRecord(undefined);
-        onResetFieldsErrors();
-    };
-
-    const handleDrawlerForm = useCallback(
-        (action: TDrawlerActions) => {
-            if (action.type === EActionType.EDIT) {
-                setEditRecord(() => action.record);
-            }
-            setActionType(() => action.type);
-            setOpenDrawler(() => true);
-        },
-        [actionType],
-    );
     /**
      * Refetch Files when open other folder.
      * @param item
@@ -87,7 +70,6 @@ const MediaPage = () => {
     const handleOnpenFilesInFolder = (
         item: IMediaFolderListRs["result"][0],
     ) => {
-        setOpenedFolder(item);
         setQueryMediaFileParams((prev) => ({
             ...prev,
             mediaInFolderRecid: item.id,
@@ -99,21 +81,32 @@ const MediaPage = () => {
             name="Quản lý Media"
             className="h-full"
             modelName="mục"
-            onClick={() => handleDrawlerForm({ type: EActionType.CREATE })}
+            hideAddButton={true}
+            breadCrumItems={[{ title: "Media" }]}
         >
             <div className="flex h-full">
                 <div className="col-left w-[260px] h-full pr-4 border-r">
                     <MediaFolder
                         items={folderList || []}
-                        isLoading={isLoading}
-                        onEdit={(record) =>
-                            handleDrawlerForm({
-                                type: EActionType.EDIT,
-                                record,
+                        errors={errors}
+                        isLoading={isLoadingFolder}
+                        onSave={(record, cb) =>
+                            handleSubmitFormData({
+                                action: EActionType.EDIT,
+                                payload: record,
+                                id: record.id,
+                                cb,
+                            })
+                        }
+                        onCreateFolder={(data, cb) =>
+                            handleSubmitFormData({
+                                action: EActionType.CREATE,
+                                payload: data,
+                                cb,
                             })
                         }
                         onOpen={handleOnpenFilesInFolder}
-                        openedFolder={openedFolder}
+                        onResetErrorsField={onResetFieldsErrors}
                     />
                 </div>
                 <MediaFiles
@@ -125,15 +118,6 @@ const MediaPage = () => {
                     maxfileSize={mediaConfig.maxfileSize}
                 />
             </div>
-            <DrawlerMedia
-                isOpen={isOpenDrawler}
-                onCancel={onCancel}
-                actionType={actionType}
-                onSubmit={handleSubmitFormData}
-                folderList={folderList || []}
-                errors={errors}
-                initialValues={editRecord}
-            />
         </PageContainer>
     );
 };

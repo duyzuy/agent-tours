@@ -35,12 +35,7 @@ const RolePage = () => {
     const [isOpenDrawler, setOpenDrawler] = useState(false);
 
     const roleList = useMemo(() => {
-        return roles
-            ? roles["result"]["roleList"].map((role) => ({
-                  ...role,
-                  key: role.localUser_RoleKey,
-              }))
-            : [];
+        return roles ? roles["result"]["roleList"] : [];
     }, [roles]);
 
     const rolePermissionList = useMemo(() => {
@@ -82,11 +77,13 @@ const RolePage = () => {
                 onClick={() =>
                     onHandleDrawlerRole({ action: EActionType.CREATE })
                 }
+                breadCrumItems={[{ title: "Quyền chức năng" }]}
             >
                 <TableListPage<TRole>
                     scroll={{ x: 1000 }}
                     modelName="Quyền chức năng"
                     dataSource={roleList}
+                    rowKey={"localUser_RoleKey"}
                     columns={columnRoleGroups}
                     onEdit={(record) =>
                         onHandleDrawlerRole({
