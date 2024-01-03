@@ -14,7 +14,7 @@ const nextConfig = {
     },
     // transpilePackages: ["antd"],
     images: {
-        domains: ["localhost"],
+        domains: ["localhost", "tours.frdev.asia"],
     },
     swcMinify: true,
     compiler: {
