@@ -127,13 +127,13 @@ const DrawlerInventory: React.FC<DrawlerInventoryProps> = ({
                         disabled={actionType === EActionType.EDIT}
                     />
                     <div className="p-2">
-                        <p className="font-bold">Lưu ý tạo code: </p>
+                        <p className="font-bold">{`Lưu ý tạo code:`}</p>
                         <ul className="text-xs list-disc pl-4">
                             <li>
-                                Code key viết không dấu và không chứa ký tự đặc
-                                biệt.
+                                {`Code key viết không dấu và không chứa ký tự đặc
+                                biệt.`}
                             </li>
-                            <li>Được ngăn cách bằng dấu gạch dưới "_".</li>
+                            <li>{`Được ngăn cách bằng dấu gạch dưới '_'.`}</li>
                         </ul>
                     </div>
                 </FormItem>

@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-    Form,
-    Input,
-    Space,
-    Radio,
-    Spin,
-    Button,
-    Drawer,
-    Tag,
-    DatePicker,
-} from "antd";
+import { Form, Input, Space, Button, Drawer, Tag, DatePicker } from "antd";
 import FormItem from "@/components/base/FormItem";
-import {
-    InventoryFormData,
-    IInventoryListRs,
-} from "@/models/management/core/inventory.interface";
+import { IInventoryListRs } from "@/models/management/core/inventory.interface";
 import { Status } from "@/models/management/common.interface";
 
 import { TInventoryErrorsField } from "../../hooks/useCRUDInventory";
@@ -23,7 +10,6 @@ import {
     IStockConfirmPayload,
     StockInventoryConfirmFormData,
 } from "@/models/management/core/stockInventory.interface";
-import { formatDate } from "@/utils/date";
 import dayjs from "dayjs";
 
 export enum EActionType {
@@ -109,7 +95,6 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
 
     useEffect(() => {
         if (initialValues) {
-            console.log(dayjs(initialValues.validTo, DATE_FORMAT));
             setFormData(() => ({
                 recId: initialValues.recId,
                 cap: initialValues.cap,
@@ -134,62 +119,7 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
                 },
             }}
         >
-            {/* <div className="contents">
-                <ListItemName
-                    items={[
-                        {
-                            label: "Inventory Type",
-                            value: initialValues?.inventoryType,
-                        },
-                        {
-                            label: "Stock Type",
-                            value: initialValues?.type,
-                        },
-                        {
-                            label: "Valid from",
-                            value:
-                                initialValues?.validFrom &&
-                                formatDate(initialValues?.validFrom),
-                        },
-                        {
-                            label: "Valid to",
-                            value:
-                                initialValues?.validTo &&
-                                formatDate(initialValues?.validTo),
-                        },
-                        {
-                            label: "Start date",
-                            value:
-                                initialValues?.startDate &&
-                                formatDate(initialValues?.startDate),
-                        },
-                        {
-                            label: "End date",
-                            value:
-                                initialValues?.endDate &&
-                                formatDate(initialValues?.endDate),
-                        },
-                        {
-                            label: "Cap",
-                            value: initialValues?.cap,
-                        },
-                        {
-                            label: "Avaiable",
-                            value: initialValues?.avaiable,
-                        },
-                        {
-                            label: "Đã sử dụng",
-                            value: initialValues?.used || "0",
-                        },
-                        {
-                            label: "Mô tả",
-                            value: initialValues?.description,
-                        },
-                    ]}
-                />
-            </div> */}
-
-            <Form layout="vertical" className=" max-w-4xl">
+            <Form layout="vertical" className="max-w-4xl">
                 <FormItem label="Inventory Type">
                     <Input
                         placeholder="Inventory Type"
@@ -335,8 +265,8 @@ const ListItemName: React.FC<IListItemName> = ({ items }) => {
         <ul>
             {items.map((item, _index) => (
                 <li className="py-2" key={_index}>
-                    <span className=" w-32 inline-block">{item.label}</span>
-                    <span>: {item?.value || "--"}</span>
+                    <span className="w-32 inline-block">{item.label}</span>
+                    <span>{`: ${item?.value || "--"}`}</span>
                 </li>
             ))}
         </ul>
