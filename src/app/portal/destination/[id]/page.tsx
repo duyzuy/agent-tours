@@ -126,7 +126,7 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
                     { title: destinationDetail.codeName },
                 ]}
                 onClick={() => {}}
-                onCanel={() => router.back()}
+                onBack={() => router.back()}
             >
                 <LocaleContainer
                     value={locale}

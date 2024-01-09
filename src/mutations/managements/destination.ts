@@ -2,7 +2,6 @@ import { destinationAPIs } from "@/services/management/misc/destination";
 import { useMutation } from "@tanstack/react-query";
 import { BaseResponse } from "@/models/management/common.interface";
 import {
-    IDestinationContentDetail,
     IDestinationContentPayload,
     IDestinationContentRs,
     IDestinationEditPayload,

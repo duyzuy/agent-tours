@@ -27,6 +27,12 @@ export const coreOneTimeKeys = {
                 message: "Không lấy được oneTimeKey",
             });
         }
+        if (data === "SERVERERROR") {
+            return Promise.reject({
+                code: "SERVERERROR",
+                message: "Server error",
+            });
+        }
         return Promise.resolve(data);
     },
 };

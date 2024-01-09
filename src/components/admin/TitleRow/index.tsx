@@ -10,6 +10,7 @@ interface Props {
     between?: boolean;
     className?: string;
     onCanel?: () => void;
+    onBack?: () => void;
 }
 const TitleRow: React.FC<Props> = ({
     title,
@@ -19,6 +20,7 @@ const TitleRow: React.FC<Props> = ({
     between = false,
     className = "",
     onCanel,
+    onBack,
 }) => {
     return (
         <Space
@@ -28,13 +30,13 @@ const TitleRow: React.FC<Props> = ({
             })}
         >
             <div className="title flex items-center">
-                {onCanel && (
-                    <CancelButton
+                {onBack && (
+                    <ButtonBack
                         type="default"
                         size="small"
                         className="mr-2"
                         icon={<LeftOutlined />}
-                        onClick={onCanel}
+                        onClick={onBack}
                     />
                 )}
                 <p className="font-semibold text-lg">{title}</p>
@@ -56,7 +58,7 @@ const TitleRow: React.FC<Props> = ({
 
 export default TitleRow;
 
-const CancelButton = styled(Button)`
+const ButtonBack = styled(Button)`
     && {
         border: none;
         box-shadow: none;

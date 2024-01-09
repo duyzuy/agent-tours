@@ -13,14 +13,32 @@ export const coreApi = {
         return await coreOneTimeKeys
             .getKey()
             .then(async (key) => {
+                //Sort object
+
+                const sortedQueryParams = Object.keys(queryParams.requestObject)
+                    .sort()
+                    .reduce<{ [key: string]: any }>((acc, key) => {
+                        acc[key] = queryParams.requestObject[key];
+
+                        return acc;
+                    }, {});
+
                 const hashData = createHash256(
-                    JSON.stringify(queryParams.requestObject) +
+                    JSON.stringify(sortedQueryParams) +
                         key +
                         coreAccountConfig.privateKey,
                 );
+                // console.log({
+                //     key,
+                //     queryParams,
+                //     endpoint,
+                //     hashData,
+                //     objstr: JSON.stringify(sortedQueryParams),
+                // });
+
                 return await client.post<TSuccess, TError>(endpoint, {
                     params: {
-                        requestObject: queryParams.requestObject,
+                        requestObject: sortedQueryParams,
                         userId: coreAccountConfig.userId,
                         localUsername: queryParams.localUsername ?? "",
                         hashCheck: hashData,
@@ -28,8 +46,7 @@ export const coreApi = {
                 });
             })
             .catch((error) => {
-                console.log(error);
-
+                console.log({ endpoint, queryParams, error });
                 return Promise.reject(error as TError);
             });
     },

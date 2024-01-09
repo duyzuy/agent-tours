@@ -8,7 +8,7 @@ export const columnRoleGroups: ColumnsType<IDestinationListRs["result"][0]> = [
         title: "Tên nhóm",
         key: "codeName",
         dataIndex: "codeName",
-        width: 150,
+        width: 250,
         render: (name, record) => {
             return (
                 <Link href={`/portal/destination/${record.id}`}>{name}</Link>
@@ -63,7 +63,7 @@ export const columnRoleGroups: ColumnsType<IDestinationListRs["result"][0]> = [
         title: "Trạng thái",
         key: "status",
         dataIndex: "status",
-        width: 400,
+        width: 150,
         render: (_, record) => {
             return (
                 <Tag color={record.status === Status.OK ? "green" : "red"}>

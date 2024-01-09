@@ -1,29 +1,35 @@
-import React, { memo, useState } from "react";
-import { Space, Dropdown, Popconfirm } from "antd";
+import React, { useMemo, useState } from "react";
+import { Space, Dropdown, MenuProps } from "antd";
 import {
     EditOutlined,
     EllipsisOutlined,
     DeleteOutlined,
+    EyeOutlined,
+    CheckCircleOutlined,
 } from "@ant-design/icons";
 import { ColumnsType, TableProps } from "antd/es/table";
 import CustomTable from "@/components/admin/CustomTable";
 import ModalDeleteConfirm from "./ModalDeleteConfirm";
 
-type ITableListPage<T extends object> = TableProps<T> & {
+type ITableListPageProps<T extends object> = TableProps<T> & {
     dataSource: T[];
     isLoading?: boolean;
     onEdit?: (record: T) => void;
     columns: ColumnsType<T>;
     onDelete?: (record: T) => void;
+    onView?: (record: T) => void;
+    onApproval?: (record: T) => void;
     modelName?: string;
 };
-function TableListPage<T extends object>(props: ITableListPage<T>) {
+function TableListPage<T extends object>(props: ITableListPageProps<T>) {
     const {
         dataSource,
         isLoading,
         onEdit,
-        columns,
+        onApproval,
+        onView,
         onDelete,
+        columns,
         modelName = "",
         ...restProps
     } = props;
@@ -43,6 +49,68 @@ function TableListPage<T extends object>(props: ITableListPage<T>) {
         onDelete?.(record);
         setShowModalDelete(false);
     };
+
+    let renderDropdownItems = (record: T): MenuProps["items"] => {
+        const fncList = [
+            {
+                fnc: onApproval,
+                item: {
+                    key: "approval",
+                    label: (
+                        <div
+                            className="item text-green-600"
+                            onClick={() => onApproval?.(record)}
+                        >
+                            <CheckCircleOutlined />
+                            <span className="ml-2">Duyệt</span>
+                        </div>
+                    ),
+                },
+            },
+            {
+                fnc: onView,
+                item: {
+                    key: "view",
+                    label: (
+                        <div
+                            className="item text-blue-600"
+                            onClick={() => onView?.(record)}
+                        >
+                            <EyeOutlined />
+                            <span className="ml-2">Xem chi tiết</span>
+                        </div>
+                    ),
+                },
+            },
+            {
+                fnc: onDelete,
+                item: {
+                    key: "delete",
+                    className: "",
+                    label: (
+                        <div
+                            className="item text-red-600"
+                            onClick={() => onShowModalConfirm(record)}
+                        >
+                            <DeleteOutlined />
+                            <span className="ml-2">Xoá</span>
+                        </div>
+                    ),
+                },
+            },
+        ];
+
+        return fncList.reduce<MenuProps["items"]>((acc, curr) => {
+            if (curr.fnc) {
+                acc = [...(acc || []), curr.item];
+            }
+            return acc;
+        }, []);
+    };
+    const showMore = useMemo(() => {
+        return Boolean(onApproval) || Boolean(onDelete) || Boolean(onView);
+    }, [onApproval, onDelete, onView]);
+
     const mergeColumns: ColumnsType<T> = [
         ...columns,
         {
@@ -60,29 +128,10 @@ function TableListPage<T extends object>(props: ITableListPage<T>) {
                         >
                             <EditOutlined className="p-[8px] block" />
                         </span>
-                        {onDelete ? (
+                        {showMore ? (
                             <Dropdown
                                 menu={{
-                                    items: [
-                                        {
-                                            key: "delete",
-                                            label: (
-                                                <div
-                                                    className="item text-red-600"
-                                                    onClick={() =>
-                                                        onShowModalConfirm(
-                                                            record,
-                                                        )
-                                                    }
-                                                >
-                                                    <DeleteOutlined />
-                                                    <span className="ml-2">
-                                                        Xoá
-                                                    </span>
-                                                </div>
-                                            ),
-                                        },
-                                    ],
+                                    items: renderDropdownItems(record),
                                 }}
                                 placement="bottomRight"
                                 arrow

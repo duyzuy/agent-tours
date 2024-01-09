@@ -44,16 +44,20 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
     {
         key: "product",
         icon: React.createElement(ShoppingCartOutlined),
-        label: "Quản lý Sản phẩm",
+        label: "Sản phẩm",
         children: [
             {
-                key: "product/list",
-                label: "Tất cả sản phẩm",
+                key: "product/inventory",
+                label: "Inventory",
             },
             {
-                key: "product/create",
-                label: "Tạo sản phẩm mới",
+                key: "product/template-sellable",
+                label: "Template sellable",
             },
+            // {
+            //     key: "product/stock",
+            //     label: "Stock",
+            // },
         ],
     },
     {
