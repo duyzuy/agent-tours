@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Space, Button, Drawer, Tag, DatePicker } from "antd";
+import { Form, Input, DatePicker, Space, Button } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { IInventoryListRs } from "@/models/management/core/inventory.interface";
-import { Status } from "@/models/management/common.interface";
 
 import { TInventoryErrorsField } from "../../hooks/useCRUDInventory";
 import {
@@ -13,37 +11,31 @@ import {
 import dayjs from "dayjs";
 
 export enum EActionType {
-    CREATE = "create",
-    EDIT = "edit",
+    VIEW = "view",
+    CONFIRM = "confirm",
 }
-export type TDrawlerCreateAction = {
-    type: EActionType.CREATE;
-};
-export type TDrawlerEditAction = {
-    type: EActionType.EDIT;
-    record: IInventoryListRs["result"][0];
-};
-export type TDrawlerAction = TDrawlerCreateAction | TDrawlerEditAction;
 
-export interface DrawlerStockConfirmProps {
-    isOpen?: boolean;
-    onCancel: () => void;
-    actionType: EActionType;
-    initialValues?: IStockListOfInventoryRs["result"][0];
-    onSubmit?: (formData: StockInventoryConfirmFormData) => void;
-    errors?: TInventoryErrorsField;
-}
+export type TDrawlerStockDetailAction = {
+    type: EActionType;
+    record: IStockListOfInventoryRs["result"][0];
+};
+
 export const DATE_FORMAT = "DDMMMYY HH:mm";
 export const TIME_FORMAT = "HH:mm";
 import { RangePickerProps } from "antd/es/date-picker";
 const RangePicker = DatePicker.RangePicker;
-const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
-    actionType,
-    onCancel,
-    onSubmit,
-    isOpen,
-    errors,
+
+interface StockConfirmationFormProps {
+    initialValues: IStockListOfInventoryRs["result"][0];
+    hasApproval: boolean;
+    errors?: TInventoryErrorsField;
+    onSubmit?: (formData: StockInventoryConfirmFormData) => void;
+}
+const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     initialValues,
+    hasApproval,
+    errors,
+    onSubmit,
 }) => {
     const initStockConfirmFormdata = new StockInventoryConfirmFormData(
         0,
@@ -54,7 +46,9 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
         undefined,
         undefined,
     );
-    const [formData, setFormData] = useState(initStockConfirmFormdata);
+    const [stockConfirmFormData, setStockConfirmFormData] = useState(
+        initStockConfirmFormdata,
+    );
 
     const onChangeFormData = (
         key: keyof IStockConfirmPayload,
@@ -63,7 +57,7 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
         if (key === "cap" && typeof value === "string") {
             value = Number(value);
         }
-        setFormData((prev) => ({
+        setStockConfirmFormData((prev) => ({
             ...prev,
             [key]: value,
         }));
@@ -73,7 +67,7 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
         date,
         dateStr,
     ) => {
-        setFormData((prev) => ({
+        setStockConfirmFormData((prev) => ({
             ...prev,
             valid: dateStr[0],
             validTo: dateStr[1],
@@ -83,19 +77,16 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
         date,
         dateStr,
     ) => {
-        setFormData((prev) => ({
+        setStockConfirmFormData((prev) => ({
             ...prev,
             start: dateStr[0],
             end: dateStr[1],
         }));
     };
-    const onSubmitFormData = (data: StockInventoryConfirmFormData) => {
-        onSubmit?.(data);
-    };
 
     useEffect(() => {
         if (initialValues) {
-            setFormData(() => ({
+            setStockConfirmFormData(() => ({
                 recId: initialValues.recId,
                 cap: initialValues.cap,
                 description: initialValues.description,
@@ -105,21 +96,11 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
                 validTo: dayjs(initialValues.validTo).format(DATE_FORMAT),
             }));
         }
-    }, [initialValues, isOpen, DATE_FORMAT]);
+    }, [initialValues]);
+
     return (
-        <Drawer
-            title={initialValues?.code ?? null}
-            destroyOnClose
-            width={550}
-            onClose={onCancel}
-            open={isOpen}
-            styles={{
-                body: {
-                    paddingBottom: 80,
-                },
-            }}
-        >
-            <Form layout="vertical" className="max-w-4xl">
+        <>
+            <Form layout="vertical">
                 <FormItem label="Inventory Type">
                     <Input
                         placeholder="Inventory Type"
@@ -139,13 +120,16 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
                         showTime={{ format: "HH:mm" }}
                         placeholder={["Date from", "Date to"]}
                         format={DATE_FORMAT}
-                        disabled={initialValues?.status === Status.OK}
+                        disabled={hasApproval}
                         value={[
-                            formData.valid
-                                ? dayjs(formData.valid, DATE_FORMAT)
+                            stockConfirmFormData.valid
+                                ? dayjs(stockConfirmFormData.valid, DATE_FORMAT)
                                 : null,
-                            formData.validTo
-                                ? dayjs(formData.validTo, DATE_FORMAT)
+                            stockConfirmFormData.validTo
+                                ? dayjs(
+                                      stockConfirmFormData.validTo,
+                                      DATE_FORMAT,
+                                  )
                                 : null,
                         ]}
                         disabledDate={(date) => {
@@ -160,13 +144,13 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
                         showTime={{ format: "HH:mm" }}
                         placeholder={["Date from", "Date to"]}
                         format={DATE_FORMAT}
-                        disabled={initialValues?.status === Status.OK}
+                        disabled={hasApproval}
                         value={[
-                            formData.start
-                                ? dayjs(formData.start, DATE_FORMAT)
+                            stockConfirmFormData.start
+                                ? dayjs(stockConfirmFormData.start, DATE_FORMAT)
                                 : null,
-                            formData.end
-                                ? dayjs(formData.end, DATE_FORMAT)
+                            stockConfirmFormData.end
+                                ? dayjs(stockConfirmFormData.end, DATE_FORMAT)
                                 : null,
                         ]}
                         disabledDate={(date) => {
@@ -185,8 +169,8 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
                 >
                     <Input
                         placeholder="Số lượng"
-                        value={formData?.cap}
-                        disabled={initialValues?.status === Status.OK}
+                        value={stockConfirmFormData?.cap}
+                        disabled={hasApproval}
                         onChange={(ev) =>
                             onChangeFormData("cap", ev.target.value)
                         }
@@ -214,37 +198,21 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
                 >
                     <Input.TextArea
                         placeholder="Mô tả"
-                        value={formData?.description}
-                        disabled={initialValues?.status === Status.OK}
+                        value={stockConfirmFormData?.description}
+                        disabled={hasApproval}
                         onChange={(ev) =>
                             onChangeFormData("description", ev.target.value)
                         }
                     />
                 </FormItem>
             </Form>
-            <hr className="my-6" />
-            <div className="status py-2">
-                <span className="mr-3">Trạng thái</span>
-                <Tag
-                    color={
-                        (initialValues?.status === Status.QQ && "orange") ||
-                        (initialValues?.status === Status.OK && "green") ||
-                        "red"
-                    }
-                >
-                    {(initialValues?.status === Status.QQ && "Chờ duyệt") ||
-                        (initialValues?.status === Status.OK && "Đã duyệt") ||
-                        "Đã xoá"}
-                </Tag>
-            </div>
-            {initialValues?.status === Status.QQ ? (
+
+            {!hasApproval ? (
                 <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
                     <Space>
-                        <Button type="default">Huỷ bỏ</Button>
-
                         <Button
                             type="primary"
-                            onClick={() => onSubmitFormData(formData)}
+                            onClick={() => onSubmit?.(stockConfirmFormData)}
                             disabled={false}
                         >
                             Duyệt stock
@@ -252,23 +220,7 @@ const DrawlerStockConfirm: React.FC<DrawlerStockConfirmProps> = ({
                     </Space>
                 </div>
             ) : null}
-        </Drawer>
+        </>
     );
 };
-export default DrawlerStockConfirm;
-
-interface IListItemName {
-    items: { label: string; value?: string | number }[];
-}
-const ListItemName: React.FC<IListItemName> = ({ items }) => {
-    return (
-        <ul>
-            {items.map((item, _index) => (
-                <li className="py-2" key={_index}>
-                    <span className="w-32 inline-block">{item.label}</span>
-                    <span>{`: ${item?.value || "--"}`}</span>
-                </li>
-            ))}
-        </ul>
-    );
-};
+export default StockConfirmationForm;

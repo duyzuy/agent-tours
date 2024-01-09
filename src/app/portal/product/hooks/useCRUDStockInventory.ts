@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
     IStockConfirmPayload,
+    StockInventoryAdjustFormData,
     StockInventoryConfirmFormData,
     StockInventoryFormData,
 } from "@/models/management/core/stockInventory.interface";
@@ -8,6 +9,7 @@ import {
 import {
     inventorySchema,
     inventoryUpdateSchema,
+    stockAdjustSchema,
     stockConfirmSchema,
     stockSchema,
 } from "./validation";
@@ -54,7 +56,7 @@ const useCRUDStockInventory = () => {
                         message.success(`Tạo stock thành công`);
                         onResetFieldsErrors();
                         queryClient.invalidateQueries({
-                            queryKey: [queryCore.GET_STOCK_INVENTORY_LIST],
+                            queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
                         });
                         cb?.();
                     },
@@ -89,7 +91,43 @@ const useCRUDStockInventory = () => {
                         message.success(`Duyệt stock thành công`);
                         onResetFieldsErrors();
                         queryClient.invalidateQueries({
-                            queryKey: [queryCore.GET_STOCK_INVENTORY_LIST],
+                            queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
+                        });
+                        cb?.();
+                    },
+                    onError: (error, variables) => {
+                        console.log({ error, variables });
+                        message.error(error.message);
+                    },
+                });
+            })
+            .catch((error) => {
+                if (error instanceof ValidationError) {
+                    let errors: TStockErrorsField = {};
+                    error.inner.forEach((err) => {
+                        if (!errors[err.path as keyof TStockErrorsField]) {
+                            errors[err.path as keyof TStockErrorsField] =
+                                err.message;
+                        }
+                    });
+                    setErrors(errors);
+                }
+            });
+    };
+
+    const onAdjustStockQuantity = (
+        payload: StockInventoryAdjustFormData,
+        cb?: () => void,
+    ) => {
+        stockAdjustSchema
+            .validate(payload, { abortEarly: false })
+            .then((schema) => {
+                makeAdjustStockQuantity(schema, {
+                    onSuccess: (data, variables) => {
+                        message.success(`Duyệt stock thành công`);
+                        onResetFieldsErrors();
+                        queryClient.invalidateQueries({
+                            queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
                         });
                         cb?.();
                     },
@@ -119,6 +157,7 @@ const useCRUDStockInventory = () => {
     return {
         onCreate: onCreateStock,
         onConfirm: onConfirmStock,
+        onAdjustQuantity: onAdjustStockQuantity,
         errors,
     };
 };

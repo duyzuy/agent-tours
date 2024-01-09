@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import useMessage from "@/hooks/useMessage";
 import StockForm from "../../components/StockForm";
 import StockList from "../../components/StockList";
+
 import { PlusOutlined } from "@ant-design/icons";
 import { isUndefined } from "lodash";
 
@@ -29,13 +30,18 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
             inventoryDetail.isStock,
     });
 
-    const { onCreate, onConfirm, errors } = useCRUDStockInventory();
+    const { onCreate, onConfirm, onAdjustQuantity, errors } =
+        useCRUDStockInventory();
     const tabItems: TabsProps["items"] = [
         {
             key: "stockList",
             label: "Danh sách Stock",
             children: (
-                <StockList items={stockList || []} onConfirm={onConfirm} />
+                <StockList
+                    items={stockList || []}
+                    onConfirm={onConfirm}
+                    onAdjustQuantity={onAdjustQuantity}
+                />
             ),
         },
         {

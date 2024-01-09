@@ -143,3 +143,43 @@ export class StockInventoryConfirmFormData
         this.end = end;
     }
 }
+
+export interface IStockAdjustment {
+    cat: "ADJUST" | "INIT";
+    inventoryStockId: number;
+    logStatus: string;
+    quantity: number;
+    recId: number;
+    rmk: string;
+    sellableDetailsId: 0;
+    sellableId: 0;
+    status: Status;
+    sysBelongTo: string;
+    sysFstUpdate: string | Date;
+    sysFstUser: string;
+    sysLstUpdate: string | Date;
+    sysLstUser: string;
+}
+export interface IStockAdjustPayload {
+    inventoryStockId: number;
+    quantity: number;
+    description: string;
+}
+
+export class StockInventoryAdjustFormData
+    implements Partial<IStockAdjustPayload>
+{
+    inventoryStockId: number;
+    description: string;
+    quantity: number;
+
+    constructor(
+        inventoryStockId: number,
+        description: string,
+        quantity: number,
+    ) {
+        this.inventoryStockId = inventoryStockId;
+        this.description = description;
+        this.quantity = quantity;
+    }
+}

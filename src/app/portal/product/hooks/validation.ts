@@ -17,6 +17,7 @@ import { Status } from "@/models/management/common.interface";
 import {
     IStockPayload,
     IStockConfirmPayload,
+    IStockAdjustPayload,
 } from "@/models/management/core/stockInventory.interface";
 import ExploreSection from "@/app/[locale]/_components/ExploreSection";
 import { ITemplateSellablePayload } from "@/models/management/core/templateSellable.interface";
@@ -138,6 +139,12 @@ export const stockConfirmSchema: ObjectSchema<IStockConfirmPayload> = object({
     validTo: string().required("Không bỏ trống"),
     start: string().required("Không bỏ trống"),
     end: string().required("Không bỏ trống"),
+});
+
+export const stockAdjustSchema: ObjectSchema<IStockAdjustPayload> = object({
+    inventoryStockId: number().required("inventoryStockId Bị thiếu."),
+    quantity: number().required("Số lượng không bỏ trống."),
+    description: string().required("Mô tả không bỏ trống"),
 });
 
 /**

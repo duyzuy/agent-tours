@@ -6,5 +6,6 @@ export const LINKS = {
     MyAccount: "/portal/my-account",
     DestinationList: "/portal/destination",
     ProductInventoryList: "/portal/product/inventory",
-    ProductInventoryDetail: "/portal/product/inventory/{inventoryId}",
+    ProductStockList: "/portal/product/inventory/{inventoryId}",
+    ProductStockDetail: "/portal/product/stock/{stockInventoryId}",
 };

@@ -19,8 +19,23 @@ export const useGetStockInventoryListCoreQuery = ({
     enabled: boolean;
 }) => {
     return useQuery({
-        queryKey: [queryCore.GET_STOCK_INVENTORY_LIST, inventoryId],
+        queryKey: [queryCore.GET_STOCK_LIST_INVENTORY, inventoryId],
         queryFn: () => stockInventoryAPIs.getStockList(inventoryId),
+        select: (data) => data.result,
+        enabled: enabled,
+    });
+};
+
+export const useGetStockDetailInventoryCoreQuery = ({
+    inventoryStockId,
+    enabled,
+}: {
+    inventoryStockId: number;
+    enabled: boolean;
+}) => {
+    return useQuery({
+        queryKey: [queryCore.GET_STOCK_DETAIL_INVENTORY, inventoryStockId],
+        queryFn: () => stockInventoryAPIs.getStockDetail(inventoryStockId),
         select: (data) => data.result,
         enabled: enabled,
     });

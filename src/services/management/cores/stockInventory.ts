@@ -6,6 +6,8 @@ import {
     IStockPayload,
     IStock,
     IStockConfirmPayload,
+    IStockAdjustPayload,
+    IStockAdjustment,
 } from "@/models/management/core/stockInventory.interface";
 
 export const stockInventoryAPIs = {
@@ -53,10 +55,19 @@ export const stockInventoryAPIs = {
             },
         );
     },
-    adjustQuantity: async (payload: {
-        inventoryStockId: number;
-        quantity: number;
-    }) => {
+    getStockDetail: async (inventoryStockId: number) => {
+        return await coreApi.post<
+            BaseResponse<IStockAdjustment[]>,
+            BaseResponse<null>
+        >("core/InventoryStock_Details", {
+            requestObject: {
+                inventoryStockId,
+            },
+            localUsername: "99",
+        });
+    },
+
+    adjustQuantity: async (payload: IStockAdjustPayload) => {
         return await coreApi.post<BaseResponse<IStock>, BaseResponse<null>>(
             "core/InventoryStock_Adjust",
             {
