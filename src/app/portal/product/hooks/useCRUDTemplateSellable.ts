@@ -30,7 +30,7 @@ const useCRUDTemplateSellable = () => {
         cb?: () => void,
     ) => {
         const payload = correctSellableFormdataToPayload(formdata);
-        console.log(payload);
+
         templateSellableSchema
             .validate(
                 {
@@ -43,9 +43,9 @@ const useCRUDTemplateSellable = () => {
                     onSuccess: (data, variables) => {
                         message.success(`Tạo Template thành công`);
                         onResetFieldsErrors();
-                        queryClient.invalidateQueries({
-                            queryKey: [queryCore.GET_STOCK_INVENTORY_LIST],
-                        });
+                        // queryClient.invalidateQueries({
+                        //     queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
+                        // });
                         cb?.();
                     },
                     onError: (error, variables) => {
@@ -75,7 +75,7 @@ const useCRUDTemplateSellable = () => {
     const correctSellableFormdataToPayload = (
         formdata: TemplateSellableFormData,
     ): ITemplateSellablePayload => {
-        const destinationListJson = JSON.stringify(formdata.destListJson);
+        // const destinationListJson = JSON.stringify(formdata.destListJson);
         const formatInventoryTypeList = formdata.inventoryTypeList.reduce(
             (acc, invt) => {
                 return acc.concat(isEmpty(acc) ? "" : "||", invt);
@@ -84,7 +84,7 @@ const useCRUDTemplateSellable = () => {
         );
         return {
             ...formdata,
-            destListJson: destinationListJson,
+            // destListJson: destinationListJson,
             inventoryTypeList: formatInventoryTypeList,
         } as ITemplateSellablePayload;
     };

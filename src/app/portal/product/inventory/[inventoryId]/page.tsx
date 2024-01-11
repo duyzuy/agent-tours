@@ -10,34 +10,35 @@ import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory
 import useCRUDStockInventory from "../../hooks/useCRUDStockInventory";
 import { useRouter } from "next/navigation";
 import useMessage from "@/hooks/useMessage";
-import StockForm from "../../components/StockForm";
-import StockList from "../../components/StockList";
+import StockFormContainer from "../../components/StockFormContainer";
+import StockListContainer from "../../components/StockListContainer";
 
 import { PlusOutlined } from "@ant-design/icons";
 import { isUndefined } from "lodash";
-
+import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
 const StockPage = ({ params }: { params: { inventoryId: number } }) => {
     const router = useRouter();
     const message = useMessage();
     const { data: inventoryDetail, isLoading } = useGetInventoryDetailCoreQuery(
         params.inventoryId,
     );
+    const stockQueryParams = new StockInventoryQueryparams("", "", "", "", "");
     const { data: stockList } = useGetStockInventoryListCoreQuery({
         inventoryId: params.inventoryId,
+        queryparams: stockQueryParams,
         enabled:
             !isUndefined(inventoryDetail) &&
             !isLoading &&
             inventoryDetail.isStock,
     });
 
-    const { onCreate, onConfirm, onAdjustQuantity, errors } =
-        useCRUDStockInventory();
+    const { onCreate, onConfirm, onAdjustQuantity } = useCRUDStockInventory();
     const tabItems: TabsProps["items"] = [
         {
             key: "stockList",
             label: "Danh sách Stock",
             children: (
-                <StockList
+                <StockListContainer
                     items={stockList || []}
                     onConfirm={onConfirm}
                     onAdjustQuantity={onAdjustQuantity}
@@ -49,11 +50,10 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
             label: "Tạo Stock",
             children:
                 (inventoryDetail && (
-                    <StockForm
+                    <StockFormContainer
                         inventoryId={inventoryDetail.recId}
                         inventoryType={inventoryDetail.type}
                         onSubmit={onCreate}
-                        errors={errors}
                     />
                 )) ||
                 null,

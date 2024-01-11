@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import {
+    IStock,
+    IStockConfirmPayload,
     IStockListOfInventoryRs,
     StockInventoryAdjustFormData,
     StockInventoryConfirmFormData,
@@ -10,18 +12,25 @@ import { stockColumns } from "./stockColumns";
 import DrawlerStockDetail, {
     DrawlerStockDetailProps,
 } from "../DrawlerStockDetail";
+import { BaseResponse } from "@/models/management/common.interface";
 
-interface StockListProps {
+interface StockListContainerProps {
     items: IStockListOfInventoryRs["result"];
     isLoading?: boolean;
-    onConfirm: (data: StockInventoryConfirmFormData, cb?: () => void) => void;
+    onConfirm: (
+        data: StockInventoryConfirmFormData,
+        cb?: (
+            response: BaseResponse<IStock>,
+            variables?: IStockConfirmPayload,
+        ) => void,
+    ) => void;
     onAdjustQuantity: (
         data: StockInventoryAdjustFormData,
         cb?: () => void,
     ) => void;
 }
 
-const StockList: React.FC<StockListProps> = ({
+const StockListContainer: React.FC<StockListContainerProps> = ({
     items,
     isLoading,
     onConfirm,
@@ -38,28 +47,21 @@ const StockList: React.FC<StockListProps> = ({
     };
     const onCancel = () => {
         setShowDrawler(false);
-
         setStockRecord(undefined);
     };
 
     const onApproval: DrawlerStockDetailProps["onApproval"] = (data) => {
-        onConfirm(data, () => {
-            setShowDrawler(false);
-            setStockRecord(undefined);
+        onConfirm(data, (response, variables) => {
+            // setShowDrawler(false);
+            setStockRecord(response["result"]);
         });
     };
 
-    const onAdjust: DrawlerStockDetailProps["onAdjust"] = (data) => {
-        onAdjustQuantity(data, () => {
-            setShowDrawler(false);
-            setStockRecord(undefined);
-        });
-    };
     return (
         <React.Fragment>
             <TableListPage<IStockListOfInventoryRs["result"][0]>
                 dataSource={items}
-                scroll={{ x: 2600 }}
+                scroll={{ x: 2200 }}
                 rowKey={"recId"}
                 isLoading={isLoading}
                 columns={stockColumns}
@@ -70,9 +72,9 @@ const StockList: React.FC<StockListProps> = ({
                 onCancel={onCancel}
                 initialValues={stockRecord}
                 onApproval={onApproval}
-                onAdjust={onAdjust}
+                onAdjust={onAdjustQuantity}
             />
         </React.Fragment>
     );
 };
-export default StockList;
+export default StockListContainer;

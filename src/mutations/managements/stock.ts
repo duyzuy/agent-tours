@@ -3,8 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { BaseResponse } from "@/models/management/common.interface";
 import {
     IStock,
+    IStockAdjustPayload,
     IStockConfirmPayload,
-    IStockListOfInventoryRs,
     IStockPayload,
 } from "@/models/management/core/stockInventory.interface";
 
@@ -32,7 +32,7 @@ export const useAdjustStockQuantityMutation = () => {
     return useMutation<
         BaseResponse<IStock>,
         BaseResponse<null>,
-        { inventoryStockId: number; quantity: number }
+        IStockAdjustPayload
     >({
         mutationFn: (payload) => stockInventoryAPIs.adjustQuantity(payload),
     });

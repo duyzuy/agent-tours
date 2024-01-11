@@ -2,25 +2,24 @@ import {
     object,
     string,
     ObjectSchema,
+    StringSchema,
     boolean,
     number,
     array,
     date,
 } from "yup";
-import {
-    IInventoryPayload,
-    InventoryFormData,
-} from "@/models/management/core/inventory.interface";
+import { IInventoryPayload } from "@/models/management/core/inventory.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { Status } from "@/models/management/common.interface";
 import {
-    IStockPayload,
-    IStockConfirmPayload,
-    IStockAdjustPayload,
+    StockInventoryConfirmFormData,
+    StockInventoryAdjustFormData,
+    StockInventoryFormData,
 } from "@/models/management/core/stockInventory.interface";
 import ExploreSection from "@/app/[locale]/_components/ExploreSection";
 import { ITemplateSellablePayload } from "@/models/management/core/templateSellable.interface";
+import { IDestination } from "@/models/management/region.interface";
 
 export const inventorySchema: ObjectSchema<IInventoryPayload> = object({
     cmsIdentity: string().default(""),
@@ -83,7 +82,7 @@ export const inventoryUpdateSchema: ObjectSchema<{ name: string }> = object({
  *
  */
 
-export const stockSchema: ObjectSchema<IStockPayload> = object({
+export const stockSchema: ObjectSchema<StockInventoryFormData> = object({
     inventoryId: number().required("inventoryId Bị thiếu."),
     isCreateSeries: boolean().default(false),
     type: string().required("Type không bỏ trống."),
@@ -99,7 +98,7 @@ export const stockSchema: ObjectSchema<IStockPayload> = object({
     fromValidTo: string().when("isCreateSeries", {
         is: true,
         then: (schema) => schema.required("Ngày kết thúc không bỏ trống."),
-        otherwise: (schema) => schema.default(""),
+        otherwise: (schema) => schema.optional(),
     }),
     everyDayofweek: array().of(string().required()).default([]),
     //Sunday Monday Tuesday Wednesday Thursday Friday Saturday (global/us locale)
@@ -129,23 +128,29 @@ export const stockSchema: ObjectSchema<IStockPayload> = object({
         .default([]),
 });
 
-export const stockConfirmSchema: ObjectSchema<IStockConfirmPayload> = object({
-    recId: number().required("recId Bị thiếu."),
-    cap: number()
-        .required("Số lượng không bỏ trống.")
-        .min(1, "Tối thiểu lớn hơn 1."),
-    description: string().required("Mô tả không bỏ trống"),
-    valid: string().required("Không bỏ trống"),
-    validTo: string().required("Không bỏ trống"),
-    start: string().required("Không bỏ trống"),
-    end: string().required("Không bỏ trống"),
-});
+export const stockConfirmSchema: ObjectSchema<StockInventoryConfirmFormData> =
+    object({
+        recId: number().required("recId Bị thiếu."),
+        cap: number()
+            .required("Số lượng không bỏ trống.")
+            .positive()
+            .integer("Không phải là số.")
+            .min(1, "Số lượng tối thiểu lớn hơn 1."),
+        description: string().required("Mô tả không bỏ trống"),
+        valid: string().required("Không bỏ trống").defined(),
+        validTo: string().required("Không bỏ trống").defined(),
+        start: string().required("Không bỏ trống").defined(),
+        end: string().required("Không bỏ trống").defined(),
+    });
 
-export const stockAdjustSchema: ObjectSchema<IStockAdjustPayload> = object({
-    inventoryStockId: number().required("inventoryStockId Bị thiếu."),
-    quantity: number().required("Số lượng không bỏ trống."),
-    description: string().required("Mô tả không bỏ trống"),
-});
+export const stockAdjustSchema: ObjectSchema<StockInventoryAdjustFormData> =
+    object({
+        inventoryStockId: number().required("inventoryStockId Bị thiếu."),
+        quantity: number()
+            .positive("Phải là số")
+            .required("Số lượng không bỏ trống."),
+        rmk: string().required("Mô tả không bỏ trống"),
+    });
 
 /**
  *
@@ -159,7 +164,28 @@ export const templateSellableSchema: ObjectSchema<ITemplateSellablePayload> =
         type: string().required("Loại sản phẩm không bỏ trống"),
         code: string().required("Code không bỏ trống"),
         name: string().required("Tên template không bỏ trống."),
-        destListJson: string().required("Nhóm điểm đến không bỏ trống."),
+        destListJson: array()
+            .of(
+                object<IDestination>().shape({
+                    cat: string()
+                        .oneOf<IDestination["cat"]>(["DESTLIST"])
+                        .required("Cat không bỏ trống"),
+                    id: number().required(),
+                    codeKey: string().required(),
+                    codeName: string().required(),
+                    status: string()
+                        .oneOf<Status>([
+                            Status.OK,
+                            Status.QQ,
+                            Status.XX,
+                            Status.OX,
+                        ])
+                        .required("Trạng thái không bỏ trống."),
+                    listStateProvince: array().required().default([]),
+                }),
+            )
+            .min(1, "Nhóm điểm đến không bỏ trống")
+            .default([]),
         inventoryTypeList: string().required("Loại inventory không bỏ trống."),
         status: string()
             .oneOf<Status>([Status.OK, Status.QQ, Status.XX, Status.OX])

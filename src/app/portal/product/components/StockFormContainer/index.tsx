@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo } from "react";
 import {
     Form,
     Input,
@@ -27,24 +27,21 @@ import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import { CheckboxGroupProps } from "antd/es/checkbox";
 import { isEmpty } from "lodash";
-import { TStockErrorsField } from "../../hooks/useCRUDStockInventory";
+import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
+import { stockSchema } from "../../hooks/validation";
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 dayjs.locale("en");
 dayjs.locale("vi");
 
 const { RangePicker } = DatePicker;
-interface StockFormProps {
+interface StockFormContainerProps {
     inventoryId: number;
     inventoryType: string;
     onSubmit?: (
-        {
-            data,
-            isCreateSeries,
-        }: { data: StockInventoryFormData; isCreateSeries: boolean },
+        { data }: { data: StockInventoryFormData },
         cb?: () => void,
     ) => void;
-    errors?: TStockErrorsField;
 }
 type TRepeatType = "day" | "week";
 export const DATE_FORMAT = "DDMMMYY HH:mm";
@@ -59,11 +56,11 @@ const DAYS_OF_WEEK = [
     { label: "T6", value: "Friday" },
     { label: "T7", value: "Saturday" },
 ];
-const StockForm: React.FC<StockFormProps> = ({
+const StockFormContainer: React.FC<StockFormContainerProps> = ({
     inventoryId,
     inventoryType,
     onSubmit,
-    errors,
+    // errors,
 }) => {
     const initStockFormData = new StockInventoryFormData(
         inventoryId,
@@ -75,7 +72,7 @@ const StockForm: React.FC<StockFormProps> = ({
         undefined,
         undefined,
         undefined,
-        "",
+        undefined,
         [],
         0,
         [],
@@ -85,8 +82,13 @@ const StockForm: React.FC<StockFormProps> = ({
     const [repeatType, setRepeatType] = useState<TRepeatType>("week");
     const [showCreateSeries, setCreateSeries] = useState(false);
 
+    const { handlerSubmit, errors } = useFormSubmit<
+        StockInventoryFormData & { isCreateSeries?: boolean }
+    >({
+        schema: stockSchema,
+    });
     const [stockFieldErrors, setStockFieldErrors] =
-        useState<TStockErrorsField>();
+        useState<Partial<Record<keyof StockInventoryFormData, string>>>();
     const { data: stockInventoryType, isLoading: isLoadingStockType } =
         useGetStockInventoryTypeCoreQuery(inventoryType);
 
@@ -243,7 +245,6 @@ const StockForm: React.FC<StockFormProps> = ({
 
     const getDisableExclusiveDate = (date: dayjs.Dayjs) => {
         let isDisabled = false;
-        //if (!stockFormData.exclusives.length) return isDisable;
 
         stockFormData.exclusives.forEach((exclDate) => {
             if (
@@ -259,14 +260,11 @@ const StockForm: React.FC<StockFormProps> = ({
         return isDisabled;
     };
 
-    const onSubmitFormData = () => {
-        onSubmit?.(
-            { data: stockFormData, isCreateSeries: showCreateSeries },
-            () => {
-                setStockFormData(initStockFormData);
-                setStockFieldErrors(undefined);
-            },
-        );
+    const onSubmitFormData: HandleSubmit<StockInventoryFormData> = (data) => {
+        onSubmit?.({ data }, () => {
+            setStockFormData(initStockFormData);
+            setStockFieldErrors(undefined);
+        });
     };
     return (
         <Form
@@ -328,6 +326,7 @@ const StockForm: React.FC<StockFormProps> = ({
                 <Input
                     placeholder="Số lượng"
                     type="number"
+                    min={0}
                     name="cap"
                     value={stockFormData.cap}
                     onChange={(ev) =>
@@ -371,7 +370,7 @@ const StockForm: React.FC<StockFormProps> = ({
             >
                 <RangePicker
                     showTime={{ format: "HH:mm" }}
-                    placeholder={["Date from", "Date to"]}
+                    placeholder={["Start date", "End date"]}
                     format={DATE_FORMAT}
                     value={[
                         stockFormData.start
@@ -595,7 +594,18 @@ const StockForm: React.FC<StockFormProps> = ({
             >
                 <Space>
                     <Button>Huỷ bỏ</Button>
-                    <Button type="primary" onClick={onSubmitFormData}>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            handlerSubmit(
+                                {
+                                    ...stockFormData,
+                                    isCreateSeries: showCreateSeries,
+                                },
+                                onSubmitFormData,
+                            )
+                        }
+                    >
                         Tạo Stock
                     </Button>
                 </Space>
@@ -603,4 +613,4 @@ const StockForm: React.FC<StockFormProps> = ({
         </Form>
     );
 };
-export default StockForm;
+export default StockFormContainer;

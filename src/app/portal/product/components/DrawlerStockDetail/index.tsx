@@ -24,11 +24,12 @@ export type TDrawlerStockDetailAction = {
 export interface DrawlerStockDetailProps {
     isOpen?: boolean;
     onCancel: () => void;
-
     initialValues?: IStockListOfInventoryRs["result"][0];
     onApproval?: (formData: StockInventoryConfirmFormData) => void;
-    onAdjust?: (formData: StockInventoryAdjustFormData) => void;
-    errors?: TInventoryErrorsField;
+    onAdjust?: (
+        formData: StockInventoryAdjustFormData,
+        cb?: () => void,
+    ) => void;
 }
 export const DATE_FORMAT = "DDMMMYY HH:mm";
 export const TIME_FORMAT = "HH:mm";
@@ -42,13 +43,14 @@ const DrawlerStockDetail: React.FC<DrawlerStockDetailProps> = ({
     onApproval,
     onAdjust,
     isOpen,
-    errors,
+
     initialValues,
 }) => {
     /**
      * Get all Stock detail history adjustment
      * only fetch if stock with status OK (Approval)
      */
+
     const { data: stockDetailList, isLoading } =
         useGetStockDetailInventoryCoreQuery({
             inventoryStockId: initialValues?.recId || 0,
@@ -87,7 +89,6 @@ const DrawlerStockDetail: React.FC<DrawlerStockDetailProps> = ({
                     initialValues={initialValues}
                     hasApproval={initialValues.status === Status.OK}
                     onSubmit={onApproval}
-                    errors={errors}
                 />
             )) ||
                 null}
@@ -98,7 +99,12 @@ const DrawlerStockDetail: React.FC<DrawlerStockDetailProps> = ({
                         <StockAdjustmentForm
                             inventoryStockId={initialValues.recId}
                             onSubmit={onAdjust}
+                            onCancel={onCancel}
+                            className="mb-6"
                         />
+                        <div className="py-3 border-b">
+                            <p className="font-semibold">Lịch sử cập nhật</p>
+                        </div>
                         <List
                             itemLayout="horizontal"
                             dataSource={stockDetailList || []}
@@ -112,8 +118,8 @@ const DrawlerStockDetail: React.FC<DrawlerStockDetailProps> = ({
                                         description={
                                             <div className="description pt-2">
                                                 <div className="flex gap-x-2">
-                                                    <p className="w-14">
-                                                        Mô tả:
+                                                    <p className="w-24">
+                                                        {` Mô tả:`}
                                                     </p>
                                                     <p className="flex-1">
                                                         {item.rmk
@@ -122,8 +128,18 @@ const DrawlerStockDetail: React.FC<DrawlerStockDetailProps> = ({
                                                     </p>
                                                 </div>
                                                 <div className="flex gap-x-2">
-                                                    <p className="w-14">
-                                                        Ngày:
+                                                    <p className="w-24">
+                                                        {`Số lượng:`}
+                                                    </p>
+                                                    <p className="flex-1">
+                                                        {item.quantity
+                                                            ? item.quantity
+                                                            : "--"}
+                                                    </p>
+                                                </div>
+                                                <div className="flex gap-x-2">
+                                                    <p className="w-24">
+                                                        {`Ngày:`}
                                                     </p>
                                                     <p>
                                                         {formatDate(

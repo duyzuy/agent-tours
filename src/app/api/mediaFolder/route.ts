@@ -82,7 +82,19 @@ export async function POST(request: NextRequest) {
             payload,
         );
         //Write folder to local public
-        await mkdir(folderPath);
+        // await mkdir(folderPath);
+        try {
+            await mkdir(folderPath);
+        } catch (error) {
+            return NextResponse.json(
+                {
+                    message: `Ghi thư mục thất bại.`,
+                    code: "FOLDER_ALREADY_EXISTS",
+                },
+                { status: 400 },
+            );
+        }
+
         return NextResponse.json(
             {
                 data: response.result,

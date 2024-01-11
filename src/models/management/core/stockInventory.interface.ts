@@ -13,6 +13,36 @@ export enum EStockInventoryType {
 
 export interface IStockInventoryTypeRs extends BaseResponse<string[]> {}
 
+export interface IStockInventoryQueryParams {
+    type: string;
+    valid: string | Date;
+    validTo: string | Date;
+    start: string | Date;
+    end: string | Date;
+}
+
+export class StockInventoryQueryparams implements IStockInventoryQueryParams {
+    type: string;
+    valid: string | Date;
+    validTo: string | Date;
+    start: string | Date;
+    end: string | Date;
+
+    constructor(
+        type: string,
+        valid: string | Date,
+        validTo: string | Date,
+        start: string | Date,
+        end: string | Date,
+    ) {
+        this.type = type;
+        this.valid = valid;
+        this.validTo = validTo;
+        this.start = start;
+        this.end = end;
+    }
+}
+
 export interface IStock {
     recId: number;
     type: string;
@@ -41,26 +71,17 @@ export interface IStockPayload {
     type: string; //api 1.3
     code: string;
     cap: number;
-    valid: string | Date; //ddMMMyy HH:mm (global/us locale)
-    validTo: string | Date;
-    start: string | Date;
-    end: string | Date;
-    fromValidTo?: string | Date; //<<========= có truyền giá trị chỗ này trở xuống = add Serial
+    valid: string; //ddMMMyy HH:mm (global/us locale)
+    validTo: string;
+    start: string;
+    end: string;
+    fromValidTo?: string; //<<========= có truyền giá trị chỗ này trở xuống = add Serial
     everyDayofweek: string[]; //Sunday Monday Tuesday Wednesday Thursday Friday Saturday (global/us locale)
     repeatAfter: number;
     exclusives: {
-        from: string | Date | undefined;
-        to: string | Date | undefined;
+        from: string | undefined;
+        to: string | undefined;
     }[];
-}
-export interface IStockConfirmPayload {
-    recId: number;
-    cap: number;
-    description?: string;
-    valid: string | Date;
-    validTo: string | Date;
-    start: string | Date;
-    end: string | Date;
 }
 
 export class StockInventoryFormData implements Partial<IStockPayload> {
@@ -69,16 +90,16 @@ export class StockInventoryFormData implements Partial<IStockPayload> {
     code: string;
     description: string;
     cap: number;
-    valid: string | Date | undefined;
-    validTo: string | Date | undefined;
-    start: string | Date | undefined;
-    end: string | Date | undefined;
-    fromValidTo: string;
+    valid?: string;
+    validTo?: string;
+    start?: string;
+    end?: string;
+    fromValidTo?: string;
     everyDayofweek: string[];
     repeatAfter: number;
     exclusives: {
-        from: string | Date | undefined;
-        to: string | Date | undefined;
+        from: string | undefined;
+        to: string | undefined;
     }[];
     constructor(
         inventoryId: number,
@@ -86,16 +107,16 @@ export class StockInventoryFormData implements Partial<IStockPayload> {
         code: string,
         description: string,
         cap: number,
-        valid: string | Date | undefined,
-        validTo: string | Date | undefined,
-        start: string | Date | undefined,
-        end: string | Date | undefined,
-        fromValidTo: string,
+        valid: string | undefined,
+        validTo: string | undefined,
+        start: string | undefined,
+        end: string | undefined,
+        fromValidTo: string | undefined,
         everyDayofweek: string[],
         repeatAfter: number,
         exclusives: {
-            from: Date;
-            to: Date;
+            from: string;
+            to: string;
         }[],
     ) {
         this.inventoryId = inventoryId;
@@ -113,6 +134,15 @@ export class StockInventoryFormData implements Partial<IStockPayload> {
         this.exclusives = exclusives;
     }
 }
+export interface IStockConfirmPayload {
+    recId: number;
+    cap: number;
+    description?: string;
+    valid: string;
+    validTo: string;
+    start: string;
+    end: string;
+}
 
 export class StockInventoryConfirmFormData
     implements Partial<IStockConfirmPayload>
@@ -120,19 +150,19 @@ export class StockInventoryConfirmFormData
     recId: number;
     description: string;
     cap: number;
-    valid: string | Date | undefined;
-    validTo: string | Date | undefined;
-    start: string | Date | undefined;
-    end: string | Date | undefined;
+    valid?: string;
+    validTo?: string;
+    start?: string;
+    end?: string;
 
     constructor(
         recId: number,
         description: string,
         cap: number,
-        valid: string | Date | undefined,
-        validTo: string | Date | undefined,
-        start: string | Date | undefined,
-        end: string | Date | undefined,
+        valid: string | undefined,
+        validTo: string | undefined,
+        start: string | undefined,
+        end: string | undefined,
     ) {
         this.recId = recId;
         this.description = description;
@@ -163,23 +193,19 @@ export interface IStockAdjustment {
 export interface IStockAdjustPayload {
     inventoryStockId: number;
     quantity: number;
-    description: string;
+    rmk: string;
 }
 
 export class StockInventoryAdjustFormData
     implements Partial<IStockAdjustPayload>
 {
     inventoryStockId: number;
-    description: string;
+    rmk: string;
     quantity: number;
 
-    constructor(
-        inventoryStockId: number,
-        description: string,
-        quantity: number,
-    ) {
+    constructor(inventoryStockId: number, rmk: string, quantity: number) {
         this.inventoryStockId = inventoryStockId;
-        this.description = description;
+        this.rmk = rmk;
         this.quantity = quantity;
     }
 }

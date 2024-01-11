@@ -1,31 +1,22 @@
 import { useState } from "react";
 import {
+    IStock,
     IStockConfirmPayload,
+    IStockPayload,
     StockInventoryAdjustFormData,
     StockInventoryConfirmFormData,
     StockInventoryFormData,
 } from "@/models/management/core/stockInventory.interface";
-
-import {
-    inventorySchema,
-    inventoryUpdateSchema,
-    stockAdjustSchema,
-    stockConfirmSchema,
-    stockSchema,
-} from "./validation";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
-
-import { ValidationError } from "yup";
 import { queryCore } from "@/queries/var";
 import {
     useCreateStockMutation,
     useConfirmStockMutation,
     useAdjustStockQuantityMutation,
 } from "@/mutations/managements/stock";
-export type TStockErrorsField = Partial<
-    Record<keyof StockInventoryFormData, string>
->;
+import { BaseResponse } from "@/models/management/common.interface";
+
 const useCRUDStockInventory = () => {
     const { mutate: makeCreateStock } = useCreateStockMutation();
     const { mutate: makeConfirmStock } = useConfirmStockMutation();
@@ -33,132 +24,76 @@ const useCRUDStockInventory = () => {
         useAdjustStockQuantityMutation();
     const message = useMessage();
     const queryClient = useQueryClient();
-    const [errors, setErrors] = useState<TStockErrorsField>();
 
     const onCreateStock = (
-        {
-            data,
-            isCreateSeries,
-        }: { data: StockInventoryFormData; isCreateSeries: boolean },
+        { data }: { data: StockInventoryFormData },
         cb?: () => void,
     ) => {
-        stockSchema
-            .validate(
-                {
-                    ...data,
-                    isCreateSeries: isCreateSeries,
-                },
-                { abortEarly: false },
-            )
-            .then((schema) => {
-                makeCreateStock(schema, {
-                    onSuccess: (data, variables) => {
-                        message.success(`Tạo stock thành công`);
-                        onResetFieldsErrors();
-                        queryClient.invalidateQueries({
-                            queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
-                        });
-                        cb?.();
-                    },
-                    onError: (error, variables) => {
-                        console.log({ error, variables });
-                        message.error(error.message);
-                    },
+        makeCreateStock(data as IStockPayload, {
+            onSuccess: (data, variables) => {
+                message.success(`Tạo stock thành công`);
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
                 });
-            })
-            .catch((error) => {
-                if (error instanceof ValidationError) {
-                    let errors: TStockErrorsField = {};
-                    error.inner.forEach((err) => {
-                        if (!errors[err.path as keyof TStockErrorsField]) {
-                            errors[err.path as keyof TStockErrorsField] =
-                                err.message;
-                        }
-                    });
-                    setErrors(errors);
-                }
-            });
+                cb?.();
+            },
+            onError: (error, variables) => {
+                console.log({ error, variables });
+                message.error(error.message);
+            },
+        });
     };
     const onConfirmStock = (
-        payload: StockInventoryConfirmFormData,
-        cb?: () => void,
+        formData: StockInventoryConfirmFormData,
+        cb?: (
+            response: BaseResponse<IStock>,
+            variables: IStockConfirmPayload,
+        ) => void,
     ) => {
-        stockConfirmSchema
-            .validate(payload, { abortEarly: false })
-            .then((schema) => {
-                makeConfirmStock(schema, {
-                    onSuccess: (data, variables) => {
-                        message.success(`Duyệt stock thành công`);
-                        onResetFieldsErrors();
-                        queryClient.invalidateQueries({
-                            queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
-                        });
-                        cb?.();
-                    },
-                    onError: (error, variables) => {
-                        console.log({ error, variables });
-                        message.error(error.message);
-                    },
+        makeConfirmStock(formData as IStockConfirmPayload, {
+            onSuccess: (response, variables) => {
+                message.success(`Duyệt stock thành công`);
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
                 });
-            })
-            .catch((error) => {
-                if (error instanceof ValidationError) {
-                    let errors: TStockErrorsField = {};
-                    error.inner.forEach((err) => {
-                        if (!errors[err.path as keyof TStockErrorsField]) {
-                            errors[err.path as keyof TStockErrorsField] =
-                                err.message;
-                        }
-                    });
-                    setErrors(errors);
-                }
-            });
+                cb?.(response, variables);
+            },
+            onError: (error, variables) => {
+                console.log({ error, variables });
+                message.error(error.message);
+            },
+        });
     };
 
     const onAdjustStockQuantity = (
-        payload: StockInventoryAdjustFormData,
+        formData: StockInventoryAdjustFormData,
         cb?: () => void,
     ) => {
-        stockAdjustSchema
-            .validate(payload, { abortEarly: false })
-            .then((schema) => {
-                makeAdjustStockQuantity(schema, {
-                    onSuccess: (data, variables) => {
-                        message.success(`Duyệt stock thành công`);
-                        onResetFieldsErrors();
-                        queryClient.invalidateQueries({
-                            queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
-                        });
-                        cb?.();
-                    },
-                    onError: (error, variables) => {
-                        console.log({ error, variables });
-                        message.error(error.message);
-                    },
+        makeAdjustStockQuantity(formData, {
+            onSuccess: (data, variables) => {
+                message.success(`Duyệt stock thành công`);
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
                 });
-            })
-            .catch((error) => {
-                if (error instanceof ValidationError) {
-                    let errors: TStockErrorsField = {};
-                    error.inner.forEach((err) => {
-                        if (!errors[err.path as keyof TStockErrorsField]) {
-                            errors[err.path as keyof TStockErrorsField] =
-                                err.message;
-                        }
-                    });
-                    setErrors(errors);
-                }
-            });
+                queryClient.invalidateQueries({
+                    queryKey: [
+                        queryCore.GET_STOCK_DETAIL_INVENTORY,
+                        formData.inventoryStockId,
+                    ],
+                });
+                cb?.();
+            },
+            onError: (error, variables) => {
+                console.log({ error, variables });
+                message.error(error.message);
+            },
+        });
     };
 
-    const onResetFieldsErrors = () => {
-        setErrors(undefined);
-    };
     return {
         onCreate: onCreateStock,
         onConfirm: onConfirmStock,
         onAdjustQuantity: onAdjustStockQuantity,
-        errors,
     };
 };
 export default useCRUDStockInventory;

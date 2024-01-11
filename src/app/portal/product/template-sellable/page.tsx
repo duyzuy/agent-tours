@@ -56,6 +56,7 @@ const SellTemplatePage = () => {
     });
 
     const { onCreate, errors } = useCRUDTemplateSellable();
+
     console.log(errors);
     const inventoryTypeOptions: SelectProps["options"] = useMemo(() => {
         let options: SelectProps["options"] = [];
@@ -155,7 +156,12 @@ const SellTemplatePage = () => {
                 labelWrap
                 className="max-w-4xl"
             >
-                <FormItem label="CMS template content" required>
+                <FormItem
+                    label="CMS template content"
+                    required
+                    validateStatus={errors?.cmsIdentity ? "error" : ""}
+                    help={errors?.cmsIdentity || ""}
+                >
                     <Select
                         placeholder="Chọn template"
                         onChange={(value) =>
@@ -164,25 +170,40 @@ const SellTemplatePage = () => {
                         options={templateOptions}
                     />
                 </FormItem>
-                <FormItem label="Sellable name" required>
+                <FormItem
+                    label="Template sellable name"
+                    required
+                    validateStatus={errors?.name ? "error" : ""}
+                    help={errors?.name || ""}
+                >
                     <Input
-                        placeholder="Sellable name"
+                        placeholder="Template sellable name"
                         value={templateSellableFormData.name}
                         onChange={(ev) =>
                             onChangeSellableFormData("name", ev.target.value)
                         }
                     />
                 </FormItem>
-                <FormItem label="Sellable code" required>
+                <FormItem
+                    label="Template sellable code"
+                    required
+                    validateStatus={errors?.code ? "error" : ""}
+                    help={errors?.code || ""}
+                >
                     <Input
-                        placeholder="Sellable code"
+                        placeholder="Template sellable code"
                         value={templateSellableFormData.code}
                         onChange={(ev) =>
                             onChangeSellableFormData("code", ev.target.value)
                         }
                     />
                 </FormItem>
-                <FormItem label="Loại product" required>
+                <FormItem
+                    label="Loại product"
+                    required
+                    validateStatus={errors?.type ? "error" : ""}
+                    help={errors?.type || ""}
+                >
                     <Select
                         placeholder="Chọn sản phẩm"
                         value={templateSellableFormData.type}
@@ -192,7 +213,12 @@ const SellTemplatePage = () => {
                         options={productTypeOptions}
                     />
                 </FormItem>
-                <FormItem label="Loại inventory" required>
+                <FormItem
+                    label="Loại inventory"
+                    required
+                    validateStatus={errors?.inventoryTypeList ? "error" : ""}
+                    help={errors?.inventoryTypeList || ""}
+                >
                     <Select
                         placeholder="Chọn inventory"
                         mode="multiple"
@@ -203,7 +229,12 @@ const SellTemplatePage = () => {
                         options={inventoryTypeOptions}
                     />
                 </FormItem>
-                <FormItem label="Nhóm điểm đến" required>
+                <FormItem
+                    label="Nhóm điểm đến"
+                    required
+                    validateStatus={errors?.destListJson ? "error" : ""}
+                    help={errors?.destListJson || ""}
+                >
                     <Select
                         placeholder="Chọn nhóm điểm đến"
                         onChange={(value, options) =>

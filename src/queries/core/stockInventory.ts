@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
 import { stockInventoryAPIs } from "@/services/management/cores/stockInventory";
+import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
 
 export const useGetStockInventoryTypeCoreQuery = (type: string) => {
     return useQuery({
@@ -13,13 +14,27 @@ export const useGetStockInventoryTypeCoreQuery = (type: string) => {
 
 export const useGetStockInventoryListCoreQuery = ({
     inventoryId,
+    queryparams,
     enabled,
 }: {
     inventoryId: number;
+    queryparams: StockInventoryQueryparams;
     enabled: boolean;
 }) => {
+    const sortedQueryParams = Object.keys(queryparams)
+        .sort()
+        .reduce<StockInventoryQueryparams>((acc, key) => {
+            return {
+                ...acc,
+                [key]: queryparams[key as keyof StockInventoryQueryparams],
+            };
+        }, new StockInventoryQueryparams("", "", "", "", ""));
     return useQuery({
-        queryKey: [queryCore.GET_STOCK_LIST_INVENTORY, inventoryId],
+        queryKey: [
+            queryCore.GET_STOCK_LIST_INVENTORY,
+            inventoryId,
+            sortedQueryParams,
+        ],
         queryFn: () => stockInventoryAPIs.getStockList(inventoryId),
         select: (data) => data.result,
         enabled: enabled,

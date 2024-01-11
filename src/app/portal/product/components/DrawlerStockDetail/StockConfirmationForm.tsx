@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, DatePicker, Space, Button } from "antd";
 import FormItem from "@/components/base/FormItem";
-
-import { TInventoryErrorsField } from "../../hooks/useCRUDInventory";
 import {
     IStockListOfInventoryRs,
     IStockConfirmPayload,
@@ -23,18 +21,18 @@ export type TDrawlerStockDetailAction = {
 export const DATE_FORMAT = "DDMMMYY HH:mm";
 export const TIME_FORMAT = "HH:mm";
 import { RangePickerProps } from "antd/es/date-picker";
+import { stockConfirmSchema } from "../../hooks/validation";
+import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 const RangePicker = DatePicker.RangePicker;
 
 interface StockConfirmationFormProps {
     initialValues: IStockListOfInventoryRs["result"][0];
     hasApproval: boolean;
-    errors?: TInventoryErrorsField;
     onSubmit?: (formData: StockInventoryConfirmFormData) => void;
 }
 const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     initialValues,
     hasApproval,
-    errors,
     onSubmit,
 }) => {
     const initStockConfirmFormdata = new StockInventoryConfirmFormData(
@@ -46,6 +44,11 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
         undefined,
         undefined,
     );
+
+    const { handlerSubmit, errors } = useFormSubmit({
+        schema: stockConfirmSchema,
+    });
+
     const [stockConfirmFormData, setStockConfirmFormData] = useState(
         initStockConfirmFormdata,
     );
@@ -54,7 +57,7 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
         key: keyof IStockConfirmPayload,
         value: string | number,
     ) => {
-        if (key === "cap" && typeof value === "string") {
+        if (key === "cap" && !isNaN(value as number)) {
             value = Number(value);
         }
         setStockConfirmFormData((prev) => ({
@@ -84,6 +87,11 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
         }));
     };
 
+    const onSubmitForm: HandleSubmit<StockInventoryConfirmFormData> = (
+        data,
+    ) => {
+        onSubmit?.(data);
+    };
     useEffect(() => {
         if (initialValues) {
             setStockConfirmFormData(() => ({
@@ -115,7 +123,14 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                         value={initialValues?.type}
                     />
                 </FormItem>
-                <FormItem label="Ngày mở bán (valid date)" required>
+                <FormItem
+                    label="Ngày mở bán (valid date)"
+                    required
+                    validateStatus={
+                        errors?.valid || errors?.validTo ? "error" : ""
+                    }
+                    help={errors?.valid || errors?.validTo || ""}
+                >
                     <RangePicker
                         showTime={{ format: "HH:mm" }}
                         placeholder={["Date from", "Date to"]}
@@ -139,7 +154,12 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                         className="w-full "
                     />
                 </FormItem>
-                <FormItem label="Ngày áp dụng (used)" required>
+                <FormItem
+                    label="Ngày áp dụng (used)"
+                    required
+                    validateStatus={errors?.start || errors?.end ? "error" : ""}
+                    help={errors?.start || errors?.end || ""}
+                >
                     <RangePicker
                         showTime={{ format: "HH:mm" }}
                         placeholder={["Date from", "Date to"]}
@@ -164,8 +184,8 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                 <FormItem
                     label="Số lượng (cap)"
                     required
-                    validateStatus={errors?.name ? "error" : ""}
-                    help={errors?.name || ""}
+                    validateStatus={errors?.cap ? "error" : ""}
+                    help={errors?.cap || ""}
                 >
                     <Input
                         placeholder="Số lượng"
@@ -193,8 +213,8 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                 <FormItem
                     label="Mô tả"
                     required
-                    validateStatus={errors?.name ? "error" : ""}
-                    help={errors?.name || ""}
+                    validateStatus={errors?.description ? "error" : ""}
+                    help={errors?.description || ""}
                 >
                     <Input.TextArea
                         placeholder="Mô tả"
@@ -212,7 +232,12 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                     <Space>
                         <Button
                             type="primary"
-                            onClick={() => onSubmit?.(stockConfirmFormData)}
+                            onClick={() =>
+                                handlerSubmit(
+                                    stockConfirmFormData,
+                                    onSubmitForm,
+                                )
+                            }
                             disabled={false}
                         >
                             Duyệt stock

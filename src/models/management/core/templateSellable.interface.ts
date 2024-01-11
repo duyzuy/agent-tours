@@ -1,6 +1,5 @@
 import { BaseResponse, Status } from "../common.interface";
 import { IDestination } from "../region.interface";
-import { IInventory } from "./inventory.interface";
 import { EInventoryType } from "./inventoryType.interface";
 import { EProductType } from "./productType.interface";
 
@@ -11,33 +10,65 @@ export interface ITemplateSellable {
     code: string;
     name: string;
     inventoryTypeList: string; //1.1 inventoryType: chuỗi split bởi ||, ví dụ: AIR||HOTEL||GUIDE
-    destListJson: string; //json cửa mảng [DestList], có thể có nhiều Destlist
+    destListJson: IDestination[]; //json cửa mảng [DestList], có thể có nhiều Destlist
     status: Status;
 }
 
+export interface ITemplateSellableQueryParams {
+    recId: number; //1 item theo Id
+    andType: string; //3 biến and.... là điều kiện search AND, có thể truyền 1 trong 3 hoặc cả 3
+    andCodeLike: string;
+    andDestIn: string;
+    pageCurrent: number; //default = 1
+    pageSize: number; //defaut = 100/page
+}
+
+export class TemplateSellableQueryParams
+    implements ITemplateSellableQueryParams
+{
+    recId: number;
+    andType: string;
+    andCodeLike: string;
+    andDestIn: string;
+    pageCurrent: number;
+    pageSize: number;
+    constructor(
+        recId: number,
+        andType: string,
+        andCodeLike: string,
+        andDestIn: string,
+        pageCurrent: number,
+        pageSize: number,
+    ) {
+        this.recId = recId;
+        this.andType = andType;
+        this.andCodeLike = andCodeLike;
+        this.andDestIn = andDestIn;
+        this.pageCurrent = pageCurrent;
+        this.pageSize = pageSize;
+    }
+}
 export interface ITemplateSellablePayload {
     cmsIdentity: string;
     type: string; //1.2 producttype
     code: string;
     name: string;
     inventoryTypeList: string; //1.1 inventoryType: chuỗi split bởi ||, ví dụ: AIR||HOTEL||GUIDE
-    destListJson: string; //json cửa mảng [DestList], có thể có nhiều Destlist
+    destListJson: IDestination[]; //json cửa mảng [DestList], có thể có nhiều Destlist
     status: Status;
 }
 
 export class TemplateSellableFormData {
     cmsIdentity: string;
-
-    type?: EProductType; //1.2 producttype
+    type?: EProductType;
     code: string;
     name: string;
-    inventoryTypeList: EInventoryType[]; //1.1 inventoryType: chuỗi split bởi ||, ví dụ: AIR||HOTEL||GUIDE
-    destListJson: IDestination[]; //json cửa mảng [DestList], có thể có nhiều Destlist
+    inventoryTypeList: EInventoryType[];
+    destListJson: IDestination[];
     status: Status;
 
     constructor(
         cmsIdentity: string,
-
         type: EProductType | undefined,
         code: string,
         name: string,
@@ -46,7 +77,6 @@ export class TemplateSellableFormData {
         status: Status,
     ) {
         this.cmsIdentity = cmsIdentity;
-
         this.type = type;
         this.code = code;
         this.name = name;

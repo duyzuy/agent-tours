@@ -75,6 +75,12 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
         },
     },
     {
+        title: "User",
+        dataIndex: "sysFstUser",
+        key: 2,
+        width: 100,
+    },
+    {
         title: "Ngày tạo",
         dataIndex: "sysFstUpdate",
         key: 4,
