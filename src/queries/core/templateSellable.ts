@@ -15,7 +15,7 @@ export const useGetTemplateSellableListCoreQuery = (
                 [key as keyof TemplateSellableQueryParams]:
                     queryParams[key as keyof TemplateSellableQueryParams],
             };
-        }, new TemplateSellableQueryParams(0, "", "", "", 0, 20));
+        }, new TemplateSellableQueryParams("", "", "", 0, 20));
 
     return useQuery({
         queryKey: [queryCore.GET_LIST_TEMPLATE_SELLABLE, sortedQueryParams],

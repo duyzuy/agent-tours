@@ -140,7 +140,7 @@ const SellTemplatePage = () => {
                             JSON.parse(destListJson);
 
                         return destinationList.map((destination) => (
-                            <div className="mb-4">
+                            <div className="mb-4" key={destination.id}>
                                 <div className="py-2">
                                     <p className="font-bold">
                                         {destination.codeName}
