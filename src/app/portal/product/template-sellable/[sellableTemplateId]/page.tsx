@@ -16,12 +16,16 @@ import { isUndefined } from "lodash";
 import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
 import SellableListContainer from "../_components/SellableListContainer";
 import SellableFormContainer from "../_components/SellableFormContainer";
-const Sellablepage = ({ params }: { params: { inventoryId: number } }) => {
+const Sellablepage = ({
+    params,
+}: {
+    params: { sellableTemplateId: number };
+}) => {
     const router = useRouter();
     const message = useMessage();
-    const { data: inventoryDetail, isLoading } = useGetInventoryDetailCoreQuery(
-        params.inventoryId,
-    );
+    // const { data: inventoryDetail, isLoading } = useGetInventoryDetailCoreQuery(
+    //     params.sellableTemplateId,
+    // );
 
     const tabItems: TabsProps["items"] = [
         {

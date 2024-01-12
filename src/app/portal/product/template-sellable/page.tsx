@@ -150,37 +150,28 @@ const SellTemplatePage = () => {
                                 <Space wrap>
                                     {destination.listStateProvince.map(
                                         (state) => (
-                                            <>
+                                            <React.Fragment key={state.id}>
                                                 {(state.stateProvinceKey && (
-                                                    <Tag key={state.id}>
+                                                    <Tag>
                                                         {state.stateProvinceKey}
                                                     </Tag>
                                                 )) ||
                                                     (state.countryKey && (
-                                                        <Tag
-                                                            color="red"
-                                                            key={state.id}
-                                                        >
+                                                        <Tag color="red">
                                                             {state.countryKey}
                                                         </Tag>
                                                     )) ||
                                                     (state.subRegionKey && (
-                                                        <Tag
-                                                            color="green"
-                                                            key={state.id}
-                                                        >
+                                                        <Tag color="green">
                                                             {state.subRegionKey}
                                                         </Tag>
                                                     )) ||
                                                     (state.regionKey && (
-                                                        <Tag
-                                                            color="black"
-                                                            key={state.id}
-                                                        >
+                                                        <Tag color="black">
                                                             {state.regionKey}
                                                         </Tag>
                                                     ))}
-                                            </>
+                                            </React.Fragment>
                                         ),
                                     )}
                                 </Space>

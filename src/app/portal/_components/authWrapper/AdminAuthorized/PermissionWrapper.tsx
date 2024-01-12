@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useCallback } from "react";
+import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocalUserGetRolesQuery } from "@/queries/localUser";
 import { LocalUserPermissionContext } from "@/context/permissionContext";
@@ -15,9 +15,10 @@ interface Props {
     token: string;
 }
 const PermissionWrapper: React.FC<Props> = ({ children, token }) => {
-    const { data: roles, isLoading, error } = useLocalUserGetRolesQuery(token);
+    const { data: roles } = useLocalUserGetRolesQuery(token);
     const path = usePathname();
     const router = useRouter();
+    const [isValidPerm, setValidPerm] = useState(false);
     const localUserPermissionsList = useMemo(() => {
         let totalPermissions: ERolesFunctions[] = [];
         roles?.result.roleList[0].localUser_RolePermissionList.forEach(
@@ -41,7 +42,7 @@ const PermissionWrapper: React.FC<Props> = ({ children, token }) => {
 
     const checkPermission = useCallback(
         (conditions: TRoleCondition) => {
-            // console.log({ localUserPermissionsList });
+            // if (isEmpty(localUserPermissionsList)) return false;
             return conditions.reduce((hasPerm, cond) => {
                 return (
                     hasPerm &&
@@ -53,17 +54,21 @@ const PermissionWrapper: React.FC<Props> = ({ children, token }) => {
     );
 
     useEffect(() => {
-        if (roles) {
-            const corectPath = path.replace("/portal", "");
-            const perms =
-                pathPermissions[corectPath as keyof typeof pathPermissions] ||
-                [];
+        const corectPath = path.replace("/portal", "");
+        const perms =
+            pathPermissions[corectPath as keyof typeof pathPermissions] || [];
 
-            if (!checkPermission(perms)) {
-                router.push(LINKS.DashBoard);
-            }
+        if (!checkPermission(perms)) {
+            setValidPerm(false);
+            router.push(LINKS.DashBoard);
+        } else {
+            setValidPerm(true);
         }
-    }, [roles, path]);
+    }, [path, roles]);
+
+    if (!isValidPerm) {
+        return null;
+    }
     return (
         <LocalUserPermissionContext.Provider
             value={[localUserPermissionsList, checkPermission]}
