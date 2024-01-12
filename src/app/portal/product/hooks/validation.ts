@@ -18,7 +18,10 @@ import {
     StockInventoryFormData,
 } from "@/models/management/core/stockInventory.interface";
 import ExploreSection from "@/app/[locale]/_components/ExploreSection";
-import { ITemplateSellablePayload } from "@/models/management/core/templateSellable.interface";
+import {
+    ITemplateSellablePayload,
+    TemplateSellableFormData,
+} from "@/models/management/core/templateSellable.interface";
 import { IDestination } from "@/models/management/region.interface";
 
 export const inventorySchema: ObjectSchema<IInventoryPayload> = object({
@@ -158,10 +161,12 @@ export const stockAdjustSchema: ObjectSchema<StockInventoryAdjustFormData> =
  *
  */
 
-export const templateSellableSchema: ObjectSchema<ITemplateSellablePayload> =
+export const templateSellableSchema: ObjectSchema<TemplateSellableFormData> =
     object({
         cmsIdentity: string().required("Template CMS không bỏ trống."),
-        type: string().required("Loại sản phẩm không bỏ trống"),
+        type: string()
+            .oneOf<EProductType>([EProductType.EXTRA, EProductType.TOUR])
+            .required("Loại sản phẩm không bỏ trống."),
         code: string().required("Code không bỏ trống"),
         name: string().required("Tên template không bỏ trống."),
         destListJson: array()
@@ -186,7 +191,9 @@ export const templateSellableSchema: ObjectSchema<ITemplateSellablePayload> =
             )
             .min(1, "Nhóm điểm đến không bỏ trống")
             .default([]),
-        inventoryTypeList: string().required("Loại inventory không bỏ trống."),
+        inventoryTypeList: array<EInventoryType[]>()
+            .required("Loại inventory không bỏ trống.")
+            .default([]),
         status: string()
             .oneOf<Status>([Status.OK, Status.QQ, Status.XX, Status.OX])
             .required("Trạng thái không bỏ trống."),

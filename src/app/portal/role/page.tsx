@@ -8,13 +8,13 @@ import {
     IRolesPermissionsRs,
     TRolePayload,
 } from "@/models/management/role.interface";
-import DrawlerRole from "./_components/DrawlerRole";
+import DrawerRole from "./_components/DrawerRole";
 
 import useCreateRole from "./modules/useCreateRole";
 import useDeleteRole from "./modules/useDeleteRole";
 import useUpdateRole from "./modules/useUpdateRole";
 
-import { EActionType, TDrawlerRole } from "./_components/DrawlerRole";
+import { EActionType, TDrawerRole } from "./_components/DrawerRole";
 type TRole = IRolesPermissionsRs["result"]["roleList"][0];
 
 const RolePage = () => {
@@ -42,14 +42,14 @@ const RolePage = () => {
         return rolePermissions?.result.rolePermissionList || [];
     }, [rolePermissions]);
 
-    const onHandleDrawlerRole = (drawlerRole: TDrawlerRole) => {
+    const onHandleDrawlerRole = (drawerRole: TDrawerRole) => {
         setEditRecord(() =>
-            drawlerRole.action === EActionType.EDIT
-                ? drawlerRole.record
+            drawerRole.action === EActionType.EDIT
+                ? drawerRole.record
                 : undefined,
         );
         setOpenDrawler(true);
-        setActionType(() => drawlerRole.action);
+        setActionType(() => drawerRole.action);
     };
 
     const handleSubmitFormData = useCallback(
@@ -96,7 +96,7 @@ const RolePage = () => {
                 />
             </PageContainer>
 
-            <DrawlerRole
+            <DrawerRole
                 isOpen={isOpenDrawler}
                 actionType={actionType}
                 onClose={() => setOpenDrawler(false)}

@@ -9,9 +9,9 @@ import {
 import { useRouter } from "next/navigation";
 import TableListPage from "@/components/admin/TableListPage";
 import { stockColumns } from "./stockColumns";
-import DrawlerStockDetail, {
-    DrawlerStockDetailProps,
-} from "../DrawlerStockDetail";
+import DrawerStockDetail, {
+    DrawerStockDetailProps,
+} from "../DrawerStockDetail";
 import { BaseResponse } from "@/models/management/common.interface";
 
 interface StockListContainerProps {
@@ -50,7 +50,7 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
         setStockRecord(undefined);
     };
 
-    const onApproval: DrawlerStockDetailProps["onApproval"] = (data) => {
+    const onApproval: DrawerStockDetailProps["onApproval"] = (data) => {
         onConfirm(data, (response, variables) => {
             // setShowDrawler(false);
             setStockRecord(response["result"]);
@@ -67,7 +67,7 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
                 columns={stockColumns}
                 onEdit={(record) => handleDrawler(record)}
             />
-            <DrawlerStockDetail
+            <DrawerStockDetail
                 isOpen={showDrawler}
                 onCancel={onCancel}
                 initialValues={stockRecord}

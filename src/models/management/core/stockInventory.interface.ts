@@ -51,6 +51,7 @@ export interface IStock {
     inventoryType: string;
     cap: number;
     used: number;
+    open: number;
     avaiable: number;
     description: string;
     validFrom: string | Date;

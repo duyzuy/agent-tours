@@ -4,18 +4,29 @@ import { EInventoryType } from "./inventoryType.interface";
 import { EProductType } from "./productType.interface";
 
 export interface ITemplateSellable {
+    recId: number;
     cmsIdentity: string;
     sellableTemplateId: number;
     type: string; //1.2 producttype
     code: string;
     name: string;
     inventoryTypeList: string; //1.1 inventoryType: chuỗi split bởi ||, ví dụ: AIR||HOTEL||GUIDE
-    destListJson: IDestination[]; //json cửa mảng [DestList], có thể có nhiều Destlist
+    destListJson: string; //json cửa mảng [DestList], có thể có nhiều Destlist
+    tourItinerary: string;
+    airItinerary: string;
+    counter: string;
+    depart: string;
+    sysFstUser: string;
+    sysFstUpdate: string;
+    sysLstUser: string;
+    sysLstUpdate: string;
+    sysBelongTo: string;
+    logStatus: string;
     status: Status;
 }
 
 export interface ITemplateSellableQueryParams {
-    recId: number; //1 item theo Id
+    // recId: number; //1 item theo Id
     andType: string; //3 biến and.... là điều kiện search AND, có thể truyền 1 trong 3 hoặc cả 3
     andCodeLike: string;
     andDestIn: string;
@@ -26,21 +37,21 @@ export interface ITemplateSellableQueryParams {
 export class TemplateSellableQueryParams
     implements ITemplateSellableQueryParams
 {
-    recId: number;
+    // recId: number;
     andType: string;
     andCodeLike: string;
     andDestIn: string;
     pageCurrent: number;
     pageSize: number;
     constructor(
-        recId: number,
+        // recId: number,
         andType: string,
         andCodeLike: string,
         andDestIn: string,
         pageCurrent: number,
         pageSize: number,
     ) {
-        this.recId = recId;
+        // this.recId = recId;
         this.andType = andType;
         this.andCodeLike = andCodeLike;
         this.andDestIn = andDestIn;
@@ -57,7 +68,11 @@ export interface ITemplateSellablePayload {
     destListJson: IDestination[]; //json cửa mảng [DestList], có thể có nhiều Destlist
     status: Status;
 }
-
+export interface ITemplateSellableUpdatePayload
+    extends Pick<
+        ITemplateSellablePayload,
+        "cmsIdentity" | "name" | "inventoryTypeList" | "destListJson"
+    > {}
 export class TemplateSellableFormData {
     cmsIdentity: string;
     type?: EProductType;
@@ -91,4 +106,4 @@ export class TemplateSellableFormData {
     // }
 }
 export interface ITemplateSaleableListRs
-    extends BaseResponse<ITemplateSellable> {}
+    extends BaseResponse<ITemplateSellable[]> {}

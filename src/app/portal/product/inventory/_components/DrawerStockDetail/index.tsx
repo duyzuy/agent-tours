@@ -3,25 +3,25 @@ import { Drawer, Tag, List } from "antd";
 
 import { Status } from "@/models/management/common.interface";
 
-import { TInventoryErrorsField } from "../../hooks/useCRUDInventory";
+import { TInventoryErrorsField } from "../../../hooks/useCRUDInventory";
 import {
     IStockListOfInventoryRs,
     StockInventoryAdjustFormData,
     StockInventoryConfirmFormData,
 } from "@/models/management/core/stockInventory.interface";
 import { useGetStockDetailInventoryCoreQuery } from "@/queries/core/stockInventory";
-
+import StockConfirmationForm from "./StockConfirmationForm";
+import { formatDate } from "@/utils/date";
+import StockAdjustmentForm from "./StockAdjustmentForm";
 export enum EActionType {
     VIEW = "view",
     CONFIRM = "confirm",
 }
-
-export type TDrawlerStockDetailAction = {
+export type TDrawerStockDetailAction = {
     type: EActionType;
     record: IStockListOfInventoryRs["result"][0];
 };
-
-export interface DrawlerStockDetailProps {
+export interface DrawerStockDetailProps {
     isOpen?: boolean;
     onCancel: () => void;
     initialValues?: IStockListOfInventoryRs["result"][0];
@@ -34,11 +34,7 @@ export interface DrawlerStockDetailProps {
 export const DATE_FORMAT = "DDMMMYY HH:mm";
 export const TIME_FORMAT = "HH:mm";
 
-import StockConfirmationForm from "./StockConfirmationForm";
-import { formatDate } from "@/utils/date";
-import StockAdjustmentForm from "./StockAdjustmentForm";
-
-const DrawlerStockDetail: React.FC<DrawlerStockDetailProps> = ({
+const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
     onCancel,
     onApproval,
     onAdjust,
@@ -159,4 +155,4 @@ const DrawlerStockDetail: React.FC<DrawlerStockDetailProps> = ({
         </Drawer>
     );
 };
-export default DrawlerStockDetail;
+export default DrawerStockDetail;

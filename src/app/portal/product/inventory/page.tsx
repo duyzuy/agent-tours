@@ -5,11 +5,11 @@ import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
 import { useState } from "react";
 import TableListPage from "@/components/admin/TableListPage";
 import { inventoryColumns } from "./columns";
-import DrawlerInventory, {
-    DrawlerInventoryProps,
+import DrawerInventory, {
+    DrawerInventoryProps,
     EActionType,
     TDrawlerAction,
-} from "../components/DrawlerInventory";
+} from "./_components/DrawerInventory";
 import useCRUDInventory from "../hooks/useCRUDInventory";
 
 const InventoryPage = () => {
@@ -39,7 +39,7 @@ const InventoryPage = () => {
         setOpenDrawler(false);
         setEditRecord(undefined);
     };
-    const handleCreateInventory: DrawlerInventoryProps["onSubmit"] = (
+    const handleCreateInventory: DrawerInventoryProps["onSubmit"] = (
         action,
         formData,
     ) => {
@@ -77,7 +77,7 @@ const InventoryPage = () => {
                     record.status === "QQ" && onApprovalInventory(record.recId)
                 }
             />
-            <DrawlerInventory
+            <DrawerInventory
                 isOpen={isOpenDrawler}
                 onCancel={onCancelDrawler}
                 actionType={editRecord ? EActionType.EDIT : EActionType.CREATE}

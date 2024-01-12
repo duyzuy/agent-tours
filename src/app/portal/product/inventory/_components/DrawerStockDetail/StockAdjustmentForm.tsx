@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import classNames from "classnames";
 import { Form, Input, Button, Space } from "antd";
 import { isEmpty } from "lodash";
-import { stockAdjustSchema } from "../../hooks/validation";
+import { stockAdjustSchema } from "../../../hooks/validation";
 import FormItem from "@/components/base/FormItem";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { StockInventoryAdjustFormData } from "@/models/management/core/stockInventory.interface";

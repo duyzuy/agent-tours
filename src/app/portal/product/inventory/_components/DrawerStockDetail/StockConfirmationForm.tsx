@@ -21,7 +21,7 @@ export type TDrawlerStockDetailAction = {
 export const DATE_FORMAT = "DDMMMYY HH:mm";
 export const TIME_FORMAT = "HH:mm";
 import { RangePickerProps } from "antd/es/date-picker";
-import { stockConfirmSchema } from "../../hooks/validation";
+import { stockConfirmSchema } from "../../../hooks/validation";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 const RangePicker = DatePicker.RangePicker;
 

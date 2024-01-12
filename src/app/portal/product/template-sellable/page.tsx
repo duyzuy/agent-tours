@@ -1,274 +1,206 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import {
-    Form,
-    Input,
-    Select,
-    Row,
-    Col,
-    DatePicker,
-    Checkbox,
-    Space,
-    Button,
-} from "antd";
-
-import FormItem from "@/components/base/FormItem";
-import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
-
-import { SelectProps } from "antd/es/select";
-import { useGetDestinationsQuery } from "@/queries/misc/destination";
-import { TemplateSellableFormData } from "@/models/management/core/templateSellable.interface";
-import { Status } from "@/models/management/common.interface";
-import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
-import { IDestination } from "@/models/management/region.interface";
-import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
-import { CMS_TEMPLATES } from "@/constants/cmsTemplate.constant";
-import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-import { EProductType } from "@/models/management/core/productType.interface";
+    ITemplateSaleableListRs,
+    TemplateSellableQueryParams,
+} from "@/models/management/core/templateSellable.interface";
 import useCRUDTemplateSellable from "../hooks/useCRUDTemplateSellable";
-type TDestinationOption = {
-    label: string;
-    value: string;
-    destination: IDestination;
-};
+import TableListPage from "@/components/admin/TableListPage";
+import DrawerTemplateSellable, {
+    DrawerTemplateSellableProps,
+    EActionType,
+} from "./_components/DrawerTemplateSellable";
+import { templateSellableColums } from "./templateSellableColums";
+import { useGetTemplateSellableListCoreQuery } from "@/queries/core/templateSellable";
+import { IDestination } from "@/models/management/region.interface";
+import { Divider, Space, Tag, Form, Radio, TablePaginationConfig } from "antd";
+import FormItem from "@/components/base/FormItem";
+import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
+import { FilterValue } from "antd/es/table/interface";
+
 const SellTemplatePage = () => {
-    const initSellableFormdata = new TemplateSellableFormData(
+    const [isOpen, setOpenDrawer] = useState(false);
+    const { onCreate, onApproval, onDelete, onUpdate } =
+        useCRUDTemplateSellable();
+    const [actionType, setActionType] = useState<EActionType>();
+    const [editRecord, setEditRecord] =
+        useState<ITemplateSaleableListRs["result"][0]>();
+    const templateQueryParams = new TemplateSellableQueryParams(
+        // 0,
+        "EXTRA",
         "",
-        undefined,
         "",
-        "",
-        [],
-        [],
-        Status.QQ,
+        1,
+        20,
     );
-    const [templateSellableFormData, setTemplateSellableFormData] =
-        useState(initSellableFormdata);
-
-    const { data: destinationList } = useGetDestinationsQuery();
-
-    const { data: inventoryTypeList } = useGetInventoryTypeListCoreQuery({
-        enabled: true,
+    const [queryFilter, setQueryFilter] = useState({
+        ...templateQueryParams,
+        total: 200,
     });
+    const { data: templateList, isLoading } =
+        useGetTemplateSellableListCoreQuery(queryFilter);
 
-    const { data: productTypeList } = useGetProductTypeListCoreQuery({
-        enabled: true,
-    });
+    const { data: productTypeList, isLoading: isLoadingProductType } =
+        useGetProductTypeListCoreQuery({ enabled: true });
+    const handleOpenDrawer = ({
+        type,
+        record,
+    }: {
+        type: EActionType;
+        record?: ITemplateSaleableListRs["result"][0];
+    }) => {
+        console.log(type);
 
-    const { onCreate, errors } = useCRUDTemplateSellable();
+        if (type === EActionType.EDIT) {
+            setEditRecord(record);
+        }
+        setActionType(() => type);
+        setOpenDrawer(true);
+    };
+    const onCloseDrawerAndResetFormInit = () => {
+        setOpenDrawer(false);
+        setEditRecord(undefined);
+    };
 
-    console.log(errors);
-    const inventoryTypeOptions: SelectProps["options"] = useMemo(() => {
-        let options: SelectProps["options"] = [];
-        if (inventoryTypeList) {
-            inventoryTypeList.forEach((item) => {
-                options = [...(options || []), { value: item, label: item }];
+    const onFilterProductType = (type: string) => {
+        setQueryFilter((prev) => ({ ...prev, andType: type }));
+    };
+    const handleTableChange = (
+        pagination: TablePaginationConfig,
+        filters: Record<string, FilterValue | null>,
+        // sorter: SorterResult<ITemplateSaleableListRs["result"][0]>,
+    ) => {
+        const { current, pageSize } = pagination;
+        if (current && current !== queryFilter.pageCurrent) {
+            setQueryFilter((prev) => ({
+                ...prev,
+                pageCurrent: current,
+            }));
+        }
+    };
+
+    const onSubmitTemplateSellable: DrawerTemplateSellableProps["onSubmit"] = (
+        actionType,
+        payload,
+    ) => {
+        if (actionType === EActionType.CREATE) {
+            onCreate(payload, () => {
+                onCloseDrawerAndResetFormInit();
             });
         }
-        return options;
-    }, [inventoryTypeList]);
 
-    const productTypeOptions = useMemo(() => {
-        return (
-            productTypeList?.reduce<{ label: string; value: string }[]>(
-                (acc, type) => {
-                    acc = [...acc, { label: type, value: type }];
-                    return acc;
-                },
-                [],
-            ) || []
-        );
-    }, [productTypeList]);
-
-    const destinationListOptions = useMemo(() => {
-        return destinationList?.reduce<
-            { value: string; label: string; destination: IDestination }[]
-        >((acc, destination) => {
-            acc = [
-                ...acc,
-                {
-                    value: destination.codeKey,
-                    label: destination.codeName,
-                    destination: destination,
-                },
-            ];
-            return acc;
-        }, []);
-    }, [destinationList]);
-
-    const onSelectDestination = (options: TDestinationOption[]) => {
-        const destinations = options.map((opt) => opt.destination);
-        setTemplateSellableFormData((prev) => ({
-            ...prev,
-            destListJson: [...destinations],
-        }));
-    };
-    const onChangeSellableFormData = (
-        key: keyof TemplateSellableFormData,
-        value:
-            | string
-            | number
-            | EInventoryType[]
-            | EProductType
-            | IDestination[],
-    ) => {
-        if (key === "code" && typeof value === "string") {
-            value = vietnameseTonesToUnderscoreKeyname(value).toUpperCase();
+        if (actionType === EActionType.EDIT && editRecord) {
+            onUpdate(editRecord.recId, payload, () => {
+                onCloseDrawerAndResetFormInit();
+            });
         }
-        setTemplateSellableFormData((prev) => ({
-            ...prev,
-            [key]: value,
-        }));
     };
-    const templateOptions = useMemo(() => {
-        return CMS_TEMPLATES.reduce<
-            {
-                label: string;
-                value: string;
-                templateName: string;
-                templateKey: string;
-            }[]
-        >((acc, template) => {
-            return (acc = [
-                ...acc,
-                {
-                    ...template,
-                    label: template.templateName,
-                    value: template.templateKey,
-                },
-            ]);
-        }, []);
-    }, []);
-
     return (
         <PageContainer
             name="Template Sell able"
-            modelName="Template Sell able"
+            modelName="Template"
             breadCrumItems={[{ title: "Template Sell able" }]}
-            hideAddButton
-            // onClick={() => handleDrawlerInventory({ type: EActionType.CREATE })}
+            onClick={() => handleOpenDrawer({ type: EActionType.CREATE })}
         >
-            <Form
-                layout="horizontal"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ flex: "1,1,0" }}
-                colon={false}
-                labelWrap
-                className="max-w-4xl"
-            >
-                <FormItem
-                    label="CMS template content"
-                    required
-                    validateStatus={errors?.cmsIdentity ? "error" : ""}
-                    help={errors?.cmsIdentity || ""}
-                >
-                    <Select
-                        placeholder="Chọn template"
-                        onChange={(value) =>
-                            onChangeSellableFormData("cmsIdentity", value)
-                        }
-                        options={templateOptions}
-                    />
-                </FormItem>
-                <FormItem
-                    label="Template sellable name"
-                    required
-                    validateStatus={errors?.name ? "error" : ""}
-                    help={errors?.name || ""}
-                >
-                    <Input
-                        placeholder="Template sellable name"
-                        value={templateSellableFormData.name}
-                        onChange={(ev) =>
-                            onChangeSellableFormData("name", ev.target.value)
-                        }
-                    />
-                </FormItem>
-                <FormItem
-                    label="Template sellable code"
-                    required
-                    validateStatus={errors?.code ? "error" : ""}
-                    help={errors?.code || ""}
-                >
-                    <Input
-                        placeholder="Template sellable code"
-                        value={templateSellableFormData.code}
-                        onChange={(ev) =>
-                            onChangeSellableFormData("code", ev.target.value)
-                        }
-                    />
-                </FormItem>
-                <FormItem
-                    label="Loại product"
-                    required
-                    validateStatus={errors?.type ? "error" : ""}
-                    help={errors?.type || ""}
-                >
-                    <Select
-                        placeholder="Chọn sản phẩm"
-                        value={templateSellableFormData.type}
-                        onChange={(value) =>
-                            onChangeSellableFormData("type", value)
-                        }
-                        options={productTypeOptions}
-                    />
-                </FormItem>
-                <FormItem
-                    label="Loại inventory"
-                    required
-                    validateStatus={errors?.inventoryTypeList ? "error" : ""}
-                    help={errors?.inventoryTypeList || ""}
-                >
-                    <Select
-                        placeholder="Chọn inventory"
-                        mode="multiple"
-                        value={templateSellableFormData.inventoryTypeList}
-                        onChange={(value) =>
-                            onChangeSellableFormData("inventoryTypeList", value)
-                        }
-                        options={inventoryTypeOptions}
-                    />
-                </FormItem>
-                <FormItem
-                    label="Nhóm điểm đến"
-                    required
-                    validateStatus={errors?.destListJson ? "error" : ""}
-                    help={errors?.destListJson || ""}
-                >
-                    <Select
-                        placeholder="Chọn nhóm điểm đến"
-                        onChange={(value, options) =>
-                            onSelectDestination(options as TDestinationOption[])
-                        }
-                        value={getSelectedDestination(
-                            templateSellableFormData.destListJson,
-                        )}
-                        mode="multiple"
-                        options={destinationListOptions}
-                    />
-                </FormItem>
-                <FormItem
-                    wrapperCol={{
-                        span: 18,
-                        offset: 6,
-                    }}
-                >
-                    <Space>
-                        <Button>Huỷ bỏ</Button>
-                        <Button
-                            type="primary"
-                            onClick={() => onCreate(templateSellableFormData)}
-                        >
-                            Tạo template
-                        </Button>
-                    </Space>
-                </FormItem>
-            </Form>
+            <div className="search-bar">
+                <Form>
+                    {productTypeList && (
+                        <FormItem label="Product type">
+                            {productTypeList.map((type) => (
+                                <Radio
+                                    key={type}
+                                    value={type}
+                                    checked={queryFilter.andType === type}
+                                    onChange={() => onFilterProductType(type)}
+                                >
+                                    {type}
+                                </Radio>
+                            ))}
+                        </FormItem>
+                    )}
+                </Form>
+            </div>
+            <Divider />
+            <TableListPage<ITemplateSaleableListRs["result"][0]>
+                modelName="Template"
+                dataSource={templateList || []}
+                scroll={{ x: 1200 }}
+                rowKey={"recId"}
+                isLoading={isLoading}
+                columns={templateSellableColums}
+                onChange={handleTableChange}
+                pagination={{
+                    current: queryFilter.pageCurrent,
+                    pageSize: queryFilter.pageSize,
+                }}
+                expandable={{
+                    expandedRowRender: ({ destListJson }) => {
+                        const destinationList: IDestination[] =
+                            JSON.parse(destListJson);
+
+                        return destinationList.map((destination) => (
+                            <div className="mb-4">
+                                <div className="py-2">
+                                    <p className="font-bold">
+                                        {destination.codeName}
+                                    </p>
+                                </div>
+                                <Space wrap>
+                                    {destination.listStateProvince.map(
+                                        (state) => (
+                                            <>
+                                                {(state.stateProvinceKey && (
+                                                    <Tag key={state.id}>
+                                                        {state.stateProvinceKey}
+                                                    </Tag>
+                                                )) ||
+                                                    (state.countryKey && (
+                                                        <Tag
+                                                            color="red"
+                                                            key={state.id}
+                                                        >
+                                                            {state.countryKey}
+                                                        </Tag>
+                                                    )) ||
+                                                    (state.subRegionKey && (
+                                                        <Tag
+                                                            color="green"
+                                                            key={state.id}
+                                                        >
+                                                            {state.subRegionKey}
+                                                        </Tag>
+                                                    )) ||
+                                                    (state.regionKey && (
+                                                        <Tag
+                                                            color="black"
+                                                            key={state.id}
+                                                        >
+                                                            {state.regionKey}
+                                                        </Tag>
+                                                    ))}
+                                            </>
+                                        ),
+                                    )}
+                                </Space>
+                            </div>
+                        ));
+                    },
+                }}
+                onEdit={(record) =>
+                    handleOpenDrawer({ type: EActionType.EDIT, record })
+                }
+                onDelete={(record) => onDelete(record.recId)}
+                onApproval={(record) => onApproval(record.recId)}
+            />
+            <DrawerTemplateSellable
+                onSubmit={onSubmitTemplateSellable}
+                initialValues={editRecord}
+                isOpen={isOpen}
+                onCancel={onCloseDrawerAndResetFormInit}
+                actionType={actionType}
+            />
         </PageContainer>
     );
 };
 export default SellTemplatePage;
-
-const getSelectedDestination = (destinations: IDestination[]) => {
-    return destinations.map((des) => des.codeKey);
-};

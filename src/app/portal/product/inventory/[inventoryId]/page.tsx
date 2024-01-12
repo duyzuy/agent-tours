@@ -3,15 +3,15 @@ import PageContainer from "@/components/admin/PageContainer";
 import { Spin, Tabs, TabsProps } from "antd";
 
 import { useGetInventoryDetailCoreQuery } from "@/queries/core/inventory";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { LINKS } from "@/constants/links.constant";
 
 import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory";
 import useCRUDStockInventory from "../../hooks/useCRUDStockInventory";
 import { useRouter } from "next/navigation";
 import useMessage from "@/hooks/useMessage";
-import StockFormContainer from "../../components/StockFormContainer";
-import StockListContainer from "../../components/StockListContainer";
+import StockFormContainer from "../_components/StockFormContainer";
+import StockListContainer from "../_components/StockListContainer";
 
 import { PlusOutlined } from "@ant-design/icons";
 import { isUndefined } from "lodash";

@@ -1,81 +1,120 @@
-import { useState } from "react";
-import { StockInventoryFormData } from "@/models/management/core/stockInventory.interface";
-
-import { templateSellableSchema } from "./validation";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { ValidationError } from "yup";
-import { queryCore } from "@/queries/var";
-
-import { useCreateTemplateSellableMutation } from "@/mutations/managements/templateSellable";
+import {
+    useCreateTemplateSellableMutation,
+    useApprovalTemplateSellableMutation,
+    useUpdateTemplateSellableMutation,
+    useDeleteTemplateSellableMutation,
+} from "@/mutations/managements/templateSellable";
 import {
     ITemplateSellablePayload,
+    ITemplateSellableUpdatePayload,
     TemplateSellableFormData,
 } from "@/models/management/core/templateSellable.interface";
+import { queryCore } from "@/queries/var";
 import { isEmpty } from "lodash";
-export type TTemplateSellableErrorsField = Partial<
-    Record<keyof TemplateSellableFormData, string>
->;
+
 const useCRUDTemplateSellable = () => {
     const { mutate: makeCreateTemplateSellable } =
         useCreateTemplateSellableMutation();
 
+    const { mutate: makeApprovalTemplateSellable } =
+        useApprovalTemplateSellableMutation();
+
+    const { mutate: makeDeleteTemplateSellable } =
+        useDeleteTemplateSellableMutation();
+
+    const { mutate: makeUpdateTemplateSellable } =
+        useUpdateTemplateSellableMutation();
+
     const message = useMessage();
     const queryClient = useQueryClient();
-    const [errors, setErrors] = useState<TTemplateSellableErrorsField>();
 
     const onCreateTemplateSellable = (
         formdata: TemplateSellableFormData,
         cb?: () => void,
     ) => {
-        const payload = correctSellableFormdataToPayload(formdata);
+        const payload = convertSellableFormdataToPayload(formdata);
 
-        templateSellableSchema
-            .validate(
-                {
-                    ...payload,
-                },
-                { abortEarly: false },
-            )
-            .then((schema) => {
-                makeCreateTemplateSellable(schema, {
-                    onSuccess: (data, variables) => {
-                        message.success(`Tạo Template thành công`);
-                        onResetFieldsErrors();
-                        // queryClient.invalidateQueries({
-                        //     queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
-                        // });
-                        cb?.();
-                    },
-                    onError: (error, variables) => {
-                        console.log({ error, variables });
-                        message.error(error.message);
-                    },
+        makeCreateTemplateSellable(payload, {
+            onSuccess: (data, variables) => {
+                message.success(`Tạo Template thành công`);
+
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_LIST_TEMPLATE_SELLABLE],
                 });
-            })
-            .catch((error) => {
-                if (error instanceof ValidationError) {
-                    let errors: TTemplateSellableErrorsField = {};
-                    error.inner.forEach((err) => {
-                        if (
-                            !errors[
-                                err.path as keyof TTemplateSellableErrorsField
-                            ]
-                        ) {
-                            errors[
-                                err.path as keyof TTemplateSellableErrorsField
-                            ] = err.message;
-                        }
-                    });
-                    setErrors(errors);
-                }
-            });
+                cb?.();
+            },
+            onError: (error) => {
+                message.error(error.message);
+            },
+        });
     };
-    const correctSellableFormdataToPayload = (
+
+    const onApprovalTemplateSellable = (reCordId: number, cb?: () => void) => {
+        makeApprovalTemplateSellable(reCordId, {
+            onSuccess: (data, variables) => {
+                message.success(`Duyệt thành công`);
+
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_LIST_TEMPLATE_SELLABLE],
+                });
+                cb?.();
+            },
+            onError: (error) => {
+                message.error(error.message);
+            },
+        });
+    };
+
+    const onDeleteTemplateSellable = (reCordId: number, cb?: () => void) => {
+        makeDeleteTemplateSellable(reCordId, {
+            onSuccess: (data, variables) => {
+                message.success(`Xoá Template thành công`);
+
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_LIST_TEMPLATE_SELLABLE],
+                });
+                cb?.();
+            },
+            onError: (error) => {
+                message.error(error.message);
+            },
+        });
+    };
+
+    const onUpdateTemplateSellable = (
+        recordId: number,
+        formData: TemplateSellableFormData,
+        cb?: () => void,
+    ) => {
+        const formPayload = convertSellableFormdataToPayload(formData);
+
+        makeUpdateTemplateSellable(
+            {
+                ...formPayload,
+                recordId: recordId,
+            },
+            {
+                onSuccess: (data, variables) => {
+                    message.success(`Cập nhật thành công`);
+
+                    queryClient.invalidateQueries({
+                        queryKey: [queryCore.GET_LIST_TEMPLATE_SELLABLE],
+                    });
+                    cb?.();
+                },
+                onError: (error) => {
+                    message.error(error.message);
+                },
+            },
+        );
+    };
+
+    const convertSellableFormdataToPayload = (
         formdata: TemplateSellableFormData,
     ): ITemplateSellablePayload => {
-        // const destinationListJson = JSON.stringify(formdata.destListJson);
         const formatInventoryTypeList = formdata.inventoryTypeList.reduce(
             (acc, invt) => {
                 return acc.concat(isEmpty(acc) ? "" : "||", invt);
@@ -84,16 +123,15 @@ const useCRUDTemplateSellable = () => {
         );
         return {
             ...formdata,
-            // destListJson: destinationListJson,
             inventoryTypeList: formatInventoryTypeList,
         } as ITemplateSellablePayload;
     };
-    const onResetFieldsErrors = () => {
-        setErrors(undefined);
-    };
+
     return {
         onCreate: onCreateTemplateSellable,
-        errors,
+        onApproval: onApprovalTemplateSellable,
+        onDelete: onDeleteTemplateSellable,
+        onUpdate: onUpdateTemplateSellable,
     };
 };
 export default useCRUDTemplateSellable;

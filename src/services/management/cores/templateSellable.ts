@@ -4,6 +4,7 @@ import {
     ITemplateSaleableListRs,
     ITemplateSellablePayload,
     ITemplateSellableQueryParams,
+    ITemplateSellableUpdatePayload,
 } from "@/models/management/core/templateSellable.interface";
 
 export const templateSellableAPIs = {
@@ -18,7 +19,7 @@ export const templateSellableAPIs = {
             },
         );
     },
-    getTemplate: async (queryParams: ITemplateSellableQueryParams) => {
+    getTemplateList: async (queryParams: ITemplateSellableQueryParams) => {
         return await coreApi.post<ITemplateSaleableListRs, BaseResponse<null>>(
             "core/SellableTemplate_List",
             {
@@ -29,13 +30,7 @@ export const templateSellableAPIs = {
             },
         );
     },
-    edit: async (
-        recId: number,
-        payload: Pick<
-            ITemplateSellablePayload,
-            "cmsIdentity" | "name" | "inventoryTypeList" | "destListJson"
-        >,
-    ) => {
+    edit: async (recId: number, payload: ITemplateSellableUpdatePayload) => {
         return await coreApi.post<ITemplateSaleableListRs, BaseResponse<null>>(
             "core/SellableTemplate_Edit",
             {
@@ -48,6 +43,17 @@ export const templateSellableAPIs = {
         );
     },
     delete: async (recId: number) => {
+        return await coreApi.post<ITemplateSaleableListRs, BaseResponse<null>>(
+            "core/SellableTemplate_Delete",
+            {
+                requestObject: {
+                    recId,
+                },
+                localUsername: "99",
+            },
+        );
+    },
+    confirm: async (recId: number) => {
         return await coreApi.post<ITemplateSaleableListRs, BaseResponse<null>>(
             "core/SellableTemplate_Confirm",
             {

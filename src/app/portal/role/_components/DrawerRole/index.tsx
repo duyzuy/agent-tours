@@ -27,16 +27,16 @@ export enum EActionType {
     CREATE = "create",
     EDIT = "edit",
 }
-export type TDrawlerCreateAction = {
+export type TDrawerCreateAction = {
     action: EActionType.CREATE;
 };
 export type TDrawlerEditAction = {
     action: EActionType.EDIT;
     record: TRole;
 };
-export type TDrawlerRole = TDrawlerEditAction | TDrawlerCreateAction;
+export type TDrawerRole = TDrawlerEditAction | TDrawerCreateAction;
 
-interface DrawlerRoleProps {
+interface DrawerRoleProps {
     isOpen?: boolean;
     onClose: () => void;
     actionType?: EActionType;
@@ -45,7 +45,7 @@ interface DrawlerRoleProps {
     rolePermissionList: IRolesPermissionsRs["result"]["rolePermissionList"];
     errors?: ICreateRoleFieldsErrors;
 }
-const DrawlerRole: React.FC<DrawlerRoleProps> = ({
+const DrawerRole: React.FC<DrawerRoleProps> = ({
     isOpen,
     onClose,
     actionType = EActionType.CREATE,
@@ -246,7 +246,7 @@ const DrawlerRole: React.FC<DrawlerRoleProps> = ({
         </Drawer>
     );
 };
-export default DrawlerRole;
+export default DrawerRole;
 
 const isExistRolePers = (
     sources: TRolePayload["localUser_RolePermissionList"],

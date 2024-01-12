@@ -11,7 +11,7 @@ import {
 } from "@/models/management/core/inventory.interface";
 import { Status } from "@/models/management/common.interface";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
-import { TInventoryErrorsField } from "../../hooks/useCRUDInventory";
+import { TInventoryErrorsField } from "../../../hooks/useCRUDInventory";
 
 export enum EActionType {
     CREATE = "create",
@@ -26,7 +26,7 @@ export type TDrawlerEditAction = {
 };
 export type TDrawlerAction = TDrawlerCreateAction | TDrawlerEditAction;
 
-export interface DrawlerInventoryProps {
+export interface DrawerInventoryProps {
     isOpen?: boolean;
     onCancel: () => void;
     actionType: EActionType;
@@ -35,7 +35,7 @@ export interface DrawlerInventoryProps {
     errors?: TInventoryErrorsField;
 }
 
-const DrawlerInventory: React.FC<DrawlerInventoryProps> = ({
+const DrawerInventory: React.FC<DrawerInventoryProps> = ({
     actionType,
     onCancel,
     onSubmit,
@@ -254,4 +254,4 @@ const DrawlerInventory: React.FC<DrawlerInventoryProps> = ({
         </Drawer>
     );
 };
-export default DrawlerInventory;
+export default DrawerInventory;

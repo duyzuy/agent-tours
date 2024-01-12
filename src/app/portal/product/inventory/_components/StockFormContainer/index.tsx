@@ -28,7 +28,7 @@ import localeData from "dayjs/plugin/localeData";
 import { CheckboxGroupProps } from "antd/es/checkbox";
 import { isEmpty } from "lodash";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
-import { stockSchema } from "../../hooks/validation";
+import { stockSchema } from "../../../hooks/validation";
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 dayjs.locale("en");
