@@ -18,7 +18,7 @@ import {
 } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useGetStockInventoryTypeCoreQuery } from "@/queries/core/stockInventory";
-import { StockInventoryFormData } from "@/models/management/core/stockInventory.interface";
+
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 
 import { RangePickerProps } from "antd/es/date-picker";
@@ -28,20 +28,17 @@ import localeData from "dayjs/plugin/localeData";
 import { CheckboxGroupProps } from "antd/es/checkbox";
 import { isEmpty, isUndefined } from "lodash";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
-import { stockSchema } from "../../../hooks/validation";
+import { SellableFormData } from "@/models/management/core/sellable.interface";
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 dayjs.locale("en");
 dayjs.locale("vi");
 
 const { RangePicker } = DatePicker;
-interface StockFormContainerProps {
-    inventoryId: number;
+interface SellableFormContainerProps {
+    templateSellableId: number;
     inventoryType: string;
-    onSubmit?: (
-        { data }: { data: StockInventoryFormData },
-        cb?: () => void,
-    ) => void;
+    onSubmit?: ({ data }: { data: SellableFormData }, cb?: () => void) => void;
 }
 type TRepeatType = "day" | "week";
 export const DATE_FORMAT = "DDMMMYY HH:mm";
@@ -56,18 +53,18 @@ const DAYS_OF_WEEK = [
     { label: "T6", value: "Friday" },
     { label: "T7", value: "Saturday" },
 ];
-const StockFormContainer: React.FC<StockFormContainerProps> = ({
-    inventoryId,
+const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
+    templateSellableId,
     inventoryType,
     onSubmit,
     // errors,
 }) => {
-    const initStockFormData = new StockInventoryFormData(
-        inventoryId,
-        "",
+    const initSellableFormdata = new SellableFormData(
+        templateSellableId,
         "",
         "",
         0,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -78,17 +75,18 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         [],
     );
 
-    const [stockFormData, setStockFormData] = useState(initStockFormData);
+    const [sellableFormData, setSellableFormData] =
+        useState(initSellableFormdata);
     const [repeatType, setRepeatType] = useState<TRepeatType>("week");
     const [showCreateSeries, setCreateSeries] = useState(false);
 
     const { handlerSubmit, errors } = useFormSubmit<
-        StockInventoryFormData & { isCreateSeries?: boolean }
+        SellableFormData & { isCreateSeries?: boolean }
     >({
-        schema: stockSchema,
+        // schema: stockSchema,
     });
     const [stockFieldErrors, setStockFieldErrors] =
-        useState<Partial<Record<keyof StockInventoryFormData, string>>>();
+        useState<Partial<Record<keyof SellableFormData, string>>>();
     const { data: stockInventoryType, isLoading: isLoadingStockType } =
         useGetStockInventoryTypeCoreQuery(inventoryType);
 
@@ -113,10 +111,10 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
      * Handle Stock form data
      */
     const onChangeStockFormData = (
-        key: keyof StockInventoryFormData,
-        value: StockInventoryFormData[keyof StockInventoryFormData],
+        key: keyof SellableFormData,
+        value: SellableFormData[keyof SellableFormData],
     ) => {
-        if (key === "code" && typeof value === "string") {
+        if (key === "codeAffix" && typeof value === "string") {
             value =
                 vietnameseTonesToUnderscoreKeyname(value).toLocaleUpperCase();
         }
@@ -129,7 +127,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         ) {
             value = Number(value);
         }
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             [key]: value,
         }));
@@ -139,7 +137,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         date,
         dateStr,
     ) => {
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             valid: dateStr[0],
             validTo: dateStr[1],
@@ -151,13 +149,13 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         dateStr,
     ) => {
         if (
-            isUndefined(stockFormData.valid) ||
-            isUndefined(stockFormData.validTo)
+            isUndefined(sellableFormData.valid) ||
+            isUndefined(sellableFormData.validTo)
         ) {
             message.error("Vui lòng Chọn ngày mở bán.");
             return;
         }
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             start: dateStr[0],
             end: dateStr[1],
@@ -167,7 +165,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         date,
         dateStr,
     ) => {
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             fromValidTo: dateStr,
         }));
@@ -183,30 +181,30 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                 return [...acc, day.value];
             }, []);
         }
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             everyDayofweek: [...(values as string[])],
         }));
     };
     const indeterminate = useMemo(() => {
         return (
-            stockFormData.everyDayofweek.length > 0 &&
-            stockFormData.everyDayofweek.length < DAYS_OF_WEEK.length
+            sellableFormData.everyDayofweek.length > 0 &&
+            sellableFormData.everyDayofweek.length < DAYS_OF_WEEK.length
         );
-    }, [stockFormData.everyDayofweek]);
+    }, [sellableFormData.everyDayofweek]);
     const checkAllDayOfWeek = useMemo(() => {
-        return stockFormData.everyDayofweek.length === DAYS_OF_WEEK.length;
-    }, [stockFormData.everyDayofweek]);
+        return sellableFormData.everyDayofweek.length === DAYS_OF_WEEK.length;
+    }, [sellableFormData.everyDayofweek]);
 
     const onCheckDayInWeek: CheckboxGroupProps["onChange"] = (values) => {
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             everyDayofweek: [...(values as string[])],
         }));
     };
 
     const onCloneExclusiveDate = () => {
-        if (isEmpty(stockFormData.fromValidTo)) {
+        if (isEmpty(sellableFormData.fromValidTo)) {
             message.info("Chọn ngày kết thúc khởi tạo series.");
             setStockFieldErrors((prev) => ({
                 ...prev,
@@ -218,7 +216,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             delete errors.fromValidTo;
             setStockFieldErrors(() => errors);
         }
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             exclusives: [
                 ...prev.exclusives,
@@ -227,9 +225,9 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         }));
     };
     const onRemoveOneExclusiveDate = (index: number) => {
-        const cloneExclusiveDates = [...stockFormData.exclusives];
+        const cloneExclusiveDates = [...sellableFormData.exclusives];
         cloneExclusiveDates.splice(index, 1);
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             exclusives: [...cloneExclusiveDates],
         }));
@@ -238,13 +236,13 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         exclIndx: number,
         dateStr: [string, string],
     ) => {
-        const exclusiveDates = [...stockFormData.exclusives];
+        const exclusiveDates = [...sellableFormData.exclusives];
         exclusiveDates.splice(exclIndx, 1, {
             from: dateStr[0],
             to: dateStr[1],
         });
 
-        setStockFormData((prev) => ({
+        setSellableFormData((prev) => ({
             ...prev,
             exclusives: [...exclusiveDates],
         }));
@@ -253,7 +251,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     const getDisableExclusiveDate = (date: dayjs.Dayjs) => {
         let isDisabled = false;
 
-        stockFormData.exclusives.forEach((exclDate) => {
+        sellableFormData.exclusives.forEach((exclDate) => {
             if (
                 exclDate.from &&
                 exclDate.to &&
@@ -267,11 +265,11 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         return isDisabled;
     };
 
-    const onSubmitFormData: HandleSubmit<StockInventoryFormData> = (data) => {
-        onSubmit?.({ data }, () => {
-            setStockFormData(initStockFormData);
-            setStockFieldErrors(undefined);
-        });
+    const onSubmitFormData: HandleSubmit<SellableFormData> = (data) => {
+        // onSubmit?.({ data }, () => {
+        //     setSellableFormData(initStockFormData);
+        //     setStockFieldErrors(undefined);
+        // });
     };
     return (
         <Form
@@ -290,40 +288,27 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             >
                 <Select
                     loading={isLoadingStockType}
-                    defaultValue={stockFormData.type}
+                    defaultValue={sellableFormData.type}
                     onChange={(value) => onChangeStockFormData("type", value)}
-                    value={stockFormData.type}
+                    value={sellableFormData.type}
                     options={stockInventoryTypeOptions}
                 />
             </FormItem>
             <FormItem
                 label="Code"
                 required
-                validateStatus={errors?.code ? "error" : ""}
-                help={errors?.code || ""}
+                validateStatus={errors?.codeAffix ? "error" : ""}
+                help={errors?.codeAffix || ""}
             >
                 <Input
                     placeholder="Stock code"
-                    value={stockFormData.code}
+                    value={sellableFormData.codeAffix}
                     onChange={(ev) =>
-                        onChangeStockFormData("code", ev.target.value)
+                        onChangeStockFormData("codeAffix", ev.target.value)
                     }
                 />
             </FormItem>
-            <FormItem
-                label="Mô tả"
-                required
-                validateStatus={errors?.description ? "error" : ""}
-                help={errors?.description || ""}
-            >
-                <Input.TextArea
-                    rows={4}
-                    value={stockFormData.description}
-                    onChange={(ev) =>
-                        onChangeStockFormData("description", ev.target.value)
-                    }
-                ></Input.TextArea>
-            </FormItem>
+
             <FormItem
                 label="Số lượng"
                 required
@@ -335,7 +320,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                     type="number"
                     min={0}
                     name="cap"
-                    value={stockFormData.cap}
+                    value={sellableFormData.cap}
                     onChange={(ev) =>
                         onChangeStockFormData("cap", ev.target.value)
                     }
@@ -354,11 +339,11 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                     placeholder={["Date from", "Date to"]}
                     format={DATE_FORMAT}
                     value={[
-                        stockFormData.valid
-                            ? dayjs(stockFormData.valid, DATE_FORMAT)
+                        sellableFormData.valid
+                            ? dayjs(sellableFormData.valid, DATE_FORMAT)
                             : null,
-                        stockFormData.validTo
-                            ? dayjs(stockFormData.validTo, DATE_FORMAT)
+                        sellableFormData.validTo
+                            ? dayjs(sellableFormData.validTo, DATE_FORMAT)
                             : null,
                     ]}
                     disabledDate={(date) => {
@@ -380,22 +365,23 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                     placeholder={["Start date", "End date"]}
                     format={DATE_FORMAT}
                     value={[
-                        stockFormData.start
-                            ? dayjs(stockFormData.start, DATE_FORMAT)
+                        sellableFormData.start
+                            ? dayjs(sellableFormData.start, DATE_FORMAT)
                             : null,
-                        stockFormData.end
-                            ? dayjs(stockFormData.end, DATE_FORMAT)
+                        sellableFormData.end
+                            ? dayjs(sellableFormData.end, DATE_FORMAT)
                             : null,
                     ]}
                     disabledDate={(date) => {
                         return (
                             dayjs().isAfter(date) ||
-                            dayjs(stockFormData.valid, DATE_FORMAT).isAfter(
+                            dayjs(sellableFormData.valid, DATE_FORMAT).isAfter(
                                 date,
                             ) ||
-                            dayjs(stockFormData.validTo, DATE_FORMAT).isBefore(
-                                date,
-                            )
+                            dayjs(
+                                sellableFormData.validTo,
+                                DATE_FORMAT,
+                            ).isBefore(date)
                         );
                     }}
                     onChange={onChangeUsedDateRange}
@@ -433,9 +419,9 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                     placeholder="Start date"
                                     disabled
                                     value={
-                                        stockFormData.valid
+                                        sellableFormData.valid
                                             ? dayjs(
-                                                  stockFormData.valid,
+                                                  sellableFormData.valid,
                                                   DATE_FORMAT,
                                               )
                                             : null
@@ -449,9 +435,9 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                     placeholder="End date"
                                     showTime={{ format: "HH:mm" }}
                                     disabledDate={(date) => {
-                                        return stockFormData.valid
+                                        return sellableFormData.valid
                                             ? dayjs(
-                                                  stockFormData.valid,
+                                                  sellableFormData.valid,
                                               ).isAfter(date)
                                             : dayjs().isAfter(date);
                                     }}
@@ -505,7 +491,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                 </Checkbox>
                                 <Checkbox.Group
                                     options={DAYS_OF_WEEK}
-                                    value={stockFormData.everyDayofweek}
+                                    value={sellableFormData.everyDayofweek}
                                     onChange={onCheckDayInWeek}
                                 />
                             </Space>
@@ -517,7 +503,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                 defaultValue={0}
                                 name="repeatAfter"
                                 maxLength={3}
-                                value={stockFormData.repeatAfter}
+                                value={sellableFormData.repeatAfter}
                                 onChange={(e) =>
                                     onChangeStockFormData(
                                         "repeatAfter",
@@ -528,7 +514,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         </FormItem>
                     )}
                     <FormItem label="Exclusive" tooltip="Trừ các ngày">
-                        {stockFormData.exclusives.map((exclDate, indx) => (
+                        {sellableFormData.exclusives.map((exclDate, indx) => (
                             <Row className="mb-3" key={indx}>
                                 <Col span={12}>
                                     <RangePicker
@@ -552,11 +538,11 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                         disabledDate={(date) => {
                                             return (
                                                 dayjs(
-                                                    stockFormData.valid,
+                                                    sellableFormData.valid,
                                                     DATE_FORMAT,
                                                 ).isAfter(date) ||
                                                 dayjs(
-                                                    stockFormData.fromValidTo,
+                                                    sellableFormData.fromValidTo,
                                                     DATE_FORMAT,
                                                 ).isBefore(date) ||
                                                 getDisableExclusiveDate(date)
@@ -609,18 +595,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             >
                 <Space>
                     <Button>Huỷ bỏ</Button>
-                    <Button
-                        type="primary"
-                        onClick={() =>
-                            handlerSubmit(
-                                {
-                                    ...stockFormData,
-                                    isCreateSeries: showCreateSeries,
-                                },
-                                onSubmitFormData,
-                            )
-                        }
-                    >
+                    <Button type="primary" onClick={() => {}}>
                         Tạo Stock
                     </Button>
                 </Space>
@@ -628,4 +603,4 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         </Form>
     );
 };
-export default StockFormContainer;
+export default SellableFormContainer;

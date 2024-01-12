@@ -1,13 +1,4 @@
-import {
-    object,
-    string,
-    ObjectSchema,
-    StringSchema,
-    boolean,
-    number,
-    array,
-    date,
-} from "yup";
+import { object, string, ObjectSchema, boolean, number, array } from "yup";
 import { IInventoryPayload } from "@/models/management/core/inventory.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
@@ -17,7 +8,6 @@ import {
     StockInventoryAdjustFormData,
     StockInventoryFormData,
 } from "@/models/management/core/stockInventory.interface";
-import ExploreSection from "@/app/[locale]/_components/ExploreSection";
 import {
     ITemplateSellablePayload,
     TemplateSellableFormData,
@@ -136,8 +126,7 @@ export const stockConfirmSchema: ObjectSchema<StockInventoryConfirmFormData> =
         recId: number().required("recId Bị thiếu."),
         cap: number()
             .required("Số lượng không bỏ trống.")
-            .positive()
-            .integer("Không phải là số.")
+            .positive("Không phải là số")
             .min(1, "Số lượng tối thiểu lớn hơn 1."),
         description: string().required("Mô tả không bỏ trống"),
         valid: string().required("Không bỏ trống").defined(),
@@ -149,9 +138,7 @@ export const stockConfirmSchema: ObjectSchema<StockInventoryConfirmFormData> =
 export const stockAdjustSchema: ObjectSchema<StockInventoryAdjustFormData> =
     object({
         inventoryStockId: number().required("inventoryStockId Bị thiếu."),
-        quantity: number()
-            .positive("Phải là số")
-            .required("Số lượng không bỏ trống."),
+        quantity: number().required("Số lượng không bỏ trống."),
         rmk: string().required("Mô tả không bỏ trống"),
     });
 

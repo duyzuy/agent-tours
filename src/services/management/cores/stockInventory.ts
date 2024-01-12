@@ -8,6 +8,7 @@ import {
     IStockConfirmPayload,
     IStockAdjustPayload,
     IStockAdjustment,
+    StockInventoryQueryparams,
 } from "@/models/management/core/stockInventory.interface";
 
 export const stockInventoryAPIs = {
@@ -22,12 +23,16 @@ export const stockInventoryAPIs = {
             },
         );
     },
-    getStockList: async (inventoryId: number) => {
+    getStockList: async (
+        inventoryId: number,
+        queryParams: StockInventoryQueryparams,
+    ) => {
         return await coreApi.post<IStockListOfInventoryRs, BaseResponse<null>>(
             "core/InventoryStock_List",
             {
                 requestObject: {
                     inventoryId,
+                    ...queryParams,
                 },
                 localUsername: "99",
             },

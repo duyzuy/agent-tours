@@ -71,7 +71,7 @@ const useCRUDStockInventory = () => {
     ) => {
         makeAdjustStockQuantity(formData, {
             onSuccess: (data, variables) => {
-                message.success(`Duyệt stock thành công`);
+                message.success(`Thêm số lượng stock thành công`);
                 queryClient.invalidateQueries({
                     queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
                 });

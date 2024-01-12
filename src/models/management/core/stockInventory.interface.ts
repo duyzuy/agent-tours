@@ -19,6 +19,8 @@ export interface IStockInventoryQueryParams {
     validTo: string | Date;
     start: string | Date;
     end: string | Date;
+    pageCurrent: number;
+    pageSize: number;
 }
 
 export class StockInventoryQueryparams implements IStockInventoryQueryParams {
@@ -27,19 +29,24 @@ export class StockInventoryQueryparams implements IStockInventoryQueryParams {
     validTo: string | Date;
     start: string | Date;
     end: string | Date;
-
+    pageCurrent: number;
+    pageSize: number;
     constructor(
         type: string,
         valid: string | Date,
         validTo: string | Date,
         start: string | Date,
         end: string | Date,
+        pageCurrent: number,
+        pageSize: number,
     ) {
         this.type = type;
         this.valid = valid;
         this.validTo = validTo;
         this.start = start;
         this.end = end;
+        this.pageCurrent = pageCurrent;
+        this.pageSize = pageSize;
     }
 }
 

@@ -11,6 +11,7 @@ import DrawerInventory, {
     TDrawlerAction,
 } from "./_components/DrawerInventory";
 import useCRUDInventory from "../hooks/useCRUDInventory";
+import { Status } from "@/models/management/common.interface";
 
 const InventoryPage = () => {
     const { data: inventoryList, isLoading } = useGetInventoryListCoreQuery();
@@ -74,8 +75,10 @@ const InventoryPage = () => {
                 }
                 onDelete={(record) => onDeleteInventory(record.recId)}
                 onApproval={(record) =>
-                    record.status === "QQ" && onApprovalInventory(record.recId)
+                    record.status === Status.QQ &&
+                    onApprovalInventory(record.recId)
                 }
+                hideApproval={(record) => record.status === Status.OK}
             />
             <DrawerInventory
                 isOpen={isOpenDrawler}

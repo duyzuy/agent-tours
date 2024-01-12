@@ -51,29 +51,7 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
             );
         },
     },
-    {
-        title: "Quản lý stock",
-        dataIndex: "isStock",
-        key: 2,
-        width: 120,
-        render: (_, record) => {
-            return (
-                <>
-                    {(record.isStock && record.status === Status.OK && (
-                        <Link
-                            href={`/portal/product/inventory/${record.recId}`}
-                            className=""
-                        >
-                            <span className="text-primary-default text-xs inline-block px-2 py-1 rounded-sm border border-primary-default">
-                                Tạo stock
-                            </span>
-                        </Link>
-                    )) ||
-                        null}
-                </>
-            );
-        },
-    },
+
     {
         title: "User",
         dataIndex: "sysFstUser",
@@ -87,6 +65,30 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
         width: 150,
         render: (_, record) => {
             return formatDate(record.sysFstUpdate);
+        },
+    },
+    {
+        title: "Quản lý stock",
+        dataIndex: "isStock",
+        key: 2,
+        fixed: "right",
+        width: 120,
+        render: (_, record) => {
+            return (
+                <>
+                    {(record.isStock && record.status === Status.OK && (
+                        <Link
+                            href={`/portal/product/inventory/${record.recId}`}
+                            className=""
+                        >
+                            <span className="text-primary-default text-xs inline-block px-2 py-1 rounded-sm border border-primary-default">
+                                Cấu hình stock
+                            </span>
+                        </Link>
+                    )) ||
+                        null}
+                </>
+            );
         },
     },
 ];

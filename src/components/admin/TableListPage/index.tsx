@@ -19,6 +19,7 @@ type ITableListPageProps<T extends object> = TableProps<T> & {
     onDelete?: (record: T) => void;
     onView?: (record: T) => void;
     onApproval?: (record: T) => void;
+    hideApproval?: (record: T) => boolean;
     modelName?: string;
 };
 function TableListPage<T extends object>(props: ITableListPageProps<T>) {
@@ -31,6 +32,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         onDelete,
         columns,
         modelName = "",
+        hideApproval,
         ...restProps
     } = props;
     const [showModalDelete, setShowModalDelete] = useState(false);
@@ -54,6 +56,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         const fncList = [
             {
                 fnc: onApproval,
+                ishide: hideApproval?.(record),
                 item: {
                     key: "approval",
                     label: (
@@ -69,6 +72,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             },
             {
                 fnc: onView,
+                ishide: false,
                 item: {
                     key: "view",
                     label: (
@@ -84,6 +88,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             },
             {
                 fnc: onDelete,
+                ishide: false,
                 item: {
                     key: "delete",
                     className: "",
@@ -101,7 +106,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         ];
 
         return fncList.reduce<MenuProps["items"]>((acc, curr) => {
-            if (curr.fnc) {
+            if (curr.fnc && !curr.ishide) {
                 acc = [...(acc || []), curr.item];
             }
             return acc;

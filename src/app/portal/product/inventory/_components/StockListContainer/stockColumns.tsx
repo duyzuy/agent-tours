@@ -23,13 +23,13 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
         },
     },
     {
-        title: "Product type",
+        title: "Inventory type",
         dataIndex: "inventoryType",
         key: "inventoryType",
         width: 60,
     },
     {
-        title: "Type",
+        title: "Stock type",
         dataIndex: "type",
         key: "type",
         width: 60,
@@ -42,16 +42,22 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
         onFilter: (value, record) => record.type.indexOf(value as string) === 0,
     },
     {
+        title: "Open",
+        dataIndex: "open",
+        key: "open",
+        width: 40,
+    },
+    {
         title: "Khả dụng (Avaiable)",
         dataIndex: "avaiable",
         key: "avaiable",
-        width: 60,
+        width: 40,
     },
     {
         title: "Đã sử dụng (Used)",
         dataIndex: "used",
         key: "used",
-        width: 60,
+        width: 45,
     },
 
     {
@@ -106,7 +112,7 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
         title: "Trạng thái",
         dataIndex: "status",
         key: "status",
-        width: 80,
+        width: 60,
         render: (_, record) => {
             return (
                 <Tag
@@ -134,7 +140,7 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
         title: "Ngày tạo",
         dataIndex: "sysFstUpdate",
         key: "sysFstUpdate",
-        width: 100,
+        width: 80,
         render: (_, record) => {
             return formatDate(record.sysFstUpdate);
         },

@@ -28,14 +28,15 @@ export const useGetStockInventoryListCoreQuery = ({
                 ...acc,
                 [key]: queryparams[key as keyof StockInventoryQueryparams],
             };
-        }, new StockInventoryQueryparams("", "", "", "", ""));
+        }, new StockInventoryQueryparams("", "", "", "", "", 1, 10));
     return useQuery({
         queryKey: [
             queryCore.GET_STOCK_LIST_INVENTORY,
             inventoryId,
             sortedQueryParams,
         ],
-        queryFn: () => stockInventoryAPIs.getStockList(inventoryId),
+        queryFn: () =>
+            stockInventoryAPIs.getStockList(inventoryId, sortedQueryParams),
         select: (data) => data.result,
         enabled: enabled,
     });

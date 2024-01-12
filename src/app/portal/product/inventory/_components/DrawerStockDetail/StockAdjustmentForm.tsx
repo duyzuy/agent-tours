@@ -36,6 +36,11 @@ const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
         key: keyof StockInventoryAdjustFormData,
         value: string | number,
     ) => {
+        if (key === "quantity") {
+            if (!isNaN(value as number)) {
+                value = Number(value);
+            }
+        }
         setFormData((prev) => ({
             ...prev,
             [key]: value,
@@ -71,7 +76,7 @@ const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
                     help={errors?.quantity || ""}
                 >
                     <Input
-                        type="text"
+                        type="number"
                         placeholder="Số lượng"
                         value={formData.quantity}
                         onChange={(ev) =>

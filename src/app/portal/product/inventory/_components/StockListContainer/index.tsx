@@ -28,6 +28,7 @@ interface StockListContainerProps {
         data: StockInventoryAdjustFormData,
         cb?: () => void,
     ) => void;
+    render?: () => React.ReactNode;
 }
 
 const StockListContainer: React.FC<StockListContainerProps> = ({
@@ -35,6 +36,7 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
     isLoading,
     onConfirm,
     onAdjustQuantity,
+    render,
 }) => {
     const [showDrawler, setShowDrawler] = useState(false);
 
@@ -59,6 +61,7 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
 
     return (
         <React.Fragment>
+            {render?.()}
             <TableListPage<IStockListOfInventoryRs["result"][0]>
                 dataSource={items}
                 scroll={{ x: 2200 }}
@@ -66,6 +69,7 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
                 isLoading={isLoading}
                 columns={stockColumns}
                 onEdit={(record) => handleDrawler(record)}
+                pagination={{ current: 1, pageSize: 20 }}
             />
             <DrawerStockDetail
                 isOpen={showDrawler}

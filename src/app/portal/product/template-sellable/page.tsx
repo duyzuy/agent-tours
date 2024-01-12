@@ -18,6 +18,7 @@ import { Divider, Space, Tag, Form, Radio, TablePaginationConfig } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { FilterValue } from "antd/es/table/interface";
+import { Status } from "@/models/management/common.interface";
 
 const SellTemplatePage = () => {
     const [isOpen, setOpenDrawer] = useState(false);
@@ -192,6 +193,7 @@ const SellTemplatePage = () => {
                 }
                 onDelete={(record) => onDelete(record.recId)}
                 onApproval={(record) => onApproval(record.recId)}
+                hideApproval={(record) => record.status === Status.OK}
             />
             <DrawerTemplateSellable
                 onSubmit={onSubmitTemplateSellable}
