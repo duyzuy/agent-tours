@@ -11,38 +11,53 @@ import {
     Space,
     Button,
 } from "antd";
-import type { DatePickerProps, RangePickerProps } from "antd/es/date-picker";
 import FormItem from "@/components/base/FormItem";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { useGetStockInventoryTypeCoreQuery } from "@/queries/core/stockInventory";
-import { useEffect, useMemo, useState } from "react";
+import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
+import { useMemo, useState } from "react";
 import { SelectProps } from "antd/es/select";
+import {
+    IInventory,
+    IInventoryQueryParams,
+} from "@/models/management/core/inventory.interface";
+import { Status } from "@/models/management/common.interface";
+import { StockInventoryFormData } from "@/models/management/core/stockInventory.interface";
 const { RangePicker } = DatePicker;
 const StockPage = () => {
-    const [type, setType] = useState("");
-
-    const { data: inventoryTypeList } = useGetInventoryTypeListCoreQuery({
-        enabled: true,
-    });
-
+    const stockFormData = new StockInventoryFormData(
+        undefined,
+        "",
+        "",
+        "",
+        0,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        [],
+        0,
+        [],
+    );
     const {
         data: stockInventoryType,
         isLoading: isLoadingStockType,
         refetch,
-    } = useGetStockInventoryTypeCoreQuery(type);
+    } = useGetStockInventoryTypeCoreQuery("HOTEL");
+    const ivnentoryQueryParams = new IInventoryQueryParams(
+        undefined,
+        true,
+        1,
+        10,
+        Status.OK,
+    );
+    const { data: inventoryResponse, isLoading } = useGetInventoryListCoreQuery(
+        { queryParams: ivnentoryQueryParams, enabled: true },
+    );
+    const { list: inventoryList } = inventoryResponse || {};
 
-    const inventoryTypeOptions: SelectProps["options"] = useMemo(() => {
-        let options: SelectProps["options"] = [
-            { label: "Chọn loại inventory", value: "" },
-        ];
-        if (inventoryTypeList) {
-            inventoryTypeList.forEach((item) => {
-                options = [...(options || []), { value: item, label: item }];
-            });
-        }
-        return options;
-    }, [inventoryTypeList]);
-
+    console.log(stockInventoryType);
     const stockInventoryTypeOptions = useMemo(() => {
         let options: SelectProps["options"] = [
             { label: "Chọn loại Stock", value: "" },
@@ -55,11 +70,24 @@ const StockPage = () => {
         }
         return options;
     }, [stockInventoryType]);
-    console.log(stockInventoryType, type);
 
-    // useEffect(() => {
-    //     refetch();
-    // }, [type]);
+    const onSelectInventory: SelectProps["onChange"] = (value, option) => {
+        console.log(value, option);
+    };
+    const inventoryOptions = useMemo(() => {
+        return inventoryList?.reduce<
+            { label: string; value: number; data: IInventory }[]
+        >((acc, inv) => {
+            return [
+                ...acc,
+                {
+                    label: `${inv.name} - ${inv.code}`,
+                    value: inv.recId,
+                    data: inv,
+                },
+            ];
+        }, []);
+    }, [inventoryList]);
     return (
         <PageContainer
             name="Stock"
@@ -76,11 +104,11 @@ const StockPage = () => {
                 labelWrap
                 className="max-w-4xl"
             >
-                <FormItem label="Inventory type" required>
+                <FormItem label="Chọn inventory" required>
                     <Select
                         defaultValue=""
-                        onChange={(value) => setType(value)}
-                        options={inventoryTypeOptions}
+                        onChange={onSelectInventory}
+                        options={inventoryOptions}
                     />
                 </FormItem>
                 <FormItem label="Type" required>

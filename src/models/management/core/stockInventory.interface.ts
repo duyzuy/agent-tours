@@ -14,31 +14,34 @@ export enum EStockInventoryType {
 export interface IStockInventoryTypeRs extends BaseResponse<string[]> {}
 
 export interface IStockInventoryQueryParams {
-    type: string;
-    valid: string | Date;
-    validTo: string | Date;
-    start: string | Date;
-    end: string | Date;
-    pageCurrent: number;
-    pageSize: number;
+    type?: string;
+    valid?: string | Date;
+    validTo?: string | Date;
+    start?: string | Date;
+    end?: string | Date;
+    pageCurrent?: number;
+    pageSize?: number;
+    status?: Status;
 }
 
 export class StockInventoryQueryparams implements IStockInventoryQueryParams {
-    type: string;
-    valid: string | Date;
-    validTo: string | Date;
-    start: string | Date;
-    end: string | Date;
-    pageCurrent: number;
-    pageSize: number;
+    type?: string;
+    valid?: string | Date;
+    validTo?: string | Date;
+    start?: string | Date;
+    end?: string | Date;
+    pageCurrent?: number;
+    pageSize?: number;
+    status?: Status;
     constructor(
-        type: string,
-        valid: string | Date,
-        validTo: string | Date,
-        start: string | Date,
-        end: string | Date,
-        pageCurrent: number,
-        pageSize: number,
+        type: string | undefined,
+        valid: string | Date | undefined,
+        validTo: string | Date | undefined,
+        start: string | Date | undefined,
+        end: string | Date | undefined,
+        pageCurrent: number | undefined,
+        pageSize: number | undefined,
+        status: Status | undefined,
     ) {
         this.type = type;
         this.valid = valid;
@@ -47,6 +50,7 @@ export class StockInventoryQueryparams implements IStockInventoryQueryParams {
         this.end = end;
         this.pageCurrent = pageCurrent;
         this.pageSize = pageSize;
+        this.status = status;
     }
 }
 
@@ -61,67 +65,67 @@ export interface IStock {
     open: number;
     avaiable: number;
     description: string;
-    validFrom: string | Date;
-    validTo: string | Date;
-    startDate: string | Date;
-    endDate: string | Date;
+    validFrom: string;
+    validTo: string;
+    startDate: string;
+    endDate: string;
     status: Status;
     sysFstUser: string;
-    sysFstUpdate: string | Date;
+    sysFstUpdate: string;
     sysLstUser: string;
-    sysLstUpdate: string | Date;
+    sysLstUpdate: string;
     sysBelongTo: string;
     logStatus: string;
 }
 export interface IStockListOfInventoryRs extends BaseResponse<IStock[]> {}
 export interface IStockPayload {
-    inventoryId: number;
-    type: string; //api 1.3
-    code: string;
-    cap: number;
-    valid: string; //ddMMMyy HH:mm (global/us locale)
-    validTo: string;
-    start: string;
-    end: string;
+    inventoryId?: number;
+    type?: string; //api 1.3
+    code?: string;
+    cap?: number;
+    valid?: string; //ddMMMyy HH:mm (global/us locale)
+    validTo?: string;
+    start?: string;
+    end?: string;
     fromValidTo?: string; //<<========= có truyền giá trị chỗ này trở xuống = add Serial
     everyDayofweek: string[]; //Sunday Monday Tuesday Wednesday Thursday Friday Saturday (global/us locale)
-    repeatAfter: number;
+    repeatAfter?: number;
     exclusives: {
-        from: string | undefined;
-        to: string | undefined;
+        from?: string;
+        to?: string;
     }[];
 }
 
-export class StockInventoryFormData implements Partial<IStockPayload> {
-    inventoryId: number;
-    type: string;
-    code: string;
-    description: string;
-    cap: number;
+export class StockInventoryFormData implements IStockPayload {
+    inventoryId?: number;
+    type?: string;
+    code?: string;
+    description?: string;
+    cap?: number;
     valid?: string;
     validTo?: string;
     start?: string;
     end?: string;
     fromValidTo?: string;
     everyDayofweek: string[];
-    repeatAfter: number;
+    repeatAfter?: number;
     exclusives: {
         from: string | undefined;
         to: string | undefined;
     }[];
     constructor(
-        inventoryId: number,
-        type: string,
-        code: string,
-        description: string,
-        cap: number,
+        inventoryId: number | undefined,
+        type: string | undefined,
+        code: string | undefined,
+        description: string | undefined,
+        cap: number | undefined,
         valid: string | undefined,
         validTo: string | undefined,
         start: string | undefined,
         end: string | undefined,
         fromValidTo: string | undefined,
         everyDayofweek: string[],
-        repeatAfter: number,
+        repeatAfter: number | undefined,
         exclusives: {
             from: string;
             to: string;
@@ -143,18 +147,16 @@ export class StockInventoryFormData implements Partial<IStockPayload> {
     }
 }
 export interface IStockConfirmPayload {
-    recId: number;
-    cap: number;
+    recId?: number;
+    cap?: number;
     description?: string;
-    valid: string;
-    validTo: string;
-    start: string;
-    end: string;
+    valid?: string;
+    validTo?: string;
+    start?: string;
+    end?: string;
 }
 
-export class StockInventoryConfirmFormData
-    implements Partial<IStockConfirmPayload>
-{
+export class StockInventoryConfirmFormData implements IStockConfirmPayload {
     recId: number;
     description: string;
     cap: number;

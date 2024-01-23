@@ -26,7 +26,7 @@ export interface ITemplateSellable {
 }
 
 export interface ITemplateSellableQueryParams {
-    // recId: number; //1 item theo Id
+    recId: number; //1 item theo Id
     andType: string; //3 biến and.... là điều kiện search AND, có thể truyền 1 trong 3 hoặc cả 3
     andCodeLike: string;
     andDestIn: string;
@@ -35,28 +35,31 @@ export interface ITemplateSellableQueryParams {
 }
 
 export class TemplateSellableQueryParams
-    implements ITemplateSellableQueryParams
+    implements Partial<ITemplateSellableQueryParams>
 {
-    // recId: number;
-    andType: string;
-    andCodeLike: string;
-    andDestIn: string;
-    pageCurrent: number;
-    pageSize: number;
+    recId?: number;
+    andType?: string;
+    andCodeLike?: string;
+    andDestIn?: string;
+    pageCurrent?: number;
+    pageSize?: number;
+    status?: Status;
     constructor(
-        // recId: number,
-        andType: string,
-        andCodeLike: string,
-        andDestIn: string,
-        pageCurrent: number,
-        pageSize: number,
+        recId: number | undefined,
+        andType: string | undefined,
+        andCodeLike: string | undefined,
+        andDestIn: string | undefined,
+        pageCurrent: number | undefined,
+        pageSize: number | undefined,
+        status: Status | undefined,
     ) {
-        // this.recId = recId;
+        this.recId = recId;
         this.andType = andType;
         this.andCodeLike = andCodeLike;
         this.andDestIn = andDestIn;
         this.pageCurrent = pageCurrent;
         this.pageSize = pageSize;
+        this.status = status;
     }
 }
 export interface ITemplateSellablePayload {

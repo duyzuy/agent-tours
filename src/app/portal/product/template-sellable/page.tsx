@@ -19,6 +19,7 @@ import FormItem from "@/components/base/FormItem";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { FilterValue } from "antd/es/table/interface";
 import { Status } from "@/models/management/common.interface";
+import { isUndefined } from "lodash";
 
 const SellTemplatePage = () => {
     const [isOpen, setOpenDrawer] = useState(false);
@@ -28,20 +29,26 @@ const SellTemplatePage = () => {
     const [editRecord, setEditRecord] =
         useState<ITemplateSaleableListRs["result"][0]>();
     const templateQueryParams = new TemplateSellableQueryParams(
-        // 0,
+        undefined,
         "EXTRA",
-        "",
-        "",
+        undefined,
+        undefined,
         1,
         20,
+        undefined,
     );
-    const [queryFilter, setQueryFilter] = useState({
-        ...templateQueryParams,
-        total: 200,
-    });
-    const { data: templateList, isLoading } =
-        useGetTemplateSellableListCoreQuery(queryFilter);
-
+    const [queryFilter, setQueryFilter] = useState(templateQueryParams);
+    const { data: templateResponse, isLoading } =
+        useGetTemplateSellableListCoreQuery({
+            queryParams: queryFilter,
+            enabled: true,
+        });
+    const {
+        list: templateList,
+        pageCurrent,
+        pageSize,
+        totalItems,
+    } = templateResponse || {};
     const { data: productTypeList, isLoading: isLoadingProductType } =
         useGetProductTypeListCoreQuery({ enabled: true });
     const handleOpenDrawer = ({
@@ -126,14 +133,15 @@ const SellTemplatePage = () => {
             <TableListPage<ITemplateSaleableListRs["result"][0]>
                 modelName="Template"
                 dataSource={templateList || []}
-                scroll={{ x: 1200 }}
+                scroll={{ x: 1600 }}
                 rowKey={"recId"}
                 isLoading={isLoading}
                 columns={templateSellableColums}
                 onChange={handleTableChange}
                 pagination={{
-                    current: queryFilter.pageCurrent,
-                    pageSize: queryFilter.pageSize,
+                    current: pageCurrent,
+                    pageSize: pageSize,
+                    total: totalItems,
                 }}
                 expandable={{
                     expandedRowRender: ({ destListJson }) => {
@@ -157,17 +165,17 @@ const SellTemplatePage = () => {
                                                     </Tag>
                                                 )) ||
                                                     (state.countryKey && (
-                                                        <Tag color="red">
+                                                        <Tag color="volcano">
                                                             {state.countryKey}
                                                         </Tag>
                                                     )) ||
                                                     (state.subRegionKey && (
-                                                        <Tag color="green">
+                                                        <Tag color="cyan">
                                                             {state.subRegionKey}
                                                         </Tag>
                                                     )) ||
                                                     (state.regionKey && (
-                                                        <Tag color="black">
+                                                        <Tag color="gold">
                                                             {state.regionKey}
                                                         </Tag>
                                                     ))}
@@ -192,6 +200,11 @@ const SellTemplatePage = () => {
                 isOpen={isOpen}
                 onCancel={onCloseDrawerAndResetFormInit}
                 actionType={actionType}
+                onApproval={(recId) =>
+                    onApproval(recId, () => {
+                        onCloseDrawerAndResetFormInit();
+                    })
+                }
             />
         </PageContainer>
     );

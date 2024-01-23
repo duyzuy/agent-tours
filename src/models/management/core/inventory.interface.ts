@@ -13,7 +13,7 @@ export interface IInventory {
     productType: EProductType;
     tourItinerary: string;
     airItinerary: string;
-    isStock: false;
+    isStock: boolean;
     status: Status;
     sysFstUser: string;
     sysFstUpdate: Date;
@@ -55,5 +55,26 @@ export class InventoryFormData implements Partial<IInventoryPayload> {
         this.productType = productType;
         this.isStock = false;
         this.status = Status.QQ;
+    }
+}
+
+export class IInventoryQueryParams {
+    type?: string;
+    isStock?: boolean;
+    pageCurrent?: number;
+    pageSize?: number;
+    status?: Status;
+    constructor(
+        type: string | undefined,
+        isStock: boolean | undefined,
+        pageCurrent: number | undefined,
+        pageSize: number | undefined,
+        status: Status | undefined,
+    ) {
+        this.type = type;
+        this.isStock = isStock;
+        this.pageCurrent = pageCurrent;
+        this.pageSize = pageSize;
+        this.status = status;
     }
 }

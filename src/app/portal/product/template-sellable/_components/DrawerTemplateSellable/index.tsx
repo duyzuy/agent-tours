@@ -1,13 +1,23 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Form, Input, Select, Space, Button, SelectProps, Drawer } from "antd";
+import {
+    Form,
+    Input,
+    Select,
+    Space,
+    Button,
+    SelectProps,
+    Drawer,
+    Tag,
+} from "antd";
 import FormItem from "@/components/base/FormItem";
-import { IDestination } from "@/models/management/region.interface";
+
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 import { CMS_TEMPLATES } from "@/constants/cmsTemplate.constant";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
+import { IDestination } from "@/models/management/region.interface";
 import {
     ITemplateSaleableListRs,
     TemplateSellableFormData,
@@ -37,6 +47,7 @@ export interface DrawerTemplateSellableProps {
         actionType: EActionType,
         formData: TemplateSellableFormData,
     ) => void;
+    onApproval?: (recId: number) => void;
 }
 
 const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
@@ -45,6 +56,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
     actionType,
     onSubmit,
     initialValues,
+    onApproval,
 }) => {
     const initSellableFormdata = new TemplateSellableFormData(
         "",
@@ -158,6 +170,9 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
     const handleSubmitForm: HandleSubmit<TemplateSellableFormData> = (data) => {
         actionType && onSubmit?.(actionType, data);
     };
+    const isWaitingApproval = useMemo(() => {
+        return initialValues?.status === Status.QQ;
+    }, [initialValues]);
     useEffect(() => {
         if (initialValues && actionType === EActionType.EDIT) {
             const inventoryTypeList = initialValues.inventoryTypeList.split(
@@ -209,6 +224,8 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                 >
                     <Select
                         placeholder="Chọn template"
+                        value={templateSellableFormData.cmsIdentity}
+                        disabled={isWaitingApproval}
                         onChange={(value) =>
                             onChangeSellableFormData("cmsIdentity", value)
                         }
@@ -223,6 +240,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                 >
                     <Input
                         placeholder="Template sellable name"
+                        disabled={isWaitingApproval}
                         value={templateSellableFormData.name}
                         onChange={(ev) =>
                             onChangeSellableFormData("name", ev.target.value)
@@ -237,6 +255,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                 >
                     <Input
                         placeholder="Template sellable code"
+                        disabled={isWaitingApproval}
                         value={templateSellableFormData.code}
                         onChange={(ev) =>
                             onChangeSellableFormData("code", ev.target.value)
@@ -252,6 +271,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                     <Select
                         placeholder="Chọn sản phẩm"
                         value={templateSellableFormData.type}
+                        disabled={isWaitingApproval}
                         onChange={(value) =>
                             onChangeSellableFormData("type", value)
                         }
@@ -267,6 +287,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                     <Select
                         placeholder="Chọn inventory"
                         mode="multiple"
+                        disabled={isWaitingApproval}
                         value={templateSellableFormData.inventoryTypeList}
                         onChange={(value) =>
                             onChangeSellableFormData("inventoryTypeList", value)
@@ -285,6 +306,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                         onChange={(value, options) =>
                             onSelectDestination(options as TDestinationOption[])
                         }
+                        disabled={isWaitingApproval}
                         value={getSelectedDestination(
                             templateSellableFormData.destListJson,
                         )}
@@ -292,23 +314,50 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                         options={destinationListOptions}
                     />
                 </FormItem>
+                {actionType === EActionType.EDIT ? (
+                    <Space>
+                        <span>Trạng thái:</span>
+                        <Tag
+                            color={
+                                initialValues?.status === Status.OK
+                                    ? "green"
+                                    : "orange"
+                            }
+                        >
+                            {initialValues?.status === Status.OK
+                                ? "Đã duyệt"
+                                : "Chờ duyệt"}
+                        </Tag>
+                    </Space>
+                ) : null}
             </Form>
+
             <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
                 <Space>
                     <Button>Huỷ bỏ</Button>
-                    <Button
-                        type="primary"
-                        onClick={() =>
-                            handlerSubmit(
-                                templateSellableFormData,
-                                handleSubmitForm,
-                            )
-                        }
-                    >
-                        {actionType === EActionType.CREATE
-                            ? "Thêm mới"
-                            : "Cập nhật"}
-                    </Button>
+                    {actionType === EActionType.EDIT &&
+                    initialValues?.status === Status.QQ ? (
+                        <Button
+                            type="primary"
+                            onClick={() => onApproval?.(initialValues.recId)}
+                        >
+                            Duyệt
+                        </Button>
+                    ) : (
+                        <Button
+                            type="primary"
+                            onClick={() =>
+                                handlerSubmit(
+                                    templateSellableFormData,
+                                    handleSubmitForm,
+                                )
+                            }
+                        >
+                            {actionType === EActionType.CREATE
+                                ? "Thêm mới"
+                                : "Cập nhật"}
+                        </Button>
+                    )}
                 </Space>
             </div>
         </Drawer>

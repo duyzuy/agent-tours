@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
 import { stockInventoryAPIs } from "@/services/management/cores/stockInventory";
 import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
+import { isUndefined } from "lodash";
 
 export const useGetStockInventoryTypeCoreQuery = (type: string) => {
     return useQuery({
@@ -17,27 +18,50 @@ export const useGetStockInventoryListCoreQuery = ({
     queryparams,
     enabled,
 }: {
-    inventoryId: number;
-    queryparams: StockInventoryQueryparams;
-    enabled: boolean;
+    inventoryId?: number;
+    enabled?: boolean;
+    queryparams?: StockInventoryQueryparams;
 }) => {
-    const sortedQueryParams = Object.keys(queryparams)
-        .sort()
-        .reduce<StockInventoryQueryparams>((acc, key) => {
-            return {
-                ...acc,
-                [key]: queryparams[key as keyof StockInventoryQueryparams],
-            };
-        }, new StockInventoryQueryparams("", "", "", "", "", 1, 10));
+    let stockQueryParams = new StockInventoryQueryparams(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        10,
+        undefined,
+    );
+    console.log({ inventoryId, queryparams, enabled });
+    if (queryparams) {
+        stockQueryParams = Object.keys(queryparams)
+            .sort()
+            .reduce<StockInventoryQueryparams>((acc, key) => {
+                return {
+                    ...acc,
+                    [key]: queryparams[key as keyof StockInventoryQueryparams],
+                };
+            }, stockQueryParams);
+    }
     return useQuery({
         queryKey: [
             queryCore.GET_STOCK_LIST_INVENTORY,
             inventoryId,
-            sortedQueryParams,
+            stockQueryParams,
         ],
         queryFn: () =>
-            stockInventoryAPIs.getStockList(inventoryId, sortedQueryParams),
-        select: (data) => data.result,
+            stockInventoryAPIs.getStockList(inventoryId, queryparams),
+        select: (data) => {
+            const { result, pageCurrent, pageSize, totalPages, totalItems } =
+                data;
+            return {
+                list: result,
+                pageCurrent,
+                pageSize,
+                totalItems,
+                totalPages,
+            };
+        },
         enabled: enabled,
     });
 };

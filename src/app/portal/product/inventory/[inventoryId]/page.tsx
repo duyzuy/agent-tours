@@ -8,7 +8,7 @@ import {
     DatePicker,
     Row,
     Col,
-    Button,
+    Select,
 } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useGetInventoryDetailCoreQuery } from "@/queries/core/inventory";
@@ -19,12 +19,16 @@ import useCRUDStockInventory from "../../hooks/useCRUDStockInventory";
 import { useRouter } from "next/navigation";
 import useMessage from "@/hooks/useMessage";
 import StockFormContainer from "../_components/StockFormContainer";
-import StockListContainer from "../_components/StockListContainer";
-import { PlusOutlined } from "@ant-design/icons";
+import StockListContainer, {
+    StockListContainerProps,
+} from "../_components/StockListContainer";
+import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
 import { isUndefined } from "lodash";
 import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
-import { DATE_FORMAT } from "../_components/StockFormContainer";
+import { DATE_FORMAT } from "@/constants/common";
 import dayjs from "dayjs";
+import { Status } from "@/models/management/common.interface";
+import { RangePickerProps } from "antd/es/date-picker";
 const { RangePicker } = DatePicker;
 const StockPage = ({ params }: { params: { inventoryId: number } }) => {
     const router = useRouter();
@@ -32,31 +36,80 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
     const { data: inventoryDetail, isLoading } = useGetInventoryDetailCoreQuery(
         params.inventoryId,
     );
-    const stockQueryParams = new StockInventoryQueryparams(
-        "",
-        "",
-        "",
-        "",
-        "",
-        1,
-        20,
+
+    const [stockQueryParams, setStockFilterFormdata] = useState(
+        new StockInventoryQueryparams(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            1,
+            10,
+            undefined,
+        ),
     );
-    const [stockFilterFormData, setStockFilterFormdata] =
-        useState(stockQueryParams);
-    const { data: stockList, isLoading: isLoadingStockList } =
+
+    const { data: stockResponse, isLoading: isLoadingStockList } =
         useGetStockInventoryListCoreQuery({
             inventoryId: params.inventoryId,
-            queryparams: stockFilterFormData,
+            queryparams: stockQueryParams,
             enabled:
                 !isUndefined(inventoryDetail) &&
                 !isLoading &&
                 inventoryDetail.isStock,
         });
-
+    const {
+        list: stockList,
+        pageSize,
+        pageCurrent,
+        totalItems,
+    } = stockResponse || {};
     const { onCreate, onConfirm, onAdjustQuantity } = useCRUDStockInventory();
 
-    const onChangeFilterForm = () => {};
-    const onChangeValidate = () => {};
+    const onChangeFilterForm = (
+        key: keyof StockInventoryQueryparams,
+        value: StockInventoryQueryparams[keyof StockInventoryQueryparams],
+    ) => {
+        if (key === "status" && typeof value === "string") {
+            if (value === "All") {
+                setStockFilterFormdata((prev) => ({
+                    ...prev,
+                    status: undefined,
+                }));
+            } else {
+                setStockFilterFormdata((prev) => ({
+                    ...prev,
+                    status: value as Status,
+                }));
+            }
+        }
+    };
+    const onChangeValidDate: RangePickerProps["onChange"] = (
+        dates,
+        datesStr,
+    ) => {
+        setStockFilterFormdata((prev) => ({
+            ...prev,
+            valid: datesStr[0],
+            validTo: datesStr[1],
+        }));
+    };
+    const onChangeValidUseDate: RangePickerProps["onChange"] = (
+        dates,
+        datesStr,
+    ) => {
+        setStockFilterFormdata((prev) => ({
+            ...prev,
+            start: datesStr[0],
+            end: datesStr[1],
+        }));
+    };
+    const onChangeStockPage: StockListContainerProps["onChangeStockPage"] = (
+        page,
+    ) => {
+        setStockFilterFormdata((prev) => ({ ...prev, pageCurrent: page }));
+    };
     const tabItems: TabsProps["items"] = [
         {
             key: "stockList",
@@ -64,32 +117,53 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
             children: (
                 <StockListContainer
                     items={stockList || []}
+                    pageSize={pageSize || 10}
+                    pageCurrent={pageCurrent || 1}
+                    totalItems={totalItems || 0}
                     isLoading={isLoadingStockList}
                     onConfirm={onConfirm}
                     onAdjustQuantity={onAdjustQuantity}
+                    onChangeStockPage={onChangeStockPage}
                     render={() => {
                         return (
                             <div className="stock-list-filter pt-3">
                                 <Form layout="vertical">
-                                    {/* {productTypeList && (
-                                    <FormItem label="Product type">
-                                        {productTypeList.map((type) => (
-                                            <Radio
-                                                key={type}
-                                                value={type}
-                                                checked={
-                                                    queryFilter.andType === type
-                                                }
-                                                onChange={() =>
-                                                    onFilterProductType(type)
-                                                }
-                                            >
-                                                {type}
-                                            </Radio>
-                                        ))}
-                                    </FormItem>
-                                )} */}
                                     <Row gutter={12}>
+                                        <Col>
+                                            <FormItem>
+                                                <FilterOutlined /> Lọc
+                                            </FormItem>
+                                        </Col>
+                                        <Col span={4}>
+                                            <FormItem>
+                                                <Select
+                                                    value={
+                                                        stockQueryParams.status ??
+                                                        "All"
+                                                    }
+                                                    options={[
+                                                        {
+                                                            label: "Tất cả trạng thái",
+                                                            value: "All",
+                                                        },
+                                                        {
+                                                            label: "Đã duyệt",
+                                                            value: Status.OK,
+                                                        },
+                                                        {
+                                                            label: "Chờ duyệt",
+                                                            value: Status.QQ,
+                                                        },
+                                                    ]}
+                                                    onChange={(value) =>
+                                                        onChangeFilterForm(
+                                                            "status",
+                                                            value,
+                                                        )
+                                                    }
+                                                />
+                                            </FormItem>
+                                        </Col>
                                         <Col span={6}>
                                             <FormItem>
                                                 <RangePicker
@@ -102,20 +176,20 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
                                                     ]}
                                                     format={DATE_FORMAT}
                                                     value={[
-                                                        stockFilterFormData.valid
+                                                        stockQueryParams.valid
                                                             ? dayjs(
-                                                                  stockFilterFormData.valid,
+                                                                  stockQueryParams.valid,
                                                                   DATE_FORMAT,
                                                               )
                                                             : null,
-                                                        stockFilterFormData.validTo
+                                                        stockQueryParams.validTo
                                                             ? dayjs(
-                                                                  stockFilterFormData.validTo,
+                                                                  stockQueryParams.validTo,
                                                                   DATE_FORMAT,
                                                               )
                                                             : null,
                                                     ]}
-                                                    onChange={onChangeValidate}
+                                                    onChange={onChangeValidDate}
                                                     className="w-full"
                                                 />
                                             </FormItem>
@@ -132,27 +206,26 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
                                                     ]}
                                                     format={DATE_FORMAT}
                                                     value={[
-                                                        stockFilterFormData.valid
+                                                        stockQueryParams.start
                                                             ? dayjs(
-                                                                  stockFilterFormData.valid,
+                                                                  stockQueryParams.start,
                                                                   DATE_FORMAT,
                                                               )
                                                             : null,
-                                                        stockFilterFormData.validTo
+                                                        stockQueryParams.end
                                                             ? dayjs(
-                                                                  stockFilterFormData.validTo,
+                                                                  stockQueryParams.end,
                                                                   DATE_FORMAT,
                                                               )
                                                             : null,
                                                     ]}
-                                                    onChange={onChangeValidate}
+                                                    onChange={
+                                                        onChangeValidUseDate
+                                                    }
                                                     className="w-full"
                                                 />
                                             </FormItem>
                                         </Col>
-                                        <FormItem>
-                                            <Button type="primary">Lọc</Button>
-                                        </FormItem>
                                     </Row>
                                 </Form>
                             </div>

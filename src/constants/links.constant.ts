@@ -8,4 +8,6 @@ export const LINKS = {
     ProductInventoryList: "/portal/product/inventory",
     ProductStockList: "/portal/product/inventory/{inventoryId}",
     ProductStockDetail: "/portal/product/stock/{stockInventoryId}",
+    TemplateSellable: "/portal/product/template-sellable",
+    Sellable: "/portal/product/template-sellable/{tempalteSellableId}",
 };

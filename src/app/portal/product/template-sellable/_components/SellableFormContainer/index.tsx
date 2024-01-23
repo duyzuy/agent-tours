@@ -11,13 +11,11 @@ import {
     Space,
     Button,
     Radio,
-    SelectProps,
     DatePickerProps,
     CheckboxProps,
     message,
 } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { useGetStockInventoryTypeCoreQuery } from "@/queries/core/stockInventory";
 
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 
@@ -29,6 +27,8 @@ import { CheckboxGroupProps } from "antd/es/checkbox";
 import { isEmpty, isUndefined } from "lodash";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { SellableFormData } from "@/models/management/core/sellable.interface";
+import { sellableSchema } from "../../../hooks/validation";
+import { DATE_FORMAT, TIME_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 dayjs.locale("en");
@@ -37,31 +37,22 @@ dayjs.locale("vi");
 const { RangePicker } = DatePicker;
 interface SellableFormContainerProps {
     templateSellableId: number;
-    inventoryType: string;
-    onSubmit?: ({ data }: { data: SellableFormData }, cb?: () => void) => void;
+    templateCode: string;
+    type: string;
+    onSubmit?: (data: SellableFormData, cb?: () => void) => void;
 }
 type TRepeatType = "day" | "week";
-export const DATE_FORMAT = "DDMMMYY HH:mm";
-export const TIME_FORMAT = "HH:mm";
-//  Monday Tuesday Wednesday Thursday Friday Saturday
-const DAYS_OF_WEEK = [
-    { label: "CN", value: "Sunday" },
-    { label: "T2", value: "Monday" },
-    { label: "T3", value: "Tuesday" },
-    { label: "T4", value: "Wednesday" },
-    { label: "T5", value: "Thursday" },
-    { label: "T6", value: "Friday" },
-    { label: "T7", value: "Saturday" },
-];
+
 const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
     templateSellableId,
-    inventoryType,
+    templateCode,
+    type,
     onSubmit,
     // errors,
 }) => {
     const initSellableFormdata = new SellableFormData(
         templateSellableId,
-        "",
+        type,
         "",
         0,
         undefined,
@@ -83,25 +74,10 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
     const { handlerSubmit, errors } = useFormSubmit<
         SellableFormData & { isCreateSeries?: boolean }
     >({
-        // schema: stockSchema,
+        schema: sellableSchema,
     });
-    const [stockFieldErrors, setStockFieldErrors] =
+    const [sellableErrors, setSellableErrors] =
         useState<Partial<Record<keyof SellableFormData, string>>>();
-    const { data: stockInventoryType, isLoading: isLoadingStockType } =
-        useGetStockInventoryTypeCoreQuery(inventoryType);
-
-    const stockInventoryTypeOptions = useMemo(() => {
-        let options: SelectProps["options"] = [
-            { label: "Chọn loại Stock", value: "" },
-        ];
-
-        if (stockInventoryType) {
-            stockInventoryType.forEach((item) => {
-                options = [...(options || []), { value: item, label: item }];
-            });
-        }
-        return options;
-    }, [stockInventoryType]);
 
     /**
      *
@@ -110,7 +86,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
      *
      * Handle Stock form data
      */
-    const onChangeStockFormData = (
+    const onChangeSellableForm = (
         key: keyof SellableFormData,
         value: SellableFormData[keyof SellableFormData],
     ) => {
@@ -141,6 +117,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
             ...prev,
             valid: dateStr[0],
             validTo: dateStr[1],
+            closeDate: dateStr[1], // default when create closeDate equal ValidTo date
         }));
     };
 
@@ -152,7 +129,18 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
             isUndefined(sellableFormData.valid) ||
             isUndefined(sellableFormData.validTo)
         ) {
-            message.error("Vui lòng Chọn ngày mở bán.");
+            message.error("Vui lòng Chọn ngày mở bán trước.");
+            return;
+        }
+
+        if (
+            dayjs(dateStr[1], DATE_FORMAT).isBefore(
+                dayjs(sellableFormData.validTo, DATE_FORMAT),
+            )
+        ) {
+            message.error(
+                "Ngày kết thúc sử dụng phải sau ngày kết thúc mở bán.",
+            );
             return;
         }
         setSellableFormData((prev) => ({
@@ -206,15 +194,15 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
     const onCloneExclusiveDate = () => {
         if (isEmpty(sellableFormData.fromValidTo)) {
             message.info("Chọn ngày kết thúc khởi tạo series.");
-            setStockFieldErrors((prev) => ({
+            setSellableErrors((prev) => ({
                 ...prev,
                 fromValidTo: "Chọn ngày kết thúc.",
             }));
             return;
         } else {
-            let errors = { ...stockFieldErrors };
+            let errors = { ...sellableErrors };
             delete errors.fromValidTo;
-            setStockFieldErrors(() => errors);
+            setSellableErrors(() => errors);
         }
         setSellableFormData((prev) => ({
             ...prev,
@@ -266,10 +254,10 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
     };
 
     const onSubmitFormData: HandleSubmit<SellableFormData> = (data) => {
-        // onSubmit?.({ data }, () => {
-        //     setSellableFormData(initStockFormData);
-        //     setStockFieldErrors(undefined);
-        // });
+        onSubmit?.(data, () => {
+            setSellableFormData(initSellableFormdata);
+            setSellableErrors(undefined);
+        });
     };
     return (
         <Form
@@ -287,24 +275,25 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                 help={errors?.type || ""}
             >
                 <Select
-                    loading={isLoadingStockType}
+                    loading={false}
                     defaultValue={sellableFormData.type}
-                    onChange={(value) => onChangeStockFormData("type", value)}
+                    disabled
+                    onChange={(value) => onChangeSellableForm("type", value)}
                     value={sellableFormData.type}
-                    options={stockInventoryTypeOptions}
+                    options={[]}
                 />
             </FormItem>
             <FormItem
-                label="Code"
+                label="Affix Code"
                 required
                 validateStatus={errors?.codeAffix ? "error" : ""}
                 help={errors?.codeAffix || ""}
             >
                 <Input
-                    placeholder="Stock code"
+                    placeholder="Affix code"
                     value={sellableFormData.codeAffix}
                     onChange={(ev) =>
-                        onChangeStockFormData("codeAffix", ev.target.value)
+                        onChangeSellableForm("codeAffix", ev.target.value)
                     }
                 />
             </FormItem>
@@ -322,7 +311,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                     name="cap"
                     value={sellableFormData.cap}
                     onChange={(ev) =>
-                        onChangeStockFormData("cap", ev.target.value)
+                        onChangeSellableForm("cap", ev.target.value)
                     }
                 />
             </FormItem>
@@ -335,7 +324,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                 help={errors?.valid || errors?.validTo || ""}
             >
                 <RangePicker
-                    showTime={{ format: "HH:mm" }}
+                    showTime={{ format: TIME_FORMAT }}
                     placeholder={["Date from", "Date to"]}
                     format={DATE_FORMAT}
                     value={[
@@ -361,7 +350,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                 help={errors?.start || errors?.end || ""}
             >
                 <RangePicker
-                    showTime={{ format: "HH:mm" }}
+                    showTime={{ format: TIME_FORMAT }}
                     placeholder={["Start date", "End date"]}
                     format={DATE_FORMAT}
                     value={[
@@ -377,11 +366,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                             dayjs().isAfter(date) ||
                             dayjs(sellableFormData.valid, DATE_FORMAT).isAfter(
                                 date,
-                            ) ||
-                            dayjs(
-                                sellableFormData.validTo,
-                                DATE_FORMAT,
-                            ).isBefore(date)
+                            )
                         );
                     }}
                     onChange={onChangeUsedDateRange}
@@ -396,18 +381,18 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                         checked={showCreateSeries}
                         onChange={() => setCreateSeries((show) => !show)}
                     >
-                        Hiển thị các tuỳ chọn nâng cao và khởi tạo series stocks
-                        theo ngày mở bán (Valid date).
+                        Hiển thị các tuỳ chọn nâng cao và khởi tạo series
+                        Sellable.
                     </Checkbox>
                 </Space>
             </FormItem>
             {showCreateSeries ? (
                 <>
                     <FormItem
-                        label="Tạo series ngày mở bán"
+                        label="Series ngày mở bán"
                         tooltip="Tạo nhiều ngày mở bán ngày mở bán (Valid date)"
                         validateStatus={
-                            stockFieldErrors?.fromValidTo || errors?.fromValidTo
+                            sellableErrors?.fromValidTo || errors?.fromValidTo
                                 ? "error"
                                 : ""
                         }
@@ -415,7 +400,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                         <Row gutter={16}>
                             <Col span={12}>
                                 <DatePicker
-                                    showTime={{ format: "HH:mm" }}
+                                    showTime={{ format: TIME_FORMAT }}
                                     placeholder="Start date"
                                     disabled
                                     value={
@@ -433,7 +418,15 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                             <Col span={12}>
                                 <DatePicker
                                     placeholder="End date"
-                                    showTime={{ format: "HH:mm" }}
+                                    showTime={{ format: TIME_FORMAT }}
+                                    value={
+                                        sellableFormData.fromValidTo
+                                            ? dayjs(
+                                                  sellableFormData.fromValidTo,
+                                                  DATE_FORMAT,
+                                              )
+                                            : null
+                                    }
                                     disabledDate={(date) => {
                                         return sellableFormData.valid
                                             ? dayjs(
@@ -445,9 +438,9 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                                     onChange={onChangeValidFromTo}
                                     className="w-full"
                                 />
-                                {stockFieldErrors?.fromValidTo ? (
+                                {sellableErrors?.fromValidTo ? (
                                     <p className="text-red-500">
-                                        {stockFieldErrors?.fromValidTo}
+                                        {sellableErrors?.fromValidTo}
                                     </p>
                                 ) : null}
                                 {errors?.fromValidTo ? (
@@ -505,7 +498,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                                 maxLength={3}
                                 value={sellableFormData.repeatAfter}
                                 onChange={(e) =>
-                                    onChangeStockFormData(
+                                    onChangeSellableForm(
                                         "repeatAfter",
                                         e.target.value,
                                     )
@@ -518,7 +511,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                             <Row className="mb-3" key={indx}>
                                 <Col span={12}>
                                     <RangePicker
-                                        showTime={{ format: "HH:mm" }}
+                                        showTime={{ format: TIME_FORMAT }}
                                         placeholder={["Date from", "Date to"]}
                                         format={DATE_FORMAT}
                                         value={[
@@ -595,8 +588,19 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
             >
                 <Space>
                     <Button>Huỷ bỏ</Button>
-                    <Button type="primary" onClick={() => {}}>
-                        Tạo Stock
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            handlerSubmit(
+                                {
+                                    ...sellableFormData,
+                                    isCreateSeries: showCreateSeries,
+                                },
+                                onSubmitFormData,
+                            )
+                        }
+                    >
+                        Tạo mới
                     </Button>
                 </Space>
             </FormItem>

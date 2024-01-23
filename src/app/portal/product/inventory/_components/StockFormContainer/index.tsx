@@ -29,6 +29,7 @@ import { CheckboxGroupProps } from "antd/es/checkbox";
 import { isEmpty, isUndefined } from "lodash";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { stockSchema } from "../../../hooks/validation";
+import { DATE_FORMAT, TIME_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 dayjs.locale("en");
@@ -44,18 +45,7 @@ interface StockFormContainerProps {
     ) => void;
 }
 type TRepeatType = "day" | "week";
-export const DATE_FORMAT = "DDMMMYY HH:mm";
-export const TIME_FORMAT = "HH:mm";
-//  Monday Tuesday Wednesday Thursday Friday Saturday
-const DAYS_OF_WEEK = [
-    { label: "CN", value: "Sunday" },
-    { label: "T2", value: "Monday" },
-    { label: "T3", value: "Tuesday" },
-    { label: "T4", value: "Wednesday" },
-    { label: "T5", value: "Thursday" },
-    { label: "T6", value: "Friday" },
-    { label: "T7", value: "Saturday" },
-];
+
 const StockFormContainer: React.FC<StockFormContainerProps> = ({
     inventoryId,
     inventoryType,
@@ -155,6 +145,10 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             isUndefined(stockFormData.validTo)
         ) {
             message.error("Vui lòng Chọn ngày mở bán.");
+            return;
+        }
+        if (date && date[1]?.isBefore(dayjs(stockFormData.validTo))) {
+            message.error("Ngày kết thúc phải lớn hơn ngày kết thúc mở bán.");
             return;
         }
         setStockFormData((prev) => ({
@@ -350,7 +344,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                 help={errors?.valid || errors?.validTo || ""}
             >
                 <RangePicker
-                    showTime={{ format: "HH:mm" }}
+                    showTime={{ format: TIME_FORMAT }}
                     placeholder={["Date from", "Date to"]}
                     format={DATE_FORMAT}
                     value={[
@@ -376,7 +370,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                 help={errors?.start || errors?.end || ""}
             >
                 <RangePicker
-                    showTime={{ format: "HH:mm" }}
+                    showTime={{ format: TIME_FORMAT }}
                     placeholder={["Start date", "End date"]}
                     format={DATE_FORMAT}
                     value={[
@@ -391,9 +385,6 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         return (
                             dayjs().isAfter(date) ||
                             dayjs(stockFormData.valid, DATE_FORMAT).isAfter(
-                                date,
-                            ) ||
-                            dayjs(stockFormData.validTo, DATE_FORMAT).isBefore(
                                 date,
                             )
                         );
@@ -429,7 +420,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         <Row gutter={16}>
                             <Col span={12}>
                                 <DatePicker
-                                    showTime={{ format: "HH:mm" }}
+                                    showTime={{ format: TIME_FORMAT }}
                                     placeholder="Start date"
                                     disabled
                                     value={
@@ -447,7 +438,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                             <Col span={12}>
                                 <DatePicker
                                     placeholder="End date"
-                                    showTime={{ format: "HH:mm" }}
+                                    showTime={{ format: TIME_FORMAT }}
                                     disabledDate={(date) => {
                                         return stockFormData.valid
                                             ? dayjs(
@@ -532,7 +523,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                             <Row className="mb-3" key={indx}>
                                 <Col span={12}>
                                     <RangePicker
-                                        showTime={{ format: "HH:mm" }}
+                                        showTime={{ format: TIME_FORMAT }}
                                         placeholder={["Date from", "Date to"]}
                                         format={DATE_FORMAT}
                                         value={[

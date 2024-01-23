@@ -3,6 +3,10 @@ export interface BaseResponse<T> {
     status: "OK" | "XX" | "OX";
     message: string;
     jwt: string;
+    pageCurrent: number;
+    pageSize: number;
+    totalPages: number;
+    totalItems: number;
     result: T;
 }
 

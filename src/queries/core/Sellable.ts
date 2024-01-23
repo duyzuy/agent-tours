@@ -1,0 +1,48 @@
+import { useQuery } from "@tanstack/react-query";
+import { queryCore } from "../var";
+import { SellableQueryParams } from "@/models/management/core/sellable.interface";
+import { sellableAPIs } from "@/services/management/cores/sellable";
+import { isUndefined } from "lodash";
+
+export const useGetSellableListCoreQuery = (sellableQuery?: {
+    queryParams?: SellableQueryParams;
+    enabled?: boolean;
+}) => {
+    const { queryParams, enabled = true } = sellableQuery || {};
+    let sellableQueryParams = new SellableQueryParams(
+        undefined,
+        undefined,
+        undefined,
+        1,
+        20,
+        undefined,
+    );
+    if (!isUndefined(queryParams)) {
+        sellableQueryParams = Object.keys(queryParams)
+            .sort()
+            .reduce<SellableQueryParams>((acc, key) => {
+                return {
+                    ...acc,
+                    [key as keyof SellableQueryParams]:
+                        queryParams[key as keyof SellableQueryParams],
+                };
+            }, sellableQueryParams);
+    }
+
+    return useQuery({
+        queryKey: [queryCore.GET_SELLABLE_LIST, sellableQueryParams],
+        queryFn: () => sellableAPIs.getList(sellableQueryParams),
+        select: (data) => {
+            const { result, pageCurrent, pageSize, totalPages, totalItems } =
+                data;
+            return {
+                list: result,
+                pageCurrent,
+                pageSize,
+                totalPages,
+                totalItems,
+            };
+        },
+        enabled: enabled,
+    });
+};

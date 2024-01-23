@@ -13,9 +13,13 @@ import DrawerStockDetail, {
     DrawerStockDetailProps,
 } from "../DrawerStockDetail";
 import { BaseResponse } from "@/models/management/common.interface";
+import { PaginationProps } from "antd";
 
-interface StockListContainerProps {
+export interface StockListContainerProps {
     items: IStockListOfInventoryRs["result"];
+    pageSize: number;
+    pageCurrent: number;
+    totalItems: number;
     isLoading?: boolean;
     onConfirm: (
         data: StockInventoryConfirmFormData,
@@ -29,13 +33,18 @@ interface StockListContainerProps {
         cb?: () => void,
     ) => void;
     render?: () => React.ReactNode;
+    onChangeStockPage?: PaginationProps["onChange"];
 }
 
 const StockListContainer: React.FC<StockListContainerProps> = ({
     items,
     isLoading,
+    pageSize,
+    pageCurrent,
+    totalItems,
     onConfirm,
     onAdjustQuantity,
+    onChangeStockPage,
     render,
 }) => {
     const [showDrawler, setShowDrawler] = useState(false);
@@ -69,7 +78,12 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
                 isLoading={isLoading}
                 columns={stockColumns}
                 onEdit={(record) => handleDrawler(record)}
-                pagination={{ current: 1, pageSize: 20 }}
+                pagination={{
+                    current: pageCurrent,
+                    pageSize: pageSize,
+                    total: totalItems,
+                    onChange: onChangeStockPage,
+                }}
             />
             <DrawerStockDetail
                 isOpen={showDrawler}

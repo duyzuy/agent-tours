@@ -1,6 +1,54 @@
-import { BaseResponse } from "../common.interface";
+import { BaseResponse, Status } from "../common.interface";
+import { IInventory } from "./inventory.interface";
+import { IStock } from "./stockInventory.interface";
 
-export interface SellablePayload {
+export class SellableQueryParams {
+    sellableTemplateId?: number;
+    andType?: string;
+    andCodeLike?: string;
+    pageCurrent?: number;
+    pageSize?: number;
+    status?: Status;
+    constructor(
+        sellableTemplateId: number | undefined,
+        andType: string | undefined,
+        andCodeLike: string | undefined,
+        pageCurrent: number | undefined,
+        pageSize: number | undefined,
+        status: Status | undefined,
+    ) {
+        this.sellableTemplateId = sellableTemplateId;
+        this.andType = andType;
+        this.andCodeLike = andCodeLike;
+        this.pageCurrent = pageCurrent;
+        this.pageSize = pageSize;
+        this.status = status;
+    }
+}
+
+export interface ISellable {
+    avaiable: number;
+    cap: number;
+    closeDate: string;
+    code: string;
+    deadlineJson: string;
+    endDate: string;
+    logStatus: string;
+    recId: number;
+    sellableTemplateId: number;
+    startDate: string;
+    status: Status;
+    sysBelongTo: string;
+    sysFstUpdate: string;
+    sysFstUser: string;
+    sysLstUpdate: string;
+    sysLstUser: string;
+    type: string;
+    used: number;
+    validFrom: string;
+    validTo: string;
+}
+export interface ISellablePayload {
     sellableTemplateId: number;
     type: string; //1.2 productType = SellableTemplate
     codeAffix: string; //templateCode + Affix(nếu có) + validDate.Tostring(): chỉ cần nhập affix
@@ -18,7 +66,6 @@ export interface SellablePayload {
         to: string;
     }[];
 }
-
 export class SellableFormData {
     sellableTemplateId: number;
     type: string;
@@ -70,50 +117,80 @@ export class SellableFormData {
         this.exclusives = exclusives;
     }
 }
-export interface SellableListRs extends BaseResponse<any> {}
+export interface SellableListRs extends BaseResponse<ISellable[]> {}
 
 export interface SellableConfirmPayload {
-    recId: number;
-    cap: number;
-    closeDate: "string";
-    valid: "string";
-    validTo: "string";
-    start: "string";
-    end: "string";
-    //stocks, extrasStokcs, otherSellables
-    //khi Cfm 1 Sellable để mở bán => cần select các Inventory/Stock tương ứng
-    inventories: //(Stocks.count + Inventories.count) là bắt buộc > 1.
-    //ở inventory, pick các inventory KHÔNG CÓ STOCK
-    //InventoryType phải match với list trong template: vd AIR||HOTEL||VISA
-    {
-        recId: number; //recId của Inventory
-        qty: number; //qty của stock luôn = cap bên trên
+    recId?: number;
+    cap?: number;
+    closeDate?: string;
+    valid?: string;
+    validTo?: string;
+    start?: string;
+    end?: string;
+    inventories: {
+        recId?: number;
+        qty?: number;
     }[];
 
-    stocks: //(Stocks.count + Inventories.count) là bắt buộc > 1.
-    //ở stocks, cần pick InventoryStock cụ thể
-    //InventoryType của stock phải match với list trong template: vd AIR||HOTEL||VISA
-    {
-        recId: number; //recId của InventoryStock
-        qty: number; //qty của stock luôn = cap bên trên
+    stocks: {
+        recId?: number;
+        qty?: number;
     }[];
 
-    extraInventories: //optional, quy tắc như trên, đây là phần SSR
-    {
-        recId: number; //InventoryRecId
-        qty: number; //qty có thể nhập, cần < CAP bên trên
+    extraInventories: {
+        recId?: number;
+        qty?: number;
+    }[];
+    extraStocks: {
+        recId?: number;
+        qty?: number;
     }[];
 
-    extraStocks: //optional
-    {
-        recId: number; //InventoryStockRecId
-        qty: number; //qty có thể nhập, cần < CAP bên trên
+    otherSellables: {
+        recId?: number;
+        qty?: number;
     }[];
+}
 
-    otherSellables: //optional
-    //gắn SSR là 1 Sellable khác, để bán kèm Sellable hiện tại
-    {
-        recId: number; //SellableRecId
-        qty: number; //qty có thể nhập, cần < CAP bên trên
-    }[];
+export class SellableConfirmFormData {
+    recId?: number;
+    cap?: number;
+    closeDate?: string;
+    valid?: string;
+    validTo?: string;
+    start?: string;
+    end?: string;
+    inventories: { inventory: Partial<IInventory>; qty: number }[];
+    stocks: { stock: Partial<IStock>; qty: number }[];
+    extraInventories: { inventory: Partial<IInventory>; qty: number }[];
+    extraStocks: { stock: Partial<IStock>; qty: number }[];
+    otherSellables: { sellable: Partial<ISellable>; qty: number }[];
+
+    constructor(
+        recId: number | undefined,
+        cap: number | undefined,
+        closeDate: string | undefined,
+        valid: string | undefined,
+        validTo: string | undefined,
+        start: string | undefined,
+        end: string | undefined,
+        inventories: { inventory: Partial<IInventory>; qty: number }[],
+        stocks: { stock: Partial<IStock>; qty: number }[],
+        extraInventories: { inventory: Partial<IInventory>; qty: number }[],
+        extraStocks: { stock: Partial<IStock>; qty: number }[],
+        otherSellables: { sellable: Partial<ISellable>; qty: number }[],
+    ) {
+        this.recId = recId;
+        this.cap = cap;
+        this.closeDate = closeDate;
+        this.valid = valid;
+        this.validTo = validTo;
+        this.start = start;
+        this.end = end;
+        this.inventories = inventories;
+        this.stocks = stocks;
+        this.extraInventories = extraInventories;
+        this.extraStocks = extraStocks;
+        this.otherSellables = otherSellables;
+    }
 }

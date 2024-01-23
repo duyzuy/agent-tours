@@ -3,14 +3,17 @@ import { coreApi } from "../coreApi";
 import {
     IInventoryListRs,
     IInventoryPayload,
+    IInventoryQueryParams,
 } from "@/models/management/core/inventory.interface";
 
 export const inventoryAPIs = {
-    getList: async () => {
+    getList: async (queryParams?: IInventoryQueryParams) => {
         return await coreApi.post<IInventoryListRs, BaseResponse<null>>(
             "core/Inventory_List",
             {
-                requestObject: {},
+                requestObject: {
+                    ...queryParams,
+                },
                 localUsername: "99",
             },
         );

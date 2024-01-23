@@ -5,6 +5,7 @@ import {
     ITemplateSellablePayload,
     ITemplateSellableQueryParams,
     ITemplateSellableUpdatePayload,
+    TemplateSellableQueryParams,
 } from "@/models/management/core/templateSellable.interface";
 
 export const templateSellableAPIs = {
@@ -19,12 +20,23 @@ export const templateSellableAPIs = {
             },
         );
     },
-    getTemplateList: async (queryParams: ITemplateSellableQueryParams) => {
+    getTemplateList: async (queryParams: TemplateSellableQueryParams) => {
         return await coreApi.post<ITemplateSaleableListRs, BaseResponse<null>>(
             "core/SellableTemplate_List",
             {
                 requestObject: {
                     ...queryParams,
+                },
+                localUsername: "99",
+            },
+        );
+    },
+    getOneTemplate: async (recId: number) => {
+        return await coreApi.post<ITemplateSaleableListRs, BaseResponse<null>>(
+            "core/SellableTemplate_List",
+            {
+                requestObject: {
+                    recId,
                 },
                 localUsername: "99",
             },

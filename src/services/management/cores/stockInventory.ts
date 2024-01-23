@@ -24,15 +24,15 @@ export const stockInventoryAPIs = {
         );
     },
     getStockList: async (
-        inventoryId: number,
-        queryParams: StockInventoryQueryparams,
+        inventoryId?: number,
+        queryParams?: StockInventoryQueryparams,
     ) => {
         return await coreApi.post<IStockListOfInventoryRs, BaseResponse<null>>(
             "core/InventoryStock_List",
             {
                 requestObject: {
                     inventoryId,
-                    ...queryParams,
+                    ...(queryParams || {}),
                 },
                 localUsername: "99",
             },

@@ -33,6 +33,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         columns,
         modelName = "",
         hideApproval,
+        pagination,
         ...restProps
     } = props;
     const [showModalDelete, setShowModalDelete] = useState(false);
@@ -122,7 +123,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             title: "Hành động",
             dataIndex: "action",
             key: "action",
-            width: 100,
+            width: 80,
             fixed: "right",
             render: (_, record) => {
                 return (
@@ -158,6 +159,11 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                 columns={mergeColumns}
                 dataSource={dataSource}
                 loading={isLoading}
+                pagination={{
+                    hideOnSinglePage: true,
+                    pageSizeOptions: [10, 20, 50, 100],
+                    ...pagination,
+                }}
                 {...restProps}
             />
             <ModalDeleteConfirm

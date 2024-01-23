@@ -1,11 +1,12 @@
 import { ColumnsType } from "antd/es/table";
-import { Space, Tag, Table } from "antd";
+import { Space, Tag, Table, Button } from "antd";
 import { formatDate } from "@/utils/date";
 import { Status } from "@/models/management/common.interface";
 
 import { ITemplateSaleableListRs } from "@/models/management/core/templateSellable.interface";
 import { IDestination } from "@/models/management/region.interface";
-import { IInventory } from "@/models/management/core/inventory.interface";
+import Link from "next/link";
+import { RightOutlined } from "@ant-design/icons";
 
 export const templateSellableColums: ColumnsType<
     ITemplateSaleableListRs["result"][0]
@@ -25,7 +26,21 @@ export const templateSellableColums: ColumnsType<
             return (
                 <div>
                     <p className="font-bold mb-1">{record.name}</p>
-                    <p className="text-xs text-gray-500">{record.code}</p>
+                    <p className="text-xs text-gray-500 mb-2">{record.code}</p>
+                    {(record.status === Status.OK && (
+                        <p>
+                            <Link
+                                href={`/portal/product/template-sellable/${record.recId}`}
+                                className="text-xs"
+                            >
+                                <span> Chi tiết</span>
+                                <span className="text-[10px] ml-1">
+                                    <RightOutlined />
+                                </span>
+                            </Link>
+                        </p>
+                    )) ||
+                        null}
                 </div>
             );
         },
@@ -35,23 +50,40 @@ export const templateSellableColums: ColumnsType<
         dataIndex: "type",
         key: "type",
         width: 120,
-        filters: [
-            {
-                text: "TOUR",
-                value: "TOUR",
-            },
-            {
-                text: "EXTRA",
-                value: "EXTRA",
-            },
-        ],
-        onFilter: (value, record) => record.type.indexOf(value as string) === 0,
     },
     {
         title: "Inventory type",
         dataIndex: "inventoryTypeList",
         key: "inventoryTypeList",
-        width: 200,
+        width: 160,
+        filters: [
+            {
+                text: "HOTEL",
+                value: "HOTEL",
+            },
+            {
+                text: "VISA",
+                value: "VISA",
+            },
+            {
+                text: "AIR",
+                value: "AIR",
+            },
+            {
+                text: "TRANSPORT",
+                value: "TRANSPORT",
+            },
+            {
+                text: "INSURANCE",
+                value: "INSURANCE",
+            },
+            {
+                text: "GUIDE",
+                value: "GUIDE",
+            },
+        ],
+        onFilter: (value, record) =>
+            record.inventoryTypeList.indexOf(value as string) === 0,
         render(value, record) {
             const inventoryTypes: string[] =
                 record.inventoryTypeList.split("||");
@@ -91,7 +123,7 @@ export const templateSellableColums: ColumnsType<
         title: "Trạng thái",
         dataIndex: "status",
         key: "status",
-        width: 80,
+        width: 100,
         render: (_, record) => {
             return (
                 <Tag
@@ -110,9 +142,17 @@ export const templateSellableColums: ColumnsType<
         },
     },
     {
+        title: "Ngày tạo",
+        key: "sysLstUpdate",
+        width: 100,
+        render: (_, { sysLstUpdate }) => {
+            return formatDate(sysLstUpdate);
+        },
+    },
+    {
         title: "User",
         dataIndex: "sysFstUser",
-        key: 2,
-        width: 80,
+        key: "sysFstUser",
+        width: 100,
     },
 ];
