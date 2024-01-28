@@ -14,11 +14,9 @@ export const useGetStockInventoryTypeCoreQuery = (type: string) => {
 };
 
 export const useGetStockInventoryListCoreQuery = ({
-    inventoryId,
     queryparams,
     enabled,
 }: {
-    inventoryId?: number;
     enabled?: boolean;
     queryparams?: StockInventoryQueryparams;
 }) => {
@@ -28,11 +26,12 @@ export const useGetStockInventoryListCoreQuery = ({
         undefined,
         undefined,
         undefined,
+        undefined,
         1,
         10,
         undefined,
     );
-    console.log({ inventoryId, queryparams, enabled });
+
     if (queryparams) {
         stockQueryParams = Object.keys(queryparams)
             .sort()
@@ -44,13 +43,8 @@ export const useGetStockInventoryListCoreQuery = ({
             }, stockQueryParams);
     }
     return useQuery({
-        queryKey: [
-            queryCore.GET_STOCK_LIST_INVENTORY,
-            inventoryId,
-            stockQueryParams,
-        ],
-        queryFn: () =>
-            stockInventoryAPIs.getStockList(inventoryId, queryparams),
+        queryKey: [queryCore.GET_STOCK_LIST_INVENTORY, stockQueryParams],
+        queryFn: () => stockInventoryAPIs.getStockList(queryparams),
         select: (data) => {
             const { result, pageCurrent, pageSize, totalPages, totalItems } =
                 data;

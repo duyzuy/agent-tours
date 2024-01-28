@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Space, Dropdown, MenuProps } from "antd";
 import {
     EditOutlined,
@@ -6,34 +6,53 @@ import {
     DeleteOutlined,
     EyeOutlined,
     CheckCircleOutlined,
+    SettingOutlined,
 } from "@ant-design/icons";
-import { ColumnsType, TableProps } from "antd/es/table";
+import Table, { ColumnsType, TableProps } from "antd/es/table";
 import CustomTable from "@/components/admin/CustomTable";
 import ModalDeleteConfirm from "./ModalDeleteConfirm";
+import styled from "styled-components";
 
 type ITableListPageProps<T extends object> = TableProps<T> & {
     dataSource: T[];
     isLoading?: boolean;
-    onEdit?: (record: T) => void;
     columns: ColumnsType<T>;
+    showActionsLess?: boolean;
+    modelName?: string;
+    onEdit?: (record: T) => void;
     onDelete?: (record: T) => void;
     onView?: (record: T) => void;
+    onSetting?: (record: T) => void;
     onApproval?: (record: T) => void;
     hideApproval?: (record: T) => boolean;
-    modelName?: string;
+    hideEdit?: (record: T) => boolean;
+    hideDelete?: (record: T) => boolean;
+};
+
+type TablePageActionItemType<T extends object> = {
+    hide?: boolean;
+    item?: {
+        key: string;
+        className?: string;
+        label: React.ReactNode;
+    };
 };
 function TableListPage<T extends object>(props: ITableListPageProps<T>) {
     const {
         dataSource,
         isLoading,
+        columns,
+        modelName = "",
+        showActionsLess = false,
+        pagination,
         onEdit,
         onApproval,
         onView,
         onDelete,
-        columns,
-        modelName = "",
+        onSetting,
         hideApproval,
-        pagination,
+        hideEdit,
+        hideDelete,
         ...restProps
     } = props;
     const [showModalDelete, setShowModalDelete] = useState(false);
@@ -53,11 +72,10 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         setShowModalDelete(false);
     };
 
-    let renderDropdownItems = (record: T): MenuProps["items"] => {
+    let renderDropdownItems = (record: T) => {
         const fncList = [
             {
-                fnc: onApproval,
-                ishide: hideApproval?.(record),
+                hide: hideApproval?.(record),
                 item: {
                     key: "approval",
                     label: (
@@ -72,8 +90,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                 },
             },
             {
-                fnc: onView,
-                ishide: false,
+                hide: false,
                 item: {
                     key: "view",
                     label: (
@@ -88,8 +105,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                 },
             },
             {
-                fnc: onDelete,
-                ishide: false,
+                hide: hideDelete?.(record),
                 item: {
                     key: "delete",
                     className: "",
@@ -107,15 +123,19 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         ];
 
         return fncList.reduce<MenuProps["items"]>((acc, curr) => {
-            if (curr.fnc && !curr.ishide) {
+            if (curr.hide === false) {
                 acc = [...(acc || []), curr.item];
             }
             return acc;
         }, []);
     };
-    const showMore = useMemo(() => {
-        return Boolean(onApproval) || Boolean(onDelete) || Boolean(onView);
-    }, [onApproval, onDelete, onView]);
+
+    const hasShowMore = useCallback(
+        (record: T) => {
+            return (renderDropdownItems(record) || [])?.length > 0;
+        },
+        [renderDropdownItems],
+    );
 
     const mergeColumns: ColumnsType<T> = [
         ...columns,
@@ -123,21 +143,38 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             title: "Hành động",
             dataIndex: "action",
             key: "action",
-            width: 80,
+            width: 160,
             fixed: "right",
             render: (_, record) => {
                 return (
                     <Space>
-                        <span
-                            className="edit-btn flex items-center text-primary-default justify-center rounded-full  hover:bg-gray-100 cursor-pointer mr-1"
-                            onClick={() => onEdit?.(record)}
-                        >
-                            <EditOutlined className="p-[8px] block" />
-                        </span>
-                        {showMore ? (
+                        {hideEdit?.(record) ? null : (
+                            <span
+                                className="edit-btn flex items-center text-primary-default justify-center rounded-full  hover:bg-gray-100 cursor-pointer mr-1"
+                                onClick={() => onEdit?.(record)}
+                                title="Sửa"
+                            >
+                                <EditOutlined className="p-[8px] block" />
+                            </span>
+                        )}
+                        {onSetting ? (
+                            <span
+                                className="edit-btn flex items-center text-primary-default justify-center rounded-full  hover:bg-gray-100 cursor-pointer mr-1"
+                                title="Thiết lập"
+                                onClick={() => onSetting?.(record)}
+                            >
+                                <SettingOutlined className="p-[8px] block" />
+                            </span>
+                        ) : null}
+                        {/* <TableListPage.Actions
+                            actions={() => renderDropdownItems(record)}
+                        /> */}
+                        {hasShowMore(record) ? (
                             <Dropdown
                                 menu={{
-                                    items: renderDropdownItems(record),
+                                    items: renderDropdownItems(
+                                        record,
+                                    ) as MenuProps["items"],
                                 }}
                                 placement="bottomRight"
                                 arrow
@@ -162,6 +199,9 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                 pagination={{
                     hideOnSinglePage: true,
                     pageSizeOptions: [10, 20, 50, 100],
+                    showTotal: (total, range) =>
+                        `${range[0]}-${range[1]} of ${total} items`,
+                    showQuickJumper: true,
                     ...pagination,
                 }}
                 {...restProps}
@@ -177,3 +217,46 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
     );
 }
 export default TableListPage;
+
+// interface TableListPageActionsProps<T extends object> {
+//     actions?: TablePageActionItemType<T>[];
+//     showLess?: boolean;
+// }
+
+// TableListPage.Actions = function <T extends object>({
+//     actions,
+//     showLess = false,
+// }: TableListPageActionsProps<T>) {
+//     let renderDropdownItems = () => {
+//         return actions?.reduce<MenuProps["items"]>((acc, curr) => {
+//             if (curr?.hide === false && curr.item) {
+//                 acc = [...(acc || []), curr?.item];
+//             }
+//             return acc;
+//         }, []);
+//     };
+
+//     return (
+//         <>
+//             {showLess ? (
+//                 <Dropdown
+//                     menu={{
+//                         items: renderDropdownItems() as MenuProps["items"],
+//                     }}
+//                     placement="bottomRight"
+//                     arrow
+//                 >
+//                     <span className="edit-btn flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 cursor-pointer">
+//                         <EllipsisOutlined className="p-[8px]" />
+//                     </span>
+//                 </Dropdown>
+//             ) : (
+//                 <>
+//                     {actions?.map((action) => (
+//                         <>{action.hide === false && action.item?.label}</>
+//                     ))}
+//                 </>
+//             )}
+//         </>
+//     );
+// };

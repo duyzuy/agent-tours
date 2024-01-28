@@ -27,15 +27,17 @@ export class SellableQueryParams {
 }
 
 export interface ISellable {
+    recId: number;
+    sellableTemplateId: number;
+    type: string;
+    code: string;
     avaiable: number;
     cap: number;
+    open: number;
     closeDate: string;
-    code: string;
     deadlineJson: string;
     endDate: string;
     logStatus: string;
-    recId: number;
-    sellableTemplateId: number;
     startDate: string;
     status: Status;
     sysBelongTo: string;
@@ -43,7 +45,6 @@ export interface ISellable {
     sysFstUser: string;
     sysLstUpdate: string;
     sysLstUser: string;
-    type: string;
     used: number;
     validFrom: string;
     validTo: string;
@@ -67,10 +68,10 @@ export interface ISellablePayload {
     }[];
 }
 export class SellableFormData {
-    sellableTemplateId: number;
-    type: string;
-    codeAffix: string;
-    cap: number;
+    sellableTemplateId?: number;
+    type?: string;
+    codeAffix?: string;
+    cap?: number;
     closeDate?: string;
     valid?: string;
     validTo?: string;
@@ -85,10 +86,10 @@ export class SellableFormData {
     }[];
 
     constructor(
-        sellableTemplateId: number,
-        type: string,
-        codeAffix: string,
-        cap: number,
+        sellableTemplateId: number | undefined,
+        type: string | undefined,
+        codeAffix: string | undefined,
+        cap: number | undefined,
         closeDate: string | undefined,
         valid: string | undefined,
         validTo: string | undefined,
@@ -193,4 +194,28 @@ export class SellableConfirmFormData {
         this.extraStocks = extraStocks;
         this.otherSellables = otherSellables;
     }
+}
+
+export interface InventoryOfSellableItem {
+    recId: number;
+    qty: number;
+    item: IInventory;
+}
+export interface StockOfSellableItem {
+    recId: number;
+    qty: number;
+    item: IStock;
+}
+export interface SellableOfSellableItem {
+    recId: number;
+    qty: number;
+    item: ISellable;
+}
+export interface SellableDetail {
+    sellable: ISellable;
+    inventories: InventoryOfSellableItem[];
+    stocks: StockOfSellableItem[];
+    extraInventories: InventoryOfSellableItem[];
+    extraStocks: StockOfSellableItem[];
+    otherSellables: SellableOfSellableItem[];
 }

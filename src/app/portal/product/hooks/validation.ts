@@ -339,6 +339,7 @@ export const sellableSchemaDetail: ObjectSchema<Partial<ISellable>> = object({
     used: number(),
     closeDate: string(),
     code: string(),
+    open: number(),
     deadlineJson: string(),
     endDate: string(),
     logStatus: string(),

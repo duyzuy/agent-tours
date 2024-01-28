@@ -46,3 +46,39 @@ export const useGetSellableListCoreQuery = (sellableQuery?: {
         enabled: enabled,
     });
 };
+
+export const useGetSellableDetailCoreQuery = (
+    recId?: number,
+    options?: {
+        enabled: boolean;
+    },
+) => {
+    const { enabled = true } = options || {};
+
+    return useQuery({
+        queryKey: [queryCore.GET_SELLABLE_DETAIL, recId],
+        queryFn: () => sellableAPIs.getDetail(recId),
+        select: (data) => {
+            return data["result"];
+        },
+        enabled: enabled,
+    });
+};
+
+export const useGetSellablePriceConfigsCoreQuery = (
+    sellableRecId?: number,
+    options?: {
+        enabled: boolean;
+    },
+) => {
+    const { enabled = true } = options || {};
+
+    return useQuery({
+        queryKey: [queryCore.GET_SELLABLE_PRICE_CONFIGS, sellableRecId],
+        queryFn: () => sellableAPIs.getPriceConfigs(sellableRecId),
+        select: (data) => {
+            return data["result"];
+        },
+        enabled: enabled,
+    });
+};

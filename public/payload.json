@@ -1,0 +1,143 @@
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Organization",
+            "@id": "https://wiki.matbao.net/#organization",
+            "name": "Trung t\u00e2m h\u1ed7 tr\u1ee3 k\u1ef9 thu\u1eadt | MATBAO.NET",
+            "url": "https://wiki.matbao.net/",
+            "sameAs": ["https://www.facebook.com/matbao.vn/"],
+            "logo": {
+                "@type": "ImageObject",
+                "@id": "https://wiki.matbao.net/#logo",
+                "url": "https://wiki.matbao.net/wp-content/uploads/2020/05/wiki-matbao-net.jpg",
+                "width": 884,
+                "height": 502,
+                "caption": "Trung t\u00e2m h\u1ed7 tr\u1ee3 k\u1ef9 thu\u1eadt | MATBAO.NET"
+            },
+            "image": { "@id": "https://wiki.matbao.net/#logo" }
+        },
+        {
+            "@type": "WebSite",
+            "@id": "https://wiki.matbao.net/#website",
+            "url": "https://wiki.matbao.net/",
+            "name": "Trung t\u00e2m h\u1ed7 tr\u1ee3 k\u1ef9 thu\u1eadt | MATBAO.NET",
+            "publisher": { "@id": "https://wiki.matbao.net/#organization" },
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://wiki.matbao.net/?s={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        },
+        {
+            "@type": "ImageObject",
+            "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#primaryimage",
+            "url": "https://wiki.matbao.net/wp-content/uploads/2019/06/seo-la-gi-tai-sao-seo-rat-quan-trong-voi-moi-website-1.jpg",
+            "width": 600,
+            "height": 350,
+            "caption": "SEO l\u00e0 g\u00ec"
+        },
+        {
+            "@type": "WebPage",
+            "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#webpage",
+            "url": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/",
+            "inLanguage": "vi",
+            "name": "SEO l\u00e0 g\u00ec? T\u1ea1i sao SEO r\u1ea5t quan tr\u1ecdng v\u1edbi m\u1ed7i website - Trung t\u00e2m h\u1ed7 tr\u1ee3 k\u1ef9 thu\u1eadt | MATBAO.NET",
+            "isPartOf": { "@id": "https://wiki.matbao.net/#website" },
+            "primaryImageOfPage": {
+                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#primaryimage"
+            },
+            "datePublished": "2019-06-21T07:31:07+07:00",
+            "dateModified": "2021-12-27T08:05:11+07:00",
+            "description": "Kh\u00e1i ni\u1ec7m SEO Website \u0111\u00e3 tr\u1edf n\u00ean kh\u00e1 quen thu\u1ed9c, l\u00e0 m\u1ed9t k\u00eanh Marketing kh\u00e1 ph\u1ed5 bi\u1ebfn. H\u00e3y c\u00f9ng t\u00ecm hi\u1ec3u SEO l\u00e0 g\u00ec v\u00e0 nh\u1eefng th\u1ee9 li\u00ean quan",
+            "breadcrumb": {
+                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#breadcrumb"
+            }
+        },
+        {
+            "@type": "BreadcrumbList",
+            "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#breadcrumb",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "item": {
+                        "@type": "WebPage",
+                        "@id": "https://wiki.matbao.net/",
+                        "url": "https://wiki.matbao.net/",
+                        "name": "Trang ch\u1ee7"
+                    }
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "item": {
+                        "@type": "WebPage",
+                        "@id": "https://wiki.matbao.net/wordpress/",
+                        "url": "https://wiki.matbao.net/wordpress/",
+                        "name": "WordPress"
+                    }
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "item": {
+                        "@type": "WebPage",
+                        "@id": "https://wiki.matbao.net/wordpress/thu-thuat/",
+                        "url": "https://wiki.matbao.net/wordpress/thu-thuat/",
+                        "name": "Th\u1ee7 thu\u1eadt"
+                    }
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 4,
+                    "item": {
+                        "@type": "WebPage",
+                        "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/",
+                        "url": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/",
+                        "name": "SEO l\u00e0 g\u00ec? T\u1ea1i sao SEO r\u1ea5t quan tr\u1ecdng v\u1edbi m\u1ed7i website"
+                    }
+                }
+            ]
+        },
+        {
+            "@type": "Article",
+            "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#article",
+            "isPartOf": {
+                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#webpage"
+            },
+            "author": {
+                "@id": "https://wiki.matbao.net/#/schema/person/8593d78c01810e546227d14c3a316bf6"
+            },
+            "headline": "SEO l\u00e0 g\u00ec? T\u1ea1i sao SEO r\u1ea5t quan tr\u1ecdng v\u1edbi m\u1ed7i website",
+            "datePublished": "2019-06-21T07:31:07+07:00",
+            "dateModified": "2021-12-27T08:05:11+07:00",
+            "commentCount": 0,
+            "mainEntityOfPage": {
+                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#webpage"
+            },
+            "publisher": { "@id": "https://wiki.matbao.net/#organization" },
+            "image": {
+                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#primaryimage"
+            },
+            "keywords": "c\u00f4ng c\u1ee5 seo,d\u1ecbch v\u1ee5 seo,seo,seo l\u00e0 g\u00ec,seo offpage l\u00e0 g\u00ec,seo onpage l\u00e0 g\u00ec,seooffpage l\u00e0 g\u00ec,seoonpage l\u00e0 g\u00ec",
+            "articleSection": "Th\u1ee7 thu\u1eadt"
+        },
+        {
+            "@type": ["Person"],
+            "@id": "https://wiki.matbao.net/#/schema/person/8593d78c01810e546227d14c3a316bf6",
+            "name": "V\u0103n H\u00f9ng Danh",
+            "image": {
+                "@type": "ImageObject",
+                "@id": "https://wiki.matbao.net/#authorlogo",
+                "url": "https://wiki.matbao.net/wp-content/litespeed/avatar/76979e7c1bde0307d35999ab9394a131.jpg?ver=1705556381",
+                "caption": "V\u0103n H\u00f9ng Danh"
+            },
+            "description": "Chuy\u00ean gia SEO t\u1ea1i M\u1eaft B\u00e3o.",
+            "sameAs": [
+                "https://www.facebook.com/vanhungdanh",
+                "https://twitter.com/vanhungdanh"
+            ]
+        }
+    ]
+}

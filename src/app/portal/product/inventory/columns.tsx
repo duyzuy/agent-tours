@@ -6,6 +6,12 @@ import Link from "next/link";
 import { Status } from "@/models/management/common.interface";
 export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     {
+        title: "#ID",
+        dataIndex: "recId",
+        key: 1,
+        width: 80,
+    },
+    {
         title: "Tên",
         dataIndex: "name",
         key: 1,

@@ -77,22 +77,22 @@ export interface ITemplateSellableUpdatePayload
         "cmsIdentity" | "name" | "inventoryTypeList" | "destListJson"
     > {}
 export class TemplateSellableFormData {
-    cmsIdentity: string;
+    cmsIdentity?: string;
     type?: EProductType;
-    code: string;
-    name: string;
+    code?: string;
+    name?: string;
     inventoryTypeList: EInventoryType[];
     destListJson: IDestination[];
-    status: Status;
+    status?: Status;
 
     constructor(
-        cmsIdentity: string,
+        cmsIdentity: string | undefined,
         type: EProductType | undefined,
-        code: string,
-        name: string,
+        code: string | undefined,
+        name: string | undefined,
         inventoryTypeList: EInventoryType[],
         destListJson: IDestination[],
-        status: Status,
+        status: Status | undefined,
     ) {
         this.cmsIdentity = cmsIdentity;
         this.type = type;

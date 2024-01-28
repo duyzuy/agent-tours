@@ -27,6 +27,7 @@ import { StockInventoryQueryparams } from "@/models/management/core/stockInvento
 import { Status } from "@/models/management/common.interface";
 import StockExtraList, { StockExtraListProps } from "./StockExtraList";
 import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
+import CustomTable from "@/components/admin/CustomTable";
 
 type StockExtraItemType = SellableConfirmFormData["extraStocks"][0];
 export type StockExtraSelectionProps = TableProps<IStock> & {
@@ -62,6 +63,7 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
         undefined,
         undefined,
         undefined,
+        undefined,
         1,
         5,
         Status.OK,
@@ -75,7 +77,6 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
 
     const { data: stockResponse, isLoading: isLoadingStock } =
         useGetStockInventoryListCoreQuery({
-            inventoryId: inventory?.recId || 0,
             queryparams: stockQueryParams,
             enabled: !isUndefined(inventory),
         });
@@ -164,7 +165,7 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
                 if (stockSelected) {
                     openQuantity = openQuantity - Number(stockSelected.qty);
                 }
-                if (openQuantity === 0) {
+                if (openQuantity <= 0) {
                     color = "red";
                 }
 
@@ -253,10 +254,11 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
                 className="w-full"
             />
             <div className="mb-3"></div>
-            <Table
+            <CustomTable
                 columns={mergeColumns}
                 dataSource={stockList}
                 loading={isLoadingStock}
+                size="small"
                 pagination={{
                     hideOnSinglePage: true,
                     current: pageCurrent,

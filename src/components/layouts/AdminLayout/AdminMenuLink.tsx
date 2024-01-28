@@ -11,6 +11,7 @@ import {
     SettingOutlined,
     EnvironmentOutlined,
     ClusterOutlined,
+    SearchOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 
@@ -25,6 +26,11 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         key: "dashboard",
         icon: React.createElement(DashboardOutlined),
         label: "Dashboard",
+    },
+    {
+        key: "search-tour",
+        icon: React.createElement(SearchOutlined),
+        label: "Search tour",
     },
     {
         key: "manage-booking",
@@ -48,16 +54,20 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         children: [
             {
                 key: "product/inventory",
-                label: "Inventory",
+                label: "Inventories",
+            },
+            {
+                key: "product/stock",
+                label: "Stocks",
             },
             {
                 key: "product/template-sellable",
-                label: "Template sellable",
+                label: "Template sellables",
             },
-            // {
-            //     key: "product/stock",
-            //     label: "Stock",
-            // },
+            {
+                key: "product/sellable",
+                label: "Sellables",
+            },
         ],
     },
     {

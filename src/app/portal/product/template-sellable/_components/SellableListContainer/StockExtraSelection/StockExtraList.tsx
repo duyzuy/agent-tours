@@ -1,8 +1,9 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
-import { Table, Input, Form, InputRef, FormInstance, Button } from "antd";
+import React, { useState, useContext } from "react";
+import { Table, Form, FormInstance, Button, InputNumber } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { TableProps } from "antd/es/table";
 import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
+import CustomTable from "@/components/admin/CustomTable";
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
@@ -27,14 +28,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
-    const inputRef = useRef<InputRef>(null);
     const form = useContext(EditableContext)!;
-
-    useEffect(() => {
-        if (editing) {
-            inputRef.current!.focus();
-        }
-    }, [editing]);
 
     const toggleEdit = () => {
         setEditing(!editing);
@@ -44,7 +38,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const save = async () => {
         try {
             const values = await form.validateFields();
-
             toggleEdit();
             handleSave({ ...record, ...values });
         } catch (errInfo) {
@@ -64,10 +57,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
                         required: true,
                         message: `Không bỏ trống.`,
                     },
+                    {
+                        type: "number",
+                        min: 1,
+                        max: 99,
+                        message: "Số lượng không hợp lệ.",
+                    },
                 ]}
             >
-                <Input
-                    ref={inputRef}
+                <InputNumber
+                    autoFocus={true}
                     size="small"
                     onPressEnter={save}
                     onBlur={save}
@@ -192,8 +191,9 @@ function StockExtraList(props: StockExtraListProps) {
     });
     return (
         <React.Fragment>
-            <Table
+            <CustomTable
                 rowKey={(record) => record.stock.recId || ""}
+                size="small"
                 components={{
                     body: {
                         row: EditableRow,
@@ -204,6 +204,10 @@ function StockExtraList(props: StockExtraListProps) {
                 columns={inventoryColumns as ColumnTypes}
                 dataSource={stocks}
                 {...restProps}
+                pagination={{
+                    hideOnSinglePage: true,
+                    size: "small",
+                }}
             />
         </React.Fragment>
     );

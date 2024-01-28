@@ -229,6 +229,7 @@ function StockExtraSelection(props: SellableSelectionProps) {
             />
             <div className="mb-3"></div>
             <Table
+                rowKey={(record) => record.recId}
                 columns={mergeColumns}
                 dataSource={sellables}
                 loading={isLoadingSellable}

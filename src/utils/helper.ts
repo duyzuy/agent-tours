@@ -211,3 +211,12 @@ export const generateStrings = (length = 8) => {
 
     return output;
 };
+
+export const sortObject = <T extends object>(obj: T) => {
+    return Object.keys(obj)
+        .sort()
+        .reduce<T>((acc, key) => {
+            acc[key as keyof T] = obj[key as keyof T];
+            return acc;
+        }, {} as T);
+};

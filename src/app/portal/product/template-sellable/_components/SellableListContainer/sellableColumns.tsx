@@ -2,11 +2,9 @@ import { ColumnsType } from "antd/es/table";
 import { Tag } from "antd";
 import { formatDate } from "@/utils/date";
 import { Status } from "@/models/management/common.interface";
-import { IStockListOfInventoryRs } from "@/models/management/core/stockInventory.interface";
+import { SellableListRs } from "@/models/management/core/sellable.interface";
 
-export const sellableColumns: ColumnsType<
-    IStockListOfInventoryRs["result"][0]
-> = [
+export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
     {
         title: "#ID",
         dataIndex: "recId",
@@ -20,29 +18,12 @@ export const sellableColumns: ColumnsType<
         key: "code",
         fixed: "left",
         width: 300,
-        render: (_, record) => {
-            return (
-                <>
-                    <p>{record.code}</p>
-                    <p className="text-xs text-gray-500">
-                        {record.description}
-                    </p>
-                </>
-            );
-        },
     },
     {
         title: "Stock type",
         dataIndex: "type",
         key: "type",
         width: 150,
-        filters: [
-            {
-                text: "AIRTICKET",
-                value: "AIRTICKET",
-            },
-        ],
-        onFilter: (value, record) => record.type.indexOf(value as string) === 0,
     },
     {
         title: "Khả dụng (Avaiable)",

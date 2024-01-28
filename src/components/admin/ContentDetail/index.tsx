@@ -1,12 +1,12 @@
 import React from "react";
 export interface ContentDetailProps {
-    contents: { label: string; value: string }[];
+    contents?: { label?: string; value?: string }[];
 }
 
 const ContentDetail: React.FC<ContentDetailProps> = ({ contents }) => {
     return (
         <ul>
-            {contents.map(({ label, value }, _index) => (
+            {contents?.map(({ label, value }, _index) => (
                 <li className="flex py-2" key={_index}>
                     <span className="w-36 text-left">{label}</span>
                     <span

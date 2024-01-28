@@ -59,7 +59,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
     onApproval,
 }) => {
     const initSellableFormdata = new TemplateSellableFormData(
-        "",
+        undefined,
         undefined,
         "",
         "",

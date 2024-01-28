@@ -4,6 +4,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { TableProps } from "antd/es/table";
 import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
 import { ITemplateSellable } from "@/models/management/core/templateSellable.interface";
+import CustomTable from "@/components/admin/CustomTable";
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
@@ -188,8 +189,9 @@ function SellableList(props: SellableListProps) {
     });
     return (
         <React.Fragment>
-            <Table
+            <CustomTable
                 rowKey={(record) => record.sellable.recId || ""}
+                size="small"
                 components={{
                     body: {
                         row: EditableRow,
@@ -197,7 +199,7 @@ function SellableList(props: SellableListProps) {
                     },
                 }}
                 rowClassName={() => "editable-row"}
-                pagination={{ size: "small" }}
+                pagination={{ size: "small", hideOnSinglePage: true }}
                 columns={inventoryColumns as ColumnTypes}
                 dataSource={sellables}
                 {...restProps}

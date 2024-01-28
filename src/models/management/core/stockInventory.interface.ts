@@ -14,35 +14,39 @@ export enum EStockInventoryType {
 export interface IStockInventoryTypeRs extends BaseResponse<string[]> {}
 
 export interface IStockInventoryQueryParams {
+    inventoryId?: number;
     type?: string;
-    valid?: string | Date;
-    validTo?: string | Date;
-    start?: string | Date;
-    end?: string | Date;
+    valid?: string;
+    validTo?: string;
+    start?: string;
+    end?: string;
     pageCurrent?: number;
     pageSize?: number;
     status?: Status;
 }
 
 export class StockInventoryQueryparams implements IStockInventoryQueryParams {
+    inventoryId?: number;
     type?: string;
-    valid?: string | Date;
-    validTo?: string | Date;
-    start?: string | Date;
-    end?: string | Date;
+    valid?: string;
+    validTo?: string;
+    start?: string;
+    end?: string;
     pageCurrent?: number;
     pageSize?: number;
     status?: Status;
     constructor(
+        inventoryId: number | undefined,
         type: string | undefined,
-        valid: string | Date | undefined,
-        validTo: string | Date | undefined,
-        start: string | Date | undefined,
-        end: string | Date | undefined,
+        valid: string | undefined,
+        validTo: string | undefined,
+        start: string | undefined,
+        end: string | undefined,
         pageCurrent: number | undefined,
         pageSize: number | undefined,
         status: Status | undefined,
     ) {
+        this.inventoryId = inventoryId;
         this.type = type;
         this.valid = valid;
         this.validTo = validTo;
@@ -195,25 +199,27 @@ export interface IStockAdjustment {
     sellableId: 0;
     status: Status;
     sysBelongTo: string;
-    sysFstUpdate: string | Date;
+    sysFstUpdate: string;
     sysFstUser: string;
-    sysLstUpdate: string | Date;
+    sysLstUpdate: string;
     sysLstUser: string;
 }
 export interface IStockAdjustPayload {
-    inventoryStockId: number;
-    quantity: number;
-    rmk: string;
+    inventoryStockId?: number;
+    quantity?: number;
+    rmk?: string;
 }
 
-export class StockInventoryAdjustFormData
-    implements Partial<IStockAdjustPayload>
-{
-    inventoryStockId: number;
-    rmk: string;
-    quantity: number;
+export class StockInventoryAdjustFormData implements IStockAdjustPayload {
+    inventoryStockId?: number;
+    rmk?: string;
+    quantity?: number;
 
-    constructor(inventoryStockId: number, rmk: string, quantity: number) {
+    constructor(
+        inventoryStockId: number | undefined,
+        rmk: string | undefined,
+        quantity: number | undefined,
+    ) {
         this.inventoryStockId = inventoryStockId;
         this.rmk = rmk;
         this.quantity = quantity;

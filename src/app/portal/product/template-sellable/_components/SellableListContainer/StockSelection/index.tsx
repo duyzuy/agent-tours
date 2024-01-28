@@ -28,6 +28,7 @@ import {
     IStock,
     StockInventoryQueryparams,
 } from "@/models/management/core/stockInventory.interface";
+import CustomTable from "@/components/admin/CustomTable";
 
 export type StockSelectionProps = TableProps<IStock> & {
     inventories: IInventory[];
@@ -70,6 +71,7 @@ function StockSelection(props: StockSelectionProps) {
         undefined,
         undefined,
         undefined,
+        undefined,
         1,
         5,
         Status.OK,
@@ -77,7 +79,6 @@ function StockSelection(props: StockSelectionProps) {
     const [stockQueryparams, setStockQueryParams] = useState(queryParams);
     const { data: stockResponse, isLoading: isLoadingStock } =
         useGetStockInventoryListCoreQuery({
-            inventoryId: inventory?.recId || 0,
             queryparams: stockQueryparams,
             enabled: !isUndefined(inventory),
         });
@@ -217,8 +218,9 @@ function StockSelection(props: StockSelectionProps) {
                 className="w-full"
             />
             <div className="mb-3"></div>
-            <Table
+            <CustomTable
                 columns={mergeColumns}
+                size="small"
                 dataSource={stockList}
                 loading={isLoadingStock}
                 pagination={{

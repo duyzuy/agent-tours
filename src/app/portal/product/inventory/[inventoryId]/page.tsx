@@ -44,6 +44,7 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
             undefined,
             undefined,
             undefined,
+            undefined,
             1,
             10,
             undefined,
@@ -52,8 +53,10 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
 
     const { data: stockResponse, isLoading: isLoadingStockList } =
         useGetStockInventoryListCoreQuery({
-            inventoryId: params.inventoryId,
-            queryparams: stockQueryParams,
+            queryparams: {
+                ...stockQueryParams,
+                inventoryId: params.inventoryId,
+            },
             enabled:
                 !isUndefined(inventoryDetail) &&
                 !isLoading &&

@@ -5,13 +5,13 @@ import {
     ITemplateSaleableListRs,
     TemplateSellableQueryParams,
 } from "@/models/management/core/templateSellable.interface";
-import useCRUDTemplateSellable from "../hooks/useCRUDTemplateSellable";
+import useCRUDTemplateSellable from "./hooks/useCRUDTemplateSellable";
 import TableListPage from "@/components/admin/TableListPage";
 import DrawerTemplateSellable, {
     DrawerTemplateSellableProps,
     EActionType,
 } from "./_components/DrawerTemplateSellable";
-import { templateSellableColums } from "./templateSellableColums";
+import { templateColums } from "./templateColums";
 import { useGetTemplateSellableListCoreQuery } from "@/queries/core/templateSellable";
 import { IDestination } from "@/models/management/region.interface";
 import { Divider, Space, Tag, Form, Radio, TablePaginationConfig } from "antd";
@@ -19,7 +19,6 @@ import FormItem from "@/components/base/FormItem";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { FilterValue } from "antd/es/table/interface";
 import { Status } from "@/models/management/common.interface";
-import { isUndefined } from "lodash";
 
 const SellTemplatePage = () => {
     const [isOpen, setOpenDrawer] = useState(false);
@@ -30,7 +29,7 @@ const SellTemplatePage = () => {
         useState<ITemplateSaleableListRs["result"][0]>();
     const templateQueryParams = new TemplateSellableQueryParams(
         undefined,
-        "EXTRA",
+        "TOUR",
         undefined,
         undefined,
         1,
@@ -136,7 +135,7 @@ const SellTemplatePage = () => {
                 scroll={{ x: 1600 }}
                 rowKey={"recId"}
                 isLoading={isLoading}
-                columns={templateSellableColums}
+                columns={templateColums}
                 onChange={handleTableChange}
                 pagination={{
                     current: pageCurrent,

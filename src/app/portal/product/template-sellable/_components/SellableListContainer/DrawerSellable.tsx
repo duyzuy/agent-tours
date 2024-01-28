@@ -33,7 +33,7 @@ import StockSelection, { StockSelectionProps } from "./StockSelection";
 import { PlusOutlined } from "@ant-design/icons";
 import InventoryExtraList, {
     InventoryExtraListProps,
-} from "./InventoryExtraList/intex";
+} from "./InventoryExtraList";
 import StockExtraSelection, {
     StockExtraSelectionProps,
 } from "./StockExtraSelection";
@@ -45,7 +45,7 @@ const MAX_QUANTITY = 50;
 const MAX_NUMBER_INPUT = 999;
 const { RangePicker } = DatePicker;
 export enum EActionType {
-    CREATE = "CREATE",
+    APPROVAL = "APPROVAL",
     EDIT = "EDIT",
 }
 export const DATE_FORMAT = "DDMMMYY HH:mm";
@@ -320,7 +320,11 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         let stockList = [...(stocks || [])];
 
         if (isUndefined(cap)) {
-            message.error("Số lượng của sellable không hợp lệ.");
+            message.error("Cap của sellable không hợp lệ.");
+            return;
+        }
+        if (isUndefined(stock.open) || Number(stock.open) <= 0) {
+            message.error("open của sellable không hợp lệ.");
             return;
         }
         if (action === "add") {
@@ -328,8 +332,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
              * Check open quantity of stock
              * Must >= cap of sellable
              */
-            if (!stock.open || stock.open < cap) {
-                message.error("Available của Stock không đủ.");
+            if (stock.open < cap) {
+                message.error("Open của Stock không đủ.");
                 return;
             }
 
@@ -340,13 +344,14 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                 (extraStocks || []).find(
                     (item) => item.stock.recId === stock.recId,
                 ) || {};
+
             if (
                 !isUndefined(stockSelectedInExtraStock) &&
                 stockSelectedInExtraStock.open &&
                 qty
             ) {
-                if (cap > stockSelectedInExtraStock.open - qty) {
-                    message.error("Available của Stock không đủ.");
+                if (stock.open - qty < cap) {
+                    message.error("Open của Stock không đủ.");
                     return;
                 }
             }
@@ -370,7 +375,6 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         action,
         stock,
     ) => {
-        console.log(action, stock);
         /**
          * default qty = cap
          * (compare quantity open (open key) of stock); minimun >= cap
@@ -391,19 +395,21 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                 (item) => item.stock.recId === stock.recId,
             );
 
-            if (!isUndefined(pickedStock)) {
-                if (!stock?.open || stock?.open < pickedStock.qty) {
+            if (pickedStock) {
+                if (!stock?.open || stock.open - pickedStock.qty <= 0) {
                     message.error("Số lượng không đủ");
+                    return;
+                }
+            } else {
+                if (!stock?.open || stock?.open <= 0) {
+                    message.error("Open của Stock không đủ.");
                     return;
                 }
             }
             /**
              * open quantity of stock must large than cap of sellable
              */
-            if (!stock?.open || stock?.open < cap) {
-                message.error("Available của Stock không đủ.");
-                return;
-            }
+
             stockList = [...stockList, { stock, qty: 1 }];
         }
         if (action === "remove") {
@@ -432,6 +438,11 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
             const stockSelected = (stocks || []).find(
                 (stk) => stk.stock.recId === stock.recId,
             );
+
+            // if (Number(qty) <= 0) {
+            //     message.error("Số lượng không hợp lệ");
+            //     return;
+            // }
 
             if (stockSelected) {
                 openQuantity = openQuantity - Number(stockSelected.qty);
@@ -504,13 +515,11 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
     };
 
     const onSubmitForm: HandleSubmit<SellableConfirmFormData> = (data) => {
-        console.log(data);
-
         actionType && onSubmit?.(actionType, data);
     };
 
     useEffect(() => {
-        if (initialValues && actionType === EActionType.EDIT) {
+        if (initialValues) {
             setSellableConfirmFormData((prev) => ({
                 ...prev,
                 start: dayjs(initialValues.startDate).format(DATE_FORMAT),
@@ -792,8 +801,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
 
                 <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white z-50">
                     <Space>
-                        <Button>Huỷ bỏ</Button>
-                        {actionType === EActionType.EDIT &&
+                        <Button onClick={onCancel}>Huỷ bỏ</Button>
+                        {actionType === EActionType.APPROVAL &&
                         initialValues?.status === Status.QQ ? (
                             <Button
                                 type="primary"
@@ -807,10 +816,12 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                                 Duyệt
                             </Button>
                         ) : (
-                            <Button type="primary" onClick={() => {}}>
-                                {actionType === EActionType.CREATE
-                                    ? "Thêm mới"
-                                    : "Cập nhật"}
+                            <Button
+                                type="primary"
+                                onClick={() => {}}
+                                disabled={true}
+                            >
+                                Cập nhật
                             </Button>
                         )}
                     </Space>

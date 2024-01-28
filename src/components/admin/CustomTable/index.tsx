@@ -13,8 +13,8 @@ const StyledTable = styled(Table)`
     & table {
         border-spacing: 0 10px !important;
     }
-    & .ant-table-row {
-        .ant-table-cell {
+    & .travel-table-row {
+        .travel-table-cell {
             border-top: 1px solid var(--neutrals-07);
 
             &:first-child {
@@ -31,8 +31,8 @@ const StyledTable = styled(Table)`
         
         
     }
-    & .ant-table-thead {
-        .ant-table-cell {
+    & .travel-table-thead {
+        .travel-table-cell {
             border-bottom-width: 0; border;
             &:first-child {
                 
