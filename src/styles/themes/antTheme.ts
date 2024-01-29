@@ -65,6 +65,11 @@ export const antdTheme: ThemeConfig = {
             // groupTitleColor: "rgba(0, 0, 0, 0.45)",
             itemBg: "#fff",
         },
+        Select: {
+            // selectorBg: "red",
+            // colorBgTextActive: "blue",
+            optionSelectedBg: "#e7f3ff",
+        },
         Form: {
             colorTextHeading: "#23262F",
         },

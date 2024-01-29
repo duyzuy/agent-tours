@@ -12,6 +12,7 @@ import Table, { ColumnsType, TableProps } from "antd/es/table";
 import CustomTable from "@/components/admin/CustomTable";
 import ModalDeleteConfirm from "./ModalDeleteConfirm";
 import styled from "styled-components";
+import classNames from "classnames";
 
 type ITableListPageProps<T extends object> = TableProps<T> & {
     dataSource: T[];
@@ -72,6 +73,34 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         setShowModalDelete(false);
     };
 
+    const actionList = (record: T) => {
+        return [
+            {
+                hide: hideApproval?.(record),
+                icon: <CheckCircleOutlined />,
+                func: onApproval,
+                text: "Duyệt",
+                key: "approval",
+                clasName: "item text-green-600",
+            },
+            {
+                hide: onView?.(record),
+                icon: <EyeOutlined />,
+                func: onView,
+                text: "Chi tiết",
+                key: "view",
+                clasName: "item text-blue-600",
+            },
+            {
+                hide: hideDelete?.(record),
+                icon: <DeleteOutlined />,
+                func: onShowModalConfirm,
+                text: "Xoá",
+                key: "delete",
+                clasName: "item text-red-600",
+            },
+        ];
+    };
     let renderDropdownItems = (record: T) => {
         const fncList = [
             {
@@ -166,10 +195,28 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                                 <SettingOutlined className="p-[8px] block" />
                             </span>
                         ) : null}
-                        {/* <TableListPage.Actions
-                            actions={() => renderDropdownItems(record)}
-                        /> */}
-                        {hasShowMore(record) ? (
+                        {(!showActionsLess && null) ||
+                        // actionList(record)?.map((item) => (
+                        //     <>
+                        //         {item.hide !== false && item.func ? (
+                        //             <span
+                        //                 key={item.key}
+                        //                 className={classNames(
+                        //                     "flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer mr-1",
+                        //                     {
+                        //                         [item.clasName]:
+                        //                             item.clasName,
+                        //                     },
+                        //                 )}
+                        //                 title={item.text}
+                        //                 onClick={() => item.func?.(record)}
+                        //             >
+                        //                 {item.icon}
+                        //             </span>
+                        //         ) : null}
+                        //     </>
+                        // ))) ||
+                        hasShowMore(record) ? (
                             <Dropdown
                                 menu={{
                                     items: renderDropdownItems(

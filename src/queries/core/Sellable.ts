@@ -2,13 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
 import { SellableQueryParams } from "@/models/management/core/sellable.interface";
 import { sellableAPIs } from "@/services/management/cores/sellable";
-import { isUndefined } from "lodash";
 
 export const useGetSellableListCoreQuery = (sellableQuery?: {
     queryParams?: SellableQueryParams;
     enabled?: boolean;
 }) => {
-    const { queryParams, enabled = true } = sellableQuery || {};
+    const { queryParams, enabled = false } = sellableQuery || {};
     let sellableQueryParams = new SellableQueryParams(
         undefined,
         undefined,
@@ -17,7 +16,7 @@ export const useGetSellableListCoreQuery = (sellableQuery?: {
         20,
         undefined,
     );
-    if (!isUndefined(queryParams)) {
+    if (queryParams) {
         sellableQueryParams = Object.keys(queryParams)
             .sort()
             .reduce<SellableQueryParams>((acc, key) => {
@@ -43,6 +42,7 @@ export const useGetSellableListCoreQuery = (sellableQuery?: {
                 totalItems,
             };
         },
+
         enabled: enabled,
     });
 };

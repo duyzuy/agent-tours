@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import TableListPage from "@/components/admin/TableListPage";
 import { useGetSellableDetailCoreQuery } from "@/queries/core/Sellable";
 import {
+    ISellable,
     SellableConfirmFormData,
     SellableListRs,
 } from "@/models/management/core/sellable.interface";
@@ -21,8 +22,6 @@ import DrawerPriceConfig from "../DrawerPriceConfig";
 import { isUndefined } from "lodash";
 import useConfigPriceSellable from "../../hooks/useConfigPriceSellable";
 import DrawerSellableDetail from "../DrawerSellableDetail";
-import { TemplateSellableQueryParams } from "@/models/management/core/templateSellable.interface";
-import { useGetTemplateSellableListCoreQuery } from "@/queries/core/templateSellable";
 import { PaginationProps } from "antd";
 
 export interface SellableListProps {
@@ -46,22 +45,6 @@ const SellableListContainer: React.FC<SellableListProps> = ({
     onChangePageSellable,
     render,
 }) => {
-    const initTemplateQueryParams = new TemplateSellableQueryParams(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        Status.OK,
-    );
-
-    const { data } = useGetTemplateSellableListCoreQuery({
-        queryParams: initTemplateQueryParams,
-        enabled: true,
-    });
-    console.log(data);
-
     const inventoryQueryParams = new IInventoryQueryParams(
         undefined,
         undefined,
@@ -136,6 +119,12 @@ const SellableListContainer: React.FC<SellableListProps> = ({
         setDrawerPriceConfig({ isShow: true, record: record });
     };
 
+    const onViewRecord = (record: ISellable) => {
+        setViewSellableDetail(() => ({
+            isShow: true,
+            recId: record.recId,
+        }));
+    };
     return (
         <React.Fragment>
             {render?.()}
@@ -161,12 +150,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
                 onEdit={(record) =>
                     handleDrawer({ action: EActionType.EDIT, record })
                 }
-                onView={(record) =>
-                    setViewSellableDetail({
-                        isShow: true,
-                        recId: record.recId,
-                    })
-                }
+                onView={(record) => onViewRecord(record)}
                 onSetting={(record) => onConfigPriceSellable(record)}
             />
             <DrawerSellable

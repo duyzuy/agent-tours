@@ -9,7 +9,16 @@ import {
 
 import { Status } from "@/models/management/common.interface";
 
-import { Col, Form, Row, Tabs, TabsProps, Select, Input } from "antd";
+import {
+    Col,
+    Form,
+    Row,
+    Tabs,
+    TabsProps,
+    Select,
+    Input,
+    SelectProps,
+} from "antd";
 import FormItem from "@/components/base/FormItem";
 
 import SellableListContainer from "./_components/SellableListContainer";
@@ -24,11 +33,6 @@ import SellableFormContainer from "./_components/SellableFormContainer";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import useCRUDSellable from "../hooks/useCRUDSellable";
 
-type TemplateOptionType = {
-    label: string;
-    value: number;
-    data: ITemplateSellable;
-};
 const SellableListPage: React.FC = () => {
     const initTemplateQueryparams = new TemplateSellableQueryParams(
         undefined,
@@ -45,6 +49,7 @@ const SellableListPage: React.FC = () => {
             enabled: true,
         });
     const { list: templateList } = templateResponse || {};
+
     const [sellableQueryParams, setSellableQueryParams] = useState(
         new SellableQueryParams(
             undefined,
@@ -55,14 +60,14 @@ const SellableListPage: React.FC = () => {
             undefined,
         ),
     );
-    const onSearchSellableCode = (code: string) => {
-        setSellableQueryParams((prev) => ({ ...prev, andCodeLike: code }));
-    };
+
     const { data: sellableResponse, isLoading: isLoadingSellable } =
         useGetSellableListCoreQuery({
             queryParams: sellableQueryParams,
             enabled: !isUndefined(sellableQueryParams.sellableTemplateId),
         });
+
+    console.log(sellableQueryParams);
     const {
         list: sellableList,
         pageCurrent,
@@ -75,6 +80,18 @@ const SellableListPage: React.FC = () => {
 
     const { onCreate, onApproval } = useCRUDSellable();
 
+    const onSearchSellableCode = (code: string) => {
+        setSellableQueryParams((prev) => ({ ...prev, andCodeLike: code }));
+    };
+    const onSelectTemplate: SelectProps<
+        number,
+        ITemplateSellable
+    >["onChange"] = (value, _) => {
+        setSellableQueryParams((prev) => ({
+            ...prev,
+            sellableTemplateId: value,
+        }));
+    };
     const productTypeOption = useMemo(() => {
         return productTypes?.reduce<{ label: string; value: string }[]>(
             (acc, type) => {
@@ -83,14 +100,8 @@ const SellableListPage: React.FC = () => {
             [],
         );
     }, []);
-    const templateOptions = useMemo(() => {
-        return templateList?.reduce<TemplateOptionType[]>((acc, template) => {
-            return [
-                ...acc,
-                { label: template.name, value: template.recId, data: template },
-            ];
-        }, [] as TemplateOptionType[]);
-    }, [templateList]);
+
+    console.log(sellableList);
     const tabItems: TabsProps["items"] = [
         {
             key: "sellableList",
@@ -123,7 +134,7 @@ const SellableListPage: React.FC = () => {
                                             <FormItem>
                                                 <Select<
                                                     number,
-                                                    TemplateOptionType
+                                                    ITemplateSellable
                                                 >
                                                     placeholder="Chọn template"
                                                     showSearch
@@ -132,59 +143,53 @@ const SellableListPage: React.FC = () => {
                                                     value={
                                                         sellableQueryParams.sellableTemplateId
                                                     }
-                                                    filterOption={(
-                                                        input,
-                                                        option,
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    filterSort={(
-                                                        optionA,
-                                                        optionB,
-                                                    ) =>
-                                                        (optionA?.label ?? "")
-                                                            .toLowerCase()
-                                                            .localeCompare(
-                                                                (
-                                                                    optionB?.label ??
-                                                                    ""
-                                                                ).toLowerCase(),
-                                                            )
-                                                    }
-                                                    options={templateOptions}
+                                                    // filterOption={(
+                                                    //     input,
+                                                    //     option,
+                                                    // ) =>
+                                                    //     (
+                                                    //         option?.name ?? ""
+                                                    //     ).includes(input)
+                                                    // }
+                                                    // filterSort={(
+                                                    //     optionA,
+                                                    //     optionB,
+                                                    // ) =>
+                                                    //     (optionA?.name ?? "")
+                                                    //         .toLowerCase()
+                                                    //         .localeCompare(
+                                                    //             (
+                                                    //                 optionB?.name ??
+                                                    //                 ""
+                                                    //             ).toLowerCase(),
+                                                    //         )
+                                                    // }
+                                                    fieldNames={{
+                                                        label: "code",
+                                                        value: "recId",
+                                                    }}
+                                                    options={templateList || []}
                                                     optionRender={(option) => {
                                                         return (
                                                             <p>
-                                                                <p>
+                                                                <span>
                                                                     {
                                                                         option
-                                                                            .data
                                                                             .data
                                                                             .name
                                                                     }
-                                                                </p>
-                                                                <p className="text-xs text-gray-500">
+                                                                </span>
+                                                                <span className="text-xs text-gray-500 ml-3">
                                                                     {
                                                                         option
                                                                             .data
-                                                                            .data
                                                                             .code
                                                                     }
-                                                                </p>
+                                                                </span>
                                                             </p>
                                                         );
                                                     }}
-                                                    onChange={(value) =>
-                                                        setSellableQueryParams(
-                                                            (prev) => ({
-                                                                ...prev,
-                                                                sellableTemplateId:
-                                                                    value,
-                                                            }),
-                                                        )
-                                                    }
+                                                    onChange={onSelectTemplate}
                                                 />
                                             </FormItem>
                                         </Col>

@@ -1,25 +1,9 @@
 "use client";
 import React from "react";
-import {
-    ArrowDownOutlined,
-    ArrowUpOutlined,
-    SearchOutlined,
-    SwapOutlined,
-} from "@ant-design/icons";
-import {
-    Card,
-    Col,
-    Row,
-    Statistic,
-    Form,
-    Input,
-    Button,
-    DatePicker,
-    Divider,
-} from "antd";
-import FormItem from "antd/es/form/FormItem";
-import styled from "styled-components";
+import { SwapOutlined } from "@ant-design/icons";
+
 import { moneyFormatVND } from "@/utils/helper";
+import BoxBooking from "../_components/BoxBooking";
 interface Props {}
 
 const TOURSS = [
@@ -97,55 +81,7 @@ const SearchTourPage = ({}: Props) => {
                     }}
                 >
                     <div className=" h-36"></div>
-                    <div className="searchbox px-6 py-4 bg-white shadow-lg rounded-lg">
-                        <SearchBookingWrapper>
-                            <Form
-                                layout="vertical"
-                                size="large"
-                                className="booking-form"
-                            >
-                                <Row align="bottom" gutter={16}>
-                                    <Col span={6}>
-                                        <Form.Item label="Điểm đến">
-                                            <Input
-                                                placeholder="Chọn điểm đến"
-                                                bordered={false}
-                                                style={{ padding: 0 }}
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Form.Item label="Ngày đi">
-                                            <DatePicker
-                                                placeholder="Chọn ngày di"
-                                                className="w-full"
-                                                bordered={false}
-                                                style={{ padding: 0 }}
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Form.Item label="Hành khách">
-                                            <Input
-                                                placeholder="Số lượng hành khách"
-                                                bordered={false}
-                                                style={{ padding: 0 }}
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col flex={1}></Col>
-                                    <Form.Item>
-                                        <Button
-                                            type="primary"
-                                            icon={<SearchOutlined />}
-                                        >
-                                            Tìm kiếm
-                                        </Button>
-                                    </Form.Item>
-                                </Row>
-                            </Form>
-                        </SearchBookingWrapper>
-                    </div>
+                    <BoxBooking className="searchbox px-6 py-4 bg-white shadow-lg rounded-lg" />
                 </div>
 
                 <div className="tours-wrapper">
@@ -153,7 +89,7 @@ const SearchTourPage = ({}: Props) => {
                     <div className="tour-list flex items-center flex-wrap -mx-3 ">
                         {TOURSS.map((tour, _index) => (
                             <div
-                                className="tour-item px-3 mb-3 w-1/3"
+                                className="tour-item px-3 mb-3 w-full lg:w-1/3"
                                 key={_index}
                             >
                                 <div className="p-3 bg-white rounded-lg shadow-lg">
@@ -162,7 +98,7 @@ const SearchTourPage = ({}: Props) => {
                                         <p className="text-red-500 font-bold">
                                             {tour.code}
                                         </p>
-                                        <div className="schedule-date flex justify-between">
+                                        <div className="schedule-date flex justify-between border-b mb-3 pb-3">
                                             <div>
                                                 <span>Ngày đi</span>
                                                 <p className="font-bold">
@@ -177,7 +113,7 @@ const SearchTourPage = ({}: Props) => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <Divider orientationMargin={"10px"} />
+
                                         <div>
                                             <p>{moneyFormatVND(tour.price)}</p>
                                         </div>
@@ -192,20 +128,3 @@ const SearchTourPage = ({}: Props) => {
     );
 };
 export default SearchTourPage;
-
-const SearchBookingWrapper = styled(`div`)`
-    .travel-form-large {
-        .travel-form-item {
-            margin-bottom: 0;
-
-            .travel-form-item-label > label {
-                height: auto;
-                font-size: 12px;
-                color: gray;
-            }
-            .travel-form-item-control-input {
-                min-height: auto;
-            }
-        }
-    }
-`;
