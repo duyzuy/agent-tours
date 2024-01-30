@@ -1,14 +1,5 @@
-import React, { useCallback, useState, useMemo } from "react";
-import {
-    Empty,
-    Space,
-    Table,
-    Tag,
-    Select,
-    SelectProps,
-    Divider,
-    Button,
-} from "antd";
+import React, { useState, useEffect } from "react";
+import { Empty, Tag, Select, SelectProps, Divider, Button } from "antd";
 import {
     PlusCircleOutlined,
     DeleteOutlined,
@@ -16,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { ColumnsType, TableProps } from "antd/es/table";
 import { IStock } from "@/models/management/core/stockInventory.interface";
-import { isArray, isEmpty, isUndefined } from "lodash";
+import { isEmpty, isUndefined } from "lodash";
 import { IInventory } from "@/models/management/core/inventory.interface";
 import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory";
 
@@ -33,6 +24,8 @@ type StockExtraItemType = SellableConfirmFormData["extraStocks"][0];
 export type StockExtraSelectionProps = TableProps<IStock> & {
     inventories: IInventory[];
     stocks?: StockExtraItemType[];
+    validFrom?: string;
+    validTo?: string;
     stockSelectedList?: StockExtraItemType[];
     isLoading?: boolean;
     onSetStock?: (
@@ -49,6 +42,8 @@ interface IInventoryOption {
 function StockExtraSelection(props: StockExtraSelectionProps) {
     const {
         inventories,
+        validFrom,
+        validTo,
         isLoading,
         onSetStock,
         onSaveQuantity,
@@ -57,19 +52,21 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
         stockSelectedList,
         ...restProps
     } = props;
-    const queryParams = new StockInventoryQueryparams(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        1,
-        5,
-        Status.OK,
+
+    const [stockQueryParams, setStockQueryParams] = useState(
+        () =>
+            new StockInventoryQueryparams(
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                1,
+                5,
+                Status.OK,
+            ),
     );
-    const [inventory, setInventory] = useState<IInventory>();
-    const [stockQueryParams, setStockQueryParams] = useState(queryParams);
     const [showModalDetail, setShowModalDetail] = useState<{
         isShow: boolean;
         record?: IStock;
@@ -78,7 +75,7 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
     const { data: stockResponse, isLoading: isLoadingStock } =
         useGetStockInventoryListCoreQuery({
             queryparams: stockQueryParams,
-            enabled: !isUndefined(inventory),
+            enabled: !isUndefined(stockQueryParams.inventoryId),
         });
     const {
         list: stockList,
@@ -86,23 +83,19 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
         pageSize,
         totalItems,
     } = stockResponse || {};
-    const inventoryOptions = useMemo(() => {
-        return inventories.reduce<IInventoryOption[]>((acc, inv) => {
-            return [...acc, { label: inv.name, value: inv.recId, data: inv }];
-        }, []);
-    }, [inventories]);
 
     const onViewStock = (record: IStock) => {
         setShowModalDetail({ isShow: true, record: record });
     };
 
-    const onChangeInventory: SelectProps<
-        number,
-        IInventoryOption
-    >["onChange"] = (value, option) => {
-        if (!isUndefined(option) && !isArray(option)) {
-            setInventory(option.data);
-        }
+    const onChangeInventory: SelectProps<number, IInventory>["onChange"] = (
+        value,
+        option,
+    ) => {
+        setStockQueryParams((prev) => ({
+            ...prev,
+            inventoryId: value,
+        }));
     };
     const onChangeStocks = (
         action: "add" | "remove",
@@ -227,6 +220,13 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
         },
     ];
 
+    useEffect(() => {
+        setStockQueryParams((prev) => ({
+            ...prev,
+            valid: validFrom,
+            validTo: validTo,
+        }));
+    }, [validFrom, validTo]);
     return (
         <React.Fragment>
             <div className="list-select py-2">
@@ -248,7 +248,8 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
             </div>
             <Divider />
             <Select
-                options={inventoryOptions}
+                options={inventories}
+                fieldNames={{ label: "name", value: "recId" }}
                 placeholder="Chọn inventory"
                 onChange={onChangeInventory}
                 className="w-full"
@@ -256,14 +257,14 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
             <div className="mb-3"></div>
             <CustomTable
                 columns={mergeColumns}
-                dataSource={inventory ? stockList : []}
+                dataSource={stockQueryParams.inventoryId ? stockList : []}
                 loading={isLoadingStock}
                 size="small"
                 pagination={{
                     hideOnSinglePage: true,
-                    current: inventory ? pageCurrent : 1,
-                    pageSize: inventory ? pageSize : 20,
-                    total: inventory ? totalItems : 0,
+                    current: stockQueryParams.inventoryId ? pageCurrent : 1,
+                    pageSize: stockQueryParams.inventoryId ? pageSize : 20,
+                    total: stockQueryParams.inventoryId ? totalItems : 0,
                     size: "small",
                     onChange: (page) =>
                         setStockQueryParams((prev) => ({

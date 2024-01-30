@@ -1,21 +1,12 @@
-import React, { useState, useMemo, FunctionComponent } from "react";
-import {
-    Empty,
-    Space,
-    Table,
-    Tag,
-    Select,
-    SelectProps,
-    Divider,
-    Button,
-} from "antd";
+import React, { useState, useEffect } from "react";
+import { Empty, Space, Tag, Select, SelectProps, Divider, Button } from "antd";
 import { ColumnsType, TableProps } from "antd/es/table";
 import {
     DeleteOutlined,
     EyeOutlined,
     PlusCircleOutlined,
 } from "@ant-design/icons";
-import { isArray, isEmpty, isUndefined } from "lodash";
+import { isEmpty, isUndefined } from "lodash";
 import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory";
 import { miniStockColumns } from "./miniStockColumns";
 import { formatDate } from "@/utils/date";
@@ -32,6 +23,8 @@ import CustomTable from "@/components/admin/CustomTable";
 
 export type StockSelectionProps = TableProps<IStock> & {
     inventories: IInventory[];
+    validFrom?: string;
+    validTo?: string;
     stocks?: SellableConfirmFormData["stocks"];
     stockSelectedList?: SellableConfirmFormData["extraStocks"];
     defaultQuantity: number;
@@ -42,11 +35,7 @@ export type StockSelectionProps = TableProps<IStock> & {
     ) => void;
     onRemove?: (record: IStock) => void;
 };
-interface IInventoryOption {
-    label: string;
-    value: number;
-    data: IInventory | undefined;
-}
+
 function StockSelection(props: StockSelectionProps) {
     const {
         inventories,
@@ -57,30 +46,35 @@ function StockSelection(props: StockSelectionProps) {
         stocks,
         defaultQuantity = 0,
         stockSelectedList,
+        validTo,
+        validFrom,
         ...restProps
     } = props;
 
-    const [inventory, setInventory] = useState<IInventory>();
     const [showModalDetail, setShowModalDetail] = useState<{
         isShow: boolean;
         record?: IStock;
     }>({ isShow: false, record: undefined });
-    const queryParams = new StockInventoryQueryparams(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        1,
-        5,
-        Status.OK,
+
+    const [stockQueryparams, setStockQueryParams] = useState(
+        () =>
+            new StockInventoryQueryparams(
+                undefined,
+                undefined,
+                validFrom,
+                validTo,
+                undefined,
+                undefined,
+                1,
+                5,
+                Status.OK,
+            ),
     );
-    const [stockQueryparams, setStockQueryParams] = useState(queryParams);
+
     const { data: stockResponse, isLoading: isLoadingStock } =
         useGetStockInventoryListCoreQuery({
             queryparams: stockQueryparams,
-            enabled: !isUndefined(inventory),
+            enabled: !isUndefined(stockQueryparams.inventoryId),
         });
     const {
         list: stockList,
@@ -88,19 +82,12 @@ function StockSelection(props: StockSelectionProps) {
         pageSize,
         totalItems,
     } = stockResponse || {};
-    const inventoryOptions = useMemo(() => {
-        return inventories.reduce<IInventoryOption[]>((acc, inv) => {
-            return [...acc, { label: inv.name, value: inv.recId, data: inv }];
-        }, []);
-    }, [inventories]);
 
-    const onChangeInventory: SelectProps<
-        number,
-        IInventoryOption
-    >["onChange"] = (value, option) => {
-        if (!isUndefined(option) && !isArray(option)) {
-            setInventory(option.data);
-        }
+    const onChangeInventory: SelectProps<number, IInventory>["onChange"] = (
+        value,
+        option,
+    ) => {
+        setStockQueryParams((prev) => ({ ...prev, inventoryId: value }));
     };
     const onChangeStocks = (
         action: "add" | "remove",
@@ -191,6 +178,13 @@ function StockSelection(props: StockSelectionProps) {
         },
     ];
 
+    useEffect(() => {
+        setStockQueryParams((prev) => ({
+            ...prev,
+            valid: validFrom,
+            validTo: validTo,
+        }));
+    }, [validFrom, validTo]);
     return (
         <React.Fragment>
             <div className="list-select py-2">
@@ -212,23 +206,24 @@ function StockSelection(props: StockSelectionProps) {
             </div>
             <Divider />
             <Select
-                options={inventoryOptions}
+                options={inventories}
                 placeholder="Chọn inventory"
+                fieldNames={{ label: "name", value: "recId" }}
                 onChange={onChangeInventory}
-                value={inventory?.recId}
+                value={stockQueryparams.inventoryId}
                 className="w-full"
             />
             <div className="mb-3"></div>
             <CustomTable
                 columns={mergeColumns}
                 size="small"
-                dataSource={inventory ? stockList : []}
+                dataSource={stockQueryparams.inventoryId ? stockList : []}
                 loading={isLoadingStock}
                 pagination={{
                     hideOnSinglePage: true,
-                    current: inventory ? pageCurrent : 1,
-                    pageSize: inventory ? pageSize : 20,
-                    total: inventory ? totalItems : 0,
+                    current: stockQueryparams.inventoryId ? pageCurrent : 1,
+                    pageSize: stockQueryparams.inventoryId ? pageSize : 20,
+                    total: stockQueryparams.inventoryId ? totalItems : 0,
                     size: "small",
                     onChange: (page) =>
                         setStockQueryParams((prev) => ({

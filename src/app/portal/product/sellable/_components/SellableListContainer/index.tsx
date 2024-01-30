@@ -128,6 +128,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
     return (
         <React.Fragment>
             {render?.()}
+
             <TableListPage<SellableListRs["result"][0]>
                 dataSource={dataSource}
                 scroll={{ x: 2000 }}

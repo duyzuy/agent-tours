@@ -22,7 +22,7 @@ const ModalContent: React.FC<Props> = ({
                     <p className="font-bold text-center mb-3 text-lg">
                         {title}
                     </p>
-                    <p className="text-gray-500">{descriptions}</p>
+                    <div className="modal-content">{descriptions}</div>
                 </div>
             </div>
         </Modal>

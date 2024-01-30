@@ -28,6 +28,7 @@ type ITableListPageProps<T extends object> = TableProps<T> & {
     hideApproval?: (record: T) => boolean;
     hideEdit?: (record: T) => boolean;
     hideDelete?: (record: T) => boolean;
+    hideView?: (record: T) => boolean;
 };
 
 type TablePageActionItemType<T extends object> = {
@@ -44,7 +45,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         isLoading,
         columns,
         modelName = "",
-        showActionsLess = false,
+        showActionsLess = true,
         pagination,
         onEdit,
         onApproval,
@@ -54,6 +55,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         hideApproval,
         hideEdit,
         hideDelete,
+        hideView,
         ...restProps
     } = props;
     const [showModalDelete, setShowModalDelete] = useState(false);
@@ -84,7 +86,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                 clasName: "item text-green-600",
             },
             {
-                hide: onView?.(record),
+                hide: hideView?.(record),
                 icon: <EyeOutlined />,
                 func: onView,
                 text: "Chi tiết",
@@ -119,7 +121,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                 },
             },
             {
-                hide: false,
+                hide: hideView?.(record),
                 item: {
                     key: "view",
                     label: (
@@ -195,28 +197,28 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                                 <SettingOutlined className="p-[8px] block" />
                             </span>
                         ) : null}
-                        {(!showActionsLess && null) ||
-                        // actionList(record)?.map((item) => (
-                        //     <>
-                        //         {item.hide !== false && item.func ? (
-                        //             <span
-                        //                 key={item.key}
-                        //                 className={classNames(
-                        //                     "flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer mr-1",
-                        //                     {
-                        //                         [item.clasName]:
-                        //                             item.clasName,
-                        //                     },
-                        //                 )}
-                        //                 title={item.text}
-                        //                 onClick={() => item.func?.(record)}
-                        //             >
-                        //                 {item.icon}
-                        //             </span>
-                        //         ) : null}
-                        //     </>
-                        // ))) ||
-                        hasShowMore(record) ? (
+                        {!showActionsLess ? (
+                            actionList(record)?.map((item) => (
+                                <>
+                                    {item.hide !== false && item.func ? (
+                                        <span
+                                            key={item.key}
+                                            className={classNames(
+                                                "flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer mr-1",
+                                                {
+                                                    [item.clasName]:
+                                                        item.clasName,
+                                                },
+                                            )}
+                                            title={item.text}
+                                            onClick={() => item.func?.(record)}
+                                        >
+                                            {item.icon}
+                                        </span>
+                                    ) : null}
+                                </>
+                            ))
+                        ) : hasShowMore(record) ? (
                             <Dropdown
                                 menu={{
                                     items: renderDropdownItems(

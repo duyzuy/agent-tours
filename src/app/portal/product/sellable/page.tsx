@@ -101,7 +101,6 @@ const SellableListPage: React.FC = () => {
         );
     }, []);
 
-    console.log(sellableList);
     const tabItems: TabsProps["items"] = [
         {
             key: "sellableList",
