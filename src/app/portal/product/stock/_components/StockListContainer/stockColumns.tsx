@@ -9,14 +9,12 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
         title: "#ID",
         dataIndex: "recId",
         key: "recId",
-        fixed: "left",
         width: 80,
     },
     {
         title: "Code",
         dataIndex: "code",
         key: "code",
-        fixed: "left",
         width: 300,
         render: (_, record) => {
             return (

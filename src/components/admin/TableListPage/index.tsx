@@ -13,6 +13,7 @@ import CustomTable from "@/components/admin/CustomTable";
 import ModalDeleteConfirm from "./ModalDeleteConfirm";
 import styled from "styled-components";
 import classNames from "classnames";
+import { isUndefined } from "lodash";
 
 type ITableListPageProps<T extends object> = TableProps<T> & {
     dataSource: T[];
@@ -75,38 +76,38 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         setShowModalDelete(false);
     };
 
-    const actionList = (record: T) => {
-        return [
-            {
-                hide: hideApproval?.(record),
-                icon: <CheckCircleOutlined />,
-                func: onApproval,
-                text: "Duyệt",
-                key: "approval",
-                clasName: "item text-green-600",
-            },
-            {
-                hide: hideView?.(record),
-                icon: <EyeOutlined />,
-                func: onView,
-                text: "Chi tiết",
-                key: "view",
-                clasName: "item text-blue-600",
-            },
-            {
-                hide: hideDelete?.(record),
-                icon: <DeleteOutlined />,
-                func: onShowModalConfirm,
-                text: "Xoá",
-                key: "delete",
-                clasName: "item text-red-600",
-            },
-        ];
-    };
+    const actionList = [
+        {
+            hide: hideApproval,
+            icon: <CheckCircleOutlined className="p-[8px]" />,
+            func: onApproval,
+            text: "Duyệt",
+            key: "approval",
+            clasName: "item text-green-600",
+        },
+        {
+            hide: hideView,
+            icon: <EyeOutlined className="p-[8px]" />,
+            func: onView,
+            text: "Chi tiết",
+            key: "view",
+            clasName: "item text-blue-600",
+        },
+        {
+            hide: hideDelete,
+            icon: <DeleteOutlined className="p-[8px]" />,
+            func: onDelete,
+            text: "Xoá",
+            key: "delete",
+            clasName: "item text-red-600",
+        },
+    ];
+
     let renderDropdownItems = (record: T) => {
         const fncList = [
             {
                 hide: hideApproval?.(record),
+                action: onApproval,
                 item: {
                     key: "approval",
                     label: (
@@ -122,6 +123,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             },
             {
                 hide: hideView?.(record),
+                action: onView,
                 item: {
                     key: "view",
                     label: (
@@ -137,6 +139,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             },
             {
                 hide: hideDelete?.(record),
+                action: onDelete,
                 item: {
                     key: "delete",
                     className: "",
@@ -153,12 +156,16 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             },
         ];
 
-        return fncList.reduce<MenuProps["items"]>((acc, curr) => {
-            if (curr.hide === false) {
-                acc = [...(acc || []), curr.item];
-            }
-            return acc;
-        }, []);
+        let actionsMerged: MenuProps["items"] = [];
+
+        fncList.forEach((fnc) => {
+            if (!isUndefined(fnc.hide) && fnc.hide === true) return;
+
+            if (isUndefined(fnc.action)) return;
+
+            actionsMerged = [...(actionsMerged || []), fnc.item];
+        });
+        return actionsMerged;
     };
 
     const hasShowMore = useCallback(
@@ -179,7 +186,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             render: (_, record) => {
                 return (
                     <Space>
-                        {hideEdit?.(record) ? null : (
+                        {!onEdit || hideEdit?.(record) === true ? null : (
                             <span
                                 className="edit-btn flex items-center text-primary-default justify-center rounded-full  hover:bg-gray-100 cursor-pointer mr-1"
                                 onClick={() => onEdit?.(record)}
@@ -198,25 +205,35 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
                             </span>
                         ) : null}
                         {!showActionsLess ? (
-                            actionList(record)?.map((item) => (
-                                <>
-                                    {item.hide !== false && item.func ? (
-                                        <span
-                                            key={item.key}
-                                            className={classNames(
-                                                "flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer mr-1",
-                                                {
-                                                    [item.clasName]:
-                                                        item.clasName,
-                                                },
-                                            )}
-                                            title={item.text}
-                                            onClick={() => item.func?.(record)}
-                                        >
-                                            {item.icon}
-                                        </span>
+                            actionList.map((item, _index) => (
+                                <React.Fragment key={_index}>
+                                    {item.func &&
+                                    (isUndefined(item.hide) ||
+                                        item.hide(record) === false) ? (
+                                        <>
+                                            <span
+                                                key={item.key}
+                                                className={classNames(
+                                                    "flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer mr-1",
+                                                    {
+                                                        [item.clasName]:
+                                                            item.clasName,
+                                                    },
+                                                )}
+                                                title={item.text}
+                                                onClick={() =>
+                                                    item.key === "delete"
+                                                        ? onShowModalConfirm(
+                                                              record,
+                                                          )
+                                                        : item.func?.(record)
+                                                }
+                                            >
+                                                {item.icon}
+                                            </span>
+                                        </>
                                     ) : null}
-                                </>
+                                </React.Fragment>
                             ))
                         ) : hasShowMore(record) ? (
                             <Dropdown

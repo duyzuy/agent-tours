@@ -147,12 +147,15 @@ const SellableListContainer: React.FC<SellableListProps> = ({
                     handleDrawer({ action: EActionType.APPROVAL, record })
                 }
                 hideApproval={({ status }) => status === Status.OK}
-                hideEdit={({ status }) => status === Status.QQ}
+                showActionsLess={false}
+                onView={(record) => onViewRecord(record)}
+                onSetting={(record) => onConfigPriceSellable(record)}
+                hideEdit={({ status }) =>
+                    status === Status.QQ || status === Status.OK
+                }
                 onEdit={(record) =>
                     handleDrawer({ action: EActionType.EDIT, record })
                 }
-                onView={(record) => onViewRecord(record)}
-                onSetting={(record) => onConfigPriceSellable(record)}
             />
             <DrawerSellable
                 isOpen={showDrawer}
@@ -181,11 +184,13 @@ const SellableListContainer: React.FC<SellableListProps> = ({
                 }
                 isLoading={isLoadingSellableDetail}
             />
+
             <DrawerPriceConfig
                 isOpen={drawerPriceConfig.isShow}
                 initialValues={sellablePriceConfigs}
                 sellableRecord={drawerPriceConfig.record}
                 sellableRecId={drawerPriceConfig.record?.recId}
+                cap={drawerPriceConfig.record?.cap || 0}
                 onCancel={() =>
                     setDrawerPriceConfig((prev) => ({
                         isShow: false,
