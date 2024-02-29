@@ -5,6 +5,7 @@ import { useLocalUserGetRolesQuery } from "@/queries/localUser";
 import { LocalUserPermissionContext } from "@/context/permissionContext";
 import { pathPermissions } from "@/constants/permission.constant";
 import { LINKS } from "@/constants/links.constant";
+import useAuth from "@/hooks/useAgAuth";
 import {
     ERolesFunctions,
     TRoleCondition,
@@ -12,10 +13,9 @@ import {
 import { isEmpty } from "lodash";
 interface Props {
     children: React.ReactNode;
-    token: string;
 }
-const PermissionWrapper: React.FC<Props> = ({ children, token }) => {
-    const { data: roles } = useLocalUserGetRolesQuery(token);
+const PermissionWrapper: React.FC<Props> = ({ children }) => {
+    const { data: roles } = useLocalUserGetRolesQuery();
     const path = usePathname();
     const router = useRouter();
     const [isValidPerm, setValidPerm] = useState(false);

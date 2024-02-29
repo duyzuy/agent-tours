@@ -16,7 +16,7 @@ export const priceConfigColumns: (PriceConfigColumnTypes[number] & {
         title: "#ID",
         dataIndex: "recId",
         key: "recId",
-        width: 100,
+        width: 80,
         editable: false,
     },
     {
@@ -41,7 +41,27 @@ export const priceConfigColumns: (PriceConfigColumnTypes[number] & {
         width: 120,
         editable: true,
     },
-
+    {
+        title: "Available",
+        dataIndex: "avaiable",
+        key: "avaiable",
+        width: 100,
+        editable: true,
+    },
+    {
+        title: "Open",
+        dataIndex: "open",
+        key: "open",
+        width: 100,
+        editable: false,
+    },
+    {
+        title: "Sold",
+        dataIndex: "sold",
+        key: "sold",
+        width: 100,
+        editable: false,
+    },
     {
         title: "Adult",
         dataIndex: "adult",
@@ -113,24 +133,20 @@ export const priceConfigColumns: (PriceConfigColumnTypes[number] & {
         },
     },
     {
-        title: "Available",
-        dataIndex: "avaiable",
-        key: "avaiable",
+        title: "Settings",
+        dataIndex: "settings",
+        key: "settings",
         width: 100,
         editable: false,
     },
     {
-        title: "Open",
-        dataIndex: "open",
-        key: "open",
-        width: 100,
+        title: "Descriptions",
+        dataIndex: "descriptions",
+        key: "descriptions",
+        width: 200,
         editable: false,
-    },
-    {
-        title: "Sold",
-        dataIndex: "sold",
-        key: "sold",
-        width: 100,
-        editable: false,
+        render: (desc) => {
+            return desc || "--";
+        },
     },
 ];

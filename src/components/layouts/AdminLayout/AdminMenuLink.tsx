@@ -79,10 +79,10 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
                 key: "destination/",
                 label: "Danh sách nhóm",
             },
-            // {
-            //     key: "destination/create-content",
-            //     label: "Tạo nội dung",
-            // },
+            {
+                key: "destination/search-group",
+                label: "Nhóm search",
+            },
         ],
     },
     {

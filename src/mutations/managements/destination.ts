@@ -1,4 +1,5 @@
 import { destinationAPIs } from "@/services/management/misc/destination";
+import { localSearchAPIs } from "@/services/management/misc/localSearch";
 import { useMutation } from "@tanstack/react-query";
 import { BaseResponse } from "@/models/management/common.interface";
 import {
@@ -8,6 +9,7 @@ import {
     IDestinationPayload,
     IDestinationRs,
 } from "@/models/management/region.interface";
+import { LocalSearchPayload } from "@/models/management/localSearchDestination.interface";
 
 //create folder in public/uploads folder.
 
@@ -47,5 +49,15 @@ export const useUpdateDestinationCMSContentMutation = () => {
     >({
         mutationFn: (payload) =>
             destinationAPIs.updateCMSContent({ ...payload }),
+    });
+};
+
+export const useCreateLocalSearchMutation = () => {
+    return useMutation<
+        IDestinationContentRs,
+        BaseResponse<null>,
+        LocalSearchPayload
+    >({
+        mutationFn: (payload) => localSearchAPIs.create(payload),
     });
 };

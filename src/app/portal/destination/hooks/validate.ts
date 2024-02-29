@@ -4,6 +4,7 @@ import {
     IDestinationPayload,
 } from "@/models/management/region.interface";
 import { Status } from "@/models/management/common.interface";
+import { LocalSearchFormData } from "@/models/management/localSearchDestination.interface";
 
 const vietnameseNamePattern =
     /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s ]+$/;
@@ -60,3 +61,25 @@ export const destinationContentSchema: ObjectSchema<IDestinationContentPayload> 
             .oneOf<IDestinationContentPayload["lang"]>(["vi", "en"])
             .required("Ngôn ngữ không bỏ trống"),
     });
+
+export const localSearchSchema: ObjectSchema<LocalSearchFormData> = object({
+    name: string()
+        .required("Tên nhóm không để trống.")
+        .matches(
+            vietnameseNamePattern,
+            "Tên thư mục không được chứa ký tự đặc biệt.",
+        ),
+    regionKey: string(),
+    subRegionKey: string(),
+    countryKey: string(),
+    stateProvinceKey: string(),
+    engName: string()
+        .required("Tên nhóm không để trống.")
+        .matches(
+            vietnameseNamePattern,
+            "Tên thư mục không được chứa ký tự đặc biệt.",
+        ),
+    order: number()
+        // .moreThan(0, "Chưa chọn ảnh đại diện.")
+        .required("Số thứ tự không bỏ trống."),
+});

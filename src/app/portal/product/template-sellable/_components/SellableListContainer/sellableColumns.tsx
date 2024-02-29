@@ -9,14 +9,12 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
         title: "#ID",
         dataIndex: "recId",
         key: "recId",
-        fixed: "left",
         width: 100,
     },
     {
         title: "Code",
         dataIndex: "code",
         key: "code",
-        fixed: "left",
         width: 300,
     },
     {

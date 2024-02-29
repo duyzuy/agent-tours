@@ -3,11 +3,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
     Drawer,
-    Table,
     Form,
     Input,
     InputNumber,
-    Typography,
     Popconfirm,
     Divider,
     Row,
@@ -31,6 +29,9 @@ import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { priceConfigSchema } from "../../../hooks/validation";
 import { sortObject } from "@/utils/helper";
 import CustomTable from "@/components/admin/CustomTable";
+import { EditOutlined, SaveOutlined } from "@ant-design/icons";
+import useMessage from "@/hooks/useMessage";
+
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
     dataIndex: string;
@@ -51,6 +52,7 @@ type PriceConfigEditingKeysType = Pick<
     | "child"
     | "infant"
     | "maxAvaiable"
+    | "avaiable"
     | "otherPrice01"
     | "otherPrice02"
     | "otherPrice03"
@@ -110,6 +112,7 @@ export interface DrawerTemplateSellableProps {
     initialValues?: SellablePriceConfigRs["result"];
     sellableRecord?: SellableListRs["result"][0];
     sellableRecId?: number;
+    cap: number;
     onSubmit?: (formData: SellablePriceConfigFormData) => void;
 }
 
@@ -119,6 +122,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
     onSubmit,
     initialValues,
     sellableRecord,
+    cap,
     sellableRecId,
 }) => {
     const [form] = Form.useForm();
@@ -137,6 +141,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
         record: SellablePriceConfigRs["result"][0] & { index: number },
     ) => record.index === editingRow;
 
+    const message = useMessage();
     const onSave = async (recordIndex: number) => {
         try {
             const row =
@@ -144,6 +149,21 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
             /**
              * format correct value number
              */
+
+            const totalMaxAvailble =
+                data?.reduce<number>((acc, item) => {
+                    return acc + item.maxAvaiable;
+                }, 0) || 0;
+
+            if (totalMaxAvailble + row.maxAvaiable > cap) {
+                message.error("Tổng max available đang lớn hơn cap.");
+                return;
+            }
+            if (row.avaiable > row.maxAvaiable) {
+                message.error("Available không lớn hơn max available.");
+                return;
+            }
+
             const correctRowValue = Object.keys(row).reduce((acc, key) => {
                 acc[key as keyof PriceConfigEditingKeysType] = Number(
                     row[key as keyof PriceConfigEditingKeysType],
@@ -221,13 +241,16 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
-                    <span>
-                        <Typography.Link
+                    <>
+                        <Button
+                            icon={<SaveOutlined />}
+                            type="text"
+                            size="small"
                             onClick={() => onSave(record.index)}
                             style={{ marginRight: 8 }}
                         >
                             Lưu
-                        </Typography.Link>
+                        </Button>
                         <Popconfirm
                             title="Bạn chắc chắn không muốn sửa?"
                             onConfirm={cancel}
@@ -236,14 +259,17 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
                                 Huỷ
                             </span>
                         </Popconfirm>
-                    </span>
+                    </>
                 ) : (
-                    <Typography.Link
+                    <Button
+                        icon={<EditOutlined />}
+                        type="text"
+                        size="small"
                         disabled={!isUndefined(editingRow)}
                         onClick={() => edit(record)}
                     >
                         Sửa
-                    </Typography.Link>
+                    </Button>
                 );
             },
         },
@@ -260,7 +286,6 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
                 rowIndex: number,
                 key: any,
             ) => {
-                console.log(key, rowIndex);
                 return {
                     record,
                     inputType:
@@ -373,6 +398,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
             <Divider />
             <Form form={form} component={false}>
                 <CustomTable
+                    size="small"
                     scroll={{ x: 1600, y: "60vh" }}
                     dataSource={data}
                     columns={mergedColumns as PriceConfigColumnTypes}

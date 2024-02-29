@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
-import { columnRoleGroups } from "./columns";
+import { columnsSearchDes } from "./columnsSearchDes";
 import DrawlerDestination from "./components/DrawlerDestination";
 import {
     EActionType,
@@ -78,10 +78,10 @@ const GroupDestinationPage = () => {
             >
                 <TableListPage<IDestinationListRs["result"][0]>
                     scroll={{ x: 1000 }}
-                    rowKey={"codeKey"}
+                    rowKey={"recId"}
                     modelName="nhóm điểm đến"
                     dataSource={destinationList || []}
-                    columns={columnRoleGroups}
+                    columns={columnsSearchDes}
                     onEdit={(record) =>
                         onHandleDrawlerDestination({
                             action: EActionType.EDIT,

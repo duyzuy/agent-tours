@@ -14,32 +14,26 @@ interface Props {
 const AdminAuthorized: React.FC<Props> = ({ children }) => {
     const router = useRouter();
 
-    const { token, clearToken } = useAuth();
+    const { clearToken } = useAuth();
     const [isAuthorized, setAuthorize] = useState(false);
 
     const { data: userProfile, isLoading } = useLocalUserGetProfileQuery();
 
     useEffect(() => {
-        if (!token) {
+        if (!userProfile && !isLoading) {
             setAuthorize(() => false);
+            clearToken();
             router.push(LINKS.PortalLogin);
         } else {
-            if (!isLoading && !userProfile) {
-                clearToken();
-                router.push(LINKS.PortalLogin);
-            } else {
-                setAuthorize(() => true);
-            }
+            setAuthorize(() => true);
         }
-    }, [userProfile]);
+    }, [userProfile, isLoading]);
 
     return (
         <React.Fragment>
-            {isAuthorized && token ? (
-                <LocalUserProfileContext.Provider value={userProfile?.result}>
-                    <PermissionWrapper token={token}>
-                        {children}
-                    </PermissionWrapper>
+            {isAuthorized ? (
+                <LocalUserProfileContext.Provider value={userProfile}>
+                    <PermissionWrapper>{children}</PermissionWrapper>
                 </LocalUserProfileContext.Provider>
             ) : null}
         </React.Fragment>
