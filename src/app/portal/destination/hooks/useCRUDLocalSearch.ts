@@ -1,11 +1,16 @@
-import { useCreateLocalSearchMutation } from "@/mutations/managements/destination";
+import {
+    useCreateLocalSearchMutation,
+    useUpdateLocalSearchMutation,
+} from "@/mutations/managements/destination";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
-import { queryMisc } from "@/queries/var";
+import { queryCMS } from "@/queries/var";
 import { LocalSearchFormData } from "@/models/management/localSearchDestination.interface";
 
 const useCRUDLocalSearch = () => {
     const { mutate: makeCreateLocalSearch } = useCreateLocalSearchMutation();
+    const { mutate: makeUpdateLocalSearch } = useUpdateLocalSearchMutation();
+
     const message = useMessage();
     const queryClient = useQueryClient();
 
@@ -15,7 +20,7 @@ const useCRUDLocalSearch = () => {
                 message.success(`Tạo  thành công`);
 
                 queryClient.invalidateQueries({
-                    queryKey: [queryMisc.GET_DESTINATION_LIST],
+                    queryKey: [queryCMS.GET_LOCAL_SEACH_DESTINATION],
                 });
                 cb?.();
             },
@@ -26,8 +31,33 @@ const useCRUDLocalSearch = () => {
         });
     };
 
+    const onUpdate = (
+        recId: number,
+        payload: LocalSearchFormData,
+        cb?: () => void,
+    ) => {
+        makeUpdateLocalSearch(
+            { recId, ...payload },
+            {
+                onSuccess: (data, variables) => {
+                    message.success(`Cập nhật thành công`);
+
+                    queryClient.invalidateQueries({
+                        queryKey: [queryCMS.GET_LOCAL_SEACH_DESTINATION],
+                    });
+                    cb?.();
+                },
+                onError: (error, variables) => {
+                    console.log({ error, variables });
+                    message.error(error.message);
+                },
+            },
+        );
+    };
+
     return {
         onCreate,
+        onUpdate,
     };
 };
 export default useCRUDLocalSearch;

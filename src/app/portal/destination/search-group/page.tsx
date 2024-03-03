@@ -5,33 +5,28 @@ import TableListPage from "@/components/admin/TableListPage";
 
 import { useGetRegionList } from "@/queries/core/region";
 
-import {
-    useGetDestinationsQuery,
-    useGetLocalSearchListMISCQuery,
-} from "@/queries/misc/destination";
+import { useGetLocalSearchListMISCQuery } from "@/queries/misc/destination";
 
 import { Status } from "@/models/management/common.interface";
-import { LocalSearchListRs } from "@/models/management/localSearchDestination.interface";
+import { LocalSearchDestinationListRs } from "@/models/management/localSearchDestination.interface";
 import DrawerGroupSearch, {
     DrawerGroupSearchProps,
     EActionType,
     TDrawerSearch,
 } from "./_components/DrawerGroupSearch";
 import useCRUDLocalSearch from "../hooks/useCRUDLocalSearch";
-import { columnsSearchDes } from "../columnsSearchDes";
+import { columnsSearchDestination } from "./columnsSearchDestination";
 
 const GroupDestinationPage = () => {
     const [editRecord, setEditRecord] =
-        useState<LocalSearchListRs["result"][0]>();
+        useState<LocalSearchDestinationListRs["result"][0]>();
 
     const { data: regionList, isLoading } = useGetRegionList();
-    const { data: destinationList, isLoading: isLoadingDestinationList } =
-        useGetDestinationsQuery();
-    // console.log(destinationList);
+
     const { data: localSearchList, isLoading: isLoadingSearchDesList } =
         useGetLocalSearchListMISCQuery();
 
-    const { onCreate } = useCRUDLocalSearch();
+    const { onCreate, onUpdate } = useCRUDLocalSearch();
 
     const [actionType, setActionType] = useState<EActionType>(
         EActionType.CREATE,
@@ -56,11 +51,11 @@ const GroupDestinationPage = () => {
             });
         }
 
-        // if (actionType === EActionType.EDIT && editRecord) {
-        //     onUpdate(editRecord.id, payload, () => {
-        //         onCloseDrawlerAndReset();
-        //     });
-        // }
+        if (actionType === EActionType.EDIT && editRecord) {
+            onUpdate(editRecord.recId, data, () => {
+                onCloseDrawlerAndReset();
+            });
+        }
     };
 
     // const onDelete = (record: IDestinationListRs["result"][0]) => {
@@ -80,12 +75,12 @@ const GroupDestinationPage = () => {
                 onClick={() => onHandleDrawer({ action: EActionType.CREATE })}
                 breadCrumItems={[{ title: "Nhóm search" }]}
             >
-                <TableListPage<LocalSearchListRs["result"][0]>
+                <TableListPage<LocalSearchDestinationListRs["result"][0]>
                     scroll={{ x: 1000 }}
                     rowKey={"recId"}
                     modelName="Nhóm search"
                     dataSource={localSearchList || []}
-                    columns={columnsSearchDes}
+                    columns={columnsSearchDestination}
                     onEdit={(record) =>
                         onHandleDrawer({
                             action: EActionType.EDIT,

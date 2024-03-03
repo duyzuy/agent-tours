@@ -9,7 +9,10 @@ import {
     IDestinationPayload,
     IDestinationRs,
 } from "@/models/management/region.interface";
-import { LocalSearchPayload } from "@/models/management/localSearchDestination.interface";
+import {
+    ILocalSeachDestination,
+    LocalSearchPayload,
+} from "@/models/management/localSearchDestination.interface";
 
 //create folder in public/uploads folder.
 
@@ -54,10 +57,23 @@ export const useUpdateDestinationCMSContentMutation = () => {
 
 export const useCreateLocalSearchMutation = () => {
     return useMutation<
-        IDestinationContentRs,
+        BaseResponse<ILocalSeachDestination>,
         BaseResponse<null>,
         LocalSearchPayload
     >({
         mutationFn: (payload) => localSearchAPIs.create(payload),
+        onSuccess(data, variables, context) {
+            return data.result;
+        },
+    });
+};
+
+export const useUpdateLocalSearchMutation = () => {
+    return useMutation<
+        BaseResponse<ILocalSeachDestination>,
+        BaseResponse<null>,
+        LocalSearchPayload & { recId: number }
+    >({
+        mutationFn: (payload) => localSearchAPIs.update({ ...payload }),
     });
 };

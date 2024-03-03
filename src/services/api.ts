@@ -1,3 +1,4 @@
+"use client";
 import { objectToQueryString } from "@/utils/helper";
 import { getAgToken } from "@/utils/common";
 enum METHODS {

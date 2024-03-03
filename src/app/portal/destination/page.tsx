@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
-import { columnsSearchDes } from "./columnsSearchDes";
+import { columnsDestinationList } from "./columnsDestinationList";
 import DrawlerDestination from "./components/DrawlerDestination";
 import {
     EActionType,
@@ -16,6 +16,7 @@ import {
     IDestinationPayload,
 } from "@/models/management/region.interface";
 import { Status } from "@/models/management/common.interface";
+import { useRouter } from "next/navigation";
 
 const GroupDestinationPage = () => {
     const [editRecord, setEditRecord] =
@@ -40,6 +41,7 @@ const GroupDestinationPage = () => {
         setActionType(() => drawler.action);
     };
 
+    const router = useRouter();
     const handleSubmitFormData = useCallback(
         (actionType: EActionType, payload: IDestinationPayload) => {
             if (actionType === EActionType.CREATE) {
@@ -78,10 +80,10 @@ const GroupDestinationPage = () => {
             >
                 <TableListPage<IDestinationListRs["result"][0]>
                     scroll={{ x: 1000 }}
-                    rowKey={"recId"}
+                    rowKey={"id"}
                     modelName="nhóm điểm đến"
                     dataSource={destinationList || []}
-                    columns={columnsSearchDes}
+                    columns={columnsDestinationList}
                     onEdit={(record) =>
                         onHandleDrawlerDestination({
                             action: EActionType.EDIT,

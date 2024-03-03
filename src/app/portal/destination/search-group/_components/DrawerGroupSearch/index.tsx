@@ -5,31 +5,18 @@ import {
     Button,
     Form,
     Input,
-    Checkbox,
-    Tooltip,
     Switch,
     SwitchProps,
     TreeSelect,
     TreeSelectProps,
 } from "antd";
 
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import {
-    IStateProvinceListRs,
-    IDestinationPayload,
-    DestinationFormData,
-    IDestinationListRs,
-} from "@/models/management/region.interface";
-
+import { IStateProvinceListRs } from "@/models/management/region.interface";
 import FormItem from "@/components/base/FormItem";
-import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
-import { isEmpty, isEqual } from "lodash";
-import { Status } from "@/models/management/common.interface";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import {
     LocalSearchFormData,
-    LocalSearchListRs,
+    LocalSearchDestinationListRs,
 } from "@/models/management/localSearchDestination.interface";
 import { localSearchSchema } from "../../../hooks/validate";
 export enum EActionType {
@@ -41,7 +28,7 @@ export type TDrawerCreateAction = {
 };
 export type TDrawerEditAction = {
     action: EActionType.EDIT;
-    record: IDestinationListRs["result"][0];
+    record: LocalSearchDestinationListRs["result"][0];
 };
 export type TDrawerSearch = TDrawerEditAction | TDrawerCreateAction;
 
@@ -54,7 +41,7 @@ export interface DrawerGroupSearchProps {
     isOpen?: boolean;
     onClose: () => void;
     actionType?: EActionType;
-    initialValues?: LocalSearchListRs["result"][0];
+    initialValues?: LocalSearchDestinationListRs["result"][0];
     onSubmit?: (actionType: EActionType, data: LocalSearchFormData) => void;
     regionList: IStateProvinceListRs["result"];
 }
@@ -74,6 +61,8 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
         undefined,
         undefined,
         undefined,
+        undefined,
+        "OX",
     );
     const { handlerSubmit, errors } = useFormSubmit<LocalSearchFormData>({
         schema: localSearchSchema,
@@ -186,22 +175,36 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
         string,
         TStateProvinceGrouping
     >["onSelect"] = (value, option) => {
-        console.log(option);
         setFormData((prev) => ({
             ...prev,
             regionKey: option.regionKey,
             subRegionKey: option.subRegionKey,
+            keyType: option.cat,
             countryKey: option.countryKey,
             stateProvinceKey: option.stateProvinceKey,
         }));
     };
-
+    const onChangeStatus: SwitchProps["onChange"] = (checked) => {
+        setFormData((prev) => ({ ...prev, status: checked ? "OK" : "OX" }));
+    };
     const onSubmitFormData: HandleSubmit<LocalSearchFormData> = (data) => {
         onSubmit?.(actionType, data);
     };
+
     useEffect(() => {
         if (initialValues && actionType === EActionType.EDIT) {
-            setFormData(() => initialValues);
+            setFormData((prev) => ({
+                ...prev,
+                name: initialValues.name,
+                engName: initialValues.engName,
+                regionKey: initialValues.regionKey,
+                keyType: initialValues.keyType,
+                subRegionKey: initialValues.subRegionKey,
+                countryKey: initialValues.countryKey,
+                stateProvinceKey: initialValues.stateProvinceKey,
+                order: Number(initialValues.order),
+                status: initialValues.status,
+            }));
         } else {
             setFormData(() => initFormData);
         }
@@ -211,7 +214,23 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
         return false;
     }, [initialValues, formData]);
 
-    console.log(formData);
+    const selectedDestinationValue = useMemo(() => {
+        switch (initialValues?.keyType) {
+            case "REGIONLIST": {
+                return initialValues.regionKey;
+            }
+            case "SUBREGIONLIST": {
+                return initialValues.subRegionKey;
+            }
+
+            case "COUNTRYLIST": {
+                return initialValues.countryKey;
+            }
+            case "STATEPROVINCELIST": {
+                return initialValues.stateProvinceKey;
+            }
+        }
+    }, [initialValues]);
     return (
         <Drawer
             title={
@@ -263,7 +282,7 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
                         style={{ width: "100%" }}
                         dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                         placeholder="Chọn điểm đến"
-                        value={"NINHBINH"}
+                        value={selectedDestinationValue}
                         allowClear
                         treeDefaultExpandAll
                         onSelect={onSelectDestination}
@@ -282,6 +301,12 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
                         onChange={(e) =>
                             onChangeFormData("order", e.target.value)
                         }
+                    />
+                </FormItem>
+                <FormItem label="Trạng thái">
+                    <Switch
+                        checked={formData.status === "OK" ? true : false}
+                        onChange={onChangeStatus}
                     />
                 </FormItem>
             </Form>
