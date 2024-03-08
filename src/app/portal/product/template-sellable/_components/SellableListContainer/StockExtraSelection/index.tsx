@@ -23,7 +23,7 @@ import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory
 import ModalContent from "@/components/admin/ModalContent";
 import ContentDetail from "@/components/admin/ContentDetail";
 import { formatDate } from "@/utils/date";
-import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
+import { StockInventoryQueryParams } from "@/models/management/core/stockInventory.interface";
 import { Status } from "@/models/management/common.interface";
 import StockExtraList, { StockExtraListProps } from "./StockExtraList";
 import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
@@ -57,16 +57,10 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
         stockSelectedList,
         ...restProps
     } = props;
-    const queryParams = new StockInventoryQueryparams(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+    const queryParams = new StockInventoryQueryParams(
+        { status: Status.OK },
         1,
         5,
-        Status.OK,
     );
     const [inventory, setInventory] = useState<IInventory>();
     const [stockQueryParams, setStockQueryParams] = useState(queryParams);

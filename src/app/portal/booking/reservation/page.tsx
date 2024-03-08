@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
-import { Breadcrumb, Row, Col, Divider, Space, Button } from "antd";
+import { Space, Button } from "antd";
 import { useBookingSelector } from "../hooks/useBooking";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
-export const ConfirmPage = () => {
+
+const ReservationPage = () => {
     const bookingInformation = useBookingSelector();
     const router = useRouter();
     const reservation = useMemo(() => {
@@ -166,4 +167,4 @@ export const ConfirmPage = () => {
         </div>
     );
 };
-export default ConfirmPage;
+export default ReservationPage;

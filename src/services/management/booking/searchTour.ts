@@ -1,15 +1,13 @@
 import { BaseResponse } from "@/models/management/common.interface";
 import { coreApi } from "../coreApi";
-import {
-    BookingInformationPayload,
-    BookingRs,
-    ProductListRs,
-    SearchDestinationFormData,
-} from "@/models/management/booking/bookingPayload.interface";
+import { BookingInformationPayload } from "@/models/management/booking/bookingPayload.interface";
+import { SearchBookingFormData } from "@/app/portal/booking/modules/searchBooking.interface";
+import { IProductListRs } from "@/models/management/booking/productItem.interface";
+import { ReservationRs } from "@/models/management/booking/reservation.interface";
 
 export const bookingAPIs = {
-    search: async (payload: SearchDestinationFormData) => {
-        return await coreApi.post<ProductListRs, BaseResponse<null>>(
+    search: async (payload: SearchBookingFormData) => {
+        return await coreApi.post<IProductListRs, BaseResponse<null>>(
             "core/BookingOrder_Search",
             {
                 requestObject: {
@@ -20,7 +18,7 @@ export const bookingAPIs = {
         );
     },
     create: async (payload?: BookingInformationPayload) => {
-        return await coreApi.post<BookingRs, BaseResponse<null>>(
+        return await coreApi.post<ReservationRs, BaseResponse<null>>(
             "core/BookingOrder_Addnew",
             {
                 requestObject: {

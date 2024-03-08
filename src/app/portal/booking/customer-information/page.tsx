@@ -43,8 +43,8 @@ const CustomerInformationPage = ({}: Props) => {
     useEffect(() => {
         if (
             isUndefined(bookingInformation?.bookingInfo?.product) ||
-            isUndefined(bookingInformation.bookingInfo.passengerSelections) ||
-            !bookingInformation.bookingInfo.passengerSelections.length
+            isUndefined(bookingInformation?.bookingInfo?.passengerSelections) ||
+            !bookingInformation?.bookingInfo?.passengerSelections.length
         ) {
             router.push("./portal/booking");
         }

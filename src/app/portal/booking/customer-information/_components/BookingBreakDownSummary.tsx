@@ -1,4 +1,3 @@
-import { BookingInformation } from "@/models/management/booking/bookingPayload.interface";
 import { PassengerType } from "@/models/management/common.interface";
 import { moneyFormatVND } from "@/utils/helper";
 import { Divider } from "antd";

@@ -5,6 +5,7 @@ import { destinationAPIs } from "@/services/management/misc/destination";
 import { isEmpty, isUndefined } from "lodash";
 import { localSearchAPIs } from "@/services/management/misc/localSearch";
 import { LocalSearchQueryParams } from "@/models/management/localSearchDestination.interface";
+import { Status } from "@/models/management/common.interface";
 
 export const useGetDestinationsQuery = () => {
     const token = getAgToken() || "";
@@ -60,6 +61,7 @@ export const useGetLocalSearchListMISCQuery = (options?: {
         undefined,
         1,
         20,
+        Status.OK,
     );
     if (!isUndefined(queryParams)) {
         localSearchParams = Object.keys(queryParams)

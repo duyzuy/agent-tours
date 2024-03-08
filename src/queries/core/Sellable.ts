@@ -8,14 +8,7 @@ export const useGetSellableListCoreQuery = (sellableQuery?: {
     enabled?: boolean;
 }) => {
     const { queryParams, enabled = false } = sellableQuery || {};
-    let sellableQueryParams = new SellableQueryParams(
-        undefined,
-        undefined,
-        undefined,
-        1,
-        20,
-        undefined,
-    );
+    let sellableQueryParams = new SellableQueryParams(undefined, 1, 20);
     if (queryParams) {
         sellableQueryParams = Object.keys(queryParams)
             .sort()

@@ -1,11 +1,9 @@
 import { ColumnsType } from "antd/es/table";
-import { Button, Tag } from "antd";
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
-import { TourListRs } from "@/models/management/booking/bookingPayload.interface";
+import { IProductListRs } from "@/models/management/booking/productItem.interface";
 import { moneyFormatVND } from "@/utils/helper";
 
-export const columnsProduct: ColumnsType<TourListRs["result"][0]> = [
+export const columnsProduct: ColumnsType<IProductListRs["result"][0]> = [
     {
         title: "Code",
         dataIndex: "code",

@@ -26,7 +26,7 @@ import { Status } from "@/models/management/common.interface";
 import { IInventory } from "@/models/management/core/inventory.interface";
 import {
     IStock,
-    StockInventoryQueryparams,
+    StockInventoryQueryParams,
 } from "@/models/management/core/stockInventory.interface";
 import CustomTable from "@/components/admin/CustomTable";
 
@@ -65,16 +65,10 @@ function StockSelection(props: StockSelectionProps) {
         isShow: boolean;
         record?: IStock;
     }>({ isShow: false, record: undefined });
-    const queryParams = new StockInventoryQueryparams(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+    const queryParams = new StockInventoryQueryParams(
+        { status: Status.OK },
         1,
         5,
-        Status.OK,
     );
     const [stockQueryparams, setStockQueryParams] = useState(queryParams);
     const { data: stockResponse, isLoading: isLoadingStock } =
