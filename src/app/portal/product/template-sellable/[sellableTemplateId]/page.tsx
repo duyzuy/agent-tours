@@ -166,7 +166,7 @@ const TemplateDetailcontent: React.FC<TemplateDetailContentProps> = ({
                                 <div className="list-state">
                                     <Space wrap>
                                         {des.listStateProvince.map((item) => (
-                                            <Tag key={item.id}>
+                                            <Tag key={item.recId}>
                                                 {item.stateProvinceKey ||
                                                     item.countryName ||
                                                     item.subRegionKey ||

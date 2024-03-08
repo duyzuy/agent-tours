@@ -27,16 +27,22 @@ const SellTemplatePage = () => {
     const [actionType, setActionType] = useState<EActionType>();
     const [editRecord, setEditRecord] =
         useState<ITemplateSaleableListRs["result"][0]>();
-    const templateQueryParams = new TemplateSellableQueryParams(
-        undefined,
-        "TOUR",
-        undefined,
-        undefined,
-        1,
-        20,
-        undefined,
+
+    const [queryFilter, setQueryFilter] = useState(
+        () =>
+            new TemplateSellableQueryParams(
+                {
+                    recId: undefined,
+                    andType: "TOUR",
+                    andCodeLike: undefined,
+                    andDestIn: undefined,
+                    status: undefined,
+                },
+                1,
+                20,
+            ),
     );
-    const [queryFilter, setQueryFilter] = useState(templateQueryParams);
+
     const { data: templateResponse, isLoading } =
         useGetTemplateSellableListCoreQuery({
             queryParams: queryFilter,
@@ -50,6 +56,7 @@ const SellTemplatePage = () => {
     } = templateResponse || {};
     const { data: productTypeList, isLoading: isLoadingProductType } =
         useGetProductTypeListCoreQuery({ enabled: true });
+
     const handleOpenDrawer = ({
         type,
         record,
@@ -71,7 +78,13 @@ const SellTemplatePage = () => {
     };
 
     const onFilterProductType = (type: string) => {
-        setQueryFilter((prev) => ({ ...prev, andType: type }));
+        setQueryFilter((prev) => ({
+            ...prev,
+            requestObject: {
+                ...prev.requestObject,
+                andType: type,
+            },
+        }));
     };
     const handleTableChange = (
         pagination: TablePaginationConfig,
@@ -118,7 +131,10 @@ const SellTemplatePage = () => {
                                 <Radio
                                     key={type}
                                     value={type}
-                                    checked={queryFilter.andType === type}
+                                    checked={
+                                        queryFilter?.requestObject?.andType ===
+                                        type
+                                    }
                                     onChange={() => onFilterProductType(type)}
                                 >
                                     {type}
@@ -157,7 +173,7 @@ const SellTemplatePage = () => {
                                 <Space wrap>
                                     {destination.listStateProvince.map(
                                         (state) => (
-                                            <React.Fragment key={state.id}>
+                                            <React.Fragment key={state.recId}>
                                                 {(state.stateProvinceKey && (
                                                     <Tag>
                                                         {state.stateProvinceKey}

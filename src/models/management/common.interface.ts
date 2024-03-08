@@ -25,3 +25,9 @@ export enum DayOfWeek {
     Friday = "Friday",
     Saturday = "Saturday",
 }
+
+export enum PassengerType {
+    ADULT = "adult",
+    CHILD = "child",
+    INFANT = "infant",
+}

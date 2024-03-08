@@ -37,13 +37,15 @@ export const sellableAPIs = {
             },
         );
     },
-    getList: async (params: SellableQueryParams) => {
+    getList: async (queryParams?: SellableQueryParams) => {
         return await coreApi.post<SellableListRs, BaseResponse<null>>(
             "core/Sellable_List",
             {
                 requestObject: {
-                    ...params,
+                    ...queryParams?.requestObject,
                 },
+                pageCurrent: queryParams?.pageCurrent,
+                pageSize: queryParams?.pageSize,
                 localUsername: "99",
             },
         );

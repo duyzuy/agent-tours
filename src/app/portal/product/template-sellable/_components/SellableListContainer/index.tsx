@@ -16,7 +16,7 @@ import DrawerSellable, {
 } from "./DrawerSellable";
 import { Status } from "@/models/management/common.interface";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
-import { IInventoryQueryParams } from "@/models/management/core/inventory.interface";
+import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
 import { Col, Form, Input, Row } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useGetSellablePriceConfigsCoreQuery } from "@/queries/core/Sellable";
@@ -38,22 +38,17 @@ const SellableListContainer: React.FC<SellableListContainerProps> = ({
     onApproval,
 }) => {
     const initSellableQueryParams = new SellableQueryParams(
-        sellableTemplateId,
-        "",
-        "",
+        { sellableTemplateId: sellableTemplateId },
         1,
         10,
-        undefined,
     );
     const [sellableQueryParams, setSellableQueryParams] = useState(
         initSellableQueryParams,
     );
-    const inventoryQueryParams = new IInventoryQueryParams(
-        inventoryType,
-        undefined,
+    const inventoryQueryParams = new InventoryQueryParams(
+        { type: inventoryType, status: Status.OK },
         1,
         10,
-        Status.OK,
     );
     const { data: sellableResponse, isLoading } = useGetSellableListCoreQuery({
         queryParams: sellableQueryParams,

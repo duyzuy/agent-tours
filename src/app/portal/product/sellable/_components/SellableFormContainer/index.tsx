@@ -29,7 +29,11 @@ import { isArray, isEmpty, isUndefined } from "lodash";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { SellableFormData } from "@/models/management/core/sellable.interface";
 import { sellableSchema } from "../../../hooks/validation";
-import { DATE_FORMAT, TIME_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
+import {
+    DATE_TIME_FORMAT,
+    TIME_FORMAT,
+    DAYS_OF_WEEK,
+} from "@/constants/common";
 import {
     ITemplateSaleableListRs,
     ITemplateSellable,
@@ -119,6 +123,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
         date,
         dateStr,
     ) => {
+        console.log("change");
         setSellableFormData((prev) => ({
             ...prev,
             valid: dateStr[0],
@@ -140,8 +145,8 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
         }
 
         if (
-            dayjs(dateStr[1], DATE_FORMAT).isBefore(
-                dayjs(sellableFormData.validTo, DATE_FORMAT),
+            dayjs(dateStr[1], DATE_TIME_FORMAT).isBefore(
+                dayjs(sellableFormData.validTo, DATE_TIME_FORMAT),
             )
         ) {
             message.error(
@@ -258,8 +263,8 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
             if (
                 exclDate.from &&
                 exclDate.to &&
-                date.isAfter(dayjs(exclDate.from, DATE_FORMAT)) &&
-                date.isBefore(dayjs(exclDate.to, DATE_FORMAT))
+                date.isAfter(dayjs(exclDate.from, DATE_TIME_FORMAT)) &&
+                date.isBefore(dayjs(exclDate.to, DATE_TIME_FORMAT))
             ) {
                 isDisabled = true;
             }
@@ -279,7 +284,6 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
             }));
         }
     };
-    console.log(sellableFormData);
     const onSubmitFormData: HandleSubmit<SellableFormData> = (data) => {
         onSubmit?.(data, () => {
             setSellableFormData(initSellableFormdata);
@@ -311,7 +315,6 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
             </FormItem>
             <FormItem
                 label="Affix Code"
-                required
                 validateStatus={errors?.codeAffix ? "error" : ""}
                 help={errors?.codeAffix || ""}
             >
@@ -345,20 +348,27 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
             <FormItem
                 label="Ngày mở bán (valid date)"
                 required
-                tooltip="Là ngày được phép mở bán"
+                tooltip="Là Hiển thị và mở bán trên website."
                 validateStatus={errors?.valid || errors?.validTo ? "error" : ""}
                 help={errors?.valid || errors?.validTo || ""}
             >
                 <RangePicker
-                    showTime={{ format: TIME_FORMAT }}
-                    placeholder={["Date from", "Date to"]}
-                    format={DATE_FORMAT}
+                    showTime={{
+                        format: TIME_FORMAT,
+                        hideDisabledOptions: true,
+                        defaultValue: [
+                            dayjs("00:00:00", "HH:mm:ss"),
+                            dayjs("23:59:59", "HH:mm:ss"),
+                        ],
+                    }}
+                    placeholder={["Từ ngày", "Đến ngày"]}
+                    format={DATE_TIME_FORMAT}
                     value={[
                         sellableFormData.valid
-                            ? dayjs(sellableFormData.valid, DATE_FORMAT)
+                            ? dayjs(sellableFormData.valid, DATE_TIME_FORMAT)
                             : null,
                         sellableFormData.validTo
-                            ? dayjs(sellableFormData.validTo, DATE_FORMAT)
+                            ? dayjs(sellableFormData.validTo, DATE_TIME_FORMAT)
                             : null,
                     ]}
                     disabledDate={(date) => {
@@ -369,30 +379,38 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                 />
             </FormItem>
             <FormItem
-                label="Ngày áp dụng (used)"
+                label="Ngày sử dụng (used)"
                 required
                 tooltip="Thời gian hiệu lực của Stock, Ngày sử dụng phải nằm trong khoảng ngày mở bán"
                 validateStatus={errors?.start || errors?.end ? "error" : ""}
                 help={errors?.start || errors?.end || ""}
             >
                 <RangePicker
-                    showTime={{ format: TIME_FORMAT }}
-                    placeholder={["Start date", "End date"]}
-                    format={DATE_FORMAT}
+                    showTime={{
+                        format: TIME_FORMAT,
+                        hideDisabledOptions: true,
+                        defaultValue: [
+                            dayjs("00:00:00", "HH:mm:ss"),
+                            dayjs("23:59:59", "HH:mm:ss"),
+                        ],
+                    }}
+                    placeholder={["Từ ngày", "Đến ngày"]}
+                    format={DATE_TIME_FORMAT}
                     value={[
                         sellableFormData.start
-                            ? dayjs(sellableFormData.start, DATE_FORMAT)
+                            ? dayjs(sellableFormData.start, DATE_TIME_FORMAT)
                             : null,
                         sellableFormData.end
-                            ? dayjs(sellableFormData.end, DATE_FORMAT)
+                            ? dayjs(sellableFormData.end, DATE_TIME_FORMAT)
                             : null,
                     ]}
                     disabledDate={(date) => {
                         return (
                             dayjs().isAfter(date) ||
-                            dayjs(sellableFormData.valid, DATE_FORMAT).isAfter(
-                                date,
-                            )
+                            dayjs(
+                                sellableFormData.validTo,
+                                DATE_TIME_FORMAT,
+                            ).isAfter(date)
                         );
                     }}
                     onChange={onChangeUsedDateRange}
@@ -415,7 +433,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
             {showCreateSeries ? (
                 <>
                     <FormItem
-                        label="Series ngày mở bán"
+                        label="Tạo series"
                         tooltip="Tạo nhiều ngày mở bán ngày mở bán (Valid date)"
                         validateStatus={
                             sellableErrors?.fromValidTo || errors?.fromValidTo
@@ -427,29 +445,36 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                             <Col span={12}>
                                 <DatePicker
                                     showTime={{ format: TIME_FORMAT }}
-                                    placeholder="Start date"
+                                    placeholder="Từ ngày"
                                     disabled
                                     value={
                                         sellableFormData.valid
                                             ? dayjs(
                                                   sellableFormData.valid,
-                                                  DATE_FORMAT,
+                                                  DATE_TIME_FORMAT,
                                               )
                                             : null
                                     }
-                                    format={DATE_FORMAT}
+                                    format={DATE_TIME_FORMAT}
                                     className="w-full"
                                 />
                             </Col>
                             <Col span={12}>
                                 <DatePicker
-                                    placeholder="End date"
-                                    showTime={{ format: TIME_FORMAT }}
+                                    placeholder="Đến ngày"
+                                    showTime={{
+                                        format: TIME_FORMAT,
+                                        hideDisabledOptions: true,
+                                        defaultValue: dayjs(
+                                            "23:59:59",
+                                            "HH:mm:ss",
+                                        ),
+                                    }}
                                     value={
                                         sellableFormData.fromValidTo
                                             ? dayjs(
                                                   sellableFormData.fromValidTo,
-                                                  DATE_FORMAT,
+                                                  DATE_TIME_FORMAT,
                                               )
                                             : null
                                     }
@@ -460,7 +485,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                                               ).isAfter(date)
                                             : dayjs().isAfter(date);
                                     }}
-                                    format={DATE_FORMAT}
+                                    format={DATE_TIME_FORMAT}
                                     onChange={onChangeValidFromTo}
                                     className="w-full"
                                 />
@@ -532,25 +557,28 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                             />
                         </FormItem>
                     )}
-                    <FormItem label="Exclusive" tooltip="Trừ các ngày">
+                    <FormItem
+                        label="Trừ các ngày"
+                        tooltip="Trừ các ngày trong khoảng tạo series."
+                    >
                         {sellableFormData.exclusives.map((exclDate, indx) => (
                             <Row className="mb-3" key={indx}>
                                 <Col span={12}>
                                     <RangePicker
                                         showTime={{ format: TIME_FORMAT }}
                                         placeholder={["Date from", "Date to"]}
-                                        format={DATE_FORMAT}
+                                        format={DATE_TIME_FORMAT}
                                         value={[
                                             exclDate.from
                                                 ? dayjs(
                                                       exclDate.from,
-                                                      DATE_FORMAT,
+                                                      DATE_TIME_FORMAT,
                                                   )
                                                 : null,
                                             exclDate.to
                                                 ? dayjs(
                                                       exclDate.to,
-                                                      DATE_FORMAT,
+                                                      DATE_TIME_FORMAT,
                                                   )
                                                 : null,
                                         ]}
@@ -558,11 +586,11 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                                             return (
                                                 dayjs(
                                                     sellableFormData.valid,
-                                                    DATE_FORMAT,
+                                                    DATE_TIME_FORMAT,
                                                 ).isAfter(date) ||
                                                 dayjs(
                                                     sellableFormData.fromValidTo,
-                                                    DATE_FORMAT,
+                                                    DATE_TIME_FORMAT,
                                                 ).isBefore(date) ||
                                                 getDisableExclusiveDate(date)
                                             );
@@ -598,9 +626,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                         }}
                     >
                         <Space>
-                            <Button onClick={onCloneExclusiveDate}>
-                                Thêm exclusive date
-                            </Button>
+                            <Button onClick={onCloneExclusiveDate}>Thêm</Button>
                         </Space>
                     </FormItem>
                 </>

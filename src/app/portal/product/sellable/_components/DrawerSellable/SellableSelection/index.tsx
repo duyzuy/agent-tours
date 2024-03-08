@@ -48,23 +48,16 @@ function StockExtraSelection(props: SellableSelectionProps) {
     } = props;
 
     const templateQueryParams = new TemplateSellableQueryParams(
-        undefined,
-        "EXTRA",
-        undefined,
-        undefined,
+        { status: Status.OK, andType: "EXTRA" },
         1,
         10,
-        Status.OK,
     );
 
     const [template, setTemplate] = useState<ITemplateSellable>();
     const sellableQueryParams = new SellableQueryParams(
-        template?.recId,
-        undefined,
-        undefined,
+        { sellableTemplateId: template?.recId, status: Status.OK },
         1,
         10,
-        Status.OK,
     );
     const [showModalDetail, setShowModalDetail] = useState<{
         isShow: boolean;

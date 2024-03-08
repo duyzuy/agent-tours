@@ -18,8 +18,7 @@ export type TDrawlerStockDetailAction = {
     record: IStockListOfInventoryRs["result"][0];
 };
 
-export const DATE_FORMAT = "DDMMMYY HH:mm";
-export const TIME_FORMAT = "HH:mm";
+import { DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import { RangePickerProps } from "antd/es/date-picker";
 import { stockConfirmSchema } from "../../../hooks/validation";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
@@ -98,10 +97,10 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                 recId: initialValues.recId,
                 cap: initialValues.cap,
                 description: initialValues.description,
-                start: dayjs(initialValues.startDate).format(DATE_FORMAT),
-                end: dayjs(initialValues.endDate).format(DATE_FORMAT),
-                valid: dayjs(initialValues.validFrom).format(DATE_FORMAT),
-                validTo: dayjs(initialValues.validTo).format(DATE_FORMAT),
+                start: dayjs(initialValues.startDate).format(DATE_TIME_FORMAT),
+                end: dayjs(initialValues.endDate).format(DATE_TIME_FORMAT),
+                valid: dayjs(initialValues.validFrom).format(DATE_TIME_FORMAT),
+                validTo: dayjs(initialValues.validTo).format(DATE_TIME_FORMAT),
             }));
         }
     }, [initialValues]);
@@ -132,18 +131,21 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                     help={errors?.valid || errors?.validTo || ""}
                 >
                     <RangePicker
-                        showTime={{ format: "HH:mm" }}
+                        showTime={{ format: TIME_FORMAT }}
                         placeholder={["Date from", "Date to"]}
-                        format={DATE_FORMAT}
+                        format={DATE_TIME_FORMAT}
                         disabled={hasApproval}
                         value={[
                             stockConfirmFormData.valid
-                                ? dayjs(stockConfirmFormData.valid, DATE_FORMAT)
+                                ? dayjs(
+                                      stockConfirmFormData.valid,
+                                      DATE_TIME_FORMAT,
+                                  )
                                 : null,
                             stockConfirmFormData.validTo
                                 ? dayjs(
                                       stockConfirmFormData.validTo,
-                                      DATE_FORMAT,
+                                      DATE_TIME_FORMAT,
                                   )
                                 : null,
                         ]}
@@ -161,16 +163,22 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                     help={errors?.start || errors?.end || ""}
                 >
                     <RangePicker
-                        showTime={{ format: "HH:mm" }}
+                        showTime={{ format: TIME_FORMAT }}
                         placeholder={["Date from", "Date to"]}
-                        format={DATE_FORMAT}
+                        format={DATE_TIME_FORMAT}
                         disabled={hasApproval}
                         value={[
                             stockConfirmFormData.start
-                                ? dayjs(stockConfirmFormData.start, DATE_FORMAT)
+                                ? dayjs(
+                                      stockConfirmFormData.start,
+                                      DATE_TIME_FORMAT,
+                                  )
                                 : null,
                             stockConfirmFormData.end
-                                ? dayjs(stockConfirmFormData.end, DATE_FORMAT)
+                                ? dayjs(
+                                      stockConfirmFormData.end,
+                                      DATE_TIME_FORMAT,
+                                  )
                                 : null,
                         ]}
                         disabledDate={(date) => {

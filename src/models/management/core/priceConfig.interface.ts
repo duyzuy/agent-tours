@@ -12,7 +12,7 @@ export interface PriceConfig {
     adult: number;
     child: number;
     infant: number;
-    settings: "" | "B2C";
+    settings: "B2C" | string;
     descriptions: string;
     otherPrice01: number;
     otherPrice02: number;

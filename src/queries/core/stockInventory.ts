@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
 import { stockInventoryAPIs } from "@/services/management/cores/stockInventory";
-import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
+import { StockInventoryQueryParams } from "@/models/management/core/stockInventory.interface";
 import { isUndefined } from "lodash";
 
 export const useGetStockInventoryTypeCoreQuery = (type: string) => {
@@ -18,32 +18,32 @@ export const useGetStockInventoryListCoreQuery = ({
     enabled,
 }: {
     enabled?: boolean;
-    queryparams?: StockInventoryQueryparams;
+    queryparams?: StockInventoryQueryParams;
 }) => {
-    let stockQueryParams = new StockInventoryQueryparams(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        1,
-        10,
-        undefined,
-    );
+    let { requestObject, pageCurrent, pageSize } = queryparams || {};
 
-    if (queryparams) {
-        stockQueryParams = Object.keys(queryparams)
+    if (!isUndefined(requestObject)) {
+        requestObject = Object.keys(requestObject)
             .sort()
-            .reduce<StockInventoryQueryparams>((acc, key) => {
+            .reduce<StockInventoryQueryParams["requestObject"]>((acc, key) => {
                 return {
                     ...acc,
-                    [key]: queryparams[key as keyof StockInventoryQueryparams],
+                    [key]: requestObject
+                        ? requestObject[
+                              key as keyof StockInventoryQueryParams["requestObject"]
+                          ]
+                        : undefined,
                 };
-            }, stockQueryParams);
+            }, requestObject);
     }
+    console.log(requestObject);
     return useQuery({
-        queryKey: [queryCore.GET_STOCK_LIST_INVENTORY, stockQueryParams],
+        queryKey: [
+            queryCore.GET_STOCK_LIST_INVENTORY,
+            pageCurrent,
+            pageSize,
+            requestObject,
+        ],
         queryFn: () => stockInventoryAPIs.getStockList(queryparams),
         select: (data) => {
             const { result, pageCurrent, pageSize, totalPages, totalItems } =

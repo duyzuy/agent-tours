@@ -58,23 +58,22 @@ export class InventoryFormData implements Partial<IInventoryPayload> {
     }
 }
 
-export class IInventoryQueryParams {
+interface InventoryRequestObject {
     type?: string;
     isStock?: boolean;
+    status?: Status;
+}
+export class InventoryQueryParams {
+    requestObject?: InventoryRequestObject;
     pageCurrent?: number;
     pageSize?: number;
-    status?: Status;
     constructor(
-        type: string | undefined,
-        isStock: boolean | undefined,
+        requestObject: InventoryRequestObject | undefined,
         pageCurrent: number | undefined,
         pageSize: number | undefined,
-        status: Status | undefined,
     ) {
-        this.type = type;
-        this.isStock = isStock;
+        this.requestObject = requestObject;
         this.pageCurrent = pageCurrent;
         this.pageSize = pageSize;
-        this.status = status;
     }
 }

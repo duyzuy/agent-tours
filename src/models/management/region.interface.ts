@@ -2,7 +2,7 @@ import { BaseResponse, Status } from "./common.interface";
 import { IMediaFile } from "./media.interface";
 
 export interface IStateProvince {
-    id: number;
+    recId: number;
     cat: "REGIONLIST" | "SUBREGIONLIST" | "COUNTRYLIST" | "STATEPROVINCELIST";
     countryKey: string;
     countryName: string;

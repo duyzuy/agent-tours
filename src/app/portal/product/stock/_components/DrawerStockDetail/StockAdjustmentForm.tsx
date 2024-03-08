@@ -93,6 +93,7 @@ const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
                     <Input.TextArea
                         placeholder="Mô tả"
                         value={formData.rmk}
+                        spellCheck={true}
                         onChange={(ev) =>
                             onChangeFormData("rmk", ev.target.value)
                         }

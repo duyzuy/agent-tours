@@ -150,17 +150,17 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
              * format correct value number
              */
 
-            const totalMaxAvailble =
-                data?.reduce<number>((acc, item) => {
-                    return acc + item.maxAvaiable;
-                }, 0) || 0;
+            // const totalMaxAvailble =
+            //     data?.reduce<number>((acc, item) => {
+            //         return acc + item.maxAvaiable;
+            //     }, 0) || 0;
 
-            if (totalMaxAvailble + row.maxAvaiable > cap) {
-                message.error("Tổng max available đang lớn hơn cap.");
-                return;
-            }
-            if (row.avaiable > row.maxAvaiable) {
-                message.error("Available không lớn hơn max available.");
+            // if (totalMaxAvailble + row.maxAvaiable > cap) {
+            //     message.error("Tổng max available đang lớn hơn cap.");
+            //     return;
+            // }
+            if (row.maxAvaiable > cap || row.avaiable > cap) {
+                message.error(`Số lượng không được lớn hơn ${cap}`);
                 return;
             }
 

@@ -287,7 +287,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
         const currentChidsKeys = formData.listStateProvince.reduce<number[]>(
             (acc, item) => {
                 if (item.regionKey === region.regionKey) {
-                    acc = [...acc, item.id];
+                    acc = [...acc, item.recId];
                 }
                 return acc;
             },
@@ -308,7 +308,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
             const excerptRestChildsOfRegion = childItemsOfRegion.filter(
                 (item) =>
                     item.regionKey === region.regionKey &&
-                    !currentChidsKeys.includes(item.id),
+                    !currentChidsKeys.includes(item.recId),
             );
 
             newList = [...newList, ...excerptRestChildsOfRegion];
@@ -337,7 +337,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                 item.regionKey === subRegion.regionKey &&
                 item.subRegionKey === subRegion.subRegionKey
             ) {
-                acc = [...acc, item.id];
+                acc = [...acc, item.recId];
             }
             return acc;
         }, []);
@@ -368,7 +368,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
             ).length;
 
             const excerptChildOfRegion = childItemsOfSubRegion.filter(
-                (item) => !currentChildItemsOfSubRegion.includes(item.id),
+                (item) => !currentChildItemsOfSubRegion.includes(item.recId),
             );
 
             const currentSubRegionLenghOfRegion =
@@ -418,7 +418,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                 item.subRegionKey === country.subRegionKey &&
                 item.countryKey === country.countryKey
             ) {
-                acc = [...acc, item.id];
+                acc = [...acc, item.recId];
             }
             return acc;
         }, []);
@@ -460,7 +460,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                     item.regionKey === country.regionKey &&
                     item.subRegionKey === country.subRegionKey &&
                     item.countryKey === country.countryKey &&
-                    !currentChildItemsOfCountry.includes(item.id),
+                    !currentChildItemsOfCountry.includes(item.recId),
             );
 
             const rootRegionLengthOfCountry = items.filter(
@@ -633,7 +633,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                 </FormItem>
                 <div className="province-wrapper">
                     {provincesGrouping.map((region) => (
-                        <div className="region" key={region.id}>
+                        <div className="region" key={region.recId}>
                             <div className="name py-2 font-bold">
                                 <Checkbox
                                     name="region"
@@ -649,7 +649,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                                 {region.children.map((subRegion) => (
                                     <div
                                         className="sub-region child-item"
-                                        key={subRegion.id}
+                                        key={subRegion.recId}
                                     >
                                         <div className="name py-2 font-bold">
                                             <Checkbox
@@ -672,7 +672,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                                                 (country) => (
                                                     <div
                                                         className="child-item"
-                                                        key={country.id}
+                                                        key={country.recId}
                                                     >
                                                         <div className="name">
                                                             <Checkbox
@@ -699,7 +699,7 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                                                                 (state) => (
                                                                     <div
                                                                         key={
-                                                                            state.id
+                                                                            state.recId
                                                                         }
                                                                         className="py-1"
                                                                     >

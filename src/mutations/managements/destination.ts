@@ -72,7 +72,7 @@ export const useUpdateLocalSearchMutation = () => {
     return useMutation<
         BaseResponse<ILocalSeachDestination>,
         BaseResponse<null>,
-        LocalSearchPayload & { recId: number }
+        LocalSearchPayload & { id: number }
     >({
         mutationFn: (payload) => localSearchAPIs.update({ ...payload }),
     });

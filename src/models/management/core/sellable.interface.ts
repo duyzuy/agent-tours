@@ -2,27 +2,25 @@ import { BaseResponse, Status } from "../common.interface";
 import { IInventory } from "./inventory.interface";
 import { IStock } from "./stockInventory.interface";
 
-export class SellableQueryParams {
+interface RequestObject {
     sellableTemplateId?: number;
     andType?: string;
     andCodeLike?: string;
+    status?: Status;
+}
+export class SellableQueryParams {
+    requestObject?: RequestObject;
     pageCurrent?: number;
     pageSize?: number;
-    status?: Status;
+
     constructor(
-        sellableTemplateId: number | undefined,
-        andType: string | undefined,
-        andCodeLike: string | undefined,
+        requestObject: RequestObject | undefined,
         pageCurrent: number | undefined,
         pageSize: number | undefined,
-        status: Status | undefined,
     ) {
-        this.sellableTemplateId = sellableTemplateId;
-        this.andType = andType;
-        this.andCodeLike = andCodeLike;
+        this.requestObject = requestObject;
         this.pageCurrent = pageCurrent;
         this.pageSize = pageSize;
-        this.status = status;
     }
 }
 

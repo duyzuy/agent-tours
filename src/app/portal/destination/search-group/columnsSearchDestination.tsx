@@ -9,8 +9,8 @@ export const columnsSearchDestination: ColumnsType<
 > = [
     {
         title: "#ID",
-        key: "recId",
-        dataIndex: "recId",
+        key: "id",
+        dataIndex: "id",
         width: 80,
     },
     {
@@ -24,6 +24,15 @@ export const columnsSearchDestination: ColumnsType<
         key: "engName",
         dataIndex: "engName",
         width: 150,
+    },
+    {
+        title: "Sắp xếp",
+        key: "order",
+        dataIndex: "order",
+        width: 150,
+        sorter: (a, b) => {
+            return a.order - b.order;
+        },
     },
     {
         title: "Trạng thái",

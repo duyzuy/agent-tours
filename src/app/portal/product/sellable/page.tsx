@@ -35,13 +35,9 @@ import useCRUDSellable from "../hooks/useCRUDSellable";
 
 const SellableListPage: React.FC = () => {
     const initTemplateQueryparams = new TemplateSellableQueryParams(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+        { status: Status.OK },
         1,
         100,
-        Status.OK,
     );
     const { data: templateResponse, isLoading: isLoadingTemplate } =
         useGetTemplateSellableListCoreQuery({
@@ -51,23 +47,17 @@ const SellableListPage: React.FC = () => {
     const { list: templateList } = templateResponse || {};
 
     const [sellableQueryParams, setSellableQueryParams] = useState(
-        new SellableQueryParams(
-            undefined,
-            undefined,
-            undefined,
-            1,
-            20,
-            undefined,
-        ),
+        new SellableQueryParams(undefined, 1, 20),
     );
 
     const { data: sellableResponse, isLoading: isLoadingSellable } =
         useGetSellableListCoreQuery({
             queryParams: sellableQueryParams,
-            enabled: !isUndefined(sellableQueryParams.sellableTemplateId),
+            enabled: !isUndefined(
+                sellableQueryParams?.requestObject?.sellableTemplateId,
+            ),
         });
 
-    console.log(sellableQueryParams);
     const {
         list: sellableList,
         pageCurrent,
@@ -81,7 +71,10 @@ const SellableListPage: React.FC = () => {
     const { onCreate, onApproval } = useCRUDSellable();
 
     const onSearchSellableCode = (code: string) => {
-        setSellableQueryParams((prev) => ({ ...prev, andCodeLike: code }));
+        setSellableQueryParams((prev) => ({
+            ...prev,
+            requestObject: { ...prev.requestObject, andCodeLike: code },
+        }));
     };
     const onSelectTemplate: SelectProps<
         number,
@@ -89,7 +82,10 @@ const SellableListPage: React.FC = () => {
     >["onChange"] = (value, _) => {
         setSellableQueryParams((prev) => ({
             ...prev,
-            sellableTemplateId: value,
+            requestObject: {
+                ...prev.requestObject,
+                sellableTemplateId: value,
+            },
         }));
     };
     const productTypeOption = useMemo(() => {
@@ -99,7 +95,7 @@ const SellableListPage: React.FC = () => {
             },
             [],
         );
-    }, []);
+    }, [productTypes]);
 
     const tabItems: TabsProps["items"] = [
         {
@@ -140,7 +136,9 @@ const SellableListPage: React.FC = () => {
                                                     optionFilterProp="children"
                                                     loading={isLoadingTemplate}
                                                     value={
-                                                        sellableQueryParams.sellableTemplateId
+                                                        sellableQueryParams
+                                                            ?.requestObject
+                                                            ?.sellableTemplateId
                                                     }
                                                     // filterOption={(
                                                     //     input,
@@ -200,14 +198,20 @@ const SellableListPage: React.FC = () => {
                                                         isLoadingProductType
                                                     }
                                                     value={
-                                                        sellableQueryParams.andType
+                                                        sellableQueryParams
+                                                            ?.requestObject
+                                                            ?.andType
                                                     }
                                                     options={productTypeOption}
                                                     onChange={(value) =>
                                                         setSellableQueryParams(
                                                             (prev) => ({
                                                                 ...prev,
-                                                                andType: value,
+                                                                requestObject: {
+                                                                    ...prev.requestObject,
+                                                                    andType:
+                                                                        value,
+                                                                },
                                                             }),
                                                         )
                                                     }

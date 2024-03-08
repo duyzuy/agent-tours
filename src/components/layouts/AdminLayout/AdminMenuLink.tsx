@@ -12,6 +12,7 @@ import {
     EnvironmentOutlined,
     ClusterOutlined,
     SearchOutlined,
+    TagOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 
@@ -28,9 +29,9 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         label: "Dashboard",
     },
     {
-        key: "search-tour",
-        icon: React.createElement(SearchOutlined),
-        label: "Search tour",
+        key: "booking",
+        icon: React.createElement(TagOutlined),
+        label: "Đặt tour",
     },
     {
         key: "manage-booking",
@@ -38,8 +39,8 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         label: "Quản lý booking",
         children: [
             {
-                key: "manage-booking/list",
-                label: "Quản lý đặt tour",
+                key: "manage-booking",
+                label: "Quản lý booking",
             },
             {
                 key: "manage-booking/print",

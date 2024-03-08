@@ -7,6 +7,8 @@ export const coreApi = {
         endpoint: string,
         queryParams: {
             requestObject: { [key: string]: any };
+            pageCurrent?: number;
+            pageSize?: number;
             localUsername?: string;
         },
     ) => {
@@ -39,6 +41,8 @@ export const coreApi = {
                 return await client.post<TSuccess, TError>(endpoint, {
                     params: {
                         requestObject: sortedQueryParams,
+                        pageCurrent: queryParams?.pageCurrent,
+                        pageSize: queryParams?.pageSize,
                         userId: coreAccountConfig.userId,
                         localUsername: queryParams.localUsername ?? "",
                         hashCheck: hashData,

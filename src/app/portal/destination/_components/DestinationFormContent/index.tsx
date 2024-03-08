@@ -194,15 +194,18 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                 <FormItem label="Danh sách điểm đến">
                     <Space wrap className="list">
                         {provinceList.map((province) => (
-                            <Tag key={province.id} bordered={false}>
-                                {(province.stateProvinceKey &&
-                                    province.stateProvinceKey) ||
-                                    (province.countryKey &&
-                                        province.countryKey) ||
-                                    (province.subRegionKey &&
-                                        province.subRegionKey) ||
-                                    province.regionKey}
-                            </Tag>
+                            <>
+                                {console.log(province)}
+                                <Tag key={province.recId} bordered={false}>
+                                    {(province.stateProvinceKey &&
+                                        province.stateProvinceKey) ||
+                                        (province.countryKey &&
+                                            province.countryKey) ||
+                                        (province.subRegionKey &&
+                                            province.subRegionKey) ||
+                                        province.regionKey}
+                                </Tag>
+                            </>
                         ))}
                     </Space>
                 </FormItem>
@@ -237,6 +240,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                     <TextArea
                         placeholder="Nhập mô tả ngắn"
                         className=" resize-none"
+                        spellCheck={true}
                         rows={4}
                         cols={12}
                         value={formData.shortDescriptions}

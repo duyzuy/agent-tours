@@ -3,7 +3,6 @@ import { Drawer, Tag, List } from "antd";
 
 import { Status } from "@/models/management/common.interface";
 
-import { TInventoryErrorsField } from "../../../hooks/useCRUDInventory";
 import {
     IStockListOfInventoryRs,
     StockInventoryAdjustFormData,
@@ -13,6 +12,7 @@ import { useGetStockDetailInventoryCoreQuery } from "@/queries/core/stockInvento
 import StockConfirmationForm from "./StockConfirmationForm";
 import { formatDate } from "@/utils/date";
 import StockAdjustmentForm from "./StockAdjustmentForm";
+
 export enum EActionType {
     VIEW = "view",
     CONFIRM = "confirm",
@@ -31,8 +31,7 @@ export interface DrawerStockDetailProps {
         cb?: () => void,
     ) => void;
 }
-export const DATE_FORMAT = "DDMMMYY HH:mm";
-export const TIME_FORMAT = "HH:mm";
+//
 
 const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
     onCancel,

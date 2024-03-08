@@ -29,7 +29,11 @@ import { CheckboxGroupProps } from "antd/es/checkbox";
 import { isArray, isEmpty, isUndefined } from "lodash";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { stockSchema } from "../../../hooks/validation";
-import { DATE_FORMAT, TIME_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
+import {
+    DATE_TIME_FORMAT,
+    TIME_FORMAT,
+    DAYS_OF_WEEK,
+} from "@/constants/common";
 import { IInventoryListRs } from "@/models/management/core/inventory.interface";
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -273,8 +277,8 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             if (
                 exclDate.from &&
                 exclDate.to &&
-                date.isAfter(dayjs(exclDate.from, DATE_FORMAT)) &&
-                date.isBefore(dayjs(exclDate.to, DATE_FORMAT))
+                date.isAfter(dayjs(exclDate.from, DATE_TIME_FORMAT)) &&
+                date.isBefore(dayjs(exclDate.to, DATE_TIME_FORMAT))
             ) {
                 isDisabled = true;
             }
@@ -381,15 +385,21 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                 help={errors?.valid || errors?.validTo || ""}
             >
                 <RangePicker
-                    showTime={{ format: TIME_FORMAT }}
-                    placeholder={["Date from", "Date to"]}
-                    format={DATE_FORMAT}
+                    showTime={{
+                        format: TIME_FORMAT,
+                        defaultValue: [
+                            dayjs("00:00:00", "HH:mm:ss"),
+                            dayjs("23:59:59", "HH:mm:ss"),
+                        ],
+                    }}
+                    placeholder={["Từ ngày", "Đến ngày"]}
+                    format={DATE_TIME_FORMAT}
                     value={[
                         stockFormData.valid
-                            ? dayjs(stockFormData.valid, DATE_FORMAT)
+                            ? dayjs(stockFormData.valid, DATE_TIME_FORMAT)
                             : null,
                         stockFormData.validTo
-                            ? dayjs(stockFormData.validTo, DATE_FORMAT)
+                            ? dayjs(stockFormData.validTo, DATE_TIME_FORMAT)
                             : null,
                     ]}
                     disabledDate={(date) => {
@@ -400,30 +410,37 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                 />
             </FormItem>
             <FormItem
-                label="Ngày áp dụng (used)"
+                label="Ngày sử dụng (used)"
                 required
-                tooltip="Thời gian hiệu lực của Stock, Ngày sử dụng phải nằm trong khoảng ngày mở bán"
+                tooltip="Thời gian sử dụng (Checkin/Checkout || Depart date, return date) của Stock phải nằm sau ngày kết thúc mở bán."
                 validateStatus={errors?.start || errors?.end ? "error" : ""}
                 help={errors?.start || errors?.end || ""}
             >
                 <RangePicker
-                    showTime={{ format: TIME_FORMAT }}
-                    placeholder={["Start date", "End date"]}
-                    format={DATE_FORMAT}
+                    showTime={{
+                        format: TIME_FORMAT,
+                        defaultValue: [
+                            dayjs("00:00:00", "HH:mm:ss"),
+                            dayjs("23:59:59", "HH:mm:ss"),
+                        ],
+                    }}
+                    placeholder={["Từ ngày", "Đến ngày"]}
+                    format={DATE_TIME_FORMAT}
                     value={[
                         stockFormData.start
-                            ? dayjs(stockFormData.start, DATE_FORMAT)
+                            ? dayjs(stockFormData.start, DATE_TIME_FORMAT)
                             : null,
                         stockFormData.end
-                            ? dayjs(stockFormData.end, DATE_FORMAT)
+                            ? dayjs(stockFormData.end, DATE_TIME_FORMAT)
                             : null,
                     ]}
                     disabledDate={(date) => {
                         return (
                             dayjs().isAfter(date) ||
-                            dayjs(stockFormData.valid, DATE_FORMAT).isAfter(
-                                date,
-                            )
+                            dayjs(
+                                stockFormData.validTo,
+                                DATE_TIME_FORMAT,
+                            ).isAfter(date)
                         );
                     }}
                     onChange={onChangeUsedDateRange}
@@ -446,7 +463,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             {showCreateSeries ? (
                 <>
                     <FormItem
-                        label="Tạo series ngày mở bán"
+                        label="Tạo series"
                         tooltip="Tạo nhiều ngày mở bán ngày mở bán (Valid date)"
                         validateStatus={
                             stockFieldErrors?.fromValidTo || errors?.fromValidTo
@@ -457,25 +474,37 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         <Row gutter={16}>
                             <Col span={12}>
                                 <DatePicker
-                                    showTime={{ format: TIME_FORMAT }}
-                                    placeholder="Start date"
+                                    showTime={{
+                                        format: TIME_FORMAT,
+                                        defaultValue: dayjs(
+                                            "00:00:00",
+                                            "HH:mm:ss",
+                                        ),
+                                    }}
+                                    placeholder="Từ ngày"
                                     disabled
                                     value={
                                         stockFormData.valid
                                             ? dayjs(
                                                   stockFormData.valid,
-                                                  DATE_FORMAT,
+                                                  DATE_TIME_FORMAT,
                                               )
                                             : null
                                     }
-                                    format={DATE_FORMAT}
+                                    format={DATE_TIME_FORMAT}
                                     className="w-full"
                                 />
                             </Col>
                             <Col span={12}>
                                 <DatePicker
-                                    placeholder="End date"
-                                    showTime={{ format: TIME_FORMAT }}
+                                    placeholder="Đến ngày"
+                                    showTime={{
+                                        format: TIME_FORMAT,
+                                        defaultValue: dayjs(
+                                            "23:59:59",
+                                            "HH:mm:ss",
+                                        ),
+                                    }}
                                     disabledDate={(date) => {
                                         return stockFormData.valid
                                             ? dayjs(
@@ -483,7 +512,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                               ).isAfter(date)
                                             : dayjs().isAfter(date);
                                     }}
-                                    format={DATE_FORMAT}
+                                    format={DATE_TIME_FORMAT}
                                     onChange={onChangeValidFromTo}
                                     className="w-full"
                                 />
@@ -555,25 +584,31 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                             />
                         </FormItem>
                     )}
-                    <FormItem label="Exclusive" tooltip="Trừ các ngày">
+                    <FormItem label="Trừ các ngày" tooltip="Trừ các ngày">
                         {stockFormData.exclusives.map((exclDate, indx) => (
                             <Row className="mb-3" key={indx}>
                                 <Col span={12}>
                                     <RangePicker
-                                        showTime={{ format: TIME_FORMAT }}
-                                        placeholder={["Date from", "Date to"]}
-                                        format={DATE_FORMAT}
+                                        showTime={{
+                                            format: TIME_FORMAT,
+                                            defaultValue: [
+                                                dayjs("00:00:00", "HH:mm:ss"),
+                                                dayjs("23:59:59", "HH:mm:ss"),
+                                            ],
+                                        }}
+                                        placeholder={["Từ ngày", "Đến ngày"]}
+                                        format={DATE_TIME_FORMAT}
                                         value={[
                                             exclDate.from
                                                 ? dayjs(
                                                       exclDate.from,
-                                                      DATE_FORMAT,
+                                                      DATE_TIME_FORMAT,
                                                   )
                                                 : null,
                                             exclDate.to
                                                 ? dayjs(
                                                       exclDate.to,
-                                                      DATE_FORMAT,
+                                                      DATE_TIME_FORMAT,
                                                   )
                                                 : null,
                                         ]}
@@ -581,11 +616,11 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                             return (
                                                 dayjs(
                                                     stockFormData.valid,
-                                                    DATE_FORMAT,
+                                                    DATE_TIME_FORMAT,
                                                 ).isAfter(date) ||
                                                 dayjs(
                                                     stockFormData.fromValidTo,
-                                                    DATE_FORMAT,
+                                                    DATE_TIME_FORMAT,
                                                 ).isBefore(date) ||
                                                 getDisableExclusiveDate(date)
                                             );
@@ -621,9 +656,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         }}
                     >
                         <Space>
-                            <Button onClick={onCloneExclusiveDate}>
-                                Thêm exclusive date
-                            </Button>
+                            <Button onClick={onCloneExclusiveDate}>Thêm</Button>
                         </Space>
                     </FormItem>
                 </>

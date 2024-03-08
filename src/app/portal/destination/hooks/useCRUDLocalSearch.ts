@@ -32,12 +32,12 @@ const useCRUDLocalSearch = () => {
     };
 
     const onUpdate = (
-        recId: number,
+        id: number,
         payload: LocalSearchFormData,
         cb?: () => void,
     ) => {
         makeUpdateLocalSearch(
-            { recId, ...payload },
+            { id, ...payload },
             {
                 onSuccess: (data, variables) => {
                     message.success(`Cập nhật thành công`);

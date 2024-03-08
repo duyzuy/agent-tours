@@ -14,7 +14,7 @@ import DrawerSellable, {
 } from "../DrawerSellable";
 import { Status } from "@/models/management/common.interface";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
-import { IInventoryQueryParams } from "@/models/management/core/inventory.interface";
+import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
 
 import { useGetSellablePriceConfigsCoreQuery } from "@/queries/core/Sellable";
 import useMessage from "@/hooks/useMessage";
@@ -45,12 +45,10 @@ const SellableListContainer: React.FC<SellableListProps> = ({
     onChangePageSellable,
     render,
 }) => {
-    const inventoryQueryParams = new IInventoryQueryParams(
-        undefined,
-        undefined,
+    const inventoryQueryParams = new InventoryQueryParams(
+        { status: Status.OK },
         1,
         10,
-        Status.OK,
     );
 
     const { data: inventoryListByTemplateSellableResponse } =

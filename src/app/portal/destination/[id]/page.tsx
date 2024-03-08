@@ -9,7 +9,7 @@ import { useRouter, notFound } from "next/navigation";
 
 import DestinationFormContent, {
     DestinationFormContentProps,
-} from "../components/DestinationFormContent";
+} from "../_components/DestinationFormContent";
 import { DestinationContentFormData } from "@/models/management/region.interface";
 import useCRUDContentDestination from "../hooks/useCRUDContentDestination";
 import {

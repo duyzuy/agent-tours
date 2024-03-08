@@ -21,7 +21,7 @@ export const destinationSchema: ObjectSchema<IDestinationPayload> = object({
     codeKey: string().required("Slug folder không để trống."),
     listStateProvince: array(
         object({
-            id: number().required("Id không bỏ trống"),
+            recId: number().required("Id không bỏ trống"),
             cat: string()
                 .oneOf<IDestinationPayload["listStateProvince"][0]["cat"]>([
                     "REGIONLIST",
@@ -67,19 +67,24 @@ export const localSearchSchema: ObjectSchema<LocalSearchFormData> = object({
         .required("Tên nhóm không để trống.")
         .matches(
             vietnameseNamePattern,
-            "Tên thư mục không được chứa ký tự đặc biệt.",
+            "Tên nhóm không được chưa ký tự đặc biệt.",
         ),
-    regionKey: string(),
-    subRegionKey: string(),
-    countryKey: string(),
-    stateProvinceKey: string(),
     engName: string()
         .required("Tên nhóm không để trống.")
         .matches(
             vietnameseNamePattern,
-            "Tên thư mục không được chứa ký tự đặc biệt.",
+            "Tên nhóm không được chưa ký tự đặc biệt.",
         ),
+    regionKey: string(),
+    subRegionKey: string(),
+    keyType: string(),
+    countryKey: string(),
+    stateProvinceKey: string(),
+
     order: number()
         // .moreThan(0, "Chưa chọn ảnh đại diện.")
         .required("Số thứ tự không bỏ trống."),
+    status: string()
+        .oneOf<"OK" | "OX" | "XX">(["OK", "OX", "XX"])
+        .required("Status không bỏ trống."),
 });

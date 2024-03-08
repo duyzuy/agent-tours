@@ -1,7 +1,7 @@
 import { BaseResponse } from "./common.interface";
 
 export interface ILocalSeachDestination {
-    recId: number;
+    id: number;
     cat: string;
     name: string;
     engName: string;
@@ -10,7 +10,7 @@ export interface ILocalSeachDestination {
     subRegionKey: string;
     countryKey: string;
     stateProvinceKey: string;
-    order: string;
+    order: number;
     status: "OK" | "OX" | "XX";
 }
 export interface LocalSearchDestinationListRs

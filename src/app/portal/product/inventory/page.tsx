@@ -5,7 +5,7 @@ import FormItem from "@/components/base/FormItem";
 import PageContainer from "@/components/admin/PageContainer";
 import {
     IInventoryListRs,
-    IInventoryQueryParams,
+    InventoryQueryParams,
 } from "@/models/management/core/inventory.interface";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
 
@@ -23,18 +23,18 @@ import { isUndefined } from "lodash";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 const InventoryPage = () => {
-    const initInventoryQueryParams = new IInventoryQueryParams(
-        `${EInventoryType.AIR}||${EInventoryType.HOTEL}||${EInventoryType.VISA}`,
-        undefined,
+    const initInventoryQueryParams = new InventoryQueryParams(
+        {
+            type: `${EInventoryType.AIR}||${EInventoryType.HOTEL}||${EInventoryType.VISA}||${EInventoryType.TRANSPORT}`,
+        },
         1,
         10,
-        undefined,
     );
     const [queryParams, setQueryParams] = useState(initInventoryQueryParams);
     const { data: inventoryResponse, isLoading } = useGetInventoryListCoreQuery(
         {
             queryParams: queryParams,
-            enabled: !isUndefined(queryParams.type),
+            enabled: !isUndefined(queryParams.requestObject?.type),
         },
     );
     const {
@@ -111,7 +111,9 @@ const InventoryPage = () => {
         );
         setQueryParams((prev) => ({
             ...prev,
-            type: inventoryTypeQueryString,
+            requestObject: {
+                type: inventoryTypeQueryString,
+            },
         }));
     };
     const onChangePagination: PaginationProps["onChange"] = (
@@ -134,7 +136,9 @@ const InventoryPage = () => {
                         <Col span={8}>
                             <FormItem>
                                 <Select
-                                    value={queryParams.type?.split("||")}
+                                    value={queryParams?.requestObject?.type?.split(
+                                        "||",
+                                    )}
                                     mode="tags"
                                     style={{ width: "100%" }}
                                     placeholder="Loại inventory"
@@ -150,7 +154,7 @@ const InventoryPage = () => {
             </div>
 
             <TableListPage<IInventoryListRs["result"][0]>
-                scroll={{ x: 1400 }}
+                scroll={{ x: 1600 }}
                 modelName="Inventory"
                 columns={inventoryColumns}
                 rowKey={"recId"}

@@ -21,7 +21,7 @@ export const localSearchAPIs = {
             isAuth: true,
         });
     },
-    update: async (payload: LocalSearchPayload & { recId: number }) => {
+    update: async (payload: LocalSearchPayload & { id: number }) => {
         return await client.post<
             BaseResponse<ILocalSeachDestination>,
             BaseResponse<null>

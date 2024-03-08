@@ -29,7 +29,11 @@ import { CheckboxGroupProps } from "antd/es/checkbox";
 import { isEmpty, isUndefined } from "lodash";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { stockSchema } from "../../../hooks/validation";
-import { DATE_FORMAT, TIME_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
+import {
+    DATE_TIME_FORMAT,
+    TIME_FORMAT,
+    DAYS_OF_WEEK,
+} from "@/constants/common";
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 dayjs.locale("en");
@@ -251,8 +255,8 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             if (
                 exclDate.from &&
                 exclDate.to &&
-                date.isAfter(dayjs(exclDate.from, DATE_FORMAT)) &&
-                date.isBefore(dayjs(exclDate.to, DATE_FORMAT))
+                date.isAfter(dayjs(exclDate.from, DATE_TIME_FORMAT)) &&
+                date.isBefore(dayjs(exclDate.to, DATE_TIME_FORMAT))
             ) {
                 isDisabled = true;
             }
@@ -346,13 +350,13 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                 <RangePicker
                     showTime={{ format: TIME_FORMAT }}
                     placeholder={["Date from", "Date to"]}
-                    format={DATE_FORMAT}
+                    format={DATE_TIME_FORMAT}
                     value={[
                         stockFormData.valid
-                            ? dayjs(stockFormData.valid, DATE_FORMAT)
+                            ? dayjs(stockFormData.valid, DATE_TIME_FORMAT)
                             : null,
                         stockFormData.validTo
-                            ? dayjs(stockFormData.validTo, DATE_FORMAT)
+                            ? dayjs(stockFormData.validTo, DATE_TIME_FORMAT)
                             : null,
                     ]}
                     disabledDate={(date) => {
@@ -372,21 +376,22 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                 <RangePicker
                     showTime={{ format: TIME_FORMAT }}
                     placeholder={["Start date", "End date"]}
-                    format={DATE_FORMAT}
+                    format={DATE_TIME_FORMAT}
                     value={[
                         stockFormData.start
-                            ? dayjs(stockFormData.start, DATE_FORMAT)
+                            ? dayjs(stockFormData.start, DATE_TIME_FORMAT)
                             : null,
                         stockFormData.end
-                            ? dayjs(stockFormData.end, DATE_FORMAT)
+                            ? dayjs(stockFormData.end, DATE_TIME_FORMAT)
                             : null,
                     ]}
                     disabledDate={(date) => {
                         return (
                             dayjs().isAfter(date) ||
-                            dayjs(stockFormData.valid, DATE_FORMAT).isAfter(
-                                date,
-                            )
+                            dayjs(
+                                stockFormData.valid,
+                                DATE_TIME_FORMAT,
+                            ).isAfter(date)
                         );
                     }}
                     onChange={onChangeUsedDateRange}
@@ -427,11 +432,11 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                         stockFormData.valid
                                             ? dayjs(
                                                   stockFormData.valid,
-                                                  DATE_FORMAT,
+                                                  DATE_TIME_FORMAT,
                                               )
                                             : null
                                     }
-                                    format={DATE_FORMAT}
+                                    format={DATE_TIME_FORMAT}
                                     className="w-full"
                                 />
                             </Col>
@@ -446,7 +451,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                               ).isAfter(date)
                                             : dayjs().isAfter(date);
                                     }}
-                                    format={DATE_FORMAT}
+                                    format={DATE_TIME_FORMAT}
                                     onChange={onChangeValidFromTo}
                                     className="w-full"
                                 />
@@ -525,18 +530,18 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                     <RangePicker
                                         showTime={{ format: TIME_FORMAT }}
                                         placeholder={["Date from", "Date to"]}
-                                        format={DATE_FORMAT}
+                                        format={DATE_TIME_FORMAT}
                                         value={[
                                             exclDate.from
                                                 ? dayjs(
                                                       exclDate.from,
-                                                      DATE_FORMAT,
+                                                      DATE_TIME_FORMAT,
                                                   )
                                                 : null,
                                             exclDate.to
                                                 ? dayjs(
                                                       exclDate.to,
-                                                      DATE_FORMAT,
+                                                      DATE_TIME_FORMAT,
                                                   )
                                                 : null,
                                         ]}
@@ -544,11 +549,11 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                             return (
                                                 dayjs(
                                                     stockFormData.valid,
-                                                    DATE_FORMAT,
+                                                    DATE_TIME_FORMAT,
                                                 ).isAfter(date) ||
                                                 dayjs(
                                                     stockFormData.fromValidTo,
-                                                    DATE_FORMAT,
+                                                    DATE_TIME_FORMAT,
                                                 ).isBefore(date) ||
                                                 getDisableExclusiveDate(date)
                                             );

@@ -4,6 +4,7 @@ import { formatDate } from "@/utils/date";
 import { IInventoryListRs } from "@/models/management/core/inventory.interface";
 import Link from "next/link";
 import { Status } from "@/models/management/common.interface";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     {
         title: "#ID",
@@ -14,31 +15,31 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     {
         title: "Tên",
         dataIndex: "name",
-        key: 1,
-        width: 200,
+        key: 2,
+        width: 250,
     },
     {
         title: "Code",
         dataIndex: "code",
-        key: 1,
-        width: 150,
+        key: 3,
+        width: 250,
     },
     {
         title: "Product type",
         dataIndex: "productType",
-        key: 2,
-        width: 100,
+        key: 4,
+        width: 150,
     },
     {
         title: "Inventory type",
         dataIndex: "type",
-        key: 2,
-        width: 100,
+        key: 5,
+        width: 150,
     },
     {
         title: "Trạng thái",
         dataIndex: "status",
-        key: 3,
+        key: 6,
         width: 120,
         render: (_, record) => {
             return (
@@ -57,44 +58,38 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
             );
         },
     },
-
     {
-        title: "User",
-        dataIndex: "sysFstUser",
-        key: 2,
-        width: 100,
+        title: "Có stock",
+        dataIndex: "isStock",
+        key: 7,
+        width: 120,
+        render: (_, record) => {
+            return (
+                <>
+                    {record.isStock ? (
+                        <Tag color="green" icon>
+                            Có
+                        </Tag>
+                    ) : (
+                        <Tag color="red">Không</Tag>
+                    )}
+                </>
+            );
+        },
     },
     {
         title: "Ngày tạo",
         dataIndex: "sysFstUpdate",
-        key: 4,
-        width: 150,
+        key: 8,
+        width: 180,
         render: (_, record) => {
             return formatDate(record.sysFstUpdate);
         },
     },
     {
-        title: "Quản lý stock",
-        dataIndex: "isStock",
-        key: 2,
-        fixed: "right",
-        width: 120,
-        render: (_, record) => {
-            return (
-                <>
-                    {(record.isStock && record.status === Status.OK && (
-                        <Link
-                            href={`/portal/product/inventory/${record.recId}`}
-                            className=""
-                        >
-                            <span className="text-primary-default text-xs inline-block px-2 py-1 rounded-sm border border-primary-default">
-                                Cấu hình stock
-                            </span>
-                        </Link>
-                    )) ||
-                        null}
-                </>
-            );
-        },
+        title: "User",
+        dataIndex: "sysFstUser",
+        key: 9,
+        width: 100,
     },
 ];

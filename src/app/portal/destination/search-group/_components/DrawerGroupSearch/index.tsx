@@ -208,7 +208,7 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
         } else {
             setFormData(() => initFormData);
         }
-    }, [initialValues, actionType]);
+    }, [initialValues, actionType, isOpen]);
 
     const isButtonDisabled = useMemo(() => {
         return false;
@@ -231,6 +231,7 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
             }
         }
     }, [initialValues]);
+
     return (
         <Drawer
             title={
@@ -279,10 +280,15 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
                 <FormItem label="Điểm đến" required>
                     <TreeSelect
                         showSearch
+                        defaultValue={undefined}
                         style={{ width: "100%" }}
                         dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                         placeholder="Chọn điểm đến"
-                        value={selectedDestinationValue}
+                        value={
+                            actionType === EActionType.EDIT
+                                ? selectedDestinationValue
+                                : undefined
+                        }
                         allowClear
                         treeDefaultExpandAll
                         onSelect={onSelectDestination}

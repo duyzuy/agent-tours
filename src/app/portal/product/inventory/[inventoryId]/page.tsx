@@ -24,8 +24,8 @@ import StockListContainer, {
 } from "../_components/StockListContainer";
 import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
 import { isUndefined } from "lodash";
-import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
-import { DATE_FORMAT } from "@/constants/common";
+import { StockInventoryQueryParams } from "@/models/management/core/stockInventory.interface";
+import { DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import dayjs from "dayjs";
 import { Status } from "@/models/management/common.interface";
 import { RangePickerProps } from "antd/es/date-picker";
@@ -38,24 +38,14 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
     );
 
     const [stockQueryParams, setStockFilterFormdata] = useState(
-        new StockInventoryQueryparams(
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            1,
-            10,
-            undefined,
-        ),
+        new StockInventoryQueryParams(undefined, 1, 10),
     );
 
     const { data: stockResponse, isLoading: isLoadingStockList } =
         useGetStockInventoryListCoreQuery({
             queryparams: {
                 ...stockQueryParams,
-                inventoryId: params.inventoryId,
+                requestObject: { inventoryId: params.inventoryId },
             },
             enabled:
                 !isUndefined(inventoryDetail) &&
@@ -70,22 +60,17 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
     } = stockResponse || {};
     const { onCreate, onConfirm, onAdjustQuantity } = useCRUDStockInventory();
 
-    const onChangeFilterForm = (
-        key: keyof StockInventoryQueryparams,
-        value: StockInventoryQueryparams[keyof StockInventoryQueryparams],
-    ) => {
-        if (key === "status" && typeof value === "string") {
-            if (value === "All") {
-                setStockFilterFormdata((prev) => ({
-                    ...prev,
-                    status: undefined,
-                }));
-            } else {
-                setStockFilterFormdata((prev) => ({
-                    ...prev,
-                    status: value as Status,
-                }));
-            }
+    const onChangeStatus = (value: string) => {
+        if (value === "All") {
+            setStockFilterFormdata((prev) => ({
+                ...prev,
+                status: undefined,
+            }));
+        } else {
+            setStockFilterFormdata((prev) => ({
+                ...prev,
+                status: value as Status,
+            }));
         }
     };
     const onChangeValidDate: RangePickerProps["onChange"] = (
@@ -141,8 +126,9 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
                                             <FormItem>
                                                 <Select
                                                     value={
-                                                        stockQueryParams.status ??
-                                                        "All"
+                                                        stockQueryParams
+                                                            ?.requestObject
+                                                            ?.status ?? "All"
                                                     }
                                                     options={[
                                                         {
@@ -159,10 +145,7 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
                                                         },
                                                     ]}
                                                     onChange={(value) =>
-                                                        onChangeFilterForm(
-                                                            "status",
-                                                            value,
-                                                        )
+                                                        onChangeStatus(value)
                                                     }
                                                 />
                                             </FormItem>
@@ -171,24 +154,32 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
                                             <FormItem>
                                                 <RangePicker
                                                     showTime={{
-                                                        format: "HH:mm",
+                                                        format: TIME_FORMAT,
                                                     }}
                                                     placeholder={[
                                                         "Valid from",
                                                         "Valid to",
                                                     ]}
-                                                    format={DATE_FORMAT}
+                                                    format={DATE_TIME_FORMAT}
                                                     value={[
-                                                        stockQueryParams.valid
+                                                        stockQueryParams
+                                                            ?.requestObject
+                                                            ?.valid
                                                             ? dayjs(
-                                                                  stockQueryParams.valid,
-                                                                  DATE_FORMAT,
+                                                                  stockQueryParams
+                                                                      ?.requestObject
+                                                                      ?.valid,
+                                                                  DATE_TIME_FORMAT,
                                                               )
                                                             : null,
-                                                        stockQueryParams.validTo
+                                                        stockQueryParams
+                                                            ?.requestObject
+                                                            ?.validTo
                                                             ? dayjs(
-                                                                  stockQueryParams.validTo,
-                                                                  DATE_FORMAT,
+                                                                  stockQueryParams
+                                                                      ?.requestObject
+                                                                      ?.validTo,
+                                                                  DATE_TIME_FORMAT,
                                                               )
                                                             : null,
                                                     ]}
@@ -201,24 +192,31 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
                                             <FormItem>
                                                 <RangePicker
                                                     showTime={{
-                                                        format: "HH:mm",
+                                                        format: TIME_FORMAT,
                                                     }}
                                                     placeholder={[
                                                         "Start",
                                                         "End",
                                                     ]}
-                                                    format={DATE_FORMAT}
+                                                    format={DATE_TIME_FORMAT}
                                                     value={[
-                                                        stockQueryParams.start
+                                                        stockQueryParams
+                                                            ?.requestObject
+                                                            ?.start
                                                             ? dayjs(
-                                                                  stockQueryParams.start,
-                                                                  DATE_FORMAT,
+                                                                  stockQueryParams
+                                                                      ?.requestObject
+                                                                      ?.start,
+                                                                  DATE_TIME_FORMAT,
                                                               )
                                                             : null,
-                                                        stockQueryParams.end
+                                                        stockQueryParams
+                                                            ?.requestObject?.end
                                                             ? dayjs(
-                                                                  stockQueryParams.end,
-                                                                  DATE_FORMAT,
+                                                                  stockQueryParams
+                                                                      ?.requestObject
+                                                                      ?.end,
+                                                                  DATE_TIME_FORMAT,
                                                               )
                                                             : null,
                                                     ]}

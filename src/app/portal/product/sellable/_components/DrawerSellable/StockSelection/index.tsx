@@ -17,7 +17,7 @@ import { Status } from "@/models/management/common.interface";
 import { IInventory } from "@/models/management/core/inventory.interface";
 import {
     IStock,
-    StockInventoryQueryparams,
+    StockInventoryQueryParams,
 } from "@/models/management/core/stockInventory.interface";
 import CustomTable from "@/components/admin/CustomTable";
 
@@ -36,21 +36,19 @@ export type StockSelectionProps = TableProps<IStock> & {
     onRemove?: (record: IStock) => void;
 };
 
-function StockSelection(props: StockSelectionProps) {
-    const {
-        inventories,
-        isLoading,
-        onSetStock,
-        onRemove,
-        columns,
-        stocks,
-        defaultQuantity = 0,
-        stockSelectedList,
-        validTo,
-        validFrom,
-        ...restProps
-    } = props;
-
+function StockSelection({
+    inventories,
+    isLoading,
+    onSetStock,
+    onRemove,
+    columns,
+    stocks,
+    defaultQuantity = 0,
+    stockSelectedList,
+    validTo,
+    validFrom,
+    ...restProps
+}: StockSelectionProps) {
     const [showModalDetail, setShowModalDetail] = useState<{
         isShow: boolean;
         record?: IStock;
@@ -58,23 +56,21 @@ function StockSelection(props: StockSelectionProps) {
 
     const [stockQueryparams, setStockQueryParams] = useState(
         () =>
-            new StockInventoryQueryparams(
-                undefined,
-                undefined,
-                validFrom,
-                validTo,
-                undefined,
-                undefined,
+            new StockInventoryQueryParams(
+                {
+                    valid: validFrom,
+                    validTo: validTo,
+                    status: Status.OK,
+                },
                 1,
                 5,
-                Status.OK,
             ),
     );
 
     const { data: stockResponse, isLoading: isLoadingStock } =
         useGetStockInventoryListCoreQuery({
             queryparams: stockQueryparams,
-            enabled: !isUndefined(stockQueryparams.inventoryId),
+            enabled: !isUndefined(stockQueryparams.requestObject?.inventoryId),
         });
     const {
         list: stockList,
@@ -87,7 +83,10 @@ function StockSelection(props: StockSelectionProps) {
         value,
         option,
     ) => {
-        setStockQueryParams((prev) => ({ ...prev, inventoryId: value }));
+        setStockQueryParams((prev) => ({
+            ...prev,
+            requestObject: { ...prev.requestObject, inventoryId: value },
+        }));
     };
     const onChangeStocks = (
         action: "add" | "remove",
@@ -181,8 +180,11 @@ function StockSelection(props: StockSelectionProps) {
     useEffect(() => {
         setStockQueryParams((prev) => ({
             ...prev,
-            valid: validFrom,
-            validTo: validTo,
+            requestObject: {
+                ...prev.requestObject,
+                valid: validFrom,
+                validTo: validTo,
+            },
         }));
     }, [validFrom, validTo]);
     return (
@@ -210,20 +212,30 @@ function StockSelection(props: StockSelectionProps) {
                 placeholder="Chọn inventory"
                 fieldNames={{ label: "name", value: "recId" }}
                 onChange={onChangeInventory}
-                value={stockQueryparams.inventoryId}
+                value={stockQueryparams?.requestObject?.inventoryId}
                 className="w-full"
             />
             <div className="mb-3"></div>
             <CustomTable
                 columns={mergeColumns}
                 size="small"
-                dataSource={stockQueryparams.inventoryId ? stockList : []}
+                dataSource={
+                    stockQueryparams?.requestObject?.inventoryId
+                        ? stockList
+                        : []
+                }
                 loading={isLoadingStock}
                 pagination={{
                     hideOnSinglePage: true,
-                    current: stockQueryparams.inventoryId ? pageCurrent : 1,
-                    pageSize: stockQueryparams.inventoryId ? pageSize : 20,
-                    total: stockQueryparams.inventoryId ? totalItems : 0,
+                    current: stockQueryparams?.requestObject?.inventoryId
+                        ? pageCurrent
+                        : 1,
+                    pageSize: stockQueryparams?.requestObject?.inventoryId
+                        ? pageSize
+                        : 20,
+                    total: stockQueryparams?.requestObject?.inventoryId
+                        ? totalItems
+                        : 0,
                     size: "small",
                     onChange: (page) =>
                         setStockQueryParams((prev) => ({

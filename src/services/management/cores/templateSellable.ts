@@ -20,13 +20,15 @@ export const templateSellableAPIs = {
             },
         );
     },
-    getTemplateList: async (queryParams: TemplateSellableQueryParams) => {
+    getTemplateList: async (queryParams?: TemplateSellableQueryParams) => {
         return await coreApi.post<ITemplateSaleableListRs, BaseResponse<null>>(
             "core/SellableTemplate_List",
             {
                 requestObject: {
-                    ...queryParams,
+                    ...queryParams?.requestObject,
                 },
+                pageCurrent: queryParams?.pageCurrent,
+                pageSize: queryParams?.pageSize,
                 localUsername: "99",
             },
         );

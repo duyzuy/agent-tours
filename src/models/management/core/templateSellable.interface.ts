@@ -25,41 +25,34 @@ export interface ITemplateSellable {
     status: Status;
 }
 
+interface RequestObject {
+    recId?: number; //1 item theo Id
+    andType?: string; //3 biến and.... là điều kiện search AND, có thể truyền 1 trong 3 hoặc cả 3
+    andCodeLike?: string;
+    andDestIn?: string;
+    status?: Status;
+}
 export interface ITemplateSellableQueryParams {
-    recId: number; //1 item theo Id
-    andType: string; //3 biến and.... là điều kiện search AND, có thể truyền 1 trong 3 hoặc cả 3
-    andCodeLike: string;
-    andDestIn: string;
-    pageCurrent: number; //default = 1
-    pageSize: number; //defaut = 100/page
+    requestObject?: RequestObject;
+    pageCurrent?: number;
+    pageSize?: number;
 }
 
 export class TemplateSellableQueryParams
-    implements Partial<ITemplateSellableQueryParams>
+    implements ITemplateSellableQueryParams
 {
-    recId?: number;
-    andType?: string;
-    andCodeLike?: string;
-    andDestIn?: string;
+    requestObject?: RequestObject | undefined;
     pageCurrent?: number;
     pageSize?: number;
-    status?: Status;
+
     constructor(
-        recId: number | undefined,
-        andType: string | undefined,
-        andCodeLike: string | undefined,
-        andDestIn: string | undefined,
+        requestObject: RequestObject | undefined,
         pageCurrent: number | undefined,
         pageSize: number | undefined,
-        status: Status | undefined,
     ) {
-        this.recId = recId;
-        this.andType = andType;
-        this.andCodeLike = andCodeLike;
-        this.andDestIn = andDestIn;
+        this.requestObject = requestObject;
         this.pageCurrent = pageCurrent;
         this.pageSize = pageSize;
-        this.status = status;
     }
 }
 export interface ITemplateSellablePayload {

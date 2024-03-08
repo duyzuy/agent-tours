@@ -1,31 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
 import { inventoryAPIs } from "@/services/management/cores/inventory";
-import { IInventoryQueryParams } from "@/models/management/core/inventory.interface";
+import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
 import { isUndefined } from "lodash";
 
-export const useGetInventoryListCoreQuery = (options?: {
+export const useGetInventoryListCoreQuery = ({
+    enabled = false,
+    queryParams,
+}: {
     enabled?: boolean;
-    queryParams?: IInventoryQueryParams;
+    queryParams?: InventoryQueryParams;
 }) => {
-    const { queryParams, enabled = false } = options || {};
+    // const { queryParams, enabled = false } = options || {};
 
-    let inventoryQueryparams = new IInventoryQueryParams(
-        undefined,
-        undefined,
-        1,
-        20,
-        undefined,
-    );
+    let inventoryQueryparams = new InventoryQueryParams(undefined, 1, 20);
     if (!isUndefined(queryParams)) {
         inventoryQueryparams = Object.keys(queryParams)
             .sort()
-            .reduce<IInventoryQueryParams>((acc, key) => {
-                if (queryParams[key as keyof IInventoryQueryParams]) {
+            .reduce<InventoryQueryParams>((acc, key) => {
+                if (queryParams[key as keyof InventoryQueryParams]) {
                     acc = {
                         ...acc,
-                        [key as keyof IInventoryQueryParams]:
-                            queryParams[key as keyof IInventoryQueryParams],
+                        [key as keyof InventoryQueryParams]:
+                            queryParams[key as keyof InventoryQueryParams],
                     };
                 }
                 return acc;

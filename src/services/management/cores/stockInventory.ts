@@ -28,8 +28,10 @@ export const stockInventoryAPIs = {
             "core/InventoryStock_List",
             {
                 requestObject: {
-                    ...queryParams,
+                    ...queryParams?.requestObject,
                 },
+                pageCurrent: queryParams?.pageCurrent,
+                pageSize: queryParams?.pageSize,
                 localUsername: "99",
             },
         );

@@ -4,45 +4,49 @@ import { templateSellableAPIs } from "@/services/management/cores/templateSellab
 
 import { TemplateSellableQueryParams } from "@/models/management/core/templateSellable.interface";
 
-export const useGetTemplateSellableListCoreQuery = (templateOptions?: {
+export const useGetTemplateSellableListCoreQuery = ({
+    queryParams,
+    enabled = false,
+}: {
     queryParams?: TemplateSellableQueryParams;
     enabled?: boolean;
 }) => {
-    const { queryParams, enabled = false } = templateOptions || {};
-    let templateQueryParams = new TemplateSellableQueryParams(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        1,
-        20,
-        undefined,
-    );
-    if (queryParams) {
-        templateQueryParams = Object.keys(queryParams)
+    let { requestObject, pageCurrent, pageSize } = queryParams || {};
+
+    if (requestObject) {
+        requestObject = Object.keys(requestObject)
             .sort()
-            .reduce<TemplateSellableQueryParams>((acc, key) => {
-                return {
-                    ...acc,
-                    [key as keyof TemplateSellableQueryParams]:
-                        queryParams[key as keyof TemplateSellableQueryParams],
-                };
-            }, templateQueryParams);
+            .reduce<TemplateSellableQueryParams["requestObject"]>(
+                (acc, key) => {
+                    return {
+                        ...acc,
+                        [key as keyof TemplateSellableQueryParams["requestObject"]]:
+                            requestObject
+                                ? requestObject[
+                                      key as keyof TemplateSellableQueryParams["requestObject"]
+                                  ]
+                                : undefined,
+                    };
+                },
+                requestObject,
+            );
     }
 
     return useQuery({
-        queryKey: [queryCore.GET_LIST_TEMPLATE_SELLABLE, templateQueryParams],
-        queryFn: () =>
-            templateSellableAPIs.getTemplateList(templateQueryParams),
-        select: (data) => {
-            const { result, pageCurrent, pageSize, totalPages, totalItems } =
-                data;
+        queryKey: [
+            queryCore.GET_LIST_TEMPLATE_SELLABLE,
+            requestObject,
+            pageCurrent,
+            pageSize,
+        ],
+        queryFn: () => templateSellableAPIs.getTemplateList(queryParams),
+        select: (response) => {
             return {
-                list: result,
-                pageCurrent: pageCurrent,
-                pageSize,
-                totalPages,
-                totalItems,
+                list: response.result,
+                pageCurrent: response.pageCurrent,
+                pageSize: response.pageSize,
+                totalPages: response.totalPages,
+                totalItems: response.totalItems,
             };
         },
         enabled: enabled,

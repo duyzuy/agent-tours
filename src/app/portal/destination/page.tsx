@@ -3,11 +3,11 @@ import React, { useCallback, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
 import { columnsDestinationList } from "./columnsDestinationList";
-import DrawlerDestination from "./components/DrawlerDestination";
+import DrawlerDestination from "./_components/DrawlerDestination";
 import {
     EActionType,
     TDrawlerDestination,
-} from "./components/DrawlerDestination";
+} from "./_components/DrawlerDestination";
 import { useGetRegionList } from "@/queries/core/region";
 import useCRUDDestination from "./hooks/useCRUDDestination";
 import { useGetDestinationsQuery } from "@/queries/misc/destination";

@@ -52,7 +52,7 @@ const GroupDestinationPage = () => {
         }
 
         if (actionType === EActionType.EDIT && editRecord) {
-            onUpdate(editRecord.recId, data, () => {
+            onUpdate(editRecord.id, data, () => {
                 onCloseDrawlerAndReset();
             });
         }
@@ -77,7 +77,7 @@ const GroupDestinationPage = () => {
             >
                 <TableListPage<LocalSearchDestinationListRs["result"][0]>
                     scroll={{ x: 1000 }}
-                    rowKey={"recId"}
+                    rowKey={"id"}
                     modelName="Nhóm search"
                     dataSource={localSearchList || []}
                     columns={columnsSearchDestination}

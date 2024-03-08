@@ -5,8 +5,9 @@ export enum LOCAL_STORAGE_KEY {
 /**
  * Date format when create Stock, Sellable
  */
-export const DATE_FORMAT = "DDMMMYY HH:mm";
+export const DATE_FORMAT = "DDMMMYY";
 export const TIME_FORMAT = "HH:mm";
+export const DATE_TIME_FORMAT = "DDMMMYY HH:mm";
 //  Monday Tuesday Wednesday Thursday Friday Saturday
 export const DAYS_OF_WEEK = [
     { label: "CN", value: "Sunday" },

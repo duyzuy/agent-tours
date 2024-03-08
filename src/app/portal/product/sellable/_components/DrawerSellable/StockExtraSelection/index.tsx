@@ -14,7 +14,7 @@ import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory
 import ModalContent from "@/components/admin/ModalContent";
 import ContentDetail from "@/components/admin/ContentDetail";
 import { formatDate } from "@/utils/date";
-import { StockInventoryQueryparams } from "@/models/management/core/stockInventory.interface";
+import { StockInventoryQueryParams } from "@/models/management/core/stockInventory.interface";
 import { Status } from "@/models/management/common.interface";
 import StockExtraList, { StockExtraListProps } from "./StockExtraList";
 import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
@@ -54,18 +54,7 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
     } = props;
 
     const [stockQueryParams, setStockQueryParams] = useState(
-        () =>
-            new StockInventoryQueryparams(
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                1,
-                5,
-                Status.OK,
-            ),
+        () => new StockInventoryQueryParams({ status: Status.OK }, 1, 5),
     );
     const [showModalDetail, setShowModalDetail] = useState<{
         isShow: boolean;
@@ -75,7 +64,7 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
     const { data: stockResponse, isLoading: isLoadingStock } =
         useGetStockInventoryListCoreQuery({
             queryparams: stockQueryParams,
-            enabled: !isUndefined(stockQueryParams.inventoryId),
+            enabled: !isUndefined(stockQueryParams?.requestObject?.inventoryId),
         });
     const {
         list: stockList,
@@ -94,7 +83,10 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
     ) => {
         setStockQueryParams((prev) => ({
             ...prev,
-            inventoryId: value,
+            requestObject: {
+                ...prev.requestObject,
+                inventoryId: value,
+            },
         }));
     };
     const onChangeStocks = (
@@ -223,8 +215,11 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
     useEffect(() => {
         setStockQueryParams((prev) => ({
             ...prev,
-            valid: validFrom,
-            validTo: validTo,
+            requestObject: {
+                ...prev.requestObject,
+                valid: validFrom,
+                validTo: validTo,
+            },
         }));
     }, [validFrom, validTo]);
     return (
@@ -257,14 +252,24 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
             <div className="mb-3"></div>
             <CustomTable
                 columns={mergeColumns}
-                dataSource={stockQueryParams.inventoryId ? stockList : []}
+                dataSource={
+                    stockQueryParams?.requestObject?.inventoryId
+                        ? stockList
+                        : []
+                }
                 loading={isLoadingStock}
                 size="small"
                 pagination={{
                     hideOnSinglePage: true,
-                    current: stockQueryParams.inventoryId ? pageCurrent : 1,
-                    pageSize: stockQueryParams.inventoryId ? pageSize : 20,
-                    total: stockQueryParams.inventoryId ? totalItems : 0,
+                    current: stockQueryParams?.requestObject?.inventoryId
+                        ? pageCurrent
+                        : 1,
+                    pageSize: stockQueryParams?.requestObject?.inventoryId
+                        ? pageSize
+                        : 20,
+                    total: stockQueryParams?.requestObject?.inventoryId
+                        ? totalItems
+                        : 0,
                     size: "small",
                     onChange: (page) =>
                         setStockQueryParams((prev) => ({

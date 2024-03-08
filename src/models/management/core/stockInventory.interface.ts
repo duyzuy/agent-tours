@@ -14,47 +14,32 @@ export enum EStockInventoryType {
 export interface IStockInventoryTypeRs extends BaseResponse<string[]> {}
 
 export interface IStockInventoryQueryParams {
+    requestObject?: IRequestObject;
+    pageCurrent?: number;
+    pageSize?: number;
+}
+interface IRequestObject {
     inventoryId?: number;
     type?: string;
     valid?: string;
     validTo?: string;
     start?: string;
     end?: string;
-    pageCurrent?: number;
-    pageSize?: number;
     status?: Status;
 }
-
-export class StockInventoryQueryparams implements IStockInventoryQueryParams {
-    inventoryId?: number;
-    type?: string;
-    valid?: string;
-    validTo?: string;
-    start?: string;
-    end?: string;
+export class StockInventoryQueryParams {
+    requestObject?: IRequestObject;
     pageCurrent?: number;
     pageSize?: number;
-    status?: Status;
+
     constructor(
-        inventoryId: number | undefined,
-        type: string | undefined,
-        valid: string | undefined,
-        validTo: string | undefined,
-        start: string | undefined,
-        end: string | undefined,
+        requestObject: IRequestObject | undefined,
         pageCurrent: number | undefined,
         pageSize: number | undefined,
-        status: Status | undefined,
     ) {
-        this.inventoryId = inventoryId;
-        this.type = type;
-        this.valid = valid;
-        this.validTo = validTo;
-        this.start = start;
-        this.end = end;
+        this.requestObject = requestObject;
         this.pageCurrent = pageCurrent;
         this.pageSize = pageSize;
-        this.status = status;
     }
 }
 

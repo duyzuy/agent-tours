@@ -210,7 +210,7 @@ export const sellableSchema: ObjectSchema<SellableFormData> = object({
     sellableTemplateId: number().required("sellableTemplateId Bị thiếu."),
     isCreateSeries: boolean().default(false),
     type: string().required("Type không bỏ trống."),
-    codeAffix: string().required("Mô tả không bỏ trống."),
+    codeAffix: string(),
     cap: number()
         .required("Số lượng không bỏ trống.")
         .min(1, "Tối thiểu lớn hơn 1."),
