@@ -18,3 +18,15 @@ export const DAYS_OF_WEEK = [
     { label: "T6", value: "Friday" },
     { label: "T7", value: "Saturday" },
 ];
+
+export enum EPassengerTitle {
+    MR = "mr",
+    MISS = "miss",
+    MRS = "mrs",
+}
+
+export enum EPassengerGender {
+    FEMALE = "female",
+    MALE = "male",
+    OTHER = "other",
+}

@@ -39,8 +39,8 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         label: "Quản lý booking",
         children: [
             {
-                key: "manage-booking",
-                label: "Quản lý booking",
+                key: "manage-booking/order-list",
+                label: "Danh sách booking",
             },
             {
                 key: "manage-booking/print",

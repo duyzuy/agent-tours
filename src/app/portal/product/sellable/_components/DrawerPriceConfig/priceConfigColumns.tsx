@@ -16,43 +16,49 @@ export const priceConfigColumns: (PriceConfigColumnTypes[number] & {
         title: "Class",
         dataIndex: "class",
         key: "class",
-        width: 100,
+        width: 80,
         editable: false,
     },
     {
         title: "Channel",
         dataIndex: "channel",
         key: "channel",
-        width: 150,
+        width: 120,
         editable: false,
     },
-
     {
         title: "Max available",
         dataIndex: "maxAvaiable",
         key: "maxAvaiable",
-        width: 120,
+        width: 80,
+        editable: true,
+    },
+    {
+        title: "Limit per-booking",
+        dataIndex: "limitPerBooking",
+        key: "limitPerBooking",
+        width: 80,
         editable: true,
     },
     {
         title: "Available",
         dataIndex: "avaiable",
         key: "avaiable",
-        width: 100,
+        width: 80,
         editable: true,
     },
     {
         title: "Open",
         dataIndex: "open",
         key: "open",
-        width: 100,
+        width: 80,
         editable: false,
     },
     {
         title: "Sold",
         dataIndex: "sold",
         key: "sold",
-        width: 100,
+        width: 80,
         editable: false,
     },
     {
@@ -126,20 +132,13 @@ export const priceConfigColumns: (PriceConfigColumnTypes[number] & {
         },
     },
     {
-        title: "Settings",
-        dataIndex: "settings",
-        key: "settings",
-        width: 100,
-        editable: false,
-    },
-    {
         title: "Descriptions",
-        dataIndex: "descriptions",
-        key: "descriptions",
-        width: 200,
+        dataIndex: "details",
+        key: "details",
+        width: 160,
         editable: false,
         render: (desc) => {
-            return desc || "--";
+            return <span className="text-xs">{desc}</span> || "--";
         },
     },
 ];

@@ -9,6 +9,8 @@ export interface PriceConfig {
     open: number;
     sold: number;
     avaiable: number;
+    details: string;
+    limitPerBooking: number;
     adult: number;
     child: number;
     infant: number;
@@ -37,6 +39,8 @@ export interface SellablePriceConfigPayload {
         channel?: string;
         class?: string;
         maxAvaiable?: number;
+        limitPerBooking?: number;
+        details?: string;
         adult?: number;
         child?: number;
         infant?: number;
@@ -55,6 +59,8 @@ export class SellablePriceConfigFormData {
         channel?: string;
         class?: string;
         maxAvaiable?: number;
+        limitPerBooking?: number;
+        details?: string;
         adult?: number;
         child?: number;
         infant?: number;

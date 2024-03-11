@@ -264,36 +264,43 @@ const DrawerBookingSelection: React.FC<DrawerBookingSelectionProps> = ({
                     <div className="product__pricings-body">
                         {productItem?.configs.map((item) => (
                             <React.Fragment key={item.recId}>
-                                <div className="bg-white rounded-md mb-3 px-4 py-6 border">
-                                    <div className="product__pricings-info mb-3">
-                                        <div>
-                                            <span className="w-20 inline-block">
+                                <div className="bg-white rounded-md mb-3 px-4 py-4 border">
+                                    <div className="product__pricings-info flex justify-between">
+                                        <div className=" flex-1">
+                                            <span className="text-xs block">
                                                 Class
                                             </span>
-                                            <span className="font-bold text-primary-default">
+                                            <span className=" text-primary-default font-bold">
                                                 {item.class}
                                             </span>
                                         </div>
-                                        <div>
-                                            <span className="w-20 inline-block">
+                                        <div className=" flex-1">
+                                            <span className="text-xs block">
                                                 Channel
                                             </span>
-                                            <span className="font-bold text-primary-default">
+                                            <span className=" text-primary-default font-bold">
                                                 {item.channel}
                                             </span>
                                         </div>
-                                        <div>
-                                            <span className="w-20 inline-block">
+                                        <div className=" flex-1">
+                                            <span className="text-xs block">
                                                 Số lượng
                                             </span>
-                                            <span className="font-bold text-primary-default">
+                                            <span className=" text-primary-default font-bold">
                                                 {item.open}
                                             </span>
                                         </div>
                                     </div>
-                                    <Divider />
+                                    {item.details ? (
+                                        <div className="details mt-2">
+                                            <span className="">
+                                                {item.details}
+                                            </span>
+                                        </div>
+                                    ) : null}
+                                    <div className="mt-3 mb-3 border-b"></div>
                                     <div>
-                                        <div className="mb-3 flex justify-between">
+                                        {/* <div className="mb-3 flex justify-between">
                                             <div className="flex-1">
                                                 <span className="font-bold">
                                                     Loại hành khách
@@ -309,13 +316,13 @@ const DrawerBookingSelection: React.FC<DrawerBookingSelectionProps> = ({
                                                     Tạm tính
                                                 </span>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className="flex justify-between mb-2">
                                             <div className="flex-1">
                                                 <span className="block">
                                                     Người lớn
                                                 </span>
-                                                <span className="text-xs text-red-600 font-bold">
+                                                <span className="text-xs font-semibold">
                                                     {moneyFormatVND(item.adult)}
                                                 </span>
                                             </div>
@@ -337,7 +344,7 @@ const DrawerBookingSelection: React.FC<DrawerBookingSelectionProps> = ({
                                                 />
                                             </div>
                                             <div className="w-48 flex items-center justify-end">
-                                                <span className="text-xs text-red-600 font-bold">
+                                                <span className="text-xs font-semibold">
                                                     {getSubtotalPassengerSelection(
                                                         PassengerType.ADULT,
                                                         item,
@@ -350,7 +357,7 @@ const DrawerBookingSelection: React.FC<DrawerBookingSelectionProps> = ({
                                                 <span className="block">
                                                     Trẻ em
                                                 </span>
-                                                <span className="text-xs text-red-600 font-bold">
+                                                <span className="text-xs font-semibold">
                                                     {moneyFormatVND(item.child)}
                                                 </span>
                                             </div>
@@ -372,7 +379,7 @@ const DrawerBookingSelection: React.FC<DrawerBookingSelectionProps> = ({
                                                 />
                                             </div>
                                             <div className="w-48 flex items-center justify-end">
-                                                <span className="text-xs text-red-600 font-bold">
+                                                <span className="text-xs font-semibold">
                                                     {getSubtotalPassengerSelection(
                                                         PassengerType.CHILD,
                                                         item,
@@ -385,7 +392,7 @@ const DrawerBookingSelection: React.FC<DrawerBookingSelectionProps> = ({
                                                 <span className="block">
                                                     Em bé
                                                 </span>
-                                                <span className="text-xs text-red-600 font-bold">
+                                                <span className="text-xs font-semibold">
                                                     {moneyFormatVND(
                                                         item.infant,
                                                     )}
@@ -409,7 +416,7 @@ const DrawerBookingSelection: React.FC<DrawerBookingSelectionProps> = ({
                                                 />
                                             </div>
                                             <div className="w-48 flex items-center justify-end">
-                                                <span className="text-xs text-red-600 font-bold">
+                                                <span className="text-xs font-semibold">
                                                     {getSubtotalPassengerSelection(
                                                         PassengerType.INFANT,
                                                         item,

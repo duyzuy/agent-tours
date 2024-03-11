@@ -1,143 +1,325 @@
 {
-    "@context": "https://schema.org",
-    "@graph": [
-        {
-            "@type": "Organization",
-            "@id": "https://wiki.matbao.net/#organization",
-            "name": "Trung t\u00e2m h\u1ed7 tr\u1ee3 k\u1ef9 thu\u1eadt | MATBAO.NET",
-            "url": "https://wiki.matbao.net/",
-            "sameAs": ["https://www.facebook.com/matbao.vn/"],
-            "logo": {
-                "@type": "ImageObject",
-                "@id": "https://wiki.matbao.net/#logo",
-                "url": "https://wiki.matbao.net/wp-content/uploads/2020/05/wiki-matbao-net.jpg",
-                "width": 884,
-                "height": 502,
-                "caption": "Trung t\u00e2m h\u1ed7 tr\u1ee3 k\u1ef9 thu\u1eadt | MATBAO.NET"
+    "result": {
+        "recId": 1,
+        "sellableId": 105,
+        "sellableTemplateId": 25,
+        "custName": "vu truong duy",
+        "custPhoneNumber": "0982013088",
+        "custEmail": "duyvutruong@vietjetair.com",
+        "custAddress": "ho chi minh",
+        "custInfoJson": "",
+        "paymentStatus": "",
+        "totalAmount": 10000000,
+        "tourPrice": 10000000,
+        "extraPrice": 0,
+        "charge": 0,
+        "rmk": "khong co ghi chu",
+        "rmk1": "",
+        "rmk2": "",
+        "rmk3": "",
+        "rmk4": "",
+        "status": "OK",
+        "sysFstUser": "99",
+        "sysFstUpdate": "2024-03-07T17:06:00",
+        "sysLstUser": "",
+        "sysLstUpdate": "2024-03-07T17:06:00",
+        "sysBelongTo": "ANTHAI_DEMO",
+        "logStatus": "",
+        "bookingDetails": [
+            {
+                "recId": 1,
+                "orderId": 1,
+                "sellableId": 105,
+                "bookingRefId": 0,
+                "sellableConfigId": 105,
+                "configJson": "[{\"RecId\":105,\"SellableId\":105,\"SellableDetailsId\":0,\"Channel\":\"AGENT\",\"Class\":\"A1\",\"Details\":\"\",\"Settings\":\"\",\"MaxAvaiable\":10,\"Open\":10,\"Sold\":0,\"Avaiable\":10,\"Adult\":9.000000000000000e+006,\"Child\":0.000000000000000e+000,\"Infant\":0.000000000000000e+000,\"OtherPrice01\":0.000000000000000e+000,\"OtherPrice02\":0.000000000000000e+000,\"OtherPrice03\":0.000000000000000e+000,\"OtherPriceNoSeat01\":0.000000000000000e+000,\"limitPerBooking\":0,\"Status\":\"OK\",\"sysFstUser\":\"99\",\"sysFstUpdate\":\"2024-02-24T16:56:00\",\"sysLstUser\":\"\",\"sysLstUpdate\":\"2024-02-24T16:56:00\",\"sysBelongTo\":\"ANTHAI_DEMO\",\"logStatus\":\"\"}]",
+                "channel": "AGENT",
+                "class": "A1",
+                "type": "child",
+                "quantity": 1,
+                "amount": 0,
+                "status": "OK",
+                "sysFstUser": "99",
+                "sysFstUpdate": "2024-03-07T17:06:00",
+                "sysLstUser": "",
+                "sysLstUpdate": "2024-03-07T17:06:00",
+                "sysBelongTo": "ANTHAI_DEMO",
+                "logStatus": "",
+                "passengers": [
+                    {
+                        "recId": 1,
+                        "bookingId": 1,
+                        "orderId": 1,
+                        "paxType": "child",
+                        "paxTitle": "",
+                        "paxLastname": "",
+                        "paxMiddleFirstName": "",
+                        "paxGender": "",
+                        "paxBirthdate": "1900-01-01T00:00:00",
+                        "paxBirthyear": 0,
+                        "paxPhoneNumber": "",
+                        "paxAddress": "",
+                        "paxIdNumber": "",
+                        "paxNatinality": "",
+                        "paxPassportNumber": "",
+                        "paxPassortExpireddate": "1900-01-01T00:00:00",
+                        "paxInfoJson": "",
+                        "status": "OK",
+                        "sysFstUser": "99",
+                        "sysFstUpdate": "2024-03-07T17:06:00",
+                        "sysLstUser": "",
+                        "sysLstUpdate": "2024-03-07T17:06:00",
+                        "sysBelongTo": "ANTHAI_DEMO",
+                        "logStatus": ""
+                    },
+                    {
+                        "recId": 2,
+                        "bookingId": 2,
+                        "orderId": 1,
+                        "paxType": "infant",
+                        "paxTitle": "",
+                        "paxLastname": "",
+                        "paxMiddleFirstName": "",
+                        "paxGender": "",
+                        "paxBirthdate": "1900-01-01T00:00:00",
+                        "paxBirthyear": 0,
+                        "paxPhoneNumber": "",
+                        "paxAddress": "",
+                        "paxIdNumber": "",
+                        "paxNatinality": "",
+                        "paxPassportNumber": "",
+                        "paxPassortExpireddate": "1900-01-01T00:00:00",
+                        "paxInfoJson": "",
+                        "status": "OK",
+                        "sysFstUser": "99",
+                        "sysFstUpdate": "2024-03-07T17:06:00",
+                        "sysLstUser": "",
+                        "sysLstUpdate": "2024-03-07T17:06:00",
+                        "sysBelongTo": "ANTHAI_DEMO",
+                        "logStatus": ""
+                    }
+                ]
             },
-            "image": { "@id": "https://wiki.matbao.net/#logo" }
-        },
-        {
-            "@type": "WebSite",
-            "@id": "https://wiki.matbao.net/#website",
-            "url": "https://wiki.matbao.net/",
-            "name": "Trung t\u00e2m h\u1ed7 tr\u1ee3 k\u1ef9 thu\u1eadt | MATBAO.NET",
-            "publisher": { "@id": "https://wiki.matbao.net/#organization" },
-            "potentialAction": {
-                "@type": "SearchAction",
-                "target": "https://wiki.matbao.net/?s={search_term_string}",
-                "query-input": "required name=search_term_string"
-            }
-        },
-        {
-            "@type": "ImageObject",
-            "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#primaryimage",
-            "url": "https://wiki.matbao.net/wp-content/uploads/2019/06/seo-la-gi-tai-sao-seo-rat-quan-trong-voi-moi-website-1.jpg",
-            "width": 600,
-            "height": 350,
-            "caption": "SEO l\u00e0 g\u00ec"
-        },
-        {
-            "@type": "WebPage",
-            "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#webpage",
-            "url": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/",
-            "inLanguage": "vi",
-            "name": "SEO l\u00e0 g\u00ec? T\u1ea1i sao SEO r\u1ea5t quan tr\u1ecdng v\u1edbi m\u1ed7i website - Trung t\u00e2m h\u1ed7 tr\u1ee3 k\u1ef9 thu\u1eadt | MATBAO.NET",
-            "isPartOf": { "@id": "https://wiki.matbao.net/#website" },
-            "primaryImageOfPage": {
-                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#primaryimage"
-            },
-            "datePublished": "2019-06-21T07:31:07+07:00",
-            "dateModified": "2021-12-27T08:05:11+07:00",
-            "description": "Kh\u00e1i ni\u1ec7m SEO Website \u0111\u00e3 tr\u1edf n\u00ean kh\u00e1 quen thu\u1ed9c, l\u00e0 m\u1ed9t k\u00eanh Marketing kh\u00e1 ph\u1ed5 bi\u1ebfn. H\u00e3y c\u00f9ng t\u00ecm hi\u1ec3u SEO l\u00e0 g\u00ec v\u00e0 nh\u1eefng th\u1ee9 li\u00ean quan",
-            "breadcrumb": {
-                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#breadcrumb"
-            }
-        },
-        {
-            "@type": "BreadcrumbList",
-            "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#breadcrumb",
-            "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "item": {
-                        "@type": "WebPage",
-                        "@id": "https://wiki.matbao.net/",
-                        "url": "https://wiki.matbao.net/",
-                        "name": "Trang ch\u1ee7"
-                    }
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "item": {
-                        "@type": "WebPage",
-                        "@id": "https://wiki.matbao.net/wordpress/",
-                        "url": "https://wiki.matbao.net/wordpress/",
-                        "name": "WordPress"
-                    }
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 3,
-                    "item": {
-                        "@type": "WebPage",
-                        "@id": "https://wiki.matbao.net/wordpress/thu-thuat/",
-                        "url": "https://wiki.matbao.net/wordpress/thu-thuat/",
-                        "name": "Th\u1ee7 thu\u1eadt"
-                    }
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 4,
-                    "item": {
-                        "@type": "WebPage",
-                        "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/",
-                        "url": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/",
-                        "name": "SEO l\u00e0 g\u00ec? T\u1ea1i sao SEO r\u1ea5t quan tr\u1ecdng v\u1edbi m\u1ed7i website"
+            {
+                "bookingId": 0,
+                "sellableConfigId": 0,
+                "qty": 1,
+                "amount": 0,
+                "type": "",
+                "booking": {
+                    "recId": 2,
+                    "orderId": 1,
+                    "sellableId": 105,
+                    "bookingRefId": 0,
+                    "sellableConfigId": 105,
+                    "configJson": "[{\"RecId\":105,\"SellableId\":105,\"SellableDetailsId\":0,\"Channel\":\"AGENT\",\"Class\":\"A1\",\"Details\":\"\",\"Settings\":\"\",\"MaxAvaiable\":10,\"Open\":9,\"Sold\":1,\"Avaiable\":10,\"Adult\":9.000000000000000e+006,\"Child\":0.000000000000000e+000,\"Infant\":0.000000000000000e+000,\"OtherPrice01\":0.000000000000000e+000,\"OtherPrice02\":0.000000000000000e+000,\"OtherPrice03\":0.000000000000000e+000,\"OtherPriceNoSeat01\":0.000000000000000e+000,\"limitPerBooking\":0,\"Status\":\"OK\",\"sysFstUser\":\"99\",\"sysFstUpdate\":\"2024-02-24T16:56:00\",\"sysLstUser\":\"\",\"sysLstUpdate\":\"2024-02-24T16:56:00\",\"sysBelongTo\":\"ANTHAI_DEMO\",\"logStatus\":\"\"}]",
+                    "channel": "AGENT",
+                    "class": "A1",
+                    "type": "infant",
+                    "quantity": 1,
+                    "amount": 0,
+                    "status": "OK",
+                    "sysFstUser": "99",
+                    "sysFstUpdate": "2024-03-07T17:06:00",
+                    "sysLstUser": "",
+                    "sysLstUpdate": "2024-03-07T17:06:00",
+                    "sysBelongTo": "ANTHAI_DEMO",
+                    "logStatus": "",
+                    "pax": {
+                        "recId": 2,
+                        "bookingId": 2,
+                        "orderId": 1,
+                        "paxType": "infant",
+                        "paxTitle": "",
+                        "paxLastname": "",
+                        "paxMiddleFirstName": "",
+                        "paxGender": "",
+                        "paxBirthdate": "1900-01-01T00:00:00",
+                        "paxBirthyear": 0,
+                        "paxPhoneNumber": "",
+                        "paxAddress": "",
+                        "paxIdNumber": "",
+                        "paxNatinality": "",
+                        "paxPassportNumber": "",
+                        "paxPassortExpireddate": "1900-01-01T00:00:00",
+                        "paxInfoJson": "",
+                        "status": "OK",
+                        "sysFstUser": "99",
+                        "sysFstUpdate": "2024-03-07T17:06:00",
+                        "sysLstUser": "",
+                        "sysLstUpdate": "2024-03-07T17:06:00",
+                        "sysBelongTo": "ANTHAI_DEMO",
+                        "logStatus": ""
                     }
                 }
-            ]
-        },
-        {
-            "@type": "Article",
-            "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#article",
-            "isPartOf": {
-                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#webpage"
             },
-            "author": {
-                "@id": "https://wiki.matbao.net/#/schema/person/8593d78c01810e546227d14c3a316bf6"
+            {
+                "bookingId": 0,
+                "sellableConfigId": 0,
+                "qty": 1,
+                "amount": 0,
+                "type": "",
+                "booking": {
+                    "recId": 3,
+                    "orderId": 1,
+                    "sellableId": 105,
+                    "bookingRefId": 0,
+                    "sellableConfigId": 108,
+                    "configJson": "[{\"RecId\":108,\"SellableId\":105,\"SellableDetailsId\":0,\"Channel\":\"CUSTOMER\",\"Class\":\"C1\",\"Details\":\"\",\"Settings\":\"\",\"MaxAvaiable\":15,\"Open\":10,\"Sold\":0,\"Avaiable\":10,\"Adult\":1.000000000000000e+007,\"Child\":0.000000000000000e+000,\"Infant\":0.000000000000000e+000,\"OtherPrice01\":0.000000000000000e+000,\"OtherPrice02\":0.000000000000000e+000,\"OtherPrice03\":0.000000000000000e+000,\"OtherPriceNoSeat01\":0.000000000000000e+000,\"limitPerBooking\":0,\"Status\":\"OK\",\"sysFstUser\":\"99\",\"sysFstUpdate\":\"2024-02-24T16:56:00\",\"sysLstUser\":\"\",\"sysLstUpdate\":\"2024-02-24T16:56:00\",\"sysBelongTo\":\"ANTHAI_DEMO\",\"logStatus\":\"\"}]",
+                    "channel": "CUSTOMER",
+                    "class": "C1",
+                    "type": "adult",
+                    "quantity": 1,
+                    "amount": 10000000,
+                    "status": "OK",
+                    "sysFstUser": "99",
+                    "sysFstUpdate": "2024-03-07T17:06:00",
+                    "sysLstUser": "",
+                    "sysLstUpdate": "2024-03-07T17:06:00",
+                    "sysBelongTo": "ANTHAI_DEMO",
+                    "logStatus": "",
+                    "pax": {
+                        "recId": 3,
+                        "bookingId": 3,
+                        "orderId": 1,
+                        "paxType": "adult",
+                        "paxTitle": "",
+                        "paxLastname": "",
+                        "paxMiddleFirstName": "",
+                        "paxGender": "",
+                        "paxBirthdate": "1900-01-01T00:00:00",
+                        "paxBirthyear": 0,
+                        "paxPhoneNumber": "",
+                        "paxAddress": "",
+                        "paxIdNumber": "",
+                        "paxNatinality": "",
+                        "paxPassportNumber": "",
+                        "paxPassortExpireddate": "1900-01-01T00:00:00",
+                        "paxInfoJson": "",
+                        "status": "OK",
+                        "sysFstUser": "99",
+                        "sysFstUpdate": "2024-03-07T17:06:00",
+                        "sysLstUser": "",
+                        "sysLstUpdate": "2024-03-07T17:06:00",
+                        "sysBelongTo": "ANTHAI_DEMO",
+                        "logStatus": ""
+                    }
+                }
             },
-            "headline": "SEO l\u00e0 g\u00ec? T\u1ea1i sao SEO r\u1ea5t quan tr\u1ecdng v\u1edbi m\u1ed7i website",
-            "datePublished": "2019-06-21T07:31:07+07:00",
-            "dateModified": "2021-12-27T08:05:11+07:00",
-            "commentCount": 0,
-            "mainEntityOfPage": {
-                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#webpage"
+            {
+                "bookingId": 0,
+                "sellableConfigId": 0,
+                "qty": 1,
+                "amount": 0,
+                "type": "",
+                "booking": {
+                    "recId": 4,
+                    "orderId": 1,
+                    "sellableId": 105,
+                    "bookingRefId": 0,
+                    "sellableConfigId": 108,
+                    "configJson": "[{\"RecId\":108,\"SellableId\":105,\"SellableDetailsId\":0,\"Channel\":\"CUSTOMER\",\"Class\":\"C1\",\"Details\":\"\",\"Settings\":\"\",\"MaxAvaiable\":15,\"Open\":9,\"Sold\":1,\"Avaiable\":10,\"Adult\":1.000000000000000e+007,\"Child\":0.000000000000000e+000,\"Infant\":0.000000000000000e+000,\"OtherPrice01\":0.000000000000000e+000,\"OtherPrice02\":0.000000000000000e+000,\"OtherPrice03\":0.000000000000000e+000,\"OtherPriceNoSeat01\":0.000000000000000e+000,\"limitPerBooking\":0,\"Status\":\"OK\",\"sysFstUser\":\"99\",\"sysFstUpdate\":\"2024-02-24T16:56:00\",\"sysLstUser\":\"\",\"sysLstUpdate\":\"2024-02-24T16:56:00\",\"sysBelongTo\":\"ANTHAI_DEMO\",\"logStatus\":\"\"}]",
+                    "channel": "CUSTOMER",
+                    "class": "C1",
+                    "type": "child",
+                    "quantity": 1,
+                    "amount": 0,
+                    "status": "OK",
+                    "sysFstUser": "99",
+                    "sysFstUpdate": "2024-03-07T17:06:00",
+                    "sysLstUser": "",
+                    "sysLstUpdate": "2024-03-07T17:06:00",
+                    "sysBelongTo": "ANTHAI_DEMO",
+                    "logStatus": "",
+                    "pax": {
+                        "recId": 4,
+                        "bookingId": 4,
+                        "orderId": 1,
+                        "paxType": "child",
+                        "paxTitle": "",
+                        "paxLastname": "",
+                        "paxMiddleFirstName": "",
+                        "paxGender": "",
+                        "paxBirthdate": "1900-01-01T00:00:00",
+                        "paxBirthyear": 0,
+                        "paxPhoneNumber": "",
+                        "paxAddress": "",
+                        "paxIdNumber": "",
+                        "paxNatinality": "",
+                        "paxPassportNumber": "",
+                        "paxPassortExpireddate": "1900-01-01T00:00:00",
+                        "paxInfoJson": "",
+                        "status": "OK",
+                        "sysFstUser": "99",
+                        "sysFstUpdate": "2024-03-07T17:06:00",
+                        "sysLstUser": "",
+                        "sysLstUpdate": "2024-03-07T17:06:00",
+                        "sysBelongTo": "ANTHAI_DEMO",
+                        "logStatus": ""
+                    }
+                }
             },
-            "publisher": { "@id": "https://wiki.matbao.net/#organization" },
-            "image": {
-                "@id": "https://wiki.matbao.net/seo-la-gi-tai-sao-noi-seo-rat-quan-trong-voi-moi-website/#primaryimage"
-            },
-            "keywords": "c\u00f4ng c\u1ee5 seo,d\u1ecbch v\u1ee5 seo,seo,seo l\u00e0 g\u00ec,seo offpage l\u00e0 g\u00ec,seo onpage l\u00e0 g\u00ec,seooffpage l\u00e0 g\u00ec,seoonpage l\u00e0 g\u00ec",
-            "articleSection": "Th\u1ee7 thu\u1eadt"
-        },
-        {
-            "@type": ["Person"],
-            "@id": "https://wiki.matbao.net/#/schema/person/8593d78c01810e546227d14c3a316bf6",
-            "name": "V\u0103n H\u00f9ng Danh",
-            "image": {
-                "@type": "ImageObject",
-                "@id": "https://wiki.matbao.net/#authorlogo",
-                "url": "https://wiki.matbao.net/wp-content/litespeed/avatar/76979e7c1bde0307d35999ab9394a131.jpg?ver=1705556381",
-                "caption": "V\u0103n H\u00f9ng Danh"
-            },
-            "description": "Chuy\u00ean gia SEO t\u1ea1i M\u1eaft B\u00e3o.",
-            "sameAs": [
-                "https://www.facebook.com/vanhungdanh",
-                "https://twitter.com/vanhungdanh"
-            ]
-        }
-    ]
+            {
+                "bookingId": 0,
+                "sellableConfigId": 0,
+                "qty": 1,
+                "amount": 0,
+                "type": "",
+                "booking": {
+                    "recId": 5,
+                    "orderId": 1,
+                    "sellableId": 105,
+                    "bookingRefId": 0,
+                    "sellableConfigId": 108,
+                    "configJson": "[{\"RecId\":108,\"SellableId\":105,\"SellableDetailsId\":0,\"Channel\":\"CUSTOMER\",\"Class\":\"C1\",\"Details\":\"\",\"Settings\":\"\",\"MaxAvaiable\":15,\"Open\":8,\"Sold\":2,\"Avaiable\":10,\"Adult\":1.000000000000000e+007,\"Child\":0.000000000000000e+000,\"Infant\":0.000000000000000e+000,\"OtherPrice01\":0.000000000000000e+000,\"OtherPrice02\":0.000000000000000e+000,\"OtherPrice03\":0.000000000000000e+000,\"OtherPriceNoSeat01\":0.000000000000000e+000,\"limitPerBooking\":0,\"Status\":\"OK\",\"sysFstUser\":\"99\",\"sysFstUpdate\":\"2024-02-24T16:56:00\",\"sysLstUser\":\"\",\"sysLstUpdate\":\"2024-02-24T16:56:00\",\"sysBelongTo\":\"ANTHAI_DEMO\",\"logStatus\":\"\"}]",
+                    "channel": "CUSTOMER",
+                    "class": "C1",
+                    "type": "infant",
+                    "quantity": 1,
+                    "amount": 0,
+                    "status": "OK",
+                    "sysFstUser": "99",
+                    "sysFstUpdate": "2024-03-07T17:06:00",
+                    "sysLstUser": "",
+                    "sysLstUpdate": "2024-03-07T17:06:00",
+                    "sysBelongTo": "ANTHAI_DEMO",
+                    "logStatus": "",
+                    "pax": {
+                        "recId": 5,
+                        "bookingId": 5,
+                        "orderId": 1,
+                        "paxType": "infant",
+                        "paxTitle": "",
+                        "paxLastname": "",
+                        "paxMiddleFirstName": "",
+                        "paxGender": "",
+                        "paxBirthdate": "1900-01-01T00:00:00",
+                        "paxBirthyear": 0,
+                        "paxPhoneNumber": "",
+                        "paxAddress": "",
+                        "paxIdNumber": "",
+                        "paxNatinality": "",
+                        "paxPassportNumber": "",
+                        "paxPassortExpireddate": "1900-01-01T00:00:00",
+                        "paxInfoJson": "",
+                        "status": "OK",
+                        "sysFstUser": "99",
+                        "sysFstUpdate": "2024-03-07T17:06:00",
+                        "sysLstUser": "",
+                        "sysLstUpdate": "2024-03-07T17:06:00",
+                        "sysBelongTo": "ANTHAI_DEMO",
+                        "logStatus": ""
+                    }
+                }
+            }
+        ]
+    },
+    "body": "",
+    "status": "OK",
+    "message": "",
+    "jwt": "",
+    "pageCurrent": 1,
+    "pageSize": 100,
+    "totalPages": 0,
+    "totalItems": 0
 }

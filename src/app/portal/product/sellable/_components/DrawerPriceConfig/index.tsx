@@ -221,6 +221,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
 
         return isEqual({ ...dataObject }, { ...initDataObject });
     }, [data, initPriceConfigValues]);
+
     const handleSubmitFormData = () => {
         sellableRecId &&
             handlerSubmit(
@@ -228,6 +229,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
                 onSubmit,
             );
     };
+
     const columns: (PriceConfigColumnTypes[number] & {
         editable?: boolean;
         dataIndex: string;

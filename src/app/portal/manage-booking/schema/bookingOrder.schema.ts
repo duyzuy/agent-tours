@@ -1,0 +1,36 @@
+import { ObjectSchema, object, string, array, number, mixed } from "yup";
+import { BookingInformationPayload } from "@/models/management/booking/bookingPayload.interface";
+import { PassengerType } from "@/models/management/common.interface";
+import { BookingOrderPassengerFormData } from "../modules/bookingOrder.interface";
+import { EPassengerGender } from "@/constants/common";
+
+export const bookingPassengerInfoSchema: ObjectSchema<BookingOrderPassengerFormData> =
+    object({
+        recId: number().required("Thiếu ID sản phẩm."),
+        paxTitle: string().required("Danh xưng không bỏ trống."),
+        paxLastname: string().required("Họ không bỏ trống."),
+        paxMiddleFirstName: string().required("Tên đệm và tên không bỏ trống."),
+        paxGender: string()
+            .oneOf<EPassengerGender>(
+                [
+                    EPassengerGender.FEMALE,
+                    EPassengerGender.MALE,
+                    EPassengerGender.OTHER,
+                ],
+                "Giới tính không đúng.",
+            )
+            .required("Chọn giới tính."),
+        paxBirthDate: string().required("Ngày sinh không bỏ trống."),
+        paxBirthYear: number().default(1900),
+        paxPhoneNumber: string()
+            .required("Số điện thoại ko bỏ trống.")
+            .matches(/^[0-9]+$/, "Số điện thoại không hợp lệ.")
+            .min(10, "Số điện thoại tối thiểu 10 số.")
+            .max(11, "Số điện thoại không quá 11 số."),
+        paxAddress: string().default(""),
+        paxIdNumber: string().default(""),
+        paxNationality: string().default(""),
+        paxPassportNumber: string().default(""),
+        paxPassortExpiredDate: string().default(""),
+        paxInfoJson: string().default(""),
+    });

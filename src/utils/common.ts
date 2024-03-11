@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE_KEY } from "@/constants/common";
+import { PassengerType } from "@/models/management/common.interface";
 
 export const isSSR = () => typeof window === "undefined";
 
@@ -51,3 +52,16 @@ export function formatNumber(value: number): string {
 
     return value.toString();
 }
+
+export const getPassengerType = (type?: PassengerType) => {
+    if (type === PassengerType.ADULT) {
+        return "Người lớn";
+    }
+    if (type === PassengerType.CHILD) {
+        return "Trẻ em";
+    }
+    if (type === PassengerType.INFANT) {
+        return "Em bé";
+    }
+    return null;
+};

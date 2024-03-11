@@ -1,34 +1,48 @@
+import { PassengerType, Status } from "../common.interface";
+
 export interface IPassengerInformation {
     recId: number;
+    bookingId: number;
+    orderId: number;
     paxTitle: string;
+    type: PassengerType;
     paxLastname: string;
     paxMiddleFirstName: string;
     paxGender: string;
-    paxBirthdate: string;
-    paxBirthyear: number;
+    paxBirthDate: string;
+    paxBirthYear: number;
     paxPhoneNumber: string;
     paxAddress: string;
     paxIdNumber: string;
-    paxNatinality: string;
+    paxNationality: string;
     paxPassportNumber: string;
-    paxPassortExpireddate: string;
+    paxPassortExpiredDate: string;
     paxInfoJson: string;
+    status: Status;
+    sysFstUser: string;
+    sysFstUpdate: string;
+    sysLstUser: string;
+    sysLstUpdate: string;
+    sysBelongTo: string;
+    logStatus: string;
 }
 
-export class PassengerInformationFormData implements IPassengerInformation {
+export class PassengerInformationFormData
+    implements Partial<IPassengerInformation>
+{
     recId: number;
     paxTitle: string;
     paxLastname: string;
     paxMiddleFirstName: string;
     paxGender: string;
-    paxBirthdate: string;
-    paxBirthyear: number;
+    paxBirthDate: string;
+    paxBirthYear: number;
     paxPhoneNumber: string;
     paxAddress: string;
     paxIdNumber: string;
-    paxNatinality: string;
+    paxNationality: string;
     paxPassportNumber: string;
-    paxPassortExpireddate: string;
+    paxPassortExpiredDate: string;
     paxInfoJson: string;
     constructor(
         recId: number,
@@ -36,14 +50,14 @@ export class PassengerInformationFormData implements IPassengerInformation {
         paxLastname: string,
         paxMiddleFirstName: string,
         paxGender: string,
-        paxBirthdate: string,
-        paxBirthyear: number,
+        paxBirthDate: string,
+        paxBirthYear: number,
         paxPhoneNumber: string,
         paxAddress: string,
         paxIdNumber: string,
-        paxNatinality: string,
+        paxNationality: string,
         paxPassportNumber: string,
-        paxPassortExpireddate: string,
+        paxPassortExpiredDate: string,
         paxInfoJson: string,
     ) {
         this.recId = recId;
@@ -51,14 +65,14 @@ export class PassengerInformationFormData implements IPassengerInformation {
         this.paxLastname = paxLastname;
         this.paxMiddleFirstName = paxMiddleFirstName;
         this.paxGender = paxGender;
-        this.paxBirthdate = paxBirthdate;
-        this.paxBirthyear = paxBirthyear;
+        this.paxBirthDate = paxBirthDate;
+        this.paxBirthYear = paxBirthYear;
         this.paxPhoneNumber = paxPhoneNumber;
         this.paxAddress = paxAddress;
         this.paxIdNumber = paxIdNumber;
-        this.paxNatinality = paxNatinality;
+        this.paxNationality = paxNationality;
         this.paxPassportNumber = paxPassportNumber;
-        this.paxPassortExpireddate = paxPassortExpireddate;
+        this.paxPassortExpiredDate = paxPassortExpiredDate;
         this.paxInfoJson = paxInfoJson;
     }
 }

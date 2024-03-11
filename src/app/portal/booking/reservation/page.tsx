@@ -102,7 +102,7 @@ const ReservationPage = () => {
                         <div className="customer__information-body">
                             <div>
                                 <ul>
-                                    <li className="mb-2">
+                                    <li className="mb-2 flex">
                                         <span className="label w-32">
                                             Trạng thái
                                         </span>
@@ -110,7 +110,7 @@ const ReservationPage = () => {
                                             {reservation?.paymentStatus}
                                         </span>
                                     </li>
-                                    <li className="mb-2">
+                                    <li className="mb-2 flex">
                                         <span className="label w-32">
                                             Tour price
                                         </span>
@@ -118,7 +118,7 @@ const ReservationPage = () => {
                                             {reservation?.tourPrice}
                                         </span>
                                     </li>
-                                    <li className="mb-2">
+                                    <li className="mb-2 flex">
                                         <span className="label w-32">
                                             Extra price
                                         </span>
@@ -126,7 +126,7 @@ const ReservationPage = () => {
                                             {reservation?.extraPrice}
                                         </span>
                                     </li>
-                                    <li className="mb-2">
+                                    <li className="mb-2 flex">
                                         <span className="label w-32">
                                             Charge
                                         </span>
@@ -134,7 +134,7 @@ const ReservationPage = () => {
                                             {reservation?.charge}
                                         </span>
                                     </li>
-                                    <li className="mb-2">
+                                    <li className="mb-2 flex">
                                         <span className="label w-32">
                                             Tổng tiền
                                         </span>

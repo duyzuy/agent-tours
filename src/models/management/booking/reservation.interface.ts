@@ -29,3 +29,18 @@ export interface IReservation {
 }
 
 export interface ReservationRs extends BaseResponse<IReservation> {}
+export interface ReservationListRs extends BaseResponse<IReservation[]> {}
+export class BookingOrderListQueryParams {
+    requestObject: object | undefined;
+    pageCurrent: number;
+    pageSize: number;
+    constructor(
+        requestObject: undefined,
+        pageCurrent: number,
+        pageSize: number,
+    ) {
+        this.requestObject = requestObject;
+        this.pageCurrent = pageCurrent;
+        this.pageSize = pageSize;
+    }
+}

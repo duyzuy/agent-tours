@@ -1,10 +1,13 @@
 import { ValidationError, Schema } from "yup";
-import { useState } from "react";
-interface UseSubmitForm<T extends object> {
+import { useState, useEffect } from "react";
+
+interface UseSubmitForm<T extends object | undefined> {
     schema?: Schema<T>;
 }
 export type HandleSubmit<T> = (data: T) => void;
-export function useFormSubmit<T extends object>({ schema }: UseSubmitForm<T>) {
+export function useFormSubmit<T extends object | undefined>({
+    schema,
+}: UseSubmitForm<T>) {
     type TErrorsField = Partial<Record<keyof T, string>>;
 
     const [errors, setErrors] = useState<TErrorsField>();
@@ -33,6 +36,9 @@ export function useFormSubmit<T extends object>({ schema }: UseSubmitForm<T>) {
             onSubmit?.(formData);
         }
     };
+    const clearErrors = () => {
+        setErrors(undefined);
+    };
 
-    return { handlerSubmit, errors };
+    return { handlerSubmit, errors, clearErrors };
 }

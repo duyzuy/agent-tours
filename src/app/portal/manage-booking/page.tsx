@@ -1,16 +1,12 @@
 "use client";
-import PageContainer from "@/components/admin/PageContainer";
-import TableListPage from "@/components/admin/TableListPage";
+
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 export default function ManageBookingPage() {
-    return (
-        <PageContainer
-            name="Quản lý booking"
-            modelName="Quản lý booking"
-            breadCrumItems={[{ title: "Quản lý booking" }]}
-            hideAddButton
-        >
-            <div className=""></div>
-            <TableListPage dataSource={[]} columns={[]} />
-        </PageContainer>
-    );
+    const router = useRouter();
+
+    useEffect(() => {
+        router.push("./portal/manage-booking/order-list");
+    }, []);
+    return null;
 }
