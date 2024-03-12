@@ -11,28 +11,40 @@ export const columnsOrderList: ColumnsType<ReservationRs["result"]> = [
         width: 80,
     },
     {
-        title: "Họ và tên",
-        dataIndex: "custName",
-        key: "custName",
-        width: 120,
+        title: "Tên template sellable",
+        dataIndex: "recId",
+        key: "recId",
+        width: 320,
+        render(value, record, index) {
+            return <>{record.template.name}</>;
+        },
     },
     {
-        title: "Email",
-        dataIndex: "custEmail",
-        key: "custEmail",
+        title: "Sellable code",
+        dataIndex: "recId",
+        key: "recId",
+        width: 160,
+        render(value, record, index) {
+            return <>{record.sellable.code}</>;
+        },
+    },
+    {
+        title: "Người đặt",
+        dataIndex: "custName",
+        key: "custName",
         width: 120,
     },
     {
         title: "Tổng tiền",
         dataIndex: "totalAmount",
         key: "totalAmount",
-        width: 200,
+        width: 180,
         render: (_, record) => {
             return <>{moneyFormatVND(record.totalAmount)}</>;
         },
     },
     {
-        title: "Trạng thái thanh toán",
+        title: "Trạng thái",
         dataIndex: "paymentStatus",
         key: "paymentStatus",
         width: 160,

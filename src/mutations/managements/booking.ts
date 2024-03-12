@@ -5,7 +5,11 @@ import { BookingInformationPayload } from "@/models/management/booking/bookingPa
 import { SearchBookingFormData } from "@/app/portal/booking/modules/searchBooking.interface";
 import { IProductListRs } from "@/models/management/booking/productItem.interface";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
-import { IBookingOrderCustomerAndPassengerPayload } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
+import {
+    IBookingOrderCancelPayload,
+    IBookingOrderCustomerPayload,
+    IBookingOrderPassengersPayload,
+} from "@/app/portal/manage-booking/modules/bookingOrder.interface";
 
 //create folder in public/uploads folder.
 
@@ -29,13 +33,21 @@ export const useCreateBookingMutation = () => {
     });
 };
 
-export const useUpdatePassengerAndCustomerInformationMutation = () => {
-    return useMutation<
-        any,
-        BaseResponse<null>,
-        IBookingOrderCustomerAndPassengerPayload
-    >({
-        mutationFn: (payload) =>
-            bookingAPIs.updateCustomerAndPassenger(payload),
+export const useUpdateCustomerInformationMutation = () => {
+    return useMutation<any, BaseResponse<null>, IBookingOrderCustomerPayload>({
+        mutationFn: (payload) => bookingAPIs.updateCustomer(payload),
+    });
+};
+export const useUpdatePassengersInformationMutation = () => {
+    return useMutation<any, BaseResponse<null>, IBookingOrderPassengersPayload>(
+        {
+            mutationFn: (payload) => bookingAPIs.updatePassengers(payload),
+        },
+    );
+};
+
+export const useCancelBookingOrderMutation = () => {
+    return useMutation<any, BaseResponse<null>, IBookingOrderCancelPayload>({
+        mutationFn: (payload) => bookingAPIs.cancelBookingOrder(payload),
     });
 };

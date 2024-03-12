@@ -178,10 +178,13 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         date,
         dateStr,
     ) => {
+        if (!date) {
+            return;
+        }
         setSellableConfirmFormData((prev) => ({
             ...prev,
-            valid: dateStr[0],
-            validTo: dateStr[1],
+            valid: date[0]?.format(DATE_TIME_FORMAT),
+            validTo: date[1]?.format(DATE_TIME_FORMAT),
         }));
     };
 
@@ -202,18 +205,18 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         } else {
             setSellableConfirmFormData((prev) => ({
                 ...prev,
-                closeDate: closeDateStr,
+                closeDate: closeDate.format(DATE_TIME_FORMAT),
             }));
         }
     };
     const onChangeUsedDateRange: RangePickerProps["onChange"] = (
-        closeDate,
-        closeDateStr,
+        date,
+        dateStr,
     ) => {
-        if (!closeDate) return;
+        if (!date) return;
 
         if (
-            closeDate[1]?.isBefore(
+            date[1]?.isBefore(
                 dayjs(sellableConfirmFormData.validTo, DATE_TIME_FORMAT),
             )
         ) {
@@ -224,8 +227,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         }
         setSellableConfirmFormData((prev) => ({
             ...prev,
-            start: closeDateStr[0],
-            end: closeDateStr[1],
+            start: date[0]?.format(DATE_TIME_FORMAT),
+            end: date[1]?.format(DATE_TIME_FORMAT),
         }));
     };
 
@@ -595,7 +598,7 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                                         ],
                                     }}
                                     placeholder={["Từ ngày", "Đến ngày"]}
-                                    format={DATE_TIME_FORMAT}
+                                    format={"DD/MM/YYYY - HH:mm"}
                                     value={[
                                         sellableConfirmFormData.valid
                                             ? dayjs(
@@ -637,7 +640,7 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                                         ],
                                     }}
                                     placeholder={["Từ ngày", "Đến ngày"]}
-                                    format={DATE_TIME_FORMAT}
+                                    format={"DD/MM/YYYY - HH:mm"}
                                     disabled={false}
                                     value={[
                                         sellableConfirmFormData.start
@@ -681,12 +684,12 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                                         format: TIME_FORMAT,
                                         hideDisabledOptions: true,
                                         defaultValue: dayjs(
-                                            "00:00:00",
+                                            "23:59:59",
                                             "HH:mm:ss",
                                         ),
                                     }}
                                     placeholder="Close date"
-                                    format={DATE_TIME_FORMAT}
+                                    format={"DD/MM/YYYY - HH:mm"}
                                     disabled={false}
                                     value={
                                         sellableConfirmFormData.closeDate

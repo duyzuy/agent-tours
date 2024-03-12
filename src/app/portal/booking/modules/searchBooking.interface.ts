@@ -5,16 +5,16 @@ import { IDestinationSearch } from "@/models/management/booking/searchBooking.in
 
 export class SearchBookingFormData {
     byMonth?: string;
-    byCode: string;
-    byDest: IDestinationSearch[];
-    byProductType: EProductType[];
-    byInventoryType: EInventoryType[];
+    byCode?: string;
+    byDest?: IDestinationSearch[];
+    byProductType?: EProductType[];
+    byInventoryType?: EInventoryType[];
     constructor(
         byMonth: string | undefined,
-        byCode: string,
-        byDest: [],
-        byProductType: EProductType[],
-        byInventoryType: EInventoryType[],
+        byCode: string | undefined,
+        byDest: IDestinationSearch[] | undefined,
+        byProductType: EProductType[] | undefined,
+        byInventoryType: EInventoryType[] | undefined,
     ) {
         this.byMonth = byMonth;
         this.byCode = byCode;

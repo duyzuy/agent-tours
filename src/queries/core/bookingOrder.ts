@@ -20,14 +20,19 @@ export const useGetBookingOrderListCoreQuery = ({
 };
 
 export const useGetBookingDetailCoreQuery = ({
-    enabled = false,
+    enabled = true,
     reservationId,
 }: {
     enabled: boolean;
     reservationId: number;
 }) => {
     return useQuery({
-        queryKey: [queryCore.GET_BOOKING_ORDER_DETAIL, reservationId],
+        queryKey: [
+            queryCore.GET_BOOKING_ORDER_DETAIL,
+            {
+                recId: Number(reservationId),
+            },
+        ],
         queryFn: () => manageBookingAPIs.getOrderDetail(reservationId),
         select: (data) => data.result,
         enabled: enabled,

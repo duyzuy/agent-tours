@@ -1,49 +1,40 @@
 import { Status } from "@/models/management/common.interface";
 
-interface IBookingOrderCustomerPayload {
+export interface IBookingOrderCustomerItem {
     recId?: number;
     custName?: string;
     custPhoneNumber?: string;
     custEmail?: string;
     custAddress?: string;
-    custInfoJson?: string;
     rmk?: string;
-    status?: Status;
 }
 
-export class BookingOrderCustomerFormData
-    implements IBookingOrderCustomerPayload
-{
+export class BookingOrderCustomerFormData implements IBookingOrderCustomerItem {
     recId?: number;
     custName?: string;
     custPhoneNumber?: string;
     custEmail?: string;
     custAddress?: string;
-    custInfoJson?: string;
     rmk?: string;
-    status?: Status;
+
     constructor(
         recId: number,
         custName: string,
         custPhoneNumber: string,
         custEmail: string,
         custAddress: string,
-        custInfoJson: string,
         rmk: string,
-        status: Status,
     ) {
         this.recId = recId;
         this.custName = custName;
         this.custPhoneNumber = custPhoneNumber;
         this.custEmail = custEmail;
         this.custAddress = custAddress;
-        this.custInfoJson = custInfoJson;
         this.rmk = rmk;
-        this.status = status;
     }
 }
 
-interface IBookingOrderPassengerPayload {
+export interface IBookingOrderPassengerItem {
     recId?: number;
     bookingRefId?: number;
     pax: {
@@ -112,7 +103,18 @@ export class BookingOrderPassengerFormData {
     }
 }
 
-export interface IBookingOrderCustomerAndPassengerPayload {
-    bookingOrder?: IBookingOrderCustomerPayload;
-    bookingDetails?: { booking: IBookingOrderPassengerPayload }[];
+export interface IBookingOrderCustomerPayload {
+    bookingOrder?: IBookingOrderCustomerItem;
+}
+
+export interface IBookingOrderPassengersPayload {
+    bookingOrder?: { recId: number };
+    bookingDetails?: { booking: IBookingOrderPassengerItem }[];
+}
+
+export interface IBookingOrderCancelPayload {
+    bookingOrder: {
+        recId?: number;
+        rmk4?: string;
+    };
 }

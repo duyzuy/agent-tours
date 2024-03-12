@@ -93,46 +93,6 @@ export const priceConfigColumns: (PriceConfigColumnTypes[number] & {
         },
     },
     {
-        title: "Other Price 01",
-        dataIndex: "otherPrice01",
-        key: "otherPrice01",
-        width: 120,
-        editable: true,
-        render: (_, { otherPrice01 }) => {
-            return moneyFormatNoSymbol(otherPrice01);
-        },
-    },
-    {
-        title: "Other Price 02",
-        dataIndex: "otherPrice02",
-        key: "otherPrice02",
-        width: 120,
-        editable: true,
-        render: (_, { otherPrice02 }) => {
-            return moneyFormatNoSymbol(otherPrice02);
-        },
-    },
-    {
-        title: "Other Price 03",
-        dataIndex: "otherPrice03",
-        key: "otherPrice03",
-        width: 120,
-        editable: true,
-        render: (_, { otherPrice03 }) => {
-            return moneyFormatNoSymbol(otherPrice03);
-        },
-    },
-    {
-        title: "Other Price no seat 01",
-        dataIndex: "otherPriceNoSeat01",
-        key: "otherPriceNoSeat01",
-        width: 120,
-        editable: true,
-        render: (_, { otherPriceNoSeat01 }) => {
-            return moneyFormatNoSymbol(otherPriceNoSeat01);
-        },
-    },
-    {
         title: "Settings",
         dataIndex: "settings",
         key: "settings",

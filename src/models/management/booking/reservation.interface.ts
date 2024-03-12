@@ -1,4 +1,7 @@
 import { BaseResponse, Status } from "../common.interface";
+import { PriceConfig } from "../core/priceConfig.interface";
+import { ISellable } from "../core/sellable.interface";
+import { ITemplateSellable } from "../core/templateSellable.interface";
 
 export interface IReservation {
     recId: number;
@@ -26,6 +29,10 @@ export interface IReservation {
     sysLstUpdate: string;
     sysBelongTo: string;
     logStatus: string;
+    template: ITemplateSellable;
+    sellable: ISellable & {
+        configs: PriceConfig[] | null;
+    };
 }
 
 export interface ReservationRs extends BaseResponse<IReservation> {}

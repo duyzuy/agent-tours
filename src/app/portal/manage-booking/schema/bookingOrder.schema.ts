@@ -1,7 +1,10 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
 import { BookingInformationPayload } from "@/models/management/booking/bookingPayload.interface";
 import { PassengerType } from "@/models/management/common.interface";
-import { BookingOrderPassengerFormData } from "../modules/bookingOrder.interface";
+import {
+    BookingOrderCustomerFormData,
+    BookingOrderPassengerFormData,
+} from "../modules/bookingOrder.interface";
 import { EPassengerGender } from "@/constants/common";
 
 export const bookingPassengerInfoSchema: ObjectSchema<BookingOrderPassengerFormData> =
@@ -33,4 +36,14 @@ export const bookingPassengerInfoSchema: ObjectSchema<BookingOrderPassengerFormD
         paxPassportNumber: string().default(""),
         paxPassortExpiredDate: string().default(""),
         paxInfoJson: string().default(""),
+    });
+
+export const bookingCustomerInfoSchema: ObjectSchema<BookingOrderCustomerFormData> =
+    object({
+        recId: number().required("Thiếu ID order sản phẩm."),
+        custName: string().required("Họ tên không bỏ trống."),
+        custPhoneNumber: string().required("Số điện thoại không bỏ trống."),
+        custEmail: string().required("Email không bỏ trống."),
+        custAddress: string().default(""),
+        rmk: string().default(""),
     });

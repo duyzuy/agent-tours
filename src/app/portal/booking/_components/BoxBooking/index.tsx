@@ -27,6 +27,8 @@ import locale from "antd/es/date-picker/locale/vi_VN";
 import FormItem from "@/components/base/FormItem";
 import dayjs from "dayjs";
 import { useBookingSelector } from "../../hooks/useBooking";
+import { EProductType } from "@/models/management/core/productType.interface";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 export interface BoxBookingProps {
     departLocation?: string;
     departDate?: string;
@@ -41,11 +43,11 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetLocalSearchListMISCQuery();
 
-    const { data: productType, isLoading: isLoadingProductType } =
+    const { data: inventoryType, isLoading: isLoadingProductType } =
         useGetInventoryTypeListCoreQuery({
             enabled: true,
         });
-    const { data: inventoryType, isLoading: isLoadingInventoryType } =
+    const { data: productType, isLoading: isLoadingInventoryType } =
         useGetProductTypeListCoreQuery({
             enabled: true,
         });
@@ -56,7 +58,6 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
     const { handlerSubmit, errors } = useFormSubmit({
         schema: searchBookingSchema,
     });
-
     const bookingInfo = useBookingSelector();
 
     const searchInfo = useMemo(() => {
@@ -75,6 +76,24 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
             byCode: code,
         }));
     };
+    const onChangeProductType: SelectProps<EProductType[]>["onChange"] = (
+        values,
+    ) => {
+        setFormData((prev) => ({
+            ...prev,
+            byProductType: [...values],
+        }));
+    };
+
+    const onChangeInventoryType: SelectProps<EInventoryType[]>["onChange"] = (
+        values,
+    ) => {
+        setFormData((prev) => ({
+            ...prev,
+            byInventoryType: [...values],
+        }));
+    };
+
     const onChangeDestination: SelectProps<
         number,
         | LocalSearchDestinationListRs["result"][0]
@@ -106,7 +125,6 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                         <FormItem
                             label="Điểm đến"
                             className="departure-location"
-                            required
                             validateStatus={errors?.byDest ? "error" : ""}
                             help={errors?.byDest || ""}
                         >
@@ -132,7 +150,6 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                     <Col span={4}>
                         <FormItem
                             label="Thời gian đi"
-                            required
                             validateStatus={errors?.byMonth ? "error" : ""}
                             help={errors?.byMonth || ""}
                         >
@@ -149,7 +166,7 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                         </FormItem>
                     </Col>
                     <Col span={4}>
-                        <FormItem label="Code" required>
+                        <FormItem label="Code">
                             <Input
                                 placeholder="Nhập code"
                                 value={formData.byCode}
@@ -162,6 +179,8 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                     <Col span={3}>
                         <FormItem label="Loại Inventory">
                             <Select
+                                mode="multiple"
+                                maxTagCount="responsive"
                                 placeholder="Chọn loại inventory"
                                 bordered={false}
                                 loading={isLoadingInventoryType}
@@ -173,7 +192,7 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                                         value: type,
                                     })) || []
                                 }
-                                onChange={() => {}}
+                                onChange={onChangeInventoryType}
                                 getPopupContainer={(triggerNode) =>
                                     triggerNode.parentElement.parentElement
                                 }
@@ -184,7 +203,9 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                     <Col span={3}>
                         <FormItem label="Loại sản phẩm">
                             <Select
+                                mode="multiple"
                                 placeholder="Chọn loại sản phẩm"
+                                maxTagCount="responsive"
                                 bordered={false}
                                 loading={isLoadingProductType}
                                 style={{ padding: 0 }}
@@ -195,7 +216,7 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                                         value: type,
                                     })) || []
                                 }
-                                onChange={() => {}}
+                                onChange={onChangeProductType}
                                 getPopupContainer={(triggerNode) =>
                                     triggerNode.parentElement.parentElement
                                 }
@@ -237,9 +258,6 @@ const SearchBookingWrapper = styled(`div`)`
             .travel-form-item-explain-error {
                 font-size: 12px;
             }
-            .travel-form-item-control-input {
-                min-height: auto;
-            }
         }
     }
     .travel-select-single.travel-select-lg:not(.travel-select-customize-input),
@@ -251,12 +269,16 @@ const SearchBookingWrapper = styled(`div`)`
                 inset-inline-start: 0px;
                 inset-inline-end: 0px;
             }
-            .travel-select-selection-search-input {
-                height: auto;
-            }
         }
     }
-    .travel-select-single.travel-select-lg {
-        height: 26px;
+
+    .travel-select-multiple.travel-select-lg {
+        .travel-select-selection-placeholder {
+            inset-inline-start: 0px;
+            inset-inline-end: 0px;
+        }
+        .travel-select-selection-search {
+            margin-inline-start: -4px;
+        }
     }
 `;

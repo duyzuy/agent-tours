@@ -65,7 +65,7 @@ const PageContainer: React.FC<Props> = ({
                 />
                 {hideBreadcrumb ? null : <Breadcrumb items={items} />}
             </div>
-            <div className="page-body" style={{ height: "calc(100% - 52px)" }}>
+            <div className="page-body" style={{ height: "calc(100% - 62px)" }}>
                 {children ? children : null}
             </div>
         </div>

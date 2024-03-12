@@ -10,20 +10,20 @@ import { useState } from "react";
 import { getPassengerType } from "@/utils/common";
 import {
     BookingOrderPassengerFormData,
-    IBookingOrderCustomerAndPassengerPayload,
+    IBookingOrderPassengersPayload,
 } from "../../../modules/bookingOrder.interface";
 import { isUndefined } from "lodash";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "@/constants/common";
 interface OrderDetailProps {
     bookingsDetail: IBookingOrderDetail["bookingDetails"];
-    onSave?: (
-        data?: IBookingOrderCustomerAndPassengerPayload["bookingDetails"],
-    ) => void;
+    onSave?: (data?: IBookingOrderPassengersPayload, cb?: () => void) => void;
+    orderId: number;
 }
 
 const BookingDetail: React.FC<OrderDetailProps> = ({
     bookingsDetail,
+    orderId,
     onSave,
 }) => {
     const [record, setEditRecord] =
@@ -49,15 +49,26 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
             throw new Error("Thiếu chi tiết booking.");
         }
 
-        onSave?.([
+        onSave?.(
             {
-                booking: {
-                    recId: record.booking.recId,
-                    bookingRefId: record.booking.bookingRefId,
-                    pax: data,
+                bookingOrder: {
+                    recId: orderId,
                 },
+                bookingDetails: [
+                    {
+                        booking: {
+                            recId: record.booking.recId,
+                            bookingRefId: record.booking.bookingRefId,
+                            pax: data,
+                        },
+                    },
+                ],
             },
-        ]);
+            () => {
+                setEditRecord(undefined);
+                setShowDrawer(false);
+            },
+        );
     };
     return (
         <>
@@ -82,7 +93,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 <span className="block text-xs">
                                                     Channel
                                                 </span>
-                                                <span>
+                                                <span className="font-[500]">
                                                     {
                                                         bookingDetail.booking
                                                             .channel
@@ -93,7 +104,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 <span className="block text-xs">
                                                     Class
                                                 </span>
-                                                <span>
+                                                <span className="font-[500]">
                                                     {
                                                         bookingDetail.booking
                                                             .class
@@ -105,7 +116,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 <span className="block text-xs">
                                                     Loại hành khách
                                                 </span>
-                                                <span>
+                                                <span className="font-[500]">
                                                     {getPassengerType(
                                                         bookingDetail.booking
                                                             .type,
@@ -116,7 +127,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 <span className="block text-xs">
                                                     Số lượng
                                                 </span>
-                                                <span>
+                                                <span className="font-[500]">
                                                     {
                                                         bookingDetail.booking
                                                             .quantity
@@ -127,7 +138,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 <span className="block text-xs">
                                                     Giá tiền
                                                 </span>
-                                                <span>
+                                                <span className="font-[500]">
                                                     {moneyFormatVND(
                                                         bookingDetail.booking
                                                             .amount,
@@ -144,7 +155,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="block text-xs">
                                                             Danh xưng
                                                         </span>
-                                                        <span>
+                                                        <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
                                                                 .paxTitle ||
@@ -157,7 +168,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="block text-xs">
                                                             Giới tính
                                                         </span>
-                                                        <span>
+                                                        <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
                                                                 .paxGender ||
@@ -172,7 +183,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="block text-xs">
                                                             Họ
                                                         </span>
-                                                        <span>
+                                                        <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
                                                                 .paxLastname ||
@@ -185,7 +196,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="block text-xs">
                                                             Tên đệm và tên
                                                         </span>
-                                                        <span>
+                                                        <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
                                                                 .paxMiddleFirstName ||
@@ -200,7 +211,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="block text-xs">
                                                             Ngày sinh
                                                         </span>
-                                                        <span>
+                                                        <span className="font-[500]">
                                                             {formatDate(
                                                                 bookingDetail
                                                                     .booking.pax
@@ -212,9 +223,9 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 <Col span={12}>
                                                     <div>
                                                         <span className="block text-xs">
-                                                            Số CCCD
+                                                            Số Passport/CCCD
                                                         </span>
-                                                        <span>
+                                                        <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
                                                                 .paxPassportNumber ||
@@ -229,7 +240,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="block text-xs">
                                                             Quốc tịch
                                                         </span>
-                                                        <span>
+                                                        <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
                                                                 .paxNationality ||
@@ -242,7 +253,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="block text-xs">
                                                             Số điện thoại
                                                         </span>
-                                                        <span>
+                                                        <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
                                                                 .paxPhoneNumber ||
@@ -261,6 +272,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                     )
                                                 }
                                                 ghost
+                                                size="small"
                                                 icon={<EditOutlined />}
                                             >
                                                 Sửa thông tin
@@ -285,6 +297,5 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
 export default BookingDetail;
 
 const formatDate = (dateStr: string, fm = "DD/MM/YYYY") => {
-    console.log(dayjs("22Aug24"));
     return dayjs(dateStr).format(fm);
 };

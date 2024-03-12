@@ -44,6 +44,7 @@ dayjs.locale("en");
 dayjs.locale("vi");
 
 const { RangePicker } = DatePicker;
+
 interface SellableFormContainerProps {
     templateList: ITemplateSaleableListRs["result"];
     onSubmit?: (data: SellableFormData, cb?: () => void) => void;
@@ -123,12 +124,12 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
         date,
         dateStr,
     ) => {
-        console.log("change");
         setSellableFormData((prev) => ({
             ...prev,
-            valid: dateStr[0],
-            validTo: dateStr[1],
-            closeDate: dateStr[1], // default when create closeDate equal ValidTo date
+            valid: date ? date[0]?.format(DATE_TIME_FORMAT) : undefined,
+            validTo: date ? date[1]?.format(DATE_TIME_FORMAT) : undefined,
+            closeDate: date ? date[1]?.format(DATE_TIME_FORMAT) : undefined, // default when create closeDate equal ValidTo date
+            fromValidTo: undefined,
         }));
     };
 
@@ -145,9 +146,9 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
         }
 
         if (
-            dayjs(dateStr[1], DATE_TIME_FORMAT).isBefore(
-                dayjs(sellableFormData.validTo, DATE_TIME_FORMAT),
-            )
+            date &&
+            date[1] &&
+            date[1].isBefore(dayjs(sellableFormData.validTo, DATE_TIME_FORMAT))
         ) {
             message.error(
                 "Ngày kết thúc sử dụng phải sau ngày kết thúc mở bán.",
@@ -156,17 +157,25 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
         }
         setSellableFormData((prev) => ({
             ...prev,
-            start: dateStr[0],
-            end: dateStr[1],
+            start: date ? date[0]?.format(DATE_TIME_FORMAT) : undefined,
+            end: date ? date[1]?.format(DATE_TIME_FORMAT) : undefined,
         }));
     };
     const onChangeValidFromTo: DatePickerProps["onChange"] = (
         date,
         dateStr,
     ) => {
+        if (
+            isUndefined(sellableFormData.valid) ||
+            isUndefined(sellableFormData.validTo)
+        ) {
+            message.error("Vui lòng Chọn ngày mở bán trước.");
+            return;
+        }
+
         setSellableFormData((prev) => ({
             ...prev,
-            fromValidTo: dateStr,
+            fromValidTo: date?.format(DATE_TIME_FORMAT),
         }));
     };
 
@@ -242,12 +251,12 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
     };
     const onChangeExclusiveDates = (
         exclIndx: number,
-        dateStr: [string, string],
+        dates: (string | undefined)[],
     ) => {
         const exclusiveDates = [...sellableFormData.exclusives];
         exclusiveDates.splice(exclIndx, 1, {
-            from: dateStr[0],
-            to: dateStr[1],
+            from: dates[0],
+            to: dates[1],
         });
 
         setSellableFormData((prev) => ({
@@ -362,7 +371,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                         ],
                     }}
                     placeholder={["Từ ngày", "Đến ngày"]}
-                    format={DATE_TIME_FORMAT}
+                    format={"DD/MM/YYYY - HH:mm"}
                     value={[
                         sellableFormData.valid
                             ? dayjs(sellableFormData.valid, DATE_TIME_FORMAT)
@@ -375,7 +384,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                         return dayjs().isAfter(date);
                     }}
                     onChange={onChangeValidDateRange}
-                    className="w-full max-w-[320px]"
+                    className="w-full max-w-[380px]"
                 />
             </FormItem>
             <FormItem
@@ -395,7 +404,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                         ],
                     }}
                     placeholder={["Từ ngày", "Đến ngày"]}
-                    format={DATE_TIME_FORMAT}
+                    format={"DD/MM/YYYY - HH:mm"}
                     value={[
                         sellableFormData.start
                             ? dayjs(sellableFormData.start, DATE_TIME_FORMAT)
@@ -414,7 +423,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                         );
                     }}
                     onChange={onChangeUsedDateRange}
-                    className="w-full max-w-[320px]"
+                    className="w-full max-w-[380px]"
                 />
             </FormItem>
 
@@ -455,7 +464,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                                               )
                                             : null
                                     }
-                                    format={DATE_TIME_FORMAT}
+                                    format={"DD/MM/YYYY - HH:mm"}
                                     className="w-full"
                                 />
                             </Col>
@@ -485,7 +494,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                                               ).isAfter(date)
                                             : dayjs().isAfter(date);
                                     }}
-                                    format={DATE_TIME_FORMAT}
+                                    format={"DD/MM/YYYY - HH:mm"}
                                     onChange={onChangeValidFromTo}
                                     className="w-full"
                                 />
@@ -565,9 +574,16 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                             <Row className="mb-3" key={indx}>
                                 <Col span={12}>
                                     <RangePicker
-                                        showTime={{ format: TIME_FORMAT }}
-                                        placeholder={["Date from", "Date to"]}
-                                        format={DATE_TIME_FORMAT}
+                                        showTime={{
+                                            format: TIME_FORMAT,
+                                            hideDisabledOptions: true,
+                                            defaultValue: [
+                                                dayjs("00:00:00", "HH:mm:ss"),
+                                                dayjs("23:59:59", "HH:mm:ss"),
+                                            ],
+                                        }}
+                                        placeholder={["Từ ngày", "Đến ngày"]}
+                                        format={"DD/MM/YYYY - HH:mm"}
                                         value={[
                                             exclDate.from
                                                 ? dayjs(
@@ -598,7 +614,15 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                                         onChange={(date, dateStr) =>
                                             onChangeExclusiveDates(
                                                 indx,
-                                                dateStr,
+                                                (date && [
+                                                    date[0]?.format(
+                                                        DATE_TIME_FORMAT,
+                                                    ),
+                                                    date[1]?.format(
+                                                        DATE_TIME_FORMAT,
+                                                    ),
+                                                ]) ||
+                                                    [],
                                             )
                                         }
                                         className="w-full"

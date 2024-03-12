@@ -16,10 +16,6 @@ export interface PriceConfig {
     infant: number;
     settings: "B2C" | string;
     descriptions: string;
-    otherPrice01: number;
-    otherPrice02: number;
-    otherPrice03: number;
-    otherPriceNoSeat01: number;
     sysFstUser: string;
     sysFstUpdate: string;
     sysLstUser: string;
@@ -44,10 +40,6 @@ export interface SellablePriceConfigPayload {
         adult?: number;
         child?: number;
         infant?: number;
-        otherPrice01?: number;
-        otherPrice02?: number;
-        otherPrice03?: number;
-        otherPriceNoSeat01?: number;
     }[];
 }
 
@@ -64,10 +56,6 @@ export class SellablePriceConfigFormData {
         adult?: number;
         child?: number;
         infant?: number;
-        otherPrice01?: number;
-        otherPrice02?: number;
-        otherPrice03?: number;
-        otherPriceNoSeat01?: number;
     }[];
 
     constructor(

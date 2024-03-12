@@ -53,10 +53,7 @@ type PriceConfigEditingKeysType = Pick<
     | "infant"
     | "maxAvaiable"
     | "avaiable"
-    | "otherPrice01"
-    | "otherPrice02"
-    | "otherPrice03"
-    | "otherPriceNoSeat01"
+    | "limitPerBooking"
 >;
 
 export type PriceConfigColumnTypes = Exclude<
@@ -223,6 +220,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
     }, [data, initPriceConfigValues]);
 
     const handleSubmitFormData = () => {
+        console.log(sellableRecId, data);
         sellableRecId &&
             handlerSubmit(
                 { sellableRecId, configs: data } as SellablePriceConfigFormData,

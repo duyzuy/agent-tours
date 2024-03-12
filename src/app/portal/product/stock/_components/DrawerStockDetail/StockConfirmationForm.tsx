@@ -71,8 +71,10 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     ) => {
         setStockConfirmFormData((prev) => ({
             ...prev,
-            valid: dateStr[0],
-            validTo: dateStr[1],
+            valid: date ? date[0]?.format(DATE_TIME_FORMAT) : undefined,
+            validTo: date ? date[1]?.format(DATE_TIME_FORMAT) : undefined,
+            // start: undefined,
+            // end: undefined,
         }));
     };
     const onChangeUsedDateRange: RangePickerProps["onChange"] = (
@@ -81,8 +83,8 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     ) => {
         setStockConfirmFormData((prev) => ({
             ...prev,
-            start: dateStr[0],
-            end: dateStr[1],
+            start: date ? date[0]?.format(DATE_TIME_FORMAT) : undefined,
+            end: date ? date[1]?.format(DATE_TIME_FORMAT) : undefined,
         }));
     };
 
@@ -131,9 +133,15 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                     help={errors?.valid || errors?.validTo || ""}
                 >
                     <RangePicker
-                        showTime={{ format: TIME_FORMAT }}
-                        placeholder={["Date from", "Date to"]}
-                        format={DATE_TIME_FORMAT}
+                        showTime={{
+                            format: TIME_FORMAT,
+                            defaultValue: [
+                                dayjs("00:00:00", "HH:mm:ss"),
+                                dayjs("23:59:59", "HH:mm:ss"),
+                            ],
+                        }}
+                        placeholder={["Từ ngày", "Đến ngày"]}
+                        format={"DD/MM/YYYY - HH:mm"}
                         disabled={hasApproval}
                         value={[
                             stockConfirmFormData.valid
@@ -163,9 +171,15 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                     help={errors?.start || errors?.end || ""}
                 >
                     <RangePicker
-                        showTime={{ format: TIME_FORMAT }}
-                        placeholder={["Date from", "Date to"]}
-                        format={DATE_TIME_FORMAT}
+                        showTime={{
+                            format: TIME_FORMAT,
+                            defaultValue: [
+                                dayjs("00:00:00", "HH:mm:ss"),
+                                dayjs("23:59:59", "HH:mm:ss"),
+                            ],
+                        }}
+                        placeholder={["Từ ngày", "Đến ngày"]}
+                        format={"DD/MM/YYYY - HH:mm"}
                         disabled={hasApproval}
                         value={[
                             stockConfirmFormData.start
@@ -185,7 +199,7 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                             return dayjs().isAfter(date);
                         }}
                         onChange={onChangeUsedDateRange}
-                        className="w-full "
+                        className="w-full"
                     />
                 </FormItem>
 

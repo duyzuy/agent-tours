@@ -41,6 +41,7 @@ export default function ManageBookingOrderListPage() {
                 onEdit={(record) =>
                     router.push(`./portal/manage-booking/${record.recId}`)
                 }
+                scroll={{ x: 1200 }}
                 showActionsLess={false}
             />
         </PageContainer>

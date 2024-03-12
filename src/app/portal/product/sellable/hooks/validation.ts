@@ -298,18 +298,6 @@ export const priceConfigSchema: ObjectSchema<SellablePriceConfigPayload> =
                     adult: number().required("adult không bỏ trống"),
                     child: number().required("child không bỏ trống"),
                     infant: number().required("infant không bỏ trống"),
-                    otherPrice01: number().required(
-                        "otherPrice01 không bỏ trống",
-                    ),
-                    otherPrice02: number().required(
-                        "otherPrice02 không bỏ trống",
-                    ),
-                    otherPrice03: number().required(
-                        "otherPrice03 không bỏ trống",
-                    ),
-                    otherPriceNoSeat01: number().required(
-                        "otherPriceNoSeat01 không bỏ trống",
-                    ),
                     open: number().optional(),
                     sold: number().optional(),
                     sellableDetailsId: number().optional(),

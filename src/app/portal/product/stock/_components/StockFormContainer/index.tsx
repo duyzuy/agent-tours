@@ -157,8 +157,11 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     ) => {
         setStockFormData((prev) => ({
             ...prev,
-            valid: dateStr[0],
-            validTo: dateStr[1],
+            valid:
+                date && date[0] ? date[0]?.format(DATE_TIME_FORMAT) : undefined,
+            validTo:
+                date && date[1] ? date[1]?.format(DATE_TIME_FORMAT) : undefined,
+            fromValidTo: undefined,
         }));
     };
 
@@ -177,19 +180,29 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             message.error("Ngày kết thúc phải lớn hơn ngày kết thúc mở bán.");
             return;
         }
+
         setStockFormData((prev) => ({
             ...prev,
-            start: dateStr[0],
-            end: dateStr[1],
+            start:
+                date && date[0] ? date[0]?.format(DATE_TIME_FORMAT) : undefined,
+            end:
+                date && date[1] ? date[1]?.format(DATE_TIME_FORMAT) : undefined,
         }));
     };
     const onChangeValidFromTo: DatePickerProps["onChange"] = (
         date,
         dateStr,
     ) => {
+        if (
+            isUndefined(stockFormData.valid) ||
+            isUndefined(stockFormData.validTo)
+        ) {
+            message.error("Vui lòng Chọn ngày mở bán trước.");
+            return;
+        }
         setStockFormData((prev) => ({
             ...prev,
-            fromValidTo: dateStr,
+            fromValidTo: date?.format(DATE_TIME_FORMAT),
         }));
     };
 
@@ -256,7 +269,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     };
     const onChangeExclusiveDates = (
         exclIndx: number,
-        dateStr: [string, string],
+        dateStr: (string | undefined)[],
     ) => {
         const exclusiveDates = [...stockFormData.exclusives];
         exclusiveDates.splice(exclIndx, 1, {
@@ -393,7 +406,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         ],
                     }}
                     placeholder={["Từ ngày", "Đến ngày"]}
-                    format={DATE_TIME_FORMAT}
+                    format={"DD/MM/YYYY - HH:mm"}
                     value={[
                         stockFormData.valid
                             ? dayjs(stockFormData.valid, DATE_TIME_FORMAT)
@@ -406,7 +419,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         return dayjs().isAfter(date);
                     }}
                     onChange={onChangeValidDateRange}
-                    className="w-full max-w-[320px]"
+                    className="w-full max-w-[380px]"
                 />
             </FormItem>
             <FormItem
@@ -425,7 +438,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         ],
                     }}
                     placeholder={["Từ ngày", "Đến ngày"]}
-                    format={DATE_TIME_FORMAT}
+                    format={"DD/MM/YYYY - HH:mm"}
                     value={[
                         stockFormData.start
                             ? dayjs(stockFormData.start, DATE_TIME_FORMAT)
@@ -444,7 +457,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                         );
                     }}
                     onChange={onChangeUsedDateRange}
-                    className="w-full max-w-[320px]"
+                    className="w-full max-w-[380px]"
                 />
             </FormItem>
 
@@ -491,7 +504,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                               )
                                             : null
                                     }
-                                    format={DATE_TIME_FORMAT}
+                                    format={"DD/MM/YYYY - HH:mm"}
                                     className="w-full"
                                 />
                             </Col>
@@ -512,7 +525,15 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                               ).isAfter(date)
                                             : dayjs().isAfter(date);
                                     }}
-                                    format={DATE_TIME_FORMAT}
+                                    value={
+                                        stockFormData.fromValidTo
+                                            ? dayjs(
+                                                  stockFormData.fromValidTo,
+                                                  DATE_TIME_FORMAT,
+                                              )
+                                            : null
+                                    }
+                                    format={"DD/MM/YYYY - HH:mm"}
                                     onChange={onChangeValidFromTo}
                                     className="w-full"
                                 />
@@ -597,7 +618,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                             ],
                                         }}
                                         placeholder={["Từ ngày", "Đến ngày"]}
-                                        format={DATE_TIME_FORMAT}
+                                        format={"DD/MM/YYYY - HH:mm"}
                                         value={[
                                             exclDate.from
                                                 ? dayjs(
@@ -628,10 +649,18 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                         onChange={(date, dateStr) =>
                                             onChangeExclusiveDates(
                                                 indx,
-                                                dateStr,
+                                                (date && [
+                                                    date[0]?.format(
+                                                        DATE_TIME_FORMAT,
+                                                    ),
+                                                    date[1]?.format(
+                                                        DATE_TIME_FORMAT,
+                                                    ),
+                                                ]) ||
+                                                    [],
                                             )
                                         }
-                                        className="w-full"
+                                        className="w-full max-w-[380px]"
                                     />
                                 </Col>
                                 <Col flex={1}>
