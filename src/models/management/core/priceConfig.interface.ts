@@ -3,6 +3,7 @@ import { BaseResponse, Status } from "../common.interface";
 export interface PriceConfig {
     recId: number;
     sellableId: number;
+    sellableDetailsId: number;
     channel: string;
     class: string;
     maxAvaiable: number;

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
 
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
+import { bookingAPIs } from "@/services/management/booking/searchTour";
 import { BookingOrderListQueryParams } from "@/models/management/booking/reservation.interface";
 
 export const useGetBookingOrderListCoreQuery = ({
@@ -34,6 +35,26 @@ export const useGetBookingDetailCoreQuery = ({
             },
         ],
         queryFn: () => manageBookingAPIs.getOrderDetail(reservationId),
+        select: (data) => data.result,
+        enabled: enabled,
+    });
+};
+
+export const useGetBookingTourServicesCoreQuery = ({
+    enabled = true,
+    sellableId,
+}: {
+    enabled: boolean;
+    sellableId?: number;
+}) => {
+    return useQuery({
+        queryKey: [
+            queryCore.GET_BOOKING_BOOKING_TOUR_SERVIES,
+            {
+                sellableId: Number(sellableId),
+            },
+        ],
+        queryFn: () => bookingAPIs.getServices(sellableId),
         select: (data) => data.result,
         enabled: enabled,
     });

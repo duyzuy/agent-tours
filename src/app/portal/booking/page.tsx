@@ -1,86 +1,44 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import BoxBooking from "./_components/BoxBooking";
-import { IProductItem } from "@/models/management/booking/productItem.interface";
-
-import CustomTable from "@/components/admin/CustomTable";
-import { columnsProduct } from "./columnsProduct";
-import { Button } from "antd";
-import DrawerBookingSelection, {
-    DrawerBookingSelectionProps,
-} from "./_components/DrawerBookingSelection";
-import { ColumnsType } from "antd/es/table";
+import { Button, Empty, Spin } from "antd";
 import useBooking from "./hooks/useBooking";
-import { useRouter } from "next/navigation";
 import useSearchBookingInformation from "./modules/useSearchBookingInformation";
+import TourBoxItem from "./_components/TourBoxItem";
+import { isUndefined } from "lodash";
+import { UndoOutlined } from "@ant-design/icons";
+import { PassengerType } from "@/models/management/common.interface";
+import PassengerQuantity from "./_components/PassengerQuantity";
+
+import useSelectProductTour from "./modules/useSelectProductTour";
+
 const BookingPage = () => {
     const [bookingInformation, setBookingInformation] = useBooking();
-    const [showDrawer, setShowDrawer] = useState(false);
-
-    const [record, setRecord] = useState<IProductItem>();
-
-    const router = useRouter();
-    const { onSearchBooking } = useSearchBookingInformation();
+    const { onSearchBooking, isLoading } = useSearchBookingInformation();
 
     const productList = useMemo(
         () => bookingInformation?.productList,
         [bookingInformation],
     );
+
+    const isSearched = useMemo(() => {
+        return (
+            !isUndefined(bookingInformation.searchBooking?.byMonth) &&
+            !isUndefined(bookingInformation.searchBooking?.byDest)
+        );
+    }, [bookingInformation]);
+
     const productSelectedItem = useMemo(() => {
         return bookingInformation.bookingInfo?.product;
     }, [bookingInformation]);
 
-    const onSelectProduct = (productItem: IProductItem) => {
-        setRecord(productItem);
-        setShowDrawer(true);
-    };
-
-    const handleClickNext: DrawerBookingSelectionProps["onClickNext"] = (
-        passengerSelection,
-        productItem,
-    ) => {
-        if (passengerSelection.length && productItem) {
-            setShowDrawer(false);
-            setBookingInformation((prev) => ({
-                ...prev,
-                bookingInfo: {
-                    ...prev.bookingInfo,
-                    passengerSelections: passengerSelection,
-                    product: productItem,
-                },
-            }));
-            router.push("./portal/booking/customer-information");
-        }
-    };
-
-    const customColumns: ColumnsType<IProductItem> = [
-        ...columnsProduct,
-        {
-            dataIndex: "action",
-            key: "action",
-            width: 100,
-            render: (_, record) => {
-                return (
-                    <Button
-                        type="primary"
-                        ghost
-                        size="small"
-                        onClick={() => onSelectProduct(record)}
-                        className="w-20"
-                    >
-                        {record.recId === productSelectedItem?.recId
-                            ? "Đang chọn"
-                            : "Chọn"}
-                    </Button>
-                );
-            },
-        },
-    ];
+    const { onNext, onSetQuantityPassenger, onReselectTour } =
+        useSelectProductTour();
 
     return (
         <div className="page">
             <div
-                className="header-page p-6 bg-gray-200 rounded-lg mb-6"
+                className="header-page p-6 bg-gray-200 rounded-lg mb-14"
                 style={{
                     background: "url('/assets/images/bg-header.png')",
                     backgroundSize: "cover",
@@ -88,28 +46,112 @@ const BookingPage = () => {
                 }}
             >
                 <div className="h-44"></div>
-                <BoxBooking
-                    className="searchbox px-6 py-4 bg-white shadow-lg rounded-lg"
-                    onSubmit={onSearchBooking}
-                />
+                <BoxBooking className="searchbox" onSubmit={onSearchBooking} />
             </div>
             <div className="tours-wrapper">
-                <h3 className="text-lg py-3 font-bold">Danh sách tìm kiếm</h3>
-                <div className="tour-list">
-                    <CustomTable
-                        rowKey={"recId"}
-                        // loading={isPending}
-                        dataSource={productList}
-                        columns={customColumns}
-                    ></CustomTable>
-                </div>
+                {isLoading ? (
+                    <Spin tip="Đang tìm kiếm...">
+                        <div className="content" />
+                    </Spin>
+                ) : (
+                    <div className="tour-list">
+                        {isSearched ? (
+                            <>
+                                {(productList?.length &&
+                                    productList.map((item) => (
+                                        <TourBoxItem
+                                            key={item.recId}
+                                            tour={item}
+                                            isSelected={
+                                                item.recId ===
+                                                productSelectedItem?.recId
+                                            }
+                                            hideBoxNotSelect={
+                                                !isUndefined(
+                                                    productSelectedItem,
+                                                )
+                                            }
+                                            onSelect={() =>
+                                                setBookingInformation(
+                                                    (prev) => ({
+                                                        ...prev,
+                                                        bookingInfo: {
+                                                            ...prev.bookingInfo,
+                                                            product: item,
+                                                        },
+                                                    }),
+                                                )
+                                            }
+                                        />
+                                    ))) || (
+                                    <Empty description="Không có tour nào" />
+                                )}
+                            </>
+                        ) : null}
+                        {!isUndefined(productSelectedItem) ? (
+                            <div className="text-right mb-2">
+                                <span
+                                    className="inline-flex text-primary-default cursor-pointer"
+                                    onClick={onReselectTour}
+                                >
+                                    <UndoOutlined size={12} />
+                                    <span className="ml-2 inline-block">
+                                        Chọn lại
+                                    </span>
+                                </span>
+                            </div>
+                        ) : null}
+                        {productSelectedItem ? (
+                            <div className="passenger__selection-box border px-6 py-4 rounded-[3px]">
+                                <div>
+                                    <div className="mb-3">
+                                        <span className="block text-lg font-[500]">
+                                            Nhập số lượng khách
+                                        </span>
+                                        <p>
+                                            * Giá lựa chọn sẽ dc áp dụng cho
+                                            toàn bộ hành khách trong tour.
+                                        </p>
+                                    </div>
+                                    <div className="line h-[1px] mt-4 mb-4 bg-slate-100"></div>
+                                    <div className="flex justify-between items-center">
+                                        <PassengerQuantity
+                                            adultAmount={
+                                                bookingInformation.searchBooking
+                                                    ?.passengers[
+                                                    PassengerType.ADULT
+                                                ] || 1
+                                            }
+                                            childAmount={
+                                                bookingInformation.searchBooking
+                                                    ?.passengers[
+                                                    PassengerType.CHILD
+                                                ] || 0
+                                            }
+                                            infantAmount={
+                                                bookingInformation.searchBooking
+                                                    ?.passengers[
+                                                    PassengerType.INFANT
+                                                ] || 0
+                                            }
+                                            onSetQuantityPassenger={
+                                                onSetQuantityPassenger
+                                            }
+                                        />
+                                        <Button
+                                            type="primary"
+                                            className="w-32"
+                                            onClick={onNext}
+                                        >
+                                            Đi tiếp
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
+                )}
             </div>
-            <DrawerBookingSelection
-                isOpen={showDrawer}
-                productItem={record}
-                onCancel={() => setShowDrawer(false)}
-                onClickNext={handleClickNext}
-            />
         </div>
     );
 };

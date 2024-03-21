@@ -24,6 +24,9 @@ const useConfigPriceSellable = () => {
                         variables.sellableRecId,
                     ],
                 });
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_SELLABLE_LIST],
+                });
                 cb?.();
             },
             onError: (error) => {

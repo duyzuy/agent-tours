@@ -2,6 +2,7 @@ import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 
 import { IDestinationSearch } from "@/models/management/booking/searchBooking.interface";
+import { PassengerType } from "@/models/management/common.interface";
 
 export class SearchBookingFormData {
     byMonth?: string;
@@ -9,6 +10,11 @@ export class SearchBookingFormData {
     byDest?: IDestinationSearch[];
     byProductType?: EProductType[];
     byInventoryType?: EInventoryType[];
+    passengers: {
+        [PassengerType.ADULT]: number;
+        [PassengerType.CHILD]: number;
+        [PassengerType.INFANT]: number;
+    };
     constructor(
         byMonth: string | undefined,
         byCode: string | undefined,
@@ -21,5 +27,10 @@ export class SearchBookingFormData {
         this.byDest = byDest;
         this.byProductType = byProductType;
         this.byInventoryType = byInventoryType;
+        this.passengers = {
+            [PassengerType.ADULT]: 1,
+            [PassengerType.CHILD]: 0,
+            [PassengerType.INFANT]: 0,
+        };
     }
 }

@@ -111,7 +111,7 @@ function StockSelection({
     const mergeColumns: ColumnsType<IStock> = [
         ...miniStockColumns,
         {
-            title: "open",
+            title: "Số lượng",
             dataIndex: "open",
             key: "open",
             width: 150,
@@ -199,7 +199,14 @@ function StockSelection({
                 ) : (
                     <Space wrap className="mb-2">
                         {stocks?.map((item) => (
-                            <Tag key={item.stock.recId} color="blue">
+                            <Tag
+                                key={item.stock.recId}
+                                color="blue"
+                                onClose={() =>
+                                    onChangeStocks("remove", item.stock)
+                                }
+                                closable
+                            >
                                 {`#${item.stock.recId} - ${item.stock.code}  `}
                             </Tag>
                         ))}

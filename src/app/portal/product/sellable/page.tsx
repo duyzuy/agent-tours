@@ -2,10 +2,7 @@
 import React, { useMemo, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetSellableListCoreQuery } from "@/queries/core/Sellable";
-import {
-    SellableConfirmFormData,
-    SellableQueryParams,
-} from "@/models/management/core/sellable.interface";
+import { SellableQueryParams } from "@/models/management/core/sellable.interface";
 
 import { Status } from "@/models/management/common.interface";
 
@@ -27,7 +24,7 @@ import {
     TemplateSellableQueryParams,
 } from "@/models/management/core/templateSellable.interface";
 import { useGetTemplateSellableListCoreQuery } from "@/queries/core/templateSellable";
-import { isUndefined } from "lodash";
+import { isArray, isUndefined } from "lodash";
 import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
 import SellableFormContainer from "./_components/SellableFormContainer";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
@@ -49,7 +46,8 @@ const SellableListPage: React.FC = () => {
     const [sellableQueryParams, setSellableQueryParams] = useState(
         new SellableQueryParams(undefined, 1, 20),
     );
-
+    const [templateSellable, setTemplateSellable] =
+        useState<ITemplateSellable>();
     const { data: sellableResponse, isLoading: isLoadingSellable } =
         useGetSellableListCoreQuery({
             queryParams: sellableQueryParams,
@@ -79,7 +77,7 @@ const SellableListPage: React.FC = () => {
     const onSelectTemplate: SelectProps<
         number,
         ITemplateSellable
-    >["onChange"] = (value, _) => {
+    >["onChange"] = (value, template) => {
         setSellableQueryParams((prev) => ({
             ...prev,
             requestObject: {
@@ -87,6 +85,8 @@ const SellableListPage: React.FC = () => {
                 sellableTemplateId: value,
             },
         }));
+
+        !isArray(template) && setTemplateSellable(template);
     };
     const productTypeOption = useMemo(() => {
         return productTypes?.reduce<{ label: string; value: string }[]>(
@@ -104,6 +104,7 @@ const SellableListPage: React.FC = () => {
             children: (
                 <SellableListContainer
                     dataSource={sellableList || []}
+                    templateSellable={templateSellable}
                     pageSize={pageSize || 10}
                     pageCurrent={pageCurrent || 1}
                     totalItems={totalItems || 0}

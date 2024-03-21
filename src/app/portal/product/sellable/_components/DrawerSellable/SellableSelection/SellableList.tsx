@@ -111,15 +111,13 @@ type EditableTableProps = TableProps<SellableItemType>;
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
 export type SellableListProps = TableProps<SellableItemType> & {
-    templateSellableList: ITemplateSellable[];
     sellables: SellableItemType[];
     onSave?: (record: SellableItemType) => void;
     onDelete: (record: SellableItemType) => void;
 };
 
 function SellableList(props: SellableListProps) {
-    const { templateSellableList, sellables, onSave, onDelete, ...restProps } =
-        props;
+    const { sellables, onSave, onDelete, ...restProps } = props;
 
     const handleSave: EditableCellProps["handleSave"] = (record) => {
         onSave?.(record);
@@ -138,7 +136,7 @@ function SellableList(props: SellableListProps) {
             },
         },
         {
-            title: "Tên",
+            title: "Code",
             dataIndex: "code",
             width: 250,
             render: (_, record) => {

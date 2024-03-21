@@ -241,9 +241,9 @@ const DrawerSellableDetail: React.FC<DrawerSellableDetailProps> = ({
                             width: 350,
                             render: (_, record) => (
                                 <>
-                                    <p>{record.item.code}</p>
+                                    <p>{record?.item?.code}</p>
                                     <p className="text-gray-500">
-                                        {record.item.name}
+                                        {record?.item?.name}
                                     </p>
                                 </>
                             ),

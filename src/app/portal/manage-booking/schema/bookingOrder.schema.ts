@@ -1,5 +1,5 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
-import { BookingInformationPayload } from "@/models/management/booking/bookingPayload.interface";
+
 import { PassengerType } from "@/models/management/common.interface";
 import {
     BookingOrderCustomerFormData,

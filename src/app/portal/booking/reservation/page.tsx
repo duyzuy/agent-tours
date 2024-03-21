@@ -5,6 +5,7 @@ import { useBookingSelector } from "../hooks/useBooking";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
+import { moneyFormatVND } from "@/utils/helper";
 
 const ReservationPage = () => {
     const bookingInformation = useBookingSelector();
@@ -115,7 +116,9 @@ const ReservationPage = () => {
                                             Tour price
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.tourPrice}
+                                            {moneyFormatVND(
+                                                reservation?.tourPrice,
+                                            )}
                                         </span>
                                     </li>
                                     <li className="mb-2 flex">
@@ -123,7 +126,9 @@ const ReservationPage = () => {
                                             Extra price
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.extraPrice}
+                                            {moneyFormatVND(
+                                                reservation?.extraPrice,
+                                            )}
                                         </span>
                                     </li>
                                     <li className="mb-2 flex">
@@ -131,7 +136,9 @@ const ReservationPage = () => {
                                             Charge
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.charge}
+                                            {moneyFormatVND(
+                                                reservation?.charge,
+                                            )}
                                         </span>
                                     </li>
                                     <li className="mb-2 flex">
@@ -139,7 +146,9 @@ const ReservationPage = () => {
                                             Tổng tiền
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.totalAmount}
+                                            {moneyFormatVND(
+                                                reservation?.totalAmount,
+                                            )}
                                         </span>
                                     </li>
                                 </ul>
@@ -156,7 +165,14 @@ const ReservationPage = () => {
                                 >
                                     Về trang đặt chỗ
                                 </Button>
-                                <Button type="primary" onClick={() => {}}>
+                                <Button
+                                    type="primary"
+                                    onClick={() =>
+                                        router.push(
+                                            `./portal/manage-booking/${reservation?.recId}`,
+                                        )
+                                    }
+                                >
                                     Quản lý đặt chỗ
                                 </Button>
                             </Space>

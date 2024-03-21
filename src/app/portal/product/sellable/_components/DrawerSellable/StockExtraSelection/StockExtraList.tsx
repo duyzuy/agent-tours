@@ -60,7 +60,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                     {
                         type: "number",
                         min: 1,
-                        max: 99,
+                        max: 9999,
                         message: "Số lượng không hợp lệ.",
                     },
                 ]}
@@ -133,7 +133,7 @@ function StockExtraList(props: StockExtraListProps) {
             },
         },
         {
-            title: "Tên",
+            title: "Code",
             dataIndex: "code",
             width: 250,
             render: (_, record) => {

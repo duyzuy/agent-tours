@@ -1,14 +1,11 @@
 import { BaseResponse } from "@/models/management/common.interface";
 import { coreApi } from "../coreApi";
-import { BookingInformationPayload } from "@/models/management/booking/bookingPayload.interface";
+import { IBookingTourPayload } from "@/app/portal/booking/modules/bookingInformation.interface";
+
 import { SearchBookingFormData } from "@/app/portal/booking/modules/searchBooking.interface";
 import { IProductListRs } from "@/models/management/booking/productItem.interface";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
-import {
-    IBookingOrderCancelPayload,
-    IBookingOrderCustomerPayload,
-    IBookingOrderPassengersPayload,
-} from "@/app/portal/manage-booking/modules/bookingOrder.interface";
+import { IServicesRs } from "@/models/management/booking/service.interface";
 
 export const bookingAPIs = {
     search: async (payload: SearchBookingFormData) => {
@@ -22,44 +19,20 @@ export const bookingAPIs = {
             },
         );
     },
-    create: async (payload?: BookingInformationPayload) => {
+    getServices: async (sellableId?: number) => {
+        return await coreApi.post<IServicesRs, BaseResponse<null>>(
+            "core/BookingOrder_Search_GetSellableSsr",
+            {
+                requestObject: {
+                    sellableId: sellableId,
+                },
+                localUsername: "99",
+            },
+        );
+    },
+    create: async (payload?: IBookingTourPayload) => {
         return await coreApi.post<ReservationRs, BaseResponse<null>>(
             "core/BookingOrder_Addnew",
-            {
-                requestObject: {
-                    ...payload,
-                },
-                localUsername: "99",
-            },
-        );
-    },
-
-    updateCustomer: async (payload?: IBookingOrderCustomerPayload) => {
-        return await coreApi.post<any, BaseResponse<null>>(
-            "core/BookingOrder_EditContactInfo",
-            {
-                requestObject: {
-                    ...payload,
-                },
-                localUsername: "99",
-            },
-        );
-    },
-
-    updatePassengers: async (payload?: IBookingOrderPassengersPayload) => {
-        return await coreApi.post<any, BaseResponse<null>>(
-            "core/BookingOrder_EditBookingPaxInfo",
-            {
-                requestObject: {
-                    ...payload,
-                },
-                localUsername: "99",
-            },
-        );
-    },
-    cancelBookingOrder: async (payload?: IBookingOrderCancelPayload) => {
-        return await coreApi.post<any, BaseResponse<null>>(
-            "core/BookingOrder_Cancel",
             {
                 requestObject: {
                     ...payload,

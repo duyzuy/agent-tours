@@ -36,7 +36,6 @@ export const useGetStockInventoryListCoreQuery = ({
                 };
             }, requestObject);
     }
-    console.log(requestObject);
     return useQuery({
         queryKey: [
             queryCore.GET_STOCK_LIST_INVENTORY,

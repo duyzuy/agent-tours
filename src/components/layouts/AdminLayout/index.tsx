@@ -173,7 +173,7 @@ const AdminLayout = ({ children }: Props) => {
                 </Header>
                 <Content
                     style={{
-                        padding: 24,
+                        padding: "24px 24px 0",
                         minHeight: 280,
                         background: colorBgContainer,
                     }}
@@ -182,12 +182,11 @@ const AdminLayout = ({ children }: Props) => {
                 </Content>
                 <Footer
                     style={{
-                        textAlign: "right",
                         backgroundColor: "#fff",
-                        paddingTop: "10px",
-                        paddingBottom: "10px",
+                        paddingTop: "16px",
+                        paddingBottom: "16px",
                     }}
-                    className="bg-white border-t"
+                    className="border-t text-right"
                 >
                     <p className="text-sm">
                         Tour Management ©2023 Created by DVU

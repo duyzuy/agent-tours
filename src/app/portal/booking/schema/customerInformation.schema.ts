@@ -13,4 +13,5 @@ export const customerInformationSchema: ObjectSchema<CustomerInformation> =
             .required("Email không bỏ trống.")
             .email("Email không hợp lệ."),
         custAddress: string().default(""),
+        rmk: string(),
     });

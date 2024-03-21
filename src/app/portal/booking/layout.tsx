@@ -6,12 +6,25 @@ import {
     BookingInformation,
     BookingInfo,
 } from "./modules/bookingInformation.interface";
-
+import { SearchBookingFormData } from "./modules/searchBooking.interface";
+export const initBookingInfo = new BookingInfo(undefined, [], undefined);
+export const initSearchFormData = new SearchBookingFormData(
+    undefined,
+    undefined,
+    [],
+    [],
+    [],
+);
 const BookingProvider = ({ children }: { children: React.ReactNode }) => {
-    const initBookingInfo = new BookingInfo(undefined, [], undefined, "");
-
     const [bookingInformation, setBookingInformation] = useState(
-        () => new BookingInformation(initBookingInfo, undefined, [], undefined),
+        () =>
+            new BookingInformation(
+                initBookingInfo,
+                initSearchFormData,
+                [],
+                [],
+                undefined,
+            ),
     );
     return (
         <BookingContext.Provider

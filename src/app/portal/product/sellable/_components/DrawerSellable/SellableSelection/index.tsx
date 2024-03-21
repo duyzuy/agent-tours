@@ -24,12 +24,13 @@ import {
 } from "@/models/management/core/templateSellable.interface";
 import ContentDetail from "@/components/admin/ContentDetail";
 import ModalContent from "@/components/admin/ModalContent";
+import { EProductType } from "@/models/management/core/productType.interface";
 type SellableItemType = SellableConfirmFormData["otherSellables"][0];
 export type SellableSelectionProps = TableProps<ISellable> & {
     sellableList?: SellableItemType[];
     onSetSellable?: (
         action: "add" | "remove",
-        record: SellableItemType["sellable"],
+        sellable: SellableItemType["sellable"],
     ) => void;
     onSaveQuantity?: SellableListProps["onSave"];
 };
@@ -38,7 +39,7 @@ interface ITemplateOption {
     value: number;
     data: ITemplateSellable | undefined;
 }
-function StockExtraSelection(props: SellableSelectionProps) {
+function SellableSelection(props: SellableSelectionProps) {
     const {
         sellableList,
         onSetSellable,
@@ -48,7 +49,7 @@ function StockExtraSelection(props: SellableSelectionProps) {
     } = props;
 
     const templateQueryParams = new TemplateSellableQueryParams(
-        { status: Status.OK, andType: "EXTRA" },
+        { status: Status.OK, andType: EProductType.EXTRA },
         1,
         10,
     );
@@ -100,10 +101,6 @@ function StockExtraSelection(props: SellableSelectionProps) {
         );
     }, [templateList]);
 
-    const onView = (record: ISellable) => {
-        setShowModalDetail({ isShow: true, record: record });
-    };
-
     const onChangeTemplate: SelectProps<number, ITemplateOption>["onChange"] = (
         value,
         option,
@@ -112,7 +109,7 @@ function StockExtraSelection(props: SellableSelectionProps) {
             setTemplate(option.data);
         }
     };
-    const onChangeStocks = (
+    const onChangeSellable = (
         action: "add" | "remove",
         record: SellableConfirmFormData["otherSellables"][0]["sellable"],
     ) => {
@@ -120,10 +117,18 @@ function StockExtraSelection(props: SellableSelectionProps) {
     };
 
     const isSelecting = (record: ISellable) => {
-        return false;
+        return sellableList?.some(
+            (item) => item.sellable.recId === record.recId,
+        );
     };
     const onViewDetail = (record: ISellable) => {
         setShowModalDetail({ isShow: true, record: record });
+    };
+
+    const getSellableSelected = (sellable: ISellable) => {
+        return sellableList?.find(
+            (item) => item.sellable.recId === sellable.recId,
+        );
     };
     const mergeColumns: ColumnsType<ISellable> = [
         {
@@ -135,7 +140,7 @@ function StockExtraSelection(props: SellableSelectionProps) {
             },
         },
         {
-            title: "Tên",
+            title: "Code",
             dataIndex: "code",
             width: 250,
             render: (_, record) => {
@@ -143,10 +148,30 @@ function StockExtraSelection(props: SellableSelectionProps) {
             },
         },
         {
-            title: "Open",
+            title: "Số lượng",
             dataIndex: "open",
             key: "open",
             width: 150,
+            render: (_, record) => {
+                const sellableSelecting = getSellableSelected(record);
+
+                let color = "green";
+
+                let openQuantity = Number(record.open);
+
+                if (sellableSelecting) {
+                    openQuantity = openQuantity - Number(sellableSelecting.qty);
+                }
+                if (openQuantity <= 0) {
+                    color = "red";
+                }
+
+                return (
+                    <Tag bordered={false} color={color}>
+                        {openQuantity}
+                    </Tag>
+                );
+            },
         },
         {
             title: "Hành động",
@@ -170,10 +195,12 @@ function StockExtraSelection(props: SellableSelectionProps) {
                                 size="small"
                                 danger
                                 type="text"
-                                onClick={() => onChangeStocks("remove", record)}
+                                onClick={() =>
+                                    onChangeSellable("remove", record)
+                                }
                                 shape="circle"
                             ></Button>
-                        ) : (
+                        ) : record.open !== 0 ? (
                             <Button
                                 icon={
                                     <PlusCircleOutlined
@@ -182,10 +209,10 @@ function StockExtraSelection(props: SellableSelectionProps) {
                                 }
                                 size="small"
                                 type="text"
-                                onClick={() => onChangeStocks("add", record)}
+                                onClick={() => onChangeSellable("add", record)}
                                 shape="circle"
                             ></Button>
-                        )}
+                        ) : null}
                     </>
                 );
             },
@@ -203,11 +230,10 @@ function StockExtraSelection(props: SellableSelectionProps) {
                     />
                 ) : (
                     <SellableList
-                        templateSellableList={[]}
-                        sellables={[]}
+                        sellables={sellableList}
                         onSave={onSaveQuantity}
                         onDelete={(item) =>
-                            onChangeStocks("remove", item.sellable)
+                            onChangeSellable("remove", item.sellable)
                         }
                     />
                 )}
@@ -294,4 +320,4 @@ function StockExtraSelection(props: SellableSelectionProps) {
         </React.Fragment>
     );
 }
-export default StockExtraSelection;
+export default SellableSelection;

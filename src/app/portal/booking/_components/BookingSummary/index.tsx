@@ -1,0 +1,211 @@
+import React from "react";
+import { PassengerType } from "@/models/management/common.interface";
+import { moneyFormatVND } from "@/utils/helper";
+import { Divider } from "antd";
+import { useMemo } from "react";
+import { useBookingSelector } from "../../hooks/useBooking";
+import { IBookingItem } from "../../modules/bookingInformation.interface";
+import useBreakDownSummary from "../../modules/useBreakDownSummary";
+import { isUndefined } from "lodash";
+interface BookingBreakDownSummaryProps {
+    label?: string;
+}
+type BreakdownTourSummaryItem = {
+    qty: number;
+    type: PassengerType;
+    price: number;
+    class: string;
+    subTotal: number;
+};
+const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
+    const bookingInfo = useBookingSelector();
+
+    const productItem = useMemo(() => {
+        return bookingInfo.bookingInfo?.product;
+    }, [bookingInfo]);
+
+    const { tourPrices, services, total } = useBreakDownSummary();
+
+    const adultTourBreakdownSummarys = useMemo(() => {
+        const totalAdultTour = tourPrices["adult"];
+        let totalItem: BreakdownTourSummaryItem[] = [];
+        if (totalAdultTour) {
+            totalItem = Object.keys(totalAdultTour).reduce<typeof totalItem>(
+                (acc, item) => {
+                    acc = [...acc, totalAdultTour[item]];
+                    return acc;
+                },
+                [],
+            );
+        }
+        return totalItem;
+    }, []);
+
+    const childTourBreakdownSummarys = useMemo(() => {
+        const totalAdultTour = tourPrices["child"];
+        let totalItem: BreakdownTourSummaryItem[] = [];
+        if (totalAdultTour) {
+            totalItem = Object.keys(totalAdultTour).reduce<typeof totalItem>(
+                (acc, item) => {
+                    acc = [...acc, totalAdultTour[item]];
+                    return acc;
+                },
+                [],
+            );
+        }
+        return totalItem;
+    }, []);
+
+    const infantTourBreakdownSummarys = useMemo(() => {
+        const totalAdultTour = tourPrices["infant"];
+        let totalItem: BreakdownTourSummaryItem[] = [];
+        if (totalAdultTour) {
+            totalItem = Object.keys(totalAdultTour).reduce<typeof totalItem>(
+                (acc, item) => {
+                    acc = [...acc, totalAdultTour[item]];
+                    return acc;
+                },
+                [],
+            );
+        }
+        return totalItem;
+    }, []);
+
+    return (
+        <div className="booking__summary bg-white rounded-md px-6 py-4">
+            <div className="booking__summary-head">
+                <h3 className="text-lg font-[500]">{label}</h3>
+            </div>
+            <Divider />
+            <div className="booking__summary-body">
+                <div className="product__item mb-3">
+                    <div className="product__item-label">
+                        <span className="font-[500]">Sản phẩm</span>
+                    </div>
+                    <div className="product__item-body">
+                        <ul>
+                            <li className="flex justify-between">
+                                <span>Mã sản phẩm</span>
+                                <span>{productItem?.code}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <Divider />
+                <div className="passenger__item">
+                    <div className="passenger__item-label mb-2">
+                        <span className="font-[500]">Giá tour</span>
+                    </div>
+                    <ul>
+                        {adultTourBreakdownSummarys.map((item, _index) => (
+                            <li
+                                className="flex justify-between items-center mb-2"
+                                key={`adult-${_index}`}
+                            >
+                                <span className="passenger__item-passenger-type flex-1">
+                                    <span className="block">
+                                        {`Người lớn - ${item.class}`}
+                                    </span>
+                                    <span className="block text-xs text-primary-default">
+                                        {moneyFormatVND(item.price)}
+                                    </span>
+                                </span>
+                                <span className="passenger__item-quantity w-20 text-center">
+                                    {`x${item.qty}`}
+                                </span>
+                                <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
+                                    {moneyFormatVND(item.subTotal)}
+                                </span>
+                            </li>
+                        ))}
+                        {childTourBreakdownSummarys.map((item, _index) => (
+                            <li
+                                className="flex justify-between items-center mb-2"
+                                key={`child-${_index}`}
+                            >
+                                <span className="passenger__item-passenger-type flex-1">
+                                    <span className="block">
+                                        {`Trẻ em - ${item.class}`}
+                                    </span>
+                                    <span className="block text-xs text-primary-default">
+                                        {moneyFormatVND(item.price)}
+                                    </span>
+                                </span>
+                                <span className="passenger__item-quantity w-20 text-center">
+                                    {`x${item.qty}`}
+                                </span>
+                                <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
+                                    {moneyFormatVND(item.subTotal)}
+                                </span>
+                            </li>
+                        ))}
+                        {infantTourBreakdownSummarys.map((item, _index) => (
+                            <li
+                                className="flex justify-between items-center mb-2"
+                                key={`infant-${_index}`}
+                            >
+                                <span className="passenger__item-passenger-type flex-1">
+                                    <span className="block">
+                                        {`Em bé - ${item.class}`}
+                                    </span>
+                                    <span className="block text-xs text-primary-default">
+                                        {moneyFormatVND(item.price)}
+                                    </span>
+                                </span>
+                                <span className="passenger__item-quantity w-20 text-center">
+                                    {`x${item.qty}`}
+                                </span>
+                                <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
+                                    {moneyFormatVND(item.subTotal)}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {!isUndefined(services) ? (
+                    <>
+                        <Divider />
+                        <div className="passenger__item">
+                            <div className="passenger__item-label mb-2">
+                                <span className="font-[500]">
+                                    Dịch vụ mua thêm
+                                </span>
+                            </div>
+                            <ul>
+                                {Object.keys(services).map((key, _index) => (
+                                    <li
+                                        className="flex justify-between items-center mb-2"
+                                        key={`adult-${_index}`}
+                                    >
+                                        <span className="passenger__item-passenger-type flex-1">
+                                            <span className="block">
+                                                {services[key].name}
+                                            </span>
+                                        </span>
+
+                                        <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
+                                            {moneyFormatVND(
+                                                services[key].subtotal,
+                                            )}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </>
+                ) : null}
+                <Divider />
+                <div className="booking__summary-total">
+                    <div className="flex justify-between">
+                        <span>Tổng tiền</span>
+                        <span className="font-[500] text-primary-default text-lg">
+                            {moneyFormatVND(total)}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+export default BookingSummary;

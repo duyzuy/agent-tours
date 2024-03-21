@@ -31,12 +31,7 @@ const useCRUDSellable = () => {
                 message.success(`Tạo thành công`);
 
                 queryClient.invalidateQueries({
-                    queryKey: [
-                        queryCore.GET_SELLABLE_LIST,
-                        {
-                            sellableTemplateId: variables.sellableTemplateId,
-                        },
-                    ],
+                    queryKey: [queryCore.GET_SELLABLE_LIST],
                 });
                 cb?.();
             },
@@ -50,7 +45,7 @@ const useCRUDSellable = () => {
         formData: SellableConfirmFormData,
         cb?: () => void,
     ) => {
-        const sellablePayload = convertSellableFormDataToPayload(formData);
+        const sellablePayload = corectSellablePayload(formData);
 
         console.log(sellablePayload);
         makeApproval(sellablePayload, {
@@ -68,7 +63,7 @@ const useCRUDSellable = () => {
             },
         });
     };
-    const convertSellableFormDataToPayload = (
+    const corectSellablePayload = (
         formData: SellableConfirmFormData,
     ): SellableConfirmPayload => {
         const {

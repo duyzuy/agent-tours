@@ -3,45 +3,87 @@ import { PassengerType } from "@/models/management/common.interface";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
 import { IProductItem } from "@/models/management/booking/productItem.interface";
 import { IReservation } from "@/models/management/booking/reservation.interface";
-export interface PassengerSelectedItem {
+import { PassengerInformationFormData } from "./passenger.interface";
+import { PriceConfig } from "@/models/management/core/priceConfig.interface";
+
+export interface IPricingBookingItem {
+    sellableDetailsId: number;
+    priceConfigRecId: number;
     item: IProductItem["configs"][0];
-    quantity: number;
+    qty: number;
     type: PassengerType;
+}
+export interface IBookingItem {
+    item: IProductItem["configs"][0];
+    index: number;
+    type: PassengerType;
+    passengerInformation: PassengerInformationFormData;
+    ssr: IPricingBookingItem[];
 }
 
 export class BookingInfo {
     product?: IProductItem;
-    passengerSelections?: PassengerSelectedItem[];
+    bookingItems?: IBookingItem[];
     customerInformation?: CustomerInformation;
-    rmk?: string;
+
     constructor(
         product: IProductItem | undefined,
-        passengerSelections: PassengerSelectedItem[] | undefined,
+        bookingItems: IBookingItem[] | undefined,
         customerInformation: CustomerInformation | undefined,
-        rmk: string | undefined,
     ) {
         this.product = product;
-        this.passengerSelections = passengerSelections;
+        this.bookingItems = bookingItems;
         this.customerInformation = customerInformation;
-        this.rmk = rmk;
     }
 }
 
 export class BookingInformation {
     bookingInfo?: BookingInfo;
-    searchBooking?: SearchBookingFormData;
+    searchBooking: SearchBookingFormData;
     productList?: IProductItem[];
+    serviceList?: PriceConfig[];
     reservation?: IReservation;
 
     constructor(
         bookingInfo: BookingInfo | undefined,
-        searchBooking: SearchBookingFormData | undefined,
+        searchBooking: SearchBookingFormData,
         productList: IProductItem[],
+        serviceList: PriceConfig[],
         reservation: IReservation | undefined,
     ) {
         this.bookingInfo = bookingInfo;
         this.searchBooking = searchBooking;
         this.productList = productList;
+        this.serviceList = serviceList;
         this.reservation = reservation;
     }
+}
+
+export interface BookingTourItem {
+    index?: number;
+    sellableConfigId?: number;
+    qty?: number;
+    amount?: number;
+    type?: PassengerType;
+    pax?: Partial<PassengerInformationFormData>;
+    ssr: {
+        sellableConfigId: number;
+        qty: number;
+        amount: number;
+        type: PassengerType;
+    }[];
+}
+export interface IBookingTourPayload {
+    sellableId?: number;
+    bookingDetails: BookingTourItem[];
+    custName?: string; //name + phone bắt buộc
+    custPhoneNumber?: string; //name + phone bắt buộc
+    custEmail?: string;
+    custAddress?: string;
+    rmk?: string; //ghi chu.
+    // CustInfoJson?: string; //chưa dùng tới
+    // Rmk1?: string;
+    // Rmk2?: string;
+    // Rmk3?: string;
+    // Rmk4?: string;
 }

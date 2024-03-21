@@ -152,8 +152,8 @@ export interface SellableConfirmPayload {
 }
 
 export class SellableConfirmFormData {
-    recId?: number;
-    cap?: number;
+    recId: number;
+    cap: number;
     closeDate?: string;
     valid?: string;
     validTo?: string;
@@ -166,8 +166,8 @@ export class SellableConfirmFormData {
     otherSellables: { sellable: Partial<ISellable>; qty: number }[];
 
     constructor(
-        recId: number | undefined,
-        cap: number | undefined,
+        recId: number,
+        cap: number,
         closeDate: string | undefined,
         valid: string | undefined,
         validTo: string | undefined,

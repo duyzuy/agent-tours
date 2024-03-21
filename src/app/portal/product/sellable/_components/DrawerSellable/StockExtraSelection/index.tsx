@@ -252,6 +252,7 @@ function StockExtraSelection(props: StockExtraSelectionProps) {
             <div className="mb-3"></div>
             <CustomTable
                 columns={mergeColumns}
+                rowKey="recId"
                 dataSource={
                     stockQueryParams?.requestObject?.inventoryId
                         ? stockList

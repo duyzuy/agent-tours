@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import TableListPage from "@/components/admin/TableListPage";
 import { useGetSellableDetailCoreQuery } from "@/queries/core/Sellable";
 import {
@@ -23,9 +23,12 @@ import { isUndefined } from "lodash";
 import useConfigPriceSellable from "../../hooks/useConfigPriceSellable";
 import DrawerSellableDetail from "../DrawerSellableDetail";
 import { PaginationProps } from "antd";
+import { ITemplateSellable } from "@/models/management/core/templateSellable.interface";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 
 export interface SellableListProps {
     dataSource: SellableListRs["result"];
+    templateSellable?: ITemplateSellable;
     pageSize: number;
     pageCurrent: number;
     totalItems: number;
@@ -41,25 +44,18 @@ const SellableListContainer: React.FC<SellableListProps> = ({
     pageSize,
     pageCurrent,
     totalItems,
+    templateSellable,
     onApproval,
     onChangePageSellable,
     render,
 }) => {
     const inventoryQueryParams = new InventoryQueryParams(
-        { status: Status.OK },
+        { status: Status.OK, type: templateSellable?.inventoryTypeList },
         1,
         10,
     );
 
-    const { data: inventoryListByTemplateSellableResponse } =
-        useGetInventoryListCoreQuery({
-            enabled: true,
-            queryParams: inventoryQueryParams,
-        });
-    const { list: inventoryListByTemplateSellable } =
-        inventoryListByTemplateSellableResponse || {};
-
-    const [showDrawer, setShowDrawer] = useState(false);
+    const [showDrawerApproval, setShowDrawerApproval] = useState(false);
     const [viewSellableDetail, setViewSellableDetail] = useState<{
         recId?: number;
         isShow: boolean;
@@ -82,12 +78,20 @@ const SellableListContainer: React.FC<SellableListProps> = ({
             enabled: !isUndefined(viewSellableDetail.recId),
         });
     const { onUpdate } = useConfigPriceSellable();
+
+    const { data: inventoryListByTemplateSellableResponse } =
+        useGetInventoryListCoreQuery({
+            enabled: showDrawerApproval,
+            queryParams: inventoryQueryParams,
+        });
+    const { list: inventoryListByTemplateSellable } =
+        inventoryListByTemplateSellableResponse || {};
     const onCloseDrawerAndResetRecord = () => {
-        setShowDrawer(false);
+        setShowDrawerApproval(false);
         setEditRecord(undefined);
     };
 
-    const handleDrawer = ({
+    const handleDrawerApproval = ({
         action,
         record,
     }: {
@@ -95,7 +99,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
         record: SellableListRs["result"][0];
     }) => {
         setEditRecord(record);
-        setShowDrawer(true);
+        setShowDrawerApproval(true);
         setActionType(action);
     };
 
@@ -104,7 +108,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
         formData,
     ) => {
         onApproval(formData, () => {
-            setShowDrawer(false);
+            setShowDrawerApproval(false);
             setEditRecord(undefined);
         });
     };
@@ -142,7 +146,10 @@ const SellableListContainer: React.FC<SellableListProps> = ({
                     hideOnSinglePage: true,
                 }}
                 onApproval={(record) =>
-                    handleDrawer({ action: EActionType.APPROVAL, record })
+                    handleDrawerApproval({
+                        action: EActionType.APPROVAL,
+                        record,
+                    })
                 }
                 hideApproval={({ status }) => status === Status.OK}
                 showActionsLess={false}
@@ -152,11 +159,11 @@ const SellableListContainer: React.FC<SellableListProps> = ({
                     status === Status.QQ || status === Status.OK
                 }
                 onEdit={(record) =>
-                    handleDrawer({ action: EActionType.EDIT, record })
+                    handleDrawerApproval({ action: EActionType.EDIT, record })
                 }
             />
             <DrawerSellable
-                isOpen={showDrawer}
+                isOpen={showDrawerApproval}
                 inventories={inventoryListByTemplateSellable || []}
                 isApproval={editRecord?.status === Status.OK}
                 code={editRecord?.code || ""}

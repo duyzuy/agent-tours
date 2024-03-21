@@ -5,6 +5,7 @@ import { SearchBookingFormData } from "../modules/searchBooking.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { IDestinationSearch } from "@/models/management/booking/searchBooking.interface";
+import { PassengerType } from "@/models/management/common.interface";
 
 const isValidDateFormat = (value: string) => {
     return dayjs(value, "MMMYY", true).isValid(); // Adjust the format as needed
@@ -28,9 +29,16 @@ export const searchBookingSchema: ObjectSchema<SearchBookingFormData> = object({
         .default([]),
     byCode: string().default(""),
     byProductType: array(
-        mixed<EProductType>().oneOf(Object.values(EProductType)).required(),
+        mixed<EProductType>()
+            .oneOf(Object.values(EProductType))
+            .required("Không bỏ trống type."),
     ).default([EProductType.EXTRA]),
     byInventoryType: array(
         mixed<EInventoryType>().oneOf(Object.values(EInventoryType)).required(),
     ).default([EInventoryType.AIR]),
+    passengers: object({
+        [PassengerType.ADULT]: number().default(1),
+        [PassengerType.CHILD]: number().default(0),
+        [PassengerType.INFANT]: number().default(0),
+    }),
 });

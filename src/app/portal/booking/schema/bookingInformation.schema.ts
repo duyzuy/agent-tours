@@ -1,16 +1,14 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
-import { BookingInformationPayload } from "@/models/management/booking/bookingPayload.interface";
+import { IBookingTourPayload } from "../modules/bookingInformation.interface";
 import { PassengerType } from "@/models/management/common.interface";
 
-export const bookingInformationSchema: ObjectSchema<BookingInformationPayload> =
+export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> =
     object({
         sellableId: number().required("Thiếu ID sản phẩm"),
         bookingDetails: array(
             object({
                 index: number().required("Thiếu Index booking detail."),
-                indexRef: number().required("Thiếu indeRef").default(0),
                 sellableConfigId: number().required("Thiếu ID pricing config."),
-                bookingRefId: number().default(0),
                 qty: number()
                     .required("Số lượng hành khách không bỏ trống.")
                     .default(0),
@@ -23,6 +21,21 @@ export const bookingInformationSchema: ObjectSchema<BookingInformationPayload> =
                     ])
                     .required("Loại hành khách không bỏ trống"),
                 pax: object({}).default({}),
+                ssr: array(
+                    object({
+                        sellableConfigId:
+                            number().required("Thiếu ID sản phẩm."),
+                        qty: number().required("Thiếu số lượng sản phẩm"),
+                        amount: number().required("Thiếu giá tiền"),
+                        type: string()
+                            .oneOf<PassengerType>([
+                                PassengerType.ADULT,
+                                PassengerType.CHILD,
+                                PassengerType.INFANT,
+                            ])
+                            .required("Loại hành khách không bỏ trống"),
+                    }),
+                ).default([]),
             }),
         ).default([]),
         custName: string().required("cusName không bỏ trống."),
