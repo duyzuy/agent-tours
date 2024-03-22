@@ -34,18 +34,15 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
 
     return (
         <div
-            className={classNames(
-                "customer__information bg-white px-6 py-4 rounded-md",
-                {
-                    [className]: className,
-                },
-            )}
+            className={classNames("customer__information", {
+                [className]: className,
+            })}
         >
-            <div className="customer__information-head">
+            <div className="customer__information-head px-6 pt-6">
                 <h3 className="font-[500] text-lg">Thông tin người đặt</h3>
             </div>
             <Divider />
-            <div className="customer__information-body">
+            <div className="customer__information-body px-6 pb-6">
                 <Form layout="vertical">
                     <Row gutter={16}>
                         <Col span={12}>

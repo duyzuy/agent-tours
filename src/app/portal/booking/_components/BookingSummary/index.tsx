@@ -72,12 +72,12 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
     }, []);
 
     return (
-        <div className="booking__summary bg-white rounded-md px-6 py-4">
-            <div className="booking__summary-head">
+        <div className="booking__summary bg-white rounded-md drop-shadow-sm">
+            <div className="booking__summary-head px-6 pt-6">
                 <h3 className="text-lg font-[500]">{label}</h3>
             </div>
             <Divider />
-            <div className="booking__summary-body">
+            <div className="booking__summary-body px-6 pb-4">
                 <div className="product__item mb-3">
                     <div className="product__item-label">
                         <span className="font-[500]">Sản phẩm</span>

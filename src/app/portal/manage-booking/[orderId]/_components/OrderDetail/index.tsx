@@ -3,7 +3,7 @@ import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import { Button, Col, Row, Space, Tag, Form, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { IBookingOrderDetail } from "@/models/management/booking/order.interface";
+import { IOrderDetail } from "@/models/management/booking/order.interface";
 import classNames from "classnames";
 import { EditOutlined } from "@ant-design/icons";
 import DrawerCustomerInfo, {
@@ -17,7 +17,7 @@ import ModalCancelBookingConfirmation from "../ModalCanelBookingConfirmation";
 import { useRouter } from "next/navigation";
 
 interface OrderDetailProps {
-    orderDetail: IBookingOrderDetail["bookingOrder"];
+    orderDetail: IOrderDetail["bookingOrder"];
     className?: string;
     onCancelBooking?: (
         payload: IBookingOrderCancelPayload,
@@ -32,16 +32,14 @@ const OrderDetail: React.FC<OrderDetailProps> = ({
     onSave,
 }) => {
     const [showDrawer, setShowDrawer] = useState(false);
-    const [record, setRecord] = useState<IBookingOrderDetail["bookingOrder"]>();
+    const [record, setRecord] = useState<IOrderDetail["bookingOrder"]>();
     const [isShowModalConfirm, setShowModalConfirm] = useState(false);
     const [cancelBookingData, setCancelBookingData] =
         useState<IBookingOrderCancelPayload>({
             bookingOrder: { recId: orderDetail.recId, rmk4: "" },
         });
     const router = useRouter();
-    const onEditCustomerInfo = (
-        record: IBookingOrderDetail["bookingOrder"],
-    ) => {
+    const onEditCustomerInfo = (record: IOrderDetail["bookingOrder"]) => {
         setShowDrawer(true);
         setRecord(record);
     };
@@ -145,7 +143,16 @@ const OrderDetail: React.FC<OrderDetailProps> = ({
                         >
                             Huỷ booking
                         </Button>
-                        <Button size="small" type="primary" ghost>
+                        <Button
+                            size="small"
+                            type="primary"
+                            ghost
+                            onClick={() =>
+                                router.push(
+                                    `./portal/manage-booking/${orderDetail.recId}/split-booking`,
+                                )
+                            }
+                        >
                             Tách booking
                         </Button>
                         <Button type="primary" size="small">

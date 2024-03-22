@@ -64,7 +64,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                 undefined,
             ),
     );
-    console.log("render-form-pax", index);
+
     const onChange = (
         key: TKeysPassenger,
         value: (typeof paxFormData)[TKeysPassenger],
@@ -95,10 +95,10 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
     };
 
     useEffect(() => {
-        if (initialValues) {
+        if (Object.keys(initialValues).length !== 0) {
             setPaxFormData(initialValues);
         }
-    }, [initialValues]);
+    }, []);
 
     return (
         <div

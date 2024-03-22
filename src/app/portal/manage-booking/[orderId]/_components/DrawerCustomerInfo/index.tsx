@@ -7,15 +7,10 @@ import {
     Row,
     Col,
     Input,
-    Checkbox,
-    Switch,
-    Select,
-    DatePicker,
     DatePickerProps,
 } from "antd";
 import FormItem from "@/components/base/FormItem";
-import type { CheckboxChangeEvent } from "antd/es/checkbox";
-import { IBookingOrderDetail } from "@/models/management/booking/order.interface";
+import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { BookingOrderCustomerFormData } from "../../../modules/bookingOrder.interface";
 import { Status } from "@/models/management/common.interface";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
@@ -27,7 +22,7 @@ import { getPassengerType } from "@/utils/common";
 export interface DrawerCustomerInfoProps {
     isOpen?: boolean;
     onClose?: () => void;
-    initialValues?: IBookingOrderDetail["bookingOrder"];
+    initialValues?: IOrderDetail["bookingOrder"];
     onSubmit?: (data: BookingOrderCustomerFormData) => void;
 }
 
@@ -61,22 +56,6 @@ const DrawerCustomerInfo: React.FC<DrawerCustomerInfoProps> = ({
         setPassengerFormData((prev) => ({
             ...prev,
             [key]: value,
-        }));
-    };
-    const onChangeBirthDate: DatePickerProps["onChange"] = (date, dateStr) => {
-        setPassengerFormData((prev) => ({
-            ...prev,
-            paxBirthDate: date?.format(DATE_FORMAT),
-            // paxBirthYear: date?.get("year"),
-        }));
-    };
-    const onChangeNationalityDate: DatePickerProps["onChange"] = (
-        date,
-        dateStr,
-    ) => {
-        setPassengerFormData((prev) => ({
-            ...prev,
-            paxPassortExpiredDate: date?.format(DATE_FORMAT),
         }));
     };
 

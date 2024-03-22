@@ -24,9 +24,21 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
         width: 150,
     },
     {
-        title: "Khả dụng (Avaiable)",
+        title: "cap",
+        dataIndex: "cap",
+        key: "cap",
+        width: 100,
+    },
+    {
+        title: "Tổng",
         dataIndex: "avaiable",
         key: "avaiable",
+        width: 100,
+    },
+    {
+        title: "SL Đang còn",
+        dataIndex: "open",
+        key: "open",
         width: 100,
     },
     {

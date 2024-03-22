@@ -2,8 +2,9 @@ import { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { Tag } from "antd";
+import { IOrderListRs } from "@/models/management/booking/order.interface";
 
-export const columnsOrderList: ColumnsType<ReservationRs["result"]> = [
+export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     {
         title: "#ID",
         dataIndex: "recId",

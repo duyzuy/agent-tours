@@ -14,10 +14,8 @@ import {
     DatePickerProps,
 } from "antd";
 import FormItem from "@/components/base/FormItem";
-import type { CheckboxChangeEvent } from "antd/es/checkbox";
-import { IBookingOrderDetail } from "@/models/management/booking/order.interface";
+import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { BookingOrderPassengerFormData } from "../../../modules/bookingOrder.interface";
-import { Status } from "@/models/management/common.interface";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "@/constants/common";
@@ -27,7 +25,7 @@ import { getPassengerType } from "@/utils/common";
 export interface DrawerPassengerInfoProps {
     isOpen?: boolean;
     onClose?: () => void;
-    initialValues?: IBookingOrderDetail["bookingDetails"][0]["booking"]["pax"];
+    initialValues?: IOrderDetail["bookingDetails"][0]["booking"]["pax"];
     onSubmit?: (data: BookingOrderPassengerFormData) => void;
 }
 
@@ -80,6 +78,7 @@ const DrawerPassengerInfo: React.FC<DrawerPassengerInfoProps> = ({
         }));
     };
     const onChangeBirthDate: DatePickerProps["onChange"] = (date, dateStr) => {
+        console.log(date, dateStr, date?.format(DATE_FORMAT));
         setPassengerFormData((prev) => ({
             ...prev,
             paxBirthDate: date?.format(DATE_FORMAT),

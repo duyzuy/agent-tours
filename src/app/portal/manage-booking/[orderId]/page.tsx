@@ -10,6 +10,7 @@ import OrderDetail from "./_components/OrderDetail";
 import BookingDetail from "./_components/BookingDetail";
 import useUpdateCustomerAndPassenger from "../modules/useUpdateCustomerAndPassenger";
 import useCancelBookingOrder from "../modules/useCancelBookingOrder";
+import ServiceDetail from "./_components/ServiceDetail";
 interface ReservationDetailPageProps {
     params: { orderId: number };
 }
@@ -32,6 +33,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
             router.push("./portal/manage-booking");
         }
     }, [bookingOrderDetail, isLoading]);
+
     if (isLoading) {
         return <Spin />;
     }
@@ -60,8 +62,12 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                 />
                 <BookingDetail
                     orderId={bookingOrderDetail.bookingOrder.recId}
-                    bookingsDetail={bookingOrderDetail.bookingDetails}
+                    bookingOrderDetailList={bookingOrderDetail.bookingDetails}
                     onSave={onUpdatePassengerInfo}
+                />
+                <ServiceDetail
+                    serviceList={bookingOrderDetail.ssr}
+                    className="mb-6"
                 />
             </div>
         </PageContainer>

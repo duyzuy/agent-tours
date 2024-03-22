@@ -1,13 +1,11 @@
 "use client";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
-import {
-    BookingOrderListQueryParams,
-    ReservationListRs,
-} from "@/models/management/booking/reservation.interface";
+import { BookingOrderListQueryParams } from "@/models/management/booking/reservation.interface";
 import { useGetBookingOrderListCoreQuery } from "@/queries/core/bookingOrder";
 import { columnsOrderList } from "./columnsOrderList";
 import { useRouter } from "next/navigation";
+import { IOrderListRs } from "@/models/management/booking/order.interface";
 export default function ManageBookingOrderListPage() {
     const router = useRouter();
     const initBookingOrderListQueryParams = new BookingOrderListQueryParams(
@@ -22,7 +20,6 @@ export default function ManageBookingOrderListPage() {
             queryParams: initBookingOrderListQueryParams,
         });
 
-    console.log(reservationList, isLoading);
     return (
         <PageContainer
             name="Quản lý booking"
@@ -34,9 +31,10 @@ export default function ManageBookingOrderListPage() {
             hideAddButton
         >
             <div className=""></div>
-            <TableListPage<ReservationListRs["result"][0]>
+            <TableListPage<IOrderListRs["result"][0]>
                 dataSource={reservationList || []}
                 columns={columnsOrderList}
+                isLoading={isLoading}
                 rowKey={"recId"}
                 onEdit={(record) =>
                     router.push(`./portal/manage-booking/${record.recId}`)

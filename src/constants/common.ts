@@ -5,9 +5,9 @@ export enum LOCAL_STORAGE_KEY {
 /**
  * Date format when create Stock, Sellable
  */
-export const DATE_FORMAT = "DDMMMYY";
+export const DATE_FORMAT = "DDMMMYYYY";
 export const TIME_FORMAT = "HH:mm";
-export const DATE_TIME_FORMAT = "DDMMMYY HH:mm";
+export const DATE_TIME_FORMAT = "DDMMMYYYY HH:mm";
 //  Monday Tuesday Wednesday Thursday Friday Saturday
 export const DAYS_OF_WEEK = [
     { label: "CN", value: "Sunday" },
@@ -30,3 +30,29 @@ export enum EPassengerGender {
     MALE = "male",
     OTHER = "other",
 }
+
+export const getPassengerGender = (gender: EPassengerGender) => {
+    if (gender === EPassengerGender.MALE) {
+        return "Nam";
+    }
+    if (gender === EPassengerGender.FEMALE) {
+        return "Nữ";
+    }
+    if (gender === EPassengerGender.OTHER) {
+        return "Khác";
+    }
+    return "--";
+};
+
+export const getPassengerTitle = (title: EPassengerTitle) => {
+    if (title === EPassengerTitle.MR) {
+        return "Ông";
+    }
+    if (title === EPassengerTitle.MISS) {
+        return "Bà";
+    }
+    if (title === EPassengerTitle.MRS) {
+        return "Cô";
+    }
+    return "--";
+};

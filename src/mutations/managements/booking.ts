@@ -11,6 +11,7 @@ import {
     IBookingOrderCustomerPayload,
     IBookingOrderPassengersPayload,
 } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
+import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 
 //create folder in public/uploads folder.
 
@@ -56,5 +57,11 @@ export const useUpdatePassengersInformationMutation = () => {
 export const useCancelBookingOrderMutation = () => {
     return useMutation<any, BaseResponse<null>, IBookingOrderCancelPayload>({
         mutationFn: (payload) => manageBookingAPIs.cancelBookingOrder(payload),
+    });
+};
+
+export const useSplitBookingMutation = () => {
+    return useMutation<any, BaseResponse<null>, ISplitBookingPayload>({
+        mutationFn: (payload) => manageBookingAPIs.splitBooking(payload),
     });
 };

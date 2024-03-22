@@ -1,38 +1,38 @@
 import React from "react";
 import { moneyFormatVND } from "@/utils/helper";
 import { Button, Col, Row, Tag } from "antd";
-import { IBookingOrderDetail } from "@/models/management/booking/order.interface";
+import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { EditOutlined } from "@ant-design/icons";
 import DrawerPassengerInfo, {
     DrawerPassengerInfoProps,
 } from "../DrawerPassengerInfo";
 import { useState } from "react";
 import { getPassengerType } from "@/utils/common";
-import {
-    BookingOrderPassengerFormData,
-    IBookingOrderPassengersPayload,
-} from "../../../modules/bookingOrder.interface";
+import { IBookingOrderPassengersPayload } from "../../../modules/bookingOrder.interface";
 import { isUndefined } from "lodash";
 import dayjs from "dayjs";
-import { DATE_FORMAT } from "@/constants/common";
+import {
+    EPassengerGender,
+    EPassengerTitle,
+    getPassengerGender,
+    getPassengerTitle,
+} from "@/constants/common";
 interface OrderDetailProps {
-    bookingsDetail: IBookingOrderDetail["bookingDetails"];
+    bookingOrderDetailList: IOrderDetail["bookingDetails"];
     onSave?: (data?: IBookingOrderPassengersPayload, cb?: () => void) => void;
     orderId: number;
 }
 
 const BookingDetail: React.FC<OrderDetailProps> = ({
-    bookingsDetail,
+    bookingOrderDetailList,
     orderId,
     onSave,
 }) => {
     const [record, setEditRecord] =
-        useState<IBookingOrderDetail["bookingDetails"][0]>();
+        useState<IOrderDetail["bookingDetails"][0]>();
     const [showDrawer, setShowDrawer] = useState(false);
 
-    const onEditPassengerInfo = (
-        record: IBookingOrderDetail["bookingDetails"][0],
-    ) => {
+    const onEditPassengerInfo = (record: IOrderDetail["bookingDetails"][0]) => {
         setEditRecord(record);
         setShowDrawer(true);
     };
@@ -72,36 +72,25 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
     };
     return (
         <>
-            <div className="booking__detail">
+            <div className="booking__detail mb-12">
                 <div className="booking__detail-head mb-3">
-                    <span className="text-[16px] font-semibold">
+                    <span className="text-[16px] font-bold">
                         Thông tin hành khách
                     </span>
                 </div>
                 <div className="booking__detail-body">
-                    <Row gutter={16}>
-                        {bookingsDetail.map((bookingDetail, _index) => (
+                    <Row gutter={[24, 24]}>
+                        {bookingOrderDetailList.map((bookingDetail, _index) => (
                             <Col
-                                span={12}
+                                span={8}
                                 className="booking__detail__item"
                                 key={_index}
                             >
-                                <div className="p-4 bg-white border mb-3 rounded-md shadow-sm">
-                                    <div className="booking__detail__item-head border-b mb-2 pb-2">
+                                <div className="p-4 bg-white border rounded-md shadow-sm">
+                                    <div className="booking__detail__item-head border-b mb-3 pb-3">
                                         <ul className="flex">
-                                            <li className="w-28">
-                                                <span className="block text-xs">
-                                                    Channel
-                                                </span>
-                                                <span className="font-[500]">
-                                                    {
-                                                        bookingDetail.booking
-                                                            .channel
-                                                    }
-                                                </span>
-                                            </li>
-                                            <li className="w-28">
-                                                <span className="block text-xs">
+                                            <li className="w-16">
+                                                <span className="block text-xs text-gray-600">
                                                     Class
                                                 </span>
                                                 <span className="font-[500]">
@@ -111,10 +100,9 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                     }
                                                 </span>
                                             </li>
-
-                                            <li className="w-32">
-                                                <span className="block text-xs">
-                                                    Loại hành khách
+                                            <li className="w-24">
+                                                <span className="block text-xs text-gray-600">
+                                                    Hành khách
                                                 </span>
                                                 <span className="font-[500]">
                                                     {getPassengerType(
@@ -123,56 +111,62 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                     )}
                                                 </span>
                                             </li>
-                                            <li className="w-32">
-                                                <span className="block text-xs">
-                                                    Số lượng
-                                                </span>
-                                                <span className="font-[500]">
-                                                    {
-                                                        bookingDetail.booking
-                                                            .quantity
-                                                    }
-                                                </span>
-                                            </li>
-                                            <li>
-                                                <span className="block text-xs">
+                                            <li className=" flex-1">
+                                                <span className="block text-xs text-gray-600">
                                                     Giá tiền
                                                 </span>
-                                                <span className="font-[500]">
+                                                <span className="font-[500] text-primary-default">
                                                     {moneyFormatVND(
                                                         bookingDetail.booking
                                                             .amount,
                                                     )}
                                                 </span>
                                             </li>
+                                            <li>
+                                                <Button
+                                                    type="primary"
+                                                    onClick={() =>
+                                                        onEditPassengerInfo(
+                                                            bookingDetail,
+                                                        )
+                                                    }
+                                                    ghost
+                                                    size="small"
+                                                    icon={<EditOutlined />}
+                                                >
+                                                    Sửa
+                                                </Button>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div className="booking__detail__item-passenger">
-                                        <div className="booking__detail__item-passenger-info mb-3 border-b pb-3">
+                                        <div className="booking__detail__item-passenger-info">
                                             <Row gutter={16} className="mb-3">
                                                 <Col span={12}>
                                                     <div>
-                                                        <span className="block text-xs">
+                                                        <span className="block text-xs text-gray-600">
                                                             Danh xưng
                                                         </span>
                                                         <span className="font-[500]">
-                                                            {bookingDetail
-                                                                .booking.pax
-                                                                .paxTitle ||
-                                                                "--"}
+                                                            {getPassengerTitle(
+                                                                bookingDetail
+                                                                    .booking.pax
+                                                                    .paxTitle as EPassengerTitle,
+                                                            )}
                                                         </span>
                                                     </div>
                                                 </Col>
                                                 <Col span={12}>
                                                     <div>
-                                                        <span className="block text-xs">
+                                                        <span className="block text-xs text-gray-600">
                                                             Giới tính
                                                         </span>
                                                         <span className="font-[500]">
-                                                            {bookingDetail
-                                                                .booking.pax
-                                                                .paxGender ||
-                                                                "--"}
+                                                            {getPassengerGender(
+                                                                bookingDetail
+                                                                    .booking.pax
+                                                                    .paxGender as EPassengerGender,
+                                                            )}
                                                         </span>
                                                     </div>
                                                 </Col>
@@ -193,7 +187,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 </Col>
                                                 <Col span={12}>
                                                     <div>
-                                                        <span className="block text-xs">
+                                                        <span className="block text-xs text-gray-600">
                                                             Tên đệm và tên
                                                         </span>
                                                         <span className="font-[500]">
@@ -205,10 +199,10 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                     </div>
                                                 </Col>
                                             </Row>
-                                            <Row gutter={16} className="mb-3">
+                                            <Row gutter={16}>
                                                 <Col span={12}>
                                                     <div>
-                                                        <span className="block text-xs">
+                                                        <span className="block text-xs text-gray-600">
                                                             Ngày sinh
                                                         </span>
                                                         <span className="font-[500]">
@@ -222,35 +216,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 </Col>
                                                 <Col span={12}>
                                                     <div>
-                                                        <span className="block text-xs">
-                                                            Số Passport/CCCD
-                                                        </span>
-                                                        <span className="font-[500]">
-                                                            {bookingDetail
-                                                                .booking.pax
-                                                                .paxPassportNumber ||
-                                                                "--"}
-                                                        </span>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <Row gutter={16}>
-                                                <Col span={12}>
-                                                    <div>
-                                                        <span className="block text-xs">
-                                                            Quốc tịch
-                                                        </span>
-                                                        <span className="font-[500]">
-                                                            {bookingDetail
-                                                                .booking.pax
-                                                                .paxNationality ||
-                                                                "--"}
-                                                        </span>
-                                                    </div>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <div>
-                                                        <span className="block text-xs">
+                                                        <span className="block text-xs text-gray-600">
                                                             Số điện thoại
                                                         </span>
                                                         <span className="font-[500]">
@@ -263,7 +229,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 </Col>
                                             </Row>
                                         </div>
-                                        <div className="booking__detail__item-passenger-action">
+                                        <div className="booking__detail__item-passenger-action hidden">
                                             <Button
                                                 type="primary"
                                                 onClick={() =>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
-import { Space, Button } from "antd";
+import { Space, Button, Tag } from "antd";
 import { useBookingSelector } from "../hooks/useBooking";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { useRouter } from "next/navigation";
@@ -55,8 +55,8 @@ const ReservationPage = () => {
                                             Họ và tên
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.custName ||
-                                                "nguyen van a"}
+                                            {reservation?.bookingOrder
+                                                .custName || "--"}
                                         </span>
                                     </li>
                                     <li className="mb-2 flex">
@@ -64,8 +64,8 @@ const ReservationPage = () => {
                                             Email
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.custEmail ||
-                                                "nguyenvana@gmail.com"}
+                                            {reservation?.bookingOrder
+                                                .custEmail || "--"}
                                         </span>
                                     </li>
                                     <li className="mb-2 flex">
@@ -73,8 +73,8 @@ const ReservationPage = () => {
                                             Số điện thoại
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.custPhoneNumber ||
-                                                "0988228467"}
+                                            {reservation?.bookingOrder
+                                                .custPhoneNumber || "--"}
                                         </span>
                                     </li>
                                     <li className="mb-2 flex">
@@ -82,8 +82,8 @@ const ReservationPage = () => {
                                             Địa chỉ
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.custAddress ||
-                                                "ho CHi minh viet nam"}
+                                            {reservation?.bookingOrder
+                                                .custAddress || "--"}
                                         </span>
                                     </li>
                                     <li className="mb-2 flex">
@@ -91,8 +91,8 @@ const ReservationPage = () => {
                                             Ghi chú
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.rmk ||
-                                                "Khong co gi de ghi chu"}
+                                            {reservation?.bookingOrder.rmk ||
+                                                "--"}
                                         </span>
                                     </li>
                                 </ul>
@@ -108,7 +108,12 @@ const ReservationPage = () => {
                                             Trạng thái
                                         </span>
                                         <span className="flex-1">
-                                            {reservation?.paymentStatus}
+                                            <Tag color="red">
+                                                {
+                                                    reservation?.bookingOrder
+                                                        .paymentStatus
+                                                }
+                                            </Tag>
                                         </span>
                                     </li>
                                     <li className="mb-2 flex">
@@ -117,7 +122,8 @@ const ReservationPage = () => {
                                         </span>
                                         <span className="flex-1">
                                             {moneyFormatVND(
-                                                reservation?.tourPrice,
+                                                reservation?.bookingOrder
+                                                    .tourPrice,
                                             )}
                                         </span>
                                     </li>
@@ -127,7 +133,8 @@ const ReservationPage = () => {
                                         </span>
                                         <span className="flex-1">
                                             {moneyFormatVND(
-                                                reservation?.extraPrice,
+                                                reservation?.bookingOrder
+                                                    .extraPrice,
                                             )}
                                         </span>
                                     </li>
@@ -137,7 +144,8 @@ const ReservationPage = () => {
                                         </span>
                                         <span className="flex-1">
                                             {moneyFormatVND(
-                                                reservation?.charge,
+                                                reservation?.bookingOrder
+                                                    .charge,
                                             )}
                                         </span>
                                     </li>
@@ -147,7 +155,8 @@ const ReservationPage = () => {
                                         </span>
                                         <span className="flex-1">
                                             {moneyFormatVND(
-                                                reservation?.totalAmount,
+                                                reservation?.bookingOrder
+                                                    .totalAmount,
                                             )}
                                         </span>
                                     </li>
