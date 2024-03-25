@@ -4,9 +4,9 @@ import { moneyFormatVND } from "@/utils/helper";
 import { Divider } from "antd";
 import { useMemo } from "react";
 import { useBookingSelector } from "../../hooks/useBooking";
-import { IBookingItem } from "../../modules/bookingInformation.interface";
 import useBreakDownSummary from "../../modules/useBreakDownSummary";
 import { isUndefined } from "lodash";
+import { getPassengerType } from "@/utils/common";
 interface BookingBreakDownSummaryProps {
     label?: string;
 }
@@ -110,7 +110,7 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
                                         {moneyFormatVND(item.price)}
                                     </span>
                                 </span>
-                                <span className="passenger__item-quantity w-20 text-center">
+                                <span className="passenger__item-quantity w-10 text-center">
                                     {`x${item.qty}`}
                                 </span>
                                 <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
@@ -131,7 +131,7 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
                                         {moneyFormatVND(item.price)}
                                     </span>
                                 </span>
-                                <span className="passenger__item-quantity w-20 text-center">
+                                <span className="passenger__item-quantity w-10 text-center">
                                     {`x${item.qty}`}
                                 </span>
                                 <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
@@ -152,7 +152,7 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
                                         {moneyFormatVND(item.price)}
                                     </span>
                                 </span>
-                                <span className="passenger__item-quantity w-20 text-center">
+                                <span className="passenger__item-quantity w-10 text-center">
                                     {`x${item.qty}`}
                                 </span>
                                 <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
@@ -175,20 +175,72 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
                             <ul>
                                 {Object.keys(services).map((key, _index) => (
                                     <li
-                                        className="flex justify-between items-center mb-2"
+                                        className="mb-2"
                                         key={`adult-${_index}`}
                                     >
-                                        <span className="passenger__item-passenger-type flex-1">
-                                            <span className="block">
-                                                {services[key].name}
+                                        <div className="flex justify-between items-center">
+                                            <span className="passenger__item-passenger-type flex-1">
+                                                <span className="block">
+                                                    {services[key].details}
+                                                </span>
                                             </span>
-                                        </span>
-
-                                        <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
-                                            {moneyFormatVND(
-                                                services[key].subtotal,
+                                            <span className="passenger__item-price w-32 text-right inline-block text-primary-default">
+                                                {moneyFormatVND(
+                                                    services[key].subTotal,
+                                                )}
+                                            </span>
+                                        </div>
+                                        <ul className="">
+                                            {services[key].items.map(
+                                                (pricingItem) => (
+                                                    <li
+                                                        key={
+                                                            pricingItem.item
+                                                                .priceConfigRecId
+                                                        }
+                                                        className="flex justify-between mb-1"
+                                                    >
+                                                        <span className="flex-1">
+                                                            <span>
+                                                                {`Hành khách ${
+                                                                    pricingItem
+                                                                        .bookingItem
+                                                                        .index +
+                                                                    1
+                                                                }`}
+                                                            </span>
+                                                            <span className="text-xs block text-primary-default">
+                                                                {moneyFormatVND(
+                                                                    pricingItem
+                                                                        .item
+                                                                        .item[
+                                                                        pricingItem
+                                                                            .item
+                                                                            .type
+                                                                    ],
+                                                                )}
+                                                            </span>
+                                                        </span>
+                                                        <span className="w-10 text-center">
+                                                            {`x ${pricingItem.item.qty}`}
+                                                        </span>
+                                                        <span className="text-primary-default w-32 text-right">
+                                                            {moneyFormatVND(
+                                                                pricingItem.item
+                                                                    .qty *
+                                                                    pricingItem
+                                                                        .item
+                                                                        .item[
+                                                                        pricingItem
+                                                                            .item
+                                                                            .type
+                                                                    ],
+                                                            )}
+                                                        </span>
+                                                    </li>
+                                                ),
                                             )}
-                                        </span>
+                                        </ul>
                                     </li>
                                 ))}
                             </ul>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
     BookingInformation,
     IBookingItem,
@@ -11,7 +11,9 @@ import useMessage from "@/hooks/useMessage";
 import { PassengerType } from "@/models/management/common.interface";
 import { isUndefined } from "lodash";
 import { Button } from "antd";
-import DrawerServiceItem from "../DrawerServiceItem";
+import DrawerServiceItem, {
+    TBookingServicePricingItem,
+} from "../DrawerServiceItem";
 
 export interface BoxServiceItemProps {
     serviceName?: string;
@@ -23,120 +25,151 @@ export interface BoxServiceItemProps {
     ) => void;
     serviceItem: TServiceItemType;
     bookingItems: IBookingItem[];
+    onSetService: (
+        sellableDetailsId: number,
+        pricingItems: TBookingServicePricingItem[],
+    ) => void;
+    render?: () => React.ReactNode;
 }
 const BoxServiceItem: React.FC<BoxServiceItemProps> = ({
     serviceName,
     bookingItems = [],
     serviceItem,
     onAddService,
+    onSetService,
+    render,
 }) => {
     const [openDrawer, setOpenDrawer] = useState(false);
 
-    const message = useMessage();
+    const pricingItems = useMemo(() => {
+        const items = bookingItems.reduce<IBookingItem["ssr"]>(
+            (acc, bkItem) => {
+                const pricingsItems = bkItem.ssr.filter(
+                    (svItem) =>
+                        svItem.sellableDetailsId ===
+                        serviceItem.sellableDetailsId,
+                );
 
-    const onChangeQuantityService = (
-        quantity: number,
-        bookingItem: IBookingItem,
-        pasengerType: PassengerType,
-        action: "minus" | "plus",
-    ) => {
-        onAddService?.(
-            bookingItem.index,
-            action,
-            serviceItem.sellableDetailsId,
-            pasengerType,
-        );
-    };
-
-    const getQuantityServiceSelected = ({
-        bookingItem,
-        paxType,
-    }: {
-        bookingItem: IBookingItem;
-        paxType: PassengerType;
-    }) => {
-        if (isUndefined(bookingItem)) {
-            throw new Error("Booking item invalid");
-        }
-        const serviceItemsInBooking = bookingItem.ssr.filter(
-            (ssrItem) =>
-                ssrItem.sellableDetailsId === serviceItem.sellableDetailsId,
+                acc = [...acc, ...pricingsItems];
+                return acc;
+            },
+            [],
         );
 
-        return serviceItemsInBooking.reduce((acc, item) => {
-            acc = acc + item.qty;
-            return acc;
-        }, 0);
-    };
+        const serviceGroupByPaxType = items.reduce<{
+            [key: string]:
+                | { qty: number; subTotal: number; type: PassengerType }
+                | undefined;
+        }>(
+            (acc, item) => {
+                if (acc[item.type]) {
+                    acc = {
+                        ...acc,
+                        [item.type]: {
+                            ...(acc[item.type] || {}),
+                            qty: (acc[item.type]?.qty || 0) + item.qty,
+                            subTotal:
+                                (acc[item.type]?.subTotal || 0) +
+                                item.qty * item.item[item.type],
+                            type: item.type,
+                        },
+                    };
+                } else {
+                    acc = {
+                        ...acc,
+                        [item.type]: {
+                            qty: item.qty,
+                            type: item.type,
+                            subTotal: item.qty * item.item[item.type],
+                        },
+                    };
+                }
+
+                return acc;
+            },
+            {
+                [PassengerType.ADULT]: undefined,
+                [PassengerType.CHILD]: undefined,
+                [PassengerType.INFANT]: undefined,
+            },
+        );
+        return serviceGroupByPaxType;
+    }, [bookingItems]);
+
+    const isSelectedService = useMemo(() => {
+        return bookingItems.some((item) =>
+            item.ssr.some(
+                (ssrItem) =>
+                    ssrItem.sellableDetailsId === serviceItem.sellableDetailsId,
+            ),
+        );
+    }, [bookingItems, serviceItem]);
 
     return (
         <>
             <div className="service__item bg-white mb-6 rounded-sm drop-shadow-sm">
                 <div className="service__item-inner">
-                    <div className="service__item-title">
-                        <div className="service-name px-6 py-6">
+                    <div className="service__item-head px-6 py-6 flex justify-between">
+                        <div className="service-name ">
                             <span className="font-[500]">
                                 {serviceItem.detail}
                             </span>
                         </div>
+                        <Button
+                            type="primary"
+                            ghost
+                            size="small"
+                            onClick={() => setOpenDrawer(true)}
+                            className="cursor-pointer"
+                        >
+                            Chọn
+                        </Button>
                     </div>
-                    <div className="service__item-body">
-                        {bookingItems.map((item, _index) => (
-                            <div
-                                className="pax-item flex justify-between py-3 px-6 border-t"
-                                key={_index}
-                            >
-                                <div className="flex-1">
-                                    <span className="mr-2">
-                                        {`Hành khách ${_index + 1}`}
-                                    </span>
-                                    <span className="text-xs text-gray-600">
-                                        {`(${getPassengerType(item.type)})`}
-                                    </span>
-                                </div>
-                                <div className="flex items-center">
-                                    <div className="quantiy mr-6">
-                                        <Quantity
-                                            size="sm"
-                                            value={getQuantityServiceSelected({
-                                                bookingItem: item,
-                                                paxType: item.type,
-                                            })}
-                                            onChange={(action, value) =>
-                                                onChangeQuantityService(
-                                                    value,
-                                                    item,
-                                                    item.type,
-                                                    action,
-                                                )
-                                            }
-                                        />
-                                    </div>
-                                    <div className="price w-32">
-                                        <span className="block text-xs">
-                                            Chỉ từ
-                                        </span>
-                                        <span className="block font-[500] text-primary-default">
-                                            {moneyFormatVND(
-                                                serviceItem.lowestPrice[
-                                                    item.type
-                                                ],
-                                            )}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    {render?.()}
+                    {isSelectedService ? (
+                        <div className="px-6 pb-4 border-t pt-6">
+                            {Object.keys(pricingItems).map((itemKey) => (
+                                <React.Fragment key={itemKey}>
+                                    {pricingItems[itemKey] ? (
+                                        <div
+                                            className="pricing-item flex py-1"
+                                            key={itemKey}
+                                        >
+                                            <div className="w-20">
+                                                {getPassengerType(
+                                                    itemKey as PassengerType,
+                                                )}
+                                            </div>
+                                            <div>
+                                                <span>{`x ${pricingItems[itemKey]?.qty}`}</span>
+                                            </div>
+                                            <div className="flex-1 pl-6">
+                                                <span className="text-primary-default">
+                                                    {moneyFormatVND(
+                                                        pricingItems[itemKey]
+                                                            ?.subTotal,
+                                                    )}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ) : null}
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    ) : null}
                 </div>
             </div>
-            {/* <DrawerServiceItem
+            <DrawerServiceItem
                 isOpen={openDrawer}
                 onClose={() => setOpenDrawer(false)}
                 serviceName={serviceItem.detail}
+                sellableDetailsId={serviceItem.sellableDetailsId}
                 pricingItems={serviceItem.items}
                 bookingItems={bookingItems}
-            /> */}
+                onConfirm={(pricingsService) =>
+                    onSetService(serviceItem.sellableDetailsId, pricingsService)
+                }
+            />
         </>
     );
 };

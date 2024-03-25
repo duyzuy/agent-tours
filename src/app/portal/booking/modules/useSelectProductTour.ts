@@ -20,86 +20,62 @@ const useSelectProductTour = () => {
     const router = useRouter();
 
     const onNext = () => {
-        const productItem = bookingInformation.bookingInfo?.product;
-        if (isUndefined(productItem)) {
-            throw new Error("Chưa chọn tour.");
-        }
-        const { open, configs } = productItem;
-        const { passengers } = bookingInformation.searchBooking;
+        const { passengerPriceConfigs } = bookingInformation;
 
-        let totalPaxAmount = 0;
-        Object.keys(passengers).map((paxType) => {
-            if (paxType !== PassengerType.INFANT) {
-                totalPaxAmount += passengers[paxType as PassengerType];
-            }
-        });
-
-        if (open < totalPaxAmount) {
-            message.error("Số lượng tour hiện tại không đủ.");
+        if (
+            passengerPriceConfigs["adult"].length === 0 &&
+            passengerPriceConfigs["child"].length === 0
+        ) {
+            message.error("Chưa chọn số lượng hành khách.");
             return;
         }
-        /**
-         *
-         * Sorting to get lowest price by adult.
-         *
-         */
-        const configsSortedByAdultPrice = configs
-            .filter((config) => isProductTourConfig(config))
-            .sort((a, b) => a.adult - b.adult);
 
-        let configsMappingItems: PriceConfig[] = [];
-
-        configsSortedByAdultPrice.forEach((item) => {
-            const configsArrItems = Array.from(
-                { length: item.open },
-                (value, index) => item,
-            );
-            configsMappingItems = [...configsMappingItems, ...configsArrItems];
-        });
-
-        /**
-         * Pax Infant will not take slot
-         */
-        const bookingInfantAmount = Array.from(
-            { length: passengers.infant },
-            (_, index) => ({
-                paxType: PassengerType.INFANT,
-                item: configsMappingItems[0],
-            }),
-        );
-        const bookingAdultAmount = Array.from(
-            { length: passengers.adult },
-            (_, index) => ({
-                paxType: PassengerType.ADULT,
-                item: configsMappingItems.splice(0, 1)[0],
-            }),
-        );
-        const bookingChildAmount = Array.from(
-            { length: passengers.child },
-            (_, index) => ({
-                paxType: PassengerType.CHILD,
-                item: configsMappingItems.splice(0, 1)[0],
-            }),
-        );
-
-        const bookingItems = [
-            ...bookingAdultAmount,
-            ...bookingChildAmount,
-            ...bookingInfantAmount,
-        ].reduce<IBookingItem[]>((acc, paxItem, _index) => {
-            acc = [
-                ...acc,
+        const allBookingItems = Object.keys(passengerPriceConfigs).reduce<
+            {
+                type: PassengerType;
+                item: PriceConfig;
+            }[]
+        >((totalConfigItems, paxType) => {
+            const totalBookingItemsPax = passengerPriceConfigs[
+                paxType as PassengerType
+            ].reduce<
                 {
-                    index: _index,
-                    item: paxItem.item,
-                    type: paxItem.paxType,
-                    passengerInformation: {},
-                    ssr: [],
-                },
-            ];
+                    type: PassengerType;
+                    item: PriceConfig;
+                }[]
+            >((configItems, item) => {
+                const priceConfigItems = Array.from(
+                    { length: item.qty },
+                    (_, index) => ({
+                        type: paxType as PassengerType,
+                        item: item.priceConfig,
+                    }),
+                );
 
-            return acc;
+                configItems = [...configItems, ...priceConfigItems];
+                return configItems;
+            }, []);
+            totalConfigItems = [...totalConfigItems, ...totalBookingItemsPax];
+            return totalConfigItems;
         }, []);
+
+        const bookingItems = allBookingItems.reduce<IBookingItem[]>(
+            (acc, paxItem, _index) => {
+                acc = [
+                    ...acc,
+                    {
+                        index: _index,
+                        item: paxItem.item,
+                        type: paxItem.type,
+                        passengerInformation: {},
+                        ssr: [],
+                    },
+                ];
+
+                return acc;
+            },
+            [],
+        );
 
         setBookingInformation((prev) => ({
             ...prev,
@@ -123,8 +99,56 @@ const useSelectProductTour = () => {
             },
         }));
     };
+    const onSetPassengerConfig = (
+        type: PassengerType,
+        quantity: number,
+        priceConfig: PriceConfig,
+    ) => {
+        setBookingInformation((oldData) => {
+            let newPassengerPriceConfigs = { ...oldData.passengerPriceConfigs };
 
-    const onReselectTour = () => {
+            const indexOfPriceConfigPax = newPassengerPriceConfigs[
+                type
+            ].findIndex((item) => item.priceConfig.recId === priceConfig.recId);
+
+            if (indexOfPriceConfigPax === -1) {
+                newPassengerPriceConfigs = {
+                    ...newPassengerPriceConfigs,
+                    [type]: [
+                        ...newPassengerPriceConfigs[type],
+                        {
+                            priceConfig: priceConfig,
+                            qty: 1,
+                        },
+                    ],
+                };
+            } else {
+                let newPaxTourPriceConfig = newPassengerPriceConfigs[type];
+
+                if (quantity === 0) {
+                    newPaxTourPriceConfig.splice(indexOfPriceConfigPax, 1);
+                } else {
+                    newPaxTourPriceConfig.splice(indexOfPriceConfigPax, 1, {
+                        ...newPaxTourPriceConfig[indexOfPriceConfigPax],
+                        qty: quantity,
+                    });
+                }
+
+                newPassengerPriceConfigs = {
+                    ...newPassengerPriceConfigs,
+                    [type]: [...newPaxTourPriceConfig],
+                };
+            }
+
+            return {
+                ...oldData,
+                passengerPriceConfigs: {
+                    ...newPassengerPriceConfigs,
+                },
+            };
+        });
+    };
+    const onReset = () => {
         setBookingInformation((prev) => ({
             ...prev,
             bookingInfo: {
@@ -132,30 +156,23 @@ const useSelectProductTour = () => {
                 product: undefined,
                 bookingItems: [],
             },
+            passengerPriceConfigs: {
+                adult: [],
+                child: [],
+                infant: [],
+            },
             searchBooking: {
                 ...prev.searchBooking,
                 passengers: { adult: 1, child: 0, infant: 0 },
             },
         }));
     };
-    const isProductTourConfig = (config: PriceConfig) => {
-        let isTourProduct = false;
-        Object.keys(productTourClassChannels).forEach((channel) => {
-            if (
-                productTourClassChannels[channel as EConfigChannel].includes(
-                    config.class as EConfigClass,
-                )
-            ) {
-                isTourProduct = true;
-            }
-        });
-        return isTourProduct;
-    };
 
     return {
         onNext,
         onSetQuantityPassenger,
-        onReselectTour,
+        onReset,
+        onSetPassengerConfig,
     };
 };
 export default useSelectProductTour;

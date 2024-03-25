@@ -2,7 +2,18 @@ import useBooking from "../../hooks/useBooking";
 
 import useMessage from "@/hooks/useMessage";
 import { PassengerType } from "@/models/management/common.interface";
-
+import {
+    IBookingItem,
+    IPricingBookingItem,
+} from "../bookingInformation.interface";
+import { PriceConfig } from "@/models/management/core/priceConfig.interface";
+type TBookingServicePricingItem = {
+    bookingItem: IBookingItem;
+    pricingItems: {
+        qty: number;
+        item: PriceConfig;
+    }[];
+};
 const useTourServiceAddOn = () => {
     const [bookingInformation, setBookingInformation] = useBooking();
 
@@ -145,6 +156,90 @@ const useTourServiceAddOn = () => {
         }));
     };
 
-    return { onAddService };
+    const onSetServiceItems = (
+        sellableDetailsId: number,
+        serviceItems: TBookingServicePricingItem[],
+    ) => {
+        console.log({ sellableDetailsId, serviceItems });
+        setBookingInformation((oldData) => {
+            let newBookingItems = [
+                ...(oldData.bookingInfo?.bookingItems || []),
+            ];
+
+            newBookingItems = newBookingItems.reduce<IBookingItem[]>(
+                (accBkItems, bkItem) => {
+                    const serviceOfBookingItem = serviceItems.find(
+                        (svItem) => svItem.bookingItem.index === bkItem.index,
+                    );
+
+                    if (serviceOfBookingItem) {
+                        let newSSrOfBookingItem = [...bkItem.ssr];
+
+                        serviceOfBookingItem.pricingItems.forEach(
+                            (pricingItem) => {
+                                const indexPricingItemInServiceItem =
+                                    newSSrOfBookingItem.findIndex(
+                                        (item) =>
+                                            item.sellableDetailsId ===
+                                                sellableDetailsId &&
+                                            item.priceConfigRecId ===
+                                                pricingItem.item.recId,
+                                    );
+
+                                if (indexPricingItemInServiceItem !== -1) {
+                                    if (pricingItem.qty === 0) {
+                                        newSSrOfBookingItem.splice(
+                                            indexPricingItemInServiceItem,
+                                            1,
+                                        );
+                                    } else {
+                                        newSSrOfBookingItem.splice(
+                                            indexPricingItemInServiceItem,
+                                            1,
+                                            {
+                                                ...newSSrOfBookingItem[
+                                                    indexPricingItemInServiceItem
+                                                ],
+                                                qty: pricingItem.qty,
+                                            },
+                                        );
+                                    }
+                                } else {
+                                    newSSrOfBookingItem = [
+                                        ...newSSrOfBookingItem,
+                                        {
+                                            sellableDetailsId:
+                                                sellableDetailsId,
+                                            priceConfigRecId:
+                                                pricingItem.item.recId,
+                                            item: pricingItem.item,
+                                            qty: pricingItem.qty,
+                                            type: serviceOfBookingItem
+                                                .bookingItem.type,
+                                        },
+                                    ];
+                                }
+                            },
+                        );
+                        bkItem = { ...bkItem, ssr: newSSrOfBookingItem };
+                    }
+                    accBkItems = [...accBkItems, bkItem];
+
+                    return accBkItems;
+                },
+                [],
+            );
+
+            return {
+                ...oldData,
+                bookingInfo: {
+                    ...oldData.bookingInfo,
+                    bookingItems: [...newBookingItems],
+                },
+            };
+        });
+    };
+    const getSSrItem = (serviceItems: TBookingServicePricingItem[]) => {};
+    return { onAddService, onSetServiceItems };
 };
 export default useTourServiceAddOn;

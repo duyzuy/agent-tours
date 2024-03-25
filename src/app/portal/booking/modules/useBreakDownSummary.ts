@@ -48,61 +48,61 @@ const useBreakDownSummary = () => {
     };
 
     const serviceSummaries = () => {
-        const allSerViceObBookingList = bookingItemList.reduce<
-            IPricingBookingItem[]
-        >((acc, bkItem) => {
-            acc = [...acc, ...bkItem.ssr];
-            return acc;
-        }, []);
+        return bookingItemList.reduce<{
+            [key: string]: {
+                sellableDetailId: number;
+                details: string;
+                subTotal: number;
+                totalQty: number;
+                items: {
+                    bookingItem: IBookingItem;
+                    item: IBookingItem["ssr"][0];
+                }[];
+            };
+        }>((acc, bkItem) => {
+            bkItem.ssr.forEach((ssrItem) => {
+                if (acc[ssrItem.sellableDetailsId]) {
+                    acc = {
+                        ...acc,
+                        [ssrItem.sellableDetailsId]: {
+                            ...acc[ssrItem.sellableDetailsId],
+                            subTotal:
+                                acc[ssrItem.sellableDetailsId].subTotal +
+                                ssrItem.qty * ssrItem.item[ssrItem.type],
+                            totalQty:
+                                acc[ssrItem.sellableDetailsId].totalQty +
+                                ssrItem.qty,
+                            items: [
+                                ...acc[ssrItem.sellableDetailsId].items,
 
-        const servicesByGroupServiceName = allSerViceObBookingList.reduce<
-            | {
-                  [key: string]: {
-                      name: string;
-                      sellableDetailId: number;
-                      items: IPricingBookingItem[];
-                      qty: number;
-                      subtotal: number;
-                  };
-              }
-            | undefined
-        >((acc, pricingItem) => {
-            if (acc && acc[pricingItem.sellableDetailsId]) {
-                acc = {
-                    ...acc,
-                    [pricingItem.sellableDetailsId]: {
-                        ...acc[pricingItem.sellableDetailsId],
-                        qty:
-                            pricingItem.qty +
-                            acc[pricingItem.sellableDetailsId].qty,
-                        items: [
-                            ...acc[pricingItem.sellableDetailsId].items,
-                            pricingItem,
-                        ],
-                        subtotal:
-                            acc[pricingItem.sellableDetailsId].subtotal +
-                            pricingItem["qty"] *
-                                pricingItem["item"][pricingItem.type],
-                    },
-                };
-            } else {
-                acc = {
-                    ...acc,
-                    [pricingItem.sellableDetailsId]: {
-                        name: pricingItem.item.details,
-                        sellableDetailId: pricingItem.sellableDetailsId,
-                        qty: pricingItem.qty,
-                        items: [pricingItem],
-                        subtotal:
-                            pricingItem["qty"] *
-                            pricingItem["item"][pricingItem.type],
-                    },
-                };
-            }
-            return acc;
-        }, undefined);
+                                {
+                                    bookingItem: bkItem,
+                                    item: ssrItem,
+                                },
+                            ],
+                        },
+                    };
+                } else {
+                    acc = {
+                        ...acc,
+                        [ssrItem.sellableDetailsId]: {
+                            sellableDetailId: ssrItem.sellableDetailsId,
+                            details: ssrItem.item.details,
+                            subTotal: ssrItem.qty * ssrItem.item[ssrItem.type],
+                            totalQty: ssrItem.qty,
+                            items: [
+                                {
+                                    bookingItem: bkItem,
+                                    item: ssrItem,
+                                },
+                            ],
+                        },
+                    };
+                }
+            });
 
-        return servicesByGroupServiceName;
+            return acc;
+        }, {});
     };
 
     const getTotal = () => {

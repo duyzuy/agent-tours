@@ -20,6 +20,7 @@ const BookingProvider = ({ children }: { children: React.ReactNode }) => {
         () =>
             new BookingInformation(
                 initBookingInfo,
+                { adult: [], child: [], infant: [] },
                 initSearchFormData,
                 [],
                 [],

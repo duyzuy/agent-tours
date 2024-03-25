@@ -39,6 +39,20 @@ export class BookingInfo {
 
 export class BookingInformation {
     bookingInfo?: BookingInfo;
+    passengerPriceConfigs: {
+        [PassengerType.ADULT]: {
+            qty: number;
+            priceConfig: PriceConfig;
+        }[];
+        [PassengerType.CHILD]: {
+            qty: number;
+            priceConfig: PriceConfig;
+        }[];
+        [PassengerType.INFANT]: {
+            qty: number;
+            priceConfig: PriceConfig;
+        }[];
+    };
     searchBooking: SearchBookingFormData;
     productList?: IProductItem[];
     serviceList?: PriceConfig[];
@@ -46,6 +60,20 @@ export class BookingInformation {
 
     constructor(
         bookingInfo: BookingInfo | undefined,
+        passengerPriceConfigs: {
+            [PassengerType.ADULT]: {
+                qty: number;
+                priceConfig: PriceConfig;
+            }[];
+            [PassengerType.CHILD]: {
+                qty: number;
+                priceConfig: PriceConfig;
+            }[];
+            [PassengerType.INFANT]: {
+                qty: number;
+                priceConfig: PriceConfig;
+            }[];
+        },
         searchBooking: SearchBookingFormData,
         productList: IProductItem[],
         serviceList: PriceConfig[],
@@ -53,6 +81,7 @@ export class BookingInformation {
     ) {
         this.bookingInfo = bookingInfo;
         this.searchBooking = searchBooking;
+        this.passengerPriceConfigs = passengerPriceConfigs;
         this.productList = productList;
         this.serviceList = serviceList;
         this.reservation = reservation;

@@ -32,74 +32,76 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
                 hidden: hideBoxNotSelect && !isSelected,
             })}
         >
-            <div className="tour__box__item-inner flex items-center">
-                <div className="tour__box__item-left flex-1">
-                    <div className="">
-                        <div className="mb-2">
-                            <span className="text-primary-default font-semibold text-[16px]">
-                                {tour.template.name}
-                            </span>
-                        </div>
-                        <span className="tour-code">{tour.code}</span>
-                    </div>
-                </div>
-                <div className="tour__box__item-dates w-1/3">
-                    <div className="flex items-center">
-                        <div>
-                            <span className="block text-xs">Ngày đi</span>
-                            <span className="text-lg">
-                                {formatDate(tour.startDate)}
-                            </span>
-                        </div>
-                        <span className="mx-6">
-                            <SwapOutlined />
-                        </span>
-                        <div>
-                            <span className="block text-xs">Ngày về</span>
-                            <span className="text-lg">
-                                {formatDate(tour.endDate)}
-                            </span>
+            <div className="tour__box__item-inner">
+                <div className="flex items-center tour__box__item-top">
+                    <div className="tour__box__item-left flex-1">
+                        <div className="">
+                            <div className="mb-2">
+                                <span className="text-primary-default font-semibold text-[16px]">
+                                    {tour.template.name}
+                                </span>
+                            </div>
+                            <span className="tour-code">{tour.code}</span>
                         </div>
                     </div>
-                </div>
-                <div className="tour__box__item-pricing-actions w-1/3">
-                    <div className="flex items-center justify-end">
-                        {tour.open === 0 ? (
-                            <span className="w-32 block bg-slate-50 text-center px-3 py-2 rounded-sm">
-                                Đã hết
+                    <div className="tour__box__item-dates w-1/3">
+                        <div className="flex items-center">
+                            <div>
+                                <span className="block text-xs">Ngày đi</span>
+                                <span className="text-lg">
+                                    {formatDate(tour.startDate)}
+                                </span>
+                            </div>
+                            <span className="mx-6">
+                                <SwapOutlined />
                             </span>
-                        ) : (
-                            <>
-                                <div className="text-right mr-8">
-                                    <span className="block text-xs">
-                                        Giá chỉ từ
-                                    </span>
-                                    <span className="price-amount text-2xl text-primary-default font-semibold">
-                                        {moneyFormatVND(
-                                            getLowestPrice(tour.configs),
-                                        )}
-                                    </span>
-                                </div>
-                                {isSelected ? (
-                                    <span className="flex items-center text-primary-default">
-                                        <span className="bg-primary-default w-6 h-6 rounded-full text-white inline-flex items-center justify-center">
-                                            <CheckOutlined />
+                            <div>
+                                <span className="block text-xs">Ngày về</span>
+                                <span className="text-lg">
+                                    {formatDate(tour.endDate)}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="tour__box__item-pricing-actions w-1/3">
+                        <div className="flex items-center justify-end">
+                            {tour.open === 0 ? (
+                                <span className="w-32 block bg-slate-50 text-center px-3 py-2 rounded-sm">
+                                    Đã hết
+                                </span>
+                            ) : (
+                                <>
+                                    <div className="text-right mr-8">
+                                        <span className="block text-xs">
+                                            Giá chỉ từ
                                         </span>
-                                    </span>
-                                ) : (
-                                    <div className="action text-right">
-                                        <span className="block mb-2 rounded-sm text-xs">{`Số lượng đang còn ${tour.open}`}</span>
-                                        <Button
-                                            type="primary"
-                                            className="w-32"
-                                            onClick={onSelect}
-                                        >
-                                            Chọn
-                                        </Button>
+                                        <span className="price-amount text-2xl text-primary-default font-semibold">
+                                            {moneyFormatVND(
+                                                getLowestPrice(tour.configs),
+                                            )}
+                                        </span>
                                     </div>
-                                )}
-                            </>
-                        )}
+                                    {isSelected ? (
+                                        <span className="flex items-center text-primary-default">
+                                            <span className="bg-primary-default w-6 h-6 rounded-full text-white inline-flex items-center justify-center">
+                                                <CheckOutlined />
+                                            </span>
+                                        </span>
+                                    ) : (
+                                        <div className="action text-right">
+                                            <span className="block mb-2 rounded-sm text-xs">{`Số lượng đang còn ${tour.open}`}</span>
+                                            <Button
+                                                type="primary"
+                                                className="w-32"
+                                                onClick={onSelect}
+                                            >
+                                                Chọn
+                                            </Button>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -130,7 +132,7 @@ const getLowestPrice = (prices: IProductItem["configs"]) => {
     );
 
     productToursConfig.forEach((config) => {
-        if (lowestPrice > config.adult) {
+        if (lowestPrice > config.adult && config.open > 0) {
             lowestPrice = config.adult;
         }
     });
