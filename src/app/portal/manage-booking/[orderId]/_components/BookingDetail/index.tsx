@@ -5,7 +5,7 @@ import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { EditOutlined } from "@ant-design/icons";
 import DrawerPassengerInfo, {
     DrawerPassengerInfoProps,
-} from "../DrawerPassengerInfo";
+} from "./DrawerPassengerInfo";
 import { useState } from "react";
 import { getPassengerType } from "@/utils/common";
 import { IBookingOrderPassengersPayload } from "../../../modules/bookingOrder.interface";

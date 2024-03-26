@@ -7,8 +7,6 @@ import {
     Row,
     Col,
     Input,
-    Checkbox,
-    Switch,
     Select,
     DatePicker,
     DatePickerProps,

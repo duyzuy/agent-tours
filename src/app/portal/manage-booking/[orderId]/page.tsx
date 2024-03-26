@@ -6,11 +6,12 @@ import { Button, Space, Spin } from "antd";
 import { isUndefined } from "lodash";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import OrderDetail from "./_components/OrderDetail";
+import OrderSummary from "./_components/OrderSummary";
 import BookingDetail from "./_components/BookingDetail";
 import useUpdateCustomerAndPassenger from "../modules/useUpdateCustomerAndPassenger";
 import useCancelBookingOrder from "../modules/useCancelBookingOrder";
 import ServiceDetail from "./_components/ServiceDetail";
+import CustomerInformation from "./_components/CustomerInformation";
 interface ReservationDetailPageProps {
     params: { orderId: number };
 }
@@ -41,6 +42,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
     if (isUndefined(bookingOrderDetail)) {
         return null;
     }
+
     return (
         <PageContainer
             name="Chi tiết booking"
@@ -54,12 +56,18 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
             hideAddButton
         >
             <div className="booking__order__Detail relative">
-                <OrderDetail
+                <OrderSummary
                     orderDetail={bookingOrderDetail.bookingOrder}
-                    className="mb-6"
+                    fops={bookingOrderDetail.fops}
                     onCancelBooking={onCancelBookingOrder}
-                    onSave={onUpdateCustomerInfo}
+                    className="mb-6"
                 />
+                <CustomerInformation
+                    bookingOrder={bookingOrderDetail.bookingOrder}
+                    onSave={onUpdateCustomerInfo}
+                    className="mb-6"
+                />
+
                 <BookingDetail
                     orderId={bookingOrderDetail.bookingOrder.recId}
                     bookingOrderDetailList={bookingOrderDetail.bookingDetails}

@@ -1,25 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-    Drawer,
-    Space,
-    Button,
-    Form,
-    Row,
-    Col,
-    Input,
-    DatePickerProps,
-} from "antd";
+import { Drawer, Space, Button, Form, Row, Col, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { BookingOrderCustomerFormData } from "../../../modules/bookingOrder.interface";
-import { Status } from "@/models/management/common.interface";
-import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import dayjs from "dayjs";
-import { DATE_FORMAT } from "@/constants/common";
-import { bookingCustomerInfoSchema } from "../../../schema/bookingOrder.schema";
-import { getPassengerType } from "@/utils/common";
 
-export interface DrawerCustomerInfoProps {
+import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
+
+import { bookingCustomerInfoSchema } from "../../../schema/bookingOrder.schema";
+
+export interface DrawerCustomerInformationProps {
     isOpen?: boolean;
     onClose?: () => void;
     initialValues?: IOrderDetail["bookingOrder"];
@@ -36,7 +25,7 @@ type TKeysPassenger = KeysOfValue<
 >;
 type Pasenger = Required<BookingOrderCustomerFormData>;
 
-const DrawerCustomerInfo: React.FC<DrawerCustomerInfoProps> = ({
+const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
     isOpen,
     onClose,
     onSubmit,
@@ -208,4 +197,4 @@ const DrawerCustomerInfo: React.FC<DrawerCustomerInfoProps> = ({
         </Drawer>
     );
 };
-export default DrawerCustomerInfo;
+export default DrawerCustomerInformation;

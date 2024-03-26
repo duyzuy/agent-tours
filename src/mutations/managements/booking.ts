@@ -6,12 +6,14 @@ import { SearchBookingFormData } from "@/app/portal/booking/modules/searchBookin
 import { IProductListRs } from "@/models/management/booking/productItem.interface";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
+import { formOfPaymentAPIs } from "@/services/management/cores/formOfPayment";
 import {
     IBookingOrderCancelPayload,
     IBookingOrderCustomerPayload,
     IBookingOrderPassengersPayload,
 } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
+import { IFormOfPaymentPayload } from "@/app/portal/manage-booking/[orderId]/modules/formOfPayment.interface";
 
 //create folder in public/uploads folder.
 
@@ -63,5 +65,17 @@ export const useCancelBookingOrderMutation = () => {
 export const useSplitBookingMutation = () => {
     return useMutation<any, BaseResponse<null>, ISplitBookingPayload>({
         mutationFn: (payload) => manageBookingAPIs.splitBooking(payload),
+    });
+};
+
+export const useCreateFormOfPaymentMutation = () => {
+    return useMutation<any, BaseResponse<null>, IFormOfPaymentPayload>({
+        mutationFn: (payload) => formOfPaymentAPIs.createFormOfPayment(payload),
+    });
+};
+
+export const useApprovalFormOfPaymentMutation = () => {
+    return useMutation<any, BaseResponse<null>, number>({
+        mutationFn: (recId) => formOfPaymentAPIs.approvalFOP(recId),
     });
 };

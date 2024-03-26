@@ -1,53 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
-import { Button, Col, Row, Space, Tag, Form, Input } from "antd";
+import { Button, Space, Tag, Form, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import classNames from "classnames";
-import { EditOutlined } from "@ant-design/icons";
-import DrawerCustomerInfo, {
-    DrawerCustomerInfoProps,
-} from "../DrawerCustomerInfo";
+
 import {
     IBookingOrderCancelPayload,
     IBookingOrderCustomerPayload,
 } from "../../../modules/bookingOrder.interface";
 import ModalCancelBookingConfirmation from "../ModalCanelBookingConfirmation";
 import { useRouter } from "next/navigation";
+import DrawerFormOfPayment from "./DrawerFormOfPayment";
 
 interface OrderDetailProps {
     orderDetail: IOrderDetail["bookingOrder"];
+    fops: IOrderDetail["fops"];
     className?: string;
     onCancelBooking?: (
         payload: IBookingOrderCancelPayload,
         cb?: () => void,
     ) => void;
-    onSave?: (payload: IBookingOrderCustomerPayload, cb?: () => void) => void;
 }
-const OrderDetail: React.FC<OrderDetailProps> = ({
+const OrderSummary: React.FC<OrderDetailProps> = ({
     orderDetail,
     className = "",
     onCancelBooking,
-    onSave,
+    fops,
 }) => {
-    const [showDrawer, setShowDrawer] = useState(false);
-    const [record, setRecord] = useState<IOrderDetail["bookingOrder"]>();
+    const [isShowDrawerFOP, setShowDrawerFOP] = useState(false);
     const [isShowModalConfirm, setShowModalConfirm] = useState(false);
     const [cancelBookingData, setCancelBookingData] =
         useState<IBookingOrderCancelPayload>({
             bookingOrder: { recId: orderDetail.recId, rmk4: "" },
         });
     const router = useRouter();
-    const onEditCustomerInfo = (record: IOrderDetail["bookingOrder"]) => {
-        setShowDrawer(true);
-        setRecord(record);
-    };
-
-    const onCancelEditCustomerInfo = () => {
-        setShowDrawer(false);
-        setRecord(undefined);
-    };
 
     const handleCancelBookingOrder = () => {
         onCancelBooking?.(cancelBookingData, () => {
@@ -56,14 +44,6 @@ const OrderDetail: React.FC<OrderDetailProps> = ({
         });
     };
 
-    const handleSubmitCustomerInfo: DrawerCustomerInfoProps["onSubmit"] = (
-        data,
-    ) => {
-        onSave?.({ bookingOrder: { ...data } }, () => {
-            setShowDrawer(false);
-            setRecord(undefined);
-        });
-    };
     return (
         <>
             <div
@@ -155,77 +135,21 @@ const OrderDetail: React.FC<OrderDetailProps> = ({
                         >
                             Tách booking
                         </Button>
-                        <Button type="primary" size="small">
-                            Thanh toán ngay
+                        <Button
+                            type="primary"
+                            size="small"
+                            onClick={() => setShowDrawerFOP(true)}
+                        >
+                            Phiếu thu
                         </Button>
                     </Space>
                 </div>
-                <div className="order__detail-customer-info">
-                    <div className="order__detail-customer-info-head mb-2">
-                        <span className="font-semibold text-[16px] mr-3">
-                            Thông tin người đặt
-                        </span>
-                        <Button
-                            icon={<EditOutlined />}
-                            type="primary"
-                            ghost
-                            size="small"
-                            onClick={() => onEditCustomerInfo(orderDetail)}
-                        >
-                            Sửa
-                        </Button>
-                    </div>
-                    <Row gutter={16}>
-                        <Col span={8} className="mb-3">
-                            <div className="">
-                                <span className="block text-xs">Họ và tên</span>
-                                <span className="font-[500]">
-                                    {orderDetail.custName}
-                                </span>
-                            </div>
-                        </Col>
-                        <Col span={8} className="mb-3">
-                            <div className="">
-                                <span className="block text-xs">Email</span>
-                                <span className="font-[500]">
-                                    {orderDetail.custEmail}
-                                </span>
-                            </div>
-                        </Col>
-                        <Col span={8} className="mb-3">
-                            <div className="">
-                                <span className="block text-xs">
-                                    Số điện thoại
-                                </span>
-                                <span className="font-[500]">
-                                    {orderDetail.custPhoneNumber}
-                                </span>
-                            </div>
-                        </Col>
-                        <Col span={8} className="mb-3">
-                            <div className="">
-                                <span className="block text-xs">Địa chỉ</span>
-                                <span className="font-[500]">
-                                    {orderDetail.custAddress}
-                                </span>
-                            </div>
-                        </Col>
-                        <Col span={8} className="mb-3">
-                            <div className="">
-                                <span className="block text-xs">Ghi chú</span>
-                                <span className="font-[500]">
-                                    {orderDetail.rmk}
-                                </span>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
             </div>
-            <DrawerCustomerInfo
-                isOpen={showDrawer}
-                initialValues={record}
-                onClose={onCancelEditCustomerInfo}
-                onSubmit={handleSubmitCustomerInfo}
+            <DrawerFormOfPayment
+                orderId={orderDetail.recId}
+                isOpen={isShowDrawerFOP}
+                fops={fops}
+                onClose={() => setShowDrawerFOP(false)}
             />
             <ModalCancelBookingConfirmation
                 isShowModal={isShowModalConfirm}
@@ -256,4 +180,4 @@ const OrderDetail: React.FC<OrderDetailProps> = ({
         </>
     );
 };
-export default OrderDetail;
+export default OrderSummary;

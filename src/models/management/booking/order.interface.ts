@@ -4,20 +4,7 @@ import { ITemplateSellable } from "../core/templateSellable.interface";
 import { ISellable } from "../core/sellable.interface";
 import { PriceConfig } from "../core/priceConfig.interface";
 import { IReservation } from "./reservation.interface";
-
-// interface IBookingDetailItem {
-//     bookingId: number;
-//     sellableConfigId: number;
-//     qty: number;
-//     amount: number;
-//     type: string;
-//     booking: IBookingDetail & { pax: IPassengerInformation };
-// }
-// export interface IBookingOrderDetail {
-//     recId: number;
-//     bookingOrder: IReservation;
-//     bookingDetails: IBookingDetailItem[];
-// }
+import { IFormOfPayment } from "../core/formOfPayment.interface";
 
 export interface IOrderItem {
     recId: number;
@@ -53,5 +40,7 @@ export interface IOrderItem {
 }
 export interface IOrderListRs extends BaseResponse<IOrderItem[]> {}
 
-export interface IOrderDetail extends IReservation {}
+export interface IOrderDetail extends IReservation {
+    fops: IFormOfPayment[];
+}
 export interface IOrderDetailRs extends BaseResponse<IOrderDetail> {}
