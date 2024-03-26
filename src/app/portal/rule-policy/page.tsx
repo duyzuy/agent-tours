@@ -1,13 +1,14 @@
 "use client";
 import React from "react";
-import PageContainer from "@/components/admin/PageContainer";
 import { Tabs, TabsProps } from "antd";
-import RuleAndPolicyList from "./_components/RuleAndPolicyList";
-import DepoSitCreateForm from "./_components/DepoSitCreateForm";
 import { PlusOutlined } from "@ant-design/icons";
 import { useLocalGetRuleAndPolicyQuery } from "@/queries/ruleAndPolicy";
 import useRuleAndPolicy from "./modules/useRuleAndPolicy";
+import PageContainer from "@/components/admin/PageContainer";
+import RuleAndPolicyList from "./_components/RuleAndPolicyList";
+import DepoSitCreateForm from "./_components/DepoSitCreateForm";
 import LimitTimeCreateForm from "./_components/LimitTimeCreateForm";
+
 const RuleAndPolicyPage = () => {
     const { data: ruleAndPolicyList, isLoading } =
         useLocalGetRuleAndPolicyQuery();
@@ -32,7 +33,7 @@ const RuleAndPolicyPage = () => {
             icon: <PlusOutlined />,
         },
         {
-            key: "LimitTimeCreate",
+            key: "limitTimeCreate",
             label: "Chính sách trả sau",
             children: <LimitTimeCreateForm onSubmit={onCreate} />,
             icon: <PlusOutlined />,

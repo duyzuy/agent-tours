@@ -36,11 +36,11 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
     {
         key: "manage-booking",
         icon: React.createElement(ContainerOutlined),
-        label: "Quản lý booking",
+        label: "Quản lý đặt chỗ",
         children: [
             {
                 key: "manage-booking/order-list",
-                label: "Danh sách booking",
+                label: "Danh sách đặt chỗ",
             },
             {
                 key: "manage-booking/print",

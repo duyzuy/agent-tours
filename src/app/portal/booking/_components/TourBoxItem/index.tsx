@@ -26,15 +26,15 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
 }) => {
     return (
         <WrapTourBoxItem
-            className={classNames("tour__box__item border-2", {
+            className={classNames("tour__box__item border", {
                 "border-primary-default": isSelected,
-                "border-transparent": !isSelected,
+                border: !isSelected,
                 hidden: hideBoxNotSelect && !isSelected,
             })}
         >
             <div className="tour__box__item-inner">
                 <div className="flex items-center tour__box__item-top">
-                    <div className="tour__box__item-left flex-1">
+                    <div className="tour__box__item-left w-[420px]">
                         <div className="">
                             <div className="mb-2">
                                 <span className="text-primary-default font-semibold text-[16px]">
@@ -44,7 +44,7 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
                             <span className="tour-code">{tour.code}</span>
                         </div>
                     </div>
-                    <div className="tour__box__item-dates w-1/3">
+                    <div className="tour__box__item-dates flex-1 px-6 flex justify-center items-center">
                         <div className="flex items-center">
                             <div>
                                 <span className="block text-xs">Ngày đi</span>
@@ -63,7 +63,7 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
                             </div>
                         </div>
                     </div>
-                    <div className="tour__box__item-pricing-actions w-1/3">
+                    <div className="tour__box__item-pricing-actions w-[380px]">
                         <div className="flex items-center justify-end">
                             {tour.open === 0 ? (
                                 <span className="w-32 block bg-slate-50 text-center px-3 py-2 rounded-sm">
@@ -142,8 +142,8 @@ const getLowestPrice = (prices: IProductItem["configs"]) => {
 const WrapTourBoxItem = styled("div")`
     & {
         background: white;
-        box-shadow: 0px 2px 4px -2px rgb(0 0 0 / 25%),
-            0px 0px 8px -4px rgb(0 0 0 / 15%);
+        box-shadow: 0px 2px 4px -4px rgb(0 0 0 / 25%),
+            0px 0px 8px -6px rgb(0 0 0 / 15%);
         padding: 16px 20px;
         border-radius: 3px;
         margin-bottom: 24px;
