@@ -1,6 +1,5 @@
 import useMessage from "@/hooks/useMessage";
 import useBooking from "../hooks/useBooking";
-import { isUndefined } from "lodash";
 import { PassengerType } from "@/models/management/common.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import {
@@ -8,11 +7,6 @@ import {
     IBookingItem,
 } from "./bookingInformation.interface";
 import { useRouter } from "next/navigation";
-import {
-    productTourClassChannels,
-    EConfigChannel,
-    EConfigClass,
-} from "@/constants/channel.constant";
 
 const useSelectProductTour = () => {
     const message = useMessage();

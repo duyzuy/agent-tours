@@ -2,7 +2,7 @@ import { bookingAPIs } from "@/services/management/booking/searchTour";
 import { BaseResponse } from "@/models/management/common.interface";
 import { useMutation } from "@tanstack/react-query";
 import { IBookingTourPayload } from "@/app/portal/booking/modules/bookingInformation.interface";
-import { SearchBookingFormData } from "@/app/portal/booking/modules/searchBooking.interface";
+import { ISearchBookingPayload } from "@/app/portal/booking/modules/searchBooking.interface";
 import { IProductListRs } from "@/models/management/booking/productItem.interface";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
@@ -21,7 +21,7 @@ export const useSearchBookingMutation = () => {
     return useMutation<
         IProductListRs,
         BaseResponse<null>,
-        SearchBookingFormData
+        ISearchBookingPayload
     >({
         mutationFn: (payload) => bookingAPIs.search(payload),
     });

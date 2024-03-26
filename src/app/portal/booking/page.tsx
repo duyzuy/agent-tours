@@ -120,7 +120,11 @@ const BookingPage = () => {
                 }}
             >
                 <div className="h-44"></div>
-                <BoxBooking className="searchbox" onSubmit={onSearchBooking} />
+                <BoxBooking
+                    className="searchbox"
+                    onSubmit={onSearchBooking}
+                    isLoading={isLoading}
+                />
             </div>
             <div className="tours-wrapper">
                 {isLoading ? (

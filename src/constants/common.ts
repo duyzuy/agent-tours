@@ -6,6 +6,7 @@ export enum LOCAL_STORAGE_KEY {
  * Date format when create Stock, Sellable
  */
 export const DATE_FORMAT = "DDMMMYYYY";
+export const MONTH_FORMAT = "MMMYYYY";
 export const TIME_FORMAT = "HH:mm";
 export const DATE_TIME_FORMAT = "DDMMMYYYY HH:mm";
 //  Monday Tuesday Wednesday Thursday Friday Saturday

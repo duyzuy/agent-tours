@@ -4,28 +4,27 @@ import dayjs from "dayjs";
 import { SearchBookingFormData } from "../modules/searchBooking.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-import { IDestinationSearch } from "@/models/management/booking/searchBooking.interface";
 import { PassengerType } from "@/models/management/common.interface";
-
+import { MONTH_FORMAT } from "@/constants/common";
+import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
 const isValidDateFormat = (value: string) => {
-    return dayjs(value, "MMMYY", true).isValid(); // Adjust the format as needed
+    return dayjs(value, MONTH_FORMAT, true).isValid(); // Adjust the format as needed
 };
 
 export const searchBookingSchema: ObjectSchema<SearchBookingFormData> = object({
     byMonth: string()
         .required("Chọn thời gian đi")
         .test("is-valid-date", "Invalid date", isValidDateFormat),
-    byDest: array<IDestinationSearch>(
+    byDest: array<ILocalSeachDestination>(
         object({
             regionKey: string(),
             countryKey: string(),
-            countryName: string(),
             stateProvinceKey: string(),
             subRegionKey: string(),
             keyType: string(),
         }),
     )
-        .required("Vui lòng chọn tỉnh thành")
+        .required("Chọn điểm đến")
         .default([]),
     byCode: string().default(""),
     byProductType: array(

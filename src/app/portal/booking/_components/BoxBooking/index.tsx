@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Form,
     Input,
@@ -24,23 +24,26 @@ import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { searchBookingSchema } from "../../schema/searchBooking.schema";
 import { isArray } from "lodash";
-import locale from "antd/es/date-picker/locale/vi_VN";
-
-import FormItem from "@/components/base/FormItem";
-import dayjs from "dayjs";
 import { useBookingSelector } from "../../hooks/useBooking";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
+import FormItem from "@/components/base/FormItem";
+import { MONTH_FORMAT } from "@/constants/common";
+import dayjs from "dayjs";
+import locale from "antd/es/date-picker/locale/vi_VN";
+import "dayjs/locale/vi";
 export interface BoxBookingProps {
     departLocation?: string;
     departDate?: string;
     className?: string;
     onSubmit?: (data: SearchBookingFormData) => void;
+    isLoading?: boolean;
 }
 
 const BoxBooking: React.FC<BoxBookingProps> = ({
     className = "searchbox px-4 py-2 bg-white shadow-lg rounded-lg",
     onSubmit,
+    isLoading,
 }) => {
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetLocalSearchListMISCQuery();
@@ -75,7 +78,7 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
     const onChangeDate: DatePickerProps["onChange"] = (date, dateStr) => {
         setFormData((prev) => ({
             ...prev,
-            byMonth: date?.format("MMMYY"),
+            byMonth: date?.format(MONTH_FORMAT),
         }));
     };
 
@@ -97,28 +100,30 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
 
     const onChangeDestination: SelectProps<
         number,
-        | LocalSearchDestinationListRs["result"][0]
-        | LocalSearchDestinationListRs["result"]
+        LocalSearchDestinationListRs["result"][0]
     >["onChange"] = (value, options) => {
-        if (!isArray(options)) {
-            setFormData((prev) => ({
-                ...prev,
-                byDest: [
-                    {
-                        keyType: options.keyType,
-                        regionKey: options.regionKey,
-                        subRegionKey: options.subRegionKey,
-                        stateProvinceKey: options.stateProvinceKey,
-                        countryKey: options.countryKey,
-                    },
-                ],
-            }));
-        }
+        setFormData((prev) => ({
+            ...prev,
+            byDest: isArray(options) ? options : [options],
+        }));
     };
 
     const onChangeTabs = (e: RadioChangeEvent) => {
         setFormData((prev) => ({ ...prev, byProductType: [e.target.value] }));
     };
+    console.log(searchInfo);
+
+    useEffect(() => {
+        setFormData((oldData) => {
+            if (searchInfo.byCode) {
+            }
+
+            return {
+                ...oldData,
+                byMonth: searchInfo.byMonth,
+            };
+        });
+    }, []);
     return (
         <SearchBookingWrapper
             className={classNames({ [className]: className })}
@@ -169,7 +174,12 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                                             label: "name",
                                             value: "id",
                                         }}
-                                        options={destinationList}
+                                        value={
+                                            formData.byDest
+                                                ? formData.byDest[0]?.id
+                                                : undefined
+                                        }
+                                        options={destinationList || []}
                                         onChange={onChangeDestination}
                                         getPopupContainer={(triggerNode) =>
                                             triggerNode.parentElement
@@ -189,8 +199,16 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                                 >
                                     <DatePicker
                                         placeholder="Thời gian đi"
+                                        value={
+                                            formData.byMonth
+                                                ? dayjs(
+                                                      formData.byMonth,
+                                                      MONTH_FORMAT,
+                                                  )
+                                                : undefined
+                                        }
                                         locale={locale}
-                                        format={"MM/YYYY"}
+                                        format={"MMMM/YYYY"}
                                         picker="month"
                                         className="w-full"
                                         bordered={false}
@@ -242,6 +260,7 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                                     <Button
                                         type="primary"
                                         icon={<SearchOutlined />}
+                                        loading={isLoading}
                                         onClick={() =>
                                             handlerSubmit(formData, onSubmit)
                                         }

@@ -1,9 +1,6 @@
 import { useBookingSelector } from "../hooks/useBooking";
 import { PassengerType } from "@/models/management/common.interface";
-import {
-    IBookingItem,
-    IPricingBookingItem,
-} from "./bookingInformation.interface";
+import { IBookingItem } from "./bookingInformation.interface";
 const useBreakDownSummary = () => {
     const { bookingInfo } = useBookingSelector();
 

@@ -1,13 +1,26 @@
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-
-import { IDestinationSearch } from "@/models/management/booking/searchBooking.interface";
+import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
 import { PassengerType } from "@/models/management/common.interface";
+
+export interface ISearchBookingPayload {
+    byMonth?: string;
+    byCode?: string;
+    byDest?: {
+        countryKey: string;
+        keyType: string;
+        regionKey: string;
+        stateProvinceKey: string;
+        subRegionKey: string;
+    }[];
+    byProductType?: EProductType[];
+    byInventoryType?: EInventoryType[];
+}
 
 export class SearchBookingFormData {
     byMonth?: string;
     byCode?: string;
-    byDest?: IDestinationSearch[];
+    byDest?: ILocalSeachDestination[];
     byProductType?: EProductType[];
     byInventoryType?: EInventoryType[];
     passengers: {
@@ -18,7 +31,7 @@ export class SearchBookingFormData {
     constructor(
         byMonth: string | undefined,
         byCode: string | undefined,
-        byDest: IDestinationSearch[] | undefined,
+        byDest: ILocalSeachDestination[] | undefined,
         byProductType: EProductType[] | undefined,
         byInventoryType: EInventoryType[] | undefined,
     ) {

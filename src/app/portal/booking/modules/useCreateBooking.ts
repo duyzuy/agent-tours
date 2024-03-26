@@ -2,7 +2,6 @@ import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
 import { useCreateBookingMutation } from "@/mutations/managements/booking";
 import {
-    BookingInformation,
     IBookingItem,
     IBookingTourPayload,
 } from "./bookingInformation.interface";
