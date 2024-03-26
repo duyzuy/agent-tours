@@ -1,9 +1,8 @@
 "use client";
 import React, { useCallback, useMemo } from "react";
 import BoxBooking from "./_components/BoxBooking";
-import { Button, Divider, Empty, Space, Spin } from "antd";
+import { Button, Divider, Empty, Space } from "antd";
 import useBooking from "./hooks/useBooking";
-import useSearchBookingInformation from "./modules/useSearchBookingInformation";
 import TourBoxItem from "./_components/TourBoxItem";
 import { isUndefined } from "lodash";
 import { UndoOutlined } from "@ant-design/icons";
@@ -16,8 +15,6 @@ import useMessage from "@/hooks/useMessage";
 
 const BookingPage = () => {
     const [bookingInformation, setBookingInformation] = useBooking();
-    const { onSearchBooking, isLoading } = useSearchBookingInformation();
-
     const productList = useMemo(
         () => bookingInformation?.productList,
         [bookingInformation],
@@ -32,6 +29,13 @@ const BookingPage = () => {
 
     const productSelectedItem = useMemo(() => {
         return bookingInformation.bookingInfo?.product;
+    }, [bookingInformation]);
+
+    const isDisableNextButton = useMemo(() => {
+        return (
+            bookingInformation.passengerPriceConfigs.adult.length === 0 &&
+            bookingInformation.passengerPriceConfigs.child.length === 0
+        );
     }, [bookingInformation]);
 
     const message = useMessage();
@@ -120,147 +124,127 @@ const BookingPage = () => {
                 }}
             >
                 <div className="h-44"></div>
-                <BoxBooking
-                    className="searchbox"
-                    onSubmit={onSearchBooking}
-                    isLoading={isLoading}
-                />
+                <BoxBooking className="searchbox" />
             </div>
             <div className="tours-wrapper">
-                {isLoading ? (
-                    <Spin tip="Đang tìm kiếm...">
-                        <div className="content" />
-                    </Spin>
-                ) : (
+                {isSearched ? (
                     <div className="tour-list">
-                        {isSearched ? (
-                            <>
-                                {(productList?.length &&
-                                    productList.map((item) => (
-                                        <TourBoxItem
-                                            key={item.recId}
-                                            tour={item}
-                                            isSelected={
-                                                item.recId ===
-                                                productSelectedItem?.recId
-                                            }
-                                            hideBoxNotSelect={
-                                                !isUndefined(
-                                                    productSelectedItem,
-                                                )
-                                            }
-                                            onSelect={() =>
-                                                setBookingInformation(
-                                                    (prev) => ({
-                                                        ...prev,
-                                                        bookingInfo: {
-                                                            ...prev.bookingInfo,
-                                                            product: item,
-                                                        },
-                                                    }),
-                                                )
-                                            }
-                                        />
-                                    ))) || (
-                                    <Empty description="Không có tour nào" />
-                                )}
-                            </>
-                        ) : null}
-                        {!isUndefined(productSelectedItem) ? (
-                            <div className="text-right mb-2">
-                                <span
-                                    className="inline-flex text-primary-default cursor-pointer"
-                                    onClick={onReset}
-                                >
-                                    <UndoOutlined size={12} />
-                                    <span className="ml-2 inline-block">
-                                        Chọn lại
-                                    </span>
-                                </span>
-                            </div>
-                        ) : null}
-                        {productSelectedItem ? (
-                            <>
-                                <div className="tour__item-classes">
-                                    <Divider />
-                                    <div className="tour__item-classes-head mb-3">
-                                        <span className="block text-lg font-[500]">
-                                            Nhập số lượng khách
-                                        </span>
-                                        <p>
-                                            * Giá lựa chọn sẽ dc áp dụng cho
-                                            toàn bộ hành khách trong tour.
-                                        </p>
-                                    </div>
-                                    <div className="tour__item-classes-body">
-                                        {productSelectedItem.configs.map(
-                                            (config) => (
-                                                <PassengerTourClassItem
-                                                    key={config.recId}
-                                                    channel={config.channel}
-                                                    classChannel={config.class}
-                                                    open={config.open}
-                                                    adultPricing={moneyFormatVND(
-                                                        config.adult,
-                                                    )}
-                                                    childPricing={moneyFormatVND(
-                                                        config.child,
-                                                    )}
-                                                    infantPricing={moneyFormatVND(
-                                                        config.infant,
-                                                    )}
-                                                    adultAmount={getPassengerAmount(
-                                                        PassengerType.ADULT,
-                                                        config,
-                                                    )}
-                                                    childAmount={getPassengerAmount(
-                                                        PassengerType.CHILD,
-                                                        config,
-                                                    )}
-                                                    infantAmount={getPassengerAmount(
-                                                        PassengerType.INFANT,
-                                                        config,
-                                                    )}
-                                                    onSelectPassenger={(
-                                                        type,
-                                                        value,
-                                                        action,
-                                                    ) =>
-                                                        onSelectPassenger(
-                                                            type,
-                                                            value,
-                                                            config,
-                                                            action,
-                                                        )
-                                                    }
-                                                />
-                                            ),
-                                        )}
-                                    </div>
-                                </div>
-                                <div className=" sticky py-4 bottom-0 bg-white">
-                                    <Space>
-                                        <Button
-                                            type="primary"
-                                            ghost
-                                            className="w-32"
-                                            onClick={onReset}
-                                        >
-                                            Chọn lại
-                                        </Button>
-                                        <Button
-                                            type="primary"
-                                            className="w-32"
-                                            onClick={onNext}
-                                        >
-                                            Đi tiếp
-                                        </Button>
-                                    </Space>
-                                </div>
-                            </>
-                        ) : null}
+                        {(productList?.length &&
+                            productList.map((item) => (
+                                <TourBoxItem
+                                    key={item.recId}
+                                    tour={item}
+                                    isSelected={
+                                        item.recId ===
+                                        productSelectedItem?.recId
+                                    }
+                                    hideBoxNotSelect={
+                                        !isUndefined(productSelectedItem)
+                                    }
+                                    onSelect={() =>
+                                        setBookingInformation((prev) => ({
+                                            ...prev,
+                                            bookingInfo: {
+                                                ...prev.bookingInfo,
+                                                product: item,
+                                            },
+                                        }))
+                                    }
+                                />
+                            ))) || <Empty description="Không có tour nào" />}
                     </div>
-                )}
+                ) : null}
+                {!isUndefined(productSelectedItem) ? (
+                    <div className="text-right mb-2">
+                        <span
+                            className="inline-flex text-primary-default cursor-pointer"
+                            onClick={onReset}
+                        >
+                            <UndoOutlined size={12} />
+                            <span className="ml-2 inline-block">Chọn lại</span>
+                        </span>
+                    </div>
+                ) : null}
+                {productSelectedItem ? (
+                    <>
+                        <div className="tour__item-classes">
+                            <Divider />
+                            <div className="tour__item-classes-head mb-3">
+                                <span className="block text-lg font-[500]">
+                                    Nhập số lượng khách
+                                </span>
+                                <p>
+                                    * Giá lựa chọn sẽ dc áp dụng cho toàn bộ
+                                    hành khách trong tour.
+                                </p>
+                            </div>
+                            <div className="tour__item-classes-body">
+                                {productSelectedItem.configs.map((config) => (
+                                    <PassengerTourClassItem
+                                        key={config.recId}
+                                        channel={config.channel}
+                                        classChannel={config.class}
+                                        open={config.open}
+                                        adultPricing={moneyFormatVND(
+                                            config.adult,
+                                        )}
+                                        childPricing={moneyFormatVND(
+                                            config.child,
+                                        )}
+                                        infantPricing={moneyFormatVND(
+                                            config.infant,
+                                        )}
+                                        adultAmount={getPassengerAmount(
+                                            PassengerType.ADULT,
+                                            config,
+                                        )}
+                                        childAmount={getPassengerAmount(
+                                            PassengerType.CHILD,
+                                            config,
+                                        )}
+                                        infantAmount={getPassengerAmount(
+                                            PassengerType.INFANT,
+                                            config,
+                                        )}
+                                        onSelectPassenger={(
+                                            type,
+                                            value,
+                                            action,
+                                        ) =>
+                                            onSelectPassenger(
+                                                type,
+                                                value,
+                                                config,
+                                                action,
+                                            )
+                                        }
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="sticky py-4 bottom-0 bg-white">
+                            <Space>
+                                <Button
+                                    type="primary"
+                                    ghost
+                                    className="w-32"
+                                    onClick={onReset}
+                                    icon={<UndoOutlined size={12} />}
+                                >
+                                    Chọn lại
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    className="w-32"
+                                    onClick={onNext}
+                                    disabled={isDisableNextButton}
+                                >
+                                    Đi tiếp
+                                </Button>
+                            </Space>
+                        </div>
+                    </>
+                ) : null}
             </div>
         </div>
     );

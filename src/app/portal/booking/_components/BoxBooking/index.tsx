@@ -29,6 +29,7 @@ import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import FormItem from "@/components/base/FormItem";
 import { MONTH_FORMAT } from "@/constants/common";
+import useSearchBookingInformation from "../../modules/useSearchBookingInformation";
 import dayjs from "dayjs";
 import locale from "antd/es/date-picker/locale/vi_VN";
 import "dayjs/locale/vi";
@@ -36,14 +37,10 @@ export interface BoxBookingProps {
     departLocation?: string;
     departDate?: string;
     className?: string;
-    onSubmit?: (data: SearchBookingFormData) => void;
-    isLoading?: boolean;
 }
 
 const BoxBooking: React.FC<BoxBookingProps> = ({
     className = "searchbox px-4 py-2 bg-white shadow-lg rounded-lg",
-    onSubmit,
-    isLoading,
 }) => {
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetLocalSearchListMISCQuery();
@@ -67,6 +64,7 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                 [],
             ),
     );
+    const { onSearchBooking, isLoading } = useSearchBookingInformation();
     const { handlerSubmit, errors } = useFormSubmit({
         schema: searchBookingSchema,
     });
@@ -111,7 +109,6 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
     const onChangeTabs = (e: RadioChangeEvent) => {
         setFormData((prev) => ({ ...prev, byProductType: [e.target.value] }));
     };
-    console.log(searchInfo);
 
     useEffect(() => {
         setFormData((oldData) => {
@@ -262,7 +259,10 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                                         icon={<SearchOutlined />}
                                         loading={isLoading}
                                         onClick={() =>
-                                            handlerSubmit(formData, onSubmit)
+                                            handlerSubmit(
+                                                formData,
+                                                onSearchBooking,
+                                            )
                                         }
                                     >
                                         Tìm kiếm
