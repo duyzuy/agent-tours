@@ -10,6 +10,12 @@ import { formatDate } from "@/utils/date";
 
 const columns: ColumnsType<IOrderDetail["fops"][0]> = [
     {
+        title: "#ID",
+        key: "recId",
+        dataIndex: "recId",
+        width: 80,
+    },
+    {
         title: "Người thanh toán",
         key: "payer",
         dataIndex: "payer",
@@ -20,12 +26,6 @@ const columns: ColumnsType<IOrderDetail["fops"][0]> = [
         key: "type",
         dataIndex: "type",
         width: 100,
-    },
-    {
-        title: "Hình thức",
-        key: "fopType",
-        dataIndex: "fopType",
-        width: 150,
     },
     {
         title: "Số tiền",
@@ -93,18 +93,20 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval }) => {
                                 </span>
                             }
                             onClick={() => onViewDetail(record)}
-                        ></Button>
-                        <Button
-                            type="text"
-                            shape="circle"
-                            ghost
-                            onClick={() => onApproval(record.recId)}
-                            icon={
-                                <span className="text-green-600">
-                                    <CheckCircleOutlined />
-                                </span>
-                            }
-                        ></Button>
+                        />
+                        {record.status !== Status.OK && (
+                            <Button
+                                type="text"
+                                shape="circle"
+                                ghost
+                                onClick={() => onApproval(record.recId)}
+                                icon={
+                                    <span className="text-green-600">
+                                        <CheckCircleOutlined />
+                                    </span>
+                                }
+                            />
+                        )}
                     </Space>
                 );
             },

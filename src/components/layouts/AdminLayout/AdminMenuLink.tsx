@@ -181,6 +181,12 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         key: "system-configuration",
         icon: React.createElement(SettingOutlined),
         label: "Cấu hình hệ thống",
+        children: [
+            {
+                key: "rule-policy",
+                label: "Chính sách thanh toán",
+            },
+        ],
     },
 ];
 
