@@ -5,14 +5,11 @@ import { Button, Space, Tag, Form, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import classNames from "classnames";
-
-import {
-    IBookingOrderCancelPayload,
-    IBookingOrderCustomerPayload,
-} from "../../../modules/bookingOrder.interface";
+import { IBookingOrderCancelPayload } from "../../../modules/bookingOrder.interface";
 import ModalCancelBookingConfirmation from "../ModalCanelBookingConfirmation";
 import { useRouter } from "next/navigation";
 import DrawerFormOfPayment from "./DrawerFormOfPayment";
+import { PaymentStatus } from "@/models/management/common.interface";
 
 interface OrderDetailProps {
     orderDetail: IOrderDetail["bookingOrder"];
@@ -97,17 +94,40 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
                         <div className="w-40">
                             <span className="block">Trạng thái</span>
                             <span className="block text-[16px] mb-3">
-                                {(orderDetail.paymentStatus === "paid" && (
+                                {(orderDetail.paymentStatus ===
+                                    PaymentStatus.PAID && (
                                     <Tag color="green">Đã thanh toán</Tag>
                                 )) ||
                                     (orderDetail.paymentStatus ===
-                                        "deposit" && (
+                                        PaymentStatus.DEPOSITED && (
                                         <Tag color="blue">
-                                            Thanh toán 1 phầm
+                                            Thanh toán 1 phần
                                         </Tag>
                                     )) || (
                                         <Tag color="red">Chưa thanh toán</Tag>
                                     )}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div className="order__detail--payment-detail mb-6 border-b pb-6">
+                    <div className="flex items-center">
+                        <div className="w-40 border-r mr-6">
+                            <span className="block">Tổng tiền phiếu thu</span>
+                            <span className="block text-[16px] font-semibold text-primary-default">
+                                {moneyFormatVND(orderDetail.totalFop)}
+                            </span>
+                        </div>
+                        <div className="w-40 border-r mr-6">
+                            <span className="block">Đã thanh toán</span>
+                            <span className="block text-[16px] font-semibold text-primary-default">
+                                {moneyFormatVND(orderDetail.totalPaid)}
+                            </span>
+                        </div>
+                        <div className="w-40 border-r mr-6">
+                            <span className="block">Đã hoàn</span>
+                            <span className="block text-[16px] font-semibold text-primary-default">
+                                {moneyFormatVND(orderDetail.totalRefunded)}
                             </span>
                         </div>
                     </div>

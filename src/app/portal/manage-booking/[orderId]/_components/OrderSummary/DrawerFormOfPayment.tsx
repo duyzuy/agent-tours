@@ -32,13 +32,19 @@ const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
     orderId,
     fops,
 }) => {
-    const { onCreateFormOfPayment, onApproval } = useFormOfPayment();
+    const { onCreateFormOfPayment, onApproval, onDelete } = useFormOfPayment();
 
     const items: TabsProps["items"] = [
         {
             key: "fopList",
             label: "Danh sách phiếu thu",
-            children: <FOPList items={fops} onApproval={onApproval} />,
+            children: (
+                <FOPList
+                    items={fops}
+                    onApproval={onApproval}
+                    onDelete={onDelete}
+                />
+            ),
         },
         {
             key: "fopcreate",

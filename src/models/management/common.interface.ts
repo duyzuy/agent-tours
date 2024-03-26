@@ -31,3 +31,9 @@ export enum PassengerType {
     CHILD = "child",
     INFANT = "infant",
 }
+
+export enum PaymentStatus {
+    PAID = "PAID",
+    NOTPAID = "NOTPAID",
+    DEPOSITED = "DEPOSITED",
+}

@@ -21,4 +21,12 @@ export const formOfPaymentAPIs = {
             localUsername: "99",
         });
     },
+    delete: async (recId?: number) => {
+        return await coreApi.post<any, BaseResponse<null>>("core/FOP_Delete", {
+            requestObject: {
+                recId,
+            },
+            localUsername: "99",
+        });
+    },
 };

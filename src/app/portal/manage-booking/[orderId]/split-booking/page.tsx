@@ -93,7 +93,7 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
             message.error("Vui lòng chọn hành khách.");
             return;
         }
-        onSplitBooking(bookingSplit);
+        onSplitBooking(bookingSplit, () => {});
     };
     useEffect(() => {
         if (isUndefined(bookingOrderDetail) && !isLoading) {
@@ -117,11 +117,13 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
                 { title: "Quản lý booking", href: "./portal/manage-booking" },
                 {
                     title: "Chi tiết booking",
-                    href: "./portal/manage-booking/28",
+                    href: `./portal/manage-booking/${params.orderId}`,
                 },
                 { title: "Tách booking" },
             ]}
-            onBack={() => router.push("./portal/manage-booking/order-list")}
+            onBack={() =>
+                router.push(`./portal/manage-booking/${params.orderId}`)
+            }
             // className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
             hideAddButton
         >

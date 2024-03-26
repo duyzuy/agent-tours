@@ -3,7 +3,11 @@ import CustomTable from "@/components/admin/CustomTable";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { Status } from "@/models/management/common.interface";
 import { moneyFormatVND } from "@/utils/helper";
-import { CheckCircleOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+    CheckCircleOutlined,
+    DeleteOutlined,
+    EyeOutlined,
+} from "@ant-design/icons";
 import { Button, Space, Tag, Modal, Col, Row } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { formatDate } from "@/utils/date";
@@ -60,8 +64,9 @@ const columns: ColumnsType<IOrderDetail["fops"][0]> = [
 interface FOPListProps {
     items: IOrderDetail["fops"];
     onApproval: (recId: number) => void;
+    onDelete: (recId: number) => void;
 }
-const FOPList: React.FC<FOPListProps> = ({ items, onApproval }) => {
+const FOPList: React.FC<FOPListProps> = ({ items, onApproval, onDelete }) => {
     const [detailRecord, setDetailRecord] = useState<{
         isShow: boolean;
         data?: IOrderDetail["fops"][0];
@@ -86,7 +91,6 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval }) => {
                         <Button
                             type="text"
                             shape="circle"
-                            ghost
                             icon={
                                 <span className="text-blue-500">
                                     <EyeOutlined />
@@ -94,11 +98,22 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval }) => {
                             }
                             onClick={() => onViewDetail(record)}
                         />
+                        {record.status === Status.QQ && (
+                            <Button
+                                type="text"
+                                shape="circle"
+                                onClick={() => onDelete(record.recId)}
+                                icon={
+                                    <span className="text-red-600">
+                                        <DeleteOutlined />
+                                    </span>
+                                }
+                            />
+                        )}
                         {record.status !== Status.OK && (
                             <Button
                                 type="text"
                                 shape="circle"
-                                ghost
                                 onClick={() => onApproval(record.recId)}
                                 icon={
                                     <span className="text-green-600">
@@ -115,7 +130,11 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval }) => {
 
     return (
         <>
-            <CustomTable dataSource={items} columns={mergeColumns} />
+            <CustomTable
+                dataSource={items}
+                rowKey={"recId"}
+                columns={mergeColumns}
+            />
             <ModalDetailFOP
                 isShowModal={detailRecord.isShow}
                 data={detailRecord.data}

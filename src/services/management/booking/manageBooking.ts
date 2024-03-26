@@ -1,6 +1,9 @@
 import { BaseResponse } from "@/models/management/common.interface";
 import { coreApi } from "../coreApi";
-import { BookingOrderListQueryParams } from "@/models/management/booking/reservation.interface";
+import {
+    BookingOrderListQueryParams,
+    ReservationRs,
+} from "@/models/management/booking/reservation.interface";
 import {
     IOrderListRs,
     IOrderDetailRs,
@@ -60,7 +63,7 @@ export const manageBookingAPIs = {
         );
     },
     splitBooking: async (payload?: ISplitBookingPayload) => {
-        return await coreApi.post<any, BaseResponse<null>>(
+        return await coreApi.post<ReservationRs, BaseResponse<null>>(
             "core/BookingOrder_Split",
             {
                 requestObject: {

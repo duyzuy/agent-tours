@@ -3,6 +3,7 @@ import { moneyFormatVND } from "@/utils/helper";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { Tag } from "antd";
 import { IOrderListRs } from "@/models/management/booking/order.interface";
+import { PaymentStatus } from "@/models/management/common.interface";
 
 export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     {
@@ -52,10 +53,10 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
         render(value, record, index) {
             return (
                 <>
-                    {(record.paymentStatus === "paid" && (
+                    {(record.paymentStatus === PaymentStatus.PAID && (
                         <Tag color="green">Đã thanh toán</Tag>
                     )) ||
-                        (record.paymentStatus === "deposit" && (
+                        (record.paymentStatus === PaymentStatus.DEPOSITED && (
                             <Tag color="blue">Thanh toán 1 phần</Tag>
                         )) || <Tag color="red">Chưa thanh toán</Tag>}
                 </>

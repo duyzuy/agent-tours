@@ -1,4 +1,4 @@
-import { BaseResponse } from "../common.interface";
+import { BaseResponse, PaymentStatus } from "../common.interface";
 import { Status } from "../common.interface";
 import { ITemplateSellable } from "../core/templateSellable.interface";
 import { ISellable } from "../core/sellable.interface";
@@ -15,7 +15,7 @@ export interface IOrderItem {
     custEmail: string;
     custAddress: string;
     custInfoJson: string;
-    paymentStatus: string;
+    paymentStatus: PaymentStatus;
     totalAmount: number;
     tourPrice: number;
     extraPrice: number;

@@ -1,4 +1,9 @@
-import { BaseResponse, PassengerType, Status } from "../common.interface";
+import {
+    BaseResponse,
+    PassengerType,
+    Status,
+    PaymentStatus,
+} from "../common.interface";
 import { PriceConfig } from "../core/priceConfig.interface";
 import { ISellable } from "../core/sellable.interface";
 import { ITemplateSellable } from "../core/templateSellable.interface";
@@ -78,10 +83,13 @@ export interface IReservation {
         custEmail: string;
         custAddress: string;
         custInfoJson: string;
-        paymentStatus: string;
+        paymentStatus: PaymentStatus;
         totalAmount: number;
         tourPrice: number;
         extraPrice: number;
+        totalFop: number;
+        totalPaid: number;
+        totalRefunded: number;
         charge: number;
         rmk: string;
         rmk1: string;

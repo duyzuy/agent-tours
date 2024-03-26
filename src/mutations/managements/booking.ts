@@ -4,7 +4,10 @@ import { useMutation } from "@tanstack/react-query";
 import { IBookingTourPayload } from "@/app/portal/booking/modules/bookingInformation.interface";
 import { ISearchBookingPayload } from "@/app/portal/booking/modules/searchBooking.interface";
 import { IProductListRs } from "@/models/management/booking/productItem.interface";
-import { ReservationRs } from "@/models/management/booking/reservation.interface";
+import {
+    IReservation,
+    ReservationRs,
+} from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { formOfPaymentAPIs } from "@/services/management/cores/formOfPayment";
 import {
@@ -63,9 +66,11 @@ export const useCancelBookingOrderMutation = () => {
 };
 
 export const useSplitBookingMutation = () => {
-    return useMutation<any, BaseResponse<null>, ISplitBookingPayload>({
-        mutationFn: (payload) => manageBookingAPIs.splitBooking(payload),
-    });
+    return useMutation<ReservationRs, BaseResponse<null>, ISplitBookingPayload>(
+        {
+            mutationFn: (payload) => manageBookingAPIs.splitBooking(payload),
+        },
+    );
 };
 
 export const useCreateFormOfPaymentMutation = () => {
@@ -77,5 +82,11 @@ export const useCreateFormOfPaymentMutation = () => {
 export const useApprovalFormOfPaymentMutation = () => {
     return useMutation<any, BaseResponse<null>, number>({
         mutationFn: (recId) => formOfPaymentAPIs.approvalFOP(recId),
+    });
+};
+
+export const useDeleteFormOfPaymentMutation = () => {
+    return useMutation<any, BaseResponse<null>, number>({
+        mutationFn: (recId) => formOfPaymentAPIs.delete(recId),
     });
 };
