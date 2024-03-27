@@ -1,25 +1,151 @@
-import { ObjectSchema, object, string, array, number, mixed } from "yup";
-import { RuleAndPolicyFormData } from "../modules/ruleAndPolicy.interface";
+import { ObjectSchema, object, string, number } from "yup";
+import {
+    DepositRuleAndPolicyFormData,
+    LimitTimeBookingRuleAndPolicyFormData,
+    PenaltyRuleAndPolicyFormData,
+} from "../modules/ruleAndPolicy.interface";
+import {
+    PolicyCat,
+    PolicyRule,
+} from "@/models/management/core/ruleAndPolicy.interface";
 
-export const ruleAndPolicyCreateSchema: ObjectSchema<RuleAndPolicyFormData> =
+export const depositRuleAndPolicyCreateSchema: ObjectSchema<DepositRuleAndPolicyFormData> =
     object({
-        cat: string().required("Không bỏ trống."), //lấy từ core
+        cat: string()
+            .oneOf<PolicyCat>(
+                [
+                    PolicyCat.BYAGENT,
+                    PolicyCat.BYDESTINATION,
+                    PolicyCat.BYTOURCODE,
+                ],
+                "Cat không hợp lệ.",
+            )
+            .required("Chưa chọn loại."), //lấy từ core
         catName: string().required("Không bỏ trống."), //lấy từ core
-        rule: string().required("Không bỏ trống."), //lấy từ core
+        rule: string()
+            .oneOf<PolicyRule>(
+                [
+                    PolicyRule["30BEFOR_DEPART"],
+                    PolicyRule["50BEFOR_DEPART"],
+                    PolicyRule["70BEFOR_DEPART"],
+                    PolicyRule["100BEFOR_DEPART"],
+                    PolicyRule.AMOUNTBEFOR_DEPART,
+                ],
+                "Rule không hợp lệ.",
+            )
+            .required("Chưa chọn quy tắc."),
         ruleName: string().required("Không bỏ trống."), //lấy từ core
-        maTour: string().required("Không bỏ trống."),
+        maTour: string().when("cat", {
+            is: PolicyCat.BYTOURCODE,
+            then: (schema) => schema.required("Không bỏ trống mã tour."),
+            //lấy từ core
+            otherwise: (schema) => schema.optional(),
+        }),
         soNgay: number()
             .min(0, "Tối thiểu là 0.")
             .max(365, "Tối đa 365 ngày.")
             .typeError("Số ngày không hợp lệ, phải là chữ số.")
-            .integer("Số ngày không hợp lệ, phải là chữ số."),
-        soTien: number()
-            .typeError("Số tiền không hợp lệ, phải là chữ số.")
-            .integer("Số tiền không hợp lệ, phải là chữ số."),
+            .integer("Số ngày không hợp lệ, phải là chữ số.")
+            .required("Vui lòng nhập số ngày"),
+        soTien: number().when("rule", {
+            is: PolicyRule.AMOUNTBEFOR_DEPART,
+            then: (schema) =>
+                schema
+                    .required("Không bỏ trống mã tour.")
+                    .typeError("Số tiền không hợp lệ, phải là chữ số.")
+                    .integer("Số tiền không hợp lệ, phải là chữ số."),
+            //lấy từ core
+            otherwise: (schema) => schema.optional(),
+        }),
+        destId: number().when("cat", {
+            is: PolicyCat.BYDESTINATION,
+            then: (schema) => schema.required("Vui lòng chọn nhóm điểm đến."),
+            otherwise: (schema) => schema.optional(),
+        }),
+    });
+
+export const limitBookingTimeRuleAndPolicyCreateSchema: ObjectSchema<LimitTimeBookingRuleAndPolicyFormData> =
+    object({
+        cat: string()
+            .oneOf<PolicyCat>(
+                [PolicyCat.BYDESTINATION, PolicyCat.BYTOURCODE],
+                "Cat không hợp lệ.",
+            )
+            .required("Chưa chọn loại."), //lấy từ core
+        catName: string().required("Không bỏ trống."), //lấy từ core
+        rule: string()
+            .oneOf<PolicyRule>(
+                [PolicyRule.HOURSAFTER_BOOK],
+                "Rule không hợp lệ.",
+            )
+            .required("Chưa chọn quy tắc."),
+
+        ruleName: string().required("Không bỏ trống."), //lấy từ core
+        maTour: string().when("cat", {
+            is: PolicyCat.BYTOURCODE,
+            then: (schema) => schema.required("Không bỏ trống mã tour."),
+            otherwise: (schema) => schema.optional(),
+        }),
         soGio: number()
             .min(0, "Tối thiểu là 0.")
             .max(24, "Tối đa 24 giờ.")
             .typeError("Số giờ không hợp lệ, phải là chữ số.")
-            .integer("Số giờ không hợp lệ, phải là chữ số."),
-        destId: number(),
+            .integer("Số giờ không hợp lệ, phải là chữ số.")
+            .required("Số giờ không bỏ trống"),
+        destId: number().when("cat", {
+            is: PolicyCat.BYDESTINATION,
+            then: (schema) => schema.required("Vui lòng chọn nhóm điểm đến."),
+            otherwise: (schema) => schema.optional(),
+        }),
+    });
+
+export const penaltyRuleAndPolicyCreateSchema: ObjectSchema<PenaltyRuleAndPolicyFormData> =
+    object({
+        cat: string()
+            .oneOf<PolicyCat>(
+                [PolicyCat.BYDESTINATION, PolicyCat.BYTOURCODE],
+                "Cat không hợp lệ.",
+            )
+            .required("Chưa chọn loại."), //lấy từ core
+        catName: string().required("Không bỏ trống."), //lấy từ core
+        rule: string()
+            .oneOf<PolicyRule>(
+                [
+                    PolicyRule["30TOTAL"],
+                    PolicyRule["50TOTAL"],
+                    PolicyRule["70TOTAL"],
+                    PolicyRule["100TOTAL"],
+                    PolicyRule.FIXAMOUNT,
+                ],
+                "Rule không hợp lệ.",
+            )
+            .required("Chưa chọn quy tắc."),
+        ruleName: string().required("Không bỏ trống."), //lấy từ core
+        maTour: string().when("cat", {
+            is: PolicyCat.BYTOURCODE,
+            then: (schema) => schema.required("Không bỏ trống mã tour."),
+            //lấy từ core
+            otherwise: (schema) => schema.optional(),
+        }),
+        soNgay: number()
+            .min(0, "Tối thiểu là 0.")
+            .max(365, "Tối đa 365 ngày.")
+            .typeError("Số ngày không hợp lệ, phải là chữ số.")
+            .integer("Số ngày không hợp lệ, phải là chữ số.")
+            .required("Vui lòng nhập số ngày"),
+        soTien: number().when("rule", {
+            is: PolicyRule.FIXAMOUNT,
+            then: (schema) =>
+                schema
+                    .required("Không bỏ trống mã tour.")
+                    .typeError("Số tiền không hợp lệ, phải là chữ số.")
+                    .integer("Số tiền không hợp lệ, phải là chữ số."),
+            //lấy từ core
+            otherwise: (schema) => schema.optional(),
+        }),
+        destId: number().when("cat", {
+            is: PolicyCat.BYDESTINATION,
+            then: (schema) => schema.required("Vui lòng chọn nhóm điểm đến."),
+            otherwise: (schema) => schema.optional(),
+        }),
     });

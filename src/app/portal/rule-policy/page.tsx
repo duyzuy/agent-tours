@@ -8,6 +8,7 @@ import PageContainer from "@/components/admin/PageContainer";
 import RuleAndPolicyList from "./_components/RuleAndPolicyList";
 import DepoSitCreateForm from "./_components/DepoSitCreateForm";
 import LimitTimeCreateForm from "./_components/LimitTimeCreateForm";
+import PenaltyCreateForm from "./_components/PenaltyCreateForm";
 
 const RuleAndPolicyPage = () => {
     const { data: ruleAndPolicyList, isLoading } =
@@ -36,6 +37,12 @@ const RuleAndPolicyPage = () => {
             key: "limitTimeCreate",
             label: "Chính sách trả sau",
             children: <LimitTimeCreateForm onSubmit={onCreate} />,
+            icon: <PlusOutlined />,
+        },
+        {
+            key: "penaltyCreate",
+            label: "Phí phạt",
+            children: <PenaltyCreateForm onSubmit={onCreate} />,
             icon: <PlusOutlined />,
         },
     ];

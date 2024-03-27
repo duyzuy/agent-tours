@@ -68,6 +68,7 @@ export const useFormOfPayment = () => {
 
     return {
         onCreateFormOfPayment,
+
         onApproval: onApproval,
         onDelete,
     };

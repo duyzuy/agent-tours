@@ -42,4 +42,22 @@ export const ruleAndPolicyAPIs = {
             },
         );
     },
+    getPenaltyCatList: async () => {
+        return await coreApi.post<RuleAndPolicyCatListRs, BaseResponse<null>>(
+            "core/RuleAndPolicy_GetPenalty_Cat",
+            {
+                requestObject: {},
+                localUsername: "99",
+            },
+        );
+    },
+    getPenaltyRuleList: async () => {
+        return await coreApi.post<RuleAndPolicyRuleListRs, BaseResponse<null>>(
+            "core/RuleAndPolicy_GetPenalty_Rule",
+            {
+                requestObject: {},
+                localUsername: "99",
+            },
+        );
+    },
 };

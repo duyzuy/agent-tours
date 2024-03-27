@@ -2,8 +2,8 @@ import { object, string, ObjectSchema, boolean, ref } from "yup";
 
 import {
     ILocalUserPayload,
-    ILocalUserChangePasswordPayLoad,
     ELocalUserType,
+    ILocalUserChangePasswordFormData,
 } from "@/models/management/localUser.interface";
 
 type TLocalUserObjectSchema = ILocalUserPayload & {
@@ -74,7 +74,7 @@ export const localUserSchema: ObjectSchema<TLocalUserObjectSchema> = object({
     status: string().required().oneOf(["OK", "XX", "OX"]).default("OK"),
 });
 
-export const localUserChangePasswordSchema: ObjectSchema<ILocalUserChangePasswordPayLoad> =
+export const localUserChangePasswordSchema: ObjectSchema<ILocalUserChangePasswordFormData> =
     object({
         username: string().required("Tên tài khoản không bỏ trống."),
         newPassword: string()

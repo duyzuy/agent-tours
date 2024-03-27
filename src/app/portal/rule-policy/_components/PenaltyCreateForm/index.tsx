@@ -10,15 +10,15 @@ import {
     Spin,
 } from "antd";
 import { isArray } from "lodash";
-import { LimitTimeBookingRuleAndPolicyFormData } from "../../modules/ruleAndPolicy.interface";
+import { PenaltyRuleAndPolicyFormData } from "../../modules/ruleAndPolicy.interface";
 import {
-    useGetRuleAndPolicyLimitTimeCatListCoreQuery,
-    useGetRuleAndPolicyLimitTimeRuleListCoreQuery,
+    useGetRuleAndPolicyPenaltyCatListCoreQuery,
+    useGetRuleAndPolicyPenaltyRuleListCoreQuery,
 } from "@/queries/core/ruleAndPolicy";
 import FormItem from "@/components/base/FormItem";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { useGetDestinationsQuery } from "@/queries/misc/destination";
-import { limitBookingTimeRuleAndPolicyCreateSchema } from "../../schema/ruleAndPolicy.schema";
+import { penaltyRuleAndPolicyCreateSchema } from "../../schema/ruleAndPolicy.schema";
 import {
     IRuleAndPolicyCat,
     IRuleAndPolicyRule,
@@ -28,25 +28,20 @@ import {
     PolicyCat,
     PolicyRule,
 } from "@/models/management/core/ruleAndPolicy.interface";
-export interface LimitTimeCreateFormProps {
-    onSubmit?: (
-        data: LimitTimeBookingRuleAndPolicyFormData,
-        cb?: () => void,
-    ) => void;
+export interface PenaltyCreateFormProps {
+    onSubmit?: (data: PenaltyRuleAndPolicyFormData, cb?: () => void) => void;
 }
 
-type RequiredLimitBookingTimeFormData =
-    Required<LimitTimeBookingRuleAndPolicyFormData>;
-const LimitTimeCreateForm: React.FC<LimitTimeCreateFormProps> = ({
-    onSubmit,
-}) => {
+type RequiredLimitBookingTimeFormData = Required<PenaltyRuleAndPolicyFormData>;
+const PenaltyCreateForm: React.FC<PenaltyCreateFormProps> = ({ onSubmit }) => {
     const { data: catList, isLoading: isLoadingCat } =
-        useGetRuleAndPolicyLimitTimeCatListCoreQuery({ enabled: true });
+        useGetRuleAndPolicyPenaltyCatListCoreQuery({ enabled: true });
     const { data: ruleList, isLoading: isLoadingRule } =
-        useGetRuleAndPolicyLimitTimeRuleListCoreQuery({ enabled: true });
+        useGetRuleAndPolicyPenaltyRuleListCoreQuery({ enabled: true });
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetDestinationsQuery();
-    const initFormData = new LimitTimeBookingRuleAndPolicyFormData(
+    const initFormData = new PenaltyRuleAndPolicyFormData(
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -57,8 +52,8 @@ const LimitTimeCreateForm: React.FC<LimitTimeCreateFormProps> = ({
     );
 
     const { handlerSubmit, errors } =
-        useFormSubmit<LimitTimeBookingRuleAndPolicyFormData>({
-            schema: limitBookingTimeRuleAndPolicyCreateSchema,
+        useFormSubmit<PenaltyRuleAndPolicyFormData>({
+            schema: penaltyRuleAndPolicyCreateSchema,
         });
     const [formData, setFormData] = useState(initFormData);
 
@@ -104,9 +99,9 @@ const LimitTimeCreateForm: React.FC<LimitTimeCreateFormProps> = ({
         }
     };
 
-    const handleSubmitForm: HandleSubmit<
-        LimitTimeBookingRuleAndPolicyFormData
-    > = (data) => {
+    const handleSubmitForm: HandleSubmit<PenaltyRuleAndPolicyFormData> = (
+        data,
+    ) => {
         onSubmit?.(data, () => {
             setFormData(initFormData);
         });
@@ -207,15 +202,30 @@ const LimitTimeCreateForm: React.FC<LimitTimeCreateFormProps> = ({
                         </Radio.Group>
                     )}
                 </FormItem>
+                {formData.rule === PolicyRule.FIXAMOUNT ? (
+                    <FormItem
+                        label="Số tiền"
+                        validateStatus={errors?.soTien ? "error" : ""}
+                        help={errors?.soTien || ""}
+                    >
+                        <Input
+                            placeholder="Nhập số tiền"
+                            value={formData.soTien}
+                            onChange={(evt) =>
+                                onChange("soTien", evt.target.value)
+                            }
+                        />
+                    </FormItem>
+                ) : null}
                 <FormItem
-                    label="Số giờ"
-                    validateStatus={errors?.soGio ? "error" : ""}
-                    help={errors?.soGio || ""}
+                    label="Số ngày"
+                    validateStatus={errors?.soNgay ? "error" : ""}
+                    help={errors?.soNgay || ""}
                 >
                     <Input
-                        placeholder="Nhập số giờ"
-                        value={formData.soGio}
-                        onChange={(evt) => onChange("soGio", evt.target.value)}
+                        placeholder="Nhập số ngày"
+                        value={formData.soNgay}
+                        onChange={(evt) => onChange("soNgay", evt.target.value)}
                     />
                 </FormItem>
                 <FormItem
@@ -240,4 +250,4 @@ const LimitTimeCreateForm: React.FC<LimitTimeCreateFormProps> = ({
         </div>
     );
 };
-export default LimitTimeCreateForm;
+export default PenaltyCreateForm;

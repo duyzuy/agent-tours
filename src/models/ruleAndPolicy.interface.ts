@@ -1,10 +1,13 @@
 import { BaseResponse } from "./management/common.interface";
-
+import {
+    PolicyCat,
+    PolicyRule,
+} from "@/models/management/core/ruleAndPolicy.interface";
 export interface IRuleAndPolicy {
     id: number;
-    cat: string;
+    cat: PolicyCat;
     catName: string;
-    rule: string;
+    rule: PolicyRule;
     ruleName: string;
     maTour: string;
     soNgay: number;

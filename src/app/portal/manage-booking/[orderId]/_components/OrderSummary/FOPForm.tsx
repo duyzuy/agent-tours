@@ -15,6 +15,7 @@ interface FOPFormProps {
     onSubmitForm?: (data: FOPFormData, cb?: () => void) => void;
 }
 const FOPForm: React.FC<FOPFormProps> = ({ orderId, onSubmitForm }) => {
+    const [isLoading, setLoading] = useState(false);
     const initialValue = new FOPFormData(
         orderId,
         undefined,
@@ -37,8 +38,10 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId, onSubmitForm }) => {
         setFormData((prev) => ({ ...prev, [key]: value }));
     };
     const onSubmit: HandleSubmit<FOPFormData> = (data) => {
+        setLoading(true);
         onSubmitForm?.(data, () => {
             setFormData(initialValue);
+            setLoading(false);
         });
     };
 
@@ -143,6 +146,7 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId, onSubmitForm }) => {
                 <Button
                     onClick={() => handlerSubmit(formData, onSubmit)}
                     type="primary"
+                    loading={isLoading}
                 >
                     Tạo phiếu thu
                 </Button>

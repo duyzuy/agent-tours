@@ -1,15 +1,29 @@
 "use client";
 import PageContainer from "@/components/admin/PageContainer";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
-import { UserOutlined } from "@ant-design/icons";
+import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { Row, Col, Button } from "antd";
 import { useLogoutPortal } from "@/app/(adminAuth)/ag/hooks/useAgAuth";
+import ExtraInformationForm from "./_components/ExtraInformationForm";
+import useUpdateUserProfile from "./modules/useUpdateUserProfile";
+import AddressContactForm from "./_components/AddressContactForm";
+import React, { useState } from "react";
+import ModalChangePassword from "./_components/ModalChangePassword";
+
 const MyAccountPage = () => {
     const localProfile = useLocalUserProfile();
     const onLogoutPortal = useLogoutPortal();
+    const { onChangePassword } = useUpdateUserProfile();
+    const [showModalChangePassword, setShowModalChangePassword] =
+        useState(false);
     return (
-        <PageContainer name="Thông tin tài khoản" hideAddButton>
-            <div className="container border p-8 rounded-md">
+        <PageContainer
+            name="Thông tin tài khoản"
+            hideAddButton
+            className=""
+            breadCrumItems={[{ title: "Thông tin tài khoản" }]}
+        >
+            <div className="container border p-8 rounded-md max-w-3xl">
                 <div className="flex items-center justify-between border-b pb-6">
                     <div className="flex items-center">
                         <div className="icon w-20 h-20 text-gray-400 bg-gray-100 rounded-full flex items-center justify-center">
@@ -41,13 +55,22 @@ const MyAccountPage = () => {
                         </Col>
                         <Col span={12} className="mb-4">
                             <div>
-                                <p>Mật khẩu</p>
-                                <div className=" flex items-center">
-                                    <span>*******</span>
-                                    <span className="text-xs text-blue-500 ml-3">
-                                        Đổi mật khẩu
+                                <p>
+                                    <span className="inline-block mr-1">
+                                        Mật khẩu
                                     </span>
-                                </div>
+                                    <span
+                                        className="text-blue-600 cursor-pointer"
+                                        onClick={() =>
+                                            setShowModalChangePassword(true)
+                                        }
+                                    >
+                                        <EditOutlined />
+                                    </span>
+                                </p>
+                                <p>
+                                    <span>*******</span>
+                                </p>
                             </div>
                         </Col>
                         <Col span={12} className="mb-4">
@@ -64,88 +87,16 @@ const MyAccountPage = () => {
                         </Col>
                     </Row>
                 </div>
-                <div className="Thông tin cá nhân">
-                    <div className=" py-2 mb-2">
-                        <h4 className="font-semibold text-lg">
-                            Thông tin cá nhân
-                        </h4>
-                    </div>
-                    <Row gutter={36}>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Họ và tên:</p>
-                                <p> {localProfile?.fullname}</p>
-                            </div>
-                        </Col>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Email:</p>
-                                <p> {localProfile?.infoEmail}</p>
-                            </div>
-                        </Col>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Số điện thoại:</p>
-                                <p> {localProfile?.infoPhoneNumber}</p>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-                <div className="infor">
-                    <div className=" py-2 mb-2">
-                        <h4 className="font-semibold text-lg">
-                            Thông tin thêm
-                        </h4>
-                    </div>
-                    <Row gutter={36}>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Công ty:</p>
-                                <p>{localProfile?.infoCompanyName || "--"}</p>
-                            </div>
-                        </Col>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Mã số thuế:</p>
-                                <p>{localProfile?.infoTaxcode || "--"}</p>
-                            </div>
-                        </Col>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Chức danh:</p>
-                                <p>{localProfile?.infoPosition || "--"}</p>
-                            </div>
-                        </Col>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Người đại diện:</p>
-                                <p>
-                                    {localProfile?.infoLegalRepresentative ||
-                                        "--"}
-                                </p>
-                            </div>
-                        </Col>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Địa chỉ:</p>
-                                <p> {localProfile?.infoAddress}</p>
-                            </div>
-                        </Col>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Thông tin ngân hàng:</p>
-                                <p>{localProfile?.infoBanking || "--"}</p>
-                            </div>
-                        </Col>
-                        <Col span={12} className="mb-4">
-                            <div>
-                                <p>Ghi chú:</p>
-                                <p>{localProfile?.infoSpecialNote || "--"}</p>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
+
+                <AddressContactForm data={localProfile} />
+                <ExtraInformationForm data={localProfile} />
             </div>
+            <ModalChangePassword
+                userName={localProfile?.username || ""}
+                isOpen={showModalChangePassword}
+                onClose={() => setShowModalChangePassword(false)}
+                onSubmit={onChangePassword}
+            />
         </PageContainer>
     );
 };

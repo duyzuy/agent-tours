@@ -11,6 +11,8 @@ import {
 import { Button, Space, Tag, Modal, Col, Row } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { formatDate } from "@/utils/date";
+import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
+import useMessage from "@/hooks/useMessage";
 
 const columns: ColumnsType<IOrderDetail["fops"][0]> = [
     {
@@ -65,13 +67,22 @@ interface FOPListProps {
     items: IOrderDetail["fops"];
     onApproval: (recId: number) => void;
     onDelete: (recId: number) => void;
+    totalAmount: number;
+    totalPaid: number;
 }
-const FOPList: React.FC<FOPListProps> = ({ items, onApproval, onDelete }) => {
+const FOPList: React.FC<FOPListProps> = ({
+    items,
+    onApproval,
+    onDelete,
+    totalAmount,
+    totalPaid,
+}) => {
     const [detailRecord, setDetailRecord] = useState<{
         isShow: boolean;
         data?: IOrderDetail["fops"][0];
     }>({ isShow: false, data: undefined });
 
+    const message = useMessage();
     const onViewDetail = (record: IOrderDetail["fops"][0]) => {
         setDetailRecord((prev) => ({
             isShow: true,
@@ -79,6 +90,16 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval, onDelete }) => {
         }));
     };
 
+    const handleApproval = (record: IFormOfPayment) => {
+        if (record.amount + totalPaid > totalAmount) {
+            message.error(
+                "Tổng tiền thanh toán không vượt quá số tiền phải thanh toán.",
+            );
+            return;
+        }
+
+        onApproval(record.recId);
+    };
     const mergeColumns: ColumnsType<IOrderDetail["fops"][0]> = [
         ...columns,
         {
@@ -114,7 +135,7 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval, onDelete }) => {
                             <Button
                                 type="text"
                                 shape="circle"
-                                onClick={() => onApproval(record.recId)}
+                                onClick={() => handleApproval(record)}
                                 icon={
                                     <span className="text-green-600">
                                         <CheckCircleOutlined />

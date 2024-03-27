@@ -114,20 +114,20 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
                     <div className="flex items-center">
                         <div className="w-40 border-r mr-6">
                             <span className="block">Tổng tiền phiếu thu</span>
-                            <span className="block text-[16px] font-semibold text-primary-default">
+                            <span className="block text-[16px] font-semibold text-green-600">
                                 {moneyFormatVND(orderDetail.totalFop)}
                             </span>
                         </div>
                         <div className="w-40 border-r mr-6">
-                            <span className="block">Đã thanh toán</span>
-                            <span className="block text-[16px] font-semibold text-primary-default">
-                                {moneyFormatVND(orderDetail.totalPaid)}
+                            <span className="block">Đã hoàn</span>
+                            <span className="block text-[16px] font-semibold text-red-600">
+                                {moneyFormatVND(orderDetail.totalRefunded)}
                             </span>
                         </div>
                         <div className="w-40 border-r mr-6">
-                            <span className="block">Đã hoàn</span>
-                            <span className="block text-[16px] font-semibold text-primary-default">
-                                {moneyFormatVND(orderDetail.totalRefunded)}
+                            <span className="block">Đã thanh toán</span>
+                            <span className="block text-[16px] font-semibold text-green-600">
+                                {moneyFormatVND(orderDetail.totalPaid)}
                             </span>
                         </div>
                     </div>
@@ -167,6 +167,8 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
             </div>
             <DrawerFormOfPayment
                 orderId={orderDetail.recId}
+                totalAmount={orderDetail.totalAmount}
+                totalPaid={orderDetail.totalPaid}
                 isOpen={isShowDrawerFOP}
                 fops={fops}
                 onClose={() => setShowDrawerFOP(false)}

@@ -5,7 +5,12 @@ import {
     ILocalUserChangePasswordPayLoad,
 } from "@/models/management/localUser.interface";
 import { localUserAPIs } from "@/services/management/localUser.service";
+import { localAuthAPIs } from "@/services/management/localAuth.service";
 import { BaseResponse } from "@/models/management/common.interface";
+import {
+    ILocalUserProfileRs,
+    ILocalUserProfilePayload,
+} from "@/models/management/localAuth.interface";
 
 export const useCreateLocalUserMutation = () => {
     return useMutation<ILocalUser, BaseResponse<null>, ILocalUserPayload>({
@@ -41,5 +46,15 @@ export const useLocalUserChangePasswordMutation = () => {
         ILocalUserChangePasswordPayLoad
     >({
         mutationFn: (payload) => localUserAPIs.changePassword(payload),
+    });
+};
+
+export const useLocalUserProfileUpdateMutation = () => {
+    return useMutation<
+        ILocalUserProfileRs,
+        BaseResponse<null>,
+        ILocalUserProfilePayload
+    >({
+        mutationFn: (payload) => localAuthAPIs.update(payload),
     });
 };

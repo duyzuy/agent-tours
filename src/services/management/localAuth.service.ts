@@ -1,5 +1,10 @@
+import { getAgToken } from "@/utils/common";
 import { client } from "../api";
-import { ILocalUserProfileRs } from "@/models/management/localAuth.interface";
+import {
+    ILocalUserProfileRs,
+    ILocalUserProfilePayload,
+} from "@/models/management/localAuth.interface";
+
 export const localAuthAPIs = {
     getRoles: async <T>(token: string) => {
         return await client.post<T, any>("local/CurrentUser_getRoles", {
@@ -14,6 +19,23 @@ export const localAuthAPIs = {
             {
                 headers: {
                     Authorization: `Bearer ${encodeURIComponent(token)}`,
+                },
+            },
+        );
+    },
+    update: async (payload: ILocalUserProfilePayload) => {
+        return await client.post<ILocalUserProfileRs, any>(
+            "local/CurrentUser_updateInfo",
+            {
+                headers: {
+                    Authorization: `Bearer ${encodeURIComponent(
+                        getAgToken() || "",
+                    )}`,
+                },
+                params: {
+                    requestObject: {
+                        ...payload,
+                    },
                 },
             },
         );

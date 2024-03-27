@@ -1,5 +1,13 @@
-import { Button, Form, Input, Select, SelectProps, Space } from "antd";
-import { RuleAndPolicyFormData } from "../../modules/ruleAndPolicy.interface";
+import {
+    Button,
+    Form,
+    Input,
+    Radio,
+    Select,
+    SelectProps,
+    Space,
+    Spin,
+} from "antd";
 import { useState } from "react";
 import {
     useGetRuleAndPolicyDepositCatListCoreQuery,
@@ -8,18 +16,23 @@ import {
 import FormItem from "@/components/base/FormItem";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { useGetDestinationsQuery } from "@/queries/misc/destination";
-import { ruleAndPolicyCreateSchema } from "../../schema/ruleAndPolicy.schema";
+import { isArray } from "lodash";
+import { IDestination } from "@/models/management/region.interface";
+import {
+    PolicyCat,
+    PolicyRule,
+} from "@/models/management/core/ruleAndPolicy.interface";
+import { depositRuleAndPolicyCreateSchema } from "../../schema/ruleAndPolicy.schema";
 import {
     IRuleAndPolicyCat,
     IRuleAndPolicyRule,
 } from "@/models/management/core/ruleAndPolicy.interface";
-import { isArray } from "lodash";
-import { IDestination } from "@/models/management/region.interface";
+import { DepositRuleAndPolicyFormData } from "../../modules/ruleAndPolicy.interface";
 export interface DepoSitCreateFormProps {
-    onSubmit?: (data: RuleAndPolicyFormData, cb?: () => void) => void;
+    onSubmit?: (data: DepositRuleAndPolicyFormData, cb?: () => void) => void;
 }
 
-type TDepositFormData = Required<RuleAndPolicyFormData>;
+type RequiredDepositFormData = Required<DepositRuleAndPolicyFormData>;
 const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
     const { data: catList, isLoading: isLoadingCat } =
         useGetRuleAndPolicyDepositCatListCoreQuery({ enabled: true });
@@ -27,8 +40,7 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
         useGetRuleAndPolicyDepositRuleListCoreQuery({ enabled: true });
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetDestinationsQuery();
-    const initFormData = new RuleAndPolicyFormData(
-        undefined,
+    const initFormData = new DepositRuleAndPolicyFormData(
         undefined,
         undefined,
         undefined,
@@ -38,15 +50,15 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
         undefined,
         undefined,
     );
-
-    const { handlerSubmit, errors } = useFormSubmit<RuleAndPolicyFormData>({
-        schema: ruleAndPolicyCreateSchema,
-    });
     const [formData, setFormData] = useState(initFormData);
+    const { handlerSubmit, errors } =
+        useFormSubmit<DepositRuleAndPolicyFormData>({
+            schema: depositRuleAndPolicyCreateSchema,
+        });
 
     const onChange = (
-        key: keyof TDepositFormData,
-        value: TDepositFormData[keyof TDepositFormData],
+        key: keyof RequiredDepositFormData,
+        value: RequiredDepositFormData[keyof RequiredDepositFormData],
     ) => {
         setFormData((oldData) => {
             return {
@@ -55,29 +67,19 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
             };
         });
     };
-    const onChangeCat: SelectProps<string, IRuleAndPolicyCat>["onChange"] = (
-        value,
-        option,
-    ) => {
-        if (!isArray(option)) {
-            setFormData((oldData) => ({
-                ...oldData,
-                cat: value,
-                catName: option.name,
-            }));
-        }
+    const onChangeCat = (value: string, option: IRuleAndPolicyCat) => {
+        setFormData((oldData) => ({
+            ...oldData,
+            cat: value as PolicyCat,
+            catName: option.name,
+        }));
     };
-    const onChangeRule: SelectProps<string, IRuleAndPolicyRule>["onChange"] = (
-        value,
-        option,
-    ) => {
-        if (!isArray(option)) {
-            setFormData((oldData) => ({
-                ...oldData,
-                rule: value,
-                ruleName: option.name,
-            }));
-        }
+    const onChangeRule = (value: string, option: IRuleAndPolicyRule) => {
+        setFormData((oldData) => ({
+            ...oldData,
+            rule: value as PolicyRule,
+            ruleName: option.name,
+        }));
     };
 
     const onChangeDestination: SelectProps<number, IDestination>["onChange"] = (
@@ -91,8 +93,9 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
             }));
         }
     };
-
-    const handleSubmitForm: HandleSubmit<RuleAndPolicyFormData> = (data) => {
+    const handleSubmitForm: HandleSubmit<DepositRuleAndPolicyFormData> = (
+        data,
+    ) => {
         onSubmit?.(data, () => {
             setFormData(initFormData);
         });
@@ -113,56 +116,101 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
                     validateStatus={errors?.cat ? "error" : ""}
                     help={errors?.cat || ""}
                 >
-                    <Select<string, IRuleAndPolicyCat>
-                        value={formData.cat}
-                        fieldNames={{ label: "name", value: "key" }}
-                        options={catList || []}
-                        loading={isLoadingCat}
-                        placeholder="Chọn loại mục"
-                        onChange={onChangeCat}
-                    />
+                    {isLoadingCat ? (
+                        <Spin />
+                    ) : (
+                        <Radio.Group value={formData.cat}>
+                            <Space direction="vertical" className="pt-1">
+                                {catList?.map((cat) => (
+                                    <Radio
+                                        key={cat.key}
+                                        value={cat.key}
+                                        onChange={(ev) =>
+                                            onChangeCat(ev.target.value, cat)
+                                        }
+                                        title={cat.name}
+                                    >
+                                        {cat.name}
+                                    </Radio>
+                                ))}
+                            </Space>
+                        </Radio.Group>
+                    )}
                 </FormItem>
+                {formData.cat === PolicyCat.BYDESTINATION ? (
+                    <FormItem
+                        label="Nhóm điểm đến"
+                        validateStatus={errors?.destId ? "error" : ""}
+                        help={errors?.destId || ""}
+                    >
+                        <Select<number, IDestination>
+                            value={formData.destId}
+                            fieldNames={{ label: "codeName", value: "id" }}
+                            options={destinationList || []}
+                            loading={isLoadingDestinationList}
+                            placeholder="Chọn nhóm điểm đến"
+                            onChange={onChangeDestination}
+                        />
+                    </FormItem>
+                ) : null}
+                {formData.cat === PolicyCat.BYTOURCODE ? (
+                    <FormItem
+                        label="Mã tour"
+                        required
+                        validateStatus={errors?.maTour ? "error" : ""}
+                        help={errors?.maTour || ""}
+                    >
+                        <Input
+                            placeholder="Nhập mã tour"
+                            value={formData.maTour}
+                            onChange={(evt) =>
+                                onChange("maTour", evt.target.value)
+                            }
+                        />
+                    </FormItem>
+                ) : null}
                 <FormItem
                     label="Chọn quy tắc"
                     required
                     validateStatus={errors?.rule ? "error" : ""}
                     help={errors?.rule || ""}
                 >
-                    <Select<string, IRuleAndPolicyRule>
-                        value={formData.rule}
-                        fieldNames={{ label: "name", value: "key" }}
-                        options={ruleList || []}
-                        loading={isLoadingRule}
-                        placeholder="Chọn quy tắc áp dụng"
-                        onChange={onChangeRule}
-                    />
+                    {isLoadingRule ? (
+                        <Spin />
+                    ) : (
+                        <Radio.Group value={formData.rule}>
+                            <Space direction="vertical" className="pt-1">
+                                {ruleList?.map((rule) => (
+                                    <Radio
+                                        key={rule.key}
+                                        value={rule.key}
+                                        onChange={(ev) =>
+                                            onChangeRule(ev.target.value, rule)
+                                        }
+                                        title={rule.note}
+                                    >
+                                        {rule.name}
+                                    </Radio>
+                                ))}
+                            </Space>
+                        </Radio.Group>
+                    )}
                 </FormItem>
-                <FormItem
-                    label="Nhóm điểm đến"
-                    validateStatus={errors?.destId ? "error" : ""}
-                    help={errors?.destId || ""}
-                >
-                    <Select<number, IDestination>
-                        value={formData.destId}
-                        fieldNames={{ label: "codeName", value: "id" }}
-                        options={destinationList || []}
-                        loading={isLoadingDestinationList}
-                        placeholder="Chọn nhóm điểm đến"
-                        onChange={onChangeDestination}
-                    />
-                </FormItem>
-                <FormItem
-                    label="Mã tour"
-                    required
-                    validateStatus={errors?.maTour ? "error" : ""}
-                    help={errors?.maTour || ""}
-                >
-                    <Input
-                        placeholder="Nhập mã tour"
-                        value={formData.maTour}
-                        onChange={(evt) => onChange("maTour", evt.target.value)}
-                    />
-                </FormItem>
+                {formData.rule === PolicyRule.AMOUNTBEFOR_DEPART ? (
+                    <FormItem
+                        label="Số tiền"
+                        validateStatus={errors?.soTien ? "error" : ""}
+                        help={errors?.soTien || ""}
+                    >
+                        <Input
+                            placeholder="Nhập số tiền"
+                            value={formData.soTien}
+                            onChange={(evt) =>
+                                onChange("soTien", evt.target.value)
+                            }
+                        />
+                    </FormItem>
+                ) : null}
                 <FormItem
                     label="Số ngày"
                     validateStatus={errors?.soNgay ? "error" : ""}
@@ -174,29 +222,6 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
                         onChange={(evt) => onChange("soNgay", evt.target.value)}
                     />
                 </FormItem>
-                <FormItem
-                    label="Số tiền"
-                    validateStatus={errors?.soTien ? "error" : ""}
-                    help={errors?.soTien || ""}
-                >
-                    <Input
-                        placeholder="Nhập số tiền"
-                        value={formData.soTien}
-                        onChange={(evt) => onChange("soTien", evt.target.value)}
-                    />
-                </FormItem>
-                <FormItem
-                    label="Số giờ"
-                    validateStatus={errors?.soGio ? "error" : ""}
-                    help={errors?.soGio || ""}
-                >
-                    <Input
-                        placeholder="Nhập số giờ"
-                        value={formData.soGio}
-                        onChange={(evt) => onChange("soGio", evt.target.value)}
-                    />
-                </FormItem>
-
                 <FormItem
                     wrapperCol={{
                         span: 16,

@@ -1,6 +1,18 @@
 import { BaseResponse } from "./common.interface";
 
-interface ILocalUserProfile {
+export interface ILocalUserProfilePayload {
+    infoCompanyName?: string;
+    infoLegalRepresentative?: string;
+    infoPosition?: string;
+    infoPhoneNumber?: string;
+    infoEmail?: string;
+    infoAddress?: string;
+    infoTaxcode?: string;
+    infoBanking?: string;
+    infoSpecialNote?: string;
+}
+
+export interface ILocalUserProfile {
     recId: number;
     userId: string;
     username: string;

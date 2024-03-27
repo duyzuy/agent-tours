@@ -46,3 +46,25 @@ export const useGetRuleAndPolicyLimitTimeRuleListCoreQuery = (options?: {
         enabled: options?.enabled || false,
     });
 };
+
+export const useGetRuleAndPolicyPenaltyRuleListCoreQuery = (options?: {
+    enabled?: boolean;
+}) => {
+    return useQuery({
+        queryKey: [queryCore.GET_RULE_POLICY_PENALTY_RULE_LIST],
+        queryFn: () => ruleAndPolicyAPIs.getPenaltyRuleList(),
+        select: (data) => data.result,
+        enabled: options?.enabled || false,
+    });
+};
+
+export const useGetRuleAndPolicyPenaltyCatListCoreQuery = (options?: {
+    enabled?: boolean;
+}) => {
+    return useQuery({
+        queryKey: [queryCore.GET_RULE_POLICY_PENALTY_CAT_LIST],
+        queryFn: () => ruleAndPolicyAPIs.getPenaltyCatList(),
+        select: (data) => data.result,
+        enabled: options?.enabled || false,
+    });
+};

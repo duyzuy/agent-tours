@@ -2,7 +2,11 @@ import {
     useCreateRuleAndPolicyMutation,
     useDeleteRuleAndPolicyMutation,
 } from "@/mutations/managements/ruleAndPolicy";
-import { RuleAndPolicyFormData } from "./ruleAndPolicy.interface";
+import {
+    DepositRuleAndPolicyFormData,
+    LimitTimeBookingRuleAndPolicyFormData,
+    PenaltyRuleAndPolicyFormData,
+} from "./ruleAndPolicy.interface";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCMS } from "@/queries/var";
@@ -13,7 +17,13 @@ const useRuleAndPolicy = () => {
     const queryClient = useQueryClient();
     const message = useMessage();
 
-    const onCreate = (data: RuleAndPolicyFormData, cb?: () => void) => {
+    const onCreate = (
+        data:
+            | DepositRuleAndPolicyFormData
+            | LimitTimeBookingRuleAndPolicyFormData
+            | PenaltyRuleAndPolicyFormData,
+        cb?: () => void,
+    ) => {
         createRuleAndPolicy(data, {
             onSuccess(data, variables, context) {
                 console.log(data, variables, context);

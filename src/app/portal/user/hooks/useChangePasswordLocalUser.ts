@@ -3,11 +3,7 @@ import { ValidationError } from "yup";
 import useMessage from "@/hooks/useMessage";
 import { localUserChangePasswordSchema } from "./validate";
 import { useLocalUserChangePasswordMutation } from "@/mutations/managements/localUser";
-
-import {
-    ILocalUserChangePasswordPayLoad,
-    ILocalUserChangePasswordFormData,
-} from "@/models/management/localUser.interface";
+import { ILocalUserChangePasswordFormData } from "@/models/management/localUser.interface";
 
 export type TLocalUserChangePasswordErrorsField = Partial<
     Record<keyof ILocalUserChangePasswordFormData, string>
@@ -30,7 +26,6 @@ const useChangePasswordLocalUser = () => {
                     },
                     {
                         onSuccess: (data) => {
-                            console.log(data);
                             setErrors(undefined);
                             message.success("Đổi mật khẩu thành công.");
                             cb?.();
