@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
-import { Breadcrumb, Col, Divider, Row } from "antd";
+import { Breadcrumb, Col, Row } from "antd";
 import useBooking from "../hooks/useBooking";
 import { useRouter } from "next/navigation";
 import BookingSummary from "../_components/BookingSummary";
@@ -10,12 +10,14 @@ import usePassenger from "../modules/usePassenger";
 import { IBookingItem } from "../modules/bookingInformation.interface";
 import { PassengerType } from "@/models/management/common.interface";
 import { isUndefined } from "lodash";
-interface Props {}
+import { useFormSubmit } from "@/hooks/useFormSubmit";
+import { passengerInformationSchema } from "./schema/passengerInformation.schema";
 
-const CustomerInformationPage = ({}: Props) => {
-    const [bookingInformation, setBookingInfomation] = useBooking();
+const CustomerInformationPage = () => {
+    const [bookingInformation, _] = useBooking();
     const router = useRouter();
-
+    // const { handlerSubmit, errors } = useFormSubmit({ schema: undefined });
+    // console.log(errors);
     const { onSetPassengerInformation } = usePassenger();
 
     const passengerList = useMemo(() => {
@@ -39,6 +41,23 @@ const CustomerInformationPage = ({}: Props) => {
             }, []) || []
         );
     }, [bookingInformation]);
+
+    // const passengerFormData = useMemo(() => {
+    //     return (
+    //         bookingInformation.bookingInfo?.bookingItems?.reduce<
+    //             IBookingItem["passengerInformation"] & { type: PassengerType }[]
+    //         >((acc, bkItem) => {
+    //             acc = [
+    //                 ...acc,
+    //                 {
+    //                     ...bkItem.passengerInformation,
+    //                     type: bkItem.type,
+    //                 },
+    //             ];
+    //             return acc;
+    //         }, []) || []
+    //     );
+    // }, [bookingInformation.bookingInfo?.bookingItems]);
 
     useEffect(() => {
         if (
@@ -69,6 +88,10 @@ const CustomerInformationPage = ({}: Props) => {
                         <Col span={15}>
                             <PassengersInformationForm
                                 className="drop-shadow-sm mb-6"
+                                startDate={
+                                    bookingInformation.bookingInfo?.product
+                                        ?.startDate
+                                }
                                 passengerList={passengerList}
                                 onSetPassengerInfo={onSetPassengerInformation}
                             />
@@ -85,6 +108,17 @@ const CustomerInformationPage = ({}: Props) => {
                                     >
                                         Mua thêm dịch vụ
                                     </Button>
+                                    {/* <Button
+                                        type="primary"
+                                        onClick={() =>
+                                            handlerSubmit(
+                                                passengerFormDatas,
+                                                onSubmitPax,
+                                            )
+                                        }
+                                    >
+                                        submit pax
+                                    </Button> */}
                                     <Button
                                         type="primary"
                                         onClick={() =>

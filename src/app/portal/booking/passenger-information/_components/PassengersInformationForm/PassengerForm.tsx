@@ -1,24 +1,16 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo } from "react";
 import { PassengerType } from "@/models/management/common.interface";
-import {
-    Col,
-    Form,
-    Input,
-    Row,
-    Select,
-    DatePicker,
-    DatePickerProps,
-} from "antd";
+import { Col, Form, Input, Row, Select, DatePickerProps } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";
-import { DATE_FORMAT } from "@/constants/common";
-import dayjs from "dayjs";
+import { DATE_FORMAT, PASSENGER_AGES } from "@/constants/common";
 import { IBookingItem } from "../../../modules/bookingInformation.interface";
 import { getPassengerType } from "@/utils/common";
 import classNames from "classnames";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import dayjs from "dayjs";
+import CustomDatePicker from "@/components/admin/CustomDatePicker";
+import useMessage from "@/hooks/useMessage";
 
-dayjs.extend(customParseFormat);
 export interface PassengerFormProps {
     index: number;
     type: PassengerType;
@@ -30,6 +22,7 @@ export interface PassengerFormProps {
         index: number;
         data: IBookingItem["passengerInformation"];
     }) => void;
+    startDate?: string;
     className?: string;
 }
 type KeysOfValue<T, TCondition> = {
@@ -46,59 +39,61 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
     type,
     onChangeForm,
     initialValues,
+    startDate,
     className = "",
 }) => {
-    const [paxFormData, setPaxFormData] = useState(
-        () =>
-            new PassengerInformationFormData(
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-            ),
-    );
-
+    const message = useMessage();
     const onChange = (
         key: TKeysPassenger,
-        value: (typeof paxFormData)[TKeysPassenger],
+        value: (typeof initialValues)[TKeysPassenger],
     ) => {
-        const newPaxInfo = { ...paxFormData, [key]: value };
+        const newPaxInfo = { ...initialValues, [key]: value };
 
-        setPaxFormData(newPaxInfo);
         onChangeForm({ index, data: newPaxInfo });
     };
 
     const onChangeBirthDate: DatePickerProps["onChange"] = (date) => {
         const newPaxInfo = {
-            ...paxFormData,
+            ...initialValues,
             paxBirthDate: date?.format(DATE_FORMAT),
         };
 
-        setPaxFormData((prev) => newPaxInfo);
+        if (
+            type === PassengerType.ADULT &&
+            dayjs(startDate).diff(date, "years") < PASSENGER_AGES.adult.min
+        ) {
+            message.error("Người lớn phải từ 12 tuổi trở lên");
+            return;
+        }
+        if (
+            (type === PassengerType.CHILD &&
+                dayjs(startDate).diff(date, "years") <
+                    PASSENGER_AGES.child.min) ||
+            (type === PassengerType.CHILD &&
+                dayjs(startDate).diff(date, "years") > PASSENGER_AGES.child.max)
+        ) {
+            message.error("Trẻ em từ 2 đến 12 tuổi");
+            return;
+        }
+
+        if (
+            type === PassengerType.INFANT &&
+            dayjs(startDate).diff(date, "years") > PASSENGER_AGES.infant.max
+        ) {
+            message.error("Em bé từ 2 tuổi trở xuống.");
+            return;
+        }
+
         onChangeForm({ index, data: newPaxInfo });
     };
     const onChangeNationalityDate: DatePickerProps["onChange"] = (date) => {
         const newPaxInfo = {
-            ...paxFormData,
+            ...initialValues,
             paxPassortExpiredDate: date?.format(DATE_FORMAT),
         };
 
-        setPaxFormData((prev) => newPaxInfo);
         onChangeForm({ index, data: newPaxInfo });
     };
-
-    useEffect(() => {
-        if (Object.keys(initialValues).length !== 0) {
-            setPaxFormData(initialValues);
-        }
-    }, []);
 
     return (
         <div
@@ -118,7 +113,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={12}>
                             <FormItem label="Danh xưng">
                                 <Select
-                                    value={paxFormData.paxTitle}
+                                    value={initialValues.paxTitle}
                                     placeholder="Chọn danh xưng"
                                     options={[
                                         { label: "Ông", value: "mr" },
@@ -134,7 +129,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={12}>
                             <FormItem label="Giới tính" required>
                                 <Select
-                                    value={paxFormData.paxGender}
+                                    value={initialValues.paxGender}
                                     placeholder="Chọn giới tính"
                                     options={[
                                         { label: "Nam", value: "male" },
@@ -150,7 +145,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={12}>
                             <FormItem label="Họ" required>
                                 <Input
-                                    value={paxFormData.paxLastname}
+                                    value={initialValues.paxLastname}
                                     placeholder="Họ"
                                     onChange={(ev) =>
                                         onChange("paxLastname", ev.target.value)
@@ -161,7 +156,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={12}>
                             <FormItem label="Tên đệm và tên" required>
                                 <Input
-                                    value={paxFormData.paxMiddleFirstName}
+                                    value={initialValues.paxMiddleFirstName}
                                     placeholder="Tên đệm và tên"
                                     onChange={(ev) =>
                                         onChange(
@@ -174,19 +169,22 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
                         <Col span={12}>
                             <FormItem label="Ngày sinh" required>
-                                <DatePicker
+                                <CustomDatePicker
                                     format="DD/MM/YYYY"
                                     className="w-full"
                                     value={
                                         dayjs(
-                                            paxFormData.paxBirthDate,
+                                            initialValues.paxBirthDate,
                                             DATE_FORMAT,
                                         ).isValid()
                                             ? dayjs(
-                                                  paxFormData.paxBirthDate,
+                                                  initialValues.paxBirthDate,
                                                   DATE_FORMAT,
                                               )
-                                            : dayjs(paxFormData.paxBirthDate)
+                                            : dayjs(initialValues.paxBirthDate)
+                                    }
+                                    disabledDate={(date) =>
+                                        date.isAfter(dayjs())
                                     }
                                     onChange={onChangeBirthDate}
                                 />
@@ -195,7 +193,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={12}>
                             <FormItem label="Số điện thoại" required>
                                 <Input
-                                    value={paxFormData.paxPhoneNumber}
+                                    value={initialValues.paxPhoneNumber}
                                     placeholder="Số điện thoại"
                                     onChange={(ev) =>
                                         onChange(
@@ -210,7 +208,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={24}>
                             <FormItem label="Địa chỉ">
                                 <Input
-                                    value={paxFormData.paxAddress}
+                                    value={initialValues.paxAddress}
                                     placeholder="Nhập địa chỉ thường trú"
                                     onChange={(ev) =>
                                         onChange("paxAddress", ev.target.value)
@@ -223,7 +221,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={8}>
                             <FormItem label="Số Passport/CCCD">
                                 <Input
-                                    value={paxFormData.paxPassportNumber}
+                                    value={initialValues.paxPassportNumber}
                                     placeholder="Số passport/CCCD"
                                     onChange={(ev) =>
                                         onChange(
@@ -236,20 +234,20 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
                         <Col span={8}>
                             <FormItem label="Ngày hết hạn">
-                                <DatePicker
+                                <CustomDatePicker
                                     format="DD/MM/YYYY"
                                     className="w-full"
                                     value={
                                         dayjs(
-                                            paxFormData.paxPassortExpiredDate,
+                                            initialValues.paxPassortExpiredDate,
                                             DATE_FORMAT,
                                         ).isValid()
                                             ? dayjs(
-                                                  paxFormData.paxPassortExpiredDate,
+                                                  initialValues.paxPassortExpiredDate,
                                                   DATE_FORMAT,
                                               )
                                             : dayjs(
-                                                  paxFormData.paxPassortExpiredDate,
+                                                  initialValues.paxPassortExpiredDate,
                                               )
                                     }
                                     disabledDate={(date) =>
@@ -262,7 +260,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={8}>
                             <FormItem label="Quốc tịch">
                                 <Input
-                                    value={paxFormData.paxNationality}
+                                    value={initialValues.paxNationality}
                                     placeholder="Nhập quốc tịch"
                                     onChange={(ev) =>
                                         onChange(

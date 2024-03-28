@@ -1,12 +1,13 @@
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useRef } from "react";
 
 import classNames from "classnames";
 import { IBookingItem } from "../../../modules/bookingInformation.interface";
 import PassengerForm, { PassengerFormProps } from "./PassengerForm";
 import { PassengerType } from "@/models/management/common.interface";
-
+import { PassengerInformationFormData } from "../../../modules/passenger.interface";
 export interface PassengersInformationFormProps {
     className?: string;
+    startDate?: string;
     passengerList: {
         bookingIndex: number;
         passengerInfo: IBookingItem["passengerInformation"];
@@ -24,14 +25,31 @@ export interface PassengersInformationFormProps {
 const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
     className = "",
     passengerList,
+    startDate,
     onSetPassengerInfo,
 }) => {
+    const initFormData = useRef(
+        new PassengerInformationFormData(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+        ),
+    );
     const onChangeFormData: PassengerFormProps["onChangeForm"] = useCallback(
         (data) => {
             onSetPassengerInfo(data);
         },
         [],
     );
+
     return (
         <div
             className={classNames("passenger__information", {
@@ -52,8 +70,13 @@ const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
                     <React.Fragment key={pax.bookingIndex}>
                         <PassengerForm
                             index={pax.bookingIndex}
+                            startDate={startDate}
                             type={pax.type}
-                            initialValues={pax.passengerInfo}
+                            initialValues={
+                                Object.keys(pax.passengerInfo).length !== 0
+                                    ? pax.passengerInfo
+                                    : initFormData.current
+                            }
                             className="bg-white px-6 py-4 rounded-md drop-shadow-sm mb-6"
                             onChangeForm={onChangeFormData}
                         />

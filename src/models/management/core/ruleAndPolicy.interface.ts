@@ -1,5 +1,11 @@
 import { BaseResponse } from "../common.interface";
 
+export enum PolicyType {
+    DEPOSIT = "DEPOSIT",
+    BOOKING_TIMELIMIT = "BOOKING_TIMELIMIT",
+    PENALTY = "PENALTY",
+}
+
 export enum PolicyTypeCat {
     BOOKING_TIMELIMIT_CAT = "BOOKING_TIMELIMIT_CAT",
     DEPOSIT_CAT = "DEPOSIT_CAT",

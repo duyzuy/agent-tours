@@ -4,6 +4,8 @@ import {
     Status,
     PaymentStatus,
 } from "../common.interface";
+import { IBookingTimeLitmit } from "../core/bookingTimeLimit.interface";
+import { IFormOfPayment } from "../core/formOfPayment.interface";
 import { PriceConfig } from "../core/priceConfig.interface";
 import { ISellable } from "../core/sellable.interface";
 import { ITemplateSellable } from "../core/templateSellable.interface";
@@ -107,17 +109,29 @@ export interface IReservation {
         sellable: ISellable & {
             configs: PriceConfig[] | null;
         };
+        fops: IFormOfPayment[];
+        timelimits: IBookingTimeLitmit[];
     };
     bookingDetails: IBookingDetailItem[];
     passengers: IPassengerInformation[];
     ssr: IBookingSSRItem[];
 }
 export class BookingOrderListQueryParams {
-    requestObject: object | undefined;
+    requestObject?: {
+        createdFrom?: string;
+        createdTo?: string;
+        status?: Status;
+    };
     pageCurrent: number;
     pageSize: number;
     constructor(
-        requestObject: undefined,
+        requestObject:
+            | {
+                  createdFrom?: string;
+                  createdTo?: string;
+                  status?: Status;
+              }
+            | undefined,
         pageCurrent: number,
         pageSize: number,
     ) {

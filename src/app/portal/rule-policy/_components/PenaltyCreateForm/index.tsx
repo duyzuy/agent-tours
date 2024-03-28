@@ -22,6 +22,7 @@ import { penaltyRuleAndPolicyCreateSchema } from "../../schema/ruleAndPolicy.sch
 import {
     IRuleAndPolicyCat,
     IRuleAndPolicyRule,
+    PolicyType,
 } from "@/models/management/core/ruleAndPolicy.interface";
 import { IDestination } from "@/models/management/region.interface";
 import {
@@ -41,6 +42,8 @@ const PenaltyCreateForm: React.FC<PenaltyCreateFormProps> = ({ onSubmit }) => {
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetDestinationsQuery();
     const initFormData = new PenaltyRuleAndPolicyFormData(
+        PolicyType.PENALTY,
+        "Phí phạt",
         undefined,
         undefined,
         undefined,
@@ -146,6 +149,7 @@ const PenaltyCreateForm: React.FC<PenaltyCreateFormProps> = ({ onSubmit }) => {
                 {formData.cat === PolicyCat.BYDESTINATION ? (
                     <FormItem
                         label="Nhóm điểm đến"
+                        required
                         validateStatus={errors?.destId ? "error" : ""}
                         help={errors?.destId || ""}
                     >
@@ -205,6 +209,7 @@ const PenaltyCreateForm: React.FC<PenaltyCreateFormProps> = ({ onSubmit }) => {
                 {formData.rule === PolicyRule.FIXAMOUNT ? (
                     <FormItem
                         label="Số tiền"
+                        required
                         validateStatus={errors?.soTien ? "error" : ""}
                         help={errors?.soTien || ""}
                     >
@@ -219,6 +224,7 @@ const PenaltyCreateForm: React.FC<PenaltyCreateFormProps> = ({ onSubmit }) => {
                 ) : null}
                 <FormItem
                     label="Số ngày"
+                    required
                     validateStatus={errors?.soNgay ? "error" : ""}
                     help={errors?.soNgay || ""}
                 >

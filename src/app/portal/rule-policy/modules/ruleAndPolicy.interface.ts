@@ -1,8 +1,11 @@
 import {
     PolicyCat,
     PolicyRule,
+    PolicyType,
 } from "@/models/management/core/ruleAndPolicy.interface";
 export interface IRuleAndPolicyPayload {
+    type?: PolicyType;
+    typeName?: string;
     cat?: PolicyCat; //lấy từ core
     catName?: string; //lấy từ core
     rule?: PolicyRule; //lấy từ core
@@ -15,6 +18,8 @@ export interface IRuleAndPolicyPayload {
 }
 
 export class DepositRuleAndPolicyFormData implements IRuleAndPolicyPayload {
+    type?: PolicyType;
+    typeName?: string;
     cat?: PolicyCat;
     catName?: string;
     rule?: PolicyRule;
@@ -24,6 +29,8 @@ export class DepositRuleAndPolicyFormData implements IRuleAndPolicyPayload {
     soTien?: number;
     destId?: number;
     constructor(
+        type: PolicyType | undefined,
+        typeName: string | undefined,
         cat: PolicyCat | undefined,
         catName: string | undefined,
         rule: PolicyRule | undefined,
@@ -33,6 +40,8 @@ export class DepositRuleAndPolicyFormData implements IRuleAndPolicyPayload {
         soTien: number | undefined,
         destId: number | undefined,
     ) {
+        this.type = type;
+        this.typeName = typeName;
         this.cat = cat;
         this.catName = catName;
         this.rule = rule;
@@ -47,6 +56,8 @@ export class DepositRuleAndPolicyFormData implements IRuleAndPolicyPayload {
 export class LimitTimeBookingRuleAndPolicyFormData
     implements IRuleAndPolicyPayload
 {
+    type?: PolicyType;
+    typeName?: string;
     cat?: PolicyCat;
     catName?: string;
     rule?: PolicyRule;
@@ -55,6 +66,8 @@ export class LimitTimeBookingRuleAndPolicyFormData
     soGio?: number;
     destId?: number;
     constructor(
+        type: PolicyType | undefined,
+        typeName: string | undefined,
         cat: PolicyCat | undefined,
         catName: string | undefined,
         rule: PolicyRule | undefined,
@@ -63,6 +76,8 @@ export class LimitTimeBookingRuleAndPolicyFormData
         soGio: number | undefined,
         destId: number | undefined,
     ) {
+        this.type = type;
+        this.typeName = typeName;
         this.cat = cat;
         this.catName = catName;
         this.rule = rule;
@@ -74,6 +89,8 @@ export class LimitTimeBookingRuleAndPolicyFormData
 }
 
 export class PenaltyRuleAndPolicyFormData implements IRuleAndPolicyPayload {
+    type?: PolicyType;
+    typeName?: string;
     cat?: PolicyCat;
     catName?: string;
     rule?: PolicyRule;
@@ -83,6 +100,8 @@ export class PenaltyRuleAndPolicyFormData implements IRuleAndPolicyPayload {
     soNgay?: number;
     destId?: number;
     constructor(
+        type: PolicyType | undefined,
+        typeName: string | undefined,
         cat: PolicyCat | undefined,
         catName: string | undefined,
         rule: PolicyRule | undefined,
@@ -92,6 +111,8 @@ export class PenaltyRuleAndPolicyFormData implements IRuleAndPolicyPayload {
         soTien: number | undefined,
         destId: number | undefined,
     ) {
+        this.type = type;
+        this.typeName = typeName;
         this.cat = cat;
         this.catName = catName;
         this.rule = rule;

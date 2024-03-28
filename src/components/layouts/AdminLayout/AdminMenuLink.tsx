@@ -43,6 +43,10 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
                 label: "Danh sách đặt chỗ",
             },
             {
+                key: "manage-booking/form-of-payment",
+                label: "Phiếu thu",
+            },
+            {
                 key: "manage-booking/print",
                 label: "In vé",
             },

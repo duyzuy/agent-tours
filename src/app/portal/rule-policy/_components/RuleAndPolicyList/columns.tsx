@@ -11,7 +11,21 @@ export const columns: ColumnsType<IRuleAndPolicy> = [
         width: 80,
     },
     {
-        title: "Loại",
+        title: "Loại chính sách",
+        key: "type",
+        dataIndex: "type",
+        width: 150,
+        render(soTien, record) {
+            return (
+                <div>
+                    <span className="block">{record.typeName}</span>
+                    <span className="text-xs">{record.type}</span>
+                </div>
+            );
+        },
+    },
+    {
+        title: "Loại áp dụng",
         key: "cat",
         dataIndex: "cat",
         width: 150,

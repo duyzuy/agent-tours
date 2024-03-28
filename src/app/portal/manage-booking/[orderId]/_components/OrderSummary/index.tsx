@@ -130,6 +130,18 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
                                 {moneyFormatVND(orderDetail.totalPaid)}
                             </span>
                         </div>
+                        <div className="flex-1">
+                            <span className="block">Thời hạn thanh toán*</span>
+                            <span className="block text-[16px]">
+                                {orderDetail.timelimits.map((item) => (
+                                    <>{formatDate(item.deadline)}</>
+                                ))}
+                            </span>
+                            <p className="text-xs">
+                                * Đặt chỗ sẽ bị huỷ nếu chưa thực hiện thanh
+                                toán trước ngày trên.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div className="booking__order__Detail-actions pb-6 mb-6 bg-white">
@@ -141,7 +153,7 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
                             size="small"
                             onClick={() => setShowModalConfirm(true)}
                         >
-                            Huỷ booking
+                            Huỷ tour
                         </Button>
                         <Button
                             size="small"
@@ -153,7 +165,7 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
                                 )
                             }
                         >
-                            Tách booking
+                            Tách tour
                         </Button>
                         <Button
                             type="primary"

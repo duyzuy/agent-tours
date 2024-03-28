@@ -1,11 +1,12 @@
+import { EPassengerGender, EPassengerTitle } from "@/constants/common";
 import { IPassengerInformation } from "@/models/management/booking/passengerInformation.interface";
 export class PassengerInformationFormData
     implements Partial<IPassengerInformation>
 {
-    paxTitle?: string;
+    paxTitle?: EPassengerTitle;
+    paxGender?: EPassengerGender;
     paxLastname?: string;
     paxMiddleFirstName?: string;
-    paxGender?: string;
     paxBirthDate?: string;
     paxPhoneNumber?: string;
     paxAddress?: string;
@@ -14,8 +15,8 @@ export class PassengerInformationFormData
     paxPassportNumber?: string;
     paxPassortExpiredDate?: string;
     constructor(
-        paxTitle: string | undefined,
-        paxGender: string | undefined,
+        paxTitle: EPassengerTitle | undefined,
+        paxGender: EPassengerGender | undefined,
         paxLastname: string | undefined,
         paxMiddleFirstName: string | undefined,
         paxBirthDate: string | undefined,

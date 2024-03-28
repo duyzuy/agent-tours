@@ -22,6 +22,7 @@ import { limitBookingTimeRuleAndPolicyCreateSchema } from "../../schema/ruleAndP
 import {
     IRuleAndPolicyCat,
     IRuleAndPolicyRule,
+    PolicyType,
 } from "@/models/management/core/ruleAndPolicy.interface";
 import { IDestination } from "@/models/management/region.interface";
 import {
@@ -47,6 +48,8 @@ const LimitTimeCreateForm: React.FC<LimitTimeCreateFormProps> = ({
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetDestinationsQuery();
     const initFormData = new LimitTimeBookingRuleAndPolicyFormData(
+        PolicyType.BOOKING_TIMELIMIT,
+        "Chính sách trả sau",
         undefined,
         undefined,
         undefined,
@@ -151,6 +154,7 @@ const LimitTimeCreateForm: React.FC<LimitTimeCreateFormProps> = ({
                 {formData.cat === PolicyCat.BYDESTINATION ? (
                     <FormItem
                         label="Nhóm điểm đến"
+                        required
                         validateStatus={errors?.destId ? "error" : ""}
                         help={errors?.destId || ""}
                     >
@@ -209,6 +213,7 @@ const LimitTimeCreateForm: React.FC<LimitTimeCreateFormProps> = ({
                 </FormItem>
                 <FormItem
                     label="Số giờ"
+                    required
                     validateStatus={errors?.soGio ? "error" : ""}
                     help={errors?.soGio || ""}
                 >

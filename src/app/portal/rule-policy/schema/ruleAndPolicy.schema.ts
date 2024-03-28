@@ -7,10 +7,15 @@ import {
 import {
     PolicyCat,
     PolicyRule,
+    PolicyType,
 } from "@/models/management/core/ruleAndPolicy.interface";
 
 export const depositRuleAndPolicyCreateSchema: ObjectSchema<DepositRuleAndPolicyFormData> =
     object({
+        type: string()
+            .oneOf<PolicyType>([PolicyType.DEPOSIT])
+            .required("Chưa chọn loại."), //lấy từ core
+        typeName: string(),
         cat: string()
             .oneOf<PolicyCat>(
                 [
@@ -66,6 +71,10 @@ export const depositRuleAndPolicyCreateSchema: ObjectSchema<DepositRuleAndPolicy
 
 export const limitBookingTimeRuleAndPolicyCreateSchema: ObjectSchema<LimitTimeBookingRuleAndPolicyFormData> =
     object({
+        type: string()
+            .oneOf<PolicyType>([PolicyType.BOOKING_TIMELIMIT])
+            .required("Chưa chọn loại."), //lấy từ core
+        typeName: string(),
         cat: string()
             .oneOf<PolicyCat>(
                 [PolicyCat.BYDESTINATION, PolicyCat.BYTOURCODE],
@@ -101,6 +110,10 @@ export const limitBookingTimeRuleAndPolicyCreateSchema: ObjectSchema<LimitTimeBo
 
 export const penaltyRuleAndPolicyCreateSchema: ObjectSchema<PenaltyRuleAndPolicyFormData> =
     object({
+        type: string()
+            .oneOf<PolicyType>([PolicyType.PENALTY])
+            .required("Chưa chọn loại."), //lấy từ core
+        typeName: string(),
         cat: string()
             .oneOf<PolicyCat>(
                 [PolicyCat.BYDESTINATION, PolicyCat.BYTOURCODE],

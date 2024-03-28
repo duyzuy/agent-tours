@@ -1,9 +1,9 @@
 import { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
-import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { Tag } from "antd";
 import { IOrderListRs } from "@/models/management/booking/order.interface";
-import { PaymentStatus } from "@/models/management/common.interface";
+import { PaymentStatus, Status } from "@/models/management/common.interface";
+import { formatDate } from "@/utils/date";
 
 export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     {
@@ -13,28 +13,26 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
         width: 80,
     },
     {
-        title: "Tên template sellable",
+        title: "Tour",
         dataIndex: "recId",
         key: "recId",
-        width: 320,
+        width: 260,
         render(value, record, index) {
-            return <>{record.template.name}</>;
-        },
-    },
-    {
-        title: "Sellable code",
-        dataIndex: "recId",
-        key: "recId",
-        width: 160,
-        render(value, record, index) {
-            return <>{record.sellable.code}</>;
+            return (
+                <div>
+                    <span className="block">{record.template.name}</span>
+                    <span className="text-xs text-gray-600">
+                        {record.sellable.code}
+                    </span>
+                </div>
+            );
         },
     },
     {
         title: "Người đặt",
         dataIndex: "custName",
         key: "custName",
-        width: 120,
+        width: 150,
     },
     {
         title: "Tổng tiền",
@@ -46,10 +44,10 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
         },
     },
     {
-        title: "Trạng thái",
+        title: "Trạng thái thanh toán",
         dataIndex: "paymentStatus",
         key: "paymentStatus",
-        width: 160,
+        width: 200,
         render(value, record, index) {
             return (
                 <>
@@ -61,6 +59,50 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
                         )) || <Tag color="red">Chưa thanh toán</Tag>}
                 </>
             );
+        },
+    },
+    {
+        title: "Thời hạn thanh toán",
+        dataIndex: "paymentStatus",
+        key: "paymentStatus",
+        width: 200,
+        render(value, record, index) {
+            return (
+                <>
+                    {record.timelimits.map((item) => (
+                        <>
+                            <div>{formatDate(item.deadline)}</div>
+                        </>
+                    ))}
+                </>
+            );
+        },
+    },
+    {
+        title: "Trạng thái ",
+        dataIndex: "paymentStatus",
+        key: "paymentStatus",
+        width: 120,
+        render(value, record, index) {
+            return (
+                <>
+                    {(record.status === Status.OK && (
+                        <Tag color="green">Đã xác nhận</Tag>
+                    )) ||
+                        (record.status === Status.XX && (
+                            <Tag color="red">Đã huỷ</Tag>
+                        )) || <Tag color="orange">Chờ xác nhận</Tag>}
+                </>
+            );
+        },
+    },
+    {
+        title: "Ngày đặt",
+        dataIndex: "sysFstUpdate",
+        key: "sysFstUpdate",
+        width: 160,
+        render: (sysFstUpdate, record) => {
+            return <>{formatDate(sysFstUpdate)}</>;
         },
     },
 ];

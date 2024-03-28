@@ -42,6 +42,9 @@ export const useFormOfPayment = () => {
                 queryClient.invalidateQueries({
                     queryKey: [queryCore.GET_BOOKING_ORDER_DETAIL],
                 });
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_FORM_OF_PAYMENT_LIST],
+                });
             },
             onError(error, variables, context) {
                 message.error(error.message);
@@ -58,6 +61,9 @@ export const useFormOfPayment = () => {
                 queryClient.invalidateQueries({
                     queryKey: [queryCore.GET_BOOKING_ORDER_DETAIL],
                 });
+                queryClient.invalidateQueries({
+                    queryKey: [queryCore.GET_FORM_OF_PAYMENT_LIST],
+                });
             },
             onError(error, variables, context) {
                 message.error(error.message);
@@ -68,8 +74,7 @@ export const useFormOfPayment = () => {
 
     return {
         onCreateFormOfPayment,
-
-        onApproval: onApproval,
+        onApproval,
         onDelete,
     };
 };

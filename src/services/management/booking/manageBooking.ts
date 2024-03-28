@@ -14,14 +14,19 @@ import {
     IBookingOrderCancelPayload,
 } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
+import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
 
 export const manageBookingAPIs = {
-    getOrderList: async (queryParams: BookingOrderListQueryParams) => {
+    getOrderList: async (
+        queryParams: BookingOrderListQueryParams,
+        localRuleAndPolicies: IRuleAndPolicy[],
+    ) => {
         return await coreApi.post<IOrderListRs, BaseResponse<null>>(
             "core/BookingOrder_List",
             {
                 requestObject: {
                     ...queryParams?.requestObject,
+                    localRuleAndPolicies,
                 },
                 pageCurrent: queryParams.pageCurrent,
                 pageSize: queryParams.pageSize,

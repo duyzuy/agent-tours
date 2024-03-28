@@ -20,6 +20,11 @@ export const DAYS_OF_WEEK = [
     { label: "T7", value: "Saturday" },
 ];
 
+export const PASSENGER_AGES = {
+    adult: { min: 12 },
+    child: { min: 2, max: 12 },
+    infant: { max: 2 },
+};
 export enum EPassengerTitle {
     MR = "mr",
     MISS = "miss",

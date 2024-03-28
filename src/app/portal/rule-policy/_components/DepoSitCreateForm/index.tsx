@@ -21,6 +21,7 @@ import { IDestination } from "@/models/management/region.interface";
 import {
     PolicyCat,
     PolicyRule,
+    PolicyType,
 } from "@/models/management/core/ruleAndPolicy.interface";
 import { depositRuleAndPolicyCreateSchema } from "../../schema/ruleAndPolicy.schema";
 import {
@@ -41,6 +42,8 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetDestinationsQuery();
     const initFormData = new DepositRuleAndPolicyFormData(
+        PolicyType.DEPOSIT,
+        "Chính sách trả 1 phần",
         undefined,
         undefined,
         undefined,
@@ -140,6 +143,7 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
                 {formData.cat === PolicyCat.BYDESTINATION ? (
                     <FormItem
                         label="Nhóm điểm đến"
+                        required
                         validateStatus={errors?.destId ? "error" : ""}
                         help={errors?.destId || ""}
                     >
@@ -199,6 +203,7 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
                 {formData.rule === PolicyRule.AMOUNTBEFOR_DEPART ? (
                     <FormItem
                         label="Số tiền"
+                        required
                         validateStatus={errors?.soTien ? "error" : ""}
                         help={errors?.soTien || ""}
                     >
@@ -213,6 +218,7 @@ const DepoSitCreateForm: React.FC<DepoSitCreateFormProps> = ({ onSubmit }) => {
                 ) : null}
                 <FormItem
                     label="Số ngày"
+                    required
                     validateStatus={errors?.soNgay ? "error" : ""}
                     help={errors?.soNgay || ""}
                 >

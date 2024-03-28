@@ -4,18 +4,29 @@ import { queryCore } from "../var";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { bookingAPIs } from "@/services/management/booking/searchTour";
 import { BookingOrderListQueryParams } from "@/models/management/booking/reservation.interface";
+import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
 
 export const useGetBookingOrderListCoreQuery = ({
     enabled = false,
     queryParams,
+    localRuleAndPolicies,
 }: {
     enabled: boolean;
     queryParams: BookingOrderListQueryParams;
+    localRuleAndPolicies: IRuleAndPolicy[];
 }) => {
     return useQuery({
-        queryKey: [queryCore.GET_BOOKING_ORDER_LIST],
-        queryFn: () => manageBookingAPIs.getOrderList(queryParams),
-        select: (data) => data.result,
+        queryKey: [queryCore.GET_BOOKING_ORDER_LIST, queryParams],
+        queryFn: () =>
+            manageBookingAPIs.getOrderList(queryParams, localRuleAndPolicies),
+        select: (data) => {
+            return {
+                list: data.result,
+                pageCurrent: data.pageCurrent,
+                pageSize: data.pageSize,
+                totalItems: data.totalItems,
+            };
+        },
         enabled: enabled,
     });
 };

@@ -30,6 +30,7 @@ type ITableListPageProps<T extends object> = TableProps<T> & {
     hideEdit?: (record: T) => boolean;
     hideDelete?: (record: T) => boolean;
     hideView?: (record: T) => boolean;
+    fixedActionsColumn?: boolean;
 };
 
 type TablePageActionItemType<T extends object> = {
@@ -57,6 +58,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         hideEdit,
         hideDelete,
         hideView,
+        fixedActionsColumn = true,
         ...restProps
     } = props;
     const [showModalDelete, setShowModalDelete] = useState(false);
@@ -182,7 +184,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
             dataIndex: "action",
             key: "action",
             width: 160,
-            fixed: "right",
+            fixed: fixedActionsColumn ? "right" : undefined,
             render: (_, record) => {
                 return (
                     <Space>
