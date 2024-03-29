@@ -6,7 +6,7 @@ import {
     IStockAdjustPayload,
     IStockConfirmPayload,
     IStockPayload,
-} from "@/models/management/core/stockInventory.interface";
+} from "@/models/management/core/stock.interface";
 
 //create folder in public/uploads folder.
 

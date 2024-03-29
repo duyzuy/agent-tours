@@ -4,6 +4,7 @@ import { Tag } from "antd";
 import { PaymentStatus, Status } from "@/models/management/common.interface";
 import { formatDate } from "@/utils/date";
 import { IFormOfPaymentListRs } from "@/models/management/core/formOfPayment.interface";
+import Link from "next/link";
 
 export const columnsFOPs: ColumnsType<IFormOfPaymentListRs["result"][0]> = [
     {
@@ -16,24 +17,18 @@ export const columnsFOPs: ColumnsType<IFormOfPaymentListRs["result"][0]> = [
         title: "Loại",
         dataIndex: "type",
         key: "type",
-        width: 100,
+        width: 140,
         render(value, record, index) {
             return (
                 <div>
-                    <span className="block">{record.type}</span>
-                </div>
-            );
-        },
-    },
-    {
-        title: "Hình thức",
-        dataIndex: "fopType",
-        key: "fopType",
-        width: 100,
-        render(value, record, index) {
-            return (
-                <div>
-                    <span className="block">{record.fopType}</span>
+                    <span className="block mb-1">{record.type}</span>
+                    <span className="block text-xs mb-2">{record.fopType}</span>
+                    <Link
+                        href={`./portal/manage-booking/${record.orderId}`}
+                        className="block text-xs"
+                    >
+                        <span>Chi tiết đặt chỗ</span>
+                    </Link>
                 </div>
             );
         },
@@ -47,12 +42,6 @@ export const columnsFOPs: ColumnsType<IFormOfPaymentListRs["result"][0]> = [
             return (
                 <div>
                     <span className="block">{record.payer}</span>
-                    <div>
-                        <span className="block text-xs">
-                            Thông tin thanh toán
-                        </span>
-                        <span className="block">{record.fopDocument}</span>
-                    </div>
                 </div>
             );
         },

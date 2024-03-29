@@ -39,12 +39,10 @@ export default function FormOfPaymentPage() {
             <div className=""></div>
             <TableListPage<IFormOfPaymentListRs["result"][0]>
                 dataSource={fopList || []}
+                size="small"
                 columns={columnsFOPs}
                 isLoading={isLoading}
                 rowKey={"recId"}
-                onEdit={(record) =>
-                    router.push(`./portal/manage-booking/${record.recId}`)
-                }
                 onApproval={(record) => onApproval(record.recId)}
                 onView={(record) => setSOPDetail({ isShow: true, record })}
                 onDelete={(record) => onDelete(record.recId)}

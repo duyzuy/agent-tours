@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
-import { Drawer, Space, Button, Form, Row, Col, Input, Select } from "antd";
-import { FOPFormData } from "../../modules/formOfPayment.interface";
-import { useFormOfPayment } from "../../modules/useFormOfPayment";
-import { Tabs, TabsProps } from "antd";
+import React from "react";
+import { Tabs, TabsProps, Drawer } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { useFormOfPayment } from "../../modules/useFormOfPayment";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import FOPList from "./FOPList";
 import FOPForm from "./FOPForm";
@@ -14,9 +12,9 @@ export interface DrawerFormOfPaymentProps {
     totalPaid: number;
     isOpen?: boolean;
     onClose?: () => void;
-    fops: IOrderDetail["fops"];
+    fops: IOrderDetail["bookingOrder"]["fops"];
 }
-type TFormData = Required<FOPFormData>;
+
 const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
     isOpen,
     totalAmount,

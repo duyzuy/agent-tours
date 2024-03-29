@@ -58,7 +58,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
             <div className="booking__order__Detail relative">
                 <OrderSummary
                     orderDetail={bookingOrderDetail.bookingOrder}
-                    fops={bookingOrderDetail.fops}
+                    fops={bookingOrderDetail.bookingOrder.fops}
                     onCancelBooking={onCancelBookingOrder}
                     className="mb-6"
                 />

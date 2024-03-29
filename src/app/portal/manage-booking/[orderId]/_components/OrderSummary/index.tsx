@@ -13,7 +13,7 @@ import { PaymentStatus } from "@/models/management/common.interface";
 
 interface OrderDetailProps {
     orderDetail: IOrderDetail["bookingOrder"];
-    fops: IOrderDetail["fops"];
+    fops: IOrderDetail["bookingOrder"]["fops"];
     className?: string;
     onCancelBooking?: (
         payload: IBookingOrderCancelPayload,
@@ -130,18 +130,26 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
                                 {moneyFormatVND(orderDetail.totalPaid)}
                             </span>
                         </div>
-                        <div className="flex-1">
-                            <span className="block">Thời hạn thanh toán*</span>
-                            <span className="block text-[16px]">
-                                {orderDetail.timelimits.map((item) => (
-                                    <>{formatDate(item.deadline)}</>
-                                ))}
-                            </span>
-                            <p className="text-xs">
-                                * Đặt chỗ sẽ bị huỷ nếu chưa thực hiện thanh
-                                toán trước ngày trên.
-                            </p>
-                        </div>
+                        {orderDetail.timelimits.length ? (
+                            <div className="flex-1">
+                                <span className="block">
+                                    Thời hạn thanh toán
+                                </span>
+                                <span className="block text-[16px]">
+                                    {orderDetail.timelimits.map((item) => (
+                                        <div key={item.recId}>
+                                            <span>
+                                                {formatDate(item.deadline)}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </span>
+                                <p className="text-xs">
+                                    * Đặt chỗ sẽ bị huỷ nếu chưa thực hiện thanh
+                                    toán trước thời hạn thanh toán.
+                                </p>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
                 <div className="booking__order__Detail-actions pb-6 mb-6 bg-white">

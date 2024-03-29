@@ -1,7 +1,5 @@
 import { BaseResponse, Status } from "../common.interface";
 import { IDestination } from "../region.interface";
-import { EInventoryType } from "./inventoryType.interface";
-import { EProductType } from "./productType.interface";
 
 export interface ITemplateSellable {
     recId: number;
@@ -26,22 +24,15 @@ export interface ITemplateSellable {
 }
 
 interface RequestObject {
-    recId?: number; //1 item theo Id
+    recId?: number;
     andType?: string; //3 biến and.... là điều kiện search AND, có thể truyền 1 trong 3 hoặc cả 3
     andCodeLike?: string;
     andDestIn?: string;
     status?: Status;
 }
-export interface ITemplateSellableQueryParams {
-    requestObject?: RequestObject;
-    pageCurrent?: number;
-    pageSize?: number;
-}
 
-export class TemplateSellableQueryParams
-    implements ITemplateSellableQueryParams
-{
-    requestObject?: RequestObject | undefined;
+export class TemplateSellableQueryParams {
+    requestObject?: RequestObject;
     pageCurrent?: number;
     pageSize?: number;
 
@@ -69,37 +60,6 @@ export interface ITemplateSellableUpdatePayload
         ITemplateSellablePayload,
         "cmsIdentity" | "name" | "inventoryTypeList" | "destListJson"
     > {}
-export class TemplateSellableFormData {
-    cmsIdentity?: string;
-    type?: EProductType;
-    code?: string;
-    name?: string;
-    inventoryTypeList: EInventoryType[];
-    destListJson: IDestination[];
-    status?: Status;
 
-    constructor(
-        cmsIdentity: string | undefined,
-        type: EProductType | undefined,
-        code: string | undefined,
-        name: string | undefined,
-        inventoryTypeList: EInventoryType[],
-        destListJson: IDestination[],
-        status: Status | undefined,
-    ) {
-        this.cmsIdentity = cmsIdentity;
-        this.type = type;
-        this.code = code;
-        this.name = name;
-        this.inventoryTypeList = inventoryTypeList;
-        this.destListJson = destListJson;
-        this.status = status;
-    }
-    // public formatInventoryList(inventoryList: string[]) {
-    //     return inventoryList.reduce((acc, inv) => {
-    //         return acc.concat(acc.length ? "||" : "", inv);
-    //     }, "");
-    // }
-}
 export interface ITemplateSaleableListRs
     extends BaseResponse<ITemplateSellable[]> {}

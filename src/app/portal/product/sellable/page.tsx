@@ -1,11 +1,5 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import PageContainer from "@/components/admin/PageContainer";
-import { useGetSellableListCoreQuery } from "@/queries/core/Sellable";
-import { SellableQueryParams } from "@/models/management/core/sellable.interface";
-
-import { Status } from "@/models/management/common.interface";
-
 import {
     Col,
     Form,
@@ -16,8 +10,11 @@ import {
     Input,
     SelectProps,
 } from "antd";
+import PageContainer from "@/components/admin/PageContainer";
+import { useGetSellableListCoreQuery } from "@/queries/core/Sellable";
+import { SellableQueryParams } from "@/models/management/core/sellable.interface";
+import { Status } from "@/models/management/common.interface";
 import FormItem from "@/components/base/FormItem";
-
 import SellableListContainer from "./_components/SellableListContainer";
 import {
     ITemplateSellable,
@@ -28,7 +25,9 @@ import { isArray, isUndefined } from "lodash";
 import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
 import SellableFormContainer from "./_components/SellableFormContainer";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
-import useCRUDSellable from "../hooks/useCRUDSellable";
+import useCRUDSellable from "./modules/useCRUDSellable";
+
+type TabKeys = "sellableList" | "sellableForm";
 
 const SellableListPage: React.FC = () => {
     const initTemplateQueryparams = new TemplateSellableQueryParams(
@@ -36,6 +35,7 @@ const SellableListPage: React.FC = () => {
         1,
         100,
     );
+    const [tabKey, setTabKey] = useState<TabKeys>("sellableList");
     const { data: templateResponse, isLoading: isLoadingTemplate } =
         useGetTemplateSellableListCoreQuery({
             queryParams: initTemplateQueryparams,
@@ -97,17 +97,20 @@ const SellableListPage: React.FC = () => {
         );
     }, [productTypes]);
 
+    const onCancelCreate = () => {
+        setTabKey("sellableList");
+    };
     const tabItems: TabsProps["items"] = [
         {
             key: "sellableList",
-            label: "Danh sách Sellable",
+            label: "Danh sách sản phẩm",
             children: (
                 <SellableListContainer
                     dataSource={sellableList || []}
                     templateSellable={templateSellable}
-                    pageSize={pageSize || 10}
-                    pageCurrent={pageCurrent || 1}
-                    totalItems={totalItems || 0}
+                    pageSize={pageSize}
+                    pageCurrent={pageCurrent}
+                    totalItems={totalItems}
                     isLoading={isLoadingSellable}
                     onApproval={onApproval}
                     onChangePageSellable={(page) =>
@@ -132,7 +135,7 @@ const SellableListPage: React.FC = () => {
                                                     number,
                                                     ITemplateSellable
                                                 >
-                                                    placeholder="Chọn template"
+                                                    placeholder="Chọn nhóm sản phẩm"
                                                     showSearch
                                                     optionFilterProp="children"
                                                     loading={isLoadingTemplate}
@@ -194,7 +197,7 @@ const SellableListPage: React.FC = () => {
                                         <Col span={4}>
                                             <FormItem>
                                                 <Select
-                                                    placeholder="Chọn type"
+                                                    placeholder="Chọn loại sản phẩm"
                                                     loading={
                                                         isLoadingProductType
                                                     }
@@ -222,7 +225,7 @@ const SellableListPage: React.FC = () => {
                                         <Col span={8}>
                                             <FormItem>
                                                 <Input.Search
-                                                    placeholder="Nhập code cần tìm"
+                                                    placeholder="Nhập mã cần tìm"
                                                     enterButton="Tìm kiếm"
                                                     onSearch={(value, ev) =>
                                                         onSearchSellableCode(
@@ -242,25 +245,31 @@ const SellableListPage: React.FC = () => {
         },
         {
             key: "sellableForm",
-            label: "Tạo Sellable",
+            label: "Tạo sản phẩm",
+            icon: <PlusOutlined />,
             children: (
                 <SellableFormContainer
-                    templateList={templateList || []}
+                    templateList={templateList}
                     onSubmit={onCreate}
+                    onCancel={onCancelCreate}
                 />
             ),
-            icon: <PlusOutlined />,
         },
     ];
     return (
         <PageContainer
-            name="Sellables"
+            name="Sản phẩm"
             // onClick={() => onHandleDrawler({ type: EActionType.CREATE })}
             hideAddButton
-            breadCrumItems={[{ title: "Sellables" }]}
-            modelName="Sellables"
+            breadCrumItems={[{ title: "Sản phẩm" }]}
+            modelName="Sản phẩm"
         >
-            <Tabs items={tabItems} />
+            <Tabs
+                activeKey={tabKey}
+                items={tabItems}
+                destroyInactiveTabPane={true}
+                onChange={(value) => setTabKey(value as TabKeys)}
+            />
         </PageContainer>
     );
 };

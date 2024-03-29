@@ -2,7 +2,6 @@ import { ColumnsType } from "antd/es/table";
 import { Space, Tag, Table, Button } from "antd";
 import { formatDate } from "@/utils/date";
 import { Status } from "@/models/management/common.interface";
-
 import { ITemplateSaleableListRs } from "@/models/management/core/templateSellable.interface";
 import { IDestination } from "@/models/management/region.interface";
 import Link from "next/link";
@@ -17,10 +16,10 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
             width: 80,
         },
         {
-            title: "Template name",
+            title: "Tên nhóm sản phẩm",
             dataIndex: "name",
-            key: "code",
-            width: 320,
+            key: "name",
+            width: 220,
             render: (_, record) => {
                 return (
                     <div>
@@ -47,13 +46,13 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
             },
         },
         {
-            title: "Product type",
+            title: "Loại sản phẩm",
             dataIndex: "type",
             key: "type",
-            width: 150,
+            width: 120,
         },
         {
-            title: "Inventory type",
+            title: "Loại nhóm kho",
             dataIndex: "inventoryTypeList",
             key: "inventoryTypeList",
             width: 200,
@@ -102,8 +101,8 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
         {
             title: "Nhóm điểm đến",
             dataIndex: "destListJson",
-            key: "inventoryTypeList",
-            width: 400,
+            key: "destListJson",
+            width: 200,
             render(value, record) {
                 const destinations: IDestination[] = JSON.parse(
                     record.destListJson,
@@ -119,7 +118,20 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
                 );
             },
         },
-
+        {
+            title: "Ngày tạo",
+            key: "sysLstUpdate",
+            width: 160,
+            render: (_, { sysLstUpdate }) => {
+                return formatDate(sysLstUpdate);
+            },
+        },
+        {
+            title: "User",
+            dataIndex: "sysFstUser",
+            key: "sysFstUser",
+            width: 100,
+        },
         {
             title: "Trạng thái",
             dataIndex: "status",
@@ -141,19 +153,5 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
                     </Tag>
                 );
             },
-        },
-        {
-            title: "Ngày tạo",
-            key: "sysLstUpdate",
-            width: 200,
-            render: (_, { sysLstUpdate }) => {
-                return formatDate(sysLstUpdate);
-            },
-        },
-        {
-            title: "User",
-            dataIndex: "sysFstUser",
-            key: "sysFstUser",
-            width: 100,
         },
     ];

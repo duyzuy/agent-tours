@@ -24,7 +24,7 @@ const TourCard: React.FC<Props> = ({
         >
             <div
                 className={classNames(
-                    "inner bg-white rounded-2xl overflow-hidden ",
+                    "inner bg-white rounded-xl overflow-hidden ",
                     {
                         "drop-shadow-sm": shadow === "sm",
                         "drop-shadow-md": shadow === "md",
@@ -45,11 +45,11 @@ const TourCard: React.FC<Props> = ({
                         <span>no image</span>
                     )}
                 </div>
-                <div className="article-content px-2 pt-3 border-[2px] border-t-0 rounded-bl-2xl rounded-br-2xl bg-white">
+                <div className="article-content px-2 pt-3 rounded-bl-xl rounded-br-xl bg-white">
                     <h3 className="line-clamp-2 mb-2 text-md font-semibold text-main-400 text-[15px]">
                         {title}
                     </h3>
-                    <div className="price flex items-center">
+                    <div className="price lg:flex lg:items-center">
                         <p className=" line-through text-gray-400 mr-2 text-xs">
                             4.500.000 VND
                         </p>

@@ -1,5 +1,5 @@
 import { BaseResponse, Status } from "../common.interface";
-import { EInventoryType, TInventoryType } from "./inventoryType.interface";
+import { EInventoryType } from "./inventoryType.interface";
 import { EProductType } from "./productType.interface";
 
 export interface IInventory {
@@ -24,41 +24,16 @@ export interface IInventory {
 }
 export interface IInventoryListRs extends BaseResponse<IInventory[]> {}
 export interface IInventoryPayload {
-    cmsIdentity: string;
-    type: EInventoryType;
-    code: string;
-    name: string;
-    productType: EProductType;
-    isStock: boolean;
-    status: Status;
-}
-
-export class InventoryFormData implements Partial<IInventoryPayload> {
-    cmsIdentity: string;
-    code: string;
-    name: string;
+    cmsIdentity?: string;
     type?: EInventoryType;
+    code?: string;
+    name?: string;
     productType?: EProductType;
-    isStock: boolean;
-    status: Status;
-    constructor(
-        name: string,
-        code: string,
-        cmsIdentity: string,
-        type?: EInventoryType,
-        productType?: EProductType,
-    ) {
-        this.cmsIdentity = cmsIdentity;
-        this.type = type;
-        this.code = code;
-        this.name = name;
-        this.productType = productType;
-        this.isStock = false;
-        this.status = Status.QQ;
-    }
+    isStock?: boolean;
+    status?: Status;
 }
 
-interface InventoryRequestObject {
+export interface InventoryRequestObject {
     type?: string;
     isStock?: boolean;
     status?: Status;

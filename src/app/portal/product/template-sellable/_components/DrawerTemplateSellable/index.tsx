@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useMemo, useState } from "react";
 import {
     Form,
@@ -18,16 +17,14 @@ import { CMS_TEMPLATES } from "@/constants/cmsTemplate.constant";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { IDestination } from "@/models/management/region.interface";
-import {
-    ITemplateSaleableListRs,
-    TemplateSellableFormData,
-} from "@/models/management/core/templateSellable.interface";
+import { ITemplateSaleableListRs } from "@/models/management/core/templateSellable.interface";
 import { Status } from "@/models/management/common.interface";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { useGetDestinationsQuery } from "@/queries/misc/destination";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import { templateSellableSchema } from "../../../hooks/validation";
+import { TemplateSellableFormData } from "../../modules/templateSellable.interface";
+import { templateSellableSchema } from "../../schema/templateSellable.schema";
 
 export enum EActionType {
     CREATE = "CREATE",
@@ -217,13 +214,13 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                 className="max-w-4xl"
             >
                 <FormItem
-                    label="CMS template content"
+                    label="Mẫu nội dung"
                     required
                     validateStatus={errors?.cmsIdentity ? "error" : ""}
                     help={errors?.cmsIdentity || ""}
                 >
                     <Select
-                        placeholder="Chọn template"
+                        placeholder="Bản mẫu nội dung"
                         value={templateSellableFormData.cmsIdentity}
                         disabled={isWaitingApproval}
                         onChange={(value) =>
@@ -233,13 +230,13 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                     />
                 </FormItem>
                 <FormItem
-                    label="Template sellable name"
+                    label="Tên nhóm sản phẩm"
                     required
                     validateStatus={errors?.name ? "error" : ""}
                     help={errors?.name || ""}
                 >
                     <Input
-                        placeholder="Template sellable name"
+                        placeholder="Tên nhóm sản phẩm"
                         disabled={isWaitingApproval}
                         value={templateSellableFormData.name}
                         onChange={(ev) =>
@@ -248,7 +245,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                     />
                 </FormItem>
                 <FormItem
-                    label="Template sellable code"
+                    label="Mã nhóm sản phẩm"
                     required
                     validateStatus={errors?.code ? "error" : ""}
                     help={errors?.code || ""}
@@ -263,7 +260,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                     />
                 </FormItem>
                 <FormItem
-                    label="Loại product"
+                    label="Loại sản phẩm"
                     required
                     validateStatus={errors?.type ? "error" : ""}
                     help={errors?.type || ""}
@@ -279,13 +276,13 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                     />
                 </FormItem>
                 <FormItem
-                    label="Loại inventory"
+                    label="Loại nhóm kho"
                     required
                     validateStatus={errors?.inventoryTypeList ? "error" : ""}
                     help={errors?.inventoryTypeList || ""}
                 >
                     <Select
-                        placeholder="Chọn inventory"
+                        placeholder="Chọn loại kho"
                         mode="multiple"
                         disabled={isWaitingApproval}
                         value={templateSellableFormData.inventoryTypeList}
@@ -334,7 +331,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
 
             <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
                 <Space>
-                    <Button>Huỷ bỏ</Button>
+                    <Button onClick={onCancel}>Huỷ bỏ</Button>
                     {actionType === EActionType.EDIT &&
                     initialValues?.status === Status.QQ ? (
                         <Button

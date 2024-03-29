@@ -2,16 +2,15 @@ import React from "react";
 import { Drawer, Tag, List, Divider } from "antd";
 
 import { Status } from "@/models/management/common.interface";
-
-import { TInventoryErrorsField } from "../../../hooks/useCRUDInventory";
+import { IStockListOfInventoryRs } from "@/models/management/core/stock.interface";
 import {
-    IStockListOfInventoryRs,
-    StockInventoryAdjustFormData,
-    StockInventoryConfirmFormData,
-} from "@/models/management/core/stockInventory.interface";
+    StockAdjustFormData,
+    StockConfirmFormData,
+} from "../../modules/stock.interface";
+import { formatDate } from "@/utils/date";
 import { useGetStockDetailInventoryCoreQuery } from "@/queries/core/stockInventory";
 import StockConfirmationForm from "./StockConfirmationForm";
-import { formatDate } from "@/utils/date";
+
 import StockAdjustmentForm from "./StockAdjustmentForm";
 export enum EActionType {
     EDIT = "edit",
@@ -21,19 +20,15 @@ export type TDrawerStockDetailAction = {
     type: EActionType;
     record: IStockListOfInventoryRs["result"][0];
 };
+
 export interface DrawerStockDetailProps {
     isOpen?: boolean;
     onCancel: () => void;
     initialValues?: IStockListOfInventoryRs["result"][0];
     actionType?: EActionType;
-    onApproval?: (formData: StockInventoryConfirmFormData) => void;
-    onAdjust?: (
-        formData: StockInventoryAdjustFormData,
-        cb?: () => void,
-    ) => void;
+    onApproval?: (formData: StockConfirmFormData) => void;
+    onAdjust?: (formData: StockAdjustFormData, cb?: () => void) => void;
 }
-export const DATE_FORMAT = "DDMMMYY HH:mm";
-export const TIME_FORMAT = "HH:mm";
 
 const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
     actionType,
@@ -99,7 +94,7 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
                             className="mb-6"
                         />
                         <div className="py-3 border-b">
-                            <p className="font-semibold">Lịch sử cập nhật</p>
+                            <p className="font-semibold">Danh sách cập nhật</p>
                         </div>
                         <List
                             itemLayout="horizontal"
@@ -112,35 +107,39 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
                                             <Tag color="blue">{item.cat}</Tag>
                                         }
                                         description={
-                                            <div className="description pt-2">
+                                            <div className="description pt-2 text-gray-800">
                                                 <div className="flex gap-x-2">
-                                                    <p className="w-24">
-                                                        {` Mô tả:`}
+                                                    <p className="w-32">
+                                                        {`Số lượng`}
                                                     </p>
                                                     <p className="flex-1">
-                                                        {item.rmk
-                                                            ? item.rmk
-                                                            : "--"}
+                                                        {`: ${
+                                                            item.quantity
+                                                                ? item.quantity
+                                                                : "--"
+                                                        }`}
                                                     </p>
                                                 </div>
                                                 <div className="flex gap-x-2">
-                                                    <p className="w-24">
-                                                        {`Số lượng:`}
-                                                    </p>
-                                                    <p className="flex-1">
-                                                        {item.quantity
-                                                            ? item.quantity
-                                                            : "--"}
-                                                    </p>
-                                                </div>
-                                                <div className="flex gap-x-2">
-                                                    <p className="w-24">
-                                                        {`Ngày:`}
+                                                    <p className="w-32">
+                                                        {`Ngày cập nhật`}
                                                     </p>
                                                     <p>
-                                                        {formatDate(
+                                                        {`: ${formatDate(
                                                             item.sysFstUpdate,
-                                                        )}
+                                                        )}`}
+                                                    </p>
+                                                </div>
+                                                <div className="flex gap-x-2">
+                                                    <p className="w-32">
+                                                        {`Mô tả`}
+                                                    </p>
+                                                    <p className="flex-1">
+                                                        {`: ${
+                                                            item.rmk
+                                                                ? item.rmk
+                                                                : "--"
+                                                        }`}
                                                     </p>
                                                 </div>
                                             </div>

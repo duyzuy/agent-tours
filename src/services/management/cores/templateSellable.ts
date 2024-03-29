@@ -3,7 +3,6 @@ import { coreApi } from "../coreApi";
 import {
     ITemplateSaleableListRs,
     ITemplateSellablePayload,
-    ITemplateSellableQueryParams,
     ITemplateSellableUpdatePayload,
     TemplateSellableQueryParams,
 } from "@/models/management/core/templateSellable.interface";

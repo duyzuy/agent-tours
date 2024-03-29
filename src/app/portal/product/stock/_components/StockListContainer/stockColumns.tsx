@@ -2,7 +2,7 @@ import { ColumnsType } from "antd/es/table";
 import { Tag } from "antd";
 import { formatDate } from "@/utils/date";
 import { Status } from "@/models/management/common.interface";
-import { IStockListOfInventoryRs } from "@/models/management/core/stockInventory.interface";
+import { IStockListOfInventoryRs } from "@/models/management/core/stock.interface";
 
 export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
     {
@@ -12,10 +12,10 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
         width: 80,
     },
     {
-        title: "Code",
+        title: "Mã kho",
         dataIndex: "code",
         key: "code",
-        width: 300,
+        width: 240,
         render: (_, record) => {
             return (
                 <>
@@ -28,89 +28,90 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
         },
     },
     {
-        title: "Inventory type",
+        title: "Loại nhóm kho",
         dataIndex: "inventoryType",
         key: "inventoryType",
         width: 120,
+        render: (_, record) => {
+            return (
+                <>
+                    <p>{record.inventoryType}</p>
+                    <p className="text-xs text-gray-500">{record.type}</p>
+                </>
+            );
+        },
     },
     {
-        title: "Stock type",
-        dataIndex: "type",
-        key: "type",
-        width: 120,
-    },
-    {
-        title: "Open",
-        dataIndex: "open",
-        key: "open",
-        width: 100,
-    },
-    {
-        title: "Khả dụng (Avaiable)",
+        title: "Khả dụng",
         dataIndex: "avaiable",
         key: "avaiable",
         width: 100,
     },
     {
-        title: "Đã sử dụng (Used)",
+        title: "SL Đang còn",
+        dataIndex: "open",
+        key: "open",
+        width: 100,
+    },
+    {
+        title: "Đã sử dụng",
         dataIndex: "used",
         key: "used",
         width: 100,
     },
 
     {
-        title: "Valid Date",
+        title: "Ngày mở bán",
         dataIndex: "valid-date",
         key: "valid-date",
-        width: 250,
+        width: 180,
         render: (_, record) => {
             return (
-                <>
-                    <p>
-                        <span className="w-14 inline-block text-right mr-2">
-                            From:
-                        </span>
-                        <span>{formatDate(record.validFrom)}</span>
-                    </p>
-                    <p>
-                        <span className="w-14 inline-block text-right mr-2">
-                            To:
-                        </span>
-                        <span>{formatDate(record.validTo)}</span>
-                    </p>
-                </>
+                <span>
+                    <span className="block">
+                        {formatDate(record.validFrom)}
+                    </span>
+                    <span className="block">{formatDate(record.validTo)}</span>
+                </span>
             );
         },
     },
     {
-        title: "Use date",
+        title: "Ngày sử dụng",
         dataIndex: "use-date",
         key: "use-date",
-        width: 250,
+        width: 180,
         render: (_, record) => {
             return (
-                <>
-                    <p>
-                        <span className="w-14 inline-block text-right mr-2">
-                            Start:
-                        </span>
-                        <span>{formatDate(record.startDate)}</span>
-                    </p>
-                    <p>
-                        <span className="w-14 inline-block text-right mr-2">
-                            End:
-                        </span>
-                        <span>{formatDate(record.endDate)}</span>
-                    </p>
-                </>
+                <span>
+                    <span className="block">
+                        {formatDate(record.startDate)}
+                    </span>
+                    <span className="block">{formatDate(record.endDate)}</span>
+                </span>
             );
+        },
+    },
+    {
+        title: "Người tạo",
+        dataIndex: "sysFstUser",
+        key: "user",
+        width: 150,
+    },
+    {
+        title: "Ngày tạo",
+        dataIndex: "sysFstUpdate",
+        key: "sysFstUpdate",
+        width: 150,
+        render: (_, record) => {
+            return formatDate(record.sysFstUpdate);
         },
     },
     {
         title: "Trạng thái",
         dataIndex: "status",
         key: "status",
-        width: 150,
+        width: 120,
         render: (_, record) => {
             return (
                 <Tag
@@ -126,21 +127,6 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
                         "Chờ kích hoạt"}
                 </Tag>
             );
-        },
-    },
-    {
-        title: "User",
-        dataIndex: "sysFstUser",
-        key: "user",
-        width: 150,
-    },
-    {
-        title: "Ngày tạo",
-        dataIndex: "sysFstUpdate",
-        key: "sysFstUpdate",
-        width: 150,
-        render: (_, record) => {
-            return formatDate(record.sysFstUpdate);
         },
     },
 ];

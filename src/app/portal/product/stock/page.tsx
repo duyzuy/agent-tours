@@ -1,34 +1,26 @@
 "use client";
 import PageContainer from "@/components/admin/PageContainer";
-import { Tabs, TabsProps, Form, DatePicker, Row, Col, Select } from "antd";
+import { Tabs, TabsProps, Form, Row, Col, Select } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
 import { useMemo, useState } from "react";
 import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory";
-import useCRUDStockInventory from "../hooks/useCRUDStockInventory";
+import useCRUDStockInventory from "./modules/useCRUDStockInventory";
 import StockFormContainer from "./_components/StockFormContainer";
 import StockListContainer, {
     StockListContainerProps,
 } from "./_components/StockListContainer";
 import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
 import { isUndefined } from "lodash";
-import { StockInventoryQueryParams } from "@/models/management/core/stockInventory.interface";
-import { DATE_FORMAT, DATE_TIME_FORMAT } from "@/constants/common";
+import { StockQueryParams } from "@/models/management/core/stock.interface";
+import { DATE_TIME_FORMAT } from "@/constants/common";
 import dayjs from "dayjs";
 import { Status } from "@/models/management/common.interface";
 import { RangePickerProps } from "antd/es/date-picker";
-import {
-    IInventory,
-    InventoryQueryParams,
-} from "@/models/management/core/inventory.interface";
-const { RangePicker } = DatePicker;
+import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
+import CustomRangePicker from "@/components/admin/CustomRangePicker";
 
-type NestedKeyOf<T extends object> = {
-    [Key in keyof T & (string | number)]: T[Key] extends object
-        ? `${Key}` | `${Key}.${NestedKeyOf<T[Key]>}`
-        : Key;
-}[keyof T & (string | number)];
-
+type StockTabKeys = "stockList" | "createStock";
 const StockPage = () => {
     const initInventoryQueryparams = new InventoryQueryParams(
         {
@@ -38,14 +30,14 @@ const StockPage = () => {
         undefined,
         undefined,
     );
-
+    const [stockTabKey, setStockTabKey] = useState<StockTabKeys>("stockList");
     const { data: inventoryResponse } = useGetInventoryListCoreQuery({
         queryParams: initInventoryQueryparams,
         enabled: true,
     });
     const { list: inventoryList } = inventoryResponse || {};
     const [stockQueryParams, setStockQueryParams] = useState(
-        new StockInventoryQueryParams(undefined, 1, 10),
+        new StockQueryParams(undefined, 1, 10),
     );
 
     const { data: stockResponse, isLoading: isLoadingStockList } =
@@ -61,37 +53,35 @@ const StockPage = () => {
     } = stockResponse || {};
     const { onCreate, onConfirm, onAdjustQuantity } = useCRUDStockInventory();
 
-    const inventoryOptions = useMemo(() => {
-        return inventoryList?.reduce<
-            { value: number; label: string; data: IInventory }[]
-        >((acc, inv) => {
-            return [...acc, { value: inv.recId, label: inv.name, data: inv }];
-        }, []);
-    }, [inventoryResponse]);
-
-    const onChangeValidDate: RangePickerProps["onChange"] = (
-        dates,
-        datesStr,
-    ) => {
+    const onChangeValidDate: RangePickerProps["onChange"] = (dates) => {
         setStockQueryParams((prev) => ({
             ...prev,
             requestObject: {
                 ...prev.requestObject,
-                valid: datesStr[0],
-                validTo: datesStr[1],
+                valid:
+                    dates && dates[0]
+                        ? dates[0].locale("en").format(DATE_TIME_FORMAT)
+                        : undefined,
+                validTo:
+                    dates && dates[1]
+                        ? dates[1].locale("en").format(DATE_TIME_FORMAT)
+                        : undefined,
             },
         }));
     };
-    const onChangeValidUseDate: RangePickerProps["onChange"] = (
-        dates,
-        datesStr,
-    ) => {
+    const onChangeUsedDate: RangePickerProps["onChange"] = (dates) => {
         setStockQueryParams((prev) => ({
             ...prev,
             requestObject: {
                 ...prev.requestObject,
-                start: datesStr[0],
-                end: datesStr[1],
+                start:
+                    dates && dates[0]
+                        ? dates[0].locale("en").format(DATE_TIME_FORMAT)
+                        : undefined,
+                end:
+                    dates && dates[1]
+                        ? dates[1].locale("en").format(DATE_TIME_FORMAT)
+                        : undefined,
             },
         }));
     };
@@ -100,19 +90,13 @@ const StockPage = () => {
     ) => {
         setStockQueryParams((prev) => ({ ...prev, pageCurrent: page }));
     };
-    const onChangeQueryParams = (
-        key: NestedKeyOf<StockInventoryQueryParams>,
-        value: StockInventoryQueryParams[keyof StockInventoryQueryParams],
-    ) => {
-        setStockQueryParams((prev) => ({
-            ...prev,
-            [key]: value,
-        }));
+    const onCancel = () => {
+        setStockTabKey("stockList");
     };
     const tabItems: TabsProps["items"] = [
         {
             key: "stockList",
-            label: "Danh sách Stock",
+            label: "Danh sách kho sản phẩm",
             children: (
                 <StockListContainer
                     items={stockList || []}
@@ -136,13 +120,17 @@ const StockPage = () => {
                                         <Col span={4}>
                                             <FormItem>
                                                 <Select
-                                                    placeholder="Chọn inventory"
+                                                    placeholder="Chọn nhóm kho"
                                                     value={
                                                         stockQueryParams
                                                             ?.requestObject
                                                             ?.inventoryId
                                                     }
-                                                    options={inventoryOptions}
+                                                    fieldNames={{
+                                                        value: "recId",
+                                                        label: "name",
+                                                    }}
+                                                    options={inventoryList}
                                                     onChange={(value) =>
                                                         setStockQueryParams(
                                                             (prev) => ({
@@ -200,26 +188,12 @@ const StockPage = () => {
                                         </Col>
                                         <Col span={6}>
                                             <FormItem>
-                                                <RangePicker
-                                                    showTime={{
-                                                        format: "HH:mm",
-
-                                                        defaultValue: [
-                                                            dayjs(
-                                                                "00:00:00",
-                                                                "HH:mm:ss",
-                                                            ),
-                                                            dayjs(
-                                                                "23:59:59",
-                                                                "HH:mm:ss",
-                                                            ),
-                                                        ],
-                                                    }}
+                                                <CustomRangePicker
                                                     placeholder={[
                                                         "Mở bán từ",
                                                         "Mở bán đến",
                                                     ]}
-                                                    format={DATE_TIME_FORMAT}
+                                                    format={"DD/MM/YYYY"}
                                                     value={[
                                                         stockQueryParams
                                                             ?.requestObject
@@ -228,7 +202,9 @@ const StockPage = () => {
                                                                   stockQueryParams
                                                                       .requestObject
                                                                       .valid,
-                                                                  DATE_TIME_FORMAT,
+                                                                  {
+                                                                      format: DATE_TIME_FORMAT,
+                                                                  },
                                                               )
                                                             : null,
                                                         stockQueryParams
@@ -238,7 +214,9 @@ const StockPage = () => {
                                                                   stockQueryParams
                                                                       .requestObject
                                                                       .validTo,
-                                                                  DATE_TIME_FORMAT,
+                                                                  {
+                                                                      format: DATE_TIME_FORMAT,
+                                                                  },
                                                               )
                                                             : null,
                                                     ]}
@@ -249,25 +227,12 @@ const StockPage = () => {
                                         </Col>
                                         <Col span={6}>
                                             <FormItem>
-                                                <RangePicker
-                                                    showTime={{
-                                                        format: "HH:mm",
-                                                        defaultValue: [
-                                                            dayjs(
-                                                                "00:00:00",
-                                                                "HH:mm:ss",
-                                                            ),
-                                                            dayjs(
-                                                                "23:59:59",
-                                                                "HH:mm:ss",
-                                                            ),
-                                                        ],
-                                                    }}
+                                                <CustomRangePicker
                                                     placeholder={[
                                                         "Sử dụng từ",
                                                         "Sử dụng đến",
                                                     ]}
-                                                    format={DATE_TIME_FORMAT}
+                                                    format={"DD/MM/YYYY"}
                                                     value={[
                                                         stockQueryParams
                                                             ?.requestObject
@@ -276,7 +241,9 @@ const StockPage = () => {
                                                                   stockQueryParams
                                                                       .requestObject
                                                                       .start,
-                                                                  DATE_TIME_FORMAT,
+                                                                  {
+                                                                      format: DATE_TIME_FORMAT,
+                                                                  },
                                                               )
                                                             : null,
                                                         stockQueryParams
@@ -285,13 +252,13 @@ const StockPage = () => {
                                                                   stockQueryParams
                                                                       .requestObject
                                                                       .end,
-                                                                  DATE_TIME_FORMAT,
+                                                                  {
+                                                                      format: DATE_TIME_FORMAT,
+                                                                  },
                                                               )
                                                             : null,
                                                     ]}
-                                                    onChange={
-                                                        onChangeValidUseDate
-                                                    }
+                                                    onChange={onChangeUsedDate}
                                                     className="w-full"
                                                 />
                                             </FormItem>
@@ -306,11 +273,12 @@ const StockPage = () => {
         },
         {
             key: "createStock",
-            label: "Tạo Stock",
+            label: "Tạo kho sản phẩm",
             children: (
                 <StockFormContainer
                     inventoryList={inventoryList}
                     onSubmit={onCreate}
+                    onCancel={onCancel}
                 />
             ),
             icon: <PlusOutlined />,
@@ -319,12 +287,17 @@ const StockPage = () => {
 
     return (
         <PageContainer
-            name={"Stocks"}
-            modelName="Quản lý stock"
-            breadCrumItems={[{ title: "stocks" }]}
+            name={"Kho sản phẩm"}
+            modelName="Kho sản phẩm"
+            breadCrumItems={[{ title: "Kho sản phẩm" }]}
             hideAddButton
         >
-            <Tabs items={tabItems} />
+            <Tabs
+                activeKey={stockTabKey}
+                items={tabItems}
+                destroyInactiveTabPane={true}
+                onChange={(tab) => setStockTabKey(tab as StockTabKeys)}
+            />
         </PageContainer>
     );
 };

@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Form, Input, Space, Radio, Spin, Button, Drawer } from "antd";
+import { isEqual } from "lodash";
 import FormItem from "@/components/base/FormItem";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
-
-import {
-    InventoryFormData,
-    IInventoryPayload,
-    IInventoryListRs,
-} from "@/models/management/core/inventory.interface";
+import { IInventoryListRs } from "@/models/management/core/inventory.interface";
+import { InventoryFormData } from "../../modules/inventory.interface";
 import { Status } from "@/models/management/common.interface";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
-import { TInventoryErrorsField } from "../../../hooks/useCRUDInventory";
+import { useFormSubmit } from "@/hooks/useFormSubmit";
+import { inventorySchema } from "../../schema/inventory.schema";
 
 export enum EActionType {
     CREATE = "create",
@@ -31,16 +29,15 @@ export interface DrawerInventoryProps {
     onCancel: () => void;
     actionType: EActionType;
     initialValues?: IInventoryListRs["result"][0];
-    onSubmit?: (action: EActionType, formData: InventoryFormData) => void;
-    errors?: TInventoryErrorsField;
+    onSubmit: (action: EActionType, formData: InventoryFormData) => void;
 }
 
+type RequiredInventoryFormData = Required<InventoryFormData>;
 const DrawerInventory: React.FC<DrawerInventoryProps> = ({
     actionType,
     onCancel,
     onSubmit,
     isOpen,
-    errors,
     initialValues,
 }) => {
     const { data: inventoryTypeList, isLoading: isLoadingInventoryType } =
@@ -51,9 +48,12 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
     let initFormData = new InventoryFormData("", "", "", undefined, undefined);
     const [formData, setFormData] = useState(initFormData);
 
+    const { handlerSubmit, errors, clearErrors } = useFormSubmit({
+        schema: inventorySchema,
+    });
     const onChangeFormData = (
-        key: keyof IInventoryPayload,
-        value: string | boolean,
+        key: keyof RequiredInventoryFormData,
+        value: RequiredInventoryFormData[keyof RequiredInventoryFormData],
     ) => {
         if (key === "code" && typeof value === "string") {
             value =
@@ -71,6 +71,14 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
         };
         onSubmit?.(actionType, formDataUpdateStatus);
     };
+    const onClose = useCallback(() => {
+        onCancel();
+        clearErrors();
+    }, []);
+    const isDisableUpdateButton = useMemo(() => {
+        return isEqual(initialValues?.name, formData.name);
+    }, [formData]);
+
     useEffect(() => {
         if (initialValues) {
             initFormData = new InventoryFormData(
@@ -84,12 +92,17 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
         }
         setFormData(() => initFormData);
     }, [initialValues, isOpen]);
+
     return (
         <Drawer
-            title={actionType === EActionType.CREATE ? "Thêm mới" : "Chỉnh sửa"}
+            title={
+                actionType === EActionType.CREATE
+                    ? "Thêm nhóm kho"
+                    : "Chỉnh sửa"
+            }
             destroyOnClose
             width={550}
-            onClose={onCancel}
+            onClose={onClose}
             open={isOpen}
             styles={{
                 body: {
@@ -99,13 +112,13 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
         >
             <Form layout="vertical" className=" max-w-4xl">
                 <FormItem
-                    label="Tên inventory"
+                    label="Tên nhóm kho"
                     required
                     validateStatus={errors?.name ? "error" : ""}
                     help={errors?.name || ""}
                 >
                     <Input
-                        placeholder="Tên"
+                        placeholder="Tên nhóm kho"
                         value={formData.name}
                         onChange={(ev) =>
                             onChangeFormData("name", ev.target.value)
@@ -113,13 +126,13 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
                     />
                 </FormItem>
                 <FormItem
-                    label="Code inventory"
+                    label="Mã nhóm kho"
                     required
                     validateStatus={errors?.code ? "error" : ""}
                     help={errors?.code || ""}
                 >
                     <Input
-                        placeholder="Code"
+                        placeholder="Mã nhóm kho"
                         value={formData.code}
                         onChange={(ev) =>
                             onChangeFormData("code", ev.target.value)
@@ -127,7 +140,7 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
                         disabled={actionType === EActionType.EDIT}
                     />
                     <div className="p-2">
-                        <p className="font-bold">{`Lưu ý tạo code:`}</p>
+                        <p className="font-bold">{`Lưu ý tạo mã nhóm kho:`}</p>
                         <ul className="text-xs list-disc pl-4">
                             <li>
                                 {`Code key viết không dấu và không chứa ký tự đặc
@@ -138,7 +151,7 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
                     </div>
                 </FormItem>
                 <FormItem
-                    label="Loại Inventory"
+                    label="Loại nhóm kho"
                     required
                     validateStatus={errors?.type ? "error" : ""}
                     help={errors?.type || ""}
@@ -196,7 +209,7 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
                     )}
                 </FormItem>
                 <FormItem
-                    label="Quản lý stock"
+                    label="Quản lý kho"
                     validateStatus={errors?.isStock ? "error" : ""}
                     help={errors?.isStock || ""}
                 >
@@ -216,19 +229,29 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
             </Form>
             <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
                 <Space>
-                    <Button type="default">Huỷ bỏ</Button>
+                    <Button type="default" onClick={onCancel}>
+                        Huỷ bỏ
+                    </Button>
                     {actionType === EActionType.CREATE ? (
                         <>
                             <Button
                                 type="primary"
-                                onClick={() => onSubmitFormData(Status.QQ)}
+                                onClick={() =>
+                                    handlerSubmit(formData, () =>
+                                        onSubmitFormData(Status.QQ),
+                                    )
+                                }
                                 disabled={false}
                             >
                                 Gửi duyệt
                             </Button>
                             <Button
                                 type="primary"
-                                onClick={() => onSubmitFormData(Status.OK)}
+                                onClick={() =>
+                                    handlerSubmit(formData, () =>
+                                        onSubmitFormData(Status.OK),
+                                    )
+                                }
                                 disabled={false}
                             >
                                 Thêm và kích hoạt
@@ -240,9 +263,13 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
                                 <Button
                                     type="primary"
                                     onClick={() =>
-                                        onSubmitFormData(initialValues.status)
+                                        handlerSubmit(formData, () =>
+                                            onSubmitFormData(
+                                                initialValues.status,
+                                            ),
+                                        )
                                     }
-                                    disabled={false}
+                                    disabled={isDisableUpdateButton}
                                 >
                                     Cập nhật
                                 </Button>
@@ -254,4 +281,4 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
         </Drawer>
     );
 };
-export default DrawerInventory;
+export default memo(DrawerInventory);

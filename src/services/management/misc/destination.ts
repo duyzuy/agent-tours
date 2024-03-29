@@ -8,8 +8,6 @@ import {
     IDestinationContentRs,
     IDestinationContentsRs,
     IDestinationGetContentQueryParams,
-    IDestinationContentDetail,
-    IDestination,
 } from "@/models/management/region.interface";
 import { client } from "@/services/api";
 

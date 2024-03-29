@@ -4,6 +4,7 @@ import { Tag } from "antd";
 import { IOrderListRs } from "@/models/management/booking/order.interface";
 import { PaymentStatus, Status } from "@/models/management/common.interface";
 import { formatDate } from "@/utils/date";
+import Link from "next/link";
 
 export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     {
@@ -24,6 +25,12 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
                     <span className="text-xs text-gray-600">
                         {record.sellable.code}
                     </span>
+                    <Link
+                        href={`./portal/manage-booking/${record.recId}`}
+                        className="block text-xs"
+                    >
+                        <span>Chi tiết</span>
+                    </Link>
                 </div>
             );
         },

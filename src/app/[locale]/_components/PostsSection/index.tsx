@@ -78,19 +78,19 @@ const PostsSection = () => {
 
     return (
         <section className="steel tours">
-            <div className="container mx-auto py-12">
+            <div className="container mx-auto py-12 lg:px-0 px-4">
                 <div className="list-items slider relative">
                     <Swiper
-                        slidesPerView={1}
+                        slidesPerView={2}
                         spaceBetween={16}
                         breakpoints={{
                             640: {
-                                slidesPerView: 2,
+                                slidesPerView: 3,
                                 spaceBetween: 16,
                             },
                             1024: {
-                                slidesPerView: 3,
-                                spaceBetween: 16,
+                                slidesPerView: 4,
+                                spaceBetween: 24,
                             },
                         }}
                         modules={[Navigation]}
@@ -106,12 +106,12 @@ const PostsSection = () => {
                                             <Image
                                                 src={item.authorAvt}
                                                 alt={item.authorName}
-                                                width={60}
-                                                height={60}
+                                                width={40}
+                                                height={40}
                                                 className="rounded-full"
                                             />
                                             <div className="ml-2">
-                                                <p className=" font-semibold text-xs mb-1">
+                                                <p className="font-semibold text-xs mb-1">
                                                     {item.authorName}
                                                 </p>
                                                 <p className="text-xs text-gray-400">
@@ -121,7 +121,7 @@ const PostsSection = () => {
                                         </div>
                                     </div>
                                     <Link href={item.slug}>
-                                        <div className="thumbnail rounded-2xl overflow-hidden mb-4">
+                                        <div className="thumbnail rounded-xl overflow-hidden mb-4">
                                             <Image
                                                 src={item.thumbnail}
                                                 alt={item.name}

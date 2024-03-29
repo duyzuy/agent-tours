@@ -20,11 +20,11 @@ const HomegePageClient = () => {
                 }}
             >
                 <FlashSale />
-                <LineSpacing spaceY={12} />
+                <LineSpacing spaceY={12} className="lg:px-0 px-4" />
                 <BannerSection />
-                <LineSpacing spaceY={12} />
+                <LineSpacing spaceY={12} className="lg:px-0 px-4" />
                 <section className="tabs">
-                    <div className="container mx-auto">
+                    <div className="container mx-auto lg:px-0 px-4">
                         <div className="tabs py-3 mb-3">
                             <ul className="flex items-center gap-x-6">
                                 <li>
@@ -47,52 +47,52 @@ const HomegePageClient = () => {
                                 </li>
                             </ul>
                         </div>
-                        <div className="tour-list flex flex-wrap flex-1 -mx-2">
+                        <div className="tour-list flex flex-wrap flex-1 -mx-3">
                             <ArticleTour
                                 thumbnail="/assets/images/article-1.jpg"
                                 title=" Liên Tuyến Trung Bắc: Đà Nẵng - Huế - Động Phong Nha & Thiên Đường"
-                                className="w-1/4 px-2 mb-4"
+                                className="w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6"
                             />
                             <ArticleTour
                                 thumbnail="/assets/images/article-2.jpg"
                                 title=" Liên Tuyến Trung Bắc: Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ"
-                                className="w-1/4 px-2 mb-4"
+                                className="w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6"
                             />
                             <ArticleTour
                                 thumbnail="/assets/images/article-8.jpg"
                                 title="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
                                     Long"
-                                className="w-1/4 px-2 mb-4"
+                                className="w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6"
                             />
                             <ArticleTour
                                 thumbnail="/assets/images/article-3.jpg"
                                 title="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
                                     Long"
-                                className="w-1/4 px-2 mb-4"
+                                className="w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6"
                             />
                             <ArticleTour
                                 thumbnail="/assets/images/article-4.jpg"
                                 title="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
                                     Long"
-                                className="w-1/4 px-2 mb-4"
+                                className="w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6"
                             />
                             <ArticleTour
                                 thumbnail="/assets/images/article-5.jpg"
                                 title="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
                                     Long"
-                                className="w-1/4 px-2 mb-4"
+                                className="w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6"
                             />
                             <ArticleTour
                                 thumbnail="/assets/images/article-6.jpg"
                                 title="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
                                     Long"
-                                className="w-1/4 px-2 mb-4"
+                                className="w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6"
                             />
                             <ArticleTour
                                 thumbnail="/assets/images/article-7.jpg"
                                 title="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
                                     Long"
-                                className="w-1/4 px-2 mb-4"
+                                className="w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6"
                             />
                         </div>
                         <div className="paginations flex items-center justify-center">
@@ -138,21 +138,6 @@ const HomegePageClient = () => {
                                         5
                                     </span>
                                 </li>
-                                <li>
-                                    <span className="w-9 h-9 bg-white inline-flex text-gray-600 text-[14px] items-center justify-center rounded-full border ml-2">
-                                        6
-                                    </span>
-                                </li>
-                                <li>
-                                    <span className="w-9 h-9 bg-white inline-flex text-gray-600 text-[14px] items-center justify-center rounded-full border ml-2">
-                                        7
-                                    </span>
-                                </li>
-                                <li>
-                                    <span className="w-9 h-9 bg-white inline-flex text-gray-600 text-[14px] items-center justify-center rounded-full border ml-2">
-                                        8
-                                    </span>
-                                </li>
                             </ul>
                             <span className="w-9 h-9 bg-white rounded-full inline-flex items-center justify-center">
                                 <svg
@@ -173,11 +158,11 @@ const HomegePageClient = () => {
                         </div>
                     </div>
                 </section>
-                <LineSpacing spaceY={12} />
+                <LineSpacing spaceY={12} className="lg:px-0 px-4" />
                 <VisaSection />
-                <LineSpacing spaceY={12} />
+                <LineSpacing spaceY={12} className="lg:px-0 px-4" />
                 <PostsSection />
-                <LineSpacing spaceY={12} />
+                <LineSpacing spaceY={12} className="lg:px-0 px-4" />
                 <ExploreSection />
             </div>
         </div>

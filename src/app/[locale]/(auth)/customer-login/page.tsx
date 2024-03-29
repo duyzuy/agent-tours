@@ -7,8 +7,8 @@ const CustomerLogin = () => {
     return (
         <div className="login-page py-16 bg-slate-50">
             <div className="container mx-auto bg-white drop-shadow-lg rounded-lg overflow-hidden">
-                <div className="flex">
-                    <div className="w-1/2 px-16 py-16">
+                <div className="flex flex-wrap lg:flex-row">
+                    <div className="w-full lg:w-1/2 px-16 py-16">
                         <div className="login-form">
                             <div className="slogan py-2 mb-4">
                                 <p className="text-main-400 font-semibold uppercase">
@@ -30,12 +30,13 @@ const CustomerLogin = () => {
                             <LoginForm />
                         </div>
                     </div>
-                    <div className="w-1/2">
-                        <div className="authimage h-full w-full relative">
+                    <div className="w-full lg:w-1/2">
+                        <div className="auth__image h-42 lg:h-full w-full relative">
                             <Image
                                 fill
                                 src="/assets/images/bg-customer-auth.png"
                                 alt="bg auth"
+                                style={{ objectFit: "cover" }}
                             />
                         </div>
                     </div>

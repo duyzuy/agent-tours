@@ -1,6 +1,6 @@
 import { BaseResponse, Status } from "../common.interface";
 import { IInventory } from "./inventory.interface";
-import { IStock } from "./stockInventory.interface";
+import { IStock } from "./stock.interface";
 
 interface RequestObject {
     sellableTemplateId?: number;

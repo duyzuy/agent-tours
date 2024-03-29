@@ -30,6 +30,14 @@ const ModalFormOfPaymentDetail: React.FC<ModalDetailFOPProps> = ({
                     <Row gutter={[16, 16]}>
                         <Col span={12}>
                             <div>
+                                <span className="block text-xs">Order id</span>
+                                <span className="font-[500]">
+                                    {data?.orderId}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
                                 <span className="block text-xs">
                                     Người thanh toán
                                 </span>

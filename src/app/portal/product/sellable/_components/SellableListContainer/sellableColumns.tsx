@@ -9,47 +9,49 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
         title: "#ID",
         dataIndex: "recId",
         key: "recId",
-        width: 100,
+        width: 80,
     },
     {
-        title: "Code",
+        title: "Mã sản phẩm",
         dataIndex: "code",
         key: "code",
-        width: 300,
+        width: 200,
+        render: (_, record) => {
+            return (
+                <div>
+                    <span className="block mb-1">{record.code}</span>
+                    <span className="text-xs">{record.type}</span>
+                </div>
+            );
+        },
     },
     {
-        title: "Stock type",
-        dataIndex: "type",
-        key: "type",
-        width: 150,
-    },
-    {
-        title: "cap",
+        title: "Tổng số lượng",
         dataIndex: "cap",
         key: "cap",
-        width: 100,
+        width: 120,
     },
     {
-        title: "Tổng",
+        title: "Khả dụng",
         dataIndex: "avaiable",
         key: "avaiable",
         width: 100,
     },
     {
-        title: "SL Đang còn",
+        title: "SL đang còn",
         dataIndex: "open",
         key: "open",
         width: 100,
     },
     {
-        title: "Đã sử dụng (Used)",
+        title: "Đã sử dụng",
         dataIndex: "used",
         key: "used",
         width: 100,
     },
 
     {
-        title: "Valid Date",
+        title: "Ngày bán",
         dataIndex: "valid-date",
         key: "valid-date",
         width: 200,
@@ -58,13 +60,13 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
                 <>
                     <p>
                         <span className="w-14 inline-block text-right mr-2">
-                            From:
+                            Từ:
                         </span>
                         <span>{formatDate(record.validFrom)}</span>
                     </p>
                     <p>
                         <span className="w-14 inline-block text-right mr-2">
-                            To:
+                            Đến:
                         </span>
                         <span>{formatDate(record.validTo)}</span>
                     </p>
@@ -73,7 +75,7 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
         },
     },
     {
-        title: "Use date",
+        title: "Ngày sử dụng",
         dataIndex: "use-date",
         key: "use-date",
         width: 200,
@@ -82,18 +84,34 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
                 <>
                     <p>
                         <span className="w-14 inline-block text-right mr-2">
-                            Start:
+                            Từ:
                         </span>
                         <span>{formatDate(record.startDate)}</span>
                     </p>
                     <p>
                         <span className="w-14 inline-block text-right mr-2">
-                            End:
+                            Đến:
                         </span>
                         <span>{formatDate(record.endDate)}</span>
                     </p>
                 </>
             );
+        },
+    },
+
+    {
+        title: "User",
+        dataIndex: "sysFstUser",
+        key: 2,
+        width: 100,
+    },
+    {
+        title: "Ngày tạo",
+        dataIndex: "sysFstUpdate",
+        key: "sysFstUpdate",
+        width: 200,
+        render: (_, record) => {
+            return formatDate(record.sysFstUpdate);
         },
     },
     {
@@ -116,21 +134,6 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
                         "Chờ kích hoạt"}
                 </Tag>
             );
-        },
-    },
-    {
-        title: "User",
-        dataIndex: "sysFstUser",
-        key: 2,
-        width: 100,
-    },
-    {
-        title: "Ngày tạo",
-        dataIndex: "sysFstUpdate",
-        key: "sysFstUpdate",
-        width: 200,
-        render: (_, record) => {
-            return formatDate(record.sysFstUpdate);
         },
     },
 ];

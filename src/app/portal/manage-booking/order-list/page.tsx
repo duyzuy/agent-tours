@@ -161,7 +161,7 @@ export default function ManageBookingOrderListPage() {
                 fixedActionsColumn={false}
                 size="small"
                 rowKey={"recId"}
-                onEdit={(record) =>
+                onView={(record) =>
                     router.push(`./portal/manage-booking/${record.recId}`)
                 }
                 pagination={{

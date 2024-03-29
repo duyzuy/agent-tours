@@ -110,16 +110,24 @@ const DATA = [
 ];
 const VisaSection = () => {
     return (
-        <section className="visa">
-            <div className="container mx-auto bg-white rounded-2xl border-2 p-6 drop-shadow-lg">
-                <div className="head-section py-2 mb-6">
+        <section className="visa container mx-auto lg:px-0 px-4">
+            <div className="bg-white rounded-2xl border-2 drop-shadow-lg">
+                <div className="head-section pt-6 px-6 mb-6">
                     <h3 className="font-semibold text-xl">
                         Danh mục Visa / Passport
                     </h3>
                 </div>
-                <div className="visa-list flex">
-                    {DATA.map((visa) => (
-                        <div className="visa-group w-1/4" key={visa.key}>
+                <div className="visa-list flex flex-wrap pb-6 px-6">
+                    {DATA.map((visa, _index) => (
+                        <div
+                            className={classNames(
+                                "visa-group md:w-1/3 w-1/2 lg:mb-0 lg:w-1/5",
+                                {
+                                    "mb-6": DATA.length - 1 !== _index,
+                                },
+                            )}
+                            key={visa.key}
+                        >
                             <div className="group-head mb-3">
                                 <h4 className="font-semibold text-red-600">
                                     {visa.name}
@@ -129,7 +137,7 @@ const VisaSection = () => {
                                 {visa.items.map((item, _index) => (
                                     <li
                                         className={classNames(
-                                            "flex items-center py-2 ",
+                                            "flex items-center py-2 hover:bg-slate-100 cursor-pointer px-2 rounded-md",
                                             {
                                                 "mt-2": _index === 0,
                                             },

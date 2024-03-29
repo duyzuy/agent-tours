@@ -2,18 +2,18 @@ import { BaseResponse } from "@/models/management/common.interface";
 import { coreApi } from "../coreApi";
 import {
     IStockListOfInventoryRs,
-    IStockInventoryTypeRs,
+    IStockTypeRs,
     IStockPayload,
     IStock,
     IStockConfirmPayload,
     IStockAdjustPayload,
     IStockAdjustment,
-    StockInventoryQueryParams,
-} from "@/models/management/core/stockInventory.interface";
+    StockQueryParams,
+} from "@/models/management/core/stock.interface";
 
 export const stockInventoryAPIs = {
     getStockType: async (type: string) => {
-        return await coreApi.post<IStockInventoryTypeRs, BaseResponse<null>>(
+        return await coreApi.post<IStockTypeRs, BaseResponse<null>>(
             "core/MiscInventoryStockType",
             {
                 requestObject: {
@@ -23,7 +23,7 @@ export const stockInventoryAPIs = {
             },
         );
     },
-    getStockList: async (queryParams?: StockInventoryQueryParams) => {
+    getStockList: async (queryParams?: StockQueryParams) => {
         return await coreApi.post<IStockListOfInventoryRs, BaseResponse<null>>(
             "core/InventoryStock_List",
             {

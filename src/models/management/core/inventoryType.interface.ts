@@ -11,5 +11,4 @@ export enum EInventoryType {
     INSURANCE = "INSURANCE",
 }
 export type TInventoryType = EInventoryType[];
-
 export interface IInventoryTypeRs extends BaseResponse<TInventoryType> {}

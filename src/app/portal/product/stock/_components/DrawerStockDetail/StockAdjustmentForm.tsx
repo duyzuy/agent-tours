@@ -2,16 +2,13 @@ import React, { useMemo, useState } from "react";
 import classNames from "classnames";
 import { Form, Input, Button, Space } from "antd";
 import { isEmpty } from "lodash";
-import { stockAdjustSchema } from "../../../hooks/validation";
 import FormItem from "@/components/base/FormItem";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
-import { StockInventoryAdjustFormData } from "@/models/management/core/stockInventory.interface";
+import { stockAdjustSchema } from "../../schema/stock.schema";
+import { StockAdjustFormData } from "../../modules/stock.interface";
 interface StockAdjustmentFormProps {
     inventoryStockId?: number;
-    onSubmit?: (
-        formData: StockInventoryAdjustFormData,
-        cb?: () => void,
-    ) => void;
+    onSubmit?: (formData: StockAdjustFormData, cb?: () => void) => void;
     className?: string;
     onCancel?: () => void;
 }
@@ -22,18 +19,14 @@ const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
     className = "",
     onCancel,
 }) => {
-    const initFormData = new StockInventoryAdjustFormData(
-        inventoryStockId,
-        "",
-        0,
-    );
+    const initFormData = new StockAdjustFormData(inventoryStockId, "", 0);
     const [formData, setFormData] = useState(initFormData);
 
     const { handlerSubmit, errors } = useFormSubmit({
         schema: stockAdjustSchema,
     });
     const onChangeFormData = (
-        key: keyof StockInventoryAdjustFormData,
+        key: keyof StockAdjustFormData,
         value: string | number,
     ) => {
         if (key === "quantity") {
@@ -54,7 +47,7 @@ const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
         return Number(formData.quantity) === 0 || isEmpty(formData.rmk);
     }, [formData]);
 
-    const onSubmitForm: HandleSubmit<StockInventoryAdjustFormData> = (data) => {
+    const onSubmitForm: HandleSubmit<StockAdjustFormData> = (data) => {
         onSubmit?.(data, onResetFormData);
     };
 
@@ -65,11 +58,11 @@ const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
             })}
         >
             <div className="mb-3">
-                <p className="font-bold">Cập nhật số lượng stock</p>
+                <p className="font-bold">Cập nhật số lượng kho sản phẩm</p>
             </div>
             <Form layout="vertical">
                 <FormItem
-                    label="Số lượng"
+                    label="Số lượng cần thêm/giảm"
                     required
                     tooltip="Sử dụng '-' để giảm số lượng"
                     validateStatus={errors?.quantity ? "error" : ""}

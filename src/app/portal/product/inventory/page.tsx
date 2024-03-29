@@ -1,6 +1,7 @@
 "use client";
-import { useMemo, useState } from "react";
-import { Form, Select, SelectProps, Row, Col, PaginationProps } from "antd";
+import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Form, Select, SelectProps, Row, Col } from "antd";
 import FormItem from "@/components/base/FormItem";
 import PageContainer from "@/components/admin/PageContainer";
 import {
@@ -16,21 +17,24 @@ import DrawerInventory, {
     EActionType,
     TDrawlerAction,
 } from "./_components/DrawerInventory";
-import useCRUDInventory from "../hooks/useCRUDInventory";
+import useCRUDInventory from "./modules/useCRUDInventory";
 import { Status } from "@/models/management/common.interface";
 import { isUndefined } from "lodash";
-
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 const InventoryPage = () => {
-    const initInventoryQueryParams = new InventoryQueryParams(
-        {
-            type: `${EInventoryType.AIR}||${EInventoryType.HOTEL}||${EInventoryType.VISA}||${EInventoryType.TRANSPORT}`,
-        },
-        1,
-        10,
+    const router = useRouter();
+
+    const [queryParams, setQueryParams] = useState(
+        () =>
+            new InventoryQueryParams(
+                {
+                    type: `${EInventoryType.AIR}||${EInventoryType.HOTEL}||${EInventoryType.VISA}||${EInventoryType.TRANSPORT}||${EInventoryType.INSURANCE}||${EInventoryType.LANDPACKAGE}||${EInventoryType.RESTAURANT}`,
+                },
+                1,
+                10,
+            ),
     );
-    const [queryParams, setQueryParams] = useState(initInventoryQueryParams);
     const { data: inventoryResponse, isLoading } = useGetInventoryListCoreQuery(
         {
             queryParams: queryParams,
@@ -62,10 +66,9 @@ const InventoryPage = () => {
         onUpdateInventory,
         onApprovalInventory,
         onDeleteInventory,
-        errors,
     } = useCRUDInventory();
 
-    const handleDrawlerInventory = (drawler: TDrawlerAction) => {
+    const handleDrawlerInventory = useCallback((drawler: TDrawlerAction) => {
         if (drawler.type === EActionType.EDIT) {
             setEditRecord(drawler.record);
         }
@@ -73,27 +76,29 @@ const InventoryPage = () => {
         if (drawler.type === EActionType.CREATE) {
         }
         setOpenDrawler(true);
-    };
-    const onCancelDrawler = () => {
+    }, []);
+
+    const onCancelDrawler = useCallback(() => {
         setOpenDrawler(false);
         setEditRecord(undefined);
-    };
-    const handleCreateInventory: DrawerInventoryProps["onSubmit"] = (
-        action,
-        formData,
-    ) => {
-        if (action === EActionType.CREATE) {
-            onCreateInventory(formData, () => {
-                setOpenDrawler(false);
-            });
-        }
-        if (action === EActionType.EDIT && editRecord) {
-            onUpdateInventory(editRecord.recId, formData, () => {
-                setOpenDrawler(false);
-                setEditRecord(undefined);
-            });
-        }
-    };
+    }, []);
+
+    const handleCreateInventory = useCallback<DrawerInventoryProps["onSubmit"]>(
+        (action, formData) => {
+            if (action === EActionType.CREATE) {
+                onCreateInventory(formData, () => {
+                    setOpenDrawler(false);
+                });
+            }
+            if (action === EActionType.EDIT && editRecord) {
+                onUpdateInventory(editRecord.recId, formData, () => {
+                    setOpenDrawler(false);
+                    setEditRecord(undefined);
+                });
+            }
+        },
+        [],
+    );
     const onChangeInventoryTypeQueryParams: SelectProps<
         string[],
         { label: string; value: string }
@@ -116,18 +121,12 @@ const InventoryPage = () => {
             },
         }));
     };
-    const onChangePagination: PaginationProps["onChange"] = (
-        page,
-        pageSize,
-    ) => {
-        console.log(page, pageSize);
-        setQueryParams((prev) => ({ ...prev, pageCurrent: page }));
-    };
+
     return (
         <PageContainer
-            name="Inventory"
-            modelName="Inventory"
-            breadCrumItems={[{ title: "Inventory" }]}
+            name="Quản lý nhóm kho sản phẩm"
+            modelName="nhóm"
+            breadCrumItems={[{ title: "Quản lý nhóm kho sản phẩm" }]}
             onClick={() => handleDrawlerInventory({ type: EActionType.CREATE })}
         >
             <div className="search-bar">
@@ -141,7 +140,7 @@ const InventoryPage = () => {
                                     )}
                                     mode="tags"
                                     style={{ width: "100%" }}
-                                    placeholder="Loại inventory"
+                                    placeholder="Loại kho"
                                     onChange={onChangeInventoryTypeQueryParams}
                                     options={inventoryTypeOptions}
                                     loading={isLoadingInventoryType}
@@ -154,11 +153,13 @@ const InventoryPage = () => {
             </div>
 
             <TableListPage<IInventoryListRs["result"][0]>
-                scroll={{ x: 1600 }}
-                modelName="Inventory"
+                scroll={{ x: 1400 }}
+                modelName="Nhóm kho sản phẩm"
                 columns={inventoryColumns}
                 rowKey={"recId"}
                 dataSource={inventoryList || []}
+                fixedActionsColumn={false}
+                showActionsLess={false}
                 isLoading={isLoading}
                 onEdit={(record) =>
                     handleDrawlerInventory({ type: EActionType.EDIT, record })
@@ -169,20 +170,29 @@ const InventoryPage = () => {
                     onApprovalInventory(record.recId)
                 }
                 hideApproval={(record) => record.status === Status.OK}
+                onView={(record) =>
+                    router.push(`./portal/product/inventory/${record.recId}`)
+                }
+                hideView={(record) =>
+                    !record.isStock || record.status !== Status.OK
+                }
                 pagination={{
                     total: totalItems,
                     pageSize: pageSize,
                     current: pageCurrent,
-                    onChange: onChangePagination,
+                    onChange: (page, pageSize) =>
+                        setQueryParams((prev) => ({
+                            ...prev,
+                            pageCurrent: page,
+                        })),
                 }}
             />
             <DrawerInventory
                 isOpen={isOpenDrawler}
+                initialValues={editRecord}
                 onCancel={onCancelDrawler}
                 actionType={editRecord ? EActionType.EDIT : EActionType.CREATE}
-                initialValues={editRecord}
                 onSubmit={handleCreateInventory}
-                errors={errors}
             />
         </PageContainer>
     );

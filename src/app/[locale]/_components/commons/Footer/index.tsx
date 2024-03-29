@@ -192,19 +192,19 @@ const Footer = () => {
                     backgroundImage: "url(/assets/images/bg-ft-parten.png)",
                 }}
             >
-                <div className="container mx-auto">
-                    <div className="flex flex-wrap -mx-8">
-                        <div className="w-1/2 px-8 mb-6">
+                <div className="container mx-auto px-4 lg:px-0">
+                    <div className="flex flex-wrap -mx-4 lg:-mx-8">
+                        <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6">
                             <div className="ft-title py-2 mb-3">
                                 <h5 className="text-white font-semibold">
                                     TOUR TRONG NƯỚC
                                 </h5>
                             </div>
                             <div className="w-full h-[1px] bg-gray-400 mb-3 opacity-50"></div>
-                            <div className="ft-contents flex -mx-3">
+                            <div className="ft-contents flex -mx-2 lg:-mx-3">
                                 {DOMS.map((item, _index) => (
                                     <ul
-                                        className="list w-1/3 px-3"
+                                        className="list w-1/3 px-2 lg:px-3"
                                         key={`doms-${_index}`}
                                     >
                                         {item.map((_item) => (
@@ -230,17 +230,17 @@ const Footer = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="w-1/2 px-8 mb-6">
+                        <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6">
                             <div className="ft-title py-2 mb-3">
                                 <h5 className="text-white font-semibold">
                                     TOUR NƯỚC NGOÀI
                                 </h5>
                             </div>
                             <div className="w-full h-[1px] bg-gray-400 mb-3 opacity-50"></div>
-                            <div className="ft-contents flex -mx-3">
+                            <div className="ft-contents flex -mx-2 lg:-mx-3">
                                 {DOMS.map((item, _index) => (
                                     <ul
-                                        className="list w-1/3 px-3"
+                                        className="list w-1/3 px-2 lg:px-3"
                                         key={`con-${_index}`}
                                     >
                                         {item.map((_item) => (
@@ -266,17 +266,17 @@ const Footer = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="w-1/2 px-8 mb-6">
+                        <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6">
                             <div className="ft-title py-2 mb-3">
                                 <h5 className="text-white font-semibold">
                                     THÔNG TIN CHUNG
                                 </h5>
                             </div>
                             <div className="w-full h-[1px] bg-gray-400 mb-3 opacity-50"></div>
-                            <div className="ft-contents flex -mx-3">
+                            <div className="ft-contents flex -mx-2 lg:-mx-3">
                                 {THONGTIN.map((item, _index) => (
                                     <ul
-                                        className="list w-1/3 px-3"
+                                        className="list w-1/3 px-2 lg:px-3"
                                         key={`tt-${_index}`}
                                     >
                                         {item.map((_item) => (
@@ -302,7 +302,7 @@ const Footer = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="w-1/2 px-8 mb-6">
+                        <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6">
                             <div className="ft-title py-2 mb-3">
                                 <h5 className="text-white font-semibold">
                                     CHẤP NHẬN THANH TOÁN
@@ -333,9 +333,9 @@ const Footer = () => {
                 </div>
             </div>
             <div className="footer-bottom">
-                <div className="container mx-auto py-6">
-                    <div className="inner flex items-center -mx-8">
-                        <div className="w-1/2 px-8">
+                <div className="container mx-auto lg:px-0 px-4 py-6">
+                    <div className="inner flex flex-wrap items-center -mx-4 lg:-mx-8">
+                        <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6 lg:mb-0">
                             <div className="cotnent text-xs">
                                 <h6 className="text-xl font-semibold text-main-400 mb-4">
                                     CÔNG TY CỔ PHẦN AN THÁI TRAVEL
@@ -363,7 +363,7 @@ const Footer = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-1/2 px-8">
+                        <div className="w-full lg:w-1/2 px-4 lg:px-8">
                             <div className="cotnent flex items-center -mx-3">
                                 <div className="socials px-3 flex-1">
                                     <div className="mb-3">
@@ -394,13 +394,13 @@ const Footer = () => {
                                             <Image
                                                 src="/assets/images/icon-bct.png"
                                                 alt="bct"
-                                                width={120}
+                                                width={80}
                                                 height={30}
                                             />
                                             <Image
                                                 src="/assets/images/icon-dmca.png"
                                                 alt="bct"
-                                                width={80}
+                                                width={60}
                                                 height={20}
                                                 className="ml-2"
                                             />
@@ -408,7 +408,7 @@ const Footer = () => {
                                     </div>
                                 </div>
 
-                                <div className="qr px-6 mx-6 border-l border-r">
+                                <div className="qr lg:px-6 lg:mx-6 px-2 mx-2 border-l border-r">
                                     <div className="text-center">
                                         <Image
                                             src="/assets/images/icon-qr.svg"

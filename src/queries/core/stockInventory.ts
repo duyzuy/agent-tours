@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
 import { stockInventoryAPIs } from "@/services/management/cores/stockInventory";
-import { StockInventoryQueryParams } from "@/models/management/core/stockInventory.interface";
+import { StockQueryParams } from "@/models/management/core/stock.interface";
 import { isUndefined } from "lodash";
 
 export const useGetStockInventoryTypeCoreQuery = (type: string) => {
@@ -18,19 +18,19 @@ export const useGetStockInventoryListCoreQuery = ({
     enabled,
 }: {
     enabled?: boolean;
-    queryparams?: StockInventoryQueryParams;
+    queryparams?: StockQueryParams;
 }) => {
     let { requestObject, pageCurrent, pageSize } = queryparams || {};
 
     if (!isUndefined(requestObject)) {
         requestObject = Object.keys(requestObject)
             .sort()
-            .reduce<StockInventoryQueryParams["requestObject"]>((acc, key) => {
+            .reduce<StockQueryParams["requestObject"]>((acc, key) => {
                 return {
                     ...acc,
                     [key]: requestObject
                         ? requestObject[
-                              key as keyof StockInventoryQueryParams["requestObject"]
+                              key as keyof StockQueryParams["requestObject"]
                           ]
                         : undefined,
                 };

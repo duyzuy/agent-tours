@@ -151,7 +151,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                             {getPassengerTitle(
                                                                 bookingDetail
                                                                     .booking.pax
-                                                                    .paxTitle as EPassengerTitle,
+                                                                    ?.paxTitle as EPassengerTitle,
                                                             )}
                                                         </span>
                                                     </div>
@@ -165,7 +165,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                             {getPassengerGender(
                                                                 bookingDetail
                                                                     .booking.pax
-                                                                    .paxGender as EPassengerGender,
+                                                                    ?.paxGender as EPassengerGender,
                                                             )}
                                                         </span>
                                                     </div>
@@ -180,7 +180,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
-                                                                .paxLastname ||
+                                                                ?.paxLastname ||
                                                                 "--"}
                                                         </span>
                                                     </div>
@@ -193,7 +193,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
-                                                                .paxMiddleFirstName ||
+                                                                ?.paxMiddleFirstName ||
                                                                 "--"}
                                                         </span>
                                                     </div>
@@ -209,7 +209,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                             {formatDate(
                                                                 bookingDetail
                                                                     .booking.pax
-                                                                    .paxBirthDate,
+                                                                    ?.paxBirthDate,
                                                             ) || "--"}
                                                         </span>
                                                     </div>
@@ -222,7 +222,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                         <span className="font-[500]">
                                                             {bookingDetail
                                                                 .booking.pax
-                                                                .paxPhoneNumber ||
+                                                                ?.paxPhoneNumber ||
                                                                 "--"}
                                                         </span>
                                                     </div>

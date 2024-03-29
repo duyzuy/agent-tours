@@ -5,7 +5,7 @@ import {
     ITemplateSaleableListRs,
     TemplateSellableQueryParams,
 } from "@/models/management/core/templateSellable.interface";
-import useCRUDTemplateSellable from "./hooks/useCRUDTemplateSellable";
+import useCRUDTemplateSellable from "./modules/useCRUDTemplateSellable";
 import TableListPage from "@/components/admin/TableListPage";
 import DrawerTemplateSellable, {
     DrawerTemplateSellableProps,
@@ -118,15 +118,15 @@ const SellTemplatePage = () => {
     };
     return (
         <PageContainer
-            name="Template Sell able"
-            modelName="Template"
-            breadCrumItems={[{ title: "Template Sell able" }]}
+            name="Nhóm sản phẩm"
+            modelName="Nhóm sản phẩm"
+            breadCrumItems={[{ title: "Nhóm sản phẩm" }]}
             onClick={() => handleOpenDrawer({ type: EActionType.CREATE })}
         >
             <div className="search-bar">
                 <Form>
                     {productTypeList && (
-                        <FormItem label="Product type">
+                        <FormItem label="Loại sản phẩm">
                             {productTypeList.map((type) => (
                                 <Radio
                                     key={type}
@@ -153,6 +153,7 @@ const SellTemplatePage = () => {
                 isLoading={isLoading}
                 columns={templateColums}
                 onChange={handleTableChange}
+                fixedActionsColumn={false}
                 pagination={{
                     current: pageCurrent,
                     pageSize: pageSize,

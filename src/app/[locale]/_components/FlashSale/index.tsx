@@ -2,9 +2,9 @@ import TourCard from "@/components/frontend/TourCard";
 const FlashSale = () => {
     return (
         <section className="flash-sale">
-            <div className="container mx-auto bg-main-400 rounded-md py-6 px-6">
-                <div className="inner flex items-center">
-                    <div className="content w-[280px]">
+            <div className="container mx-auto bg-main-400 rounded-md lg:py-6 lg:px-6 px-4 py-4">
+                <div className="inner flex flex-wrap items-center">
+                    <div className="content w-[260px] hidden lg:block">
                         <div className="text-white">
                             <div className="promo-name text-center text-lg mb-3">
                                 <p>Chương trình</p>
@@ -30,19 +30,22 @@ const FlashSale = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="items flex items-center gap-x-4 flex-1">
+                    <div className="items flex flex-wrap -mx-3 flex-1">
                         <TourCard
                             thumbnail="/assets/images/article-1.jpg"
                             title=" Liên Tuyến Trung Bắc: Đà Nẵng - Huế - Động Phong Nha & Thiên Đường"
+                            className="w-1/2 lg:w-1/3 px-3 lg:mb-0 mb-6"
                         />
                         <TourCard
                             thumbnail="/assets/images/article-2.jpg"
                             title=" Liên Tuyến Trung Bắc: Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ"
+                            className="w-1/2 lg:w-1/3 px-3 lg:mb-0 mb-6"
                         />
                         <TourCard
                             thumbnail="/assets/images/article-3.jpg"
                             title="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
                     Long"
+                            className="w-1/2 lg:w-1/3 px-3 lg:mb-0 mb-6"
                         />
                     </div>
                 </div>

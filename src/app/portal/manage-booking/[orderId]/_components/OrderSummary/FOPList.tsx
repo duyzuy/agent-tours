@@ -155,6 +155,7 @@ const FOPList: React.FC<FOPListProps> = ({
                 dataSource={items}
                 rowKey={"recId"}
                 columns={mergeColumns}
+                size="small"
             />
             <ModalDetailFOP
                 isShowModal={detailRecord.isShow}
@@ -264,6 +265,17 @@ const ModalDetailFOP: React.FC<ModalDetailFOPProps> = ({
                                 <span className="font-[500]">
                                     {data?.sysFstUpdate &&
                                         formatDate(data?.sysFstUpdate)}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">
+                                    Ngày duyệt
+                                </span>
+                                <span className="font-[500]">
+                                    {data?.sysFstUpdate &&
+                                        formatDate(data?.sysLstUpdate)}
                                 </span>
                             </div>
                         </Col>

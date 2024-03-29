@@ -4,10 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { IBookingTourPayload } from "@/app/portal/booking/modules/bookingInformation.interface";
 import { ISearchBookingPayload } from "@/app/portal/booking/modules/searchBooking.interface";
 import { IProductListRs } from "@/models/management/booking/productItem.interface";
-import {
-    IReservation,
-    ReservationRs,
-} from "@/models/management/booking/reservation.interface";
+import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { formOfPaymentAPIs } from "@/services/management/cores/formOfPayment";
 import {

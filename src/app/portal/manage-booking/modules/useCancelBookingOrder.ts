@@ -11,10 +11,11 @@ const useCancelBookingOrder = () => {
     ) => {
         makeCancelBookingOrder(payload, {
             onSuccess(data, variables, context) {
-                message.success("Huỷ booking thành công.");
+                message.success("Huỷ tour thành công.");
                 cb?.();
             },
             onError(error, variables, context) {
+                message.error(error.message);
                 console.log(error);
             },
         });

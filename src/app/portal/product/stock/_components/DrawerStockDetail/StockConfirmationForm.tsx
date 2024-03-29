@@ -1,40 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, DatePicker, Space, Button } from "antd";
+import { Form, Input, Space, Button, Col, Row } from "antd";
 import FormItem from "@/components/base/FormItem";
-import {
-    IStockListOfInventoryRs,
-    IStockConfirmPayload,
-    StockInventoryConfirmFormData,
-} from "@/models/management/core/stockInventory.interface";
+import { IStockListOfInventoryRs } from "@/models/management/core/stock.interface";
 import dayjs from "dayjs";
-
-export enum EActionType {
-    VIEW = "view",
-    CONFIRM = "confirm",
-}
-
-export type TDrawlerStockDetailAction = {
-    type: EActionType;
-    record: IStockListOfInventoryRs["result"][0];
-};
 
 import { DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import { RangePickerProps } from "antd/es/date-picker";
-import { stockConfirmSchema } from "../../../hooks/validation";
+
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
-const RangePicker = DatePicker.RangePicker;
+import CustomRangePicker from "@/components/admin/CustomRangePicker";
+import { stockConfirmSchema } from "../../schema/stock.schema";
+import { StockConfirmFormData } from "../../modules/stock.interface";
 
 interface StockConfirmationFormProps {
     initialValues?: IStockListOfInventoryRs["result"][0];
     hasApproval: boolean;
-    onSubmit?: (formData: StockInventoryConfirmFormData) => void;
+    onSubmit?: (formData: StockConfirmFormData) => void;
 }
 const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     initialValues,
     hasApproval,
     onSubmit,
 }) => {
-    const initStockConfirmFormdata = new StockInventoryConfirmFormData(
+    const initStockConfirmFormdata = new StockConfirmFormData(
         0,
         "",
         0,
@@ -53,8 +41,8 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     );
 
     const onChangeFormData = (
-        key: keyof IStockConfirmPayload,
-        value: string | number,
+        key: keyof StockConfirmFormData,
+        value: StockConfirmFormData[keyof StockConfirmFormData],
     ) => {
         if (key === "cap" && !isNaN(value as number)) {
             value = Number(value);
@@ -71,8 +59,12 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     ) => {
         setStockConfirmFormData((prev) => ({
             ...prev,
-            valid: date ? date[0]?.format(DATE_TIME_FORMAT) : undefined,
-            validTo: date ? date[1]?.format(DATE_TIME_FORMAT) : undefined,
+            valid: date
+                ? date[0]?.locale("en").format(DATE_TIME_FORMAT)
+                : undefined,
+            validTo: date
+                ? date[1]?.locale("en").format(DATE_TIME_FORMAT)
+                : undefined,
             // start: undefined,
             // end: undefined,
         }));
@@ -83,14 +75,16 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     ) => {
         setStockConfirmFormData((prev) => ({
             ...prev,
-            start: date ? date[0]?.format(DATE_TIME_FORMAT) : undefined,
-            end: date ? date[1]?.format(DATE_TIME_FORMAT) : undefined,
+            start: date
+                ? date[0]?.locale("en").format(DATE_TIME_FORMAT)
+                : undefined,
+            end: date
+                ? date[1]?.locale("en").format(DATE_TIME_FORMAT)
+                : undefined,
         }));
     };
 
-    const onSubmitForm: HandleSubmit<StockInventoryConfirmFormData> = (
-        data,
-    ) => {
+    const onSubmitForm: HandleSubmit<StockConfirmFormData> = (data) => {
         onSubmit?.(data);
     };
     useEffect(() => {
@@ -99,10 +93,18 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                 recId: initialValues.recId,
                 cap: initialValues.cap,
                 description: initialValues.description,
-                start: dayjs(initialValues.startDate).format(DATE_TIME_FORMAT),
-                end: dayjs(initialValues.endDate).format(DATE_TIME_FORMAT),
-                valid: dayjs(initialValues.validFrom).format(DATE_TIME_FORMAT),
-                validTo: dayjs(initialValues.validTo).format(DATE_TIME_FORMAT),
+                start: dayjs(initialValues.startDate)
+                    .locale("en")
+                    .format(DATE_TIME_FORMAT),
+                end: dayjs(initialValues.endDate)
+                    .locale("en")
+                    .format(DATE_TIME_FORMAT),
+                valid: dayjs(initialValues.validFrom)
+                    .locale("en")
+                    .format(DATE_TIME_FORMAT),
+                validTo: dayjs(initialValues.validTo)
+                    .locale("en")
+                    .format(DATE_TIME_FORMAT),
             }));
         }
     }, [initialValues]);
@@ -110,20 +112,26 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
     return (
         <>
             <Form layout="vertical">
-                <FormItem label="Inventory Type">
-                    <Input
-                        placeholder="Inventory Type"
-                        disabled
-                        value={initialValues?.inventoryType}
-                    />
-                </FormItem>
-                <FormItem label="Stock Type">
-                    <Input
-                        placeholder="Inventory Type"
-                        disabled
-                        value={initialValues?.type}
-                    />
-                </FormItem>
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <FormItem label="Loại nhóm kho">
+                            <Input
+                                placeholder="Loại nhóm kho"
+                                disabled
+                                value={initialValues?.inventoryType}
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem label="Loại kho">
+                            <Input
+                                placeholder="Loại nhóm kho"
+                                disabled
+                                value={initialValues?.type}
+                            />
+                        </FormItem>
+                    </Col>
+                </Row>
                 <FormItem
                     label="Ngày mở bán (valid date)"
                     required
@@ -132,7 +140,7 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                     }
                     help={errors?.valid || errors?.validTo || ""}
                 >
-                    <RangePicker
+                    <CustomRangePicker
                         showTime={{
                             format: TIME_FORMAT,
                             defaultValue: [
@@ -145,16 +153,14 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                         disabled={hasApproval}
                         value={[
                             stockConfirmFormData.valid
-                                ? dayjs(
-                                      stockConfirmFormData.valid,
-                                      DATE_TIME_FORMAT,
-                                  )
+                                ? dayjs(stockConfirmFormData.valid, {
+                                      format: DATE_TIME_FORMAT,
+                                  })
                                 : null,
                             stockConfirmFormData.validTo
-                                ? dayjs(
-                                      stockConfirmFormData.validTo,
-                                      DATE_TIME_FORMAT,
-                                  )
+                                ? dayjs(stockConfirmFormData.validTo, {
+                                      format: DATE_TIME_FORMAT,
+                                  })
                                 : null,
                         ]}
                         disabledDate={(date) => {
@@ -170,7 +176,7 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                     validateStatus={errors?.start || errors?.end ? "error" : ""}
                     help={errors?.start || errors?.end || ""}
                 >
-                    <RangePicker
+                    <CustomRangePicker
                         showTime={{
                             format: TIME_FORMAT,
                             defaultValue: [
@@ -183,55 +189,65 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                         disabled={hasApproval}
                         value={[
                             stockConfirmFormData.start
-                                ? dayjs(
-                                      stockConfirmFormData.start,
-                                      DATE_TIME_FORMAT,
-                                  )
+                                ? dayjs(stockConfirmFormData.start, {
+                                      format: DATE_TIME_FORMAT,
+                                  })
                                 : null,
                             stockConfirmFormData.end
-                                ? dayjs(
-                                      stockConfirmFormData.end,
-                                      DATE_TIME_FORMAT,
-                                  )
+                                ? dayjs(stockConfirmFormData.end, {
+                                      format: DATE_TIME_FORMAT,
+                                  })
                                 : null,
                         ]}
                         disabledDate={(date) => {
-                            return dayjs().isAfter(date);
+                            return stockConfirmFormData.validTo
+                                ? dayjs(stockConfirmFormData.validTo, {
+                                      format: DATE_TIME_FORMAT,
+                                  }).isAfter(date)
+                                : dayjs().isAfter(date);
                         }}
                         onChange={onChangeUsedDateRange}
                         className="w-full"
                     />
                 </FormItem>
 
-                <FormItem
-                    label="Số lượng (cap)"
-                    required
-                    validateStatus={errors?.cap ? "error" : ""}
-                    help={errors?.cap || ""}
-                >
-                    <Input
-                        placeholder="Số lượng"
-                        value={stockConfirmFormData?.cap}
-                        disabled={hasApproval}
-                        onChange={(ev) =>
-                            onChangeFormData("cap", ev.target.value)
-                        }
-                    />
-                </FormItem>
-                <FormItem label="Khả dụng">
-                    <Input
-                        placeholder="Số lượng"
-                        disabled
-                        value={initialValues?.avaiable}
-                    />
-                </FormItem>
-                <FormItem label="Đã sử dụng">
-                    <Input
-                        placeholder="Đã sử dụng"
-                        disabled
-                        value={initialValues?.used}
-                    />
-                </FormItem>
+                <Row gutter={16}>
+                    <Col span={8}>
+                        <FormItem
+                            label="Số lượng (cap)"
+                            required
+                            validateStatus={errors?.cap ? "error" : ""}
+                            help={errors?.cap || ""}
+                        >
+                            <Input
+                                placeholder="Số lượng"
+                                value={stockConfirmFormData?.cap}
+                                disabled={hasApproval}
+                                onChange={(ev) =>
+                                    onChangeFormData("cap", ev.target.value)
+                                }
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem label="Khả dụng">
+                            <Input
+                                placeholder="Số lượng"
+                                disabled
+                                value={initialValues?.avaiable}
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem label="Đã sử dụng">
+                            <Input
+                                placeholder="Đã sử dụng"
+                                disabled
+                                value={initialValues?.used}
+                            />
+                        </FormItem>
+                    </Col>
+                </Row>
                 <FormItem
                     label="Mô tả"
                     required

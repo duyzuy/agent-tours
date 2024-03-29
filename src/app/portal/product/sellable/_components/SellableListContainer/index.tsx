@@ -11,27 +11,25 @@ import { sellableColumns } from "./sellableColumns";
 import DrawerSellable, {
     DrawerSellableProps,
     EActionType,
-} from "../DrawerSellable";
+} from "./DrawerSellable";
 import { Status } from "@/models/management/common.interface";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
 import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
-
 import { useGetSellablePriceConfigsCoreQuery } from "@/queries/core/Sellable";
 import useMessage from "@/hooks/useMessage";
-import DrawerPriceConfig from "../DrawerPriceConfig";
+import DrawerPriceConfig from "./DrawerPriceConfig";
 import { isUndefined } from "lodash";
-import useConfigPriceSellable from "../../hooks/useConfigPriceSellable";
-import DrawerSellableDetail from "../DrawerSellableDetail";
+
+import DrawerSellableDetail from "./DrawerSellableDetail";
 import { PaginationProps } from "antd";
 import { ITemplateSellable } from "@/models/management/core/templateSellable.interface";
-import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-
+import useConfigPriceSellable from "../../modules/useConfigPriceSellable";
 export interface SellableListProps {
-    dataSource: SellableListRs["result"];
+    dataSource?: SellableListRs["result"];
     templateSellable?: ITemplateSellable;
-    pageSize: number;
-    pageCurrent: number;
-    totalItems: number;
+    pageSize?: number;
+    pageCurrent?: number;
+    totalItems?: number;
     isLoading?: boolean;
     render?: () => React.ReactNode;
     onApproval: (record: SellableConfirmFormData, cb?: () => void) => void;
@@ -39,7 +37,7 @@ export interface SellableListProps {
 }
 
 const SellableListContainer: React.FC<SellableListProps> = ({
-    dataSource,
+    dataSource = [],
     isLoading,
     pageSize,
     pageCurrent,
@@ -64,6 +62,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
         isShow: boolean;
         record?: SellableListRs["result"][0];
     }>({ isShow: false, record: undefined });
+
     const [editRecord, setEditRecord] = useState<SellableListRs["result"][0]>();
 
     const [actionType, setActionType] = useState<EActionType>();

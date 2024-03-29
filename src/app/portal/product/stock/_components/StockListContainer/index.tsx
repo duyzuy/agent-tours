@@ -3,9 +3,11 @@ import {
     IStock,
     IStockConfirmPayload,
     IStockListOfInventoryRs,
-    StockInventoryAdjustFormData,
-    StockInventoryConfirmFormData,
-} from "@/models/management/core/stockInventory.interface";
+} from "@/models/management/core/stock.interface";
+import {
+    StockAdjustFormData,
+    StockConfirmFormData,
+} from "../../modules/stock.interface";
 import { useRouter } from "next/navigation";
 import TableListPage from "@/components/admin/TableListPage";
 import { stockColumns } from "./stockColumns";
@@ -23,16 +25,13 @@ export interface StockListContainerProps {
     totalItems: number;
     isLoading?: boolean;
     onConfirm: (
-        data: StockInventoryConfirmFormData,
+        data: StockConfirmFormData,
         cb?: (
             response: BaseResponse<IStock>,
             variables?: IStockConfirmPayload,
         ) => void,
     ) => void;
-    onAdjustQuantity: (
-        data: StockInventoryAdjustFormData,
-        cb?: () => void,
-    ) => void;
+    onAdjustQuantity: (data: StockAdjustFormData, cb?: () => void) => void;
     render?: () => React.ReactNode;
     onChangeStockPage?: PaginationProps["onChange"];
 }
@@ -80,10 +79,13 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
             {render?.()}
             <TableListPage<IStockListOfInventoryRs["result"][0]>
                 dataSource={items}
-                scroll={{ x: 2200 }}
+                size="small"
+                scroll={{ x: 1800 }}
                 rowKey={"recId"}
                 isLoading={isLoading}
                 columns={stockColumns}
+                fixedActionsColumn={false}
+                showActionsLess={false}
                 onEdit={(record) => handleDrawler(EActionType.EDIT, record)}
                 hideEdit={(record) => record.status !== Status.OK}
                 hideApproval={(record) => record.status !== Status.QQ}

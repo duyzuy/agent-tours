@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Drawer, Space, Button, Form, Row, Col, Input, Select } from "antd";
+import React, { useState } from "react";
+import { Space, Button, Form, Row, Col, Input, Select } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { FOPFormData } from "../../modules/formOfPayment.interface";
 import {
@@ -9,6 +9,7 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import { formOfPaymentSchema } from "../../schema/formOfPayment";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
+
 type TFormData = Required<FOPFormData>;
 interface FOPFormProps {
     orderId: number;
@@ -142,13 +143,13 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId, onSubmitForm }) => {
                 </Row>
             </Form>
             <Space>
-                <Button onClick={() => {}}>Huỷ</Button>
                 <Button
                     onClick={() => handlerSubmit(formData, onSubmit)}
                     type="primary"
+                    className="w-[160px]"
                     loading={isLoading}
                 >
-                    Tạo phiếu thu
+                    Xác nhận
                 </Button>
             </Space>
         </>

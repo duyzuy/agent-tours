@@ -46,32 +46,32 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
                 key: "manage-booking/form-of-payment",
                 label: "Phiếu thu",
             },
-            {
-                key: "manage-booking/print",
-                label: "In vé",
-            },
+            // {
+            //     key: "manage-booking/print",
+            //     label: "In vé",
+            // },
         ],
     },
     {
         key: "product",
         icon: React.createElement(ShoppingCartOutlined),
-        label: "Sản phẩm",
+        label: "Quản lý sản phẩm",
         children: [
             {
                 key: "product/inventory",
-                label: "Inventories",
+                label: "Nhóm kho sản phẩm",
             },
             {
                 key: "product/stock",
-                label: "Stocks",
+                label: "Kho sản phẩm",
             },
             {
                 key: "product/template-sellable",
-                label: "Template sellables",
+                label: "Nhóm sản phẩm",
             },
             {
                 key: "product/sellable",
-                label: "Sellables",
+                label: "Sản phẩm",
             },
         ],
     },
@@ -113,45 +113,45 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
             },
         ],
     },
-    {
-        key: "menu",
-        icon: React.createElement(UnorderedListOutlined),
-        label: "Menu",
-        children: [
-            {
-                key: "menu/menu-header",
-                label: "Menu header",
-            },
-            {
-                key: "menu/menu-footer",
-                label: "Menu footer",
-                // /portal/menu/menu-footer
-            },
-        ],
-    },
-    {
-        key: "post",
-        icon: React.createElement(FileOutlined),
-        label: "Blog",
-        children: [
-            {
-                key: "post/list",
-                label: "Tất cả bài viết",
-            },
-            {
-                key: "post/create",
-                label: "Tạo bài viết mới",
-            },
-            {
-                key: "post/category",
-                label: "Chuyên mục",
-            },
-            {
-                key: "post/tag",
-                label: "Thẻ",
-            },
-        ],
-    },
+    // {
+    //     key: "menu",
+    //     icon: React.createElement(UnorderedListOutlined),
+    //     label: "Menu",
+    //     children: [
+    //         {
+    //             key: "menu/menu-header",
+    //             label: "Menu header",
+    //         },
+    //         {
+    //             key: "menu/menu-footer",
+    //             label: "Menu footer",
+    //             // /portal/menu/menu-footer
+    //         },
+    //     ],
+    // },
+    // {
+    //     key: "post",
+    //     icon: React.createElement(FileOutlined),
+    //     label: "Blog",
+    //     children: [
+    //         {
+    //             key: "post/list",
+    //             label: "Tất cả bài viết",
+    //         },
+    //         {
+    //             key: "post/create",
+    //             label: "Tạo bài viết mới",
+    //         },
+    //         {
+    //             key: "post/category",
+    //             label: "Chuyên mục",
+    //         },
+    //         {
+    //             key: "post/tag",
+    //             label: "Thẻ",
+    //         },
+    //     ],
+    // },
     {
         key: "media",
         icon: React.createElement(FolderOutlined),
@@ -176,11 +176,11 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
             },
         ],
     },
-    {
-        key: "member",
-        icon: React.createElement(TeamOutlined),
-        label: "Quản lý thành viên",
-    },
+    // {
+    //     key: "member",
+    //     icon: React.createElement(TeamOutlined),
+    //     label: "Quản lý thành viên",
+    // },
     {
         key: "system-configuration",
         icon: React.createElement(SettingOutlined),
