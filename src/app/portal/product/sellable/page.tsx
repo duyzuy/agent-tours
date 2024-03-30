@@ -48,6 +48,7 @@ const SellableListPage: React.FC = () => {
     );
     const [templateSellable, setTemplateSellable] =
         useState<ITemplateSellable>();
+
     const { data: sellableResponse, isLoading: isLoadingSellable } =
         useGetSellableListCoreQuery({
             queryParams: sellableQueryParams,

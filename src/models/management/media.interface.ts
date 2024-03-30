@@ -64,5 +64,6 @@ export class QueryParamsMediaFiles implements TQueryParamsMediaFiles {
         this.pageSize = pageSize;
     }
 }
+export interface IMediaFolderRs extends BaseResponse<IMediaFolder> {}
 export interface IMediaFolderListRs extends BaseResponse<IMediaFolder[]> {}
 export interface IMediaFileListRs extends BaseResponse<IMediaFile[]> {}

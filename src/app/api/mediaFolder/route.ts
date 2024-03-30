@@ -1,11 +1,12 @@
-import { writeFile, mkdir, access } from "fs/promises";
+import { mkdir } from "fs/promises";
+import { existsSync } from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { stringToSlug } from "@/utils/stringToSlug";
-import { IMediaFolderPayload } from "@/models/management/media.interface";
-import { cookies } from "next/headers";
-import { localMediaAPIs } from "@/services/management/localMedia.service";
-import { mediaConfig } from "@/configs";
+import {
+    IMediaFolderPayload,
+    IMediaFolderRs,
+} from "@/models/management/media.interface";
 import { headers } from "next/headers";
 import { isEmpty } from "lodash";
 
@@ -57,58 +58,63 @@ export async function POST(request: NextRequest) {
             { status: 400 },
         );
     }
+    const folderSlugName = stringToSlug(payload.folderSlug);
+    const folderPath = path.join(
+        `${process.cwd()}/public${payload.folderPath}`,
+        folderSlugName,
+    );
+
+    if (existsSync(folderPath)) {
+        return NextResponse.json(
+            {
+                message: `Thư mục "${payload.folderName}" đã tồn tại.`,
+                code: "FOLDER_ALREADY_EXISTS",
+            },
+            { status: 400 },
+        );
+    }
 
     try {
-        const folderSlugName = stringToSlug(payload.folderSlug);
+        /**
+         *
+         * Save to Database
+         *
+         */
 
-        const folderPath = path.join(
-            `${process.cwd()}/public${payload.folderPath}`,
-            folderSlugName,
-        );
-        try {
-            await access(folderPath);
-            return NextResponse.json(
-                {
-                    message: `Thư mục "${payload.folderName}" đã tồn tại.`,
-                    code: "FOLDER_ALREADY_EXISTS",
+        const response = await fetch(
+            `${process.env.API_ROOT}/local/Cms_MediaFolder_Addnew`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${encodeURIComponent(authToken)}`,
                 },
-                { status: 400 },
-            );
-        } catch (error) {}
+                body: JSON.stringify({
+                    requestObject: {
+                        parent: payload.parent,
+                        folderName: payload.folderName,
+                        folderSlug: folderSlugName,
+                    },
+                }),
+            },
+        );
 
-        //create and save to db
-        const response = await localMediaAPIs.createMediaFolder(
-            authToken,
-            payload,
-        );
-        //Write folder to local public
-        // await mkdir(folderPath);
-        try {
-            await mkdir(folderPath);
-        } catch (error) {
-            return NextResponse.json(
-                {
-                    message: `Ghi thư mục thất bại.`,
-                    code: "FOLDER_ALREADY_EXISTS",
-                },
-                { status: 400 },
-            );
-        }
+        const data = (await response.json()) as IMediaFolderRs;
+
+        await mkdir(folderPath);
 
         return NextResponse.json(
             {
-                data: response.result,
+                data: data,
                 message: `Tạo thư mục thành công`,
-                status: 201,
             },
             { status: 201 },
         );
     } catch (error) {
-        console.log(error);
         return NextResponse.json(
             {
                 message: `Tạo thư mục thất bại.`,
-                code: "CREATE_FAILED",
+                code: "ERROR_FORM_SERVER",
             },
             { status: 500 },
         );

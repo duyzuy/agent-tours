@@ -6,6 +6,7 @@ import {
     IMediaFilePayload,
     IMediaFolderListRs,
     IMediaFolderPayload,
+    IMediaFolderRs,
     TQueryParamsMediaFiles,
 } from "@/models/management/media.interface";
 export const localMediaAPIs = {
@@ -65,7 +66,7 @@ export const localMediaAPIs = {
         );
     },
     createMediaFolder: async (token: string, payload: IMediaFolderPayload) => {
-        return await client.post<IMediaFolderListRs, BaseResponse<null>>(
+        return await client.post<IMediaFolderRs, BaseResponse<null>>(
             "local/Cms_MediaFolder_Addnew",
             {
                 headers: {
