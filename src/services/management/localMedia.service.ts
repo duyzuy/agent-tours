@@ -65,21 +65,21 @@ export const localMediaAPIs = {
             },
         );
     },
-    createMediaFolder: async (token: string, payload: IMediaFolderPayload) => {
-        return await client.post<IMediaFolderRs, BaseResponse<null>>(
-            "local/Cms_MediaFolder_Addnew",
-            {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        ...payload,
-                    },
-                },
-            },
-        );
-    },
+    // createMediaFolder: async (token: string, payload: IMediaFolderPayload) => {
+    //     return await client.post<IMediaFolderRs, BaseResponse<null>>(
+    //         "local/Cms_MediaFolder_Addnew",
+    //         {
+    //             headers: {
+    //                 Authorization: `Bearer ${encodeURIComponent(token)}`,
+    //             },
+    //             params: {
+    //                 requestObject: {
+    //                     ...payload,
+    //                 },
+    //             },
+    //         },
+    //     );
+    // },
 
     updateMediaFolder: async (
         token: string,

@@ -6,10 +6,14 @@ import sharp from "sharp";
 import { stringToSlug } from "@/utils/stringToSlug";
 import { mediaConfig } from "@/configs";
 import { isEmpty } from "lodash";
-import { IMediaFilePayload } from "@/models/management/media.interface";
+import {
+    IMediaFile,
+    IMediaFilePayload,
+} from "@/models/management/media.interface";
 import { getMediaFileType, isValidMediaFileTypes } from "@/helpers/mediaFiles";
 import { localMediaAPIs } from "@/services/management/localMedia.service";
 import { headers } from "next/headers";
+import { BaseResponse } from "@/models/management/common.interface";
 
 export async function POST(request: NextRequest) {
     // const {writeFile} = fs
@@ -57,7 +61,7 @@ export async function POST(request: NextRequest) {
     if (!existsSync(directoryPath)) {
         return NextResponse.json(
             {
-                message: "Đường dẫn thư mục không hợp lệ",
+                message: "Đường dẫn thư mục không tồn tại",
                 code: "FODLER_DIRECTORY_NO_EXISTS",
             },
             { status: 400 },
@@ -101,13 +105,39 @@ export async function POST(request: NextRequest) {
         const originalFilePath = `${directoryPath}/${fileSlugName}.${fileExtension}`;
         try {
             //Save path to local DB
-            await localMediaAPIs.uploadMediaFile(authToken, {
-                fileType: `.${fileExtension}`,
-                parent: folderParse.id,
-                slug: fileSlugName,
-                path: `${fileSlugName}.${fileExtension}`,
-                type: getMediaFileType(file.type) || "",
-            });
+            // await localMediaAPIs.uploadMediaFile(authToken, {
+            //     fileType: `.${fileExtension}`,
+            //     parent: folderParse.id,
+            //     slug: fileSlugName,
+            //     path: `${fileSlugName}.${fileExtension}`,
+            //     type: getMediaFileType(file.type) || "",
+            // });
+
+            const response = await fetch(
+                `${process.env.API_ROOT}/local/Cms_Media_Addnew`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${encodeURIComponent(
+                            authToken,
+                        )}`,
+                    },
+                    body: JSON.stringify({
+                        requestObject: {
+                            fileType: `.${fileExtension}`,
+                            parent: folderParse.id,
+                            slug: fileSlugName,
+                            path: `${fileSlugName}.${fileExtension}`,
+                            type: getMediaFileType(file.type) || "",
+                        },
+                    }),
+                },
+            );
+
+            const data = (await response.json()) as BaseResponse<IMediaFile>;
+
+            console.log({ data });
 
             // saving file to local public
             const bytes = await file.arrayBuffer();
