@@ -26,12 +26,14 @@ export interface FolderCreateFormProps {
     onCancel: () => void;
     onCreate: (formData: MediaFolderCreateFormData, cb?: () => void) => void;
     folderList: IMediaFolderListRs["result"];
+    onChangeTabPanel: () => void;
 }
 
 const FolderCreateForm: React.FC<FolderCreateFormProps> = ({
     onCancel,
     onCreate,
     folderList,
+    onChangeTabPanel,
 }) => {
     const { handlerSubmit, errors } = useFormSubmit({
         schema: mediaFolderCreateSchema,
@@ -97,7 +99,9 @@ const FolderCreateForm: React.FC<FolderCreateFormProps> = ({
     const onSubmitForm: HandleSubmit<MediaFolderCreateFormData> = (
         formData,
     ) => {
-        onCreate(formData, () => {});
+        onCreate(formData, () => {
+            onChangeTabPanel();
+        });
     };
     return (
         <Form layout="vertical">

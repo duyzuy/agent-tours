@@ -16,6 +16,8 @@
 # production
 /build
 
+/plublic/uploads*
+
 # misc
 .DS_Store
 *.pem

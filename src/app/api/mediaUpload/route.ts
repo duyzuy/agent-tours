@@ -1,8 +1,9 @@
 import { writeFile } from "fs/promises";
 import { existsSync } from "fs";
+import sharp from "sharp";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
-import sharp from "sharp";
+import { headers } from "next/headers";
 import { stringToSlug } from "@/utils/stringToSlug";
 import { mediaConfig } from "@/configs";
 import { isEmpty } from "lodash";
@@ -10,14 +11,14 @@ import {
     IMediaFile,
     IMediaFilePayload,
 } from "@/models/management/media.interface";
-import { getMediaFileType, isValidMediaFileTypes } from "@/helpers/mediaFiles";
-import { localMediaAPIs } from "@/services/management/localMedia.service";
-import { headers } from "next/headers";
+import {
+    getMediaFileType,
+    isInValidFileSize,
+    isInvalidFile,
+} from "@/helpers/mediaFiles";
 import { BaseResponse, Status } from "@/models/management/common.interface";
 
 export async function POST(request: NextRequest) {
-    // const {writeFile} = fs
-
     const headersList = headers();
     const authorization = headersList.get("authorization");
 
@@ -49,13 +50,11 @@ export async function POST(request: NextRequest) {
         return path;
     }, "public");
 
-    // file types
-    //'application/pdf', 'image/jpeg', 'image/gif', image/png, image/svg+xml
-
-    //.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-
     if (isEmpty(files) || !files) {
-        return NextResponse.json({ message: "Chưa có file." }, { status: 404 });
+        return NextResponse.json(
+            { message: "Chưa có file.", code: "FILES_IS_EMPTY" },
+            { status: 404 },
+        );
     }
 
     if (!existsSync(directoryPath)) {
@@ -70,40 +69,44 @@ export async function POST(request: NextRequest) {
         // mkdirSync(directoryPath);
     }
 
-    files.forEach(async (file) => {
-        if (file.size / 1024 / 1024 > mediaConfig.maxfileSize) {
-            return NextResponse.json(
-                {
-                    message: `Dung lượng file không vượt quá ${mediaConfig.maxfileSize}MB`,
-                    code: "MAX_FILE_SIZE",
-                },
-                { status: 400 },
-            );
-        }
-
-        const fileExtension = file.name.split(".")[1];
-        const fileSlugName = stringToSlug(file.name.split(".")[0]).concat(
-            "-",
-            new Date().getTime().toString(),
+    if (isInValidFileSize(files)) {
+        return NextResponse.json(
+            {
+                message: `Dung lượng file không vượt quá ${mediaConfig.maxfileSize}MB`,
+                code: "MAX_FILE_SIZE",
+            },
+            { status: 400 },
         );
+    }
 
-        if (
-            !mediaConfig.accept
-                .split(",")
-                .map((ex) => ex.trim().replaceAll(".", ""))
-                .includes(fileExtension) ||
-            !isValidMediaFileTypes(file.type)
-        ) {
-            return NextResponse.json(
-                {
-                    message: "File không hợp lệ",
-                    code: "FILE_INVALID",
-                },
-                { status: 400 },
+    if (isInvalidFile(files)) {
+        return NextResponse.json(
+            {
+                message: `Định dạng file không hợp lệ ${mediaConfig.accept}`,
+                code: "INVALID_FILES",
+            },
+            { status: 400 },
+        );
+    }
+    let responseMessage = {
+        message: "Upload Success",
+        isSuccess: true,
+        code: "",
+    };
+
+    try {
+        // files.every(async (file) => {
+        for await (const file of files) {
+            let fileNameToArr = file.name.split(".");
+
+            const fileExtension = fileNameToArr.pop(); // get last of array
+            const fileSlugName = stringToSlug(fileNameToArr.join("")).concat(
+                "-",
+                new Date().getTime().toString(),
             );
-        }
-        const originalFilePath = `${directoryPath}/${fileSlugName}.${fileExtension}`;
-        try {
+
+            const originalFilePath = `${directoryPath}/${fileSlugName}.${fileExtension}`;
+
             const response = await fetch(
                 `${process.env.API_ROOT}/local/Cms_Media_Addnew`,
                 {
@@ -136,40 +139,50 @@ export async function POST(request: NextRequest) {
                     path.join(process.cwd(), originalFilePath),
                     buffer,
                 );
-                if (
-                    fileExtension === "jpg" ||
-                    fileExtension === "jpeg" ||
-                    fileExtension === "png" ||
-                    "gif"
-                ) {
-                    //accept: ".jpg, .jpeg, .png, .pdf, .svg, .docx, .xlsx, .gif",
 
-                    const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
+                const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
 
-                    const croppedImageBuffer = await sharp(buffer)
-                        .resize({
-                            height: 150,
-                            fit: "contain",
-                            background: { r: 0, g: 0, b: 0, alpha: 0 },
-                        })
-                        .toBuffer();
-                    await writeFile(
-                        path.join(process.cwd(), thumbPath),
-                        croppedImageBuffer,
-                    );
-                }
+                const croppedImageBuffer = await sharp(buffer)
+                    .resize({
+                        height: 150,
+                        fit: "contain",
+                        background: { r: 0, g: 0, b: 0, alpha: 0 },
+                    })
+                    .toBuffer();
+                await writeFile(
+                    path.join(process.cwd(), thumbPath),
+                    croppedImageBuffer,
+                );
+            } else {
+                responseMessage = {
+                    isSuccess: false,
+                    message: data.message,
+                    code: "UPLOAD_FAILED",
+                };
+                break;
             }
-        } catch (error) {
-            console.log("Error occured ", error);
-            return NextResponse.json(
-                { message: "Upload", code: "DB_SAVING_OR_CREATE_FAIL" },
-                { status: 500 },
-            );
         }
-    });
+    } catch (error) {
+        responseMessage = {
+            isSuccess: false,
+            message: "Error From Server",
+            code: "SERVER_ERROR",
+        };
+    }
 
-    return NextResponse.json(
-        { message: "Upload success", status: 201 },
-        { status: 201 },
-    );
+    if (responseMessage.isSuccess) {
+        return NextResponse.json(
+            { message: "Upload thành công.", code: "CREATE_SUCCESS" },
+            {
+                status: 201,
+            },
+        );
+    } else {
+        return NextResponse.json(
+            { messate: responseMessage.message, code: responseMessage.code },
+            {
+                status: 400,
+            },
+        );
+    }
 }

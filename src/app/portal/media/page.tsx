@@ -12,12 +12,6 @@ import {
 } from "@/models/management/media.interface";
 import MediaFolder from "./_components/MediaUploadContainer/MediaFolder";
 import MediaFiles from "./_components/MediaUploadContainer/MediaFiles";
-import { mediaConfig } from "@/configs";
-
-enum EActionType {
-    CREATE = "create",
-    EDIT = "edit",
-}
 
 const MediaPage = () => {
     const { data: folderList, isLoading: isLoadingFolder } =
@@ -72,8 +66,6 @@ const MediaPage = () => {
                     isLoading={isLoadingFile}
                     onUpload={onUploadMediaFile}
                     folderList={folderList || []}
-                    accept={mediaConfig.accept}
-                    maxfileSize={mediaConfig.maxfileSize}
                 />
             </div>
         </PageContainer>

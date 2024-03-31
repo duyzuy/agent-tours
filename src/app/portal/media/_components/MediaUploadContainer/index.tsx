@@ -116,8 +116,6 @@ const MediaUploadContainer: React.FC<MediaUploadContainerProps> = ({
                 isLoading={isLoadingFile}
                 onUpload={onUploadMediaFile}
                 folderList={folderList || []}
-                accept={mediaConfig.accept}
-                maxfileSize={mediaConfig.maxfileSize}
                 selectedFiles={selectedFiles}
                 onSelect={onSelect}
             />

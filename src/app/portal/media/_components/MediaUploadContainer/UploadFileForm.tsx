@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
     Upload,
     Button,
@@ -9,24 +9,21 @@ import {
     TreeSelect,
     TreeSelectProps,
 } from "antd";
-import { UploadFile, UploadProps, RcFile } from "antd/es/upload";
+import { UploadFile, UploadProps } from "antd/es/upload";
 import { UploadOutlined } from "@ant-design/icons";
 import FormItem from "@/components/base/FormItem";
 import { IMediaFolderListRs } from "@/models/management/media.interface";
 import useMessage from "@/hooks/useMessage";
-
 import { isEmpty } from "lodash";
 import { mediaConfig } from "@/configs";
 
 export interface UploadFileFormProps {
     uploading?: boolean;
-    accept?: string;
     onUpload: (
         payload: { folder: TFolderSelect; fileList: UploadFile[] },
         cb?: () => void,
     ) => void;
     folderList: IMediaFolderListRs["result"];
-    maxfileSize?: number;
     onResetTab?: () => void;
 }
 export type TFolderSelect = {
@@ -40,10 +37,10 @@ export type TFolderSelect = {
 
 const UploadFileForm: React.FC<UploadFileFormProps> = ({
     uploading,
-    accept,
+
     onUpload,
     folderList,
-    maxfileSize = 2,
+
     onResetTab,
 }) => {
     const message = useMessage();
@@ -129,10 +126,13 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({
         if (!isValidFileType) {
             message.error("Định dạng file không hợp lệ");
         }
-        const isValidFileSize = file.size / 1024 / 1024 < maxfileSize;
+        const isValidFileSize =
+            file.size / 1024 / 1024 < mediaConfig.maxfileSize;
 
         if (!isValidFileSize) {
-            message.error(`Kích thước file phải nhỏ hơn ${maxfileSize}MB!`);
+            message.error(
+                `Kích thước file phải nhỏ hơn ${mediaConfig.maxfileSize}MB!`,
+            );
         }
 
         if (isValidFileSize && isValidFileType) {
@@ -186,7 +186,7 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({
                         listType="picture-card"
                         beforeUpload={beforeUpload}
                         onRemove={onRemoveFile}
-                        accept={accept}
+                        accept={mediaConfig.accept}
                         className="w-full"
                     >
                         {formData.fileList.length >=

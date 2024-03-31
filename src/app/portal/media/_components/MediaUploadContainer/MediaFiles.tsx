@@ -8,11 +8,8 @@ import MediaFileItem from "@/components/admin/media/MediaFileItem";
 import { mediaConfig } from "@/configs";
 import { isEmpty } from "lodash";
 import UploadFileForm, { UploadFileFormProps } from "./UploadFileForm";
-import { boolean } from "yup";
 
 export interface IMediaFilesProps {
-    accept?: string;
-    maxfileSize?: number;
     items: IMediaFileListRs["result"];
     isLoading?: boolean;
     onUpload: UploadFileFormProps["onUpload"];
@@ -24,12 +21,10 @@ export interface IMediaFilesProps {
 type MediaFileTabPanel = "mediaFiles" | "upload";
 
 const MediaFiles = ({
-    accept,
     items,
     isLoading = false,
     onUpload,
     uploading = false,
-    maxfileSize = 2,
     folderList,
     selectedFiles = [],
     onSelect,
@@ -60,8 +55,6 @@ const MediaFiles = ({
             label: "Tải file",
             children: (
                 <UploadFileForm
-                    accept={accept}
-                    maxfileSize={maxfileSize}
                     folderList={folderList}
                     onUpload={onUpload}
                     uploading={uploading}

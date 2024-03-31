@@ -19,11 +19,10 @@ export interface IMediaFolderProps {
     items: IMediaFolderListRs["result"];
     isLoading?: boolean;
     onSave: (formData: MediaFolderUpdateFormData, cb?: () => void) => void;
-    onOpen?: (item: TMediaFolder) => void;
+    onOpen?: (item: IMediaFolderListRs["result"][0]) => void;
     onCreateFolder: FolderCreateFormProps["onCreate"];
 }
-type TabKeys = "folderList" | "addFolder";
-type TMediaFolder = IMediaFolderListRs["result"][0];
+type FolderTabKeys = "folderList" | "addFolder";
 const MediaFolder = ({
     items,
     isLoading,
@@ -31,10 +30,11 @@ const MediaFolder = ({
     onOpen,
     onCreateFolder,
 }: IMediaFolderProps) => {
-    const [folderTabKey, setFolderTabKey] = useState<TabKeys>("folderList");
+    const [folderTabKey, setFolderTabKey] =
+        useState<FolderTabKeys>("folderList");
 
     const onChangeTab: TabsProps["onChange"] = (activeKey) => {
-        setFolderTabKey(activeKey as TabKeys);
+        setFolderTabKey(activeKey as FolderTabKeys);
     };
 
     const tabFolderItems: TabsProps["items"] = [
@@ -79,6 +79,7 @@ const MediaFolder = ({
                 <FolderCreateForm
                     onCancel={() => setFolderTabKey("folderList")}
                     onCreate={onCreateFolder}
+                    onChangeTabPanel={() => setFolderTabKey("folderList")}
                     folderList={items}
                 />
             ),
@@ -100,10 +101,10 @@ const MediaFolder = ({
 export default MediaFolder;
 
 interface IMediaFolderListProps {
-    items: TMediaFolder[];
+    items: IMediaFolderListRs["result"];
     openKeys?: string[];
     onSave: IMediaFolderProps["onSave"];
-    onOpen?: (item: TMediaFolder) => void;
+    onOpen?: (item: IMediaFolderListRs["result"][0]) => void;
     depth: number;
     className?: string;
 }
@@ -125,7 +126,7 @@ MediaFolder.FolderList = function MediaFolderList({
         [],
     );
     const [formData, setFormData] = useState(initFormEditItem);
-    const [editItem, setEditItem] = useState<TMediaFolder>();
+    const [editItem, setEditItem] = useState<IMediaFolderListRs["result"][0]>();
 
     const [expandKeys, setExpandKeys] = useState<string[]>([]);
 

@@ -49,3 +49,22 @@ export const getMediaFileType = (fType: string) => {
 
     return typeOfFile;
 };
+
+export const isInValidFileSize = (files: File[]) => {
+    return files.some(
+        (file) => file.size / 1024 / 1024 > mediaConfig.maxfileSize,
+    );
+};
+
+export const isInvalidFile = (files: File[]) => {
+    return files.some((file) => {
+        const fileExtension = file.name.split(".").pop() || "";
+
+        return (
+            !mediaConfig.accept
+                .split(",")
+                .map((ex) => ex.trim().replaceAll(".", ""))
+                .includes(fileExtension) || !isValidMediaFileTypes(file.type)
+        );
+    });
+};
