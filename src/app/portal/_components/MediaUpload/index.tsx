@@ -1,8 +1,7 @@
 "use client";
 import React, { useCallback, useState } from "react";
 import { Drawer, Space, Button } from "antd";
-import useUploadMedia from "../../media/hooks/useUploadMedia";
-import useCRUDMediaFolder from "../../media/hooks/useCRUDFolder";
+
 import PageContainer from "@/components/admin/PageContainer";
 
 import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
