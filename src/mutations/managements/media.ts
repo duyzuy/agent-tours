@@ -3,7 +3,6 @@ import { useMutation } from "@tanstack/react-query";
 import { getAgToken } from "@/utils/common";
 import {
     IMediaFileListRs,
-    IMediaFilePayload,
     IMediaFolderListRs,
     IMediaFolderPayload,
     IMediaFolderUpdatePayload,

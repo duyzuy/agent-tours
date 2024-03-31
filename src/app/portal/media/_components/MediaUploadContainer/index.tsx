@@ -7,8 +7,8 @@ import {
     IMediaFileListRs,
     QueryParamsMediaFiles,
 } from "@/models/management/media.interface";
-import useCRUDMediaFolder from "../../hooks/useCRUDFolder";
-import useUploadMedia from "../../hooks/useUploadMedia";
+import useMediaFolder from "../../modules/useMediaFolder";
+import useMediaFile from "../../modules/useMediaFile";
 import classNames from "classnames";
 import {
     IMediaFolderListRs,
@@ -41,10 +41,9 @@ const MediaUploadContainer: React.FC<MediaUploadContainerProps> = ({
     const { data: fileList, isLoading: isLoadingFile } =
         useGetMediaFiles(queryMediaFileParams);
 
-    const { onCreateFolder, onUpdateFolder, errors, onResetFieldsErrors } =
-        useCRUDMediaFolder();
+    const { onCreateFolder, onUpdateFolder } = useMediaFolder();
 
-    const onUploadMediaFile = useUploadMedia();
+    const onUploadMediaFile = useMediaFile();
 
     const handleSubmitFormData = ({
         action,
@@ -65,7 +64,7 @@ const MediaUploadContainer: React.FC<MediaUploadContainerProps> = ({
         }
 
         if (action === EActionType.EDIT && id) {
-            onUpdateFolder(id, payload, () => {
+            onUpdateFolder(payload, () => {
                 cb?.();
             });
         }
@@ -93,7 +92,6 @@ const MediaUploadContainer: React.FC<MediaUploadContainerProps> = ({
             <div className="col-left w-[260px] h-full pr-4 border-r">
                 <MediaFolder
                     items={folderList || []}
-                    errors={errors}
                     isLoading={isLoadingFolder}
                     onSave={(record, cb) =>
                         handleSubmitFormData({
@@ -111,7 +109,6 @@ const MediaUploadContainer: React.FC<MediaUploadContainerProps> = ({
                         })
                     }
                     onOpen={handleOnpenFilesInFolder}
-                    onResetErrorsField={onResetFieldsErrors}
                 />
             </div>
             <MediaFiles

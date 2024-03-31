@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { IMediaFolderPayload } from "@/models/management/media.interface";
-import { localMediaAPIs } from "@/services/management/localMedia.service";
+import {
+    IMediaFolderRs,
+    IMediaFolderUpdatePayload,
+} from "@/models/management/media.interface";
 import { headers } from "next/headers";
+import { Status } from "@/models/management/common.interface";
 
 export async function PUT(
     request: NextRequest,
@@ -20,28 +23,49 @@ export async function PUT(
         );
     }
     const authToken = authorization.split("Bearer")[1].trim();
-    const payload = (await request.json()) as Required<IMediaFolderPayload>;
+    const payload =
+        (await request.json()) as Required<IMediaFolderUpdatePayload>;
 
     try {
-        const response = await localMediaAPIs.updateMediaFolder(
-            authToken,
-            Number(params.id),
-            payload,
-        );
-        console.log(response);
-
-        return NextResponse.json(
+        const response = await fetch(
+            `${process.env.API_ROOT}/local/Cms_MediaFolder_Edit`,
             {
-                message: `Cập nhật thư mục thành công`,
-                data: response.result,
-                id: params.id,
-                status: 200,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${encodeURIComponent(authToken)}`,
+                },
+                body: JSON.stringify({
+                    requestObject: {
+                        ...payload,
+                        id: Number(params.id),
+                    },
+                }),
             },
-            { status: 200 },
         );
-    } catch (error) {
-        console.log(error);
 
+        const data = (await response.json()) as IMediaFolderRs;
+
+        if (response.ok && data.status === Status.OK) {
+            return NextResponse.json(
+                {
+                    message: `Cập nhật thư mục thành công`,
+                    data: data,
+                    id: params.id,
+                    status: 200,
+                },
+                { status: 200 },
+            );
+        } else {
+            return NextResponse.json(
+                {
+                    message: `Cập nhật thư mục thát bại`,
+                    code: "UPDATE_FOLDER_FAILED",
+                },
+                { status: 400 },
+            );
+        }
+    } catch (error) {
         return NextResponse.json(
             {
                 message: `Cập nhật thư mục thất bại.`,

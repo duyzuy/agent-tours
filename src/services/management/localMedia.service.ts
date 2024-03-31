@@ -3,10 +3,9 @@ import { client } from "../api";
 import config from "@/configs";
 import {
     IMediaFileListRs,
-    IMediaFilePayload,
     IMediaFolderListRs,
     IMediaFolderPayload,
-    IMediaFolderRs,
+    IMediaFolderUpdatePayload,
     TQueryParamsMediaFiles,
 } from "@/models/management/media.interface";
 export const localMediaAPIs = {
@@ -43,64 +42,6 @@ export const localMediaAPIs = {
             },
         );
     },
-    uploadMediaFile: async (
-        token: string,
-        payload: Pick<
-            IMediaFileListRs["result"][0],
-            "slug" | "path" | "type" | "fileType" | "parent"
-        >,
-    ) => {
-        return await client.post<IMediaFileListRs, BaseResponse<null>>(
-            "local/Cms_Media_Addnew",
-            {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        ...payload,
-                    },
-                },
-                // isAuth: true,
-            },
-        );
-    },
-    // createMediaFolder: async (token: string, payload: IMediaFolderPayload) => {
-    //     return await client.post<IMediaFolderRs, BaseResponse<null>>(
-    //         "local/Cms_MediaFolder_Addnew",
-    //         {
-    //             headers: {
-    //                 Authorization: `Bearer ${encodeURIComponent(token)}`,
-    //             },
-    //             params: {
-    //                 requestObject: {
-    //                     ...payload,
-    //                 },
-    //             },
-    //         },
-    //     );
-    // },
-
-    updateMediaFolder: async (
-        token: string,
-        id: number,
-        payload: IMediaFolderPayload,
-    ) => {
-        return await client.post<IMediaFolderListRs, BaseResponse<null>>(
-            "local/Cms_MediaFolder_Edit",
-            {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        id,
-                        ...payload,
-                    },
-                },
-            },
-        );
-    },
 };
 
 export const mediaApis = {
@@ -125,8 +66,8 @@ export const mediaApis = {
 
     updateFolderFromLocal: async (
         token: string,
-        id: number,
-        payload: IMediaFolderPayload,
+        id?: number,
+        payload?: IMediaFolderUpdatePayload,
     ) => {
         const response = await fetch(
             `${config.LOCAL_API_URL}/mediaFolder/${id}`,

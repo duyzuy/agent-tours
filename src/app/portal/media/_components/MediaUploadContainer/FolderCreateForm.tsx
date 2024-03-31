@@ -1,18 +1,17 @@
 import React, { useMemo, useState } from "react";
-import { Space, Button, Form, Row, Col, Input, TreeSelect } from "antd";
+import { Space, Button, Form, Input, TreeSelect } from "antd";
 import { mediaConfig } from "@/configs";
 import FormItem from "@/components/base/FormItem";
 import {
     IMediaFolderListRs,
     IMediaFolderPayload,
 } from "@/models/management/media.interface";
-
-// import { EActionType } from "../../page";
 import { stringToSlug } from "@/utils/stringToSlug";
 import { isEmpty } from "lodash";
 import useMessage from "@/hooks/useMessage";
-
-import { TMediaFolderErrorsField } from "@/app/portal/media/hooks/useCRUDFolder";
+import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
+import { MediaFolderCreateFormData } from "../../modules/media.interface";
+import { mediaFolderCreateSchema } from "../../schema/media.schema";
 
 type TFolderSelectOption = {
     id: number;
@@ -23,26 +22,28 @@ type TFolderSelectOption = {
     children: TFolderSelectOption[];
     depth: number;
 };
-export interface CreateFolderFormProps {
+export interface FolderCreateFormProps {
     onCancel: () => void;
-    errors?: TMediaFolderErrorsField;
-    onSubmit?: (payload: IMediaFolderPayload) => void;
+    onCreate: (formData: MediaFolderCreateFormData, cb?: () => void) => void;
     folderList: IMediaFolderListRs["result"];
 }
 
-const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
+const FolderCreateForm: React.FC<FolderCreateFormProps> = ({
     onCancel,
-    errors,
-    onSubmit,
+    onCreate,
     folderList,
 }) => {
-    const [formData, setFormdata] = useState<Required<IMediaFolderPayload>>({
-        folderName: "",
-        folderSlug: "",
-        folderPath: `/${mediaConfig.rootFolder}`,
-        parentSlug: mediaConfig.rootFolder,
-        parent: 0,
+    const { handlerSubmit, errors } = useFormSubmit({
+        schema: mediaFolderCreateSchema,
     });
+    const initFormData = new MediaFolderCreateFormData(
+        "",
+        "",
+        mediaConfig.rootFolder,
+        0,
+        `/${mediaConfig.rootFolder}`,
+    );
+    const [formData, setFormdata] = useState(initFormData);
 
     const message = useMessage();
     const onChangeFolderName = (
@@ -93,6 +94,11 @@ const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
         ];
     }, [folderList]);
 
+    const onSubmitForm: HandleSubmit<MediaFolderCreateFormData> = (
+        formData,
+    ) => {
+        onCreate(formData, () => {});
+    };
     return (
         <Form layout="vertical">
             <FormItem
@@ -122,14 +128,17 @@ const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
 
             <Space>
                 <Button onClick={onCancel}>Huỷ</Button>
-                <Button onClick={() => onSubmit?.(formData)} type="primary">
+                <Button
+                    onClick={() => handlerSubmit(formData, onSubmitForm)}
+                    type="primary"
+                >
                     Thêm mới
                 </Button>
             </Space>
         </Form>
     );
 };
-export default CreateFolderForm;
+export default FolderCreateForm;
 
 const formatFolderListToOptionDataSelectTree = (
     items: IMediaFolderListRs["result"],

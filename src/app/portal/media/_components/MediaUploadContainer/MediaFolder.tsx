@@ -1,99 +1,40 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Empty, Spin, Tabs, Space, Input, Button } from "antd";
 import FormItem from "@/components/base/FormItem";
 import type { TabsProps } from "antd";
 import {
+    IMediaFolder,
     IMediaFolderListRs,
-    IMediaFolderPayload,
 } from "@/models/management/media.interface";
 import classNames from "classnames";
 import { isEmpty, isEqual } from "lodash";
-import { TMediaFolderErrorsField } from "@/app/portal/media/hooks/useCRUDFolder";
 import MediaFolderItem from "@/components/admin/media/MediaFolderItem";
 import styled from "styled-components";
-import CreateFolderForm, { CreateFolderFormProps } from "./CreateFolderForm";
-
-type TabKeys = "folderList" | "addFolder";
-type TMediaFolder = IMediaFolderListRs["result"][0];
+import FolderCreateForm, { FolderCreateFormProps } from "./FolderCreateForm";
+import { MediaFolderUpdateFormData } from "../../modules/media.interface";
+import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
+import { mediaFolderUpdateSchema } from "../../schema/media.schema";
 
 export interface IMediaFolderProps {
     items: IMediaFolderListRs["result"];
     isLoading?: boolean;
-    errors?: TMediaFolderErrorsField;
-    onSave?: (item: TMediaFolder, cb?: () => void) => void;
+    onSave: (formData: MediaFolderUpdateFormData, cb?: () => void) => void;
     onOpen?: (item: TMediaFolder) => void;
-    onCreateFolder?: (formData: IMediaFolderPayload, cb?: () => void) => void;
-    onResetErrorsField?: () => void;
+    onCreateFolder: FolderCreateFormProps["onCreate"];
 }
-
+type TabKeys = "folderList" | "addFolder";
+type TMediaFolder = IMediaFolderListRs["result"][0];
 const MediaFolder = ({
     items,
     isLoading,
     onSave,
     onOpen,
     onCreateFolder,
-    errors,
-    onResetErrorsField,
 }: IMediaFolderProps) => {
     const [folderTabKey, setFolderTabKey] = useState<TabKeys>("folderList");
 
-    const [expandKeys, setExpandKeys] = useState<string[]>([]);
-    const [editItem, setEditItem] = useState<TMediaFolder>();
-    const [selectedKey, setSelectedKey] = useState<string>();
-
-    const onExpandFolder = (key: string) => {
-        setExpandKeys((prev) => {
-            let newKeys = [...prev];
-            if (prev.includes(key)) {
-                const indexOfkey = prev.indexOf(key);
-                newKeys.splice(indexOfkey, 1);
-                return [...newKeys];
-            } else {
-                return [...newKeys, key];
-            }
-        });
-    };
-
-    const onCancelEdit = () => {
-        setEditItem(undefined);
-        onResetErrorsField?.();
-    };
-    const onChangeFolderName = (value: string) => {
-        if (editItem) {
-            const newEditItem = {
-                ...editItem,
-                folderName: value,
-            };
-            setEditItem(() => newEditItem);
-        }
-    };
-
-    const onOpenFolder = (folder: TMediaFolder) => {
-        setSelectedKey(folder.key);
-        onOpen?.(folder);
-    };
-    const onUpdateFolder = () => {
-        if (editItem && onSave) {
-            onSave(editItem, () => {
-                setEditItem(undefined);
-            });
-        }
-    };
-
-    const onCreateNewFolder: CreateFolderFormProps["onSubmit"] = (data) => {
-        onCreateFolder?.(data, () => {
-            setFolderTabKey("folderList");
-        });
-    };
-
-    const onCancelCreateFolder = () => {
-        onResetErrorsField?.();
-        setFolderTabKey("folderList");
-    };
     const onChangeTab: TabsProps["onChange"] = (activeKey) => {
         setFolderTabKey(activeKey as TabKeys);
-        setEditItem(undefined);
-        onResetErrorsField?.();
     };
 
     const tabFolderItems: TabsProps["items"] = [
@@ -111,19 +52,9 @@ const MediaFolder = ({
                             {items.length ? (
                                 <MediaFolder.FolderList
                                     items={items}
-                                    expandKeys={expandKeys}
-                                    editItem={editItem}
                                     depth={1}
-                                    errors={errors}
-                                    onCancelEdit={onCancelEdit}
-                                    onChangeFolderName={onChangeFolderName}
-                                    onSetEditting={(folder) =>
-                                        setEditItem(folder)
-                                    }
-                                    onExpand={onExpandFolder}
-                                    onSave={onUpdateFolder}
-                                    selectedKey={selectedKey}
-                                    onOpen={(folder) => onOpenFolder(folder)}
+                                    onSave={onSave}
+                                    onOpen={onOpen}
                                 />
                             ) : (
                                 <Empty
@@ -145,10 +76,9 @@ const MediaFolder = ({
             key: "addFolder",
             label: "Thêm thư mục",
             children: (
-                <CreateFolderForm
-                    onCancel={onCancelCreateFolder}
-                    onSubmit={onCreateNewFolder}
-                    errors={errors}
+                <FolderCreateForm
+                    onCancel={() => setFolderTabKey("folderList")}
+                    onCreate={onCreateFolder}
                     folderList={items}
                 />
             ),
@@ -171,35 +101,88 @@ export default MediaFolder;
 
 interface IMediaFolderListProps {
     items: TMediaFolder[];
-    editItem?: TMediaFolder;
     openKeys?: string[];
-    selectedKey?: string;
-    errors?: TMediaFolderErrorsField;
-    onSave?: () => void;
+    onSave: IMediaFolderProps["onSave"];
     onOpen?: (item: TMediaFolder) => void;
-    onSetEditting?: (item: TMediaFolder) => void;
-    expandKeys: string[];
     depth: number;
     className?: string;
-    onExpand: (expandKey: string) => void;
-    onCancelEdit: () => void;
-    onChangeFolderName: (value: string) => void;
 }
 MediaFolder.FolderList = function MediaFolderList({
     items,
-    selectedKey,
     depth,
     className = "",
     onSave,
-    errors,
-    onSetEditting,
-    editItem,
-    expandKeys,
     onOpen,
-    onExpand,
-    onCancelEdit,
-    onChangeFolderName,
 }: IMediaFolderListProps) {
+    const initFormEditItem = useMemo(
+        () =>
+            new MediaFolderUpdateFormData(
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        [],
+    );
+    const [formData, setFormData] = useState(initFormEditItem);
+    const [editItem, setEditItem] = useState<TMediaFolder>();
+
+    const [expandKeys, setExpandKeys] = useState<string[]>([]);
+
+    const [selectedKey, setSelectedKey] = useState<string>();
+
+    const onExpand = (key: string) => {
+        setExpandKeys((prev) => {
+            let newKeys = [...prev];
+            if (prev.includes(key)) {
+                const indexOfkey = prev.indexOf(key);
+                newKeys.splice(indexOfkey, 1);
+                return [...newKeys];
+            } else {
+                return [...newKeys, key];
+            }
+        });
+    };
+
+    const { handlerSubmit, errors } = useFormSubmit({
+        schema: mediaFolderUpdateSchema,
+    });
+
+    const onEdit = (item: IMediaFolder) => {
+        setEditItem(item);
+        setFormData((oldData) => ({
+            ...oldData,
+            id: item.id,
+            oldFolderName: item.folderName,
+            folderName: item.folderName,
+            parent: item.parent,
+        }));
+    };
+
+    const onCancelEdit = () => {
+        setEditItem(undefined);
+        setFormData(initFormEditItem);
+    };
+
+    const onChangeFolderName = (value: string) => {
+        setFormData((oldData) => ({
+            ...oldData,
+            folderName: value,
+        }));
+    };
+
+    const onOpenFolder = (item: IMediaFolder) => {
+        setSelectedKey(item.key);
+        onOpen?.(item);
+    };
+    const onSubmitForm: HandleSubmit<MediaFolderUpdateFormData> = (
+        formData,
+    ) => {
+        onSave(formData, () => {
+            setEditItem(undefined);
+        });
+    };
+
     return (
         <ul
             className={classNames(`folders ${depth}`, {
@@ -211,9 +194,9 @@ MediaFolder.FolderList = function MediaFolderList({
                     <MediaFolderItem
                         folderName={item.folderName}
                         isExpanded={hasExpandedFolder(item.key, expandKeys)}
-                        onEdit={() => onSetEditting?.(item)}
+                        onEdit={() => onEdit(item)}
                         isEditting={isEqual(editItem?.key, item.key)}
-                        onOpen={() => onOpen?.(item)}
+                        onOpen={() => onOpenFolder(item)}
                         isSelected={isEqual(selectedKey, item.key)}
                         onExpand={() => onExpand(item.key)}
                         hasChildren={!isEmpty(item.children)}
@@ -229,7 +212,7 @@ MediaFolder.FolderList = function MediaFolderList({
                                 >
                                     <Input
                                         placeholder="Tên thư mục"
-                                        value={editItem?.folderName}
+                                        value={formData?.folderName}
                                         size="small"
                                         onChange={(e) =>
                                             onChangeFolderName(e.target.value)
@@ -247,10 +230,15 @@ MediaFolder.FolderList = function MediaFolderList({
                                         <Button
                                             type="primary"
                                             size="small"
-                                            onClick={onSave}
+                                            onClick={() =>
+                                                handlerSubmit(
+                                                    formData,
+                                                    onSubmitForm,
+                                                )
+                                            }
                                             disabled={isEqual(
+                                                formData?.folderName,
                                                 editItem?.folderName,
-                                                item.folderName,
                                             )}
                                         >
                                             Lưu
@@ -266,16 +254,8 @@ MediaFolder.FolderList = function MediaFolderList({
                             items={item.children}
                             depth={depth + 1}
                             className={`pl-${depth * 4}`}
-                            onSetEditting={onSetEditting}
-                            onCancelEdit={onCancelEdit}
-                            onChangeFolderName={onChangeFolderName}
-                            onExpand={onExpand}
-                            expandKeys={expandKeys}
-                            editItem={editItem}
                             onSave={onSave}
                             onOpen={onOpen}
-                            errors={errors}
-                            selectedKey={selectedKey}
                         />
                     ) : null}
                 </li>

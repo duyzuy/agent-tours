@@ -6,7 +6,7 @@ import { TFolderSelect } from "../_components/MediaUploadContainer/UploadFileFor
 import { UploadFile } from "antd";
 import { RcFile } from "antd/es/upload";
 
-const useUploadMedia = () => {
+const useMediaFile = () => {
     const { mutate: makeUploadMediaFiles } = useUploadMediaFilesMutation();
     const message = useMessage();
     const queryClient = useQueryClient();
@@ -22,7 +22,6 @@ const useUploadMedia = () => {
 
         makeUploadMediaFiles(formData, {
             onSuccess: (data) => {
-                console.log(data);
                 message.success("Upload File thành công.");
                 queryClient.invalidateQueries({
                     queryKey: [GET_MEDIA_FILES, folder.id],
@@ -38,4 +37,4 @@ const useUploadMedia = () => {
 
     return onUploadMedia;
 };
-export default useUploadMedia;
+export default useMediaFile;

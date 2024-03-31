@@ -2,12 +2,12 @@
 import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
-import useUploadMedia from "./hooks/useUploadMedia";
-import useCRUDMediaFolder from "./hooks/useCRUDFolder";
+
+import useMediaFolder from "./modules/useMediaFolder";
+import useMediaFile from "./modules/useMediaFile";
 import { useGetMediaFolders, useGetMediaFiles } from "@/queries/media";
 import {
     IMediaFolderListRs,
-    IMediaFolderPayload,
     QueryParamsMediaFiles,
 } from "@/models/management/media.interface";
 import MediaFolder from "./_components/MediaUploadContainer/MediaFolder";
@@ -23,45 +23,18 @@ const MediaPage = () => {
     const { data: folderList, isLoading: isLoadingFolder } =
         useGetMediaFolders();
 
-    const defaultQueryParams = new QueryParamsMediaFiles(0, 1, 50);
-
-    const [queryMediaFileParams, setQueryMediaFileParams] =
-        useState(defaultQueryParams);
+    const [queryMediaFileParams, setQueryMediaFileParams] = useState(
+        () => new QueryParamsMediaFiles(0, 1, 50),
+    );
 
     const { data: fileList, isLoading: isLoadingFile } =
         useGetMediaFiles(queryMediaFileParams);
 
-    const { onCreateFolder, onUpdateFolder, errors, onResetFieldsErrors } =
-        useCRUDMediaFolder();
+    const { onCreateFolder, onUpdateFolder } = useMediaFolder();
 
-    const onUploadMediaFile = useUploadMedia();
+    const onUploadMediaFile = useMediaFile();
 
     const [pers, checkPermission] = useLocalUserPermissions();
-
-    const handleSubmitFormData = ({
-        action,
-        payload,
-        id,
-        cb,
-    }: {
-        action: EActionType;
-        payload: IMediaFolderPayload;
-        id?: number;
-        cb?: () => void;
-    }) => {
-        console.log(action, payload);
-        if (action === EActionType.CREATE) {
-            onCreateFolder(payload, () => {
-                cb?.();
-            });
-        }
-
-        if (action === EActionType.EDIT && id) {
-            onUpdateFolder(id, payload, () => {
-                cb?.();
-            });
-        }
-    };
 
     /**
      * Refetch Files when open other folder.
@@ -88,25 +61,10 @@ const MediaPage = () => {
                 <div className="col-left w-[260px] h-full pr-4 border-r">
                     <MediaFolder
                         items={folderList || []}
-                        errors={errors}
                         isLoading={isLoadingFolder}
-                        onSave={(record, cb) =>
-                            handleSubmitFormData({
-                                action: EActionType.EDIT,
-                                payload: record,
-                                id: record.id,
-                                cb,
-                            })
-                        }
-                        onCreateFolder={(data, cb) =>
-                            handleSubmitFormData({
-                                action: EActionType.CREATE,
-                                payload: data,
-                                cb,
-                            })
-                        }
+                        onSave={onUpdateFolder}
+                        onCreateFolder={onCreateFolder}
                         onOpen={handleOnpenFilesInFolder}
-                        onResetErrorsField={onResetFieldsErrors}
                     />
                 </div>
                 <MediaFiles

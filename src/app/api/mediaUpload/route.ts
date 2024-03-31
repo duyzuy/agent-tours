@@ -13,7 +13,7 @@ import {
 import { getMediaFileType, isValidMediaFileTypes } from "@/helpers/mediaFiles";
 import { localMediaAPIs } from "@/services/management/localMedia.service";
 import { headers } from "next/headers";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse, Status } from "@/models/management/common.interface";
 
 export async function POST(request: NextRequest) {
     // const {writeFile} = fs
@@ -104,15 +104,6 @@ export async function POST(request: NextRequest) {
         }
         const originalFilePath = `${directoryPath}/${fileSlugName}.${fileExtension}`;
         try {
-            //Save path to local DB
-            // await localMediaAPIs.uploadMediaFile(authToken, {
-            //     fileType: `.${fileExtension}`,
-            //     parent: folderParse.id,
-            //     slug: fileSlugName,
-            //     path: `${fileSlugName}.${fileExtension}`,
-            //     type: getMediaFileType(file.type) || "",
-            // });
-
             const response = await fetch(
                 `${process.env.API_ROOT}/local/Cms_Media_Addnew`,
                 {
@@ -137,33 +128,36 @@ export async function POST(request: NextRequest) {
 
             const data = (await response.json()) as BaseResponse<IMediaFile>;
 
-            console.log({ data });
-
-            // saving file to local public
-            const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            await writeFile(path.join(process.cwd(), originalFilePath), buffer);
-            if (
-                fileExtension === "jpg" ||
-                fileExtension === "jpeg" ||
-                fileExtension === "png" ||
-                "gif"
-            ) {
-                //accept: ".jpg, .jpeg, .png, .pdf, .svg, .docx, .xlsx, .gif",
-
-                const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
-
-                const croppedImageBuffer = await sharp(buffer)
-                    .resize({
-                        height: 150,
-                        fit: "contain",
-                        background: { r: 0, g: 0, b: 0, alpha: 0 },
-                    })
-                    .toBuffer();
+            if (response.ok && data.status === Status.OK) {
+                // saving file to local public
+                const bytes = await file.arrayBuffer();
+                const buffer = Buffer.from(bytes);
                 await writeFile(
-                    path.join(process.cwd(), thumbPath),
-                    croppedImageBuffer,
+                    path.join(process.cwd(), originalFilePath),
+                    buffer,
                 );
+                if (
+                    fileExtension === "jpg" ||
+                    fileExtension === "jpeg" ||
+                    fileExtension === "png" ||
+                    "gif"
+                ) {
+                    //accept: ".jpg, .jpeg, .png, .pdf, .svg, .docx, .xlsx, .gif",
+
+                    const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
+
+                    const croppedImageBuffer = await sharp(buffer)
+                        .resize({
+                            height: 150,
+                            fit: "contain",
+                            background: { r: 0, g: 0, b: 0, alpha: 0 },
+                        })
+                        .toBuffer();
+                    await writeFile(
+                        path.join(process.cwd(), thumbPath),
+                        croppedImageBuffer,
+                    );
+                }
             }
         } catch (error) {
             console.log("Error occured ", error);

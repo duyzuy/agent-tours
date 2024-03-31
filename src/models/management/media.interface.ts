@@ -13,8 +13,11 @@ export interface IMediaFolderPayload {
     parent?: number;
     folderPath?: string;
 }
-export interface IMediaFolderUpdatePayload extends IMediaFolderPayload {
-    id: number;
+export interface IMediaFolderUpdatePayload {
+    id?: number;
+    folderName?: string;
+    oldFolderName?: string;
+    parent?: number;
 }
 export interface IMediaFolder {
     cat: "MEDIA_FOLDER";
