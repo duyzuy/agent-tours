@@ -1,8 +1,8 @@
 import {
     ITransation,
-    ITranslationCreatePayload,
+    ITranslationPayload,
 } from "@/models/management/cms/translations.interface";
-export class TranslationFormData implements ITranslationCreatePayload {
+export class TranslationFormData implements ITranslationPayload {
     keyName?: string;
     languages: { name?: string; lang?: string }[];
     note?: string;
