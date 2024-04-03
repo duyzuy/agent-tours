@@ -13,7 +13,7 @@ import {
     IBookingOrderPassengersPayload,
 } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
-import { IFormOfPaymentPayload } from "@/app/portal/manage-booking/[orderId]/modules/formOfPayment.interface";
+import { IFormOfPaymentPayload } from "@/models/management/core/formOfPayment.interface";
 
 //create folder in public/uploads folder.
 

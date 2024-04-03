@@ -28,8 +28,8 @@ export default function FormOfPaymentPage() {
     }>({ isShow: false, record: undefined });
     return (
         <PageContainer
-            name="Quản lý booking"
-            modelName="Quản lý booking"
+            name="Phiếu thu"
+            modelName="Phiếu thu"
             breadCrumItems={[
                 { title: "Quản lý đặt chỗ" },
                 { title: "Phiếu thu" },

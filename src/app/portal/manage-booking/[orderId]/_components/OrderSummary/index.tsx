@@ -10,6 +10,8 @@ import ModalCancelBookingConfirmation from "../ModalCanelBookingConfirmation";
 import { useRouter } from "next/navigation";
 import DrawerFormOfPayment from "./DrawerFormOfPayment";
 import { PaymentStatus } from "@/models/management/common.interface";
+import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
+import { FOPFormData } from "../../modules/formOfPayment.interface";
 
 interface OrderDetailProps {
     orderDetail: IOrderDetail["bookingOrder"];
@@ -27,6 +29,8 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
     fops,
 }) => {
     const [isShowDrawerFOP, setShowDrawerFOP] = useState(false);
+    const [formOfPaymentType, setFormOfPaymentType] =
+        useState<FOPFormData["type"]>();
     const [isShowModalConfirm, setShowModalConfirm] = useState(false);
     const [cancelBookingData, setCancelBookingData] =
         useState<IBookingOrderCancelPayload>({
@@ -41,6 +45,10 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
         });
     };
 
+    const handleShowDrawerFOP = (type: FOPFormData["type"]) => {
+        setShowDrawerFOP(true);
+        setFormOfPaymentType(type);
+    };
     return (
         <>
             <div
@@ -178,9 +186,18 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
                         <Button
                             type="primary"
                             size="small"
-                            onClick={() => setShowDrawerFOP(true)}
+                            onClick={() =>
+                                handleShowDrawerFOP(FOP_TYPE.PAYMENT)
+                            }
                         >
-                            Phiếu thu
+                            Thanh toán
+                        </Button>
+                        <Button
+                            type="primary"
+                            size="small"
+                            onClick={() => handleShowDrawerFOP(FOP_TYPE.REFUND)}
+                        >
+                            Hoàn tiền
                         </Button>
                     </Space>
                 </div>
@@ -190,6 +207,7 @@ const OrderSummary: React.FC<OrderDetailProps> = ({
                 totalAmount={orderDetail.totalAmount}
                 totalPaid={orderDetail.totalPaid}
                 isOpen={isShowDrawerFOP}
+                formOfPaymentType={formOfPaymentType}
                 fops={fops}
                 onClose={() => setShowDrawerFOP(false)}
             />

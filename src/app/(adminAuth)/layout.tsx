@@ -11,25 +11,29 @@ const LayoutAgAuth = ({ children }: Props) => {
                     <div className="w-full lg:w-1/5 bg-gray-50 bg-gradient-to-t from-primary-dark to-primary-light flex items-end justify-center">
                         <div className="content text-white px-2 py-8">
                             <div className="mb-4 py-2">
-                                <p className="text-2xl font-bold mb-1">
+                                <p className="text-2xl font-bold mb-1 uppercase">
                                     Nền tảng quản lý tour trực tuyến
                                 </p>
-                                <p className="text-sm">
+                                <p className="text-sm ">
                                     Giải pháp quản lý tour trực tuyến B2B.
                                 </p>
                             </div>
                             <ul className="flex items-center text-xs">
                                 <li>
-                                    <Link href="/" className="text-white">
-                                        Chính sách
+                                    <Link href="/" className="">
+                                        <span className="text-white">
+                                            Chính sách
+                                        </span>
                                     </Link>
                                 </li>
                                 <li>
                                     <span className="w-1 h-1 rounded bg-white block mx-2"></span>
                                 </li>
                                 <li>
-                                    <Link href="/" className="text-white">
-                                        Điều kiện, điều khoản
+                                    <Link href="/">
+                                        <span className="text-white">
+                                            Điều kiện, điều khoản
+                                        </span>
                                     </Link>
                                 </li>
                             </ul>

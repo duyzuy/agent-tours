@@ -177,10 +177,10 @@ export const roleConfigs = {
         delete: [ERolesFunctions.SSR_DELETE],
     },
     language: {
-        list: [ERolesFunctions.SSR_LIST],
-        add: [ERolesFunctions.SSR_CREATE],
-        update: [ERolesFunctions.SSR_UPDATE],
-        delete: [ERolesFunctions.SSR_DELETE],
+        list: [ERolesFunctions.LANGUAGE_LIST],
+        add: [ERolesFunctions.LANGUAGE_CREATE],
+        update: [ERolesFunctions.LANGUAGE_UPDATE],
+        delete: [ERolesFunctions.LANGUAGE_DELETE],
     },
     currency: {
         list: [ERolesFunctions.CURRENCY_LIST],
@@ -204,7 +204,7 @@ export const roleConfigs = {
         view: [ERolesFunctions.DASHBOARD_VIEW],
     },
     systemConfig: {
-        update: [ERolesFunctions.SYSTEM_MANAGEMENT],
+        management: [ERolesFunctions.SYSTEM_MANAGEMENT],
     },
 };
 
@@ -213,5 +213,6 @@ export const pathPermissions = {
     "/role-permission": roleConfigs.role.list,
     "/role": roleConfigs.role.list,
     "/menu": roleConfigs.menu.list,
-    "/system-configuration": roleConfigs.systemConfig.update,
+    "/system-configuration": roleConfigs.systemConfig.management,
+    "/rule-policy": roleConfigs.systemConfig.management,
 };

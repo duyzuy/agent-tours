@@ -1,3 +1,4 @@
+import React from "react";
 import { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
 import { Tag } from "antd";
@@ -77,9 +78,9 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
             return (
                 <>
                     {record.timelimits.map((item) => (
-                        <>
+                        <React.Fragment key={item.recId}>
                             <div>{formatDate(item.deadline)}</div>
-                        </>
+                        </React.Fragment>
                     ))}
                 </>
             );

@@ -15,6 +15,10 @@ import {
 } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
+import {
+    FormOfPaymmentQueryParams,
+    IFormOfPaymentListRs,
+} from "@/models/management/core/formOfPayment.interface";
 
 export const manageBookingAPIs = {
     getOrderList: async (
@@ -85,6 +89,19 @@ export const manageBookingAPIs = {
                 requestObject: {
                     ...payload,
                 },
+                localUsername: "99",
+            },
+        );
+    },
+    getFOPListByOrderId: async (queryParams?: FormOfPaymmentQueryParams) => {
+        return await coreApi.post<IFormOfPaymentListRs, BaseResponse<null>>(
+            "core/BookingOrder_Fop_List",
+            {
+                requestObject: {
+                    ...queryParams?.requestObject,
+                },
+                pageSize: queryParams?.pageSize,
+                pageCurrent: queryParams?.pageCurrent,
                 localUsername: "99",
             },
         );

@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
+import { isEqual } from "lodash";
+import { Spin } from "antd";
+import { useRouter, notFound } from "next/navigation";
 import PageContainer from "@/components/admin/PageContainer";
 import LocaleContainer, {
     LocaleContainerProps,
 } from "@/components/admin/LocaleContainer";
 import { useLocale } from "@/hooks/useLocale";
-import { useRouter, notFound } from "next/navigation";
-
 import DestinationFormContent, {
     DestinationFormContentProps,
 } from "../_components/DestinationFormContent";
@@ -17,8 +18,6 @@ import {
     useGetDestinationDetailCMSQuery,
 } from "@/queries/misc/destination";
 import { LINKS } from "@/constants/links.constant";
-import { isEqual } from "lodash";
-import { Spin } from "antd";
 
 const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
     const { data: destinationDetail, isLoading } =

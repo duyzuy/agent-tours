@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Tabs, TabsProps, Drawer } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useFormOfPayment } from "../../modules/useFormOfPayment";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import FOPList from "./FOPList";
 import FOPForm from "./FOPForm";
+import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
+import { FOPFormData } from "../../modules/formOfPayment.interface";
+import { useGetFormOfPaymentListByOrderIdCoreQuery } from "@/queries/core/bookingOrder";
+
+import { FormOfPaymmentQueryParams } from "@/models/management/core/formOfPayment.interface";
+import { isUndefined } from "lodash";
 
 export interface DrawerFormOfPaymentProps {
     orderId: number;
@@ -13,6 +19,7 @@ export interface DrawerFormOfPaymentProps {
     isOpen?: boolean;
     onClose?: () => void;
     fops: IOrderDetail["bookingOrder"]["fops"];
+    formOfPaymentType: FOPFormData["type"];
 }
 
 const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
@@ -22,16 +29,28 @@ const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
     onClose,
     orderId,
     fops,
+    formOfPaymentType,
 }) => {
+    const queryParams = new FormOfPaymmentQueryParams(
+        { orderId: orderId, type: formOfPaymentType },
+        undefined,
+        undefined,
+    );
+    const { data: fopList, isLoading } =
+        useGetFormOfPaymentListByOrderIdCoreQuery({
+            queryParams: queryParams,
+            enabled: !isUndefined(orderId) && !isUndefined(formOfPaymentType),
+        });
+
     const { onCreateFormOfPayment, onApproval, onDelete } = useFormOfPayment();
 
     const items: TabsProps["items"] = [
         {
             key: "fopList",
-            label: "Danh sách phiếu thu",
+            label: "Danh sách",
             children: (
                 <FOPList
-                    items={fops}
+                    items={fopList || []}
                     onApproval={onApproval}
                     onDelete={onDelete}
                     totalPaid={totalPaid}
@@ -41,21 +60,28 @@ const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
         },
         {
             key: "fopCreate",
-            label: "Thêm phiếu thu",
+            label: "Thêm mới",
             children: (
                 <FOPForm
                     orderId={orderId}
+                    formOfPaymentType={FOP_TYPE.PAYMENT}
                     onSubmitForm={onCreateFormOfPayment}
                 />
             ),
             icon: <PlusOutlined />,
         },
     ];
+
     return (
         <Drawer
-            title={`Phiếu thu`}
+            title={
+                (formOfPaymentType === FOP_TYPE.PAYMENT && "Thanh toán") ||
+                (formOfPaymentType === FOP_TYPE.REFUND && "Hoàn tiền") ||
+                "--"
+            }
             width={750}
             onClose={onClose}
+            destroyOnClose={true}
             open={isOpen}
             styles={{
                 body: {

@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { Collapse, CollapseProps, Checkbox, Button } from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
 import styled from "styled-components";
+import CustomLinkMenuType from "../CustomLinkMenuType";
 const MENUS_DATA = [
     {
         id: 1,
@@ -87,7 +87,10 @@ const MenuLinkType = () => {
             <React.Fragment key={item.id}>
                 <div className="items">
                     <p className="mb-3">
-                        <Checkbox checked={isItemSelected(item.id, itemSelected)} onChange={() => onSelectItem(item.id)}>
+                        <Checkbox
+                            checked={isItemSelected(item.id, itemSelected)}
+                            onChange={() => onSelectItem(item.id)}
+                        >
                             {item.name}
                         </Checkbox>
                     </p>
@@ -124,7 +127,7 @@ const MenuLinkType = () => {
         {
             key: "custom",
             label: "Liên kết tự tạo",
-            children: <div></div>,
+            children: <CustomLinkMenuType />,
         },
     ];
     return (
@@ -135,7 +138,9 @@ const MenuLinkType = () => {
                 </div>
                 <CollapseStyled
                     expandIconPosition="end"
-                    expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                    expandIcon={({ isActive }) => (
+                        <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                    )}
                     items={items}
                     defaultActiveKey={["page"]}
                     onChange={onChange}
@@ -147,19 +152,19 @@ const MenuLinkType = () => {
 export default MenuLinkType;
 
 const CollapseStyled = styled(Collapse)`
-    && {
-        border-radius: 0;
-    }
-    .ant-collapse-header-text {
-        font-weight: bold;
-    }
-    .ant-collapse-item:last-child,
-    .ant-collapse-item:last-child > .ant-collapse-header {
-        border-radius: 0;
-    }
-    .ant-collapse-content > .ant-collapse-content-box {
-        padding-bottom: 0;
-    }
+    // && {
+    //     border-radius: 0;
+    // }
+    // .ant-collapse-header-text {
+    //     font-weight: bold;
+    // }
+    // .ant-collapse-item:last-child,
+    // .ant-collapse-item:last-child > .ant-collapse-header {
+    //     border-radius: 0;
+    // }
+    // .ant-collapse-content > .ant-collapse-content-box {
+    //     padding-bottom: 0;
+    // }
 `;
 
 const isItemSelected = (target: number, items: number[]) => {

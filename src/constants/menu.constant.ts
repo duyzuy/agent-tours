@@ -11,4 +11,8 @@ export const MENU_TYPES = [
         key: "menu-vertical",
         name: "Vertical",
     },
+    {
+        key: "menu-top",
+        name: "Top",
+    },
 ];

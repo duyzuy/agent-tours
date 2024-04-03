@@ -5,6 +5,8 @@ import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { bookingAPIs } from "@/services/management/booking/searchTour";
 import { BookingOrderListQueryParams } from "@/models/management/booking/reservation.interface";
 import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
+import { Status } from "@/models/management/common.interface";
+import { FormOfPaymmentQueryParams } from "@/models/management/core/formOfPayment.interface";
 
 export const useGetBookingOrderListCoreQuery = ({
     enabled = false,
@@ -66,6 +68,21 @@ export const useGetBookingTourServicesCoreQuery = ({
             },
         ],
         queryFn: () => bookingAPIs.getServices(sellableId),
+        select: (data) => data.result,
+        enabled: enabled,
+    });
+};
+
+export const useGetFormOfPaymentListByOrderIdCoreQuery = ({
+    enabled = false,
+    queryParams,
+}: {
+    enabled: boolean;
+    queryParams: FormOfPaymmentQueryParams;
+}) => {
+    return useQuery({
+        queryKey: [queryCore.GET_FORM_OF_PAYMENT_LIST, queryParams],
+        queryFn: () => manageBookingAPIs.getFOPListByOrderId(queryParams),
         select: (data) => data.result,
         enabled: enabled,
     });

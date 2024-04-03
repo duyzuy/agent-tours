@@ -4,17 +4,6 @@ import {
     FOP_PAYMENT_TYPE,
 } from "@/models/management/core/formOfPayment.interface";
 
-export interface IFormOfPaymentPayload {
-    orderId?: number;
-    type?: FOP_TYPE; //"PAYMENT(IN)"; REFUND(OUT), CHARGE(IN-KOTRAKHACH), DISCOUNT(OUT-KOTRAKHACH)
-    fopType?: FOP_PAYMENT_TYPE; //"CASH"; BANKTRANSFER, CREDITCARD, COUPON
-    fopDocument?: string;
-    amount?: number;
-    payer?: string;
-    rmk?: string;
-    status?: Status; //OK không được xoá - chỉ QQ mới được xoá
-}
-
 export class FOPFormData {
     orderId: number;
     type?: FOP_TYPE;

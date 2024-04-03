@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Space, Button, Form, Row, Col, Input, Select } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { FOPFormData } from "../../modules/formOfPayment.interface";
@@ -9,17 +9,23 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import { formOfPaymentSchema } from "../../schema/formOfPayment";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
+import { isEmpty, isUndefined } from "lodash";
 
 type TFormData = Required<FOPFormData>;
 interface FOPFormProps {
     orderId: number;
     onSubmitForm?: (data: FOPFormData, cb?: () => void) => void;
+    formOfPaymentType: FOPFormData["type"];
 }
-const FOPForm: React.FC<FOPFormProps> = ({ orderId, onSubmitForm }) => {
+const FOPForm: React.FC<FOPFormProps> = ({
+    orderId,
+    onSubmitForm,
+    formOfPaymentType,
+}) => {
     const [isLoading, setLoading] = useState(false);
     const initialValue = new FOPFormData(
         orderId,
-        undefined,
+        formOfPaymentType,
         undefined,
         "",
         0,
@@ -45,57 +51,19 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId, onSubmitForm }) => {
             setLoading(false);
         });
     };
-
+    const isDisableButton = useMemo(() => {
+        return (
+            isEmpty(formData.amount) ||
+            isUndefined(formData.amount) ||
+            isUndefined(formData.payer) ||
+            isEmpty(formData.payer) ||
+            isUndefined(formData.fopType)
+        );
+    }, [formData.amount, formData.payer, formData.fopType]);
     return (
         <>
             <Form layout="vertical">
                 <Row gutter={16}>
-                    <Col span={12}>
-                        <FormItem
-                            label="Loại phiếu thu"
-                            validateStatus={errors?.type ? "error" : ""}
-                            help={errors?.type || ""}
-                            required
-                        >
-                            <Select
-                                value={formData.type}
-                                options={FOP_TYPE_LIST}
-                                placeholder="Chọn loại phiếu thu"
-                                onChange={(value) => onChange("type", value)}
-                            />
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12}>
-                        <FormItem
-                            label="Hình thức thanh toán"
-                            validateStatus={errors?.fopType ? "error" : ""}
-                            help={errors?.fopType || ""}
-                            required
-                        >
-                            <Select
-                                value={formData.fopType}
-                                options={FOP_PAYMENT_TYPE_LIST}
-                                placeholder="Chọn hình thức thanh toán"
-                                onChange={(value) => onChange("fopType", value)}
-                            />
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem
-                            label="Số tiền"
-                            validateStatus={errors?.amount ? "error" : ""}
-                            help={errors?.amount || ""}
-                        >
-                            <Input
-                                value={formData.amount}
-                                placeholder="Số tiền thanh toán"
-                                onChange={(evt) =>
-                                    onChange("amount", evt.target.value)
-                                }
-                            />
-                        </FormItem>
-                    </Col>
                     <Col span={12}>
                         <FormItem
                             label="Người thanh toán"
@@ -109,6 +77,37 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId, onSubmitForm }) => {
                                 name="payer"
                                 onChange={(evt) =>
                                     onChange("payer", evt.target.value)
+                                }
+                            />
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem
+                            label="Hình thức"
+                            validateStatus={errors?.fopType ? "error" : ""}
+                            help={errors?.fopType || ""}
+                            required
+                        >
+                            <Select
+                                value={formData.fopType}
+                                options={FOP_PAYMENT_TYPE_LIST}
+                                placeholder="Hình thức"
+                                onChange={(value) => onChange("fopType", value)}
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={24}>
+                        <FormItem
+                            label="Số tiền"
+                            validateStatus={errors?.amount ? "error" : ""}
+                            help={errors?.amount || ""}
+                        >
+                            <Input
+                                value={formData.amount}
+                                placeholder="Số tiền"
+                                onChange={(evt) =>
+                                    onChange("amount", evt.target.value)
                                 }
                             />
                         </FormItem>
@@ -146,8 +145,9 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId, onSubmitForm }) => {
                 <Button
                     onClick={() => handlerSubmit(formData, onSubmit)}
                     type="primary"
-                    className="w-[160px]"
+                    className="w-[140px]"
                     loading={isLoading}
+                    disabled={isDisableButton}
                 >
                     Xác nhận
                 </Button>
