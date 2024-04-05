@@ -14,6 +14,8 @@ import { mediaConfig } from "@/configs";
 import MediaUploadDrawler from "@/app/portal/media/_components/MediaUploadDrawler";
 import { TDestinationsCMSContentErrorField } from "../../hooks/useCRUDContentDestination";
 import { isEqual } from "lodash";
+import { PictureOutlined } from "@ant-design/icons";
+import { useFormSubmit } from "@/hooks/useFormSubmit";
 
 const TextArea = Input.TextArea;
 
@@ -49,6 +51,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
     isDisableButton = false,
     provinceList,
 }) => {
+    // const {handlerSubmit, errors} = useFormSubmit({schema: undefined})
     const [previewImageUrl, setPreviewImageUrl] = useState<string>();
     const [isEditSlug, setEditSlug] = useState(false);
     const [slug, setSlug] = useState("");
@@ -194,18 +197,15 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                 <FormItem label="Danh sách điểm đến">
                     <Space wrap className="list">
                         {provinceList.map((province) => (
-                            <>
-                                {console.log(province)}
-                                <Tag key={province.recId} bordered={false}>
-                                    {(province.stateProvinceKey &&
-                                        province.stateProvinceKey) ||
-                                        (province.countryKey &&
-                                            province.countryKey) ||
-                                        (province.subRegionKey &&
-                                            province.subRegionKey) ||
-                                        province.regionKey}
-                                </Tag>
-                            </>
+                            <Tag key={province.recId} bordered={false}>
+                                {(province.stateProvinceKey &&
+                                    province.stateProvinceKey) ||
+                                    (province.countryKey &&
+                                        province.countryKey) ||
+                                    (province.subRegionKey &&
+                                        province.subRegionKey) ||
+                                    province.regionKey}
+                            </Tag>
                         ))}
                     </Space>
                 </FormItem>
@@ -224,8 +224,13 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                                     height={128}
                                 />
                             ) : (
-                                <span className="text-gray-500 text-xs">
-                                    Chưa chọn ảnh
+                                <span className="text-slate-500 text-center">
+                                    <span className="text-2xl">
+                                        <PictureOutlined />
+                                    </span>
+                                    <span className="text-xs block">
+                                        Chưa có ảnh
+                                    </span>
                                 </span>
                             )}
                         </span>

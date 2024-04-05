@@ -135,29 +135,29 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
                 },
             ],
         },
-        // {
-        //     key: "post",
-        //     icon: React.createElement(FileOutlined),
-        //     label: "Blog",
-        //     children: [
-        //         {
-        //             key: "post/list",
-        //             label: "Tất cả bài viết",
-        //         },
-        //         {
-        //             key: "post/create",
-        //             label: "Tạo bài viết mới",
-        //         },
-        //         {
-        //             key: "post/category",
-        //             label: "Chuyên mục",
-        //         },
-        //         {
-        //             key: "post/tag",
-        //             label: "Thẻ",
-        //         },
-        //     ],
-        // },
+        {
+            key: "contents",
+            icon: React.createElement(FileOutlined),
+            label: "Quản lý nội dung",
+            children: [
+                {
+                    key: "contents/page",
+                    label: "Trang nội dung",
+                },
+                {
+                    key: "contents/category",
+                    label: "Danh mục bài viết",
+                },
+                {
+                    key: "contents/tag",
+                    label: "Thẻ bài viết",
+                },
+                {
+                    key: "contents/post",
+                    label: "Bài viết",
+                },
+            ],
+        },
         {
             key: "media",
             icon: React.createElement(FolderOutlined),

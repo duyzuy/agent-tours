@@ -8,6 +8,7 @@ import { stringToSlug } from "@/utils/stringToSlug";
 import { mediaConfig } from "@/configs";
 import { isEmpty } from "lodash";
 import {
+    FileTypes,
     IMediaFile,
     IMediaFilePayload,
 } from "@/models/management/media.interface";
@@ -40,22 +41,23 @@ export async function POST(request: NextRequest) {
 
     if (isEmpty(folder) || folder === null || !folder) {
         return NextResponse.json(
-            { message: "Thư mục trống.", code: "FOLDER_EMPTY" },
+            { message: "Thiếu thư mục upload.", code: "FOLDER_EMPTY" },
             { status: 400 },
         );
     }
-    const folderParse = JSON.parse(folder) as IMediaFilePayload["folder"];
-    const directoryPath = folderParse.nestedSlug.reduce((path, curr) => {
-        path = path.concat("/", curr);
-        return path;
-    }, "public");
 
     if (isEmpty(files) || !files) {
         return NextResponse.json(
             { message: "Chưa có file.", code: "FILES_IS_EMPTY" },
-            { status: 404 },
+            { status: 400 },
         );
     }
+
+    const folderParse = JSON.parse(folder) as IMediaFilePayload["folder"];
+    const directoryPath = folderParse.nestedSlug.reduce(
+        (path, curr) => path.concat("/", curr),
+        "public",
+    );
 
     if (!existsSync(directoryPath)) {
         return NextResponse.json(
@@ -119,7 +121,7 @@ export async function POST(request: NextRequest) {
                     },
                     body: JSON.stringify({
                         requestObject: {
-                            fileType: `.${fileExtension}`,
+                            fileType: `${fileExtension}`,
                             parent: folderParse.id,
                             slug: fileSlugName,
                             path: `${fileSlugName}.${fileExtension}`,
@@ -140,19 +142,26 @@ export async function POST(request: NextRequest) {
                     buffer,
                 );
 
-                const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
+                if (
+                    fileExtension === FileTypes.JPEG ||
+                    fileExtension === FileTypes.PNG ||
+                    fileExtension === FileTypes.GIF ||
+                    fileExtension === FileTypes.JPG
+                ) {
+                    const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
 
-                const croppedImageBuffer = await sharp(buffer)
-                    .resize({
-                        height: 150,
-                        fit: "contain",
-                        background: { r: 0, g: 0, b: 0, alpha: 0 },
-                    })
-                    .toBuffer();
-                await writeFile(
-                    path.join(process.cwd(), thumbPath),
-                    croppedImageBuffer,
-                );
+                    const croppedImageBuffer = await sharp(buffer)
+                        .resize({
+                            height: 150,
+                            fit: "contain",
+                            background: { r: 0, g: 0, b: 0, alpha: 0 },
+                        })
+                        .toBuffer();
+                    await writeFile(
+                        path.join(process.cwd(), thumbPath),
+                        croppedImageBuffer,
+                    );
+                }
             } else {
                 responseMessage = {
                     isSuccess: false,
@@ -163,6 +172,7 @@ export async function POST(request: NextRequest) {
             }
         }
     } catch (error) {
+        console.log({ error });
         responseMessage = {
             isSuccess: false,
             message: "Error From Server",

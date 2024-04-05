@@ -45,7 +45,7 @@ const PageContainer: React.FC<Props> = ({
             },
             [{ title: <Link href={LINKS.DashBoard}>Dashboard</Link> }],
         );
-    }, []);
+    }, [breadCrumItems]);
 
     return (
         <div

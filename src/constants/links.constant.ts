@@ -10,4 +10,5 @@ export const LINKS = {
     ProductStockDetail: "/portal/product/stock/{stockInventoryId}",
     TemplateSellable: "/portal/product/template-sellable",
     Sellable: "/portal/product/template-sellable/{tempalteSellableId}",
+    PageCreate: "/portal/contents/page/create",
 };

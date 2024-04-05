@@ -4,12 +4,13 @@ import React, { memo, useState } from "react";
 import config from "@/configs";
 import { stringToSlug } from "@/utils/stringToSlug";
 import { EditOutlined } from "@ant-design/icons";
-interface SlugProps {
+import FormItem from "@/components/base/FormItem";
+export interface SlugProps {
     domainName?: string;
     lang?: LangCode;
     type?: "post" | "page" | "category";
     slugName?: string;
-    onSave?: (slug: string) => void;
+    onSave?: (value: string) => void;
 }
 const Slug: React.FC<SlugProps> = ({
     domainName = config.DOMAIN_ROOT,
@@ -31,34 +32,33 @@ const Slug: React.FC<SlugProps> = ({
         setEdit(false);
         setSlug(slugName);
     };
+
+    const onEdit = () => {
+        setEdit(true);
+        setSlug(slugName);
+    };
+
     return (
-        <div className="post-slug text-xs py-2 w-full">
+        <div className="post-slug text-xs py-2 w-full flex items-center">
             <span className="mr-2">Đường dẫn:</span>
             <div className="flex items-center flex-1 whitespace-nowrap">
                 <span>{domainName}</span>
                 <span>{`/${lang}`}</span>
-                <span>{`/${type}`}</span>
-                <div className="flex items-center">
-                    <div
-                        className="mr-2"
-                        style={{
-                            width: "calc(100% - 120px)",
-                        }}
-                    >
+                <span>{`/${type}/`}</span>
+                <div className="flex items-center max-w-[280px]">
+                    <div className="mr-2 w-full">
                         {!isEdit ? (
-                            <p className="text flex-1 overflow-hidden text-ellipsis">
-                                {slugName}
+                            <p className="overflow-hidden text-ellipsis bg-slate-100">
+                                <span>{`${slugName}`}</span>
                             </p>
                         ) : (
-                            <div className="ml-1 w-full max-w-[320px]">
-                                <Input
-                                    size="small"
-                                    value={slug}
-                                    onChange={(evt) =>
-                                        onChangeSlug(evt.target.value)
-                                    }
-                                />
-                            </div>
+                            <Input
+                                size="small"
+                                value={slug}
+                                onChange={(evt) =>
+                                    onChangeSlug(evt.target.value)
+                                }
+                            />
                         )}
                     </div>
                     {isEdit ? (
@@ -86,7 +86,7 @@ const Slug: React.FC<SlugProps> = ({
                             size="small"
                             className="ml-2"
                             icon={<EditOutlined />}
-                            onClick={() => setEdit(true)}
+                            onClick={onEdit}
                         >
                             Sửa
                         </Button>

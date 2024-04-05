@@ -5,7 +5,6 @@ import path from "path";
 export async function GET(
     req: NextRequest,
     { params }: { params: { slug: string[] } },
-    res: NextResponse,
 ) {
     const { slug } = params;
 
@@ -35,7 +34,10 @@ export async function GET(
             // if(filePath?.includes(".jpe") || filePath?.includes(".jpeg")){
             //     response.headers.set("content-type", "image/jpeg");
             // }
+            // const data = response.body;
 
+            // const blob = await response.blob();
+            // console.log({ data: blob });
             return response;
         } else {
             return new NextResponse(null, { status: 403 });

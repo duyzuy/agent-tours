@@ -6,6 +6,22 @@ export interface IMedia {
     type: "image" | "doc" | "folder" | "pdf";
 }
 
+export enum MediaTypes {
+    IMAGE = "IMAGE",
+    FILE = "FILE",
+    ICON = "ICON",
+}
+export enum FileTypes {
+    DOCX = "docx",
+    XLSX = "xlsx",
+    JPEG = "jpeg",
+    PNG = "png",
+    JPG = "jpg",
+    GIF = "gif",
+    SVG = "svg",
+    PDF = "pdf",
+}
+
 export interface IMediaFolderPayload {
     folderName?: string;
     folderSlug?: string;
@@ -20,7 +36,7 @@ export interface IMediaFolderUpdatePayload {
     parent?: number;
 }
 export interface IMediaFolder {
-    cat: "MEDIA_FOLDER";
+    cat: string;
     id: number;
     key: string;
     parent: number;
@@ -30,14 +46,14 @@ export interface IMediaFolder {
 }
 
 export interface IMediaFile {
+    cat: string;
     id: number;
-    cat: "MEDIA";
     key: string;
     parent: number;
     path: string;
     slug: string;
-    type: string;
-    fileType: string;
+    type: MediaTypes;
+    fileType: FileTypes;
     fullPath: string;
 }
 export type TQueryParamsMediaFiles = {

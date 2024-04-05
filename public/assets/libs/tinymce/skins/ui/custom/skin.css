@@ -3,7 +3,8 @@
     box-sizing: content-box;
     color: #222f3e;
     cursor: auto;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: normal;
@@ -56,13 +57,14 @@
     text-align: right;
 }
 .tox-tinymce {
-    border: 2px solid #eeeeee;
-    border-radius: 10px;
+    border: 1px solid #eeeeee;
+    border-radius: 4px;
     box-shadow: none;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     overflow: hidden;
     position: relative;
     visibility: inherit !important;
@@ -83,7 +85,8 @@
     overflow: hidden;
 }
 .tox-tinymce-aux {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     z-index: 1300;
 }
 .tox-tinymce *:focus,
@@ -121,7 +124,10 @@ button::-moz-focus-inner {
 .tox .accessibility-issue__repair {
     margin-top: 16px;
 }
-.tox .tox-dialog__body-content .accessibility-issue--info .accessibility-issue__description {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--info
+    .accessibility-issue__description {
     background-color: rgba(0, 101, 216, 0.1);
     color: #222f3e;
 }
@@ -131,21 +137,36 @@ button::-moz-focus-inner {
 .tox .tox-dialog__body-content .accessibility-issue--info .tox-icon svg {
     fill: #006ce7;
 }
-.tox .tox-dialog__body-content .accessibility-issue--info a.tox-button--naked.tox-button--icon {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--info
+    a.tox-button--naked.tox-button--icon {
     background-color: #006ce7;
     color: #fff;
 }
-.tox .tox-dialog__body-content .accessibility-issue--info a.tox-button--naked.tox-button--icon:hover,
-.tox .tox-dialog__body-content .accessibility-issue--info a.tox-button--naked.tox-button--icon:focus {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--info
+    a.tox-button--naked.tox-button--icon:hover,
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--info
+    a.tox-button--naked.tox-button--icon:focus {
     background-color: #0060ce;
 }
-.tox .tox-dialog__body-content .accessibility-issue--info a.tox-button--naked.tox-button--icon:active {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--info
+    a.tox-button--naked.tox-button--icon:active {
     background-color: #0054b4;
 }
 .tox .tox-dialog__body-content .accessibility-issue--warn {
     /* stylelint-disable-next-line no-descending-specificity */
 }
-.tox .tox-dialog__body-content .accessibility-issue--warn .accessibility-issue__description {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--warn
+    .accessibility-issue__description {
     background-color: rgba(255, 165, 0, 0.08);
     color: #222f3e;
 }
@@ -155,23 +176,38 @@ button::-moz-focus-inner {
 .tox .tox-dialog__body-content .accessibility-issue--warn .tox-icon svg {
     fill: #8f5d00;
 }
-.tox .tox-dialog__body-content .accessibility-issue--warn a.tox-button--naked.tox-button--icon {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--warn
+    a.tox-button--naked.tox-button--icon {
     background-color: #ffe89d;
     color: #222f3e;
 }
-.tox .tox-dialog__body-content .accessibility-issue--warn a.tox-button--naked.tox-button--icon:hover,
-.tox .tox-dialog__body-content .accessibility-issue--warn a.tox-button--naked.tox-button--icon:focus {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--warn
+    a.tox-button--naked.tox-button--icon:hover,
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--warn
+    a.tox-button--naked.tox-button--icon:focus {
     background-color: #f2d574;
     color: #222f3e;
 }
-.tox .tox-dialog__body-content .accessibility-issue--warn a.tox-button--naked.tox-button--icon:active {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--warn
+    a.tox-button--naked.tox-button--icon:active {
     background-color: #e8c657;
     color: #222f3e;
 }
 .tox .tox-dialog__body-content .accessibility-issue--error {
     /* stylelint-disable-next-line no-descending-specificity */
 }
-.tox .tox-dialog__body-content .accessibility-issue--error .accessibility-issue__description {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--error
+    .accessibility-issue__description {
     background-color: rgba(204, 0, 0, 0.1);
     color: #222f3e;
 }
@@ -181,50 +217,91 @@ button::-moz-focus-inner {
 .tox .tox-dialog__body-content .accessibility-issue--error .tox-icon svg {
     fill: #c00;
 }
-.tox .tox-dialog__body-content .accessibility-issue--error a.tox-button--naked.tox-button--icon {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--error
+    a.tox-button--naked.tox-button--icon {
     background-color: #f2bfbf;
     color: #222f3e;
 }
-.tox .tox-dialog__body-content .accessibility-issue--error a.tox-button--naked.tox-button--icon:hover,
-.tox .tox-dialog__body-content .accessibility-issue--error a.tox-button--naked.tox-button--icon:focus {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--error
+    a.tox-button--naked.tox-button--icon:hover,
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--error
+    a.tox-button--naked.tox-button--icon:focus {
     background-color: #e9a4a4;
     color: #222f3e;
 }
-.tox .tox-dialog__body-content .accessibility-issue--error a.tox-button--naked.tox-button--icon:active {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--error
+    a.tox-button--naked.tox-button--icon:active {
     background-color: #ee9494;
     color: #222f3e;
 }
-.tox .tox-dialog__body-content .accessibility-issue--success .accessibility-issue__description {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--success
+    .accessibility-issue__description {
     background-color: rgba(120, 171, 70, 0.1);
     color: #222f3e;
 }
-.tox .tox-dialog__body-content .accessibility-issue--success .accessibility-issue__description > *:last-child {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--success
+    .accessibility-issue__description
+    > *:last-child {
     display: none;
 }
-.tox .tox-dialog__body-content .accessibility-issue--success .tox-form__group h2 {
+.tox
+    .tox-dialog__body-content
+    .accessibility-issue--success
+    .tox-form__group
+    h2 {
     color: #527530;
 }
 .tox .tox-dialog__body-content .accessibility-issue--success .tox-icon svg {
     fill: #527530;
 }
 .tox .tox-dialog__body-content .accessibility-issue__header .tox-form__group h1,
-.tox .tox-dialog__body-content .tox-form__group .accessibility-issue__description h2 {
+.tox
+    .tox-dialog__body-content
+    .tox-form__group
+    .accessibility-issue__description
+    h2 {
     font-size: 14px;
     margin-top: 0;
 }
-.tox:not([dir="rtl"]) .tox-dialog__body-content .accessibility-issue__header .tox-button {
+.tox:not([dir="rtl"])
+    .tox-dialog__body-content
+    .accessibility-issue__header
+    .tox-button {
     margin-left: 4px;
 }
-.tox:not([dir="rtl"]) .tox-dialog__body-content .accessibility-issue__header > *:nth-last-child(2) {
+.tox:not([dir="rtl"])
+    .tox-dialog__body-content
+    .accessibility-issue__header
+    > *:nth-last-child(2) {
     margin-left: auto;
 }
-.tox:not([dir="rtl"]) .tox-dialog__body-content .accessibility-issue__description {
+.tox:not([dir="rtl"])
+    .tox-dialog__body-content
+    .accessibility-issue__description {
     padding: 4px 4px 4px 8px;
 }
-.tox[dir="rtl"] .tox-dialog__body-content .accessibility-issue__header .tox-button {
+.tox[dir="rtl"]
+    .tox-dialog__body-content
+    .accessibility-issue__header
+    .tox-button {
     margin-right: 4px;
 }
-.tox[dir="rtl"] .tox-dialog__body-content .accessibility-issue__header > *:nth-last-child(2) {
+.tox[dir="rtl"]
+    .tox-dialog__body-content
+    .accessibility-issue__header
+    > *:nth-last-child(2) {
     margin-right: auto;
 }
 .tox[dir="rtl"] .tox-dialog__body-content .accessibility-issue__description {
@@ -244,7 +321,11 @@ button::-moz-focus-inner {
     overflow: auto;
 }
 @media only screen and (max-width: 767px) {
-    body:not(.tox-force-desktop) .tox .tox-advtemplate .tox-form__grid > div:first-child {
+    body:not(.tox-force-desktop)
+        .tox
+        .tox-advtemplate
+        .tox-form__grid
+        > div:first-child {
         width: 100%;
     }
 }
@@ -281,7 +362,8 @@ button::-moz-focus-inner {
     color: #fff;
     cursor: pointer;
     display: inline-block;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: bold;
@@ -299,7 +381,8 @@ button::-moz-focus-inner {
 .tox .tox-button::before {
     border-radius: 6px;
     bottom: -1px;
-    box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px #006ce7, 0 0 0 3px rgba(0, 108, 231, 0.25);
+    box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px #006ce7,
+        0 0 0 3px rgba(0, 108, 231, 0.25);
     content: "";
     left: -1px;
     opacity: 0;
@@ -488,7 +571,8 @@ button::-moz-focus-inner {
     box-sizing: border-box;
     cursor: pointer;
     display: inline-block;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     font-size: 16px;
     font-weight: normal;
     line-height: 1.3;
@@ -578,25 +662,53 @@ button::-moz-focus-inner {
     color: rgba(34, 47, 62, 0.5);
     cursor: not-allowed;
 }
-.tox .tox-checkbox--disabled .tox-checkbox__icons .tox-checkbox-icon__checked svg {
+.tox
+    .tox-checkbox--disabled
+    .tox-checkbox__icons
+    .tox-checkbox-icon__checked
+    svg {
     fill: rgba(34, 47, 62, 0.5);
 }
-.tox .tox-checkbox--disabled .tox-checkbox__icons .tox-checkbox-icon__unchecked svg {
+.tox
+    .tox-checkbox--disabled
+    .tox-checkbox__icons
+    .tox-checkbox-icon__unchecked
+    svg {
     fill: rgba(34, 47, 62, 0.5);
 }
-.tox .tox-checkbox--disabled .tox-checkbox__icons .tox-checkbox-icon__indeterminate svg {
+.tox
+    .tox-checkbox--disabled
+    .tox-checkbox__icons
+    .tox-checkbox-icon__indeterminate
+    svg {
     fill: rgba(34, 47, 62, 0.5);
 }
-.tox input.tox-checkbox__input:checked + .tox-checkbox__icons .tox-checkbox-icon__unchecked svg {
+.tox
+    input.tox-checkbox__input:checked
+    + .tox-checkbox__icons
+    .tox-checkbox-icon__unchecked
+    svg {
     display: none;
 }
-.tox input.tox-checkbox__input:checked + .tox-checkbox__icons .tox-checkbox-icon__checked svg {
+.tox
+    input.tox-checkbox__input:checked
+    + .tox-checkbox__icons
+    .tox-checkbox-icon__checked
+    svg {
     display: block;
 }
-.tox input.tox-checkbox__input:indeterminate + .tox-checkbox__icons .tox-checkbox-icon__unchecked svg {
+.tox
+    input.tox-checkbox__input:indeterminate
+    + .tox-checkbox__icons
+    .tox-checkbox-icon__unchecked
+    svg {
     display: none;
 }
-.tox input.tox-checkbox__input:indeterminate + .tox-checkbox__icons .tox-checkbox-icon__indeterminate svg {
+.tox
+    input.tox-checkbox__input:indeterminate
+    + .tox-checkbox__icons
+    .tox-checkbox-icon__indeterminate
+    svg {
     display: block;
 }
 .tox input.tox-checkbox__input:focus + .tox-checkbox__icons {
@@ -704,14 +816,20 @@ button::-moz-focus-inner {
     background-color: #a6ccf7;
     color: #222f3e;
 }
-.tox .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+.tox
+    .tox-collection--grid
+    .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: #cce2fa;
     color: #222f3e;
 }
-.tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+.tox
+    .tox-collection--list
+    .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     color: #222f3e;
 }
-.tox .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+.tox
+    .tox-collection--toolbar
+    .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     color: #222f3e;
 }
 .tox .tox-collection__item-icon,
@@ -771,17 +889,26 @@ button::-moz-focus-inner {
 .tox .tox-collection__item--state-disabled .tox-collection__item-caret svg {
     fill: rgba(34, 47, 62, 0.5);
 }
-.tox .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
+.tox
+    .tox-collection--list
+    .tox-collection__item:not(.tox-collection__item--enabled)
+    .tox-collection__item-checkmark
+    svg {
     display: none;
 }
-.tox .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory + .tox-collection__item-checkmark {
+.tox
+    .tox-collection--list
+    .tox-collection__item:not(.tox-collection__item--enabled)
+    .tox-collection__item-accessory
+    + .tox-collection__item-checkmark {
     display: none;
 }
 .tox .tox-collection--horizontal {
     background-color: #fff;
     border: 1px solid #e3e3e3;
     border-radius: 6px;
-    box-shadow: 0 0 2px 0 rgba(34, 47, 62, 0.2), 0 4px 8px 0 rgba(34, 47, 62, 0.15);
+    box-shadow: 0 0 2px 0 rgba(34, 47, 62, 0.2),
+        0 4px 8px 0 rgba(34, 47, 62, 0.15);
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
@@ -816,21 +943,26 @@ button::-moz-focus-inner {
     flex: 1 1 auto;
     flex-direction: row;
 }
-.tox .tox-collection__item-container--row.tox-collection__item-container--align-left {
+.tox
+    .tox-collection__item-container--row.tox-collection__item-container--align-left {
     margin-right: auto;
 }
-.tox .tox-collection__item-container--row.tox-collection__item-container--align-right {
+.tox
+    .tox-collection__item-container--row.tox-collection__item-container--align-right {
     justify-content: flex-end;
     margin-left: auto;
 }
-.tox .tox-collection__item-container--row.tox-collection__item-container--valign-top {
+.tox
+    .tox-collection__item-container--row.tox-collection__item-container--valign-top {
     align-items: flex-start;
     margin-bottom: auto;
 }
-.tox .tox-collection__item-container--row.tox-collection__item-container--valign-middle {
+.tox
+    .tox-collection__item-container--row.tox-collection__item-container--valign-middle {
     align-items: center;
 }
-.tox .tox-collection__item-container--row.tox-collection__item-container--valign-bottom {
+.tox
+    .tox-collection__item-container--row.tox-collection__item-container--valign-bottom {
     align-items: flex-end;
     margin-top: auto;
 }
@@ -839,28 +971,41 @@ button::-moz-focus-inner {
     flex: 1 1 auto;
     flex-direction: column;
 }
-.tox .tox-collection__item-container--column.tox-collection__item-container--align-left {
+.tox
+    .tox-collection__item-container--column.tox-collection__item-container--align-left {
     align-items: flex-start;
 }
-.tox .tox-collection__item-container--column.tox-collection__item-container--align-right {
+.tox
+    .tox-collection__item-container--column.tox-collection__item-container--align-right {
     align-items: flex-end;
 }
-.tox .tox-collection__item-container--column.tox-collection__item-container--valign-top {
+.tox
+    .tox-collection__item-container--column.tox-collection__item-container--valign-top {
     align-self: flex-start;
 }
-.tox .tox-collection__item-container--column.tox-collection__item-container--valign-middle {
+.tox
+    .tox-collection__item-container--column.tox-collection__item-container--valign-middle {
     align-self: center;
 }
-.tox .tox-collection__item-container--column.tox-collection__item-container--valign-bottom {
+.tox
+    .tox-collection__item-container--column.tox-collection__item-container--valign-bottom {
     align-self: flex-end;
 }
-.tox:not([dir="rtl"]) .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
+.tox:not([dir="rtl"])
+    .tox-collection--horizontal
+    .tox-collection__group:not(:last-of-type) {
     border-right: 1px solid transparent;
 }
-.tox:not([dir="rtl"]) .tox-collection--list .tox-collection__item > *:not(:first-child) {
+.tox:not([dir="rtl"])
+    .tox-collection--list
+    .tox-collection__item
+    > *:not(:first-child) {
     margin-left: 8px;
 }
-.tox:not([dir="rtl"]) .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
+.tox:not([dir="rtl"])
+    .tox-collection--list
+    .tox-collection__item
+    > .tox-collection__item-label:first-child {
     margin-left: 4px;
 }
 .tox:not([dir="rtl"]) .tox-collection__item-accessory {
@@ -870,13 +1015,21 @@ button::-moz-focus-inner {
 .tox:not([dir="rtl"]) .tox-collection .tox-collection__item-caret {
     margin-left: 16px;
 }
-.tox[dir="rtl"] .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
+.tox[dir="rtl"]
+    .tox-collection--horizontal
+    .tox-collection__group:not(:last-of-type) {
     border-left: 1px solid transparent;
 }
-.tox[dir="rtl"] .tox-collection--list .tox-collection__item > *:not(:first-child) {
+.tox[dir="rtl"]
+    .tox-collection--list
+    .tox-collection__item
+    > *:not(:first-child) {
     margin-right: 8px;
 }
-.tox[dir="rtl"] .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
+.tox[dir="rtl"]
+    .tox-collection--list
+    .tox-collection__item
+    > .tox-collection__item-label:first-child {
     margin-right: 4px;
 }
 .tox[dir="rtl"] .tox-collection__item-accessory {
@@ -930,7 +1083,22 @@ button::-moz-focus-inner {
     width: 25px;
 }
 .tox .tox-hue-slider-spectrum {
-    background: linear-gradient(to bottom, #f00, #ff0080, #f0f, #8000ff, #00f, #0080ff, #0ff, #00ff80, #0f0, #80ff00, #ff0, #ff8000, #f00);
+    background: linear-gradient(
+        to bottom,
+        #f00,
+        #ff0080,
+        #f0f,
+        #8000ff,
+        #00f,
+        #0080ff,
+        #0ff,
+        #00ff80,
+        #0f0,
+        #80ff00,
+        #ff0,
+        #ff8000,
+        #f00
+    );
     height: 100%;
     width: 100%;
 }
@@ -1306,7 +1474,8 @@ button::-moz-focus-inner {
     border-radius: 10px;
     border-style: solid;
     border-width: 0px;
-    box-shadow: 0 16px 16px -10px rgba(34, 47, 62, 0.15), 0 0 40px 1px rgba(34, 47, 62, 0.15);
+    box-shadow: 0 16px 16px -10px rgba(34, 47, 62, 0.15),
+        0 0 40px 1px rgba(34, 47, 62, 0.15);
     display: flex;
     flex-direction: column;
     max-height: 100%;
@@ -1356,7 +1525,8 @@ button::-moz-focus-inner {
     margin-left: auto;
 }
 .tox .tox-dialog__title {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: normal;
@@ -1665,7 +1835,9 @@ button::-moz-focus-inner {
     }
 }
 @media only screen and (max-width: 767px) {
-    body:not(.tox-force-desktop) .tox:not([dir="rtl"]) .tox-dialog__body-nav-item:not(:first-child) {
+    body:not(.tox-force-desktop)
+        .tox:not([dir="rtl"])
+        .tox-dialog__body-nav-item:not(:first-child) {
         margin-left: 8px;
     }
 }
@@ -1682,7 +1854,9 @@ button::-moz-focus-inner {
     }
 }
 @media only screen and (max-width: 767px) {
-    body:not(.tox-force-desktop) .tox[dir="rtl"] .tox-dialog__body-nav-item:not(:first-child) {
+    body:not(.tox-force-desktop)
+        .tox[dir="rtl"]
+        .tox-dialog__body-nav-item:not(:first-child) {
         margin-right: 8px;
     }
 }
@@ -1759,23 +1933,31 @@ body.tox-dialog__disable-scroll {
 .tox:not(.tox-tinymce-inline) .tox-editor-header {
     background-color: #fff;
     border-bottom: none;
-    box-shadow: 0 2px 2px -2px rgba(34, 47, 62, 0.1), 0 8px 8px -4px rgba(34, 47, 62, 0.07);
+    box-shadow: 0 2px 2px -2px rgba(34, 47, 62, 0.1),
+        0 8px 8px -4px rgba(34, 47, 62, 0.07);
     padding: 4px 0;
 }
-.tox:not(.tox-tinymce-inline) .tox-editor-header:not(.tox-editor-dock-transition) {
+.tox:not(.tox-tinymce-inline)
+    .tox-editor-header:not(.tox-editor-dock-transition) {
     transition: box-shadow 0.5s;
 }
 .tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-bottom .tox-editor-header {
     border-top: 1px solid #e3e3e3;
     box-shadow: none;
 }
-.tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-sticky-on .tox-editor-header {
+.tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-sticky-on
+    .tox-editor-header {
     background-color: #fff;
-    box-shadow: 0 2px 2px -2px rgba(34, 47, 62, 0.2), 0 8px 8px -4px rgba(34, 47, 62, 0.15);
+    box-shadow: 0 2px 2px -2px rgba(34, 47, 62, 0.2),
+        0 8px 8px -4px rgba(34, 47, 62, 0.15);
     padding: 4px 0;
 }
-.tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-sticky-on.tox-tinymce--toolbar-bottom .tox-editor-header {
-    box-shadow: 0 2px 2px -2px rgba(34, 47, 62, 0.2), 0 8px 8px -4px rgba(34, 47, 62, 0.15);
+.tox:not(
+        .tox-tinymce-inline
+    ).tox-tinymce--toolbar-sticky-on.tox-tinymce--toolbar-bottom
+    .tox-editor-header {
+    box-shadow: 0 2px 2px -2px rgba(34, 47, 62, 0.2),
+        0 8px 8px -4px rgba(34, 47, 62, 0.15);
 }
 .tox.tox:not(.tox-tinymce-inline) .tox-editor-header.tox-editor-header--empty {
     background: none;
@@ -1801,9 +1983,15 @@ body.tox-dialog__disable-scroll {
     flex: 1;
     position: relative;
 }
-.tox .tox-control-wrap:not(.tox-control-wrap--status-invalid) .tox-control-wrap__status-icon-invalid,
-.tox .tox-control-wrap:not(.tox-control-wrap--status-unknown) .tox-control-wrap__status-icon-unknown,
-.tox .tox-control-wrap:not(.tox-control-wrap--status-valid) .tox-control-wrap__status-icon-valid {
+.tox
+    .tox-control-wrap:not(.tox-control-wrap--status-invalid)
+    .tox-control-wrap__status-icon-invalid,
+.tox
+    .tox-control-wrap:not(.tox-control-wrap--status-unknown)
+    .tox-control-wrap__status-icon-unknown,
+.tox
+    .tox-control-wrap:not(.tox-control-wrap--status-valid)
+    .tox-control-wrap__status-icon-valid {
     display: none;
 }
 .tox .tox-control-wrap svg {
@@ -1875,8 +2063,14 @@ body.tox-dialog__disable-scroll {
     cursor: pointer;
 }
 .tox .tox-color-input span::before {
-    background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.25) 25%, transparent 25%), linear-gradient(-45deg, rgba(0, 0, 0, 0.25) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.25) 75%), linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.25) 75%);
+    background-image: linear-gradient(
+            45deg,
+            rgba(0, 0, 0, 0.25) 25%,
+            transparent 25%
+        ),
+        linear-gradient(-45deg, rgba(0, 0, 0, 0.25) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.25) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.25) 75%);
     background-position: 0 0, 0 6px, 6px -6px, -6px 0;
     background-size: 12px 12px;
     border: 1px solid #fff;
@@ -2012,7 +2206,8 @@ body.tox-dialog__disable-scroll {
     box-shadow: none;
     box-sizing: border-box;
     color: #222f3e;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     font-size: 16px;
     line-height: 24px;
     margin: 0;
@@ -2114,7 +2309,8 @@ body.tox-dialog__disable-scroll {
     box-shadow: none;
     box-sizing: border-box;
     color: #222f3e;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     font-size: 16px;
     line-height: 24px;
     margin: 0;
@@ -2338,7 +2534,8 @@ body.tox-dialog__disable-scroll {
     background-color: #fff;
     border: 1px solid transparent;
     border-radius: 6px;
-    box-shadow: 0 0 2px 0 rgba(34, 47, 62, 0.2), 0 4px 8px 0 rgba(34, 47, 62, 0.15);
+    box-shadow: 0 0 2px 0 rgba(34, 47, 62, 0.2),
+        0 4px 8px 0 rgba(34, 47, 62, 0.15);
     display: inline-block;
     overflow: hidden;
     vertical-align: top;
@@ -2374,7 +2571,11 @@ body.tox-dialog__disable-scroll {
     margin: 0;
 }
 .tox .tox-menubar {
-    background: repeating-linear-gradient(transparent 0px 1px, transparent 1px 39px) center top 39px / 100% calc(100% - 39px) no-repeat;
+    background: repeating-linear-gradient(
+            transparent 0px 1px,
+            transparent 1px 39px
+        )
+        center top 39px / 100% calc(100% - 39px) no-repeat;
     background-color: #fff;
     display: flex;
     flex: 0 0 auto;
@@ -2388,7 +2589,11 @@ body.tox-dialog__disable-scroll {
     grid-column: 1;
 }
 .tox .tox-promotion {
-    background: repeating-linear-gradient(transparent 0px 1px, transparent 1px 39px) center top 39px / 100% calc(100% - 39px) no-repeat;
+    background: repeating-linear-gradient(
+            transparent 0px 1px,
+            transparent 1px 39px
+        )
+        center top 39px / 100% calc(100% - 39px) no-repeat;
     background-color: #fff;
     grid-column: 2;
     grid-row: 1;
@@ -2630,7 +2835,8 @@ body.tox-dialog__disable-scroll {
     background-color: #fff;
     border: 1px solid #eeeeee;
     border-radius: 6px;
-    box-shadow: 0 0 2px 0 rgba(34, 47, 62, 0.2), 0 4px 8px 0 rgba(34, 47, 62, 0.15);
+    box-shadow: 0 0 2px 0 rgba(34, 47, 62, 0.2),
+        0 4px 8px 0 rgba(34, 47, 62, 0.15);
     min-width: 0;
     overflow: hidden;
 }
@@ -2885,9 +3091,15 @@ body.tox-dialog__disable-scroll {
     overflow: hidden;
 }
 @media only screen and (min-width: 768px) {
-    .tox .tox-statusbar__text-container.tox-statusbar__text-container-3-cols > .tox-statusbar__help-text,
-    .tox .tox-statusbar__text-container.tox-statusbar__text-container-3-cols > .tox-statusbar__right-container,
-    .tox .tox-statusbar__text-container.tox-statusbar__text-container-3-cols > .tox-statusbar__path {
+    .tox
+        .tox-statusbar__text-container.tox-statusbar__text-container-3-cols
+        > .tox-statusbar__help-text,
+    .tox
+        .tox-statusbar__text-container.tox-statusbar__text-container-3-cols
+        > .tox-statusbar__right-container,
+    .tox
+        .tox-statusbar__text-container.tox-statusbar__text-container-3-cols
+        > .tox-statusbar__path {
         flex: 0 0 calc(100% / 3);
     }
 }
@@ -2897,7 +3109,8 @@ body.tox-dialog__disable-scroll {
 .tox .tox-statusbar__text-container.tox-statusbar__text-container--flex-start {
     justify-content: flex-start;
 }
-.tox .tox-statusbar__text-container.tox-statusbar__text-container--space-around {
+.tox
+    .tox-statusbar__text-container.tox-statusbar__text-container--space-around {
     justify-content: space-around;
 }
 .tox .tox-statusbar__path > * {
@@ -2927,7 +3140,8 @@ body.tox-dialog__disable-scroll {
 .tox .tox-statusbar__wordcount:hover:not(:disabled):not([aria-disabled="true"]),
 .tox .tox-statusbar a:focus:not(:disabled):not([aria-disabled="true"]),
 .tox .tox-statusbar__path-item:focus:not(:disabled):not([aria-disabled="true"]),
-.tox .tox-statusbar__wordcount:focus:not(:disabled):not([aria-disabled="true"]) {
+.tox
+    .tox-statusbar__wordcount:focus:not(:disabled):not([aria-disabled="true"]) {
     color: #222f3e;
     cursor: pointer;
 }
@@ -2937,8 +3151,14 @@ body.tox-dialog__disable-scroll {
     vertical-align: -0.28em;
     width: 3.6em;
 }
-.tox .tox-statusbar__branding a:hover:not(:disabled):not([aria-disabled="true"]) svg,
-.tox .tox-statusbar__branding a:focus:not(:disabled):not([aria-disabled="true"]) svg {
+.tox
+    .tox-statusbar__branding
+    a:hover:not(:disabled):not([aria-disabled="true"])
+    svg,
+.tox
+    .tox-statusbar__branding
+    a:focus:not(:disabled):not([aria-disabled="true"])
+    svg {
     fill: #222f3e;
 }
 .tox .tox-statusbar__resize-handle {
@@ -3288,14 +3508,19 @@ body.tox-dialog__disable-scroll {
 .tox.tox-platform-touch .tox-split-button .tox-tbtn--select {
     padding: 0 0px;
 }
-.tox.tox-platform-touch .tox-split-button .tox-tbtn:not(.tox-tbtn--select):first-child {
+.tox.tox-platform-touch
+    .tox-split-button
+    .tox-tbtn:not(.tox-tbtn--select):first-child {
     width: 30px;
 }
 .tox.tox-platform-touch .tox-split-button__chevron {
     width: 20px;
 }
 .tox .tox-split-button.tox-tbtn--disabled svg #tox-icon-text-color__color,
-.tox .tox-split-button.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
+.tox
+    .tox-split-button.tox-tbtn--disabled
+    svg
+    #tox-icon-highlight-bg-color__color {
     opacity: 0.6;
 }
 .tox .tox-toolbar-overlord {
@@ -3306,7 +3531,10 @@ body.tox-dialog__disable-scroll {
 .tox .tox-toolbar__overflow {
     background-attachment: local;
     background-color: #fff;
-    background-image: repeating-linear-gradient(#e3e3e3 0px 1px, transparent 1px 39px);
+    background-image: repeating-linear-gradient(
+        #e3e3e3 0px 1px,
+        transparent 1px 39px
+    );
     background-position: center top 40px;
     background-repeat: no-repeat;
     background-size: calc(100% - 11px * 2) calc(100% - 41px);
@@ -3334,7 +3562,8 @@ body.tox-dialog__disable-scroll {
     transition: height 0.3s ease, opacity 0.2s linear 0.1s;
 }
 .tox .tox-toolbar__overflow--shrinking {
-    transition: opacity 0.3s ease, height 0.2s linear 0.1s, visibility 0s linear 0.3s;
+    transition: opacity 0.3s ease, height 0.2s linear 0.1s,
+        visibility 0s linear 0.3s;
 }
 .tox .tox-toolbar-overlord,
 .tox .tox-anchorbar {
@@ -3357,7 +3586,9 @@ body.tox-dialog__disable-scroll {
 .tox .tox-toolbar--no-divider {
     background-image: none;
 }
-.tox .tox-toolbar-overlord .tox-toolbar:not(.tox-toolbar--scrolling):first-child,
+.tox
+    .tox-toolbar-overlord
+    .tox-toolbar:not(.tox-toolbar--scrolling):first-child,
 .tox .tox-toolbar-overlord .tox-toolbar__primary {
     background-position: center top 39px;
 }
@@ -3371,7 +3602,8 @@ body.tox-dialog__disable-scroll {
     background-size: calc(100% - 8px * 2) calc(100% - 51px);
     border: none;
     border-radius: 6px;
-    box-shadow: 0 0 2px 0 rgba(34, 47, 62, 0.2), 0 4px 8px 0 rgba(34, 47, 62, 0.15);
+    box-shadow: 0 0 2px 0 rgba(34, 47, 62, 0.2),
+        0 4px 8px 0 rgba(34, 47, 62, 0.15);
     overscroll-behavior: none;
     padding: 4px 0;
 }
@@ -3589,30 +3821,74 @@ body.tox-dialog__disable-scroll {
 .tox .tox-tree .tox-tree--directory .tox-tree--directory__label .tox-mbtn svg {
     fill: transparent;
 }
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label .tox-mbtn.tox-mbtn--active svg,
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label .tox-mbtn:focus svg {
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label
+    .tox-mbtn.tox-mbtn--active
+    svg,
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label
+    .tox-mbtn:focus
+    svg {
     fill: #222f3e;
 }
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label:hover .tox-mbtn svg,
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label:focus .tox-mbtn svg {
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label:hover
+    .tox-mbtn
+    svg,
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label:focus
+    .tox-mbtn
+    svg {
     fill: #222f3e;
 }
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label:hover:has(.tox-mbtn:hover) {
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label:hover:has(.tox-mbtn:hover) {
     background-color: transparent;
     color: #222f3e;
 }
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label:hover:has(.tox-mbtn:hover) .tox-chevron svg {
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label:hover:has(.tox-mbtn:hover)
+    .tox-chevron
+    svg {
     fill: #222f3e;
 }
 .tox .tox-tree .tox-tree--directory .tox-tree--directory__label .tox-chevron {
     margin-right: 6px;
 }
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label:has(+ .tox-tree--directory__children--growing) .tox-chevron,
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label:has(+ .tox-tree--directory__children--shrinking) .tox-chevron {
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label:has(+ .tox-tree--directory__children--growing)
+    .tox-chevron,
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label:has(+ .tox-tree--directory__children--shrinking)
+    .tox-chevron {
     transition: transform 0.5s ease-in-out;
 }
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label:has(+ .tox-tree--directory__children--growing) .tox-chevron,
-.tox .tox-tree .tox-tree--directory .tox-tree--directory__label:has(+ .tox-tree--directory__children--open) .tox-chevron {
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label:has(+ .tox-tree--directory__children--growing)
+    .tox-chevron,
+.tox
+    .tox-tree
+    .tox-tree--directory
+    .tox-tree--directory__label:has(+ .tox-tree--directory__children--open)
+    .tox-chevron {
     transform: rotate(90deg);
 }
 .tox .tox-tree .tox-tree--leaf__label {
@@ -3635,15 +3911,23 @@ body.tox-dialog__disable-scroll {
     background-color: transparent;
     color: #222f3e;
 }
-.tox .tox-tree .tox-tree--leaf__label:hover:has(.tox-mbtn:hover) .tox-chevron svg {
+.tox
+    .tox-tree
+    .tox-tree--leaf__label:hover:has(.tox-mbtn:hover)
+    .tox-chevron
+    svg {
     fill: #222f3e;
 }
 .tox .tox-tree .tox-tree--directory__children {
     overflow: hidden;
     padding-left: 16px;
 }
-.tox .tox-tree .tox-tree--directory__children.tox-tree--directory__children--growing,
-.tox .tox-tree .tox-tree--directory__children.tox-tree--directory__children--shrinking {
+.tox
+    .tox-tree
+    .tox-tree--directory__children.tox-tree--directory__children--growing,
+.tox
+    .tox-tree
+    .tox-tree--directory__children.tox-tree--directory__children--shrinking {
     transition: height 0.5s ease-in-out;
 }
 .tox .tox-tree .tox-trbtn.tox-tree--leaf__label {

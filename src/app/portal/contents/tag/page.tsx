@@ -1,18 +1,18 @@
 "use client";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
-const PageManagement = () => {
+const TagPage = () => {
     return (
         <>
             <PageContainer
-                name="Trang nội dung"
-                modelName="trang"
+                name="Thẻ nội dung"
+                modelName="thẻ"
                 onClick={() => {}}
-                breadCrumItems={[{ title: "Trang nội dung" }]}
+                breadCrumItems={[{ title: "Thẻ nội dung" }]}
             >
                 <TableListPage<any>
                     scroll={{ x: 1000 }}
-                    modelName="Trang nội dung"
+                    modelName="Thẻ"
                     dataSource={[]}
                     rowKey={"localUser_RoleKey"}
                     columns={[]}
@@ -22,4 +22,4 @@ const PageManagement = () => {
         </>
     );
 };
-export default PageManagement;
+export default TagPage;

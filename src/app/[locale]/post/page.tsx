@@ -1,3 +1,4 @@
+import Image from "next/image";
 const PostPage = () => {
     return (
         <div className="post__page">
@@ -16,6 +17,12 @@ const PostPage = () => {
                 </div>
                 <div className="post__page-body">
                     <div className="">
+                        <Image
+                            src="/api/public/header-banner-1711882365969.jpeg"
+                            alt="thumbnail"
+                            width={1000}
+                            height={400}
+                        />
                         <p>Công ty Du lịch An Thái được thành lập theo:</p>
                         <ul>
                             <li>

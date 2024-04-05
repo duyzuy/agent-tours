@@ -10,21 +10,21 @@ import useMessage from "@/hooks/useMessage";
 import { isEmpty } from "lodash";
 
 export interface IMediaUploadProps {
-    onClose: () => void;
-    isOpen: boolean;
-    isMultipleSelect?: boolean;
-    exceptsSelect?: string[];
+    onClose?: () => void;
+    isOpen?: boolean;
+    mode?: "multiple" | "single";
+    exceptsSelect?: ("IMAGE" | "ICON" | "FILE")[];
     onConfirm?: (files: MediaUploadContainerProps["selectedFiles"]) => void;
     initialValues?: MediaUploadContainerProps["selectedFiles"];
 }
-const MediaUploadDrawler: React.FC<IMediaUploadProps> = ({
+const MediaUploadDrawler = ({
     onClose,
-    isOpen,
+    isOpen = false,
     exceptsSelect = ["IMAGE", "ICON", "FILE"],
-    isMultipleSelect = false,
+    mode = "single",
     initialValues = [],
     onConfirm,
-}) => {
+}: IMediaUploadProps) => {
     const [selectedFiles, setSelectedFiles] = useState<
         MediaUploadContainerProps["selectedFiles"]
     >([]);
@@ -38,28 +38,35 @@ const MediaUploadDrawler: React.FC<IMediaUploadProps> = ({
             return;
         }
 
-        let newSelectedFiles = [...selectedFiles];
-        const fileIndex = newSelectedFiles.findIndex(
-            (item) => item.key === file.key,
-        );
+        setSelectedFiles((oldFiles) => {
+            let newFiles = [...oldFiles];
 
-        if (fileIndex !== -1) {
-            newSelectedFiles.splice(fileIndex, 1);
-        } else {
-            if (isMultipleSelect) {
-                newSelectedFiles = [...newSelectedFiles, file];
-            } else {
-                newSelectedFiles = [file];
+            const fileIndex = newFiles.findIndex(
+                (item) => item.key === file.key,
+            );
+
+            if (fileIndex !== -1) {
+                newFiles.splice(fileIndex, 1);
             }
-        }
 
-        setSelectedFiles(() => [...newSelectedFiles]);
+            if (fileIndex === -1) {
+                if (mode === "multiple") {
+                    newFiles = [...newFiles, file];
+                } else {
+                    newFiles = [file];
+                }
+            }
+
+            return newFiles;
+        });
     };
 
     const onConfirmSelect = () => {
-        !isEmpty(selectedFiles) && onConfirm?.(selectedFiles);
-        onClose();
+        !isEmpty(selectedFiles) && onConfirm?.(selectedFiles),
+            onClose?.(),
+            setSelectedFiles([]);
     };
+
     return (
         <React.Fragment>
             <Drawer
@@ -94,3 +101,8 @@ const MediaUploadDrawler: React.FC<IMediaUploadProps> = ({
     );
 };
 export default MediaUploadDrawler;
+
+MediaUploadDrawler.open = function (cb?: () => void) {
+    console.log("111");
+    return <>ádasdsadasdasdas</>;
+};

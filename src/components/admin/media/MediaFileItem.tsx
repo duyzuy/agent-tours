@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,14 +10,17 @@ import {
     LinkOutlined,
 } from "@ant-design/icons";
 import classNames from "classnames";
-import { Button, Space, Tooltip } from "antd";
+import { Button, Space, Tooltip, Modal } from "antd";
+import { IMediaFile } from "@/models/management/media.interface";
 interface IMediaFileItemProps {
     type: string; //"ICON" | "IMAGE" | "FILE";
     fileType: string; //"xlsx" | "pdf" | "docx" | "jpeg" | "svg" | "gif"
     fileName: string;
     filePath: string;
-    onSelect: () => void;
-    isSelected: boolean;
+    onSelect?: (item: IMediaFile) => void;
+    item: IMediaFile;
+    isSelected?: boolean;
+    onPreview?: (path: string) => void;
 }
 const MediaFileItem: React.FC<IMediaFileItemProps> = ({
     fileType,
@@ -26,15 +29,17 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
     type,
     onSelect,
     isSelected,
+    onPreview,
+    item,
 }) => {
     const onCoppyText = (
         e: React.MouseEvent<HTMLElement, MouseEvent>,
         text: string,
     ) => {
         navigator.clipboard.writeText(text);
-        console.log(text);
         e.stopPropagation();
     };
+
     return (
         <div
             className={classNames(
@@ -47,7 +52,7 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
             //     background: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8AQMAAAAAMksxAAAABlBMVEX////l5eUJgtBrAAAAG0lEQVQoz2MAAub///9/GGWAGEDiD4g3ygACANC87U+XEKc0AAAAAElFTkSuQmCC)`,
             //     backgroundSize: "10px",
             // }}
-            onClick={onSelect}
+            onClick={() => onSelect?.(item)}
         >
             {(type === "IMAGE" && (
                 <div className="item w-full h-full relative">
@@ -56,6 +61,8 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
                         alt={fileName}
                         loading="lazy"
                         fill
+                        placeholder="empty"
+                        sizes="100px"
                         style={{
                             objectFit: "contain",
                         }}
@@ -68,6 +75,7 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
                         alt={fileName}
                         loading="lazy"
                         fill
+                        sizes="100px"
                         style={{
                             objectFit: "contain",
                         }}
@@ -88,18 +96,18 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
             </div>
             <div className="group/item item-actions absolute left-0 right-0 w-full h-full flex items-center justify-center">
                 <Space>
-                    <Tooltip title="Xem trước">
-                        <Button
-                            type="primary"
-                            icon={<EyeOutlined />}
-                            size="small"
-                            className="invisible group-hover/item:visible"
-                            shape="circle"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                            }}
-                        />
-                    </Tooltip>
+                    {type === "ICON" || type === "IMAGE" ? (
+                        <Tooltip title="Xem trước">
+                            <Button
+                                type="primary"
+                                icon={<EyeOutlined />}
+                                size="small"
+                                className="invisible group-hover/item:visible"
+                                shape="circle"
+                                onClick={() => onPreview?.(filePath)}
+                            />
+                        </Tooltip>
+                    ) : null}
                     <Tooltip title="Sao chép">
                         <Button
                             type="primary"
@@ -115,7 +123,7 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
         </div>
     );
 };
-export default MediaFileItem;
+export default memo(MediaFileItem);
 
 // <ul role="list">
 

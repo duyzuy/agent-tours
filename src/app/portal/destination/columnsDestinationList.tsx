@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Space, Tag } from "antd";
 import { IDestinationListRs } from "@/models/management/region.interface";
 import { Status } from "@/models/management/common.interface";
+import { formatDate } from "@/utils/date";
 export const columnsDestinationList: ColumnsType<
     IDestinationListRs["result"][0]
 > = [
@@ -17,20 +18,29 @@ export const columnsDestinationList: ColumnsType<
         key: "codeName",
         dataIndex: "codeName",
         width: 150,
-    },
-    {
-        title: "Nội dung",
-        key: "content",
-        dataIndex: "content",
-        width: 150,
-        render: (_, { id }) => {
+        render: (_, { id, codeName }) => {
             return (
                 <>
-                    <Link href={`/portal/destination/${id}`}>Cập nhật</Link>
+                    <div>
+                        <span>{codeName}</span>
+                    </div>
+                    <Link
+                        href={`/portal/destination/${id}`}
+                        className="text-xs"
+                    >
+                        Tạo nội dung
+                    </Link>
                 </>
             );
         },
     },
+    {
+        title: "Mã nhóm",
+        key: "codeKey",
+        dataIndex: "codeKey",
+        width: 150,
+    },
+
     {
         title: "Trạng thái",
         key: "status",

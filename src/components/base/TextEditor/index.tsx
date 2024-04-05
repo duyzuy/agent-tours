@@ -1,150 +1,195 @@
+import React, { useRef, useState, memo } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-
-import React, { useRef } from "react";
-import { RawEditorOptions } from "tinymce";
-
-interface Props {
+import MediaUploadDrawler, {
+    IMediaUploadProps,
+} from "@/app/portal/media/_components/MediaUploadDrawler";
+import { MediaTypes } from "@/models/management/media.interface";
+import { mediaConfig } from "@/configs";
+export interface TextEditorProps {
     value?: string;
     id?: string;
     onEditorChange: (a: any, editor: any) => void;
-    onFilePickerCallback?: RawEditorOptions["file_picker_callback"];
     height?: number;
     minHeight?: number;
-    file?: string;
+    maxHeight?: number;
     initialValue?: string;
 }
 const TextEditor = ({
     value,
     onEditorChange,
-    height,
-    minHeight = 450,
-    onFilePickerCallback,
+    height = 500,
+    minHeight = 550,
+    maxHeight = 600,
     id,
     initialValue = "",
-}: Props) => {
+}: TextEditorProps) => {
     const editorRef = useRef<any>(null);
-    const log = () => {
-        if (editorRef.current) {
-            console.log(editorRef.current.getContent());
-        }
+    const [isShowMedia, setShowMedia] = useState(false);
+
+    const onConfirmSelection: IMediaUploadProps["onConfirm"] = (files) => {
+        let contents = "";
+        files.forEach((file) => {
+            if (
+                file.type === MediaTypes.IMAGE ||
+                file.type === MediaTypes.ICON
+            ) {
+                contents = contents.concat(
+                    `<img src="${mediaConfig.rootPath}/${file.fullPath}" class="max-w-full" alt="${file.slug}" style="max-width: 100%"/>`,
+                );
+            }
+
+            if (file.type === MediaTypes.FILE) {
+                contents = contents.concat(
+                    `<a href="${mediaConfig.rootPath}/${file.fullPath}" target="_blank">${mediaConfig.rootPath}/${file.fullPath}</a>`,
+                );
+            }
+        });
+
+        editorRef.current.insertContent(contents);
     };
 
     return (
-        <Editor
-            tinymceScriptSrc={"/assets/libs/tinymce/tinymce.min.js"}
-            id={id}
-            initialValue={initialValue}
-            onInit={(evt, editor) => (editorRef.current = editor.getContent())}
-            value={value}
-            init={{
-                ui_mode: "split",
-
-                skin: "snow",
-                height: height,
-                min_height: minHeight,
-                // icons: "thin",
-                skin_url: "/assets/libs/tinymce/skins/ui/custom",
-                branding: false,
-                promotion: false,
-                plugins:
-                    "autoresize preview importcss autolink autosave save directionality code visualblocks visualchars fullscreen image link media table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap  emoticons",
-                // editimage_cors_hosts: ["picsum.photos"],
-                menubar: "file edit view table",
-                // images_upload_handler: (blob, progressFn) => {
-
-                //     return Promise.resolve("11");
-                // },
-                toolbar:
-                    "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | pagebreak anchor codesample",
-                autosave_ask_before_unload: true,
-                autosave_interval: "30s",
-                autosave_prefix: "{path}{query}-{id}-",
-                autosave_restore_when_empty: false,
-                autosave_retention: "2m",
-                // image_advtab: true,
-                // link_list: [
-                //     { title: "My page 1", value: "https://www.tiny.cloud" },
-                //     { title: "My page 2", value: "http://www.moxiecode.com" },
-                // ],
-                // image_list: [
-                //     { title: "My page 1", value: "https://www.tiny.cloud" },
-                //     { title: "My page 2", value: "http://www.moxiecode.com" },
-                // ],
-                // image_class_list: [
-                //     { title: "None", value: "" },
-                //     { title: "Some class", value: "class-name" },
-                // ],
-                importcss_append: true,
-                // file_picker_validator_handler: (a, b) => {
-                //     console.log(a, b);
-                // },
-                // images_upload_handler: (blobInfo, progress) => {
-                //     console.log({ blobInfo, progress });
-                //     return Promise.resolve("path/a/aa");
-                // },
-
-                file_picker_callback: onFilePickerCallback,
-                // file_picker_validator_handler(info, callback) {
-                //     console.log(info, callback);
-
-                //     callback({ status: "invalid", message: "ádfasdfa" });
-                // },
-                // file_picker_callback: (callback, value, meta) => {
-                //     /* Provide file and text for the link dialog */
-                //     onOpenMediaFileUpload?.();
-                //     // console.log({ callback, value, meta });
-                //     if (meta.filetype === "file") {
-                //         callback("https://www.google.com/logos/google.jpg", {
-                //             text: "My text",
-                //         });
-                //     }
-
-                //     /* Provide image and alt text for the image dialog */
-                //     if (meta.filetype === "image") {
-                //         // onPickMediaFile?.(callback);
-                //         // callback(file, {
-                //         //     alt: "My alt text",
-                //         // });
-                //         onCallbackFilePicker?.((value, meta) =>
-                //             callback(value, meta),
-                //         );
-                //     }
-
-                //     /* Provide alternative source and posted for the media dialog */
-                //     if (meta.filetype === "media") {
-                //         callback("movie.mp4", {
-                //             source2: "alt.ogg",
-                //             poster: "https://www.google.com/logos/google.jpg",
-                //         });
-                //     }
-                // },
-                // templates: [
-                //     {
-                //         title: "New Table",
-                //         description: "creates a new table",
-                //         content:
-                //             '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>',
-                //     },
-                //     { title: "Starting my story", description: "A cure for writers block", content: "Once upon a time..." },
-                //     {
-                //         title: "New list with dates",
-                //         description: "New List with dates",
-                //         content: '<div class="mceTmpl"><span class="cdate">cdate</span><br><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>',
-                //     },
-                // ],
-                // template_cdate_format: "[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]",
-                // template_mdate_format: "[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]",
-                // image_caption: true,
-                quickbars_selection_toolbar:
-                    "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
-                noneditable_class: "mceNonEditable",
-                toolbar_mode: "sliding",
-                contextmenu: "link table",
-                content_style:
-                    "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-            }}
-            onEditorChange={onEditorChange}
-        />
+        <>
+            <Editor
+                tinymceScriptSrc={"/assets/libs/tinymce/tinymce.min.js"}
+                id={id}
+                initialValue={initialValue}
+                onInit={(evt, editor) => (editorRef.current = editor)}
+                value={value}
+                init={{
+                    ui_mode: "split",
+                    skin_url: "/assets/libs/tinymce/skins/ui/custom",
+                    language_url: "/assets/libs/tinymce/langs/vi.js",
+                    language: "vi",
+                    statusbar: true,
+                    language_load: false,
+                    toolbar_mode: "sliding",
+                    contextmenu: "link table",
+                    content_style:
+                        "body { font-family: Helvetica,Arial,sans-serif; font-size:14px }",
+                    quickbars_selection_toolbar:
+                        "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
+                    noneditable_class: "mceNonEditable",
+                    // icons: "thin",
+                    height: height,
+                    min_height: minHeight,
+                    max_height: maxHeight,
+                    branding: false,
+                    promotion: false,
+                    plugins: [
+                        "autoresize",
+                        "preview",
+                        "autolink",
+                        "autosave",
+                        "save",
+                        "directionality",
+                        "code",
+                        "image",
+                        "editimage",
+                        "media",
+                        "visualblocks",
+                        "visualchars",
+                        "fullscreen",
+                        "link",
+                        "table",
+                        "charmap",
+                        "pagebreak",
+                        "nonbreaking",
+                        "anchor",
+                        "insertdatetime",
+                        "advlist",
+                        "lists",
+                        "wordcount",
+                        "charmap",
+                        "emoticons",
+                    ],
+                    toolbar: [
+                        "undo redo | blocks fontfamily fontsize | bold italic underline | align numlist bullist | image media link",
+                        "table lineheight outdent indent | forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | pagebreak anchor codesample",
+                    ],
+                    menubar: "file edit view table insert mediaLib",
+                    menu: {
+                        mediaLib: {
+                            title: "Upload",
+                            items: "mediaUpload",
+                        },
+                    },
+                    setup: (editor) => {
+                        editor.ui.registry.addMenuItem("mediaUpload", {
+                            text: "Thư viện ảnh",
+                            icon: "image",
+                            onAction: () => {
+                                setShowMedia(true);
+                            },
+                        });
+                    },
+                    image_class_list: [
+                        { title: "None", value: "" },
+                        { title: "Max width", value: "max-w-full" },
+                    ],
+                    autosave_ask_before_unload: true,
+                    autosave_interval: "30s",
+                    autosave_prefix: "{path}{query}-{id}-",
+                    autosave_restore_when_empty: false,
+                    autosave_retention: "2m",
+                    importcss_append: false,
+                    // file_picker_callback: () => {},
+                    image_caption: true,
+                    formats: {
+                        alignleft: {
+                            selector:
+                                "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video",
+                            classes: "left",
+                        },
+                        aligncenter: {
+                            selector:
+                                "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video",
+                            classes: "center",
+                        },
+                        alignright: {
+                            selector:
+                                "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video",
+                            classes: "right",
+                        },
+                        alignjustify: {
+                            selector:
+                                "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video",
+                            classes: "full",
+                        },
+                        bold: { inline: "span", classes: "bold" },
+                        italic: { inline: "span", classes: "italic" },
+                        underline: {
+                            inline: "span",
+                            classes: "underline",
+                            exact: true,
+                        },
+                        strikethrough: { inline: "del" },
+                        forecolor: {
+                            inline: "span",
+                            classes: "forecolor",
+                            styles: { color: "%value" },
+                        },
+                        hilitecolor: {
+                            inline: "span",
+                            classes: "hilitecolor",
+                            styles: { backgroundColor: "%value" },
+                        },
+                        custom_format: {
+                            block: "h1",
+                            attributes: { title: "Header" },
+                            styles: { color: "red" },
+                        },
+                    },
+                }}
+                onEditorChange={onEditorChange}
+            />
+            <MediaUploadDrawler
+                isOpen={isShowMedia}
+                onClose={() => setShowMedia(false)}
+                onConfirm={onConfirmSelection}
+                mode="multiple"
+            />
+        </>
     );
 };
-export default TextEditor;
+export default memo(TextEditor);

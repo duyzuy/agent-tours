@@ -5,16 +5,16 @@ import MediaUploadDrawler, {
 import React, { useState } from "react";
 import tinymce, { RawEditorOptions } from "tinymce";
 import { IMediaFile } from "@/models/management/media.interface";
-import { useMediaSelection } from "../../media/hooks/useMediaSelection";
+import { useMediaManager } from "../../media/hooks/useMediaManager";
 const TextEditorWithMedia = () => {
     const [isOpenDrawler, setOpenDrawler] = useState(false);
     const [file, setFile] = useState<IMediaFile>();
 
-    const isOpen = useMediaSelection((state) => state.isOpen);
-    const onOPen = useMediaSelection((state) => state.onOpen);
-    const onClose = useMediaSelection((state) => state.onClose);
-    const onConfirm = useMediaSelection((state) => state.onConfirm);
-    const onCallbackFile = useMediaSelection((state) => state.onCallbackFile);
+    const isOpen = useMediaManager((state) => state.isOpen);
+    const onOPen = useMediaManager((state) => state.onOpen);
+    const onClose = useMediaManager((state) => state.onClose);
+    const onConfirm = useMediaManager((state) => state.onConfirm);
+    const onCallbackFile = useMediaManager((state) => state.onCallbackFile);
 
     const onFilePickerMediaCallback: RawEditorOptions["file_picker_callback"] =
         (callback, value, meta) => {
@@ -84,7 +84,7 @@ const TextEditorWithMedia = () => {
                 onClose={() => onClose()}
                 isOpen={isOpen}
                 onConfirm={onConfirm}
-                isMultipleSelect={false}
+                mode="multiple"
             />
         </React.Fragment>
     );

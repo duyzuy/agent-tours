@@ -1,5 +1,4 @@
 import { BaseResponse, Status } from "./common.interface";
-import { IMediaFile } from "./media.interface";
 
 export interface IStateProvince {
     recId: number;

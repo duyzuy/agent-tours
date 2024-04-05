@@ -14,8 +14,8 @@ export const mediaConfig = {
     rootPath: "/uploads",
     rootApiPath: `${
         process.env.NODE_ENV === "production"
-            ? "https://tours.frdev.asia/api/public"
-            : "http://localhost:3000/api/public"
+            ? "https://tours.frdev.asia/api/uploads"
+            : "http://localhost:3000/api/uploads"
     }`,
     rootFolder: "uploads",
     maxfileSize: 2, //mb 2,

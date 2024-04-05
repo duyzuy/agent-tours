@@ -82,6 +82,7 @@ const GroupDestinationPage = () => {
                     scroll={{ x: 1000 }}
                     rowKey={"id"}
                     modelName="nhóm điểm đến"
+                    showActionsLess={false}
                     dataSource={destinationList || []}
                     columns={columnsDestinationList}
                     onEdit={(record) =>

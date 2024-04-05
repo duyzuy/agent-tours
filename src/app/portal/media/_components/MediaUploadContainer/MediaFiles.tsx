@@ -1,13 +1,14 @@
-import React, { memo, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import { Tabs, TabsProps, Spin, Empty } from "antd";
+import { isEmpty } from "lodash";
 import {
     IMediaFileListRs,
     IMediaFolderListRs,
 } from "@/models/management/media.interface";
-import MediaFileItem from "@/components/admin/media/MediaFileItem";
 import { mediaConfig } from "@/configs";
-import { isEmpty } from "lodash";
+import MediaFileItem from "@/components/admin/media/MediaFileItem";
 import UploadFileForm, { UploadFileFormProps } from "./UploadFileForm";
+import ModalPreview from "./ModalPreview";
 
 export interface IMediaFilesProps {
     items: IMediaFileListRs["result"];
@@ -91,6 +92,28 @@ MediaFiles.ItemList = function MediaFilesItemList({
     onSelect,
     selectedFiles,
 }: MediaFilesItemListProps) {
+    const [preview, setPreview] = useState<{
+        isShow: boolean;
+        thumbnail?: string;
+    }>({ isShow: false, thumbnail: undefined });
+
+    const onPreviewImage = useCallback((path: string) => {
+        setPreview(() => ({
+            isShow: true,
+            thumbnail: path,
+        }));
+    }, []);
+
+    const hasSelectedFile = useCallback(
+        (
+            file: IMediaFileListRs["result"][0],
+            files: IMediaFilesProps["selectedFiles"],
+        ) => {
+            return Boolean(files?.find((item) => item.key === file.key));
+        },
+        [],
+    );
+
     return (
         <React.Fragment>
             {isLoading ? (
@@ -114,27 +137,29 @@ MediaFiles.ItemList = function MediaFilesItemList({
                                 <MediaFileItem
                                     key={item.key}
                                     type={item.type}
+                                    item={item}
                                     fileType={item.fileType.replace(".", "")}
                                     filePath={`${mediaConfig.rootApiPath}/${item.fullPath}`}
                                     fileName={item.slug}
-                                    onSelect={() => onSelect?.(item)}
+                                    onSelect={onSelect}
                                     isSelected={hasSelectedFile(
                                         item,
                                         selectedFiles,
                                     )}
+                                    onPreview={onPreviewImage}
                                 />
                             ))}
                         </div>
                     )}
+                    <ModalPreview
+                        isOpen={preview.isShow}
+                        onClose={() =>
+                            setPreview({ isShow: false, thumbnail: undefined })
+                        }
+                        thumbUrl={preview.thumbnail}
+                    />
                 </React.Fragment>
             )}
         </React.Fragment>
     );
-};
-
-const hasSelectedFile = (
-    file: IMediaFileListRs["result"][0],
-    files: IMediaFilesProps["selectedFiles"],
-) => {
-    return Boolean(files?.find((item) => item.key === file.key));
 };

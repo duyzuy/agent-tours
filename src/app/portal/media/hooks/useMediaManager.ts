@@ -1,7 +1,7 @@
 import { IMediaFile } from "@/models/management/media.interface";
 import { create } from "zustand";
 
-interface IMediaUploadSelection {
+interface useMediaManagerProps {
     isOpen: boolean;
     files: IMediaFile[];
     onConfirm: (
@@ -15,7 +15,7 @@ interface IMediaUploadSelection {
         cb?: (files: IMediaFile[]) => void,
     ) => void;
 }
-export const useMediaSelection = create<IMediaUploadSelection>((set, get) => ({
+export const useMediaManager = create<useMediaManagerProps>((set, get) => ({
     isOpen: false,
     files: [],
     onOpen: () => set(() => ({ isOpen: true })),
@@ -26,7 +26,6 @@ export const useMediaSelection = create<IMediaUploadSelection>((set, get) => ({
     },
     onConfirm: (files) =>
         set((state) => {
-            get().onCallbackFile?.(files || []);
-            return { files: files };
+            return { ...state, files: [...files] };
         }),
 }));
