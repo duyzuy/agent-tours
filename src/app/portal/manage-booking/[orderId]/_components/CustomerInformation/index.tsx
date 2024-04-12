@@ -2,42 +2,35 @@ import React, { memo, useState } from "react";
 import { Button, Row, Col } from "antd";
 import classNames from "classnames";
 import { EditOutlined } from "@ant-design/icons";
-import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { IBookingOrderCustomerPayload } from "../../../modules/bookingOrder.interface";
 import DrawerCustomerInformation, {
     DrawerCustomerInformationProps,
 } from "./DrawerCustomerInformation";
+import { ICustomerInformation } from "@/models/management/booking/customer.interface";
 
 interface CustomerInformationProps {
-    bookingOrder: IOrderDetail["bookingOrder"];
     className?: string;
+    cusInfo?: ICustomerInformation;
+    orderId?: number;
     onSave?: (payload: IBookingOrderCustomerPayload, cb?: () => void) => void;
 }
 const CustomerInformation: React.FC<CustomerInformationProps> = ({
-    bookingOrder,
+    orderId,
+    cusInfo,
     className = "",
     onSave,
 }) => {
     const [showDrawer, setShowDrawer] = useState(false);
-    const [record, setRecord] = useState<IOrderDetail["bookingOrder"]>();
 
-    const onEditCustomerInfo = (record: IOrderDetail["bookingOrder"]) => {
-        setShowDrawer(true);
-        setRecord(record);
-    };
+    const onCloseDrawer = () => setShowDrawer(false);
+    const onOpenDrawer = () => setShowDrawer(true);
 
-    const onCancelEditCustomerInfo = () => {
-        setShowDrawer(false);
-        setRecord(undefined);
-    };
-
-    const handleSubmitCustomerInfo: DrawerCustomerInformationProps["onSubmit"] =
-        (data) => {
-            onSave?.({ bookingOrder: { ...data } }, () => {
+    const handleUpdate: DrawerCustomerInformationProps["onSubmit"] = (data) => {
+        orderId &&
+            onSave?.({ bookingOrder: { ...data, recId: orderId } }, () => {
                 setShowDrawer(false);
-                setRecord(undefined);
             });
-        };
+    };
 
     return (
         <>
@@ -55,7 +48,7 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({
                         type="primary"
                         ghost
                         size="small"
-                        onClick={() => onEditCustomerInfo(bookingOrder)}
+                        onClick={onOpenDrawer}
                     >
                         Sửa
                     </Button>
@@ -65,7 +58,7 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({
                         <div className="">
                             <span className="block text-xs">Họ và tên</span>
                             <span className="font-[500]">
-                                {bookingOrder.custName}
+                                {cusInfo?.custName}
                             </span>
                         </div>
                     </Col>
@@ -73,7 +66,7 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({
                         <div className="">
                             <span className="block text-xs">Email</span>
                             <span className="font-[500]">
-                                {bookingOrder.custEmail}
+                                {cusInfo?.custEmail}
                             </span>
                         </div>
                     </Col>
@@ -81,7 +74,7 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({
                         <div className="">
                             <span className="block text-xs">Số điện thoại</span>
                             <span className="font-[500]">
-                                {bookingOrder.custPhoneNumber}
+                                {cusInfo?.custPhoneNumber}
                             </span>
                         </div>
                     </Col>
@@ -89,25 +82,23 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({
                         <div className="">
                             <span className="block text-xs">Địa chỉ</span>
                             <span className="font-[500]">
-                                {bookingOrder.custAddress}
+                                {cusInfo?.custAddress}
                             </span>
                         </div>
                     </Col>
                     <Col span={8} className="mb-3">
                         <div className="">
                             <span className="block text-xs">Ghi chú</span>
-                            <span className="font-[500]">
-                                {bookingOrder.rmk}
-                            </span>
+                            <span className="font-[500]">{cusInfo?.rmk}</span>
                         </div>
                     </Col>
                 </Row>
             </div>
             <DrawerCustomerInformation
                 isOpen={showDrawer}
-                initialValues={record}
-                onClose={onCancelEditCustomerInfo}
-                onSubmit={handleSubmitCustomerInfo}
+                initialValues={cusInfo}
+                onClose={onCloseDrawer}
+                onSubmit={handleUpdate}
             />
         </>
     );

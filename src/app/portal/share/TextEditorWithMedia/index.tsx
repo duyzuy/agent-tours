@@ -1,6 +1,6 @@
 import TextEditor from "@/components/base/TextEditor";
 import MediaUploadDrawler, {
-    IMediaUploadProps,
+    MediaUploadProps,
 } from "../../media/_components/MediaUploadDrawler";
 import React, { useState } from "react";
 import tinymce, { RawEditorOptions } from "tinymce";
@@ -60,7 +60,7 @@ const TextEditorWithMedia = () => {
             // }
         };
 
-    const onConfirmSelection: IMediaUploadProps["onConfirm"] = (files) => {
+    const onConfirmSelection: MediaUploadProps["onConfirm"] = (files) => {
         setFile(() => files[0]);
         onCallbackPickerFile(() => files[0].fullPath);
     };
@@ -75,10 +75,10 @@ const TextEditorWithMedia = () => {
             <TextEditor
                 value={""}
                 onEditorChange={() => {}}
-                onFilePickerCallback={onFilePickerMediaCallback}
+                // onFilePickerCallback={onFilePickerMediaCallback}
                 // onOpenMediaFileUpload={() => setOpenDrawler(true)}
                 // onCallbackFilePicker={onCallbackPickerFile}
-                file={file?.fullPath}
+                // file={file?.fullPath}
             />
             <MediaUploadDrawler
                 onClose={() => onClose()}

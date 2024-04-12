@@ -4,6 +4,14 @@ import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import { Card, Col, Row, Statistic } from "antd";
 interface Props {}
 const DashBoardPage = ({}: Props) => {
+    const a = () => (
+        <>
+            &#99;&#111;&#110;&#115;&#111;&#108;&#101;&#46;&#108;&#111;&#103;&#40;&#49;&#41;
+        </>
+    );
+    const type = "log";
+
+    console[type]("1");
     return (
         <>
             <Row gutter={16}>
@@ -19,6 +27,7 @@ const DashBoardPage = ({}: Props) => {
                         />
                     </Card>
                 </Col>
+
                 <Col span={12}>
                     <Card bordered={false}>
                         <Statistic
@@ -31,6 +40,11 @@ const DashBoardPage = ({}: Props) => {
                         />
                     </Card>
                 </Col>
+            </Row>
+            <Row>
+                <>
+                    &#99;&#111;&#110;&#115;&#111;&#108;&#101;&#46;&#108;&#111;&#103;&#40;&#49;&#41;
+                </>
             </Row>
         </>
     );

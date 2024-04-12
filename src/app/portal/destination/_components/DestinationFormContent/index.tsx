@@ -1,19 +1,22 @@
+import React, { useState, useEffect, useMemo } from "react";
 import { Form, Input, Button, Space, Tag } from "antd";
+import { isEqual } from "lodash";
+import Image from "next/image";
 import TextEditor from "@/components/base/TextEditor";
 import FormItem from "@/components/base/FormItem";
-import React, { useState, useEffect, useMemo } from "react";
+
 import {
     IDestinationContentPayload,
     IDestinationContentsRs,
     IDestinationRs,
 } from "@/models/management/region.interface";
 import { stringToSlug } from "@/utils/stringToSlug";
-import Image from "next/image";
-import { IMediaUploadProps } from "@/app/portal/media/_components/MediaUploadDrawler";
+
+import { MediaUploadProps } from "@/app/portal/media/_components/MediaUploadDrawler";
 import { mediaConfig } from "@/configs";
 import MediaUploadDrawler from "@/app/portal/media/_components/MediaUploadDrawler";
 import { TDestinationsCMSContentErrorField } from "../../hooks/useCRUDContentDestination";
-import { isEqual } from "lodash";
+
 import { PictureOutlined } from "@ant-design/icons";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 
@@ -76,7 +79,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
         }
         setFormData(() => ({ ...newFormData }));
     };
-    const onConfirmImageFromMediaUpload: IMediaUploadProps["onConfirm"] = (
+    const onConfirmImageFromMediaUpload: MediaUploadProps["onConfirm"] = (
         files,
     ) => {
         const file = files[0];

@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { Tabs, TabsProps, Drawer } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useFormOfPayment } from "../../modules/useFormOfPayment";
-import { IOrderDetail } from "@/models/management/booking/order.interface";
 import FOPList from "./FOPList";
 import FOPForm from "./FOPForm";
 import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
@@ -13,12 +12,11 @@ import { FormOfPaymmentQueryParams } from "@/models/management/core/formOfPaymen
 import { isUndefined } from "lodash";
 
 export interface DrawerFormOfPaymentProps {
-    orderId: number;
-    totalAmount: number;
-    totalPaid: number;
+    orderId?: number;
+    totalAmount?: number;
+    totalPaid?: number;
     isOpen?: boolean;
     onClose?: () => void;
-    fops: IOrderDetail["bookingOrder"]["fops"];
     formOfPaymentType: FOPFormData["type"];
 }
 
@@ -28,7 +26,6 @@ const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
     totalPaid,
     onClose,
     orderId,
-    fops,
     formOfPaymentType,
 }) => {
     const queryParams = new FormOfPaymmentQueryParams(

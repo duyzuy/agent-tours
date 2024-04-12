@@ -5,6 +5,7 @@ import ThemeProvider from "@/providers/ThemeProvider";
 
 import { RQClientProvider } from "@/providers/RQClientProvider";
 import { Inter } from "next/font/google";
+import { WebVitals } from "@/components/WebVirtuals";
 
 import "@/styles/globals.scss";
 const inter = Inter({ subsets: ["latin"] });
@@ -30,7 +31,10 @@ export default function RootLayout({
         <html suppressHydrationWarning={true}>
             <body className={inter.className} suppressHydrationWarning={true}>
                 <ThemeProvider>
-                    <RQClientProvider>{children}</RQClientProvider>
+                    <RQClientProvider>
+                        <WebVitals />
+                        {children}
+                    </RQClientProvider>
                 </ThemeProvider>
             </body>
         </html>

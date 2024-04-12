@@ -20,7 +20,7 @@ import {
 interface OrderDetailProps {
     bookingOrderDetailList: IOrderDetail["bookingDetails"];
     onSave?: (data?: IBookingOrderPassengersPayload, cb?: () => void) => void;
-    orderId: number;
+    orderId?: number;
 }
 
 const BookingDetail: React.FC<OrderDetailProps> = ({
@@ -45,7 +45,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
     const onSavePassengerDetail: DrawerPassengerInfoProps["onSubmit"] = (
         data,
     ) => {
-        if (isUndefined(record)) {
+        if (isUndefined(record) || isUndefined(orderId)) {
             throw new Error("Thiếu chi tiết booking.");
         }
 

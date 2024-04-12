@@ -67,15 +67,15 @@ interface FOPListProps {
     items: IOrderDetail["fops"];
     onApproval: (recId: number) => void;
     onDelete: (recId: number) => void;
-    totalAmount: number;
-    totalPaid: number;
+    totalAmount?: number;
+    totalPaid?: number;
 }
 const FOPList: React.FC<FOPListProps> = ({
     items,
     onApproval,
     onDelete,
-    totalAmount,
-    totalPaid,
+    totalAmount = 0,
+    totalPaid = 0,
 }) => {
     const [detailRecord, setDetailRecord] = useState<{
         isShow: boolean;

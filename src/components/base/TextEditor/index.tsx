@@ -1,7 +1,7 @@
 import React, { useRef, useState, memo } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import MediaUploadDrawler, {
-    IMediaUploadProps,
+    MediaUploadProps,
 } from "@/app/portal/media/_components/MediaUploadDrawler";
 import { MediaTypes } from "@/models/management/media.interface";
 import { mediaConfig } from "@/configs";
@@ -26,7 +26,7 @@ const TextEditor = ({
     const editorRef = useRef<any>(null);
     const [isShowMedia, setShowMedia] = useState(false);
 
-    const onConfirmSelection: IMediaUploadProps["onConfirm"] = (files) => {
+    const onConfirmSelection: MediaUploadProps["onConfirm"] = (files) => {
         let contents = "";
         files.forEach((file) => {
             if (
@@ -85,7 +85,6 @@ const TextEditor = ({
                         "directionality",
                         "code",
                         "image",
-                        "editimage",
                         "media",
                         "visualblocks",
                         "visualchars",

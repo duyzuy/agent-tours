@@ -9,7 +9,7 @@ import { IMediaFilesProps } from "../MediaUploadContainer/MediaFiles";
 import useMessage from "@/hooks/useMessage";
 import { isEmpty } from "lodash";
 
-export interface IMediaUploadProps {
+export interface MediaUploadProps {
     onClose?: () => void;
     isOpen?: boolean;
     mode?: "multiple" | "single";
@@ -17,14 +17,14 @@ export interface IMediaUploadProps {
     onConfirm?: (files: MediaUploadContainerProps["selectedFiles"]) => void;
     initialValues?: MediaUploadContainerProps["selectedFiles"];
 }
-const MediaUploadDrawler = ({
+const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
     onClose,
     isOpen = false,
     exceptsSelect = ["IMAGE", "ICON", "FILE"],
     mode = "single",
     initialValues = [],
     onConfirm,
-}: IMediaUploadProps) => {
+}) => {
     const [selectedFiles, setSelectedFiles] = useState<
         MediaUploadContainerProps["selectedFiles"]
     >([]);
@@ -101,8 +101,3 @@ const MediaUploadDrawler = ({
     );
 };
 export default MediaUploadDrawler;
-
-MediaUploadDrawler.open = function (cb?: () => void) {
-    console.log("111");
-    return <>ádasdsadasdasdas</>;
-};

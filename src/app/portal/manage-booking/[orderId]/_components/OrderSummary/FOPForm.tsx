@@ -13,12 +13,12 @@ import { isEmpty, isUndefined } from "lodash";
 
 type TFormData = Required<FOPFormData>;
 interface FOPFormProps {
-    orderId: number;
+    orderId?: number;
     onSubmitForm?: (data: FOPFormData, cb?: () => void) => void;
     formOfPaymentType: FOPFormData["type"];
 }
 const FOPForm: React.FC<FOPFormProps> = ({
-    orderId,
+    orderId = 0,
     onSubmitForm,
     formOfPaymentType,
 }) => {

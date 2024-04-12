@@ -1,5 +1,7 @@
 "use client";
 import React, { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
+import { isEmpty, isUndefined } from "lodash";
 import {
     Input,
     Typography,
@@ -20,17 +22,19 @@ import { mediaConfig } from "@/configs";
 import Slug, { SlugProps } from "@/components/admin/Slug";
 import Image from "next/image";
 import MediaUploadDrawler, {
-    IMediaUploadProps,
+    MediaUploadProps,
 } from "@/app/portal/media/_components/MediaUploadDrawler";
 import { PageContentFormData } from "../modules/pageContent.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import { stringToSlug } from "@/utils/stringToSlug";
-import { isEmpty, isUndefined } from "lodash";
+
 import { TIME_FORMAT } from "@/constants/common";
+import dayjs from "dayjs";
 
 type RequirePageContentFormData = Required<PageContentFormData>;
 const PageCreate = () => {
+    const router = useRouter();
     const initFormData = new PageContentFormData(
         undefined,
         undefined,
@@ -77,7 +81,7 @@ const PageCreate = () => {
         }));
     };
 
-    const onSelectThumbnail: IMediaUploadProps["onConfirm"] = (file) => {
+    const onSelectThumbnail: MediaUploadProps["onConfirm"] = (file) => {
         setFormData((oldData) => ({
             ...oldData,
             thumbnail: file[0].fullPath,
@@ -94,7 +98,7 @@ const PageCreate = () => {
         <PageContainer
             name="Tạo trang mới"
             hideAddButton
-            onBack={() => {}}
+            onBack={() => router.push("./portal/contents/page")}
             breadCrumItems={[
                 { title: "Trang nội dung", href: "/portal/contents/page" },
                 { title: "Thêm mới" },
@@ -136,7 +140,6 @@ const PageCreate = () => {
                                 }
                             ></Input.TextArea>
                         </FormItem>
-
                         <FormItem label="Chi tiết">
                             <TextEditor
                                 onEditorChange={(data, editor) =>
@@ -145,7 +148,6 @@ const PageCreate = () => {
                                 value={formData.descriptions}
                             />
                         </FormItem>
-
                         <Typography.Title level={4}>SEO Meta</Typography.Title>
                         <div className="box border rounded-[4px] px-4 py-6">
                             <FormItem label="Meta title">
@@ -199,6 +201,8 @@ const PageCreate = () => {
                                                 <CustomDatePicker
                                                     onChange={() => {}}
                                                     onOk={() => {}}
+                                                    value={dayjs()}
+                                                    format={"DD/MM/YYYY"}
                                                     placeholder="Chọn ngày"
                                                     picker="date"
                                                     className="flex-1"
@@ -206,6 +210,7 @@ const PageCreate = () => {
                                                 <TimePicker
                                                     onChange={() => {}}
                                                     onOk={() => {}}
+                                                    value={dayjs()}
                                                     placeholder="Chọn giờ"
                                                     className="w-28"
                                                     format={TIME_FORMAT}
@@ -225,6 +230,61 @@ const PageCreate = () => {
                                             Đăng
                                         </Button>
                                     </div>
+                                </div>
+                            </div>
+                            <div className="box border rounded-[4px] mb-6">
+                                <div className="py-4 border-b px-4">
+                                    <p className="font-bold">Hero banners</p>
+                                </div>
+                                <div className="feature-post py-4 px-4">
+                                    <div className="thumbnail-preview bg-slate-100 h-40 mb-3 flex items-center justify-center">
+                                        {formData.thumbnail ? (
+                                            <div className="relative w-full h-full">
+                                                <Image
+                                                    src={`${mediaConfig.rootPath}/${formData.thumbnail}`}
+                                                    alt="thumbnail"
+                                                    fill
+                                                    style={{
+                                                        objectFit: "contain",
+                                                    }}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="no-image text-slate-400 text-center">
+                                                <span className="text-2xl stroke-slate-400">
+                                                    <PictureOutlined />
+                                                </span>
+                                                <span className="block">
+                                                    Chưa có ảnh
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <Space>
+                                        <Button
+                                            onClick={() =>
+                                                setShowDrawerMedia(true)
+                                            }
+                                        >
+                                            {isEmpty(formData.thumbnail) ||
+                                            isUndefined(formData.thumbnail)
+                                                ? "Thêm ảnh"
+                                                : "Thay ảnh"}
+                                        </Button>
+                                        {isEmpty(formData.thumbnail) ||
+                                        isUndefined(
+                                            formData.thumbnail,
+                                        ) ? null : (
+                                            <Button
+                                                type="primary"
+                                                ghost
+                                                danger
+                                                onClick={onRemoveThumbnail}
+                                            >
+                                                Xoá ảnh
+                                            </Button>
+                                        )}
+                                    </Space>
                                 </div>
                             </div>
                             <div className="box border rounded-[4px] mb-6">

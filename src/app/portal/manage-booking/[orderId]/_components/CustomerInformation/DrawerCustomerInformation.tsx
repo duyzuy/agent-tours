@@ -1,17 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, memo } from "react";
 import { Drawer, Space, Button, Form, Row, Col, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { BookingOrderCustomerFormData } from "../../../modules/bookingOrder.interface";
-
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-
 import { bookingCustomerInfoSchema } from "../../../schema/bookingOrder.schema";
+import { ICustomerInformation } from "@/models/management/booking/customer.interface";
 
 export interface DrawerCustomerInformationProps {
     isOpen?: boolean;
     onClose?: () => void;
-    initialValues?: IOrderDetail["bookingOrder"];
+    initialValues?: ICustomerInformation;
     onSubmit?: (data: BookingOrderCustomerFormData) => void;
 }
 
@@ -23,7 +22,6 @@ type TKeysPassenger = KeysOfValue<
     Required<BookingOrderCustomerFormData>,
     string
 >;
-type Pasenger = Required<BookingOrderCustomerFormData>;
 
 const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
     isOpen,
@@ -59,7 +57,6 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
     useEffect(() => {
         setPassengerFormData((prev) => ({
             ...prev,
-            recId: initialValues?.recId,
             custName: initialValues?.custName,
             custEmail: initialValues?.custEmail,
             custAddress: initialValues?.custAddress,
@@ -197,4 +194,4 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
         </Drawer>
     );
 };
-export default DrawerCustomerInformation;
+export default memo(DrawerCustomerInformation);

@@ -5,16 +5,31 @@ import { useGetBookingDetailCoreQuery } from "@/queries/core/bookingOrder";
 import { Button, Space, Spin } from "antd";
 import { isUndefined } from "lodash";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import dynamic from "next/dynamic";
+import React, { useEffect, useMemo } from "react";
 import OrderSummary from "./_components/OrderSummary";
-import BookingDetail from "./_components/BookingDetail";
+
 import useUpdateCustomerAndPassenger from "../modules/useUpdateCustomerAndPassenger";
 import useCancelBookingOrder from "../modules/useCancelBookingOrder";
 import ServiceDetail from "./_components/ServiceDetail";
 import CustomerInformation from "./_components/CustomerInformation";
+
 interface ReservationDetailPageProps {
     params: { orderId: number };
 }
+
+const BookingDetailDynamic = dynamic(
+    () => import("./_components/BookingDetail"),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="py-3">
+                <p>Loading...</p>
+            </div>
+        ),
+    },
+);
+
 const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
     params,
 }) => {
@@ -28,6 +43,10 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
         useUpdateCustomerAndPassenger();
 
     const { onCancelBookingOrder } = useCancelBookingOrder();
+
+    const bookingOrder = useMemo(() => {
+        return bookingOrderDetail?.bookingOrder;
+    }, [bookingOrderDetail]);
 
     useEffect(() => {
         if (isUndefined(bookingOrderDetail) && !isLoading) {
@@ -57,22 +76,41 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
         >
             <div className="booking__order__Detail relative">
                 <OrderSummary
-                    orderDetail={bookingOrderDetail.bookingOrder}
-                    fops={bookingOrderDetail.bookingOrder.fops}
+                    orderId={bookingOrder?.recId}
+                    data={{
+                        sysFstUpdate: bookingOrder?.sysFstUpdate,
+                        tourPrice: bookingOrder?.tourPrice,
+                        extraPrice: bookingOrder?.extraPrice,
+                        totalAmount: bookingOrder?.totalAmount,
+                        charge: bookingOrder?.charge,
+                        totalFop: bookingOrder?.totalFop,
+                        totalPaid: bookingOrder?.totalPaid,
+                        totalRefunded: bookingOrder?.totalRefunded,
+                        timelimits: bookingOrder?.timelimits,
+                    }}
+                    code={bookingOrder?.template.code}
+                    name={bookingOrder?.template.name}
                     onCancelBooking={onCancelBookingOrder}
                     className="mb-6"
                 />
+
                 <CustomerInformation
-                    bookingOrder={bookingOrderDetail.bookingOrder}
+                    orderId={bookingOrder?.recId}
+                    cusInfo={{
+                        custName: bookingOrder?.custName,
+                        custEmail: bookingOrder?.custEmail,
+                        custPhoneNumber: bookingOrder?.custPhoneNumber,
+                        custAddress: bookingOrder?.custAddress,
+                    }}
                     onSave={onUpdateCustomerInfo}
                     className="mb-6"
                 />
-
-                <BookingDetail
-                    orderId={bookingOrderDetail.bookingOrder.recId}
+                <BookingDetailDynamic
+                    orderId={bookingOrder?.recId}
                     bookingOrderDetailList={bookingOrderDetail.bookingDetails}
                     onSave={onUpdatePassengerInfo}
                 />
+
                 <ServiceDetail
                     serviceList={bookingOrderDetail.ssr}
                     className="mb-6"
