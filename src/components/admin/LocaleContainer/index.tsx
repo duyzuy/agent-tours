@@ -1,133 +1,214 @@
-import React, { useMemo, useState } from "react";
-import { locales } from "@/constants/locale.constant";
-import { Flex, Typography, Modal, Button } from "antd";
+import React, { useEffect, useState, memo, useCallback } from "react";
+import { Flex, Typography, Button } from "antd";
 import classNames from "classnames";
-import { memo } from "react";
-import { localeDefault } from "@/constants/locale.constant";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { isEqual } from "lodash";
-export type TLocale = (typeof locales)[0];
+import { CloseOutlined, PlusCircleOutlined } from "@ant-design/icons";
 
+import { Locale, LangCode } from "@/models/management/cms/language.interface";
+import { locales } from "@/constants/locale.constant";
+import ModalLanguageSwitchConfirm from "./ModalLanguageSwitchConfirm";
+import ModalLanguageList, { ModalLanguageListProps } from "./ModalLanguageList";
 export interface LocaleContainerProps {
-    onChange: (locale: TLocale) => void;
-    value?: TLocale;
-    initvalue?: TLocale;
+    onChange?: (locale?: Locale) => void;
+    defaultValue?: Locale;
+    value?: Locale;
+    langCodes?: LangCode[];
     className?: string;
     label?: string;
-    currentData?: any;
-    newData?: any;
+    mode?: "list" | "tabs";
+    showConfirmBeforeChange?: boolean;
 }
 const LocaleContainer: React.FC<LocaleContainerProps> = ({
     onChange,
     value,
-    initvalue,
+    defaultValue,
+    langCodes = [],
     className = "",
     label = "Ngôn ngữ",
-    currentData,
-    newData,
+    mode = "tabs",
+    showConfirmBeforeChange = false,
 }) => {
-    const [open, setOpen] = useState(false);
-    const [lc, setLc] = useState<TLocale>();
-    const onCancel = () => {
-        setOpen(false);
-        setLc(undefined);
-    };
+    const [showModal, setShowModal] = useState<{
+        isShow: boolean;
+        temp?: Locale;
+        action?: "change" | "add";
+    }>({ isShow: false, temp: undefined });
+    const [showLangList, setShowLangList] = useState(false);
+    const [selectedList, setSelectedList] = useState<Locale[]>([]);
+    const [currentLocale, setCurrentLocale] = useState<Locale>();
 
-    const handleModalConfirmation = (lc: TLocale) => {
+    const onCancel = () => setShowModal({ isShow: false, temp: undefined });
+
+    const onChangeLocale = (lc: Locale) => {
         /**
          * Compare two data
          */
-        if (
-            isEqual(
-                JSON.stringify(currentData || {}),
-                JSON.stringify(newData || {}),
-            )
-        ) {
-            onChange(lc);
+        if (showConfirmBeforeChange) {
+            setShowModal({ isShow: true, temp: lc, action: "change" });
         } else {
-            onShowModalConfirm(lc);
+            onChange?.(lc);
+            setCurrentLocale(lc);
         }
     };
-    const onShowModalConfirm = (lc: TLocale) => {
-        setOpen(true);
-        setLc(lc);
-    };
-    const onOk = () => {
-        lc && onChange(lc);
-        setOpen(false);
-    };
-    const locale = useMemo(() => {
-        return value ? value : localeDefault;
-    }, [localeDefault, value]);
 
-    const renderModalFooter = () => {
-        return (
-            <div className="px-2 flex items-center flex-1 justify-center">
-                <Button onClick={onCancel} className="w-24">
-                    Huỷ bỏ
-                </Button>
-                <Button onClick={onOk} type="primary" className="w-24">
-                    Xác nhận
-                </Button>
-            </div>
-        );
+    const onConfirmChangeLocale = () => {
+        const locale = showModal.temp;
+        const action = showModal.action;
+        if (locale) {
+            onChange?.(locale);
+            setCurrentLocale(locale);
+            action === "add" &&
+                setSelectedList((oldData) => [...oldData, locale]);
+        }
+        setShowModal({ isShow: false, temp: undefined, action: undefined });
     };
+    const onCloseLangList = useCallback(() => setShowLangList(false), []);
+
+    const onAddLang: ModalLanguageListProps["onAdd"] = (lang) => {
+        if (showConfirmBeforeChange) {
+            setShowModal({ isShow: true, temp: lang, action: "add" });
+        } else {
+            setSelectedList((oldData) => [...oldData, lang]);
+            onChange?.(lang);
+            setCurrentLocale(lang);
+        }
+        onCloseLangList();
+    };
+    const onRemoveLangItem = (langCode: LangCode) => {
+        setSelectedList((oldList) => {
+            let newList = [...oldList];
+            const indexItem = oldList.findIndex(
+                (item) => item.key === langCode,
+            );
+            if (indexItem !== -1) {
+                newList.splice(indexItem, 1);
+            }
+            return newList;
+        });
+        if (value?.key === langCode) {
+            onChange?.(undefined);
+        }
+    };
+    const hasExistsInLangCodes = (langCode: LangCode) => {
+        return (langCodes || []).includes(langCode);
+    };
+
+    useEffect(() => {
+        setSelectedList((prev) => {
+            let langItems = langCodes.reduce<Locale[]>((acc, code) => {
+                const indexLc = locales.findIndex((item) => item.key === code);
+                if (indexLc !== -1) {
+                    acc = [...acc, locales[indexLc]];
+                }
+                return acc;
+            }, []);
+            if (
+                defaultValue &&
+                langItems.every((item) => item.key !== defaultValue.key)
+            ) {
+                langItems = [...langItems, defaultValue];
+            }
+
+            return [...langItems];
+        });
+    }, [langCodes.length, defaultValue]);
+    useEffect(() => {
+        defaultValue && setCurrentLocale(defaultValue);
+    }, [defaultValue]);
 
     return (
         <React.Fragment>
             <Flex
                 gap="small"
                 align="flex-center"
-                className={classNames("py-2 mb-2 items-center", {
+                className={classNames("py-3 mb-3 items-center", {
                     [className]: className,
                 })}
             >
                 <Typography.Text className="mb-0">{label}</Typography.Text>
-                {locales.map((lc) => (
-                    <div
-                        className={classNames(
-                            "border rounded-sm px-3 py-1 cursor-pointer",
-                            {
-                                "border-primary-default text-primary-default":
-                                    lc.key === locale.key,
-                                "opacity-60": lc.key !== locale.key,
-                            },
-                        )}
-                        key={lc.key}
-                        onClick={() =>
-                            lc.key !== locale.key && handleModalConfirmation(lc)
-                        }
-                    >
-                        <div className="flex items-center">
-                            <lc.icon className="w-5 h-5 mr-2" />
-                            {lc.shortName}
+                {mode === "list" ? (
+                    locales.map((lc) => (
+                        <div
+                            className={classNames(
+                                "border rounded-sm px-3 py-1 cursor-pointer",
+                                {
+                                    "border-primary-default text-primary-default":
+                                        lc.key === currentLocale?.key,
+                                    "opacity-60": lc.key !== currentLocale?.key,
+                                },
+                            )}
+                            key={lc.key}
+                            onClick={() =>
+                                lc.key !== currentLocale?.key &&
+                                onChangeLocale(lc)
+                            }
+                        >
+                            <div className="flex items-center">
+                                <lc.icon className="w-5 h-5 mr-2" />
+                                {lc.shortName}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <>
+                        {selectedList.map((lc) => (
+                            <div
+                                className={classNames("border rounded-sm", {
+                                    "border-primary-default text-primary-default":
+                                        lc.key === currentLocale?.key,
+                                    "opacity-60": lc.key !== currentLocale?.key,
+                                })}
+                                key={lc.key}
+                            >
+                                <div className="flex items-center">
+                                    <span
+                                        className="flex items-center px-3 py-1 cursor-pointer"
+                                        onClick={() =>
+                                            lc.key !== currentLocale?.key &&
+                                            onChangeLocale(lc)
+                                        }
+                                    >
+                                        <lc.icon className="w-5 h-5 mr-2" />
+                                        {lc.shortName}
+                                    </span>
+                                    {!hasExistsInLangCodes(lc.key) ? (
+                                        <span
+                                            className="text-[10px] mr-3 cursor-pointer hover:bg-slate-100"
+                                            onClick={() =>
+                                                onRemoveLangItem(lc.key)
+                                            }
+                                        >
+                                            <CloseOutlined />
+                                        </span>
+                                    ) : null}
+                                </div>
+                            </div>
+                        ))}
+                        <Button
+                            className="rounded-sm"
+                            type="text"
+                            icon={<PlusCircleOutlined />}
+                            onClick={() => setShowLangList(true)}
+                            disabled={selectedList.length === locales.length}
+                        >
+                            Thêm ngôn ngữ
+                        </Button>
+                    </>
+                )}
             </Flex>
-            <Modal
-                open={open}
+            <ModalLanguageList
+                open={showLangList}
+                items={locales.filter(
+                    (lc) => !selectedList.some((item) => item.key === lc.key),
+                )}
+                onCancel={onCloseLangList}
+                onAdd={onAddLang}
+            />
+            <ModalLanguageSwitchConfirm
+                open={showModal.isShow}
                 onCancel={onCancel}
-                footer={renderModalFooter}
+                onOk={onConfirmChangeLocale}
                 width={380}
-            >
-                <div className="body py-4">
-                    <div className="icon text-blue-600 text-center">
-                        <InfoCircleOutlined className="text-5xl" />
-                    </div>
-                    <div className="content py-2 text-center">
-                        <p className="font-bold text-center py-2 text-lg">
-                            Rời khỏi trang?
-                        </p>
-                        <p className="text-gray-500">
-                            Dữ liệu chưa được lưu sẽ không thể khôi phục lại
-                        </p>
-                        <p className="text-gray-500">
-                            Bạn chắc chắn muốn rời khỏi trang
-                        </p>
-                    </div>
-                </div>
-            </Modal>
+            />
         </React.Fragment>
     );
 };

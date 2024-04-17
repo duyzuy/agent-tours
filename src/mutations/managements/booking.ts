@@ -62,10 +62,19 @@ export const useCancelBookingOrderMutation = () => {
     });
 };
 
-export const useSplitBookingMutation = () => {
+export const useSplitBookingInTwoOrderMutation = () => {
     return useMutation<ReservationRs, BaseResponse<null>, ISplitBookingPayload>(
         {
             mutationFn: (payload) => manageBookingAPIs.splitBooking(payload),
+        },
+    );
+};
+
+export const useSplitBookingToOnceOrderMutation = () => {
+    return useMutation<ReservationRs, BaseResponse<null>, ISplitBookingPayload>(
+        {
+            mutationFn: (payload) =>
+                manageBookingAPIs.splitBookingAndCancel(payload),
         },
     );
 };

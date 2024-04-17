@@ -5,12 +5,17 @@ import config from "@/configs";
 import { stringToSlug } from "@/utils/stringToSlug";
 import { EditOutlined } from "@ant-design/icons";
 import FormItem from "@/components/base/FormItem";
+import classNames from "classnames";
 export interface SlugProps {
     domainName?: string;
     lang?: LangCode;
-    type?: "post" | "page" | "category";
+    type?: "post" | "page" | "category" | "destination";
+    validateStatus?: "" | "error" | "success" | "warning" | "validating";
+    help?: string;
     slugName?: string;
     onSave?: (value: string) => void;
+    className?: string;
+    hiddenLabel?: boolean;
 }
 const Slug: React.FC<SlugProps> = ({
     domainName = config.DOMAIN_ROOT,
@@ -18,7 +23,12 @@ const Slug: React.FC<SlugProps> = ({
     type,
     slugName = "",
     onSave,
+    className = "",
+    validateStatus,
+    help,
+    hiddenLabel = false,
 }) => {
+    const [error, setError] = useState(help);
     const [slug, setSlug] = useState(slugName);
     const [isEdit, setEdit] = useState(false);
     const onChangeSlug = (value: string) => {
@@ -39,8 +49,15 @@ const Slug: React.FC<SlugProps> = ({
     };
 
     return (
-        <div className="post-slug text-xs py-2 w-full flex items-center">
-            <span className="mr-2">Đường dẫn:</span>
+        <div
+            className={classNames(
+                "post-slug text-xs w-full flex items-center",
+                {
+                    [className]: className,
+                },
+            )}
+        >
+            {hiddenLabel && <span className="mr-2">Đường dẫn:</span>}
             <div className="flex items-center flex-1 whitespace-nowrap">
                 <span>{domainName}</span>
                 <span>{`/${lang}`}</span>

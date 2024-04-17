@@ -18,7 +18,7 @@ const MediaPage = () => {
         useGetMediaFolders();
 
     const [queryMediaFileParams, setQueryMediaFileParams] = useState(
-        () => new QueryParamsMediaFiles(0, 1, 50),
+        () => new QueryParamsMediaFiles(0, 1, 10),
     );
 
     const { data: fileList, isLoading: isLoadingFile } =

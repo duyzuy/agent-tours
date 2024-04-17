@@ -6,7 +6,6 @@ import { TQueryParamsMediaFiles } from "@/models/management/media.interface";
 
 export const useGetMediaFolders = () => {
     const token = getAgToken() || "";
-
     return useQuery({
         queryKey: [GET_MEDIA_FOLDERS],
         queryFn: () => localMediaAPIs.getFolders(),

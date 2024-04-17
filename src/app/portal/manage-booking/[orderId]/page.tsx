@@ -13,6 +13,7 @@ import useUpdateCustomerAndPassenger from "../modules/useUpdateCustomerAndPassen
 import useCancelBookingOrder from "../modules/useCancelBookingOrder";
 import ServiceDetail from "./_components/ServiceDetail";
 import CustomerInformation from "./_components/CustomerInformation";
+import { useLocalGetRuleAndPolicyQuery } from "@/queries/ruleAndPolicy";
 
 interface ReservationDetailPageProps {
     params: { orderId: number };
@@ -34,10 +35,14 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
     params,
 }) => {
     const router = useRouter();
+    const { data: ruleAndPolicyList, isLoading: isLoadingRule } =
+        useLocalGetRuleAndPolicyQuery();
+
     const { data: bookingOrderDetail, isLoading } =
         useGetBookingDetailCoreQuery({
             enabled: true,
             reservationId: params.orderId,
+            localRuleAndPolicies: ruleAndPolicyList || [],
         });
     const { onUpdateCustomerInfo, onUpdatePassengerInfo } =
         useUpdateCustomerAndPassenger();
@@ -87,13 +92,13 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                         totalPaid: bookingOrder?.totalPaid,
                         totalRefunded: bookingOrder?.totalRefunded,
                         timelimits: bookingOrder?.timelimits,
+                        paymentStatus: bookingOrder?.paymentStatus,
                     }}
                     code={bookingOrder?.template.code}
                     name={bookingOrder?.template.name}
                     onCancelBooking={onCancelBookingOrder}
                     className="mb-6"
                 />
-
                 <CustomerInformation
                     orderId={bookingOrder?.recId}
                     cusInfo={{

@@ -42,26 +42,6 @@ export const destinationSchema: ObjectSchema<IDestinationPayload> = object({
         .required("Trạng thái không bỏ trống."),
 });
 
-export const destinationContentSchema: ObjectSchema<IDestinationContentPayload> =
-    object({
-        title: string()
-            .required("Tiêu đề không được để trống.")
-            .matches(
-                vietnameseNamePattern,
-                "Tên thư mục không được chứa ký tự đặc biệt.",
-            ),
-        codeKey: string().required("Vui lòng chọn nhóm điểm đến."),
-        descriptions: string().default(""),
-        shortDescriptions: string().default(""),
-        thumb: number()
-            // .moreThan(0, "Chưa chọn ảnh đại diện.")
-            .required("Ảnh đại diện không bỏ trống."),
-        slug: string().required("Đường dẫn không bỏ trống."),
-        lang: string()
-            .oneOf<IDestinationContentPayload["lang"]>(["vi", "en"])
-            .required("Ngôn ngữ không bỏ trống"),
-    });
-
 export const localSearchSchema: ObjectSchema<LocalSearchFormData> = object({
     name: string()
         .required("Tên nhóm không để trống.")

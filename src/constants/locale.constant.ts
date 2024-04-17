@@ -8,9 +8,4 @@ export const locales: Locale[] = [
     { key: LangCode.EN, name: "Tiếng Anh", shortName: "EN", icon: IconFlagEN },
 ];
 
-export const localeDefault: Locale = {
-    key: LangCode.VI,
-    name: "Tiếng Việt",
-    shortName: "VN",
-    icon: IconFlagVN,
-};
+export const localeDefault: Locale = locales[0];

@@ -11,13 +11,13 @@ import {
 } from "@/constants/common";
 import classNames from "classnames";
 
-export interface BoxBookingTourItemProps {
+export interface PassengerDetailListProps {
     items: IOrderDetail["bookingDetails"];
     selectedItems: IOrderDetail["bookingDetails"];
     onSelectItem: (item: IOrderDetail["bookingDetails"][0]) => void;
     className?: string;
 }
-const BoxBookingTourItem: React.FC<BoxBookingTourItemProps> = ({
+const PassengerDetailList: React.FC<PassengerDetailListProps> = ({
     items,
     selectedItems,
     onSelectItem,
@@ -94,7 +94,7 @@ const BoxBookingTourItem: React.FC<BoxBookingTourItemProps> = ({
                             <div className="booking__detail__item-passenger">
                                 <div className="booking__detail__item-passenger-info">
                                     <Row gutter={16}>
-                                        <Col span={12} xs={12} lg={12} xl={6}>
+                                        <Col span={24} xs={24} lg={12} xl={8}>
                                             <div>
                                                 <span className="block text-xs">
                                                     Danh xưng
@@ -107,8 +107,7 @@ const BoxBookingTourItem: React.FC<BoxBookingTourItemProps> = ({
                                                 </span>
                                             </div>
                                         </Col>
-
-                                        <Col span={6} xs={12} lg={12} xl={6}>
+                                        <Col span={6} xs={12} lg={12} xl={8}>
                                             <div>
                                                 <span className="block text-xs">
                                                     Họ
@@ -119,7 +118,7 @@ const BoxBookingTourItem: React.FC<BoxBookingTourItemProps> = ({
                                                 </span>
                                             </div>
                                         </Col>
-                                        <Col span={6} xs={12} lg={12} xl={6}>
+                                        <Col span={6} xs={12} lg={12} xl={8}>
                                             <div>
                                                 <span className="block text-xs">
                                                     Tên đệm và tên
@@ -142,4 +141,4 @@ const BoxBookingTourItem: React.FC<BoxBookingTourItemProps> = ({
         </div>
     );
 };
-export default BoxBookingTourItem;
+export default PassengerDetailList;

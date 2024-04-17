@@ -1,6 +1,4 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
-
-import { EPassengerGender } from "@/constants/common";
 import { FOPFormData } from "../modules/formOfPayment.interface";
 import {
     FOP_TYPE,

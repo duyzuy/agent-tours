@@ -21,10 +21,8 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({
     onSave,
 }) => {
     const [showDrawer, setShowDrawer] = useState(false);
-
     const onCloseDrawer = () => setShowDrawer(false);
     const onOpenDrawer = () => setShowDrawer(true);
-
     const handleUpdate: DrawerCustomerInformationProps["onSubmit"] = (data) => {
         orderId &&
             onSave?.({ bookingOrder: { ...data, recId: orderId } }, () => {

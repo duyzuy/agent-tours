@@ -1,10 +1,8 @@
+import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
+import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
 
-export interface ISplitBookingPayload {
-    bookingOrder?: {
-        recId?: number;
-        rmk3?: string;
-    };
+export interface ISplitBookingBase {
     bookingDetails: {
         booking?: {
             recId?: number;
@@ -14,34 +12,52 @@ export interface ISplitBookingPayload {
     custPhoneNumber?: string; //name + phone bắt buộc
     custEmail?: string;
     custAddress?: string;
+    invoiceName?: string;
+    invoiceCompanyName?: string;
+    invoiceAddress?: string;
+    invoiceTaxCode?: string;
+    invoiceEmail?: string;
     rmk?: string; //ghi chu.
 }
+export interface SplitBookingOrder {
+    recId?: number;
+    rmk3?: string;
+    fop: {
+        type: FOP_TYPE.CHARGE_SPLIT | FOP_TYPE.SPLIT; //important
+        amount: number;
+        rmk: string;
+    }[];
+}
+export interface ISplitBookingPayload extends ISplitBookingBase {
+    bookingOrder: SplitBookingOrder;
+}
 
-export class SplitBookingData {
-    bookingOrder?: { recId?: number; rmk3?: string };
+export class SplitBookingFormData implements ISplitBookingPayload {
+    bookingOrder: SplitBookingOrder;
     bookingDetails: IOrderDetail["bookingDetails"];
-    customerInfo?: {
+    customerInfo: {
         custName?: string;
         custPhoneNumber?: string;
         custEmail?: string;
         custAddress?: string;
         rmk?: string;
     };
-
+    invoiceInfo: Partial<IInvoice>;
     constructor(
-        bookingOrder: { recId?: number; rmk3?: string },
-        customerInfo:
-            | {
-                  custName: string;
-                  custPhoneNumber: string;
-                  custEmail: string;
-                  custAddress: string;
-                  rmk: string;
-              }
-            | undefined,
+        bookingOrder: SplitBookingOrder,
+        customerInfo: {
+            custName?: string;
+            custPhoneNumber?: string;
+            custEmail?: string;
+            custAddress?: string;
+            rmk?: string;
+        },
+
+        invoiceInfo: Partial<IInvoice>,
     ) {
         this.bookingOrder = bookingOrder;
         this.bookingDetails = [];
         this.customerInfo = customerInfo;
+        this.invoiceInfo = invoiceInfo;
     }
 }

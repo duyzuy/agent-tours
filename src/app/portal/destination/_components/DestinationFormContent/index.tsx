@@ -6,66 +6,66 @@ import TextEditor from "@/components/base/TextEditor";
 import FormItem from "@/components/base/FormItem";
 
 import {
-    IDestinationContentPayload,
     IDestinationContentsRs,
     IDestinationRs,
 } from "@/models/management/region.interface";
 import { stringToSlug } from "@/utils/stringToSlug";
-
+import { destinationContentSchema } from "../../schema/destinationContent.schema";
 import { MediaUploadProps } from "@/app/portal/media/_components/MediaUploadDrawler";
 import { mediaConfig } from "@/configs";
 import MediaUploadDrawler from "@/app/portal/media/_components/MediaUploadDrawler";
-import { TDestinationsCMSContentErrorField } from "../../hooks/useCRUDContentDestination";
-
+import { DestinationContentFormData } from "../../modules/destinationContent.interface";
 import { PictureOutlined } from "@ant-design/icons";
-import { useFormSubmit } from "@/hooks/useFormSubmit";
+import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
+import { LangCode } from "@/models/management/cms/language.interface";
+import Slug, { SlugProps } from "@/components/admin/Slug";
 
 const TextArea = Input.TextArea;
 
 export interface DestinationFormContentProps {
     className?: string;
-    onSubmit: (
-        action: "create" | "edit",
-        payload: IDestinationContentPayload,
-        id?: number,
-    ) => void;
-    formData: IDestinationContentPayload;
-    errors?: TDestinationsCMSContentErrorField;
+    onSubmit?: (data: DestinationContentFormData) => void;
     initValues?: IDestinationContentsRs["result"][0];
     codeKey: string;
-    basePath: string;
     codeName: string;
     provinceList: IDestinationRs["result"]["listStateProvince"];
-    isDisableButton?: boolean;
-    setFormData: React.Dispatch<
-        React.SetStateAction<IDestinationContentPayload>
-    >;
+    langCode?: LangCode;
+    onWatchFormChange?: (data: DestinationContentFormData) => void;
 }
+export const initDestinationCMSFormData = new DestinationContentFormData(
+    undefined,
+    "",
+    "",
+    "",
+    undefined,
+    "",
+    "",
+    undefined,
+);
 const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
     onSubmit,
     className = "",
-    formData,
-    errors,
-    setFormData,
     initValues,
     codeKey,
-    basePath,
     codeName,
-    isDisableButton = false,
     provinceList,
+    langCode,
+    onWatchFormChange,
 }) => {
-    // const {handlerSubmit, errors} = useFormSubmit({schema: undefined})
+    const { handlerSubmit, errors, clearErrors } = useFormSubmit({
+        schema: destinationContentSchema,
+    });
+
+    const [formData, setFormData] = useState(initDestinationCMSFormData);
     const [previewImageUrl, setPreviewImageUrl] = useState<string>();
-    const [isEditSlug, setEditSlug] = useState(false);
-    const [slug, setSlug] = useState("");
     const [isOpenDrawler, setOpenDrawler] = useState(false);
 
     const onChangeFormData = (
-        key: keyof IDestinationContentPayload,
-        value: string,
+        key: keyof DestinationContentFormData,
+        value: DestinationContentFormData[keyof DestinationContentFormData],
     ) => {
         let newFormData = { ...formData };
-        if (key === "title") {
+        if (key === "title" && typeof value === "string") {
             newFormData = {
                 ...newFormData,
                 title: value,
@@ -79,41 +79,68 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
         }
         setFormData(() => ({ ...newFormData }));
     };
-    const onConfirmImageFromMediaUpload: MediaUploadProps["onConfirm"] = (
-        files,
-    ) => {
-        const file = files[0];
-        setPreviewImageUrl(() => `${mediaConfig.rootApiPath}/${file.fullPath}`);
 
+    const onSaveSlug: SlugProps["onSave"] = (slug) => {
+        setFormData((oldData) => ({ ...oldData, slug: slug }));
+    };
+    const onChangeThumbnail: MediaUploadProps["onConfirm"] = (files) => {
+        const file = files[0];
+        setPreviewImageUrl(() => `${file.fullPath}`);
         setFormData((prev) => ({ ...prev, thumb: file.id }));
     };
-    const onSubmitFormData = () => {
-        onSubmit?.(initValues ? "edit" : "create", formData, initValues?.id);
+    const isDisableButton = useMemo(() => {
+        return isEqual(
+            JSON.stringify({
+                id: formData?.id,
+                title: formData?.title,
+                descriptions: formData?.descriptions,
+                shortDescriptions: formData?.shortDescriptions,
+                thumb: formData?.thumb,
+                slug: formData?.slug,
+            }),
+            JSON.stringify({
+                id: initValues?.id,
+                title: initValues?.title,
+                descriptions: initValues?.descriptions,
+                shortDescriptions: initValues?.shortDescriptions,
+                thumb: initValues?.thumb,
+                slug: initValues?.slug,
+            }),
+        );
+    }, [initValues, formData]);
+
+    const onSubmitFormData: HandleSubmit<DestinationContentFormData> = (
+        formData,
+    ) => {
+        onSubmit?.(formData);
     };
-    const onChangeSlug = (slug: string) => {
-        setSlug(slug);
-    };
-    const onEditSlug = () => {
-        setEditSlug(true);
-        setSlug(formData.slug);
-    };
-    const onUpdateSlug = () => {
-        if (isDisableButtonApproveSlug) return;
-        setEditSlug(false);
-        setFormData((prev) => ({ ...prev, slug: stringToSlug(slug) }));
-    };
-    const isDisableButtonApproveSlug = useMemo(() => {
-        return isEqual(formData.slug, slug);
-    }, [slug]);
+
+    useEffect(() => {
+        onWatchFormChange?.(formData);
+    }, [formData]);
     useEffect(() => {
         if (initValues) {
-            setPreviewImageUrl(
-                () => `${mediaConfig.rootApiPath}/${initValues.thumbPath}`,
-            );
+            setPreviewImageUrl(() => `${initValues.thumbPath}`);
+            setFormData(() => ({
+                id: initValues.id,
+                title: initValues.title,
+                descriptions: initValues.descriptions,
+                shortDescriptions: initValues.shortDescriptions,
+                thumb: initValues.thumb,
+                slug: initValues.slug,
+                codeKey: codeKey,
+                lang: initValues.lang,
+            }));
         } else {
             setPreviewImageUrl(undefined);
+            setFormData({
+                ...initDestinationCMSFormData,
+                lang: langCode,
+                codeKey: codeKey,
+            });
         }
-    }, [initValues]);
+        clearErrors();
+    }, [initValues, langCode]);
 
     return (
         <>
@@ -138,56 +165,13 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                         }
                     />
                 </FormItem>
-                <FormItem
-                    label="Đường dẫn"
-                    validateStatus={errors?.slug ? "error" : ""}
-                    help={errors?.slug || ""}
-                >
-                    <div className="slug  text-gray-500  flex items-center">
-                        <span>{basePath}</span>
-                        <div className="slug-edit flex items-center">
-                            {isEditSlug ? (
-                                <Space>
-                                    <Input
-                                        name="slug"
-                                        value={slug}
-                                        onChange={(ev) =>
-                                            onChangeSlug(ev.target.value)
-                                        }
-                                        size="small"
-                                    />
-                                    <Button
-                                        type="primary"
-                                        size="small"
-                                        ghost
-                                        disabled={isDisableButtonApproveSlug}
-                                        onClick={onUpdateSlug}
-                                    >
-                                        Cập nhật
-                                    </Button>
-                                    <Button
-                                        size="small"
-                                        type="text"
-                                        danger
-                                        onClick={() => setEditSlug(false)}
-                                    >
-                                        Huỷ
-                                    </Button>
-                                </Space>
-                            ) : (
-                                <>
-                                    <span>{formData.slug}</span>
-                                    <Button
-                                        size="small"
-                                        type="text"
-                                        onClick={onEditSlug}
-                                    >
-                                        Sửa
-                                    </Button>
-                                </>
-                            )}
-                        </div>
-                    </div>
+                <FormItem label="Đường dẫn">
+                    <Slug
+                        type="destination"
+                        lang={langCode}
+                        slugName={formData.slug}
+                        onSave={onSaveSlug}
+                    />
                 </FormItem>
                 <FormItem
                     label="Tên nhóm"
@@ -221,7 +205,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                         <span className="no-image border border-dashed w-32 h-32 rounded-md flex items-center justify-center bg-gray-50 mb-2">
                             {previewImageUrl ? (
                                 <Image
-                                    src={previewImageUrl}
+                                    src={`${mediaConfig.rootApiPath}/${previewImageUrl}`}
                                     alt="feature image"
                                     width={128}
                                     height={128}
@@ -268,7 +252,6 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                             onChangeFormData("descriptions", content)
                         }
                     />
-                    {/* <TextEditorWithMedia /> */}
                 </FormItem>
                 <FormItem
                     wrapperCol={{
@@ -280,7 +263,9 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
                         <Button type="default">Huỷ bỏ</Button>
                         <Button
                             type="primary"
-                            onClick={onSubmitFormData}
+                            onClick={() =>
+                                handlerSubmit(formData, onSubmitFormData)
+                            }
                             disabled={isDisableButton}
                         >
                             {initValues ? "Cập nhật" : "Thêm mới"}
@@ -291,7 +276,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
             <MediaUploadDrawler
                 onClose={() => setOpenDrawler(false)}
                 isOpen={isOpenDrawler}
-                onConfirm={onConfirmImageFromMediaUpload}
+                onConfirm={onChangeThumbnail}
             />
         </>
     );

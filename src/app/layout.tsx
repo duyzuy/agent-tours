@@ -32,7 +32,7 @@ export default function RootLayout({
             <body className={inter.className} suppressHydrationWarning={true}>
                 <ThemeProvider>
                     <RQClientProvider>
-                        <WebVitals />
+                        {/* <WebVitals /> */}
                         {children}
                     </RQClientProvider>
                 </ThemeProvider>

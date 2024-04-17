@@ -1,4 +1,4 @@
-import { SplitBookingData } from "../modules/splitBooking.interface";
+import { SplitBookingFormData } from "../modules/splitBooking.interface";
 
 import { ObjectSchema, object, string } from "yup";
 
@@ -6,7 +6,7 @@ const vietnameseNamePattern =
     /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
 
 export const customerInformationSchema: ObjectSchema<
-    SplitBookingData["customerInfo"]
+    SplitBookingFormData["customerInfo"]
 > = object({
     custName: string().required("Họ tên không bỏ trống."),
     custPhoneNumber: string()
@@ -20,3 +20,12 @@ export const customerInformationSchema: ObjectSchema<
     custAddress: string().default(""),
     rmk: string(),
 });
+
+export const invoiceSchema: ObjectSchema<SplitBookingFormData["invoiceInfo"]> =
+    object({
+        invoiceAddress: string(),
+        invoiceCompanyName: string().default(""),
+        invoiceEmail: string().email("Email không hợp lệ."),
+        invoiceName: string().default(""),
+        invoiceTaxCode: string().default(""),
+    });

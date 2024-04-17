@@ -1,3 +1,4 @@
+import { LangCode } from "./cms/language.interface";
 import { BaseResponse, Status } from "./common.interface";
 
 export interface IStateProvince {
@@ -52,9 +53,9 @@ export interface IDestinationRs extends BaseResponse<IDestination> {}
 
 //content
 export interface IDestinationContentDetail {
+    id: number;
     cat: string;
     type: string;
-    id: number;
     codeKey: string;
     title: string;
     descriptions: string;
@@ -62,61 +63,20 @@ export interface IDestinationContentDetail {
     thumb: number;
     thumbPath: string;
     slug: string;
-    lang: "vi" | "en";
+    lang: LangCode;
     status: string;
 }
 
-export interface IDestinationContentPayload
-    extends Pick<
-        IDestinationContentDetail,
-        | "codeKey"
-        | "title"
-        | "descriptions"
-        | "shortDescriptions"
-        | "thumb"
-        | "slug"
-        | "lang"
-    > {}
-
-export class DestinationContentFormData implements IDestinationContentPayload {
-    codeKey: string;
-    title: string;
-    descriptions: string;
-    shortDescriptions: string;
-    thumb: number;
-    slug: string;
-    lang: "vi" | "en";
-
-    constructor(
-        title: string,
-        descriptions: string,
-        shortDescriptions: string,
-        thumb: number,
-        slug: string,
-        codeKey: string,
-        lang: "vi" | "en",
-    ) {
-        this.title = title;
-        this.descriptions = descriptions;
-        this.shortDescriptions = shortDescriptions;
-        this.thumb = thumb;
-        this.title = title;
-        this.slug = slug;
-        this.lang = lang;
-        this.codeKey = codeKey;
-    }
+export interface IDestinationContentPayload {
+    id?: number;
+    codeKey?: string;
+    title?: string;
+    descriptions?: string;
+    shortDescriptions?: string;
+    thumb?: number;
+    slug?: string;
+    lang?: LangCode;
 }
-export interface IDestinationContentPayload
-    extends Pick<
-        IDestinationContentDetail,
-        | "codeKey"
-        | "title"
-        | "descriptions"
-        | "shortDescriptions"
-        | "thumb"
-        | "slug"
-        | "lang"
-    > {}
 
 export interface IDestinationContentRs
     extends BaseResponse<IDestinationContentDetail> {}

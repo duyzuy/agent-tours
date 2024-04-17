@@ -1,4 +1,4 @@
-import React, { useRef, useState, memo } from "react";
+import React, { useRef, useState, memo, useCallback } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import MediaUploadDrawler, {
     MediaUploadProps,
@@ -26,7 +26,9 @@ const TextEditor = ({
     const editorRef = useRef<any>(null);
     const [isShowMedia, setShowMedia] = useState(false);
 
-    const onConfirmSelection: MediaUploadProps["onConfirm"] = (files) => {
+    const onConfirmSelection = useCallback<
+        Required<MediaUploadProps>["onConfirm"]
+    >((files) => {
         let contents = "";
         files.forEach((file) => {
             if (
@@ -46,15 +48,18 @@ const TextEditor = ({
         });
 
         editorRef.current.insertContent(contents);
-    };
-
+    }, []);
+    const onShowMedia = useCallback(() => setShowMedia(true), []);
     return (
         <>
             <Editor
                 tinymceScriptSrc={"/assets/libs/tinymce/tinymce.min.js"}
                 id={id}
-                initialValue={initialValue}
-                onInit={(evt, editor) => (editorRef.current = editor)}
+                // initialValue={initialValue}
+                onInit={(evt, editor) => {
+                    editorRef.current = editor;
+                    // editor.setContent(value || "");
+                }}
                 value={value}
                 init={{
                     ui_mode: "split",
@@ -184,7 +189,7 @@ const TextEditor = ({
             />
             <MediaUploadDrawler
                 isOpen={isShowMedia}
-                onClose={() => setShowMedia(false)}
+                onClose={onShowMedia}
                 onConfirm={onConfirmSelection}
                 mode="multiple"
             />

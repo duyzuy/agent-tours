@@ -5,6 +5,7 @@ import { IProductItem } from "@/models/management/booking/productItem.interface"
 import { IReservation } from "@/models/management/booking/reservation.interface";
 import { PassengerInformationFormData } from "./passenger.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
+import { IInvoice } from "@/models/management/booking/invoice.interface";
 
 export interface IPricingBookingItem {
     sellableDetailsId: number;
@@ -25,15 +26,17 @@ export class BookingInfo {
     product?: IProductItem;
     bookingItems?: IBookingItem[];
     customerInformation?: CustomerInformation;
-
+    invoiceInfo?: Partial<IInvoice>;
     constructor(
         product: IProductItem | undefined,
         bookingItems: IBookingItem[] | undefined,
         customerInformation: CustomerInformation | undefined,
+        invoiceInfo: Partial<IInvoice> | undefined,
     ) {
         this.product = product;
         this.bookingItems = bookingItems;
         this.customerInformation = customerInformation;
+        this.invoiceInfo = invoiceInfo;
     }
 }
 
@@ -110,6 +113,11 @@ export interface IBookingTourPayload {
     custEmail?: string;
     custAddress?: string;
     rmk?: string; //ghi chu.
+    invoiceName?: string;
+    invoiceCompanyName?: string;
+    invoiceAddress?: string;
+    invoiceTaxCode?: string;
+    invoiceEmail?: string;
     // CustInfoJson?: string; //chưa dùng tới
     // Rmk1?: string;
     // Rmk2?: string;

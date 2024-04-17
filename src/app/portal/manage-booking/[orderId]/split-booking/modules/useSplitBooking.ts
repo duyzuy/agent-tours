@@ -1,26 +1,47 @@
-import { useSplitBookingMutation } from "@/mutations/managements/booking";
-import { SplitBookingData } from "./splitBooking.interface";
+import {
+    useSplitBookingToOnceOrderMutation,
+    useSplitBookingInTwoOrderMutation,
+} from "@/mutations/managements/booking";
+import { SplitBookingFormData } from "./splitBooking.interface";
 import { ISplitBookingPayload } from "./splitBooking.interface";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";
 import { useRouter } from "next/navigation";
+
+export type SplitTypes = "SplitToOnce" | "SplitToTwo";
 const useSplitBooking = () => {
-    const { mutate: makeSplit } = useSplitBookingMutation();
+    const { mutate: makeSplitInTwo } = useSplitBookingInTwoOrderMutation();
+    const { mutate: makeSplitToOnce } = useSplitBookingToOnceOrderMutation();
 
     const message = useMessage();
     const queryClient = useQueryClient();
     const router = useRouter();
     const onSplitBooking = (
-        { bookingDetails, bookingOrder, customerInfo }: SplitBookingData,
+        splitType: SplitTypes,
+        {
+            bookingDetails,
+            bookingOrder,
+            customerInfo,
+            invoiceInfo,
+        }: SplitBookingFormData,
         cb?: () => void,
     ) => {
         const payload: ISplitBookingPayload = {
-            bookingOrder: { ...bookingOrder },
+            bookingOrder: {
+                recId: bookingOrder?.recId,
+                rmk3: bookingOrder?.rmk3,
+                fop: bookingOrder?.fop || [],
+            },
             custAddress: customerInfo?.custAddress,
             custEmail: customerInfo?.custEmail,
             custName: customerInfo?.custName,
             custPhoneNumber: customerInfo?.custPhoneNumber,
+            invoiceAddress: invoiceInfo?.invoiceAddress,
+            invoiceCompanyName: invoiceInfo?.invoiceCompanyName,
+            invoiceEmail: invoiceInfo?.invoiceEmail,
+            invoiceName: invoiceInfo?.invoiceName,
+            invoiceTaxCode: invoiceInfo?.invoiceTaxCode,
             bookingDetails: bookingDetails.reduce<
                 ISplitBookingPayload["bookingDetails"]
             >((acc, bkItem) => {
@@ -36,7 +57,11 @@ const useSplitBooking = () => {
             }, []),
         };
 
-        makeSplit(payload, {
+        console.log(payload);
+        const splitBookingFn =
+            splitType === "SplitToTwo" ? makeSplitInTwo : makeSplitToOnce;
+
+        splitBookingFn(payload, {
             onSuccess: (data, variables) => {
                 console.log(data, variables);
                 message.success("Tách booking thành công.");

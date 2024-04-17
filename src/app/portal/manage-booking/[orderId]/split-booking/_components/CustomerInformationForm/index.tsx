@@ -1,19 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState, memo, useCallback } from "react";
 import { Form, Row, Col, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { SplitBookingData } from "../../modules/splitBooking.interface";
+import { SplitBookingFormData } from "../../modules/splitBooking.interface";
 import { isUndefined } from "lodash";
 
-export interface CustomerInformationFormProps {
-    initialValues?: SplitBookingData["customerInfo"];
-    onChangeForm?: (
-        key: keyof TCustomerInfoType,
-        value: TCustomerInfoType[TKeysCustomerInfo],
-    ) => void;
-    errors?: Partial<Record<TKeysCustomerInfo, string>>;
-}
-
-type TCustomerInfoType = Required<Required<SplitBookingData>["customerInfo"]>;
+type TCustomerInfoType = Required<
+    Required<SplitBookingFormData>["customerInfo"]
+>;
 
 type KeysOfValue<T, TCondition> = {
     [K in keyof T]: T[K] extends TCondition ? K : never;
@@ -21,41 +14,20 @@ type KeysOfValue<T, TCondition> = {
 
 type TKeysCustomerInfo = KeysOfValue<TCustomerInfoType, string>;
 
-const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
-    onChangeForm,
-    initialValues,
-    errors,
-}) => {
-    const [customerFormData, setCustomerFormData] =
-        useState<SplitBookingData["customerInfo"]>();
-
-    const onChangeFormData = (
+export interface CustomerInformationFormProps {
+    value?: SplitBookingFormData["customerInfo"];
+    onChangeForm?: (
         key: keyof TCustomerInfoType,
         value: TCustomerInfoType[TKeysCustomerInfo],
-    ) => {
-        setCustomerFormData((oldValue) => ({
-            ...oldValue,
-            [key]: value,
-        }));
-        onChangeForm?.(key, value);
-    };
-
-    /*
-     * INITIAL FORM Data
-     */
-    useEffect(() => {
-        if (!isUndefined(initialValues)) {
-            setCustomerFormData((prev) => ({
-                ...prev,
-                custName: initialValues?.custName,
-                custEmail: initialValues?.custEmail,
-                custAddress: initialValues?.custAddress,
-                custPhoneNumber: initialValues?.custPhoneNumber,
-                rmk: initialValues?.rmk,
-            }));
-        }
-    }, []);
-
+    ) => void;
+    errors?: Partial<Record<TKeysCustomerInfo, string>>;
+}
+const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
+    onChangeForm,
+    value,
+    errors,
+}) => {
+    console.log("render customer");
     return (
         <div className="customer__information-form max-w-2xl mt-6">
             <div className="customer__information-form-head py-3">
@@ -74,10 +46,10 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                                 required
                             >
                                 <Input
-                                    value={customerFormData?.custName}
+                                    value={value?.custName}
                                     placeholder="Họ"
                                     onChange={(ev) =>
-                                        onChangeFormData(
+                                        onChangeForm?.(
                                             "custName",
                                             ev.target.value,
                                         )
@@ -95,10 +67,10 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                                 required
                             >
                                 <Input
-                                    value={customerFormData?.custEmail}
+                                    value={value?.custEmail}
                                     placeholder="Email"
                                     onChange={(ev) =>
-                                        onChangeFormData(
+                                        onChangeForm?.(
                                             "custEmail",
                                             ev.target.value,
                                         )
@@ -116,10 +88,10 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                                 required
                             >
                                 <Input
-                                    value={customerFormData?.custPhoneNumber}
+                                    value={value?.custPhoneNumber}
                                     placeholder="Số điện thoại"
                                     onChange={(ev) =>
-                                        onChangeFormData(
+                                        onChangeForm?.(
                                             "custPhoneNumber",
                                             ev.target.value,
                                         )
@@ -127,7 +99,6 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                                 />
                             </FormItem>
                         </Col>
-
                         <Col span={12}>
                             <FormItem
                                 label="Địa chỉ"
@@ -137,10 +108,10 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                                 help={errors?.custAddress || ""}
                             >
                                 <Input
-                                    value={customerFormData?.custAddress}
+                                    value={value?.custAddress}
                                     placeholder="Nhập địa chỉ thường trú"
                                     onChange={(ev) =>
-                                        onChangeFormData(
+                                        onChangeForm?.(
                                             "custAddress",
                                             ev.target.value,
                                         )
@@ -155,10 +126,10 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                                 help={errors?.rmk || ""}
                             >
                                 <Input.TextArea
-                                    value={customerFormData?.rmk}
+                                    value={value?.rmk}
                                     placeholder="Ghi chú"
                                     onChange={(ev) =>
-                                        onChangeFormData("rmk", ev.target.value)
+                                        onChangeForm?.("rmk", ev.target.value)
                                     }
                                 />
                             </FormItem>
@@ -169,4 +140,4 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
         </div>
     );
 };
-export default CustomerInformationForm;
+export default memo(CustomerInformationForm);

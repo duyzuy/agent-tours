@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useState, memo } from "react";
 import { Drawer, Space, Button } from "antd";
 import MediaUploadContainer, {
     MediaUploadContainerProps,
@@ -60,7 +60,7 @@ const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
             return newFiles;
         });
     };
-
+    console.log("redenr");
     const onConfirmSelect = () => {
         !isEmpty(selectedFiles) && onConfirm?.(selectedFiles),
             onClose?.(),
@@ -100,4 +100,4 @@ const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
         </React.Fragment>
     );
 };
-export default MediaUploadDrawler;
+export default memo(MediaUploadDrawler);

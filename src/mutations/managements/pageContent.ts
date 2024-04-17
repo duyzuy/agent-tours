@@ -5,16 +5,26 @@ import { BaseResponse } from "@/models/management/common.interface";
 import { pageContentAPIs } from "@/services/management/cms/pageContent";
 import {
     IPageContentPayload,
-    IPageContentRs,
+    IPageContentDetailRs,
 } from "@/models/management/cms/pageContent.interface";
 
 //create folder in public/uploads folder.
 
 export const useCreatePageContentMutation = () => {
     const token = getAgToken() || "";
-    return useMutation<IPageContentRs, BaseResponse<null>, IPageContentPayload>(
-        {
-            mutationFn: (payload) => pageContentAPIs.create(payload),
-        },
-    );
+    return useMutation<
+        IPageContentDetailRs,
+        BaseResponse<null>,
+        IPageContentPayload
+    >({
+        mutationFn: (payload) => pageContentAPIs.create(payload),
+    });
+};
+
+export const useUpdatePageContentMutation = () => {
+    const token = getAgToken() || "";
+    return useMutation({
+        mutationFn: (payload: IPageContentPayload) =>
+            pageContentAPIs.update(payload),
+    });
 };

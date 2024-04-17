@@ -1,88 +1,175 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetBookingDetailCoreQuery } from "@/queries/core/bookingOrder";
-import { Button, Spin, Input, Form } from "antd";
-import BoxBookingTourItem, {
-    BoxBookingTourItemProps,
-} from "./_components/BoxBookingTourItem";
-import { SplitBookingData } from "./modules/splitBooking.interface";
+import { Button, Spin, Input, Form, Radio, Space } from "antd";
+import PassengerDetailList, {
+    PassengerDetailListProps,
+} from "./_components/PassengerDetailList";
+import { SplitBookingFormData } from "./modules/splitBooking.interface";
 import CustomerInformationForm, {
     CustomerInformationFormProps,
 } from "./_components/CustomerInformationForm";
 import FormItem from "@/components/base/FormItem";
 import useSplitBooking from "./modules/useSplitBooking";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import { customerInformationSchema } from "./hooks/validate";
+import { customerInformationSchema, invoiceSchema } from "./hooks/validate";
 import useMessage from "@/hooks/useMessage";
+import InvoiceForm, { InvoiceFormProps } from "./_components/InvoiceForm";
+import SplitFeeForm, { SplitFeeFormProps } from "./_components/SplitFeeForm";
+import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
+
+import useSplitBookingProvider from "./hooks/useSplitBookingProvider";
 interface SplitBookingPageProps {
     params: { orderId: number };
 }
 const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
-    const [bookingSplit, setBookingSplitItem] = useState(
-        () =>
-            new SplitBookingData(
-                { recId: params.orderId, rmk3: "" },
-                undefined,
-            ),
-    );
+    const [bookingSplit, setBookingSplit] = useSplitBookingProvider();
+
+    const customerInfo = useMemo(() => {
+        return bookingSplit.customerInfo;
+    }, [bookingSplit.customerInfo]);
+
+    const invoiceInfo = useMemo(() => {
+        return bookingSplit.invoiceInfo;
+    }, [bookingSplit.invoiceInfo]);
+
+    const fop = useMemo(() => {
+        return bookingSplit.bookingOrder.fop;
+    }, [bookingSplit.bookingOrder]);
+
     const router = useRouter();
     const { onSplitBooking } = useSplitBooking();
-    const { errors, handlerSubmit } = useFormSubmit<
-        SplitBookingData["customerInfo"]
-    >({
-        schema: customerInformationSchema,
-    });
+
     const { data: bookingOrderDetail, isLoading } =
         useGetBookingDetailCoreQuery({
             enabled: true,
             reservationId: params.orderId,
         });
-
     const message = useMessage();
-    const onSelectItem: BoxBookingTourItemProps["onSelectItem"] = (item) => {
-        setBookingSplitItem((oldData) => {
-            let newItems = [...oldData.bookingDetails];
-            const itemIndex = newItems.findIndex(
-                (bkItem) => bkItem.booking.recId === item.booking.recId,
-            );
+    const { errors: customerErrors, handlerSubmit } = useFormSubmit<
+        Required<SplitBookingFormData>["customerInfo"]
+    >({
+        schema: customerInformationSchema,
+    });
 
-            if (itemIndex !== -1) {
-                newItems.splice(itemIndex, 1);
-            } else {
-                newItems = [...newItems, item];
-            }
-            return {
-                ...oldData,
-                bookingDetails: [...newItems],
-            };
+    const { errors: invoiceErrors, handlerSubmit: handleSubmitInvoiceForm } =
+        useFormSubmit<Required<SplitBookingFormData>["invoiceInfo"]>({
+            schema: invoiceSchema,
         });
-    };
-    const onChangeNote = (value: string) => {
-        setBookingSplitItem((oldData) => ({
+
+    const [splitType, setSplitType] =
+        useState<SplitFeeFormProps["splitType"]>("SplitToOnce");
+
+    const onSelectItem = useCallback<PassengerDetailListProps["onSelectItem"]>(
+        (item) => {
+            setBookingSplit((oldData) => {
+                let newItems = [...oldData.bookingDetails];
+                const itemIndex = newItems.findIndex(
+                    (bkItem) => bkItem.booking.recId === item.booking.recId,
+                );
+                if (itemIndex !== -1) {
+                    newItems.splice(itemIndex, 1);
+                } else {
+                    newItems = [...newItems, item];
+                }
+                return {
+                    ...oldData,
+                    bookingDetails: [...newItems],
+                };
+            });
+        },
+        [],
+    );
+    const onChangeNote = (note: string) => {
+        setBookingSplit((oldData) => ({
             ...oldData,
             bookingOrder: {
                 ...oldData.bookingOrder,
-                rmk3: value,
+                rmk3: note,
             },
         }));
     };
-    const onChangeCustomerForm: CustomerInformationFormProps["onChangeForm"] = (
-        key,
-        value,
-    ) => {
-        setBookingSplitItem((oldData) => ({
+    const onChangeCustomerForm = useCallback<
+        Required<CustomerInformationFormProps>["onChangeForm"]
+    >((key, value) => {
+        setBookingSplit((oldData) => ({
             ...oldData,
             customerInfo: {
                 ...oldData.customerInfo,
                 [key]: value,
             },
         }));
-    };
+    }, []);
 
-    const onSubmit: HandleSubmit<SplitBookingData["customerInfo"]> = (
+    const onChangeInvoiceForm = useCallback<
+        Required<InvoiceFormProps>["onChangeForm"]
+    >((key, value) => {
+        setBookingSplit((oldData) => ({
+            ...oldData,
+            invoiceInfo: {
+                ...oldData.invoiceInfo,
+                [key]: value,
+            },
+        }));
+    }, []);
+
+    useEffect(() => {
+        setBookingSplit((oldData) => ({
+            ...oldData,
+            bookingOrder: {
+                ...oldData.bookingOrder,
+                recId: params.orderId,
+            },
+        }));
+    }, []);
+    const onChangeSplitCharge = useCallback<SplitFeeFormProps["onChange"]>(
+        (fopType, { key, value }) => {
+            setBookingSplit((oldData) => {
+                let newFops = oldData.bookingOrder.fop;
+
+                const fopIndex = oldData.bookingOrder.fop.findIndex(
+                    (item) => item.type === fopType,
+                );
+
+                if (fopIndex !== -1) {
+                    newFops.splice(fopIndex, 1, {
+                        ...newFops[fopIndex],
+                        [key]: value,
+                    });
+                } else {
+                    let item = { amount: 0, rmk: "" };
+                    if (key === "amount" && !isNaN(Number(value))) {
+                        value = Number(value);
+                        item = {
+                            rmk: "",
+                            amount: value,
+                        };
+                    }
+                    if (key === "rmk") {
+                        value = value.toString();
+                        item = {
+                            rmk: value,
+                            amount: 0,
+                        };
+                    }
+                    newFops = [...newFops, { type: fopType, ...item }];
+                }
+
+                return {
+                    ...oldData,
+                    bookingOrder: {
+                        ...oldData.bookingOrder,
+                        fop: newFops,
+                    },
+                };
+            });
+        },
+        [],
+    );
+    const onSubmit: HandleSubmit<SplitBookingFormData["customerInfo"]> = (
         customerInfo,
     ) => {
         if (!bookingSplit.bookingOrder?.recId) {
@@ -93,8 +180,13 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
             message.error("Vui lòng chọn hành khách.");
             return;
         }
-        onSplitBooking(bookingSplit, () => {});
+
+        console.log(bookingSplit);
+        onSplitBooking(splitType, bookingSplit, () => {});
     };
+
+    const onChangeSplitType = (type: SplitFeeFormProps["splitType"]) =>
+        setSplitType(type);
     useEffect(() => {
         if (isUndefined(bookingOrderDetail) && !isLoading) {
             router.push("./portal/manage-booking");
@@ -128,12 +220,23 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
             hideAddButton
         >
             <div className="split__booking relative">
-                <div className="customer__info">
-                    <CustomerInformationForm
-                        onChangeForm={onChangeCustomerForm}
-                        errors={errors}
-                    />
-                </div>
+                <CustomerInformationForm
+                    value={customerInfo}
+                    onChangeForm={onChangeCustomerForm}
+                    errors={customerErrors}
+                />
+                <InvoiceForm
+                    value={invoiceInfo}
+                    onChangeForm={onChangeInvoiceForm}
+                    errors={invoiceErrors}
+                />
+                <SplitFeeForm
+                    value={fop}
+                    onChange={onChangeSplitCharge}
+                    splitType={splitType}
+                    onChangeSplitType={onChangeSplitType}
+                    className="max-w-2xl"
+                />
                 <div className="split__booking-head mb-6">
                     <span className="font-[500] text-[16px]">
                         Chọn hành khách
@@ -146,11 +249,12 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
                         </p>
                     </div>
                 </div>
-                <BoxBookingTourItem
+
+                <PassengerDetailList
                     items={bookingOrderDetail.bookingDetails}
                     selectedItems={bookingSplit.bookingDetails}
                     onSelectItem={onSelectItem}
-                    className="mb-6"
+                    className="mb-6 max-w-6xl"
                 />
                 <div className="max-w-2xl">
                     <Form layout="vertical" component="div">
@@ -163,6 +267,7 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
                         </FormItem>
                     </Form>
                 </div>
+
                 <div className="split__booking-actions py-6  mt-6 sticky bottom-0 bg-white">
                     <Button
                         type="primary"

@@ -8,6 +8,7 @@ import {
 import useBooking from "../hooks/useBooking";
 import useMessage from "@/hooks/useMessage";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
+import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 
 const useCreateBooking = () => {
     const { mutate: createBooking } = useCreateBookingMutation();
@@ -15,7 +16,13 @@ const useCreateBooking = () => {
 
     const message = useMessage();
     const router = useRouter();
-    const onCreateBooking = (customerInfo: CustomerInformation) => {
+    const onCreateBooking = ({
+        customerInfo,
+        invoiceInfo,
+    }: {
+        customerInfo: CustomerInformation;
+        invoiceInfo: InvoiceFormData;
+    }) => {
         let bookingPayload: IBookingTourPayload = { bookingDetails: [] };
 
         const bookingDetails = getBookingDetailsItems(
@@ -36,9 +43,14 @@ const useCreateBooking = () => {
             custEmail: customerInfo.custEmail,
             custName: customerInfo.custName,
             custPhoneNumber: customerInfo.custPhoneNumber,
+            invoiceAddress: invoiceInfo.invoiceAddress,
+            invoiceCompanyName: invoiceInfo.invoiceCompanyName,
+            invoiceEmail: invoiceInfo.invoiceEmail,
+            invoiceName: invoiceInfo.invoiceName,
+            invoiceTaxCode: invoiceInfo.invoiceTaxCode,
             rmk: customerInfo.rmk,
         };
-        console.log({ bookingInformation, bookingPayload });
+        // console.table({ bookingInformation, bookingPayload });
         createBooking(bookingPayload, {
             onSuccess: (response) => {
                 console.log(response);

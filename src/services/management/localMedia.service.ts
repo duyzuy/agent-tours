@@ -20,6 +20,8 @@ export const localMediaAPIs = {
                     requestObject: {
                         type: "MEDIA_FOLDER", //MEDIA_FOLDER
                     },
+                    pageCurrent: 1,
+                    pageSize: 10,
                 },
                 isAuth: true,
             },

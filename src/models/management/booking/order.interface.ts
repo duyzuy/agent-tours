@@ -38,6 +38,11 @@ export interface IOrderItem {
         configs: PriceConfig[] | null;
         template: ITemplateSellable;
     };
+    invoiceName: string;
+    invoiceCompanyName: string;
+    invoiceAddress: string;
+    invoiceTaxCode: string;
+    invoiceEmail: string;
     fops: IFormOfPayment[];
     timelimits: IBookingTimeLitmit[];
 }

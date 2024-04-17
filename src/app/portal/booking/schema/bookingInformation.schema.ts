@@ -43,4 +43,9 @@ export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> =
         custEmail: string().required("Email không bỏ trống."),
         custAddress: string().default(""),
         rmk: string().default(""),
+        invoiceName: string().default(""),
+        invoiceCompanyName: string().default(""),
+        invoiceAddress: string().default(""),
+        invoiceTaxCode: string().default(""),
+        invoiceEmail: string().default(""),
     });

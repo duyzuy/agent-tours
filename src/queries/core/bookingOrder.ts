@@ -15,7 +15,7 @@ export const useGetBookingOrderListCoreQuery = ({
 }: {
     enabled: boolean;
     queryParams: BookingOrderListQueryParams;
-    localRuleAndPolicies: IRuleAndPolicy[];
+    localRuleAndPolicies?: IRuleAndPolicy[];
 }) => {
     return useQuery({
         queryKey: [queryCore.GET_BOOKING_ORDER_LIST, queryParams],
@@ -36,9 +36,11 @@ export const useGetBookingOrderListCoreQuery = ({
 export const useGetBookingDetailCoreQuery = ({
     enabled = true,
     reservationId,
+    localRuleAndPolicies,
 }: {
     enabled: boolean;
     reservationId: number;
+    localRuleAndPolicies?: IRuleAndPolicy[];
 }) => {
     return useQuery({
         queryKey: [
@@ -47,7 +49,11 @@ export const useGetBookingDetailCoreQuery = ({
                 recId: Number(reservationId),
             },
         ],
-        queryFn: () => manageBookingAPIs.getOrderDetail(reservationId),
+        queryFn: () =>
+            manageBookingAPIs.getOrderDetail(
+                reservationId,
+                localRuleAndPolicies,
+            ),
         select: (data) => data.result,
         enabled: enabled,
     });

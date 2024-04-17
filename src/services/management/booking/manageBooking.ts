@@ -23,7 +23,7 @@ import {
 export const manageBookingAPIs = {
     getOrderList: async (
         queryParams: BookingOrderListQueryParams,
-        localRuleAndPolicies: IRuleAndPolicy[],
+        localRuleAndPolicies?: IRuleAndPolicy[],
     ) => {
         return await coreApi.post<IOrderListRs, BaseResponse<null>>(
             "core/BookingOrder_List",
@@ -38,12 +38,16 @@ export const manageBookingAPIs = {
             },
         );
     },
-    getOrderDetail: async (reservationId: number) => {
+    getOrderDetail: async (
+        reservationId: number,
+        localRuleAndPolicies?: IRuleAndPolicy[],
+    ) => {
         return await coreApi.post<IOrderDetailRs, BaseResponse<null>>(
             "core/BookingOrder_Details",
             {
                 requestObject: {
                     recId: reservationId,
+                    localRuleAndPolicies,
                 },
                 localUsername: "99",
             },
@@ -73,7 +77,18 @@ export const manageBookingAPIs = {
     },
     splitBooking: async (payload?: ISplitBookingPayload) => {
         return await coreApi.post<ReservationRs, BaseResponse<null>>(
-            "core/BookingOrder_Split",
+            "core/BookingOrder_SplitInTwoOrder",
+            {
+                requestObject: {
+                    ...payload,
+                },
+                localUsername: "99",
+            },
+        );
+    },
+    splitBookingAndCancel: async (payload?: ISplitBookingPayload) => {
+        return await coreApi.post<ReservationRs, BaseResponse<null>>(
+            "core/BookingOrder_SplitAndCancel",
             {
                 requestObject: {
                     ...payload,

@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { isEqual } from "lodash";
 import { Spin } from "antd";
-import { useRouter, notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
 import PageContainer from "@/components/admin/PageContainer";
 import LocaleContainer, {
     LocaleContainerProps,
@@ -11,13 +11,16 @@ import { useLocale } from "@/hooks/useLocale";
 import DestinationFormContent, {
     DestinationFormContentProps,
 } from "../_components/DestinationFormContent";
-import { DestinationContentFormData } from "@/models/management/region.interface";
-import useCRUDContentDestination from "../hooks/useCRUDContentDestination";
+import useCRUDContentDestination from "../modules/useCRUDContentDestination";
 import {
     useGetDestinationDetailMICSQuery,
     useGetDestinationDetailCMSQuery,
 } from "@/queries/misc/destination";
 import { LINKS } from "@/constants/links.constant";
+import { LangCode } from "@/models/management/cms/language.interface";
+import { localeDefault } from "@/constants/locale.constant";
+
+import { initDestinationCMSFormData } from "../_components/DestinationFormContent";
 
 const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
     const { data: destinationDetail, isLoading } =
@@ -25,76 +28,76 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
 
     const { data: destinationCMSContents, isLoading: loadingCMS } =
         useGetDestinationDetailCMSQuery(destinationDetail?.codeKey || "");
-    const { onCreateCMSContent, errors, onUpdateCMSContent } =
+    const { onCreateCMSContent, onUpdateCMSContent } =
         useCRUDContentDestination();
 
-    const { locale, setLocale } = useLocale();
-    const initFormData = new DestinationContentFormData(
-        "",
-        "",
-        "",
-        0,
-        "",
-        "",
-        locale.key,
-    );
+    const { locale, setLocale } = useLocale(localeDefault);
+    const [isUpdatedContent, setUpdatedContent] = useState(false);
+
     const router = useRouter();
-    const [initData, setInitData] = useState(initFormData);
-    const [formData, setFormData] = useState(initFormData);
 
     const initDestinationCMSContent = useMemo(() => {
         return destinationCMSContents?.find(
-            (content) => content.lang === locale.key,
+            (content) => content.lang === locale?.key,
         );
-    }, [loadingCMS, locale, destinationCMSContents]);
+    }, [locale, destinationCMSContents]);
+
+    const initFormContent = useMemo(() => {
+        return initDestinationCMSContent || initDestinationCMSFormData;
+    }, [initDestinationCMSContent]);
 
     const onChangeLocale: LocaleContainerProps["onChange"] = (locale) => {
         setLocale(locale);
     };
 
-    const isDisableButton = useMemo(() => {
-        return isEqual(JSON.stringify(initData), JSON.stringify(formData));
-    }, [formData]);
+    const langCodes = useMemo(() => {
+        return destinationCMSContents?.reduce<LangCode[]>((acc, item) => {
+            acc = [...acc, item.lang as LangCode];
+            return acc;
+        }, []);
+    }, [destinationCMSContents]);
 
-    const handleSubmitFormData: DestinationFormContentProps["onSubmit"] = (
-        action,
-        payload,
+    const handleSubmitFormData: DestinationFormContentProps["onSubmit"] = ({
         id,
-    ) => {
-        if (action === "create") {
-            onCreateCMSContent(payload);
-        }
-        if (action === "edit" && id) {
-            onUpdateCMSContent(id, payload);
+        ...restFormData
+    }) => {
+        if (id) {
+            onUpdateCMSContent(id, restFormData);
+        } else {
+            onCreateCMSContent(restFormData);
         }
     };
-
-    useEffect(() => {
-        let initFormDataUpdate = { ...initFormData };
-        if (destinationDetail) {
-            initFormDataUpdate = {
-                ...initFormDataUpdate,
-                codeKey: destinationDetail.codeKey,
-            };
-        }
-
-        const destinationCMSContentByLang = destinationCMSContents?.find(
-            (content) => content.lang === locale.key,
-        );
-        if (destinationCMSContentByLang) {
-            initFormDataUpdate = {
-                ...initFormDataUpdate,
-                title: destinationCMSContentByLang.title,
-                descriptions: destinationCMSContentByLang.descriptions,
-                shortDescriptions:
-                    destinationCMSContentByLang.shortDescriptions,
-                slug: destinationCMSContentByLang.slug,
-                thumb: destinationCMSContentByLang.thumb,
-            };
-        }
-        setFormData(() => initFormDataUpdate);
-        setInitData(() => initFormDataUpdate);
-    }, [destinationCMSContents, destinationDetail, locale]);
+    const onWatchingFormChange = useCallback<
+        Required<DestinationFormContentProps>["onWatchFormChange"]
+    >(
+        (formData) => {
+            if (
+                isEqual(
+                    {
+                        id: formData.id,
+                        title: formData.title,
+                        descriptions: formData.descriptions,
+                        shortDescriptions: formData.shortDescriptions,
+                        thumb: formData.thumb,
+                        slug: formData.slug,
+                    },
+                    {
+                        id: initFormContent.id,
+                        title: initFormContent.title,
+                        descriptions: initFormContent.descriptions,
+                        shortDescriptions: initFormContent.shortDescriptions,
+                        thumb: initFormContent.thumb,
+                        slug: initFormContent.slug,
+                    },
+                )
+            ) {
+                setUpdatedContent(false);
+            } else {
+                setUpdatedContent(true);
+            }
+        },
+        [initDestinationCMSContent],
+    );
 
     useEffect(() => {
         if (!destinationDetail && !isLoading) {
@@ -112,6 +115,7 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
     if (!destinationDetail) {
         return null;
     }
+
     return (
         <React.Fragment>
             <PageContainer
@@ -129,24 +133,24 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
             >
                 <LocaleContainer
                     value={locale}
+                    defaultValue={localeDefault}
+                    langCodes={langCodes}
+                    showConfirmBeforeChange={isUpdatedContent}
                     onChange={onChangeLocale}
-                    currentData={initData}
-                    newData={formData}
                     className="border-b"
                 />
-                <DestinationFormContent
-                    basePath={`/${locale.key}/destination/`}
-                    initValues={initDestinationCMSContent}
-                    isDisableButton={isDisableButton}
-                    setFormData={setFormData}
-                    formData={formData}
-                    errors={errors}
-                    codeKey={destinationDetail.codeKey}
-                    provinceList={destinationDetail.listStateProvince}
-                    codeName={destinationDetail.codeName}
-                    onSubmit={handleSubmitFormData}
-                    className="form-wrapper max-w-4xl pt-6"
-                />
+                {locale && (
+                    <DestinationFormContent
+                        initValues={initDestinationCMSContent}
+                        langCode={locale.key}
+                        codeKey={destinationDetail.codeKey}
+                        provinceList={destinationDetail.listStateProvince}
+                        codeName={destinationDetail.codeName}
+                        onSubmit={handleSubmitFormData}
+                        className="form-wrapper max-w-4xl pt-6"
+                        onWatchFormChange={onWatchingFormChange}
+                    />
+                )}
             </PageContainer>
         </React.Fragment>
     );
