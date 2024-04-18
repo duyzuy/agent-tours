@@ -10,6 +10,7 @@ import TextArea from "antd/es/input/TextArea";
 import { formOfPaymentSchema } from "../../schema/formOfPayment";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { isEmpty, isUndefined } from "lodash";
+import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
 
 type TFormData = Required<FOPFormData>;
 interface FOPFormProps {
@@ -29,6 +30,12 @@ const FOPForm: React.FC<FOPFormProps> = ({
         undefined,
         "",
         0,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
         "",
         "",
     );
@@ -66,7 +73,11 @@ const FOPForm: React.FC<FOPFormProps> = ({
                 <Row gutter={16}>
                     <Col span={12}>
                         <FormItem
-                            label="Người thanh toán"
+                            label={`${
+                                formOfPaymentType === FOP_TYPE.PAYMENT
+                                    ? "Người thanh toán"
+                                    : "Người nhận"
+                            }`}
                             validateStatus={errors?.payer ? "error" : ""}
                             help={errors?.payer || ""}
                             required
@@ -112,7 +123,6 @@ const FOPForm: React.FC<FOPFormProps> = ({
                             />
                         </FormItem>
                     </Col>
-
                     <Col span={24}>
                         <FormItem label="Thông tin thanh toán">
                             <TextArea
@@ -124,6 +134,97 @@ const FOPForm: React.FC<FOPFormProps> = ({
                             ></TextArea>
                         </FormItem>
                     </Col>
+                    <Col span={8}>
+                        <FormItem
+                            label="infoTId"
+                            validateStatus={errors?.infoTId ? "error" : ""}
+                            help={errors?.infoTId || ""}
+                        >
+                            <Input
+                                value={formData.infoTId}
+                                placeholder="infoTId"
+                                onChange={(evt) =>
+                                    onChange("infoTId", evt.target.value)
+                                }
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem
+                            label="infoMId"
+                            validateStatus={errors?.infoMId ? "error" : ""}
+                            help={errors?.infoMId || ""}
+                        >
+                            <Input
+                                value={formData.infoMId}
+                                placeholder="infoMId"
+                                onChange={(evt) =>
+                                    onChange("infoMId", evt.target.value)
+                                }
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem
+                            label="infoTnxId"
+                            validateStatus={errors?.infoTnxId ? "error" : ""}
+                            help={errors?.infoTnxId || ""}
+                        >
+                            <Input
+                                value={formData.infoTnxId}
+                                placeholder="infoTnxId"
+                                onChange={(evt) =>
+                                    onChange("infoTnxId", evt.target.value)
+                                }
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem
+                            label="infoNumber"
+                            validateStatus={errors?.infoNumber ? "error" : ""}
+                            help={errors?.infoNumber || ""}
+                        >
+                            <Input
+                                value={formData.infoNumber}
+                                placeholder="infoNumber"
+                                onChange={(evt) =>
+                                    onChange("infoNumber", evt.target.value)
+                                }
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem
+                            label="Thông tin theo dõi"
+                            validateStatus={errors?.infoTrace ? "error" : ""}
+                            help={errors?.infoTrace || ""}
+                        >
+                            <Input
+                                value={formData.infoTrace}
+                                placeholder="Thông tin theo dõi"
+                                onChange={(evt) =>
+                                    onChange("infoTrace", evt.target.value)
+                                }
+                            />
+                        </FormItem>
+                    </Col>
+                    <Col span={24}>
+                        <FormItem
+                            label="Thông tin ghi chú"
+                            validateStatus={errors?.infoNote ? "error" : ""}
+                            help={errors?.infoNote || ""}
+                        >
+                            <Input.TextArea
+                                value={formData.infoNote}
+                                placeholder="Thông tin ghi chú"
+                                onChange={(evt) =>
+                                    onChange("infoNote", evt.target.value)
+                                }
+                            />
+                        </FormItem>
+                    </Col>
+
                     <Col span={24}>
                         <FormItem
                             label="Ghi chú"

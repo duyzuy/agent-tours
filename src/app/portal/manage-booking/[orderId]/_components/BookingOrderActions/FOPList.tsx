@@ -14,7 +14,7 @@ import { formatDate } from "@/utils/date";
 import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
 import useMessage from "@/hooks/useMessage";
 
-const columns: ColumnsType<IOrderDetail["fops"][0]> = [
+const columns: ColumnsType<IFormOfPayment> = [
     {
         title: "#ID",
         key: "recId",
@@ -182,17 +182,31 @@ const ModalDetailFOP: React.FC<ModalDetailFOPProps> = ({
     onConfirm,
     isShowModal,
     onCancel,
-    title = "Chi tiết phiếu thu",
+    title = "Chi tiết",
     data,
 }) => {
     return (
         <Modal open={isShowModal} onCancel={onCancel} footer={null} width={450}>
-            <div className="body py-4">
+            <div className="body">
                 <div className="text-center font-[500] text-lg mb-6">
                     <p>{title}</p>
                 </div>
                 <div className="content py-2">
                     <Row gutter={[16, 16]}>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">ID</span>
+                                <span className="font-[500]">
+                                    {`#${data?.recId}`}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">Loại</span>
+                                <span className="font-[500]">{data?.type}</span>
+                            </div>
+                        </Col>
                         <Col span={12}>
                             <div>
                                 <span className="block text-xs">
@@ -201,12 +215,6 @@ const ModalDetailFOP: React.FC<ModalDetailFOPProps> = ({
                                 <span className="font-[500]">
                                     {data?.payer}
                                 </span>
-                            </div>
-                        </Col>
-                        <Col span={12}>
-                            <div>
-                                <span className="block text-xs">Loại</span>
-                                <span className="font-[500]">{data?.type}</span>
                             </div>
                         </Col>
                         <Col span={12}>
@@ -232,6 +240,56 @@ const ModalDetailFOP: React.FC<ModalDetailFOPProps> = ({
                                 </span>
                                 <span className="font-[500]">
                                     {data?.fopDocument}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">infoTId</span>
+                                <span className="font-[500]">
+                                    {data?.infoTId}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">infoTnxId</span>
+                                <span className="font-[500]">
+                                    {data?.infoTnxId}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">infoMId</span>
+                                <span className="font-[500]">
+                                    {data?.infoMId}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">infoTrace</span>
+                                <span className="font-[500]">
+                                    {data?.infoTrace}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">
+                                    infoNumber
+                                </span>
+                                <span className="font-[500]">
+                                    {data?.infoNumber}
+                                </span>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <span className="block text-xs">infoNote</span>
+                                <span className="font-[500]">
+                                    {data?.infoNote}
                                 </span>
                             </div>
                         </Col>
@@ -265,17 +323,6 @@ const ModalDetailFOP: React.FC<ModalDetailFOPProps> = ({
                                 <span className="font-[500]">
                                     {data?.sysFstUpdate &&
                                         formatDate(data?.sysFstUpdate)}
-                                </span>
-                            </div>
-                        </Col>
-                        <Col span={12}>
-                            <div>
-                                <span className="block text-xs">
-                                    Ngày duyệt
-                                </span>
-                                <span className="font-[500]">
-                                    {data?.sysFstUpdate &&
-                                        formatDate(data?.sysLstUpdate)}
                                 </span>
                             </div>
                         </Col>

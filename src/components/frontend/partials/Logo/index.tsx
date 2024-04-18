@@ -2,11 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { memo } from "react";
 import classNames from "classnames";
-interface LogoProps {
+export interface LogoProps {
     width?: number;
     height?: number;
     alt?: string;
     className?: string;
+    href?: string;
+    thumbUrl?: string;
 }
 
 const Logo: React.FC<LogoProps> = ({
@@ -14,19 +16,22 @@ const Logo: React.FC<LogoProps> = ({
     height = 100,
     alt = "Logo",
     className = "",
+    href = "/",
+    thumbUrl = "/assets/images/logo-anthai.svg",
 }) => {
     return (
         <Link
-            href="/"
+            href={href}
             className={classNames("logo", {
                 [className]: className,
             })}
         >
             <Image
-                src="/assets/images/logo-anthai.svg"
+                src={thumbUrl}
                 alt={alt}
                 width={width}
                 height={height}
+                loading="lazy"
             />
         </Link>
     );

@@ -12,6 +12,7 @@ import {
     IBookingOrderCustomerPayload,
     IBookingOrderPassengersPayload,
     IBookingOrderCancelPayload,
+    IBookingOrderInvoiceInfoPayload,
 } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
@@ -64,6 +65,18 @@ export const manageBookingAPIs = {
             },
         );
     },
+    updateInvoiceInfo: async (payload?: IBookingOrderInvoiceInfoPayload) => {
+        return await coreApi.post<any, BaseResponse<null>>(
+            "core/BookingOrder_EditInvoiceInfo",
+            {
+                requestObject: {
+                    ...payload,
+                },
+                localUsername: "99",
+            },
+        );
+    },
+
     updatePassengers: async (payload?: IBookingOrderPassengersPayload) => {
         return await coreApi.post<any, BaseResponse<null>>(
             "core/BookingOrder_EditBookingPaxInfo",

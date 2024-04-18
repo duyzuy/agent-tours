@@ -11,6 +11,7 @@ import {
     IBookingOrderCancelPayload,
     IBookingOrderCustomerPayload,
     IBookingOrderPassengersPayload,
+    IBookingOrderInvoiceInfoPayload,
 } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IFormOfPaymentPayload } from "@/models/management/core/formOfPayment.interface";
@@ -77,6 +78,12 @@ export const useSplitBookingToOnceOrderMutation = () => {
                 manageBookingAPIs.splitBookingAndCancel(payload),
         },
     );
+};
+export const useUpdateBookingOrderInvoiceInfoMutation = () => {
+    return useMutation({
+        mutationFn: (payload: IBookingOrderInvoiceInfoPayload) =>
+            manageBookingAPIs.updateInvoiceInfo(payload),
+    });
 };
 
 export const useCreateFormOfPaymentMutation = () => {

@@ -51,7 +51,7 @@ export const useGetPageContentDetailQuery = (
     payload: { id: number } | { originId: number },
 ) => {
     return useQuery({
-        queryKey: [queryCMS.GET_PAGE_DETAIL],
+        queryKey: [queryCMS.GET_PAGE_DETAIL, payload],
         queryFn: () => pageContentAPIs.getDetail(payload),
         select: (data) => {
             return data.result;

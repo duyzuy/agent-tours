@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useState, memo } from "react";
+import { useEffect, useState, memo, useMemo } from "react";
 import { Drawer, Space, Button, Form, Row, Col, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { IOrderDetail } from "@/models/management/booking/order.interface";
-import { BookingOrderCustomerFormData } from "../../../modules/bookingOrder.interface";
+import { BookingOrderInvoiceFormData } from "../../../modules/bookingOrder.interface";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import { bookingCustomerInfoSchema } from "../../../schema/bookingOrder.schema";
-import { ICustomerInformation } from "@/models/management/booking/customer.interface";
+import { bookingInvoiceInfoSchema } from "../../../schema/bookingOrder.schema";
 import { isEqualObject } from "@/utils/compare";
-export interface DrawerCustomerInformationProps {
+import { isEqual } from "lodash";
+
+export interface DrawerInvoiceInformationProps {
     isOpen?: boolean;
     onClose?: () => void;
-    initialValues?: ICustomerInformation;
-    onSubmit?: (data: BookingOrderCustomerFormData) => void;
+    initialValues?: BookingOrderInvoiceFormData;
+    onSubmit?: (data: BookingOrderInvoiceFormData) => void;
     orderId?: number;
 }
 
@@ -20,65 +20,71 @@ type KeysOfValue<T, TCondition> = {
 }[keyof T];
 
 type TKeysPassenger = KeysOfValue<
-    Required<BookingOrderCustomerFormData>,
+    Required<BookingOrderInvoiceFormData>,
     string
 >;
 
-const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
+const DrawerInvoiceInformation: React.FC<DrawerInvoiceInformationProps> = ({
     isOpen,
     onClose,
     onSubmit,
     initialValues,
     orderId,
 }) => {
-    const [passengerFormData, setPassengerFormData] = useState(
-        () => new BookingOrderCustomerFormData(orderId, "", "", "", "", ""),
+    const [formData, setformData] = useState(
+        () => new BookingOrderInvoiceFormData(orderId, "", "", "", "", ""),
     );
     const { handlerSubmit, clearErrors, errors } = useFormSubmit({
-        schema: bookingCustomerInfoSchema,
+        schema: bookingInvoiceInfoSchema,
     });
 
     const onChangeFormData = (
         key: TKeysPassenger,
-        value: (typeof passengerFormData)[TKeysPassenger],
+        value: (typeof formData)[TKeysPassenger],
     ) => {
-        setPassengerFormData((prev) => ({
+        setformData((prev) => ({
             ...prev,
             [key]: value,
         }));
     };
-    const isDisableButton = useMemo(() => {
-        return isEqualObject(
-            ["custAddress", "custEmail", "custName", "custPhoneNumber", "rmk"],
-            passengerFormData,
-            initialValues,
-        );
-    }, [passengerFormData]);
-    const onSubmitPassengerFormData: HandleSubmit<
-        BookingOrderCustomerFormData
-    > = (data) => {
+
+    const onSubmitformData: HandleSubmit<BookingOrderInvoiceFormData> = (
+        data,
+    ) => {
         onSubmit?.(data);
     };
+
+    const isDisableButton = useMemo(() => {
+        return isEqualObject(
+            [
+                "invoiceAddress",
+                "invoiceCompanyName",
+                "invoiceEmail",
+                "invoiceName",
+            ],
+            formData,
+            initialValues,
+        );
+    }, [formData]);
+
     /*
      * INITIAL FORM Data
      */
     useEffect(() => {
-        if (initialValues) {
-            setPassengerFormData((prev) => ({
-                ...prev,
-                custName: initialValues?.custName,
-                custEmail: initialValues?.custEmail,
-                custAddress: initialValues?.custAddress,
-                custPhoneNumber: initialValues?.custPhoneNumber,
-                rmk: initialValues?.rmk,
-            }));
-        }
+        setformData((prev) => ({
+            ...prev,
+            invoiceName: initialValues?.invoiceName,
+            invoiceEmail: initialValues?.invoiceEmail,
+            invoiceCompanyName: initialValues?.invoiceCompanyName,
+            invoiceTaxCode: initialValues?.invoiceTaxCode,
+            invoiceAddress: initialValues?.invoiceAddress,
+        }));
         clearErrors();
     }, [initialValues, isOpen]);
 
     return (
         <Drawer
-            title={`Thông tin người đặt`}
+            title={`Thông tin xuất hoá đơn`}
             width={650}
             onClose={onClose}
             open={isOpen}
@@ -93,16 +99,16 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
                     <Col span={12}>
                         <FormItem
                             label="Họ và tên"
-                            validateStatus={errors?.custName ? "error" : ""}
-                            help={errors?.custName || ""}
+                            validateStatus={errors?.invoiceName ? "error" : ""}
+                            help={errors?.invoiceName || ""}
                             required
                         >
                             <Input
-                                value={passengerFormData.custName}
-                                placeholder="Họ"
+                                value={formData.invoiceName}
+                                placeholder="Họ và tên"
                                 onChange={(ev) =>
                                     onChangeFormData(
-                                        "custName",
+                                        "invoiceName",
                                         ev.target.value,
                                     )
                                 }
@@ -112,16 +118,16 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
                     <Col span={12}>
                         <FormItem
                             label="Email"
-                            validateStatus={errors?.custEmail ? "error" : ""}
-                            help={errors?.custEmail || ""}
+                            validateStatus={errors?.invoiceEmail ? "error" : ""}
+                            help={errors?.invoiceEmail || ""}
                             required
                         >
                             <Input
-                                value={passengerFormData.custEmail}
+                                value={formData.invoiceEmail}
                                 placeholder="Email"
                                 onChange={(ev) =>
                                     onChangeFormData(
-                                        "custEmail",
+                                        "invoiceEmail",
                                         ev.target.value,
                                     )
                                 }
@@ -130,19 +136,19 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
                     </Col>
                     <Col span={12}>
                         <FormItem
-                            label="Số điện thoại"
+                            label="Tên công ty"
                             validateStatus={
-                                errors?.custPhoneNumber ? "error" : ""
+                                errors?.invoiceCompanyName ? "error" : ""
                             }
-                            help={errors?.custPhoneNumber || ""}
+                            help={errors?.invoiceCompanyName || ""}
                             required
                         >
                             <Input
-                                value={passengerFormData.custPhoneNumber}
-                                placeholder="Số điện thoại"
+                                value={formData.invoiceCompanyName}
+                                placeholder="Tên công ty"
                                 onChange={(ev) =>
                                     onChangeFormData(
-                                        "custPhoneNumber",
+                                        "invoiceCompanyName",
                                         ev.target.value,
                                     )
                                 }
@@ -152,16 +158,18 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
 
                     <Col span={12}>
                         <FormItem
-                            label="Địa chỉ"
-                            validateStatus={errors?.custAddress ? "error" : ""}
-                            help={errors?.custAddress || ""}
+                            label="Mã số thuế"
+                            validateStatus={
+                                errors?.invoiceTaxCode ? "error" : ""
+                            }
+                            help={errors?.invoiceTaxCode || ""}
                         >
                             <Input
-                                value={passengerFormData.custAddress}
-                                placeholder="Nhập địa chỉ thường trú"
+                                value={formData.invoiceTaxCode}
+                                placeholder="Mã số thuế"
                                 onChange={(ev) =>
                                     onChangeFormData(
-                                        "custAddress",
+                                        "invoiceTaxCode",
                                         ev.target.value,
                                     )
                                 }
@@ -170,15 +178,20 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
                     </Col>
                     <Col span={24}>
                         <FormItem
-                            label="Lưu ý"
-                            validateStatus={errors?.rmk ? "error" : ""}
-                            help={errors?.rmk || ""}
+                            label="Địa chỉ"
+                            validateStatus={
+                                errors?.invoiceAddress ? "error" : ""
+                            }
+                            help={errors?.invoiceAddress || ""}
                         >
-                            <Input.TextArea
-                                value={passengerFormData.rmk}
-                                placeholder="Nhập nội dung"
+                            <Input
+                                value={formData.invoiceAddress}
+                                placeholder="Địa chỉ"
                                 onChange={(ev) =>
-                                    onChangeFormData("rmk", ev.target.value)
+                                    onChangeFormData(
+                                        "invoiceAddress",
+                                        ev.target.value,
+                                    )
                                 }
                             />
                         </FormItem>
@@ -190,10 +203,7 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
                     <Button onClick={onClose}>Huỷ</Button>
                     <Button
                         onClick={() =>
-                            handlerSubmit(
-                                passengerFormData,
-                                onSubmitPassengerFormData,
-                            )
+                            handlerSubmit(formData, onSubmitformData)
                         }
                         type="primary"
                         disabled={isDisableButton}
@@ -205,4 +215,4 @@ const DrawerCustomerInformation: React.FC<DrawerCustomerInformationProps> = ({
         </Drawer>
     );
 };
-export default memo(DrawerCustomerInformation);
+export default memo(DrawerInvoiceInformation);

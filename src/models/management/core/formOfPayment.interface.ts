@@ -16,6 +16,12 @@ export interface IFormOfPayment {
     sysLstUpdate: string;
     sysBelongTo: string;
     logStatus: string;
+    infoTId: string;
+    infoMId: string;
+    infoTnxId: string;
+    infoTrace: string;
+    infoNote: string;
+    infoNumber: string;
 }
 
 export enum FOP_TYPE {
@@ -36,6 +42,7 @@ export enum FOP_PAYMENT_TYPE {
     BANKTRANSFER = "BANKTRANSFER",
     CREDITCARD = "CREDITCARD",
     COUPON = "COUPON",
+    SYSTEM = "SYSTEM", // từ hệ thống sinh ra
 }
 
 export interface IFormOfPaymentPayload {

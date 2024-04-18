@@ -1,3 +1,4 @@
+import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { Status } from "@/models/management/common.interface";
 
 export interface IBookingOrderCustomerItem {
@@ -18,7 +19,7 @@ export class BookingOrderCustomerFormData implements IBookingOrderCustomerItem {
     rmk?: string;
 
     constructor(
-        recId: number,
+        recId: number | undefined,
         custName: string,
         custPhoneNumber: string,
         custEmail: string,
@@ -31,6 +32,31 @@ export class BookingOrderCustomerFormData implements IBookingOrderCustomerItem {
         this.custEmail = custEmail;
         this.custAddress = custAddress;
         this.rmk = rmk;
+    }
+}
+
+export class BookingOrderInvoiceFormData implements Partial<IInvoice> {
+    recId?: number;
+    invoiceAddress?: string | undefined;
+    invoiceCompanyName?: string | undefined;
+    invoiceEmail?: string | undefined;
+    invoiceName?: string | undefined;
+    invoiceTaxCode?: string | undefined;
+
+    constructor(
+        recId: number | undefined,
+        invoiceAddress: string | undefined,
+        invoiceCompanyName: string | undefined,
+        invoiceEmail: string | undefined,
+        invoiceName: string | undefined,
+        invoiceTaxCode: string | undefined,
+    ) {
+        this.recId = recId;
+        this.invoiceAddress = invoiceAddress;
+        this.invoiceCompanyName = invoiceCompanyName;
+        this.invoiceEmail = invoiceEmail;
+        this.invoiceName = invoiceName;
+        this.invoiceTaxCode = invoiceTaxCode;
     }
 }
 
@@ -107,6 +133,11 @@ export interface IBookingOrderCustomerPayload {
     bookingOrder?: IBookingOrderCustomerItem;
 }
 
+export interface IBookingOrderInvoiceInfoPayload {
+    bookingOrder: Partial<IInvoice> & {
+        recId?: number;
+    };
+}
 export interface IBookingOrderPassengersPayload {
     bookingOrder?: { recId: number };
     bookingDetails?: { booking: IBookingOrderPassengerItem }[];

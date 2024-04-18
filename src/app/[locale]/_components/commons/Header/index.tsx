@@ -7,6 +7,8 @@ import DropdownMenu from "./DropdownMenu";
 import IconSearch from "@/assets/icons/IconSearch";
 import Logo from "@/components/frontend/partials/Logo";
 import NavLink from "../NavLink";
+import LanguageSwitcher from "@/components/frontend/partials/LanguageSwitcher";
+
 const Header = () => {
     return (
         <header className="bg-white drop-shadow-sm relative z-20">
@@ -69,6 +71,9 @@ const Header = () => {
                                         <IconAccount className="w-5 h-5 mr-2 stroke-gray-600" />
                                     }
                                 />
+                            </li>
+                            <li>
+                                <LanguageSwitcher />
                             </li>
                         </ul>
                     </div>

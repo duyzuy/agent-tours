@@ -3,10 +3,11 @@ import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import Header from "./_components/commons/Header";
 import Footer from "./_components/commons/Footer";
+import { LangCode } from "@/models/management/cms/language.interface";
 
 interface Props {
     children: React.ReactNode;
-    params: { locale: string };
+    params: { locale: LangCode };
 }
 
 export async function generateStaticParams() {

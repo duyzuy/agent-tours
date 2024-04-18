@@ -1,4 +1,3 @@
-import { IMediaFolderPayload } from "@/models/management/media.interface";
 import useMessage from "@/hooks/useMessage";
 
 import {
@@ -12,17 +11,14 @@ import { PageContentFormData } from "./pageContent.interface";
 
 import { useRouter } from "next/navigation";
 
-export type TMediaFolderErrorsField = Partial<
-    Record<keyof Pick<IMediaFolderPayload, "folderName" | "folderSlug">, string>
->;
 const useCRUDPageContent = () => {
     const { mutate: makeCreate } = useCreatePageContentMutation();
     const { mutate: makeUpdate } = useUpdatePageContentMutation();
 
     const router = useRouter();
     const queryClient = useQueryClient();
-
     const message = useMessage();
+
     const onCreate = (formData: PageContentFormData, cb?: () => void) => {
         makeCreate(
             { ...formData },

@@ -12,6 +12,9 @@ const nextConfig = {
         CDN_ROOT: "",
         SECRET: "YOUR_SECRET_VALUE_HERE",
     },
+    experimental: {
+        serverActions: true,
+    },
     // transpilePackages: ["antd"],
     images: {
         domains: ["localhost", "tours.frdev.asia"],

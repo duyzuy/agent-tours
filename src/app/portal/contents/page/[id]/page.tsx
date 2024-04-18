@@ -17,12 +17,12 @@ interface PageContentDetailProps {
     params: { id: number };
 }
 const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
+    const { locale, setLocale } = useLocale(localeDefault);
+
     const { data, isLoading } = useGetPageContentDetailQuery({
         originId: Number(params.id),
     });
     const router = useRouter();
-
-    const { locale, setLocale } = useLocale(localeDefault);
 
     const pageContent = useMemo(() => {
         return data?.find((page) => page.lang === locale?.key);

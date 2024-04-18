@@ -97,7 +97,7 @@ export const limitBookingTimeRuleAndPolicyCreateSchema: ObjectSchema<LimitTimeBo
         }),
         soGio: number()
             .min(0, "Tối thiểu là 0.")
-            .max(24, "Tối đa 24 giờ.")
+            .max(2400, "Tối đa 2400 giờ.")
             .typeError("Số giờ không hợp lệ, phải là chữ số.")
             .integer("Số giờ không hợp lệ, phải là chữ số.")
             .required("Số giờ không bỏ trống"),

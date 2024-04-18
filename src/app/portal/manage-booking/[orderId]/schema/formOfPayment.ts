@@ -37,6 +37,12 @@ export const formOfPaymentSchema: ObjectSchema<FOPFormData> = object({
         )
         .required("Trạng thái."),
     fopDocument: string().required("Ngày sinh không bỏ trống."),
+    infoTId: string(),
+    infoMId: string(),
+    infoTnxId: string(),
+    infoTrace: string(),
+    infoNote: string(),
+    infoNumber: string(),
     amount: number().min(1, "Tối thiểu lớn hơn 1."),
     rmk: string().default(""),
     payer: string().required("Không bỏ trống."),

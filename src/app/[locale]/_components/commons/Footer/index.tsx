@@ -9,81 +9,81 @@ const DOMS = [
         {
             id: 1,
             name: "Du lịch Hà Nội",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 2,
             name: "Du lịch Sapa",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 3,
             name: "Du lịch Ninh Bình",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 4,
             name: "Du lịch Đà Nẵng",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 5,
             name: "Du lịch Đà Lạt",
-            slug: "",
+            slug: "a-1",
         },
     ],
     [
         {
             id: 6,
             name: "Du lịch Hà Nội",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 7,
             name: "Du lịch Sapa",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 8,
             name: "Du lịch Ninh Bình",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 9,
             name: "Du lịch Đà Nẵng",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 10,
             name: "Du lịch Đà Lạt",
-            slug: "",
+            slug: "a-1",
         },
     ],
     [
         {
             id: 11,
             name: "Du lịch Hà Nội",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 12,
             name: "Du lịch Sapa",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 13,
             name: "Du lịch Ninh Bình",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 14,
             name: "Du lịch Đà Nẵng",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 15,
             name: "Du lịch Đà Lạt",
-            slug: "",
+            slug: "a-1",
         },
     ],
 ];
@@ -93,36 +93,36 @@ const THONGTIN = [
         {
             id: 111,
             name: "Về chúng tôi",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 21,
             name: "Tuyển dụng",
-            slug: "",
+            slug: "a-1",
         },
     ],
     [
         {
             id: 611,
             name: "Điểm tim Visa",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 711,
             name: "Chính sách bảo mật",
-            slug: "",
+            slug: "a-1",
         },
     ],
     [
         {
             id: 111,
             name: "Trải nghiệm du lịch",
-            slug: "",
+            slug: "a-1",
         },
         {
             id: 1211,
             name: "Điều khoản sử dụng",
-            slug: "",
+            slug: "a-1",
         },
     ],
 ];
@@ -213,7 +213,7 @@ const Footer = () => {
                                                 key={_item.id}
                                             >
                                                 <Link
-                                                    href={_item.slug}
+                                                    href={`/${_item.slug}`}
                                                     className="flex items-center"
                                                 >
                                                     <IconChevronRight

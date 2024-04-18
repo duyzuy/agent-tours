@@ -61,7 +61,7 @@ const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
             children: (
                 <FOPForm
                     orderId={orderId}
-                    formOfPaymentType={FOP_TYPE.PAYMENT}
+                    formOfPaymentType={formOfPaymentType}
                     onSubmitForm={onCreateFormOfPayment}
                 />
             ),

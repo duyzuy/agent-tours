@@ -3,6 +3,12 @@ import { IRolesPermissionsRs } from "@/models/management/role.interface";
 import { Tag } from "antd";
 import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
 import { moneyFormatVND } from "@/utils/helper";
+import {
+    PolicyCat,
+    PolicyRule,
+} from "@/models/management/core/ruleAndPolicy.interface";
+
+import Table from "antd/es/table";
 export const columns: ColumnsType<IRuleAndPolicy> = [
     {
         title: "#ID",
@@ -23,38 +29,61 @@ export const columns: ColumnsType<IRuleAndPolicy> = [
                 </div>
             );
         },
+        filters: [
+            { text: "Phí phạt", value: "PENALTY" },
+            { text: "Trả 1 phần", value: "DEPOSIT" },
+            { text: "Trả sau", value: "BOOKING_TIMELIMIT" },
+        ],
+        onFilter: (value, record) => record.type.indexOf(value as string) === 0,
     },
     {
-        title: "Loại áp dụng",
+        title: "Áp dụng theo",
         key: "cat",
         dataIndex: "cat",
         width: 150,
+        render(value, record, index) {
+            return (
+                <div>
+                    <div className="text-xs mb-2">{record.cat}</div>
+                    {record.cat === PolicyCat.BYTOURCODE ? (
+                        <Tag className="text-xs" color="blue">
+                            {record.maTour}
+                        </Tag>
+                    ) : null}
+                </div>
+            );
+        },
     },
+    Table.EXPAND_COLUMN,
     {
         title: "Nguyên tắc",
         key: "ruleName",
         dataIndex: "ruleName",
-        width: 150,
-    },
-    {
-        title: "Số tiền",
-        key: "soTien",
-        dataIndex: "soTien",
-        render(soTien, record) {
-            return moneyFormatVND(soTien);
+        width: 250,
+        render(value, record, index) {
+            return (
+                <div>
+                    <div className="text-xs mb-2">{record.ruleName}</div>
+                    {record.rule === PolicyRule.HOURSAFTER_BOOK ? (
+                        <Tag className="text-xs" color="blue">
+                            {`${record.soGio} giờ`}
+                        </Tag>
+                    ) : null}
+
+                    {record.rule === PolicyRule.FIXAMOUNT ||
+                    record.rule === PolicyRule.AMOUNTBEFOR_DEPART ? (
+                        <Tag className="text-xs" color="blue">
+                            {`${moneyFormatVND(record.soTien)}`}
+                        </Tag>
+                    ) : null}
+                </div>
+            );
         },
-        width: 150,
     },
     {
         title: "Số ngày",
         key: "soNgay",
         dataIndex: "soNgay",
-        width: 150,
-    },
-    {
-        title: "Số giờ",
-        key: "soGio",
-        dataIndex: "soGio",
-        width: 150,
+        width: 100,
     },
 ];

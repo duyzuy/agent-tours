@@ -1,7 +1,7 @@
 export interface IBookingTimeLitmit {
     recId: number;
     orderId: number;
-    type: string;
+    type: "BOOKING_TIMELIMIT";
     rmk: string;
     deadline: string;
     validFrom: string;
@@ -13,4 +13,8 @@ export interface IBookingTimeLitmit {
     sysLstUpdate: string;
     sysBelongTo: string;
     logStatus: string;
+    isCompleted: boolean;
+    isExpired: boolean;
+    maximumAmount: number;
+    minimumAmount: number;
 }

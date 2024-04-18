@@ -1,8 +1,8 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
 
-import { PassengerType } from "@/models/management/common.interface";
 import {
     BookingOrderCustomerFormData,
+    BookingOrderInvoiceFormData,
     BookingOrderPassengerFormData,
 } from "../modules/bookingOrder.interface";
 import { EPassengerGender } from "@/constants/common";
@@ -43,7 +43,19 @@ export const bookingCustomerInfoSchema: ObjectSchema<BookingOrderCustomerFormDat
         recId: number().required("Thiếu ID order sản phẩm."),
         custName: string().required("Họ tên không bỏ trống."),
         custPhoneNumber: string().required("Số điện thoại không bỏ trống."),
-        custEmail: string().required("Email không bỏ trống."),
+        custEmail: string()
+            .email("Email không đúng")
+            .required("Email không bỏ trống."),
         custAddress: string().default(""),
         rmk: string().default(""),
+    });
+
+export const bookingInvoiceInfoSchema: ObjectSchema<BookingOrderInvoiceFormData> =
+    object({
+        recId: number().required("Thiếu ID order sản phẩm."),
+        invoiceAddress: string(),
+        invoiceCompanyName: string(),
+        invoiceEmail: string().email("Email không đúng."),
+        invoiceName: string(),
+        invoiceTaxCode: string(),
     });

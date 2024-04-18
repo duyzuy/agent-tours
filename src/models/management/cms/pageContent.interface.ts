@@ -34,8 +34,8 @@ export interface IPageContentDetail {
     metaKeyword: string;
     publishDate: string;
     status: PageStatus;
-    children: any[];
-    languages: [];
+    children: IPageContentDetail[];
+    languages: { lang: LangCode; slug: string }[];
 }
 
 export interface IPageContentPayload {
@@ -67,7 +67,7 @@ export class PageContentQueryParams {
 export interface IPageContentListRs extends BaseResponse<IPageContentItem[]> {}
 
 export interface IPageContentDetailPerLangRs
-    extends BaseResponse<IPageContentDetail[]> {}
+    extends BaseResponse<IPageContentDetail> {}
 
 export interface IPageContentDetailRs
-    extends BaseResponse<IPageContentDetail> {}
+    extends BaseResponse<IPageContentDetail[]> {}

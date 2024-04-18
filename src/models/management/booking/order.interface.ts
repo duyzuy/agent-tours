@@ -44,12 +44,20 @@ export interface IOrderItem {
     invoiceTaxCode: string;
     invoiceEmail: string;
     fops: IFormOfPayment[];
-    timelimits: IBookingTimeLitmit[];
+    rulesAndPolicies: {
+        bookingTimelimits: IBookingTimeLitmit[];
+        depositTimelimits: [];
+        penalties: [];
+    };
 }
 export interface IOrderListRs extends BaseResponse<IOrderItem[]> {}
 
 export interface IOrderDetail extends IReservation {
     fops: IFormOfPayment[];
-    timelimits: IBookingTimeLitmit[];
+    rulesAndPolicies: {
+        bookingTimelimits: IBookingTimeLitmit[];
+        depositTimelimits: [];
+        penalties: [];
+    };
 }
 export interface IOrderDetailRs extends BaseResponse<IOrderDetail> {}

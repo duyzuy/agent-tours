@@ -93,6 +93,11 @@ export interface IReservation {
         totalPaid: number;
         totalRefunded: number;
         charge: number;
+        invoiceName: string;
+        invoiceCompanyName: string;
+        invoiceAddress: string;
+        invoiceTaxCode: string;
+        invoiceEmail: string;
         rmk: string;
         rmk1: string;
         rmk2: string;
@@ -110,7 +115,7 @@ export interface IReservation {
             configs: PriceConfig[] | null;
         };
         fops: IFormOfPayment[];
-        timelimits: IBookingTimeLitmit[];
+        rulesAndPolicies: IBookingTimeLitmit[];
     };
     bookingDetails: IBookingDetailItem[];
     passengers: IPassengerInformation[];

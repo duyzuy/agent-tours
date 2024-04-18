@@ -1,72 +1,39 @@
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { isUndefined } from "lodash";
-import { Button, Space, Tag, Form, Input } from "antd";
+import React, { memo } from "react";
+import { Tag } from "antd";
 import classNames from "classnames";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
-import FormItem from "@/components/base/FormItem";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
-import { IBookingOrderCancelPayload } from "../../../modules/bookingOrder.interface";
-import ModalCancelBookingConfirmation from "../ModalCanelBookingConfirmation";
-import DrawerFormOfPayment from "./DrawerFormOfPayment";
 import { PaymentStatus } from "@/models/management/common.interface";
-import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
-import { FOPFormData } from "../../modules/formOfPayment.interface";
 
+type DataType = Pick<
+    IOrderDetail["bookingOrder"],
+    | "tourPrice"
+    | "extraPrice"
+    | "charge"
+    | "sysFstUpdate"
+    | "totalAmount"
+    | "totalFop"
+    | "totalPaid"
+    | "totalRefunded"
+    | "paymentStatus"
+>;
 interface OrderDetailProps {
     orderId?: number;
     name?: string;
     code?: string;
-    data?: Partial<
-        Pick<
-            IOrderDetail["bookingOrder"],
-            | "tourPrice"
-            | "extraPrice"
-            | "charge"
-            | "sysFstUpdate"
-            | "totalAmount"
-            | "totalFop"
-            | "totalPaid"
-            | "totalRefunded"
-            | "paymentStatus"
-            | "timelimits"
-        >
-    >;
+    data?: Partial<DataType>;
+    rulesAndPolicies?: IOrderDetail["rulesAndPolicies"];
     className?: string;
-    onCancelBooking?: (
-        payload: IBookingOrderCancelPayload,
-        cb?: () => void,
-    ) => void;
 }
 const OrderSummary = ({
     orderId,
     data,
     code,
+    rulesAndPolicies,
     name,
     className = "",
-    onCancelBooking,
 }: OrderDetailProps) => {
-    const [formOfPaymentType, setFormOfPaymentType] =
-        useState<FOPFormData["type"]>();
-    const [isShowModalConfirm, setShowModalConfirm] = useState(false);
-    const [cancelBookingData, setCancelBookingData] =
-        useState<IBookingOrderCancelPayload>({
-            bookingOrder: { recId: orderId, rmk4: "" },
-        });
-    const router = useRouter();
-
-    const onConfirmCancelBookingOrder = () => {
-        onCancelBooking?.(cancelBookingData, () => {
-            setShowModalConfirm(false);
-            router.push("./portal/manage-booking/order-list");
-        });
-    };
-    const onShowModalCancelConfirm = () => setShowModalConfirm(true);
-    const onCloseModalCancelConfirm = () => setShowModalConfirm(false);
-    const onShowDrawerFOP = (type: FOPFormData["type"]) => {
-        setFormOfPaymentType(type);
-    };
     return (
         <>
             <div
@@ -74,7 +41,8 @@ const OrderSummary = ({
                     [className]: className,
                 })}
             >
-                <OrderSummary.Title name={name} code={code} className="mb-6" />
+                {/* <OrderSummary.Title name={name} code={code} className="mb-6" /> */}
+
                 <OrderSummary.Pricings
                     tourPrice={moneyFormatVND(data?.tourPrice)}
                     extraPrice={moneyFormatVND(data?.extraPrice)}
@@ -94,107 +62,34 @@ const OrderSummary = ({
                             <Tag color="blue">Thanh toán 1 phần</Tag>
                         )) || <Tag color="red">Chưa thanh toán</Tag>
                     }
-                    timelimit={
-                        data?.timelimits && data?.timelimits.length ? (
-                            <div className="flex-1">
-                                <span className="block">
-                                    Thời hạn thanh toán
-                                </span>
-                                <span className="block text-[16px]">
-                                    {data?.timelimits.map((item) => (
-                                        <div key={item.recId}>
-                                            <span>
-                                                {formatDate(item.deadline)}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </span>
-                                <p className="text-xs">
-                                    * Đặt chỗ sẽ bị huỷ nếu chưa thực hiện thanh
-                                    toán trước thời hạn thanh toán.
-                                </p>
-                            </div>
-                        ) : null
-                    }
+                    // timelimit={
+                    //     data?.timelimits && data?.timelimits.length ? (
+                    //         <div className="flex-1">
+                    //             <span className="block">
+                    //                 Thời hạn thanh toán
+                    //             </span>
+                    //             <span className="block text-[16px]">
+                    //                 {data?.timelimits.map((item) => (
+                    //                     <div key={item.recId}>
+                    //                         <span>
+                    //                             {formatDate(item.deadline)}
+                    //                         </span>
+                    //                     </div>
+                    //                 ))}
+                    //             </span>
+                    //             <p className="text-xs">
+                    //                 * Đặt chỗ sẽ bị huỷ nếu chưa thực hiện thanh
+                    //                 toán trước thời hạn thanh toán.
+                    //             </p>
+                    //         </div>
+                    //     ) : null
+                    // }
                 />
-                <div className="booking__order__Detail-actions pb-6 mb-6 bg-white">
-                    <Space>
-                        <Button
-                            type="default"
-                            danger
-                            ghost
-                            size="small"
-                            onClick={onShowModalCancelConfirm}
-                        >
-                            Huỷ tour
-                        </Button>
-                        <Button
-                            size="small"
-                            type="primary"
-                            ghost
-                            onClick={() =>
-                                router.push(
-                                    `./portal/manage-booking/${orderId}/split-booking`,
-                                )
-                            }
-                        >
-                            Tách tour
-                        </Button>
-                        <Button
-                            type="primary"
-                            size="small"
-                            onClick={() => onShowDrawerFOP(FOP_TYPE.PAYMENT)}
-                        >
-                            Thanh toán
-                        </Button>
-                        <Button
-                            type="primary"
-                            size="small"
-                            onClick={() => onShowDrawerFOP(FOP_TYPE.REFUND)}
-                        >
-                            Hoàn tiền
-                        </Button>
-                    </Space>
-                </div>
             </div>
-            <DrawerFormOfPayment
-                orderId={orderId}
-                totalAmount={data?.totalAmount}
-                totalPaid={data?.totalPaid}
-                isOpen={!isUndefined(formOfPaymentType)}
-                formOfPaymentType={formOfPaymentType}
-                onClose={() => setFormOfPaymentType(undefined)}
-            />
-            <ModalCancelBookingConfirmation
-                isShowModal={isShowModalConfirm}
-                title="Huỷ đặt chỗ!"
-                descriptions="Bạn chắc chắn muốn huỷ đặt chỗ?"
-                onCancel={onCloseModalCancelConfirm}
-                render={() => (
-                    <Form layout="vertical">
-                        <FormItem required>
-                            <Input.TextArea
-                                placeholder="Lý do huỷ"
-                                name="rmk4"
-                                onChange={(ev) =>
-                                    setCancelBookingData((prev) => ({
-                                        ...prev,
-                                        bookingOrder: {
-                                            ...prev?.bookingOrder,
-                                            rmk4: ev.target.value,
-                                        },
-                                    }))
-                                }
-                            />
-                        </FormItem>
-                    </Form>
-                )}
-                onConfirm={onConfirmCancelBookingOrder}
-            />
         </>
     );
 };
-export default OrderSummary;
+export default memo(OrderSummary);
 
 interface OrderSummaryPricings {
     tourPrice?: string;
@@ -206,7 +101,6 @@ interface OrderSummaryPricings {
     totalFop?: string;
     totalRefunded?: string;
     totalPaid?: string;
-    timelimit?: React.ReactNode;
 }
 OrderSummary.Pricings = function OrderSummaryPricings({
     tourPrice,
@@ -218,7 +112,6 @@ OrderSummary.Pricings = function OrderSummaryPricings({
     totalFop,
     totalRefunded,
     totalPaid,
-    timelimit,
 }: OrderSummaryPricings) {
     return (
         <>
@@ -282,7 +175,6 @@ OrderSummary.Pricings = function OrderSummaryPricings({
                             {totalPaid}
                         </span>
                     </div>
-                    {timelimit}
                 </div>
             </div>
         </>

@@ -50,7 +50,10 @@ export const coreApi = {
                 });
             })
             .catch((error) => {
-                console.log({ endpoint, queryParams, error });
+                console.table(endpoint);
+                console.table({ queryParams });
+                console.table({ error });
+
                 return Promise.reject(error as TError);
             });
     },
