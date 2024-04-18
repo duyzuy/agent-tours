@@ -421,6 +421,9 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
                             />
                             <PageParentList
                                 lang={lang}
+                                excludeIds={
+                                    initData?.id ? [initData?.id] : undefined
+                                }
                                 value={formData.parentId}
                                 onChange={onChangeParentId}
                                 className="mb-2"

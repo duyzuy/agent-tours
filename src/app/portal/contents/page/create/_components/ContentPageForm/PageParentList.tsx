@@ -9,12 +9,14 @@ export interface PageParentListProps {
     lang?: LangCode;
     value?: number;
     className?: string;
+    excludeIds?: number[];
     onChange?: (value: number) => void;
 }
 const PageParentList: React.FC<PageParentListProps> = ({
     lang,
     value,
     className = "",
+    excludeIds,
     onChange,
 }) => {
     const [pagination, setPaginations] = useState<{
@@ -27,7 +29,7 @@ const PageParentList: React.FC<PageParentListProps> = ({
     );
 
     const { data: pageParentData, isLoading } =
-        useGetPageContentListParentByLangQuery(lang, queryParams);
+        useGetPageContentListParentByLangQuery(lang, excludeIds, queryParams);
 
     useEffect(() => {
         if (!isLoading && pageParentData) {

@@ -30,11 +30,17 @@ export const useGetPageContentListQuery = (
 
 export const useGetPageContentListParentByLangQuery = (
     lang?: LangCode,
+    excludes?: number[],
     queryParams?: PageContentQueryParams,
 ) => {
     return useQuery({
         queryKey: [queryCMS.GET_PAGE_LIST, lang, { ...queryParams }],
-        queryFn: () => pageContentAPIs.getParentListByLang(lang, queryParams),
+        queryFn: () =>
+            pageContentAPIs.getParentListByLang({
+                lang,
+                queryParams,
+                excludes,
+            }),
         select: (data) => {
             return {
                 list: data.result,

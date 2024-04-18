@@ -61,10 +61,15 @@ export const pageContentAPIs = {
             },
         );
     },
-    getParentListByLang: async (
-        lang?: LangCode,
-        queryParams?: PageContentQueryParams,
-    ) => {
+    getParentListByLang: async ({
+        lang,
+        excludes,
+        queryParams,
+    }: {
+        lang?: LangCode;
+        excludes?: number[];
+        queryParams?: PageContentQueryParams;
+    }) => {
         return await client.post<IPageContentListRs, BaseResponse<null>>(
             "local/Cms_page_ListOnlyParent",
             {
@@ -74,7 +79,7 @@ export const pageContentAPIs = {
                     )}`,
                 },
                 params: {
-                    requestObject: { lang },
+                    requestObject: { lang, excludes },
                     pageCurrent: queryParams?.pageCurrent,
                     pageSize: queryParams?.pageSize,
                 },
