@@ -5,7 +5,10 @@ import { ISellable } from "../core/sellable.interface";
 import { PriceConfig } from "../core/priceConfig.interface";
 import { IReservation } from "./reservation.interface";
 import { IFormOfPayment } from "../core/formOfPayment.interface";
-import { IBookingTimeLitmit } from "../core/bookingTimeLimit.interface";
+import {
+    IBookingTimeLitmit,
+    IDepositTimelimit,
+} from "../core/bookingTimeLimit.interface";
 
 export interface IOrderItem {
     recId: number;
@@ -46,7 +49,7 @@ export interface IOrderItem {
     fops: IFormOfPayment[];
     rulesAndPolicies: {
         bookingTimelimits: IBookingTimeLitmit[];
-        depositTimelimits: [];
+        depositTimelimits: IDepositTimelimit[];
         penalties: [];
     };
 }
@@ -56,7 +59,7 @@ export interface IOrderDetail extends IReservation {
     fops: IFormOfPayment[];
     rulesAndPolicies: {
         bookingTimelimits: IBookingTimeLitmit[];
-        depositTimelimits: [];
+        depositTimelimits: IDepositTimelimit[];
         penalties: [];
     };
 }

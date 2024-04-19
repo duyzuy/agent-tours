@@ -1,7 +1,6 @@
-export interface IBookingTimeLitmit {
+export interface SystemRuleAndPolicyBase {
     recId: number;
     orderId: number;
-    type: "BOOKING_TIMELIMIT";
     rmk: string;
     deadline: string;
     validFrom: string;
@@ -17,4 +16,10 @@ export interface IBookingTimeLitmit {
     isExpired: boolean;
     maximumAmount: number;
     minimumAmount: number;
+}
+export interface IBookingTimeLitmit extends SystemRuleAndPolicyBase {
+    type: "BOOKING_TIMELIMIT";
+}
+export interface IDepositTimelimit extends SystemRuleAndPolicyBase {
+    type: "DEPOSIT";
 }

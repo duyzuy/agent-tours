@@ -19,6 +19,7 @@ import { useLocalGetRuleAndPolicyQuery } from "@/queries/ruleAndPolicy";
 import { formatDate } from "@/utils/date";
 import InvoiceInformation from "./_components/InvoiceInformation";
 import BookingOrderActions from "./_components/BookingOrderActions";
+import DepositTimeline from "./_components/DepositTimeline";
 
 interface ReservationDetailPageProps {
     params: { orderId: number };
@@ -157,6 +158,9 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                     // startDate={bookingOrder?.sellable.startDate}
                     // endDate={bookingOrder?.sellable.endDate}
                     className="mb-6"
+                />
+                <DepositTimeline
+                    depositTimelimits={rulesAndPolicies?.depositTimelimits}
                 />
                 <Row gutter={16}>
                     <Col span={12}>

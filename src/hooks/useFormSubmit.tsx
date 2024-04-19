@@ -103,7 +103,7 @@ export function useFormSubmit<T extends object | undefined>({
             : onSubmit?.(formData);
     };
 
-    const clearErrors = () => useCallback(() => setErrors(undefined), []);
+    const clearErrors = useCallback(() => setErrors(undefined), []);
 
     return { handlerSubmit, errors, clearErrors };
 }
