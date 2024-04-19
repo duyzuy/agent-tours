@@ -70,23 +70,6 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
         },
     },
     {
-        title: "Thời hạn thanh toán",
-        dataIndex: "timelimits",
-        key: "timelimits",
-        width: 200,
-        render(value, record, index) {
-            return (
-                <>
-                    {/* {record.timelimits.map((item) => (
-                        <React.Fragment key={item.recId}>
-                            <div>{formatDate(item.deadline)}</div>
-                        </React.Fragment>
-                    ))} */}
-                </>
-            );
-        },
-    },
-    {
         title: "Trạng thái ",
         dataIndex: "paymentStatus",
         key: "paymentStatus",

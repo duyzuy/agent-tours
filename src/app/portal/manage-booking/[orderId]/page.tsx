@@ -101,6 +101,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                     }
                     name={bookingOrder?.template.name}
                     code={bookingOrder?.sellable.code}
+                    orderId={bookingOrder?.recId}
                     className="mb-6"
                 />
                 <BookingOrderActions

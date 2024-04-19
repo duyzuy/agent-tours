@@ -1,4 +1,5 @@
 import useBooking from "../hooks/useBooking";
+import { PassengerListFormData } from "../passenger-information/_components/PassengersInformationForm";
 import { IBookingItem } from "./bookingInformation.interface";
 const usePassenger = () => {
     const [_, setBookingInformation] = useBooking();
@@ -34,8 +35,43 @@ const usePassenger = () => {
         });
     };
 
+    const onSetPassengerInformationBooking = (
+        passengerFormsData: PassengerListFormData,
+    ) => {
+        setBookingInformation((prev) => {
+            let newBookingItems = prev.bookingInfo?.bookingItems || [];
+
+            newBookingItems = newBookingItems.reduce<IBookingItem[]>(
+                (acc, item) => {
+                    const paxFormItem = passengerFormsData.find(
+                        (paxForm) =>
+                            paxForm.index === item.index &&
+                            paxForm.type === item.type,
+                    );
+                    if (paxFormItem) {
+                        acc = [
+                            ...acc,
+                            { ...item, passengerInformation: paxFormItem.data },
+                        ];
+                    }
+                    return acc;
+                },
+                [],
+            );
+
+            return {
+                ...prev,
+                bookingInfo: {
+                    ...prev.bookingInfo,
+                    bookingItems: [...newBookingItems],
+                },
+            };
+        });
+    };
+
     return {
         onSetPassengerInformation,
+        onSetPassengerInformationBooking,
     };
 };
 export default usePassenger;

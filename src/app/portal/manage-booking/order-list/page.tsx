@@ -18,7 +18,7 @@ export default function ManageBookingOrderListPage() {
     const router = useRouter();
 
     const [booingQueryParams, setBookingQueryParams] = useState(
-        () => new BookingOrderListQueryParams(undefined, 1, 10),
+        () => new BookingOrderListQueryParams(undefined, 1, 20),
     );
 
     const { data: ruleAndPolicyList, isLoading: isLoadingRule } =

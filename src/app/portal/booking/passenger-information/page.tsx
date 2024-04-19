@@ -5,20 +5,16 @@ import useBooking from "../hooks/useBooking";
 import { useRouter } from "next/navigation";
 import BookingSummary from "../_components/BookingSummary";
 import PassengersInformationForm from "./_components/PassengersInformationForm";
-import { Space, Button } from "antd";
 import usePassenger from "../modules/usePassenger";
 import { IBookingItem } from "../modules/bookingInformation.interface";
 import { PassengerType } from "@/models/management/common.interface";
 import { isUndefined } from "lodash";
-import { useFormSubmit } from "@/hooks/useFormSubmit";
-import { passengerInformationSchema } from "./schema/passengerInformation.schema";
 
 const CustomerInformationPage = () => {
     const [bookingInformation, _] = useBooking();
     const router = useRouter();
-    // const { handlerSubmit, errors } = useFormSubmit({ schema: undefined });
-    // console.log(errors);
-    const { onSetPassengerInformation } = usePassenger();
+
+    const { onSetPassengerInformationBooking } = usePassenger();
 
     const passengerList = useMemo(() => {
         return (
@@ -41,23 +37,6 @@ const CustomerInformationPage = () => {
             }, []) || []
         );
     }, [bookingInformation]);
-
-    // const passengerFormData = useMemo(() => {
-    //     return (
-    //         bookingInformation.bookingInfo?.bookingItems?.reduce<
-    //             IBookingItem["passengerInformation"] & { type: PassengerType }[]
-    //         >((acc, bkItem) => {
-    //             acc = [
-    //                 ...acc,
-    //                 {
-    //                     ...bkItem.passengerInformation,
-    //                     type: bkItem.type,
-    //                 },
-    //             ];
-    //             return acc;
-    //         }, []) || []
-    //     );
-    // }, [bookingInformation.bookingInfo?.bookingItems]);
 
     useEffect(() => {
         if (
@@ -93,44 +72,10 @@ const CustomerInformationPage = () => {
                                         ?.startDate
                                 }
                                 passengerList={passengerList}
-                                onSetPassengerInfo={onSetPassengerInformation}
+                                onSetPassengerInformationBooking={
+                                    onSetPassengerInformationBooking
+                                }
                             />
-                            <div className="text-right">
-                                <Space align="end">
-                                    <Button
-                                        type="primary"
-                                        ghost
-                                        onClick={() =>
-                                            router.push(
-                                                "./portal/booking/tour-services",
-                                            )
-                                        }
-                                    >
-                                        Mua thêm dịch vụ
-                                    </Button>
-                                    {/* <Button
-                                        type="primary"
-                                        onClick={() =>
-                                            handlerSubmit(
-                                                passengerFormDatas,
-                                                onSubmitPax,
-                                            )
-                                        }
-                                    >
-                                        submit pax
-                                    </Button> */}
-                                    <Button
-                                        type="primary"
-                                        onClick={() =>
-                                            router.push(
-                                                "./portal/booking/payment",
-                                            )
-                                        }
-                                    >
-                                        Tiến hành đặt chỗ
-                                    </Button>
-                                </Space>
-                            </div>
                         </Col>
                         <Col span={9}>
                             <BookingSummary label="Chi tiết giá tour" />

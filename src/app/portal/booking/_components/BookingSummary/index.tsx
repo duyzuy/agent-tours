@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { PassengerType } from "@/models/management/common.interface";
 import { moneyFormatVND } from "@/utils/helper";
 import { Divider } from "antd";
@@ -70,6 +70,7 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
         }
         return totalItem;
     }, []);
+    // console.log("render summary");
 
     return (
         <div className="booking__summary bg-white rounded-md drop-shadow-sm">
@@ -260,4 +261,4 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
         </div>
     );
 };
-export default BookingSummary;
+export default memo(BookingSummary);

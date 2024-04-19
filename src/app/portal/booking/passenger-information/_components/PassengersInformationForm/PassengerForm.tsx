@@ -3,7 +3,12 @@ import { PassengerType } from "@/models/management/common.interface";
 import { Col, Form, Input, Row, Select, DatePickerProps } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";
-import { DATE_FORMAT, PASSENGER_AGES } from "@/constants/common";
+import {
+    DATE_FORMAT,
+    PASSENGER_AGES,
+    PASSENGER_GENDER,
+    PASSENGER_TITLES,
+} from "@/constants/common";
 import { IBookingItem } from "../../../modules/bookingInformation.interface";
 import { getPassengerType } from "@/utils/common";
 import classNames from "classnames";
@@ -11,10 +16,12 @@ import dayjs from "dayjs";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import useMessage from "@/hooks/useMessage";
 
+type RequiredPaxFormData = Required<PassengerInformationFormData>;
 export interface PassengerFormProps {
     index: number;
     type: PassengerType;
-    initialValues: IBookingItem["passengerInformation"];
+    initialValues?: IBookingItem["passengerInformation"];
+    errors?: Partial<Record<keyof RequiredPaxFormData, string>>;
     onChangeForm: ({
         index,
         data,
@@ -25,14 +32,6 @@ export interface PassengerFormProps {
     startDate?: string;
     className?: string;
 }
-type KeysOfValue<T, TCondition> = {
-    [K in keyof T]: T[K] extends TCondition ? K : never;
-}[keyof T];
-
-type TKeysPassenger = KeysOfValue<
-    Required<PassengerInformationFormData>,
-    string
->;
 
 const PassengerForm: React.FC<PassengerFormProps> = ({
     index,
@@ -41,11 +40,12 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
     initialValues,
     startDate,
     className = "",
+    errors,
 }) => {
     const message = useMessage();
     const onChange = (
-        key: TKeysPassenger,
-        value: (typeof initialValues)[TKeysPassenger],
+        key: keyof PassengerInformationFormData,
+        value: PassengerInformationFormData[keyof PassengerInformationFormData],
     ) => {
         const newPaxInfo = { ...initialValues, [key]: value };
 
@@ -53,11 +53,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
     };
 
     const onChangeBirthDate: DatePickerProps["onChange"] = (date) => {
-        const newPaxInfo = {
-            ...initialValues,
-            paxBirthDate: date?.format(DATE_FORMAT),
-        };
-
         if (
             type === PassengerType.ADULT &&
             dayjs(startDate).diff(date, "years") < PASSENGER_AGES.adult.min
@@ -84,12 +79,18 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
             return;
         }
 
-        onChangeForm({ index, data: newPaxInfo });
+        onChangeForm({
+            index,
+            data: {
+                ...initialValues,
+                paxBirthDate: date?.locale("en").format(DATE_FORMAT),
+            },
+        });
     };
     const onChangeNationalityDate: DatePickerProps["onChange"] = (date) => {
         const newPaxInfo = {
             ...initialValues,
-            paxPassortExpiredDate: date?.format(DATE_FORMAT),
+            paxPassortExpiredDate: date?.locale("en").format(DATE_FORMAT),
         };
 
         onChangeForm({ index, data: newPaxInfo });
@@ -111,15 +112,16 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                 <Form layout="vertical" component="div">
                     <Row gutter={16}>
                         <Col span={12}>
-                            <FormItem label="Danh xưng">
+                            <FormItem
+                                label="Danh xưng"
+                                required
+                                validateStatus={errors?.paxTitle ? "error" : ""}
+                                help={errors?.paxTitle || ""}
+                            >
                                 <Select
-                                    value={initialValues.paxTitle}
+                                    value={initialValues?.paxTitle}
                                     placeholder="Chọn danh xưng"
-                                    options={[
-                                        { label: "Ông", value: "mr" },
-                                        { label: "Bà", value: "mrs" },
-                                        { label: "Cô", value: "miss" },
-                                    ]}
+                                    options={PASSENGER_TITLES}
                                     onChange={(value) =>
                                         onChange("paxTitle", value)
                                     }
@@ -127,15 +129,18 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem label="Giới tính" required>
+                            <FormItem
+                                label="Giới tính"
+                                required
+                                validateStatus={
+                                    errors?.paxGender ? "error" : ""
+                                }
+                                help={errors?.paxGender || ""}
+                            >
                                 <Select
-                                    value={initialValues.paxGender}
+                                    value={initialValues?.paxGender}
                                     placeholder="Chọn giới tính"
-                                    options={[
-                                        { label: "Nam", value: "male" },
-                                        { label: "Nữ", value: "female" },
-                                        { label: "Khác", value: "other" },
-                                    ]}
+                                    options={PASSENGER_GENDER}
                                     onChange={(value) =>
                                         onChange("paxGender", value)
                                     }
@@ -143,9 +148,16 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem label="Họ" required>
+                            <FormItem
+                                label="Họ"
+                                required
+                                validateStatus={
+                                    errors?.paxLastname ? "error" : ""
+                                }
+                                help={errors?.paxLastname || ""}
+                            >
                                 <Input
-                                    value={initialValues.paxLastname}
+                                    value={initialValues?.paxLastname}
                                     placeholder="Họ"
                                     onChange={(ev) =>
                                         onChange("paxLastname", ev.target.value)
@@ -154,9 +166,16 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem label="Tên đệm và tên" required>
+                            <FormItem
+                                label="Tên đệm và tên"
+                                required
+                                validateStatus={
+                                    errors?.paxMiddleFirstName ? "error" : ""
+                                }
+                                help={errors?.paxMiddleFirstName || ""}
+                            >
                                 <Input
-                                    value={initialValues.paxMiddleFirstName}
+                                    value={initialValues?.paxMiddleFirstName}
                                     placeholder="Tên đệm và tên"
                                     onChange={(ev) =>
                                         onChange(
@@ -168,20 +187,26 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem label="Ngày sinh" required>
+                            <FormItem
+                                label="Ngày sinh"
+                                required
+                                validateStatus={
+                                    errors?.paxBirthDate ? "error" : ""
+                                }
+                                help={errors?.paxBirthDate || ""}
+                            >
                                 <CustomDatePicker
                                     format="DD/MM/YYYY"
                                     className="w-full"
                                     value={
-                                        dayjs(
-                                            initialValues.paxBirthDate,
-                                            DATE_FORMAT,
-                                        ).isValid()
+                                        dayjs(initialValues?.paxBirthDate, {
+                                            format: DATE_FORMAT,
+                                        }).isValid()
                                             ? dayjs(
-                                                  initialValues.paxBirthDate,
-                                                  DATE_FORMAT,
+                                                  initialValues?.paxBirthDate,
+                                                  { format: DATE_FORMAT },
                                               )
-                                            : dayjs(initialValues.paxBirthDate)
+                                            : dayjs(initialValues?.paxBirthDate)
                                     }
                                     disabledDate={(date) =>
                                         date.isAfter(dayjs())
@@ -191,9 +216,16 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem label="Số điện thoại" required>
+                            <FormItem
+                                label="Số điện thoại"
+                                required
+                                validateStatus={
+                                    errors?.paxPhoneNumber ? "error" : ""
+                                }
+                                help={errors?.paxPhoneNumber || ""}
+                            >
                                 <Input
-                                    value={initialValues.paxPhoneNumber}
+                                    value={initialValues?.paxPhoneNumber}
                                     placeholder="Số điện thoại"
                                     onChange={(ev) =>
                                         onChange(
@@ -206,9 +238,15 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
 
                         <Col span={24}>
-                            <FormItem label="Địa chỉ">
+                            <FormItem
+                                label="Địa chỉ"
+                                validateStatus={
+                                    errors?.paxAddress ? "error" : ""
+                                }
+                                help={errors?.paxAddress || ""}
+                            >
                                 <Input
-                                    value={initialValues.paxAddress}
+                                    value={initialValues?.paxAddress}
                                     placeholder="Nhập địa chỉ thường trú"
                                     onChange={(ev) =>
                                         onChange("paxAddress", ev.target.value)
@@ -219,9 +257,15 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                     </Row>
                     <Row gutter={16}>
                         <Col span={8}>
-                            <FormItem label="Số Passport/CCCD">
+                            <FormItem
+                                label="Số Passport/CCCD"
+                                validateStatus={
+                                    errors?.paxPassportNumber ? "error" : ""
+                                }
+                                help={errors?.paxPassportNumber || ""}
+                            >
                                 <Input
-                                    value={initialValues.paxPassportNumber}
+                                    value={initialValues?.paxPassportNumber}
                                     placeholder="Số passport/CCCD"
                                     onChange={(ev) =>
                                         onChange(
@@ -233,21 +277,27 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                             </FormItem>
                         </Col>
                         <Col span={8}>
-                            <FormItem label="Ngày hết hạn">
+                            <FormItem
+                                label="Ngày hết hạn"
+                                validateStatus={
+                                    errors?.paxPassortExpiredDate ? "error" : ""
+                                }
+                                help={errors?.paxPassortExpiredDate || ""}
+                            >
                                 <CustomDatePicker
                                     format="DD/MM/YYYY"
                                     className="w-full"
                                     value={
                                         dayjs(
-                                            initialValues.paxPassortExpiredDate,
+                                            initialValues?.paxPassortExpiredDate,
                                             DATE_FORMAT,
                                         ).isValid()
                                             ? dayjs(
-                                                  initialValues.paxPassortExpiredDate,
+                                                  initialValues?.paxPassortExpiredDate,
                                                   DATE_FORMAT,
                                               )
                                             : dayjs(
-                                                  initialValues.paxPassortExpiredDate,
+                                                  initialValues?.paxPassortExpiredDate,
                                               )
                                     }
                                     disabledDate={(date) =>
@@ -258,9 +308,15 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                             </FormItem>
                         </Col>
                         <Col span={8}>
-                            <FormItem label="Quốc tịch">
+                            <FormItem
+                                label="Quốc tịch"
+                                validateStatus={
+                                    errors?.paxNationality ? "error" : ""
+                                }
+                                help={errors?.paxNationality || ""}
+                            >
                                 <Input
-                                    value={initialValues.paxNationality}
+                                    value={initialValues?.paxNationality}
                                     placeholder="Nhập quốc tịch"
                                     onChange={(ev) =>
                                         onChange(

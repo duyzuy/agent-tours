@@ -62,3 +62,14 @@ export const getPassengerTitle = (title: EPassengerTitle) => {
     }
     return "--";
 };
+export const PASSENGER_TITLES = [
+    { label: "Ông", value: EPassengerTitle.MR },
+    { label: "Bà", value: EPassengerTitle.MRS },
+    { label: "Cô", value: EPassengerTitle.MISS },
+];
+
+export const PASSENGER_GENDER = [
+    { label: "Nam", value: EPassengerGender.FEMALE },
+    { label: "Nữ", value: EPassengerGender.MALE },
+    { label: "Khác", value: EPassengerGender.OTHER },
+];

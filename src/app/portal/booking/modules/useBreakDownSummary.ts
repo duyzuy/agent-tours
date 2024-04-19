@@ -1,50 +1,55 @@
 import { useBookingSelector } from "../hooks/useBooking";
 import { PassengerType } from "@/models/management/common.interface";
 import { IBookingItem } from "./bookingInformation.interface";
+import { useCallback } from "react";
 const useBreakDownSummary = () => {
     const { bookingInfo } = useBookingSelector();
 
     const bookingItemList = bookingInfo?.bookingItems || [];
 
-    const getTourBookingPriceByPassengerType = (paxType: PassengerType) => {
-        const passengerList =
-            bookingItemList?.filter((pItem) => pItem.type === paxType) || [];
-        return passengerList.reduce<
-            | {
-                  [key: string]: {
-                      qty: number;
-                      type: PassengerType;
-                      price: number;
-                      class: string;
-                      subTotal: number;
-                  };
-              }
-            | undefined
-        >((acc, item) => {
-            if (acc && acc[item.item.class]) {
-                const newQty = acc[item.item.class].qty + 1;
-                acc[item.item.class] = {
-                    ...acc[item.item.class],
-                    qty: newQty,
-                    subTotal: item.item[paxType] * newQty,
-                };
-            } else {
-                acc = {
-                    ...acc,
-                    [item.item.class]: {
-                        qty: 1,
-                        type: paxType,
-                        class: item.item.class,
-                        subTotal: item.item[paxType],
-                        price: item.item[paxType],
-                    },
-                };
-            }
-            return acc;
-        }, undefined);
-    };
+    const getTourBookingPriceByPassengerType = useCallback(
+        (paxType: PassengerType) => {
+            const passengerList =
+                bookingItemList?.filter((pItem) => pItem.type === paxType) ||
+                [];
+            return passengerList.reduce<
+                | {
+                      [key: string]: {
+                          qty: number;
+                          type: PassengerType;
+                          price: number;
+                          class: string;
+                          subTotal: number;
+                      };
+                  }
+                | undefined
+            >((acc, item) => {
+                if (acc && acc[item.item.class]) {
+                    const newQty = acc[item.item.class].qty + 1;
+                    acc[item.item.class] = {
+                        ...acc[item.item.class],
+                        qty: newQty,
+                        subTotal: item.item[paxType] * newQty,
+                    };
+                } else {
+                    acc = {
+                        ...acc,
+                        [item.item.class]: {
+                            qty: 1,
+                            type: paxType,
+                            class: item.item.class,
+                            subTotal: item.item[paxType],
+                            price: item.item[paxType],
+                        },
+                    };
+                }
+                return acc;
+            }, undefined);
+        },
+        [],
+    );
 
-    const serviceSummaries = () => {
+    const serviceSummaries = useCallback(() => {
         return bookingItemList.reduce<{
             [key: string]: {
                 sellableDetailId: number;
@@ -100,9 +105,9 @@ const useBreakDownSummary = () => {
 
             return acc;
         }, {});
-    };
+    }, []);
 
-    const getTotal = () => {
+    const getTotal = useCallback(() => {
         const tourPrices = bookingItemList.reduce((acc, bkItem) => {
             acc += bkItem.item[bkItem.type];
 
@@ -114,7 +119,7 @@ const useBreakDownSummary = () => {
         }, 0);
 
         return tourPrices;
-    };
+    }, []);
     return {
         tourPrices: {
             adult: getTourBookingPriceByPassengerType(PassengerType.ADULT),

@@ -7,6 +7,7 @@ interface TourBookingInfoProps {
     startDate?: string;
     endDate?: string;
     className?: string;
+    orderId?: number;
 }
 const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
     className = "",
@@ -14,6 +15,7 @@ const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
     endDate,
     startDate,
     code,
+    orderId,
 }) => {
     return (
         <div
@@ -24,6 +26,10 @@ const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
                 },
             )}
         >
+            <div className="w-20 border-r mr-6 pr-6">
+                <span className="block">ID</span>
+                <span className="block text-[15px] font-[500] ">{`#${orderId}`}</span>
+            </div>
             <div className="w-40 border-r mr-6 pr-6">
                 <span className="block">Tên</span>
                 <span className="block text-[15px] font-[500] ">{name}</span>
