@@ -11,6 +11,7 @@ import { isEmpty } from "lodash";
 
 interface ServiceDetailProps {
     serviceList: IOrderDetail["ssr"];
+    onBuyService?: () => void;
     className?: string;
 }
 
@@ -26,6 +27,7 @@ type GroupingServiceByTypeAndPassengerItem = {
 const ServiceDetail: React.FC<ServiceDetailProps> = ({
     serviceList,
     className = "",
+    onBuyService,
 }) => {
     const serviceListGroupingByTypeAndPax = useMemo(() => {
         if (!serviceList || !serviceList.length) return undefined;
@@ -158,7 +160,12 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({
                 <span className="text-[16px] font-semibold mr-2">
                     Thông tin dịch vụ
                 </span>
-                <Button icon={<PlusCircleFilled />} type="primary" size="small">
+                <Button
+                    icon={<PlusCircleFilled />}
+                    type="primary"
+                    size="small"
+                    onClick={onBuyService}
+                >
                     Thên dịch vụ
                 </Button>
             </div>

@@ -220,6 +220,9 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                 />
                 <ServiceDetail
                     serviceList={bookingOrderDetail.ssr}
+                    onBuyService={() =>
+                        router.push(`./portal/manage-booking/${params.orderId}`)
+                    }
                     className="mb-6"
                 />
             </div>
