@@ -49,23 +49,30 @@ export function useFormSubmit<T extends object | undefined>({
                               const { path } = err;
                               if (path) {
                                   const pathSplit = path.split(".");
+
                                   const indexOfErr = Number(
                                       pathSplit[0].replace(/\D/g, ""),
                                   );
+
                                   if (
                                       pathSplit.length > 1 &&
-                                      Array.isArray(errors) &&
-                                      !isNaN(indexOfErr)
+                                      Array.isArray(errors)
                                   ) {
-                                      const indexItem = errors.findIndex(
-                                          (item) => item.index === indexOfErr,
+                                      if (isNaN(indexOfErr)) {
+                                          throw new Error(
+                                              "index of Error is not number",
+                                          );
+                                      }
+
+                                      const indexErr = errors.findIndex(
+                                          (err) => err.index === indexOfErr,
                                       );
 
-                                      if (indexItem !== -1) {
-                                          errors.splice(indexItem, 1, {
-                                              ...errors[indexItem],
+                                      if (indexErr !== -1) {
+                                          errors.splice(indexErr, 1, {
+                                              ...errors[indexErr],
                                               data: {
-                                                  ...errors[indexItem].data,
+                                                  ...errors[indexErr].data,
                                                   [pathSplit[1]]: err.message,
                                               },
                                           });
@@ -81,12 +88,7 @@ export function useFormSubmit<T extends object | undefined>({
                                               },
                                           ] as ErrorsMesssageType<T>;
                                       }
-                                  }
-
-                                  if (
-                                      pathSplit.length < 2 &&
-                                      !Array.isArray(errors)
-                                  ) {
+                                  } else {
                                       errors = {
                                           ...(errors || {}),
                                           [path]: err.message,
@@ -101,6 +103,27 @@ export function useFormSubmit<T extends object | undefined>({
                       }
                   })
             : onSubmit?.(formData);
+    };
+
+    const extractErrorInstant = (error: ValidationError) => {
+        const { inner, errors } = error;
+
+        let errObject = {};
+        inner.forEach((innerErr) => {
+            const { path, message } = innerErr;
+
+            const pathArr = path?.split(".");
+
+            pathArr;
+        });
+        //   const errIndex =
+        //       pathSplit[0].match(/(?<=\[).+?(?=\])/g); remove two [ and ]
+        //   const indexOfErr = Number(
+        //     pathSplit[0].replace(/\D/g, ""),
+        // );
+        //   .match(/.+(?=\[)/g)
+
+        //   const matches = str.match(/\[.+?\]/g);
     };
 
     const clearErrors = useCallback(() => setErrors(undefined), []);

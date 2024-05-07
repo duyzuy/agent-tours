@@ -1,8 +1,9 @@
 import { BaseResponse } from "../common.interface";
 import { LangCode } from "./language.interface";
-export enum PageStatus {
+export enum PageContentStatus {
     PUBLISH = "publish",
     PENDING = "pending",
+    UNPUBLISH = "unpublish",
 }
 export interface IPageContentItem {
     id: number;
@@ -33,7 +34,7 @@ export interface IPageContentDetail {
     metaDescription: string;
     metaKeyword: string;
     publishDate: string;
-    status: PageStatus;
+    status: PageContentStatus;
     children: IPageContentDetail[];
     languages: { lang: LangCode; slug: string }[];
 }
@@ -54,7 +55,7 @@ export interface IPageContentPayload {
     metaDescription?: string;
     metaKeyword?: string;
     publishDate?: string;
-    status?: PageStatus;
+    status?: PageContentStatus;
 }
 export class PageContentQueryParams {
     pageCurrent?: number;

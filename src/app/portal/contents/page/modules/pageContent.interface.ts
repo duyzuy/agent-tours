@@ -1,7 +1,7 @@
 import { LangCode } from "@/models/management/cms/language.interface";
 import {
     IPageContentPayload,
-    PageStatus,
+    PageContentStatus,
 } from "@/models/management/cms/pageContent.interface";
 
 export class PageContentFormData implements IPageContentPayload {
@@ -20,7 +20,7 @@ export class PageContentFormData implements IPageContentPayload {
     metaDescription?: string;
     publishDate: string;
     metaKeyword?: string;
-    status?: PageStatus;
+    status?: PageContentStatus;
 
     constructor(
         id: number | undefined,
@@ -38,7 +38,7 @@ export class PageContentFormData implements IPageContentPayload {
         metaDescription: string | undefined,
         metaKeyword: string | undefined,
         publishDate: string,
-        status: PageStatus,
+        status: PageContentStatus,
     ) {
         this.id = id;
         this.originId = originId;

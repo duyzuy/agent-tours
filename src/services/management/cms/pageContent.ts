@@ -103,4 +103,38 @@ export const pageContentAPIs = {
             },
         );
     },
+    publish: async (id: number) => {
+        return await client.post<
+            IPageContentDetailPerLangRs,
+            BaseResponse<null>
+        >("local/Cms_page_Publish", {
+            headers: {
+                Authorization: `Bearer ${encodeURIComponent(
+                    getAgToken() || "",
+                )}`,
+            },
+            params: {
+                requestObject: {
+                    id,
+                },
+            },
+        });
+    },
+    unPublish: async (id: number) => {
+        return await client.post<
+            IPageContentDetailPerLangRs,
+            BaseResponse<null>
+        >("local/Cms_page_Unpublish", {
+            headers: {
+                Authorization: `Bearer ${encodeURIComponent(
+                    getAgToken() || "",
+                )}`,
+            },
+            params: {
+                requestObject: {
+                    id,
+                },
+            },
+        });
+    },
 };

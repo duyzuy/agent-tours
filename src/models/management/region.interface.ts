@@ -11,13 +11,14 @@ export interface IStateProvince {
     subRegionKey: string;
 }
 export interface IDestination {
-    cat: "DESTLIST";
+    cat: string;
     id: number;
     codeKey: string;
     codeName: string;
     status: Status;
     listStateProvince: IStateProvince[];
 }
+
 export interface IDestinationPayload {
     codeName: string;
     codeKey: string;

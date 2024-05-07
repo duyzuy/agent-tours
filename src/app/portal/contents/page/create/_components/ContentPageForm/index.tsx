@@ -1,16 +1,14 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Input, Typography } from "antd";
+import { Form, Input, SwitchProps, Typography } from "antd";
 import dayjs from "dayjs";
-import { isEqual } from "lodash";
 import { stringToSlug } from "@/utils/stringToSlug";
 import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { mediaConfig } from "@/configs";
-
 import { pageContentSchema } from "../../../schema/pageContent.schema";
 import { IPageContentDetail } from "@/models/management/cms/pageContent.interface";
 import { PageContentFormData } from "../../../modules/pageContent.interface";
-import { PageStatus } from "@/models/management/cms/pageContent.interface";
+import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 
 import { MediaUploadProps } from "@/app/portal/media/_components/MediaUploadDrawler";
@@ -21,6 +19,11 @@ import FormItem from "@/components/base/FormItem";
 import Slug, { SlugProps } from "@/components/admin/Slug";
 import MediaUploadDrawler from "@/app/portal/media/_components/MediaUploadDrawler";
 import PageParentList from "./PageParentList";
+import { isEqualObject } from "@/utils/compare";
+import {
+    templateDefault,
+    CONTENTS_LAYOUT_PAGE_TEMPLATE,
+} from "@/constants/cmsTemplate.constant";
 
 type RequirePageContentFormData = Required<PageContentFormData>;
 
@@ -31,7 +34,10 @@ export interface ContentPageFormProps {
     initData?: IPageContentDetail;
     originId?: number;
     onSubmit?: (data: PageContentFormData) => void;
+    onPublish?: (id?: number) => void;
     onWatchFormChange?: (data: PageContentFormData) => void;
+    action?: "create" | "update";
+    onChangeStatus?: (id: number, type: "active" | "deactive") => void;
 }
 export const initPageContentFormData = new PageContentFormData(
     undefined,
@@ -43,13 +49,13 @@ export const initPageContentFormData = new PageContentFormData(
     "",
     "",
     0,
-    "",
+    templateDefault.value,
     undefined,
     "",
     "",
     "",
     dayjs().format(DATE_TIME_FORMAT),
-    PageStatus.PENDING,
+    PageContentStatus.PENDING,
 );
 
 const ContentPageForm: React.FC<ContentPageFormProps> = ({
@@ -57,7 +63,10 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
     initData,
     onSubmit,
     onWatchFormChange,
+    onPublish,
     originId,
+    action,
+    onChangeStatus,
 }) => {
     const [formData, setFormData] = useState(initPageContentFormData);
 
@@ -138,6 +147,31 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
             });
         }
     }, []);
+
+    const onChangeTemplate = useCallback<
+        Required<PublishingProps>["onChangeTemplate"]
+    >(
+        (value) =>
+            setFormData((oldData) => ({
+                ...oldData,
+                templateId: value,
+            })),
+        [],
+    );
+
+    const onChangeStatusPage = useCallback<Required<SwitchProps>["onChange"]>(
+        (checked) => {
+            formData.id &&
+                onChangeStatus?.(formData.id, checked ? "active" : "deactive");
+        },
+        [formData.id],
+    );
+    const publishDateTime = useMemo(() => {
+        return {
+            publishTime: dayjs(formData.publishDate, { format: TIME_FORMAT }),
+            publishDate: dayjs(formData.publishDate, { format: DATE_FORMAT }),
+        };
+    }, [formData.publishDate]);
     const onConfirmSelectMediaImage = useCallback<
         Required<MediaUploadProps>["onConfirm"]
     >(
@@ -184,48 +218,30 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
         [],
     );
 
-    const isDisablePublishButton = useMemo(() => {
-        const initDataConpareration = initData
-            ? initData
-            : initPageContentFormData;
+    const isDisablePublishButton = useMemo(
+        () =>
+            isEqualObject(
+                [
+                    "id",
+                    "slug",
+                    "thumbnail",
+                    "excerpt",
+                    "heroBanner",
+                    "descriptions",
+                    "parentId",
+                    "templateId",
+                    "metaTitle",
+                    "metaDescription",
+                    "metaKeyword",
+                    "publishDate",
+                    "name",
+                ],
+                formData,
+                initData || initPageContentFormData,
+            ),
+        [initData, formData],
+    );
 
-        return isEqual(
-            {
-                id: formData.id,
-                originId: formData.originId,
-                name: formData.name,
-                slug: formData.slug,
-                thumbnail: formData.thumbnail,
-                excerpt: formData.excerpt,
-                heroBanner: formData.heroBanner,
-                descriptions: formData.descriptions,
-                parentId: formData.parentId,
-                templateId: formData.templateId,
-                metaTitle: formData.metaTitle,
-                metaDescription: formData.metaDescription,
-                metaKeyword: formData.metaKeyword,
-                publishDate: formData.publishDate,
-                status: formData.status,
-            },
-            {
-                id: initDataConpareration.id,
-                originId: initDataConpareration.originId,
-                name: initDataConpareration.name,
-                slug: initDataConpareration.slug,
-                thumbnail: initDataConpareration.thumbnail,
-                excerpt: initDataConpareration.excerpt,
-                heroBanner: initDataConpareration.heroBanner,
-                descriptions: initDataConpareration.descriptions,
-                parentId: initDataConpareration.parentId,
-                templateId: initDataConpareration.templateId,
-                metaTitle: initDataConpareration.metaTitle,
-                metaDescription: initDataConpareration.metaDescription,
-                metaKeyword: initDataConpareration.metaKeyword,
-                publishDate: initDataConpareration.publishDate,
-                status: initDataConpareration.status,
-            },
-        );
-    }, [initData, formData]);
     useEffect(() => {
         onWatchFormChange?.(formData);
     }, [formData]);
@@ -266,7 +282,7 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
                 <div className="flex w-full">
                     <div
                         className="post-left flex-1 mr-8"
-                        style={{ width: "calc(100% - 380px)" }}
+                        // style={{ width: "calc(100% - 380px)" }}
                     >
                         <FormItem
                             label="Tiêu đề"
@@ -375,28 +391,48 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
                             </FormItem>
                         </div>
                     </div>
-                    <div className="post-right w-[320px]">
+                    <div className="post-right w-[320px] xl:w-[380px]">
                         <div className="inner-right">
                             <Publishing
-                                timeValue={dayjs(formData.publishDate, {
-                                    format: TIME_FORMAT,
-                                })}
-                                dateValue={dayjs(formData.publishDate, {
-                                    format: DATE_FORMAT,
-                                })}
+                                templateValue={formData.templateId}
+                                templateList={CONTENTS_LAYOUT_PAGE_TEMPLATE}
+                                onChangeTemplate={onChangeTemplate}
                                 onChangeTime={onChangePublishTime}
                                 onChangeDate={onChangePublishDate}
+                                timeValue={publishDateTime.publishTime}
+                                dateValue={publishDateTime.publishDate}
                                 onSaveAndPublish={() =>
                                     handlerSubmit(
                                         {
                                             ...formData,
-                                            status: PageStatus.PUBLISH,
+                                            status: PageContentStatus.PUBLISH,
                                         },
                                         onSubmit,
                                     )
                                 }
+                                onSaveForApproval={() =>
+                                    handlerSubmit(
+                                        {
+                                            ...formData,
+                                            status: PageContentStatus.PENDING,
+                                        },
+                                        onSubmit,
+                                    )
+                                }
+                                onApproval={() => onPublish?.(formData.id)}
+                                onChangeStatus={onChangeStatusPage}
+                                hideSaveForApproval={
+                                    action === "update" ?? false
+                                }
+                                hideApproval={
+                                    formData.status !==
+                                        PageContentStatus.PENDING ||
+                                    action === "create"
+                                }
+                                action={action}
+                                status={formData.status}
                                 disableSubmit={isDisablePublishButton}
-                                disableApproval={isDisablePublishButton}
+                                disableSaveForApproval={isDisablePublishButton}
                             />
                             <ThumbnailImage
                                 label="Hero banners"

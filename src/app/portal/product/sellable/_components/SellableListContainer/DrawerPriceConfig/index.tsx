@@ -324,7 +324,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
                         onClick={handleSubmitFormData}
                         disabled={isDisableSubmit}
                     >
-                        Lưu chỉnh sửa
+                        Lưu
                     </Button>
                 </Space>
             }

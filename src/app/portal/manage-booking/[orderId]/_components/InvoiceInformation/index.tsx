@@ -10,6 +10,7 @@ import {
     InvoiceFormData,
     IInvoice,
 } from "@/models/management/booking/invoice.interface";
+import { ButtonSecondary } from "@/components/base/buttons";
 
 interface InvoiceInformationProps {
     className?: string;
@@ -36,23 +37,24 @@ const InvoiceInformation: React.FC<InvoiceInformationProps> = ({
     return (
         <>
             <div
-                className={classNames("order__detail-customer-info", {
+                className={classNames("order__detail-invoice-info", {
                     [className]: className,
                 })}
             >
-                <div className="order__detail-customer-info-head mb-2">
+                <div className="order__detail-invoice-info-head mb-2">
                     <span className="font-semibold text-[16px] mr-3">
                         Thông xuất hoá đơn
                     </span>
-                    <Button
-                        icon={<EditOutlined />}
-                        type="primary"
-                        ghost
-                        size="small"
+
+                    <ButtonSecondary
+                        buttonProps={{
+                            icon: <EditOutlined />,
+                            size: "small",
+                            shape: "circle",
+                        }}
+                        color="primary"
                         onClick={onOpenDrawer}
-                    >
-                        Sửa
-                    </Button>
+                    ></ButtonSecondary>
                 </div>
                 <Row gutter={16}>
                     <Col span={12} className="mb-3">

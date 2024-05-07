@@ -12,6 +12,7 @@ import { localeDefault } from "@/constants/locale.constant";
 
 import { isEqual } from "lodash";
 import { initPageContentFormData } from "./_components/ContentPageForm";
+import { isEqualObject } from "@/utils/compare";
 
 const PageCreate = () => {
     const router = useRouter();
@@ -23,37 +24,24 @@ const PageCreate = () => {
         Required<ContentPageFormProps>["onWatchFormChange"]
     >((formData) => {
         if (
-            isEqual(
-                {
-                    id: formData.id,
-                    heroBanner: formData.heroBanner,
-                    parentId: formData.parentId,
-                    publishDate: formData.publishDate,
-                    templateId: formData.templateId,
-                    name: formData.name,
-                    slug: formData.slug,
-                    descriptions: formData.descriptions,
-                    excerpt: formData.excerpt,
-                    thumbnail: formData.thumbnail,
-                    metaDescription: formData.metaDescription,
-                    metaKeyword: formData.metaKeyword,
-                    metaTitle: formData.metaTitle,
-                },
-                {
-                    id: initPageContentFormData.id,
-                    heroBanner: initPageContentFormData.heroBanner,
-                    parentId: initPageContentFormData.parentId,
-                    publishDate: initPageContentFormData.publishDate,
-                    templateId: initPageContentFormData.templateId,
-                    name: initPageContentFormData.name,
-                    slug: initPageContentFormData.slug,
-                    descriptions: initPageContentFormData.descriptions,
-                    excerpt: initPageContentFormData.excerpt,
-                    thumbnail: initPageContentFormData.thumbnail,
-                    metaDescription: initPageContentFormData.metaDescription,
-                    metaKeyword: initPageContentFormData.metaKeyword,
-                    metaTitle: initPageContentFormData.metaTitle,
-                },
+            isEqualObject(
+                [
+                    "id",
+                    "heroBanner",
+                    "parentId",
+                    "publishDate",
+                    "templateId",
+                    "name",
+                    "slug",
+                    "descriptions",
+                    "excerpt",
+                    "thumbnail",
+                    "metaTitle",
+                    "metaKeyword",
+                    "metaDescription",
+                ],
+                formData,
+                initPageContentFormData,
             )
         ) {
             setUpdatedContent(false);
@@ -87,6 +75,7 @@ const PageCreate = () => {
                     lang={locale?.key}
                     onSubmit={handleSubmitForm}
                     onWatchFormChange={onWatchingFormChange}
+                    action="create"
                 />
             )}
         </PageContainer>

@@ -5,7 +5,6 @@ import {
     Input,
     Row,
     Col,
-    DatePicker,
     Button,
     Select,
     DatePickerProps,
@@ -31,8 +30,8 @@ import FormItem from "@/components/base/FormItem";
 import { MONTH_FORMAT } from "@/constants/common";
 import useSearchBookingInformation from "../../modules/useSearchBookingInformation";
 import dayjs from "dayjs";
-import locale from "antd/es/date-picker/locale/vi_VN";
-import "dayjs/locale/vi";
+
+import CustomDatePicker from "@/components/admin/CustomDatePicker";
 export interface BoxBookingProps {
     departLocation?: string;
     departDate?: string;
@@ -73,10 +72,11 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
     const searchInfo = useMemo(() => {
         return bookingInfo?.searchBooking;
     }, [bookingInfo]);
-    const onChangeDate: DatePickerProps["onChange"] = (date, dateStr) => {
+
+    const handleSelectDate: DatePickerProps["onChange"] = (date, dateStr) => {
         setFormData((prev) => ({
             ...prev,
-            byMonth: date?.format(MONTH_FORMAT),
+            byMonth: date?.locale("en").format(MONTH_FORMAT),
         }));
     };
 
@@ -194,23 +194,21 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
                                     }
                                     help={errors?.byMonth || ""}
                                 >
-                                    <DatePicker
+                                    <CustomDatePicker
                                         placeholder="Thời gian đi"
                                         value={
                                             formData.byMonth
-                                                ? dayjs(
-                                                      formData.byMonth,
-                                                      MONTH_FORMAT,
-                                                  )
+                                                ? dayjs(formData.byMonth, {
+                                                      format: MONTH_FORMAT,
+                                                  })
                                                 : undefined
                                         }
-                                        locale={locale}
                                         format={"MMMM/YYYY"}
                                         picker="month"
                                         className="w-full"
                                         bordered={false}
                                         style={{ padding: 0 }}
-                                        onChange={onChangeDate}
+                                        onChange={handleSelectDate}
                                     />
                                 </FormItem>
                             </Col>

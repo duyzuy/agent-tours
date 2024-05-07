@@ -71,7 +71,7 @@ const GroupDestinationPage = () => {
     return (
         <React.Fragment>
             <PageContainer
-                name="Danh sách nhóm điểm đến"
+                name="Nhóm điểm đến"
                 modelName="nhóm"
                 onClick={() =>
                     onHandleDrawlerDestination({ action: EActionType.CREATE })

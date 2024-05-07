@@ -15,6 +15,7 @@ export enum Status {
     OK = "OK", // active
     XX = "XX", // delete
     OX = "OX", // deactive
+    EX = "EX", // expired
 }
 export enum DayOfWeek {
     Sunday = "Sunday",

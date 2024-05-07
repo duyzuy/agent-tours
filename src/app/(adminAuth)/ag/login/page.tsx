@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Form, Input, Button } from "antd";
-import { travelLogo } from "@/assets";
+import { originalLogo } from "@/assets";
 import { LINKS } from "@/constants/links.constant";
 import useAuth from "@/hooks/useAgAuth";
 import { useLoginPortal } from "../hooks/useAgAuth";
@@ -44,8 +44,9 @@ const LoginPage = () => {
         <div className="box w-full max-w-sm">
             <div className="head mb-6">
                 <Image
-                    src={travelLogo}
+                    src={originalLogo}
                     alt="travel agent"
+                    width={240}
                     className="mb-6"
                     priority
                 />

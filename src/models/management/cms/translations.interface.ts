@@ -18,3 +18,5 @@ export interface ITranslationPayload {
 }
 
 export interface ITranslationRs extends BaseResponse<ITransation[]> {}
+export interface ITranslationListFeRs
+    extends BaseResponse<{ keyName: string; name: string }[]> {}

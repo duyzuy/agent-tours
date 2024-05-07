@@ -61,25 +61,34 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
             <div className="booking__order__Detail-actions pb-6 mb-6 border-b bg-white">
                 <Space>
                     <Button
-                        type="default"
+                        type="primary"
                         danger
-                        ghost
                         size="small"
                         onClick={onShowModalCancelConfirm}
                     >
-                        Huỷ tour
+                        Huỷ
                     </Button>
                     <Button
                         size="small"
                         type="primary"
-                        ghost
                         onClick={() =>
                             router.push(
                                 `./portal/manage-booking/${orderId}/split-booking`,
                             )
                         }
                     >
-                        Tách tour
+                        Tách
+                    </Button>
+                    <Button
+                        type="primary"
+                        size="small"
+                        onClick={() =>
+                            router.push(
+                                `./portal/manage-booking/${orderId}/addon-service`,
+                            )
+                        }
+                    >
+                        Mua thêm dịch vụ
                     </Button>
                     <Button
                         type="primary"

@@ -132,7 +132,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
 
             <TableListPage<SellableListRs["result"][0]>
                 dataSource={dataSource}
-                scroll={{ x: 2000 }}
+                scroll={{ x: 1600 }}
                 rowKey={"recId"}
                 isLoading={isLoading}
                 columns={sellableColumns}

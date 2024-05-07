@@ -82,6 +82,21 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
             ],
         },
         {
+            key: "discountPolicy",
+            icon: React.createElement(TagOutlined),
+            label: "Chính sách giảm giá",
+            children: [
+                {
+                    key: "discount-policy/coupon",
+                    label: "Coupon",
+                },
+                {
+                    key: "discount-policy/policy",
+                    label: "Policy",
+                },
+            ],
+        },
+        {
             key: "destination",
             icon: React.createElement(ClusterOutlined),
             label: "Nhóm điểm đến",

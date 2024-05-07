@@ -52,6 +52,7 @@ export default async function PageContentDetail({
         slug: params.slug,
     });
 
+    console.log(pageContent);
     if (!pageContent) {
         notFound();
     } else {

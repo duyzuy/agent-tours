@@ -7,6 +7,7 @@ import DrawerCustomerInformation, {
     DrawerCustomerInformationProps,
 } from "./DrawerCustomerInformation";
 import { ICustomerInformation } from "@/models/management/booking/customer.interface";
+import { ButtonSecondary } from "@/components/base/buttons";
 
 interface CustomerInformationProps {
     className?: string;
@@ -42,15 +43,15 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({
                     <span className="font-semibold text-[16px] mr-3">
                         Thông tin người đặt
                     </span>
-                    <Button
-                        icon={<EditOutlined />}
-                        type="primary"
-                        ghost
-                        size="small"
+                    <ButtonSecondary
+                        buttonProps={{
+                            icon: <EditOutlined />,
+                            size: "small",
+                            shape: "circle",
+                        }}
+                        color="primary"
                         onClick={onOpenDrawer}
-                    >
-                        Sửa
-                    </Button>
+                    ></ButtonSecondary>
                 </div>
                 <Row gutter={16}>
                     <Col span={12} className="mb-3">

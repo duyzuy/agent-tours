@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
-import { Spin, Row, Col, Steps, StepProps } from "antd";
+import { Spin, Row, Col, Steps, StepProps, Divider } from "antd";
 import { isUndefined } from "lodash";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -20,6 +20,7 @@ import { formatDate } from "@/utils/date";
 import InvoiceInformation from "./_components/InvoiceInformation";
 import BookingOrderActions from "./_components/BookingOrderActions";
 import DepositTimeline from "./_components/DepositTimeline";
+import OrderInformation from "./_components/OrderInformation";
 
 interface ReservationDetailPageProps {
     params: { orderId: number };
@@ -91,20 +92,69 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
             hideAddButton
         >
             <div className="booking__order__Detail relative">
-                <TourBookingInfo
-                    startDate={
-                        bookingOrder?.sellable.startDate &&
-                        formatDate(bookingOrder.sellable.startDate)
+                <OrderInformation
+                    sysFstUpdate={
+                        bookingOrder?.sysFstUpdate &&
+                        formatDate(bookingOrder?.sysFstUpdate)
                     }
-                    endDate={
-                        bookingOrder?.sellable.endDate &&
-                        formatDate(bookingOrder.sellable.endDate)
-                    }
-                    name={bookingOrder?.template.name}
-                    code={bookingOrder?.sellable.code}
                     orderId={bookingOrder?.recId}
+                    paymentStatus={bookingOrder?.paymentStatus}
                     className="mb-6"
                 />
+                <div className="bg-slate-50 p-6 rounded-md">
+                    <TourBookingInfo
+                        startDate={
+                            bookingOrder?.sellable.startDate &&
+                            formatDate(bookingOrder.sellable.startDate)
+                        }
+                        endDate={
+                            bookingOrder?.sellable.endDate &&
+                            formatDate(bookingOrder.sellable.endDate)
+                        }
+                        sysFstUpdate={
+                            bookingOrder?.sysFstUpdate &&
+                            formatDate(bookingOrder?.sysFstUpdate)
+                        }
+                        name={bookingOrder?.template.name}
+                        code={bookingOrder?.sellable.code}
+                        className="mb-6"
+                    />
+                    <Row gutter={[24, 24]}>
+                        <Col span={24} md={12}>
+                            <CustomerInformation
+                                orderId={bookingOrder?.recId}
+                                cusInfo={{
+                                    custName: bookingOrder?.custName,
+                                    custEmail: bookingOrder?.custEmail,
+                                    custPhoneNumber:
+                                        bookingOrder?.custPhoneNumber,
+                                    custAddress: bookingOrder?.custAddress,
+                                    rmk: bookingOrder?.rmk,
+                                }}
+                                onSave={onUpdateCustomerInfo}
+                                className="bg-white border border-slate-100 px-6 py-4 h-full rounded-md"
+                            />
+                        </Col>
+                        <Col span={24} md={12}>
+                            <InvoiceInformation
+                                orderId={bookingOrder?.recId}
+                                invoiceInfo={{
+                                    invoiceAddress:
+                                        bookingOrder?.invoiceAddress,
+                                    invoiceCompanyName:
+                                        bookingOrder?.invoiceCompanyName,
+                                    invoiceEmail: bookingOrder?.invoiceEmail,
+                                    invoiceName: bookingOrder?.invoiceName,
+                                    invoiceTaxCode:
+                                        bookingOrder?.invoiceTaxCode,
+                                }}
+                                onSave={onUpdateInvoiceInfo}
+                                className="bg-white border border-slate-100 px-6 py-4 h-full rounded-md"
+                            />
+                        </Col>
+                    </Row>
+                </div>
+                <Divider />
                 <BookingOrderActions
                     orderId={bookingOrder?.recId}
                     onCancelBooking={onCancelBookingOrder}
@@ -162,37 +212,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                 <DepositTimeline
                     depositTimelimits={rulesAndPolicies?.depositTimelimits}
                 />
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <CustomerInformation
-                            orderId={bookingOrder?.recId}
-                            cusInfo={{
-                                custName: bookingOrder?.custName,
-                                custEmail: bookingOrder?.custEmail,
-                                custPhoneNumber: bookingOrder?.custPhoneNumber,
-                                custAddress: bookingOrder?.custAddress,
-                                rmk: bookingOrder?.rmk,
-                            }}
-                            onSave={onUpdateCustomerInfo}
-                            className="mb-6"
-                        />
-                    </Col>
-                    <Col span={12}>
-                        <InvoiceInformation
-                            orderId={bookingOrder?.recId}
-                            invoiceInfo={{
-                                invoiceAddress: bookingOrder?.invoiceAddress,
-                                invoiceCompanyName:
-                                    bookingOrder?.invoiceCompanyName,
-                                invoiceEmail: bookingOrder?.invoiceEmail,
-                                invoiceName: bookingOrder?.invoiceName,
-                                invoiceTaxCode: bookingOrder?.invoiceTaxCode,
-                            }}
-                            onSave={onUpdateInvoiceInfo}
-                            className="mb-6"
-                        />
-                    </Col>
-                </Row>
+
                 <BookingDetailDynamic
                     orderId={bookingOrder?.recId}
                     bookingOrderDetailList={bookingOrderDetail.bookingDetails}

@@ -26,12 +26,6 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
         },
     },
     {
-        title: "Tổng số lượng",
-        dataIndex: "cap",
-        key: "cap",
-        width: 120,
-    },
-    {
         title: "Khả dụng",
         dataIndex: "avaiable",
         key: "avaiable",
@@ -49,28 +43,19 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
         key: "used",
         width: 100,
     },
-
     {
         title: "Ngày bán",
         dataIndex: "valid-date",
         key: "valid-date",
-        width: 200,
+        width: 180,
         render: (_, record) => {
             return (
-                <>
-                    <p>
-                        <span className="w-14 inline-block text-right mr-2">
-                            Từ:
-                        </span>
-                        <span>{formatDate(record.validFrom)}</span>
-                    </p>
-                    <p>
-                        <span className="w-14 inline-block text-right mr-2">
-                            Đến:
-                        </span>
-                        <span>{formatDate(record.validTo)}</span>
-                    </p>
-                </>
+                <span>
+                    <span className="block">
+                        {formatDate(record.validFrom)}
+                    </span>
+                    <span className="block">{formatDate(record.validTo)}</span>
+                </span>
             );
         },
     },
@@ -78,23 +63,15 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
         title: "Ngày sử dụng",
         dataIndex: "use-date",
         key: "use-date",
-        width: 200,
+        width: 180,
         render: (_, record) => {
             return (
-                <>
-                    <p>
-                        <span className="w-14 inline-block text-right mr-2">
-                            Từ:
-                        </span>
-                        <span>{formatDate(record.startDate)}</span>
-                    </p>
-                    <p>
-                        <span className="w-14 inline-block text-right mr-2">
-                            Đến:
-                        </span>
-                        <span>{formatDate(record.endDate)}</span>
-                    </p>
-                </>
+                <span>
+                    <span className="block">
+                        {formatDate(record.startDate)}
+                    </span>
+                    <span className="block">{formatDate(record.endDate)}</span>
+                </span>
             );
         },
     },

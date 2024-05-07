@@ -8,7 +8,11 @@ import FlashSale from "./_components/FlashSale";
 import LineSpacing from "@/components/frontend/LineSpacing";
 import BannerSection from "./_components/BannerSection";
 import TopSliderSection from "./_components/TopSliderSection";
+import { useTranslations } from "next-intl";
+
 const HomegePageClient = () => {
+    const t = useTranslations("home");
+
     return (
         <div className="page-home">
             <TopSliderSection />

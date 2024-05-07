@@ -285,6 +285,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     const onSubmitFormData: HandleSubmit<StockFormData> = (data) => {
         onSubmit?.({ data }, () => {
             setStockFormData(initStockFormData);
+            setInventory(undefined);
             setStockFieldErrors(undefined);
             setCreateSeries(false);
         });

@@ -1,24 +1,23 @@
-"use client";
 import React, { ElementType, ReactNode } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 
-type NavLinkProps = {
+export interface NavLinkProps {
     prefix?: ReactNode;
     children?: React.ReactNode;
-    label?: string;
+    title?: string;
     href?: string;
-};
+}
 const NavLinkBase: React.FC<NavLinkProps> = ({
     prefix,
     children,
-    label,
+    title,
     href = "/",
 }) => {
     return (
-        <Link href={href} className="flex items-center text-sm font-semibold">
+        <Link href={href} className="flex items-center text-sm font-[600]">
             {prefix ? prefix : null}
-            <span className="text text-gray-600">{label}</span>
+            <span className="text text-gray-600">{title}</span>
         </Link>
     );
 };

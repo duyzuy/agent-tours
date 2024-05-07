@@ -7,13 +7,13 @@ import { localSearchAPIs } from "@/services/management/misc/localSearch";
 import { LocalSearchQueryParams } from "@/models/management/localSearchDestination.interface";
 import { Status } from "@/models/management/common.interface";
 
-export const useGetDestinationsQuery = () => {
+export const useGetDestinationsQuery = (options?: { enabled?: boolean }) => {
     const token = getAgToken() || "";
-
+    const { enabled = true } = options || {};
     return useQuery({
         queryKey: [queryMisc.GET_DESTINATION_LIST],
         queryFn: () => destinationAPIs.getDestinationList(),
-        enabled: Boolean(token),
+        enabled: enabled && Boolean(token),
         select: (data) => {
             return data.result;
         },

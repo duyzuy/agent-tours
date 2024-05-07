@@ -15,6 +15,10 @@ import useMessage from "@/hooks/useMessage";
 
 const BookingPage = () => {
     const [bookingInformation, setBookingInformation] = useBooking();
+    const message = useMessage();
+
+    const { onNext, onSetPassengerConfig, onReset } = useSelectProductTour();
+
     const productList = useMemo(
         () => bookingInformation?.productList,
         [bookingInformation],
@@ -37,9 +41,6 @@ const BookingPage = () => {
             bookingInformation.passengerPriceConfigs.child.length === 0
         );
     }, [bookingInformation]);
-
-    const message = useMessage();
-    const { onNext, onSetPassengerConfig, onReset } = useSelectProductTour();
 
     const onSelectPassenger = (
         type: PassengerType,

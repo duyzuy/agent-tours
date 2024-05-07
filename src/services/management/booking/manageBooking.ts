@@ -20,6 +20,7 @@ import {
     FormOfPaymmentQueryParams,
     IFormOfPaymentListRs,
 } from "@/models/management/core/formOfPayment.interface";
+import { IBookingSSRPayload } from "@/app/portal/manage-booking/[orderId]/addon-service/modules/bookingSSR.interface";
 
 export const manageBookingAPIs = {
     getOrderList: async (
@@ -130,6 +131,17 @@ export const manageBookingAPIs = {
                 },
                 pageSize: queryParams?.pageSize,
                 pageCurrent: queryParams?.pageCurrent,
+                localUsername: "99",
+            },
+        );
+    },
+    updateSSRByPassenger: async (payload?: IBookingSSRPayload) => {
+        return await coreApi.post<IFormOfPaymentListRs, BaseResponse<null>>(
+            "core/BookingOrder_EditBookingDetailsSSR",
+            {
+                requestObject: {
+                    ...payload,
+                },
                 localUsername: "99",
             },
         );

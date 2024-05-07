@@ -57,6 +57,7 @@ interface IBookingSSRItem {
         bookingRefId: number;
         sellableConfigId: number;
         configJson: string;
+        config: PriceConfig;
         channel: string;
         class: string;
         type: PassengerType;

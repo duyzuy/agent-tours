@@ -8,13 +8,13 @@ import { PassengerType } from "@/models/management/common.interface";
 import { MONTH_FORMAT } from "@/constants/common";
 import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
 const isValidDateFormat = (value: string) => {
-    return dayjs(value, MONTH_FORMAT, true).isValid(); // Adjust the format as needed
+    return dayjs(value, { format: MONTH_FORMAT }, true).isValid(); // Adjust the format as needed
 };
 
 export const searchBookingSchema: ObjectSchema<SearchBookingFormData> = object({
     byMonth: string()
         .required("Chọn thời gian đi")
-        .test("is-valid-date", "Invalid date", isValidDateFormat),
+        .test("is-valid-date", "Ngày đi không hợp lệ", isValidDateFormat),
     byDest: array<ILocalSeachDestination>(
         object({
             regionKey: string(),

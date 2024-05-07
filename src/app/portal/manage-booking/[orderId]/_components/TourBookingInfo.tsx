@@ -1,5 +1,7 @@
 import React, { memo } from "react";
 import classNames from "classnames";
+import { PaymentStatus } from "@/models/management/common.interface";
+import { Tag } from "antd";
 
 interface TourBookingInfoProps {
     name?: string;
@@ -8,6 +10,8 @@ interface TourBookingInfoProps {
     endDate?: string;
     className?: string;
     orderId?: number;
+    paymentStatus?: PaymentStatus;
+    sysFstUpdate?: string;
 }
 const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
     className = "",
@@ -16,20 +20,18 @@ const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
     startDate,
     code,
     orderId,
+    sysFstUpdate,
+    paymentStatus,
 }) => {
     return (
         <div
             className={classNames(
-                "flex items-center bg-slate-50 px-6 py-4 rounded-md drop-shadow-sm",
+                "flex items-center bg-white border border-slate-100 px-6 py-4 rounded-md flex-wrap gap-y-4",
                 {
                     [className]: className,
                 },
             )}
         >
-            <div className="w-20 border-r mr-6 pr-6">
-                <span className="block">ID</span>
-                <span className="block text-[15px] font-[500] ">{`#${orderId}`}</span>
-            </div>
             <div className="w-40 border-r mr-6 pr-6">
                 <span className="block">Tên</span>
                 <span className="block text-[15px] font-[500] ">{name}</span>
@@ -44,7 +46,7 @@ const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
                     {startDate}
                 </span>
             </div>
-            <div className="">
+            <div className="mr-6 pr-6 w-fit">
                 <span className="block">Ngày về</span>
                 <span className="block text-[15px] font-[500] ">{endDate}</span>
             </div>

@@ -3,6 +3,8 @@ import useMessage from "@/hooks/useMessage";
 import {
     useCreatePageContentMutation,
     useUpdatePageContentMutation,
+    useUnPublishPageContentMutation,
+    usePublishPageContentMutation,
 } from "@/mutations/managements/pageContent";
 
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,6 +16,8 @@ import { useRouter } from "next/navigation";
 const useCRUDPageContent = () => {
     const { mutate: makeCreate } = useCreatePageContentMutation();
     const { mutate: makeUpdate } = useUpdatePageContentMutation();
+    const { mutate: makeUnPublish } = useUnPublishPageContentMutation();
+    const { mutate: makePublish } = usePublishPageContentMutation();
 
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -66,9 +70,49 @@ const useCRUDPageContent = () => {
         );
     };
 
+    const onPublish = (id: number, cb?: () => void) => {
+        makePublish(id, {
+            onSuccess: (data, variables) => {
+                message.success(`Cập nhật thành công`);
+                queryClient.invalidateQueries({
+                    queryKey: [queryCMS.GET_PAGE_LIST],
+                });
+                queryClient.invalidateQueries({
+                    queryKey: [queryCMS.GET_PAGE_DETAIL],
+                });
+                cb?.();
+            },
+            onError: (error, variables) => {
+                console.log({ error, variables });
+                message.error(error.message);
+            },
+        });
+    };
+
+    const onUnPublish = (id: number, cb?: () => void) => {
+        makeUnPublish(id, {
+            onSuccess: (data, variables) => {
+                message.success(`Cập nhật thành công`);
+                queryClient.invalidateQueries({
+                    queryKey: [queryCMS.GET_PAGE_LIST],
+                });
+                queryClient.invalidateQueries({
+                    queryKey: [queryCMS.GET_PAGE_DETAIL],
+                });
+                cb?.();
+            },
+            onError: (error, variables) => {
+                console.log({ error, variables });
+                message.error(error.message);
+            },
+        });
+    };
+
     return {
         onCreate,
         onUpdate,
+        onPublish,
+        onUnPublish,
     };
 };
 export default useCRUDPageContent;

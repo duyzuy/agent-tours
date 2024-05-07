@@ -56,6 +56,7 @@ export const useGetBookingDetailCoreQuery = ({
             ),
         select: (data) => data.result,
         enabled: enabled,
+        staleTime: 5 * 60 * 1000,
     });
 };
 

@@ -1,15 +1,18 @@
-import Link from "next/link";
+"use client";
 import IconShippingCart from "@/assets/icons/IconShoppingCart";
 import IconAccount from "@/assets/icons/IconAccount";
 import IconMail from "@/assets/icons/IconMail";
 import IconSupport from "@/assets/icons/IconSupport";
-import DropdownMenu from "./DropdownMenu";
 import IconSearch from "@/assets/icons/IconSearch";
 import Logo from "@/components/frontend/partials/Logo";
-import NavLink from "../NavLink";
 import LanguageSwitcher from "@/components/frontend/partials/LanguageSwitcher";
+import { useTranslations } from "next-intl";
+import NavItem from "@/components/frontend/base/NavItem";
+import NavLink from "@/components/frontend/base/NavItem/NavLink";
 
 const Header = () => {
+    const t = useTranslations("String");
+
     return (
         <header className="bg-white drop-shadow-sm relative z-20">
             <nav className="mx-auto flex items-center justify-between py-4 container px-4 lg:px-0">
@@ -47,7 +50,7 @@ const Header = () => {
                         <ul className="flex items-center gap-x-2 justify-end">
                             <li className="px-3 py-2">
                                 <NavLink
-                                    label="Hỗ trợ"
+                                    title={t("support")}
                                     href="/"
                                     prefix={
                                         <IconSupport className="w-5 h-5 mr-2 stroke-gray-600" />
@@ -56,7 +59,7 @@ const Header = () => {
                             </li>
                             <li className="px-3 py-2">
                                 <NavLink
-                                    label="Liên hệ"
+                                    title={t("contact")}
                                     href="/"
                                     prefix={
                                         <IconMail className="w-5 h-5 mr-2 stroke-gray-600" />
@@ -65,7 +68,7 @@ const Header = () => {
                             </li>
                             <li className="px-3 py-2">
                                 <NavLink
-                                    label="Thành viên"
+                                    title={t("login")}
                                     href="/"
                                     prefix={
                                         <IconAccount className="w-5 h-5 mr-2 stroke-gray-600" />
@@ -79,55 +82,36 @@ const Header = () => {
                     </div>
                     <div className="bottom-menu flex items-center">
                         <ul className="flex items-center">
-                            <li className="relative group/item px-3 py-2">
-                                <span
-                                    className="flex items-center gap-x-1 font-semibold leading-6 text-primary-default cursor-pointer"
-                                    aria-expanded="false"
-                                >
-                                    <span>Tra cứu Booking</span>
-                                    <span className=" group-hover/item:rotate-180">
-                                        <svg
-                                            className="h-5 w-5 flex-none text-gray-400"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                    </span>
-                                </span>
-                                <DropdownMenu className="invisible group-hover/item:visible" />
-                            </li>
-                            <li className="relative px-3 py-2">
-                                <Link href="/" className="font-semibold ">
-                                    <span className="text-primary-default">
-                                        Giới thiệu
-                                    </span>
-                                </Link>
-                            </li>
-                            <li className="relative px-3 py-2">
-                                <Link
-                                    href="/"
-                                    className="font-semibold text-main-400"
-                                >
-                                    <span className="text-primary-default">
-                                        Tuyển dụng
-                                    </span>
-                                </Link>
-                            </li>
-                            <li className="relative px-3 py-2">
-                                <Link
-                                    href="/"
-                                    className="font-semibold text-main-400"
-                                >
-                                    <span className="text-primary-default">
-                                        Tin tức sự kiện
-                                    </span>
-                                </Link>
-                            </li>
+                            <NavItem
+                                title="Tra cứu Booking"
+                                hasDropdown
+                                dropdownItems={[
+                                    {
+                                        title: "Security",
+                                        description:
+                                            "Your customers’ data will be safe and secure",
+                                        href: "",
+                                        iconPath:
+                                            "http://localhost:3000/api/uploads/ninh-binh/logo-1703491889324.svg",
+                                    },
+                                    {
+                                        title: "Security 2",
+                                        href: "",
+                                        iconPath:
+                                            "http://localhost:3000/api/uploads/ninh-binh/logo-1703491889324.svg",
+                                    },
+                                    {
+                                        title: "Security 3",
+                                        href: "https://www.youtube.com/",
+                                        description:
+                                            "Your customers’ data will be safe and secure",
+                                        isBlank: true,
+                                    },
+                                ]}
+                            />
+                            <NavItem title="Giới thiệu" />
+                            <NavItem title="Tuyển dụng" />
+                            <NavItem title="Tin tức sự kiện" />
                         </ul>
                         <div className="space mx-1 text-xs text-gray-400">
                             |

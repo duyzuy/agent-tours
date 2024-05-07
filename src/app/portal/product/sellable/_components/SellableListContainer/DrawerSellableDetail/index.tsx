@@ -143,6 +143,7 @@ const DrawerSellableDetail: React.FC<DrawerSellableDetailProps> = ({
                     size="small"
                     loading={isLoading}
                     dataSource={inventories}
+                    rowKey={"recId"}
                     pagination={{ hideOnSinglePage: true, pageSize: 30 }}
                     columns={[
                         { title: "#ID", dataIndex: "recId", width: 100 },
@@ -172,6 +173,7 @@ const DrawerSellableDetail: React.FC<DrawerSellableDetailProps> = ({
                     size="small"
                     dataSource={stocks}
                     loading={isLoading}
+                    rowKey={"recId"}
                     pagination={{ hideOnSinglePage: true, pageSize: 30 }}
                     columns={[
                         { title: "#ID", dataIndex: "recId", width: 100 },
@@ -256,7 +258,7 @@ const DrawerSellableDetail: React.FC<DrawerSellableDetailProps> = ({
                     ]}
                 />
             </div>
-            <Divider />
+            {/* <Divider />
             <div className="stock">
                 <div className="title">
                     <p className="font-bold mb-6">Danh sách sản phẩm</p>
@@ -278,7 +280,7 @@ const DrawerSellableDetail: React.FC<DrawerSellableDetailProps> = ({
                         { dataIndex: "qty", title: "Số lượng", width: 100 },
                     ]}
                 />
-            </div>
+            </div> */}
         </Drawer>
     );
 };

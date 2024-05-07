@@ -20,21 +20,13 @@ const request = async <TSuccess, TError>(
 
     let configs: RequestInit = {
         method: method,
+        headers: {
+            "Content-Type": "application/json",
+            ...(headers || {}),
+        },
     };
 
-    configs = headers
-        ? {
-              ...configs,
-              headers: headers,
-          }
-        : configs;
-
-    configs = next
-        ? {
-              ...configs,
-              next: next,
-          }
-        : configs;
+    configs.next = next ?? undefined;
 
     if (method === "GET" && params) {
         const queryString = objectToQueryString(params);
@@ -51,7 +43,7 @@ const request = async <TSuccess, TError>(
     try {
         const response = await fetch(requestUrl, configs);
         const data = await response.json();
-        console.log({ response, configs });
+        // console.log({ data, configs });
         if (response.ok && data.status === "OK") {
             return Promise.resolve(data as TSuccess);
         }

@@ -6,7 +6,7 @@ import { LangCode, Locale } from "@/models/management/cms/language.interface";
 import classNames from "classnames";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
-
+import { useQueryClient } from "@tanstack/react-query";
 interface LanguageSwitcherProps {
     langCode?: LangCode;
     className?: string;
@@ -14,6 +14,8 @@ interface LanguageSwitcherProps {
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     className = "",
 }) => {
+    const queryClient = useQueryClient();
+    // queryClient.getQueriesData("")
     const pathname = usePathname();
     const router = useRouter();
     const langCode = pathname.split("/")[1] as LangCode;

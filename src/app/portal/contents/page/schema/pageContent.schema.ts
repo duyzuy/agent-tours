@@ -1,7 +1,7 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
 
 import { PageContentFormData } from "../modules/pageContent.interface";
-import { PageStatus } from "@/models/management/cms/pageContent.interface";
+import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 
 export const pageContentSchema: ObjectSchema<PageContentFormData> = object({
@@ -23,6 +23,10 @@ export const pageContentSchema: ObjectSchema<PageContentFormData> = object({
     publishDate: string().required("Ngày đăng bài không bỏ trống."),
     metaKeyword: string().default(""),
     status: string()
-        .oneOf<PageStatus>([PageStatus.PENDING, PageStatus.PUBLISH])
+        .oneOf<PageContentStatus>([
+            PageContentStatus.PENDING,
+            PageContentStatus.PUBLISH,
+            PageContentStatus.UNPUBLISH,
+        ])
         .required("Chưa chọn ngôn ngữ"),
 });

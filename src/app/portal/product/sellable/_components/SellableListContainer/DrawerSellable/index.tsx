@@ -514,77 +514,78 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         }
     };
 
-    const onSelectSellable: SellableSelectionProps["onSetSellable"] = (
-        action,
-        sellable,
-    ) => {
-        const { otherSellables } = sellableConfirmFormData;
-        let newOtherSellables = [...otherSellables];
-        if (action === "add") {
-            const indx = newOtherSellables.findIndex(
-                (item) => item.sellable.recId === sellable.recId,
-            );
-            if (indx !== -1) {
-                message.error("Sellable đã được thêm.");
-                return;
-            }
-            if (!sellable.open || sellable.open === 0 || sellable.open < 0) {
-                message.error("Số lượng không đủ");
-                return;
-            }
+    // const onSelectSellable: SellableSelectionProps["onSetSellable"] = (
+    //     action,
+    //     sellable,
+    // ) => {
+    //     const { otherSellables } = sellableConfirmFormData;
+    //     let newOtherSellables = [...otherSellables];
+    //     if (action === "add") {
+    //         const indx = newOtherSellables.findIndex(
+    //             (item) => item.sellable.recId === sellable.recId,
+    //         );
+    //         if (indx !== -1) {
+    //             message.error("Sellable đã được thêm.");
+    //             return;
+    //         }
+    //         if (!sellable.open || sellable.open === 0 || sellable.open < 0) {
+    //             message.error("Số lượng không đủ");
+    //             return;
+    //         }
 
-            newOtherSellables = [
-                ...newOtherSellables,
-                { qty: 1, sellable: sellable },
-            ];
-        }
-        if (action === "remove") {
-            const indx = newOtherSellables.findIndex(
-                (item) => item.sellable.recId === sellable.recId,
-            );
-            if (indx !== -1) {
-                newOtherSellables.splice(indx, 1);
-            }
-        }
-        setSellableConfirmFormData((prev) => ({
-            ...prev,
-            otherSellables: [...newOtherSellables],
-        }));
-    };
+    //         newOtherSellables = [
+    //             ...newOtherSellables,
+    //             { qty: 1, sellable: sellable },
+    //         ];
+    //     }
+    //     if (action === "remove") {
+    //         const indx = newOtherSellables.findIndex(
+    //             (item) => item.sellable.recId === sellable.recId,
+    //         );
+    //         if (indx !== -1) {
+    //             newOtherSellables.splice(indx, 1);
+    //         }
+    //     }
+    //     setSellableConfirmFormData((prev) => ({
+    //         ...prev,
+    //         otherSellables: [...newOtherSellables],
+    //     }));
+    // };
 
-    const onSaveSellableByQuantity: SellableSelectionProps["onSaveQuantity"] =
-        ({ sellable, qty }) => {
-            const { cap } = sellableConfirmFormData;
-            if (Number(qty) < 0) {
-                message.error("Số lượng phải lớn hơn 1");
-                return;
-            }
+    // const onSaveSellableByQuantity: SellableSelectionProps["onSaveQuantity"] =
+    //     ({ sellable, qty }) => {
+    //         const { cap } = sellableConfirmFormData;
+    //         if (Number(qty) < 0) {
+    //             message.error("Số lượng phải lớn hơn 1");
+    //             return;
+    //         }
 
-            if (Number(qty) > cap) {
-                message.error(`Số lượng được lớn hơn ${cap}`);
-                return;
-            }
-            if (qty > Number(sellable.open)) {
-                message.error(`Số lượng không đủ`);
-                return;
-            }
-            let newOtherSellables = [...sellableConfirmFormData.otherSellables];
-            const indxSellable =
-                sellableConfirmFormData.otherSellables.findIndex(
-                    (item) => item.sellable.recId === sellable.recId,
-                );
+    //         if (Number(qty) > cap) {
+    //             message.error(`Số lượng được lớn hơn ${cap}`);
+    //             return;
+    //         }
+    //         if (qty > Number(sellable.open)) {
+    //             message.error(`Số lượng không đủ`);
+    //             return;
+    //         }
+    //         let newOtherSellables = [...sellableConfirmFormData.otherSellables];
+    //         const indxSellable =
+    //             sellableConfirmFormData.otherSellables.findIndex(
+    //                 (item) => item.sellable.recId === sellable.recId,
+    //             );
 
-            if (indxSellable !== -1) {
-                newOtherSellables.splice(indxSellable, 1, {
-                    qty: Number(qty),
-                    sellable: sellable,
-                });
-            }
-            setSellableConfirmFormData((prev) => ({
-                ...prev,
-                otherSellables: [...newOtherSellables],
-            }));
-        };
+    //         if (indxSellable !== -1) {
+    //             newOtherSellables.splice(indxSellable, 1, {
+    //                 qty: Number(qty),
+    //                 sellable: sellable,
+    //             });
+    //         }
+    //         setSellableConfirmFormData((prev) => ({
+    //             ...prev,
+    //             otherSellables: [...newOtherSellables],
+    //         }));
+    //     };
+
     const onSubmitForm: HandleSubmit<SellableConfirmFormData> = (data) => {
         actionType && onSubmit?.(actionType, data);
     };
@@ -903,7 +904,7 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                             stockSelectedList={sellableConfirmFormData.stocks}
                         />
                     </FormItem>
-                    <FormItem label="Chọn sản phẩm">
+                    {/* <FormItem label="Chọn sản phẩm">
                         <SellableSelection
                             onSetSellable={onSelectSellable}
                             sellableList={
@@ -911,7 +912,7 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                             }
                             onSaveQuantity={onSaveSellableByQuantity}
                         />
-                    </FormItem>
+                    </FormItem> */}
                 </Form>
 
                 <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white z-50">

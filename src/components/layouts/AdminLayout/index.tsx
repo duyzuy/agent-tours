@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import classNames from "classnames";
-import { travelLogo } from "@/assets";
+import { travelLogo, originalLogo } from "@/assets";
 import Image from "next/image";
 import { removeAgToken } from "@/utils/common";
 import { LINKS } from "@/constants/links.constant";
@@ -80,12 +80,14 @@ const AdminLayout = ({ children }: Props) => {
             >
                 <div className="logo h-16 flex items-center justify-center">
                     {!collapsed ? (
-                        <Image
-                            src={travelLogo}
-                            alt="logo"
-                            width={180}
-                            priority
-                        />
+                        <span className="flex-1 px-6">
+                            <Image
+                                src={originalLogo}
+                                alt="logo"
+                                width={260}
+                                priority
+                            />
+                        </span>
                     ) : null}
                     <Button
                         type="text"
@@ -130,7 +132,7 @@ const AdminLayout = ({ children }: Props) => {
                     className="flex justify-between border-b sticky top-0 z-10  items-center"
                 >
                     <p className="font-semibold text-lg">
-                        Agent Hub - Cổng Quản lý Tours
+                        Tour Management Platform
                     </p>
                     <div className="avata ">
                         <Dropdown

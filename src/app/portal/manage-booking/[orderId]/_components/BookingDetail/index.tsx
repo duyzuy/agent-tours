@@ -17,6 +17,7 @@ import {
     getPassengerGender,
     getPassengerTitle,
 } from "@/constants/common";
+import { ButtonSecondary } from "@/components/base/buttons";
 interface OrderDetailProps {
     bookingOrderDetailList: IOrderDetail["bookingDetails"];
     onSave?: (data?: IBookingOrderPassengersPayload, cb?: () => void) => void;
@@ -86,7 +87,7 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                 className="booking__detail__item"
                                 key={_index}
                             >
-                                <div className="p-4 bg-white border rounded-md shadow-sm">
+                                <div className="p-4 border-slate-200 border rounded-md">
                                     <div className="booking__detail__item-head border-b mb-3 pb-3">
                                         <ul className="flex">
                                             <li className="w-16">
@@ -123,19 +124,19 @@ const BookingDetail: React.FC<OrderDetailProps> = ({
                                                 </span>
                                             </li>
                                             <li>
-                                                <Button
-                                                    type="primary"
+                                                <ButtonSecondary
                                                     onClick={() =>
                                                         onEditPassengerInfo(
                                                             bookingDetail,
                                                         )
                                                     }
-                                                    ghost
-                                                    size="small"
-                                                    icon={<EditOutlined />}
-                                                >
-                                                    Sửa
-                                                </Button>
+                                                    buttonProps={{
+                                                        size: "small",
+                                                        icon: <EditOutlined />,
+                                                        shape: "circle",
+                                                    }}
+                                                    color="primary"
+                                                ></ButtonSecondary>
                                             </li>
                                         </ul>
                                     </div>

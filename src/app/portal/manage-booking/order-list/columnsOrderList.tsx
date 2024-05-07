@@ -15,9 +15,22 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
         width: 80,
     },
     {
-        title: "Tour",
+        title: "Loại dịch vụ",
         dataIndex: "recId",
         key: "recId",
+        width: 120,
+        render(value, record, index) {
+            return (
+                <div>
+                    <span className="block">{record.template.type}</span>
+                </div>
+            );
+        },
+    },
+    {
+        title: "Tên sản phẩm",
+        dataIndex: "templateName",
+        key: "templateName",
         width: 260,
         render(value, record, index) {
             return (
@@ -41,6 +54,33 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
         dataIndex: "custName",
         key: "custName",
         width: 150,
+    },
+    {
+        title: "Ngày đặt",
+        dataIndex: "sysFstUpdate",
+        key: "sysFstUpdate",
+        width: 160,
+        render: (sysFstUpdate, record) => {
+            return <>{formatDate(sysFstUpdate)}</>;
+        },
+    },
+    {
+        title: "Trạng thái",
+        dataIndex: "paymentStatus",
+        key: "paymentStatus",
+        width: 120,
+        render(value, record, index) {
+            return (
+                <>
+                    {(record.status === Status.OK && (
+                        <Tag color="green">Đã xác nhận</Tag>
+                    )) ||
+                        (record.status === Status.XX && (
+                            <Tag color="red">Đã huỷ</Tag>
+                        )) || <Tag color="orange">Chờ xác nhận</Tag>}
+                </>
+            );
+        },
     },
     {
         title: "Tổng tiền",
@@ -67,33 +107,6 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
                         )) || <Tag color="red">Chưa thanh toán</Tag>}
                 </>
             );
-        },
-    },
-    {
-        title: "Trạng thái ",
-        dataIndex: "paymentStatus",
-        key: "paymentStatus",
-        width: 120,
-        render(value, record, index) {
-            return (
-                <>
-                    {(record.status === Status.OK && (
-                        <Tag color="green">Đã xác nhận</Tag>
-                    )) ||
-                        (record.status === Status.XX && (
-                            <Tag color="red">Đã huỷ</Tag>
-                        )) || <Tag color="orange">Chờ xác nhận</Tag>}
-                </>
-            );
-        },
-    },
-    {
-        title: "Ngày đặt",
-        dataIndex: "sysFstUpdate",
-        key: "sysFstUpdate",
-        width: 160,
-        render: (sysFstUpdate, record) => {
-            return <>{formatDate(sysFstUpdate)}</>;
         },
     },
 ];

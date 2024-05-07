@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { IProductItem } from "@/models/management/booking/productItem.interface";
 import { formatDate } from "@/utils/date";
 import {
@@ -9,7 +9,7 @@ import {
 import { moneyFormatVND } from "@/utils/helper";
 import { CheckOutlined, SwapOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import { Button } from "antd";
+import { Button, Space, Tag } from "antd";
 import classNames from "classnames";
 
 interface TourBoxItemProps {
@@ -34,7 +34,7 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
         >
             <div className="tour__box__item-inner">
                 <div className="flex items-center tour__box__item-top">
-                    <div className="tour__box__item-left w-[420px]">
+                    <div className="tour__box__item-left w-[320px]">
                         <div className="">
                             <div className="mb-2">
                                 <span className="text-primary-default font-semibold text-[16px]">
@@ -63,6 +63,7 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
                             </div>
                         </div>
                     </div>
+
                     <div className="tour__box__item-pricing-actions w-[380px]">
                         <div className="flex items-center justify-end">
                             {tour.open === 0 ? (
@@ -89,6 +90,20 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
                                         </span>
                                     ) : (
                                         <div className="action text-right">
+                                            <Space>
+                                                {tour.promotions.map((promo) =>
+                                                    promo.isValid ? (
+                                                        <span
+                                                            key={promo.name}
+                                                            className="border border-dashed inline-block px-2 rounded-sm text-xs bg-emerald-100 border-emerald-400 text-emerald-500 mb-2"
+                                                        >
+                                                            {`Giảm ${moneyFormatVND(
+                                                                promo.discountAmount,
+                                                            )}`}
+                                                        </span>
+                                                    ) : null,
+                                                )}
+                                            </Space>
                                             <span className="block mb-2 rounded-sm text-xs">{`Số lượng đang còn ${tour.open}`}</span>
                                             <Button
                                                 type="primary"
@@ -108,7 +123,7 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
         </WrapTourBoxItem>
     );
 };
-export default TourBoxItem;
+export default memo(TourBoxItem);
 
 export const isProductTourConfig = (config: IProductItem["configs"][0]) => {
     let isTourProduct = false;

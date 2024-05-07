@@ -34,7 +34,7 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
         }, []);
     }, [data]);
 
-    const { onUpdate, onCreate } = useCRUDPageContent();
+    const { onUpdate, onCreate, onPublish, onUnPublish } = useCRUDPageContent();
 
     const handleSubmitFormData: ContentPageFormProps["onSubmit"] = (
         formData,
@@ -44,6 +44,14 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
         } else {
             onCreate(formData);
         }
+    };
+
+    const onChangeStatus: ContentPageFormProps["onChangeStatus"] = (
+        id,
+        type,
+    ) => {
+        console.log(id, type);
+        type === "active" ? onPublish(id) : onUnPublish(id);
     };
     useEffect(() => {
         if (isUndefined(data) && !isLoading) {
@@ -82,6 +90,9 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
                     originId={params.id}
                     lang={locale?.key}
                     onSubmit={handleSubmitFormData}
+                    onPublish={(id) => id && onPublish(id)}
+                    action={pageContent ? "update" : "create"}
+                    onChangeStatus={onChangeStatus}
                 />
             ) : null}
         </PageContainer>
