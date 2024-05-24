@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import classNames from "classnames";
 import { PaymentStatus } from "@/models/management/common.interface";
 import { Tag } from "antd";
+import { isEmpty } from "lodash";
 
 interface OrderInformationProps {
     name?: string;
@@ -10,6 +11,7 @@ interface OrderInformationProps {
     orderId?: number;
     paymentStatus?: PaymentStatus;
     sysFstUpdate?: string;
+    referenceId?: string;
 }
 const OrderInformation: React.FC<OrderInformationProps> = ({
     className = "",
@@ -18,6 +20,7 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
     orderId,
     sysFstUpdate,
     paymentStatus,
+    referenceId,
 }) => {
     return (
         <div
@@ -53,6 +56,12 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
                 <span className="block">Ngày đặt</span>
                 <span className="block text-[15px] font-[500] ">
                     {sysFstUpdate}
+                </span>
+            </div>
+            <div className="border-r mr-6 pr-6 w-fit">
+                <span className="block">Mã giới thiệu</span>
+                <span className="block text-[15px] font-[500] ">
+                    {referenceId && isEmpty(referenceId) ? referenceId : "--"}
                 </span>
             </div>
             <div className="">

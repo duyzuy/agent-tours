@@ -19,21 +19,16 @@ const useSearchBookingInformation = () => {
             byInventoryType: formData.byInventoryType,
             byProductType: formData.byProductType,
             byDest: formData.byDest?.reduce<ISearchBookingPayload["byDest"]>(
-                (acc, item) => {
-                    acc = [
-                        ...(acc || []),
-                        {
-                            countryKey: item.countryKey,
-                            stateProvinceKey: item.stateProvinceKey,
-
-                            keyType: item.keyType,
-                            regionKey: item.regionKey,
-
-                            subRegionKey: item.subRegionKey,
-                        },
-                    ];
-                    return acc;
-                },
+                (acc, item) => [
+                    ...(acc || []),
+                    {
+                        countryKey: item.countryKey,
+                        stateProvinceKey: item.stateProvinceKey,
+                        keyType: item.keyType,
+                        regionKey: item.regionKey,
+                        subRegionKey: item.subRegionKey,
+                    },
+                ],
                 [],
             ),
         };

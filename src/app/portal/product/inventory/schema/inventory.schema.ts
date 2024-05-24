@@ -1,4 +1,4 @@
-import { object, string, ObjectSchema, boolean } from "yup";
+import { object, string, ObjectSchema, boolean, number } from "yup";
 import { IInventoryPayload } from "@/models/management/core/inventory.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
@@ -7,24 +7,7 @@ import { InventoryFormData } from "../modules/inventory.interface";
 
 export const inventorySchema: ObjectSchema<InventoryFormData> = object({
     cmsIdentity: string().default(""),
-    // isCreate: boolean().default(true),
-    // type: string().when("isCreate", {
-    //     is: true,
-    //     then: (schema) =>
-    //         schema
-    //             .oneOf<IInventoryPayload["type"]>([
-    //                 EInventoryType.AIR,
-    //                 EInventoryType.GUIDE,
-    //                 EInventoryType.HOTEL,
-    //                 EInventoryType.INSURANCE,
-    //                 EInventoryType.LANDPACKAGE,
-    //                 EInventoryType.RESTAURANT,
-    //                 EInventoryType.TRANSPORT,
-    //                 EInventoryType.VISA,
-    //             ])
-    //             .required("Type không bỏ trống"),
-    //     otherwise: (schema) => schema.optional(),
-    // }),
+    supplierId: number().required("Chưa chọn Supplier."),
     type: string()
         .oneOf<IInventoryPayload["type"]>([
             EInventoryType.AIR,
@@ -59,3 +42,22 @@ export const inventorySchema: ObjectSchema<InventoryFormData> = object({
 export const inventoryUpdateSchema: ObjectSchema<{ name: string }> = object({
     name: string().required("Tên không bỏ trống."),
 });
+
+// isCreate: boolean().default(true),
+// type: string().when("isCreate", {
+//     is: true,
+//     then: (schema) =>
+//         schema
+//             .oneOf<IInventoryPayload["type"]>([
+//                 EInventoryType.AIR,
+//                 EInventoryType.GUIDE,
+//                 EInventoryType.HOTEL,
+//                 EInventoryType.INSURANCE,
+//                 EInventoryType.LANDPACKAGE,
+//                 EInventoryType.RESTAURANT,
+//                 EInventoryType.TRANSPORT,
+//                 EInventoryType.VISA,
+//             ])
+//             .required("Type không bỏ trống"),
+//     otherwise: (schema) => schema.optional(),
+// }),

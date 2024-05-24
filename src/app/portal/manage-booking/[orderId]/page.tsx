@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
-import { Spin, Row, Col, Steps, StepProps, Divider } from "antd";
+import React, { useEffect, useMemo, useTransition } from "react";
+import { Spin, Row, Col, Divider } from "antd";
 import { isUndefined } from "lodash";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -22,6 +22,11 @@ import BookingOrderActions from "./_components/BookingOrderActions";
 import DepositTimeline from "./_components/DepositTimeline";
 import OrderInformation from "./_components/OrderInformation";
 
+import BookingTimeLimitation from "./_components/BookingTimeLimitation";
+import { PaymentStatus } from "@/models/management/common.interface";
+import { IBookingDetail } from "@/models/management/booking/bookingDetail.interface";
+import { IOrderDetail } from "@/models/management/booking/order.interface";
+
 interface ReservationDetailPageProps {
     params: { orderId: number };
 }
@@ -42,6 +47,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
     params,
 }) => {
     const router = useRouter();
+    const [isPending, startTransition] = useTransition();
     const { data: ruleAndPolicyList, isLoading: isLoadingRule } =
         useLocalGetRuleAndPolicyQuery();
 
@@ -61,9 +67,24 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
         return bookingOrderDetail?.bookingOrder;
     }, [bookingOrderDetail]);
 
+    const bookingSSRList = useMemo(() => {
+        return bookingOrderDetail?.ssr.reduce<
+            IOrderDetail["ssr"][0]["booking"][]
+        >((acc, item) => {
+            return (acc = [...acc, item.booking]);
+        }, []);
+    }, [bookingOrderDetail]);
     const rulesAndPolicies = useMemo(() => {
         return bookingOrderDetail?.rulesAndPolicies;
     }, [bookingOrderDetail]);
+
+    const onClickBuyService = () => {
+        startTransition(() => {
+            router.push(
+                `./portal/manage-booking/${params.orderId}/addon-service`,
+            );
+        });
+    };
 
     useEffect(() => {
         if (isUndefined(bookingOrderDetail) && !isLoading && !isLoadingRule) {
@@ -99,6 +120,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                     }
                     orderId={bookingOrder?.recId}
                     paymentStatus={bookingOrder?.paymentStatus}
+                    referenceId={bookingOrder?.referenceId}
                     className="mb-6"
                 />
                 <div className="bg-slate-50 p-6 rounded-md">
@@ -161,34 +183,12 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                     totalAmount={bookingOrder?.totalAmount}
                     totalPaid={bookingOrder?.totalPaid}
                 />
-                <div className="mb-6">
-                    <div className="mb-3">
-                        <p className="font-[500] text-[16px]">
-                            Thời gian thực hiện thanh toán
-                        </p>
-                    </div>
-                    <Steps
-                        current={0}
-                        items={rulesAndPolicies?.bookingTimelimits.map<StepProps>(
-                            (item) => {
-                                return {
-                                    title: `Hạn thanh toán: ${formatDate(
-                                        item.deadline,
-                                    )}`,
-                                    description: `${
-                                        item.isCompleted === true
-                                            ? "Đã thanh toán"
-                                            : "Chưa thanh toán"
-                                    }`,
-                                    subTitle:
-                                        item.isExpired === true
-                                            ? "Hết hạn"
-                                            : null,
-                                };
-                            },
-                        )}
+                {bookingOrder?.paymentStatus === PaymentStatus.PAID ? null : (
+                    <BookingTimeLimitation
+                        orderId={params.orderId}
+                        items={rulesAndPolicies?.bookingTimelimits}
                     />
-                </div>
+                )}
                 <OrderSummary
                     orderId={bookingOrder?.recId}
                     data={{
@@ -219,10 +219,9 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                     onSave={onUpdatePassengerInfo}
                 />
                 <ServiceDetail
-                    serviceList={bookingOrderDetail.ssr}
-                    onBuyService={() =>
-                        router.push(`./portal/manage-booking/${params.orderId}`)
-                    }
+                    serviceList={bookingSSRList || []}
+                    isLoading={isPending}
+                    onBuyService={onClickBuyService}
                     className="mb-6"
                 />
             </div>

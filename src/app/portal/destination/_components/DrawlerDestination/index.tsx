@@ -183,6 +183,9 @@ const DrawlerDestination: React.FC<DrawlerRoleProps> = ({
                         items={items}
                         value={formData.listStateProvince}
                         onChange={onChangeProvinceState}
+                        editAble={
+                            actionType === EActionType.CREATE ? true : false
+                        }
                     />
                 </div>
             </Form>

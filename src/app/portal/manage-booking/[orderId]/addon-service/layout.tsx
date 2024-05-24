@@ -6,7 +6,7 @@ import { BookingSSRData } from "./modules/bookingSSR.interface";
 
 const BookingProvider = ({ children }: { children: React.ReactNode }) => {
     const [bookingSSR, setBookingSSR] = useState(
-        () => new BookingSSRData(undefined, undefined),
+        () => new BookingSSRData(undefined, undefined, []),
     );
     return (
         <ManageBookingContext.Provider value={[bookingSSR, setBookingSSR]}>

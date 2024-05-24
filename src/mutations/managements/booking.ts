@@ -16,6 +16,10 @@ import {
 import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IFormOfPaymentPayload } from "@/models/management/core/formOfPayment.interface";
 import { IBookingSSRPayload } from "@/app/portal/manage-booking/[orderId]/addon-service/modules/bookingSSR.interface";
+import {
+    IOrderDetail,
+    IOrderDetailRs,
+} from "@/models/management/booking/order.interface";
 
 //create folder in public/uploads folder.
 
@@ -109,5 +113,16 @@ export const useUpdateSSRByPassengerMutation = () => {
     return useMutation<any, BaseResponse<null>, IBookingSSRPayload>({
         mutationFn: (payload) =>
             manageBookingAPIs.updateSSRByPassenger(payload),
+    });
+};
+
+export const useExtendBookingTimeLimitMutation = () => {
+    return useMutation<
+        IOrderDetailRs,
+        BaseResponse<null>,
+        { orderId: number; postponeHours: number }
+    >({
+        mutationFn: (payload) =>
+            manageBookingAPIs.extendBookingTimeLimit(payload),
     });
 };

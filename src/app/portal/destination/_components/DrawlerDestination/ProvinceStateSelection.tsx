@@ -15,12 +15,14 @@ interface ProvinceStateSelectionProps {
     items: IStateProvince[];
     value: IStateProvince[];
     onChange?: (value: IStateProvince[]) => void;
+    editAble?: boolean;
 }
 
 const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({
     items,
     value,
     onChange,
+    editAble = true,
 }) => {
     const [provinceList, setProvinceList] = useState<IStateProvince[]>([]);
 
@@ -497,6 +499,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({
                             name="region"
                             onChange={(ev) => changeRegion(ev, region)}
                             checked={hasCheckedState(region, "REGIONLIST")}
+                            disabled={!editAble}
                         >
                             {region.regionKey}
                         </Checkbox>
@@ -517,6 +520,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({
                                             subRegion,
                                             "SUBREGIONLIST",
                                         )}
+                                        disabled={!editAble}
                                     >
                                         {subRegion.subRegionKey}
                                     </Checkbox>
@@ -540,6 +544,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({
                                                         country,
                                                         "COUNTRYLIST",
                                                     )}
+                                                    disabled={!editAble}
                                                 >
                                                     {country.countryName}
                                                 </Checkbox>
@@ -565,6 +570,9 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({
                                                                     state,
                                                                     "STATEPROVINCELIST",
                                                                 )}
+                                                                disabled={
+                                                                    !editAble
+                                                                }
                                                             >
                                                                 {
                                                                     state.stateProvinceKey

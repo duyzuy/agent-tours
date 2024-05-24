@@ -118,6 +118,7 @@ export interface IBookingTourPayload {
     invoiceAddress?: string;
     invoiceTaxCode?: string;
     invoiceEmail?: string;
+    referenceId?: string;
     // CustInfoJson?: string; //chưa dùng tới
     // Rmk1?: string;
     // Rmk2?: string;

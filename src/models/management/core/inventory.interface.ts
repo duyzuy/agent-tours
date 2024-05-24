@@ -25,6 +25,7 @@ export interface IInventory {
 export interface IInventoryListRs extends BaseResponse<IInventory[]> {}
 export interface IInventoryPayload {
     cmsIdentity?: string;
+    supplierId?: number;
     type?: EInventoryType;
     code?: string;
     name?: string;

@@ -1,8 +1,10 @@
 import React from "react";
 import Quantity, { QuantityProps } from "@/components/admin/Quantity";
+import { Button } from "antd";
 import classNames from "classnames";
 
 interface SellableConfigItemProps {
+    mode?: "new" | "buyed";
     sellableClass?: string;
     open?: number;
     price?: string;
@@ -18,6 +20,7 @@ const SellableConfigItem: React.FC<SellableConfigItemProps> = ({
     onChange,
     quantity,
     className = "",
+    mode = "new",
 }) => {
     return (
         <div
@@ -31,18 +34,30 @@ const SellableConfigItem: React.FC<SellableConfigItemProps> = ({
                     <span className="block text-xs text-gray-500">Class</span>
                     <span>{sellableClass}</span>
                 </div>
-                <div className="w-24">
+                <div className="w-20">
                     <span className="text-xs block text-gray-500">
                         Đang còn
                     </span>
                     <span>{open}</span>
                 </div>
+                {mode === "buyed" ? (
+                    <div className="w-20">
+                        <span className="block text-xs">Số lượng</span>
+                        <span className="text-primary-default">{quantity}</span>
+                    </div>
+                ) : null}
                 <div>
                     <span className="block text-xs">Giá tiền</span>
                     <span className="text-primary-default">{price}</span>
                 </div>
             </div>
-            <Quantity size="sm" value={quantity} onChange={onChange} />
+            {mode === "buyed" ? (
+                <div>
+                    <Button size="small">Add/remove</Button>
+                </div>
+            ) : (
+                <Quantity size="sm" value={quantity} onChange={onChange} />
+            )}
         </div>
     );
 };

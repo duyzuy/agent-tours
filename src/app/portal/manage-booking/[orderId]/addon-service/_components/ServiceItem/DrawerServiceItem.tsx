@@ -9,8 +9,9 @@ import useMessage from "@/hooks/useMessage";
 import { PassengerType } from "@/models/management/common.interface";
 import SellableConfigItem from "./SellableConfigItem";
 import { IPassengerInformation } from "@/models/management/booking/passengerInformation.interface";
-import { BookingDetailItem } from "../../page";
-import { BookingSSRItem } from "../../modules/bookingSSR.interface";
+import { BookingDetailItemType, BookingDetailSSRItemType } from "../../page";
+import { BookingSSRItemType } from "../../modules/bookingSSR.interface";
+import BookingSSRItem, { BookingSSRItemprops } from "./BookingSSRItem";
 
 type ServiceGroupingByPassenger = {
     recId: number;
@@ -31,13 +32,16 @@ export interface DrawerServiceItemProps {
     serviceId?: number;
     pricingConfigs?: PriceConfig[];
     ssrBookedItemGroupByPax?: ServiceGroupingByPassenger[];
+    bookingSSRItemsBooked?: BookingDetailSSRItemType[];
     onConfirm?: (
-        bookingDetailSSRItems: BookingSSRItem[],
+        bookingDetailSSRItems: BookingSSRItemType[],
+        bookingDetailSSRItemsRemove: BookingDetailSSRItemType[],
         serviceId: number,
     ) => void;
-    bookingItems?: BookingDetailItem[];
-    initSSRBookingItems?: BookingSSRItem[];
-    defaultSSRBookingItems?: BookingSSRItem[];
+    bookingItems?: BookingDetailItemType[];
+    initSSRBookingItems?: BookingSSRItemType[];
+    initSSRBookingItemsRemove?: BookingDetailSSRItemType[];
+    // defaultSSRBookingItems?: BookingSSRItemType[];
 }
 
 const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
@@ -47,19 +51,23 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
     pricingConfigs = [],
     ssrBookedItemGroupByPax,
     initSSRBookingItems,
-    defaultSSRBookingItems = [],
+    initSSRBookingItemsRemove,
+    // defaultSSRBookingItems = [],
+    bookingSSRItemsBooked = [],
     serviceId,
     onConfirm,
     bookingItems,
 }) => {
     const [bookingDetailItems, setBookingDetailItems] = useState<
-        BookingSSRItem[]
+        BookingSSRItemType[]
     >([]);
+    const [bookingDetailSSRItemsRemove, setBookingDetailSSRItemsRemove] =
+        useState<BookingDetailSSRItemType[]>([]);
     const [bookingItemSelecting, setBookingItemSelecting] =
-        useState<BookingDetailItem>();
+        useState<BookingDetailItemType>();
     const message = useMessage();
 
-    const selectBookingItem = (bookingItem: BookingDetailItem) => {
+    const selectBookingItem = (bookingItem: BookingDetailItemType) => {
         setBookingItemSelecting(bookingItem);
     };
 
@@ -79,13 +87,9 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
             priceConfig.recId,
         );
 
-        const totalBookedItem = getTotalSellableConfigBookedItem(
-            priceConfig.recId,
-        );
         if (
             action === "plus" &&
-            totalSellableConfigSelecting + 1 >
-                priceConfig.open + totalBookedItem
+            totalSellableConfigSelecting + 1 > priceConfig.open
         ) {
             message.info("Số lượng dịch vụ đã hết.");
             return;
@@ -223,6 +227,15 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
         }, 0);
     }, [bookingDetailItems]);
 
+    /**
+     * Get Booking SSR detail Item by pax selecting
+     */
+    const bookingSSRItemsBookedByPax = useMemo(() => {
+        return bookingSSRItemsBooked.filter(
+            (item) => item.bookingRefId === bookingItemSelecting?.recId,
+        );
+    }, [bookingSSRItemsBooked, bookingItemSelecting]);
+
     const getFullnamePassenger = useCallback(
         (lastName?: string, middleAndFirstName?: string) => {
             if (
@@ -240,38 +253,70 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
         onClose?.();
         bookingItems && setBookingItemSelecting(bookingItems[0]);
     };
-
     const handleConfirmService = () => {
-        serviceId && onConfirm?.(bookingDetailItems, serviceId);
+        serviceId &&
+            onConfirm?.(
+                bookingDetailItems,
+                bookingDetailSSRItemsRemove,
+                serviceId,
+            );
         onClose?.();
         // bookingItems && setBookingItemSelecting(bookingItems[0]);
     };
 
-    const isDisableButton = useMemo(() => {
-        if (defaultSSRBookingItems?.length !== bookingDetailItems.length) {
-            return false;
-        }
-        return !!bookingDetailItems.every((bkItem) => {
-            return defaultSSRBookingItems.some((defaultItem) => {
-                return (
-                    bkItem.booking === defaultItem.booking &&
-                    bkItem.ssr.length === defaultItem.ssr.length &&
-                    bkItem.ssr.every((ssrIt) => {
-                        return defaultItem.ssr.some(
-                            (defaultSSr) =>
-                                defaultSSr.priceConfig.recId ===
-                                    ssrIt.priceConfig.recId &&
-                                defaultSSr.quantity === ssrIt.quantity,
-                        );
-                    })
-                );
-            });
+    console.log(bookingDetailItems, bookingDetailSSRItemsRemove, serviceId);
+    const hasBookingSSRItemRemoved = useCallback(
+        (bkDetailSSRItem: BookingDetailSSRItemType) => {
+            return bookingDetailSSRItemsRemove.some(
+                (item) => item.recId === bkDetailSSRItem.recId,
+            );
+        },
+        [bookingDetailSSRItemsRemove],
+    );
+    const onAddRemoveSSRItem: BookingSSRItemprops["onAdd"] = (data) => {
+        if (!data) return;
+        setBookingDetailSSRItemsRemove((oldData) => {
+            let newData = [...oldData];
+            const indexItem = oldData.findIndex(
+                (item) => item.recId === data?.recId,
+            );
+
+            if (indexItem !== -1) {
+                newData.splice(indexItem, 1);
+            } else {
+                newData = [...newData, data];
+            }
+
+            return newData;
         });
-    }, [bookingDetailItems, defaultSSRBookingItems]);
+    };
+    // const isDisableButton = useMemo(() => {
+    //     if (defaultSSRBookingItems?.length !== bookingDetailItems.length) {
+    //         return false;
+    //     }
+    //     return !!bookingDetailItems.every((bkItem) => {
+    //         return defaultSSRBookingItems.some((defaultItem) => {
+    //             return (
+    //                 bkItem.booking === defaultItem.booking &&
+    //                 bkItem.ssr.length === defaultItem.ssr.length &&
+    //                 bkItem.ssr.every((ssrIt) => {
+    //                     return defaultItem.ssr.some(
+    //                         (defaultSSr) =>
+    //                             defaultSSr.priceConfig.recId ===
+    //                                 ssrIt.priceConfig.recId &&
+    //                             defaultSSr.quantity === ssrIt.quantity,
+    //                     );
+    //                 })
+    //             );
+    //         });
+    //     });
+    // }, [bookingDetailItems, defaultSSRBookingItems]);
 
     useEffect(() => {
         initSSRBookingItems && setBookingDetailItems(initSSRBookingItems);
-    }, [initSSRBookingItems, isOpen]);
+        initSSRBookingItemsRemove &&
+            setBookingDetailSSRItemsRemove(initSSRBookingItemsRemove);
+    }, [initSSRBookingItems, initSSRBookingItemsRemove, isOpen]);
     useEffect(() => {
         bookingItems && setBookingItemSelecting(bookingItems[0]);
     }, [isOpen, bookingItems]);
@@ -337,25 +382,54 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
                 </div>
             </div>
             <div className="service__item-body px-6 pt-6">
-                {pricingConfigs.map((item, _index) => (
-                    <SellableConfigItem
-                        key={_index}
-                        sellableClass={item.class}
-                        open={item.open}
-                        price={
-                            bookingItemSelecting
-                                ? moneyFormatVND(
-                                      item[bookingItemSelecting?.type],
-                                  )
-                                : undefined
-                        }
-                        onChange={(action, value) =>
-                            handleChangeServiceItem(action, value, item)
-                        }
-                        quantity={getQuanitySSROfPaxByPriceConfig(item)}
-                        className="mb-3"
-                    />
-                ))}
+                <div className="service-item-booked mb-6">
+                    {bookingSSRItemsBookedByPax ? (
+                        <div>
+                            <div className="mb-6">
+                                <p className="font-[500]">Dịch vụ đã mua</p>
+                            </div>
+                            {bookingSSRItemsBookedByPax.map(
+                                (bookingSSRItem, _index) => (
+                                    <BookingSSRItem
+                                        key={_index}
+                                        isRemoved={hasBookingSSRItemRemoved(
+                                            bookingSSRItem,
+                                        )}
+                                        data={bookingSSRItem}
+                                        onAdd={onAddRemoveSSRItem}
+                                        className="mb-3"
+                                    />
+                                ),
+                            )}
+                        </div>
+                    ) : null}
+                </div>
+                <div className="service-items-new">
+                    <div>
+                        <div className="mb-6">
+                            <p className="font-[500]">Mua thêm dịch vụ</p>
+                        </div>
+                    </div>
+                    {pricingConfigs.map((item, _index) => (
+                        <SellableConfigItem
+                            key={_index}
+                            sellableClass={item.class}
+                            open={item.open}
+                            price={
+                                bookingItemSelecting
+                                    ? moneyFormatVND(
+                                          item[bookingItemSelecting?.type],
+                                      )
+                                    : undefined
+                            }
+                            onChange={(action, value) =>
+                                handleChangeServiceItem(action, value, item)
+                            }
+                            quantity={getQuanitySSROfPaxByPriceConfig(item)}
+                            className="mb-3"
+                        />
+                    ))}
+                </div>
             </div>
             <div className="drawler-action absolute px-6 py-4 border-t left-0 right-0 bg-white bottom-0">
                 <div className="flex justify-between">

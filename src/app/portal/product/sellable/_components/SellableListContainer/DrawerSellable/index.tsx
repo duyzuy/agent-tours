@@ -38,6 +38,7 @@ import SellableSelection, { SellableSelectionProps } from "./SellableSelection";
 import { TIME_FORMAT, DATE_TIME_FORMAT } from "@/constants/common";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
+import { EProductType } from "@/models/management/core/productType.interface";
 const MAX_NUMBER_INPUT = 999;
 
 export enum EActionType {
@@ -99,14 +100,19 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
 
     const [errorSellableForm, setErrorSellableForm] =
         useState<Partial<Record<keyof SellableConfirmFormData, string>>>();
-    /**
-     * If inventory has stock only pick stock;
-     */
 
-    const inventoryWithOutStockOptions = useMemo(() => {
+    /**
+     *
+     * Get Product list items filter from inventories list
+     * @param {IInventory[]} inventories is inventories list
+     * @param {EProductType} productType for this type of Data just filter with value is "PRODUCT"
+     * @param {boolean} isProdyctType for this type of data just filter with value is "false"
+     *
+     */
+    const inventoryWithOutStockAndProductTypeTourOptions = useMemo(() => {
         return (
             inventories?.reduce<IInventoryOption[]>((acc, inv) => {
-                if (!inv.isStock) {
+                if (!inv.isStock && inv.productType === EProductType.TOUR) {
                     acc = [
                         ...acc,
                         { label: inv.name, value: inv.recId, data: inv },
@@ -117,8 +123,35 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         );
     }, [inventories]);
 
-    const inventoriesWithManageStock = useMemo(() => {
-        return inventories?.filter((item) => item.isStock) || [];
+    /**
+     * Get Product list items filter from inventories list
+     * @param {IInventory[]} inventories is inventories list
+     * @param {EProductType} productType for this type of Data just filter with value is "PRODUCT"
+     * @param {boolean} isProdyctType for this type of data just filter with value is "true"
+     */
+
+    const inventoriesWithManageStockAndProductTypeTour = useMemo(() => {
+        return (
+            inventories?.filter(
+                (item) =>
+                    item.isStock && item.productType === EProductType.TOUR,
+            ) || []
+        );
+    }, [inventories]);
+
+    /**
+     * Get service list items filter from inventories list
+     * @param {IInventory[]} inventories is inventories list
+     * @param {EProductType} productType for this type of Data just filter with value is "EXTRA"
+     * @param {boolean} isProdyctType for this type of data just filter with value is "false"
+     */
+    const inventoriesWithManageStockAndProductTypeExtra = useMemo(() => {
+        return (
+            inventories?.filter(
+                (item) =>
+                    item.isStock && item.productType === EProductType.EXTRA,
+            ) || []
+        );
     }, [inventories]);
 
     const { handlerSubmit, errors } = useFormSubmit<SellableConfirmFormData>({
@@ -254,25 +287,25 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         }));
     };
 
-    const onSelectExtraInventoryHasnotStock: SelectProps<
+    const selectExtraInventoryWithNoStock: SelectProps<
         number,
-        IInventoryOption
+        IInventory
     >["onChange"] = (value, option) => {
-        if (!isArray(option)) {
-            setInventoryExtraItem(option.data);
-        }
+        setInventoryExtraItem(() => {
+            return isArray(option) ? option[0] : option;
+        });
     };
+
     const inventoryExtraOptions = useMemo(() => {
         const recordIdList = (
             sellableConfirmFormData.extraInventories || []
         ).map((inv) => inv.inventory.recId);
-        return inventoryWithOutStockOptions.filter(
-            (inv) => !recordIdList.includes(inv.value),
+        return inventories.filter(
+            (inv) =>
+                !recordIdList.includes(inv.recId) &&
+                inv.productType === EProductType.EXTRA,
         );
-    }, [
-        inventoryWithOutStockOptions,
-        sellableConfirmFormData.extraInventories,
-    ]);
+    }, [inventories, sellableConfirmFormData.extraInventories]);
 
     const onAddExtraInventory = () => {
         if (isUndefined(inventoryExtraItem)) {
@@ -819,7 +852,9 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                     <FormItem label="Chọn nhóm kho sản phẩm" required>
                         <Select
                             mode="multiple"
-                            options={inventoryWithOutStockOptions}
+                            options={
+                                inventoryWithOutStockAndProductTypeTourOptions
+                            }
                             onChange={onSelectInventoryHasnotStock}
                             placeholder="Chọn inventory"
                         />
@@ -833,7 +868,9 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                             </p>
                         </div>
                         <StockSelection
-                            inventories={inventoriesWithManageStock}
+                            inventories={
+                                inventoriesWithManageStockAndProductTypeTour
+                            }
                             scroll={{ x: 750 }}
                             rowKey={"recId"}
                             validFrom={sellableConfirmFormData.valid}
@@ -858,11 +895,15 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                     >
                         <Row gutter={8} className="mb-3">
                             <Col style={{ flex: 1 }}>
-                                <Select
+                                <Select<number, IInventory>
                                     value={inventoryExtraItem?.recId ?? null}
+                                    fieldNames={{
+                                        value: "recId",
+                                        label: "name",
+                                    }}
                                     options={inventoryExtraOptions}
                                     placeholder="Chọn inventory (extra)"
-                                    onChange={onSelectExtraInventoryHasnotStock}
+                                    onChange={selectExtraInventoryWithNoStock}
                                     className="w-full"
                                 />
                             </Col>
@@ -893,7 +934,9 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                     </FormItem>
                     <FormItem label="Thêm kho sản phẩm (Extra)">
                         <StockExtraSelection
-                            inventories={inventoriesWithManageStock}
+                            inventories={
+                                inventoriesWithManageStockAndProductTypeExtra
+                            }
                             scroll={{ x: 750 }}
                             rowKey={"recId"}
                             validFrom={sellableConfirmFormData.valid}

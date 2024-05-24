@@ -1,3 +1,4 @@
+import { isEqual } from "lodash";
 export const isEqualObject = <T extends object>(
     compKeys: (keyof T)[],
     obj?: T,
@@ -11,8 +12,8 @@ export const isEqualObject = <T extends object>(
         return false;
     }
     if (target && obj) {
-        return compKeys.every(
-            (key) => obj[key as keyof T] === target[key as keyof T],
+        return compKeys.every((key) =>
+            isEqual(obj[key as keyof T], target[key as keyof T]),
         );
     }
     return false;

@@ -44,11 +44,11 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
     const { data: destinationList, isLoading: isLoadingDestinationList } =
         useGetLocalSearchListMISCQuery();
 
-    const { data: inventoryType, isLoading: isLoadingProductType } =
+    const { data: inventoryType, isLoading: isLoadingInventoryType } =
         useGetInventoryTypeListCoreQuery({
             enabled: true,
         });
-    const { data: productType, isLoading: isLoadingInventoryType } =
+    const { data: productType, isLoading: isLoadingProductType } =
         useGetProductTypeListCoreQuery({
             enabled: true,
         });
@@ -127,24 +127,31 @@ const BoxBooking: React.FC<BoxBookingProps> = ({
         >
             <div className="form-inner">
                 <div className="booking-tab bg-white px-3 py-3 rounded-tr-md rounded-tl-md border-b">
-                    <Radio.Group
-                        value={
-                            formData.byProductType
-                                ? formData.byProductType[0]
-                                : undefined
-                        }
-                        onChange={onChangeTabs}
-                    >
-                        {productType?.map((type) => (
-                            <React.Fragment key={type}>
-                                <Radio value={type}>
-                                    <span className="font-[500] mr-3">
-                                        {getProductTypeName(type)}
-                                    </span>
-                                </Radio>
-                            </React.Fragment>
-                        ))}
-                    </Radio.Group>
+                    {isLoadingProductType ? (
+                        <div className="flex items-center gap-x-3 animate-pulse">
+                            <div className="w-12 h-4 bg-slate-100"></div>
+                            <div className="w-12 h-4 bg-slate-100"></div>
+                        </div>
+                    ) : (
+                        <Radio.Group
+                            value={
+                                formData.byProductType
+                                    ? formData.byProductType[0]
+                                    : undefined
+                            }
+                            onChange={onChangeTabs}
+                        >
+                            {productType?.map((type) => (
+                                <React.Fragment key={type}>
+                                    <Radio value={type}>
+                                        <span className="font-[500] mr-3">
+                                            {getProductTypeName(type)}
+                                        </span>
+                                    </Radio>
+                                </React.Fragment>
+                            ))}
+                        </Radio.Group>
+                    )}
                 </div>
                 <div className="booking-form px-6 py-4 bg-white shadow-lg rounded-br-md rounded-bl-md">
                     <Form layout="vertical" size="large">

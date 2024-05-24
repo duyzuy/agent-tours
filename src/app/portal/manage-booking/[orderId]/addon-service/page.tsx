@@ -14,8 +14,9 @@ import { IOrderDetail } from "@/models/management/booking/order.interface";
 interface AddOnServiceProps {
     params: { orderId: number };
 }
-export type BookingDetailItem = IOrderDetail["bookingDetails"][0]["booking"];
-export type BookingDetailSSRItem = IOrderDetail["ssr"][0]["booking"];
+export type BookingDetailItemType =
+    IOrderDetail["bookingDetails"][0]["booking"];
+export type BookingDetailSSRItemType = IOrderDetail["ssr"][0]["booking"];
 
 const AddonServicePage: React.FC<AddOnServiceProps> = ({ params }) => {
     const router = useRouter();
@@ -33,17 +34,16 @@ const AddonServicePage: React.FC<AddOnServiceProps> = ({ params }) => {
         });
 
     const bookingDetails = useMemo(() => {
-        return bookingOrderDetail?.bookingDetails?.reduce<BookingDetailItem[]>(
-            (acc, bookingItem) => {
-                acc = [...acc, bookingItem.booking];
-                return acc;
-            },
-            [],
-        );
+        return bookingOrderDetail?.bookingDetails?.reduce<
+            BookingDetailItemType[]
+        >((acc, bookingItem) => {
+            acc = [...acc, bookingItem.booking];
+            return acc;
+        }, []);
     }, [bookingOrderDetail]);
 
     const ssrListBooked = useMemo(() => {
-        return bookingOrderDetail?.ssr?.reduce<BookingDetailSSRItem[]>(
+        return bookingOrderDetail?.ssr?.reduce<BookingDetailSSRItemType[]>(
             (acc, bookingItem) => {
                 acc = [...acc, bookingItem.booking];
                 return acc;

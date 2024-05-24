@@ -23,7 +23,7 @@ const PaymentPage = () => {
 
     const [customerInformation, setCustomerInformation] =
         useState<CustomerInformation>(
-            () => new CustomerInformation("", "", "", "", ""),
+            () => new CustomerInformation("", "", "", "", "", ""),
         );
     const [invoiceInformation, setInvoiceInformation] = useState(
         new InvoiceFormData("", "", "", "", ""),

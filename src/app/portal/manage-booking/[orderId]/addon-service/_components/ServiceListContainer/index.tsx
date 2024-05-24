@@ -1,21 +1,20 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import ServiceItem, { ServiceItemProps } from "../ServiceItem";
-import { IOrderDetail } from "@/models/management/booking/order.interface";
+
 import useManageBooking from "../../hooks/useManageBooking";
 
-import { BookingDetailItem, BookingDetailSSRItem } from "../../page";
-import { BookingSSRItem } from "../../modules/bookingSSR.interface";
+import { BookingDetailItemType, BookingDetailSSRItemType } from "../../page";
+import { BookingSSRItemType } from "../../modules/bookingSSR.interface";
 import useEditSSR from "../../modules/useEditSSR";
 import { Button, Space } from "antd";
 import { useRouter } from "next/navigation";
-import { isUndefined } from "lodash";
 
 interface ServiceListContainerProps {
     orderId?: number;
     items: PriceConfig[];
-    ssrListBooked?: BookingDetailSSRItem[];
-    bookingDetails?: BookingDetailItem[];
+    ssrListBooked?: BookingDetailSSRItemType[];
+    bookingDetails?: BookingDetailItemType[];
 }
 const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
     orderId,
@@ -23,9 +22,18 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
     ssrListBooked,
     bookingDetails,
 }) => {
-    const [bookingSSRData, setBookingSSRData] = useManageBooking();
+    const [bookingSSRInformation, setBookingSSRInformation] =
+        useManageBooking();
     const router = useRouter();
     const { onUpdateSSRByPax } = useEditSSR();
+
+    console.log(bookingSSRInformation);
+    /**
+     *
+     * Grouping Booking service items by serviceitem
+     * @param sellableDetailsId present an type of service.
+     *
+     */
     const groupingServices = useMemo(() => {
         return items.reduce<{
             [key: string]: {
@@ -58,72 +66,72 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
         }, {});
     }, [items]);
 
-    const defaultSSRBookingGroupingItems = useMemo(() => {
-        let initBookingSSRItems: Required<
-            typeof bookingSSRData
-        >["bookingDetails"] = {};
+    // const defaultSSRBookingGroupingItems = useMemo(() => {
+    //     let initBookingSSRItems: Required<
+    //         typeof bookingSSRData
+    //     >["bookingDetails"] = {};
 
-        Object.entries(groupingServices).forEach(([key, service], _index) => {
-            const groupSSRListBooked = ssrListBooked?.filter(
-                (item) => item.config.sellableDetailsId === service.serviceId,
-            );
+    //     Object.entries(groupingServices).forEach(([key, service], _index) => {
+    //         const groupSSRListBooked = ssrListBooked?.filter(
+    //             (item) => item.config.sellableDetailsId === service.serviceId,
+    //         );
 
-            let bookingSSRByServiceItems: (typeof initBookingSSRItems)[0]["items"] =
-                [];
-            bookingDetails?.forEach((bkItem) => {
-                const ssrListBookedByBooking =
-                    groupSSRListBooked?.filter(
-                        (item) => item.bookingRefId === bkItem.recId,
-                    ) || [];
+    //         let bookingSSRByServiceItems: (typeof initBookingSSRItems)[0]["items"] =
+    //             [];
+    //         bookingDetails?.forEach((bkItem) => {
+    //             const ssrListBookedByBooking =
+    //                 groupSSRListBooked?.filter(
+    //                     (item) => item.bookingRefId === bkItem.recId,
+    //                 ) || [];
 
-                bookingSSRByServiceItems = [
-                    ...bookingSSRByServiceItems,
-                    {
-                        booking: bkItem,
-                        ssr: ssrListBookedByBooking.reduce<
-                            BookingSSRItem["ssr"]
-                        >((acc, item) => {
-                            const indexConfig = acc.findIndex(
-                                (it) =>
-                                    it.priceConfig.recId === item.config.recId,
-                            );
+    //             bookingSSRByServiceItems = [
+    //                 ...bookingSSRByServiceItems,
+    //                 {
+    //                     booking: bkItem,
+    //                     ssr: ssrListBookedByBooking.reduce<
+    //                         BookingSSRItemType["ssr"]
+    //                     >((acc, item) => {
+    //                         const indexConfig = acc.findIndex(
+    //                             (it) =>
+    //                                 it.priceConfig.recId === item.config.recId,
+    //                         );
 
-                            if (indexConfig !== -1) {
-                                acc.splice(indexConfig, 1, {
-                                    ...acc[indexConfig],
-                                    quantity: acc[indexConfig].quantity + 1,
-                                });
-                            } else {
-                                acc = [
-                                    ...acc,
-                                    {
-                                        quantity: 1,
-                                        type: item.pax.type,
-                                        priceConfig: item.config,
-                                    },
-                                ];
-                            }
-                            return acc;
-                        }, []),
-                    },
-                ];
-            });
+    //                         if (indexConfig !== -1) {
+    //                             acc.splice(indexConfig, 1, {
+    //                                 ...acc[indexConfig],
+    //                                 quantity: acc[indexConfig].quantity + 1,
+    //                             });
+    //                         } else {
+    //                             acc = [
+    //                                 ...acc,
+    //                                 {
+    //                                     quantity: 1,
+    //                                     type: item.pax.type,
+    //                                     priceConfig: item.config,
+    //                                 },
+    //                             ];
+    //                         }
+    //                         return acc;
+    //                     }, []),
+    //                 },
+    //             ];
+    //         });
 
-            initBookingSSRItems = {
-                ...initBookingSSRItems,
-                [service.serviceId]: {
-                    serviceId: service.serviceId,
-                    items: bookingSSRByServiceItems,
-                },
-            };
-        });
-        return initBookingSSRItems;
-    }, [ssrListBooked, groupingServices, bookingDetails]);
+    //         initBookingSSRItems = {
+    //             ...initBookingSSRItems,
+    //             [service.serviceId]: {
+    //                 serviceId: service.serviceId,
+    //                 items: bookingSSRByServiceItems,
+    //             },
+    //         };
+    //     });
+    //     return initBookingSSRItems;
+    // }, [groupingServices, bookingDetails]);
 
     const onAddSSRBooking = useCallback<
         Required<ServiceItemProps>["onConfirm"]
-    >((ssrItems, serviceId) => {
-        setBookingSSRData((oldData) => ({
+    >((ssrItems, ssrItemRemove, serviceId) => {
+        setBookingSSRInformation((oldData) => ({
             ...oldData,
             bookingDetails: {
                 ...oldData.bookingDetails,
@@ -132,63 +140,62 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
                     items: ssrItems,
                 },
             },
+            bookingSsrDelete: [...oldData.bookingSsrDelete, ...ssrItemRemove],
         }));
     }, []);
 
-    console.log({
-        form: bookingSSRData.bookingDetails,
-        default: defaultSSRBookingGroupingItems,
-    });
-    const isDisableButton = useMemo(() => {
-        const bookingDetailItems = bookingSSRData.bookingDetails;
+    // const isDisableButton = useMemo(() => {
+    //     const bookingDetailItems = bookingSSRData.bookingDetails;
 
-        let isDisable = true;
+    //     let isDisable = true;
 
-        bookingDetailItems &&
-            Object.entries(bookingDetailItems).forEach(([key, serviceItem]) => {
-                const isEqualData =
-                    defaultSSRBookingGroupingItems[key] &&
-                    serviceItem.items.length ===
-                        defaultSSRBookingGroupingItems[key].items.length &&
-                    serviceItem.items.every((bookingItem) => {
-                        return defaultSSRBookingGroupingItems[key].items.some(
-                            (defaultItem) => {
-                                return (
-                                    defaultItem.booking.recId ===
-                                        bookingItem.booking.recId &&
-                                    defaultItem.ssr.length ===
-                                        bookingItem.ssr.length &&
-                                    bookingItem.ssr.every((ssrItem) => {
-                                        return defaultItem.ssr.some(
-                                            (defaultSsrItem) =>
-                                                defaultSsrItem.priceConfig
-                                                    .recId ===
-                                                    ssrItem.priceConfig.recId &&
-                                                defaultSsrItem.quantity ===
-                                                    ssrItem.quantity,
-                                        );
-                                    })
-                                );
-                            },
-                        );
-                    });
-                if (isEqualData === false) {
-                    isDisable = false;
-                }
-            });
+    //     bookingDetailItems &&
+    //         Object.entries(bookingDetailItems).forEach(([key, serviceItem]) => {
+    //             const isEqualData =
+    //                 defaultSSRBookingGroupingItems[key] &&
+    //                 serviceItem.items.length ===
+    //                     defaultSSRBookingGroupingItems[key].items.length &&
+    //                 serviceItem.items.every((bookingItem) => {
+    //                     return defaultSSRBookingGroupingItems[key].items.some(
+    //                         (defaultItem) => {
+    //                             return (
+    //                                 defaultItem.booking.recId ===
+    //                                     bookingItem.booking.recId &&
+    //                                 defaultItem.ssr.length ===
+    //                                     bookingItem.ssr.length &&
+    //                                 bookingItem.ssr.every((ssrItem) => {
+    //                                     return defaultItem.ssr.some(
+    //                                         (defaultSsrItem) =>
+    //                                             defaultSsrItem.priceConfig
+    //                                                 .recId ===
+    //                                                 ssrItem.priceConfig.recId &&
+    //                                             defaultSsrItem.quantity ===
+    //                                                 ssrItem.quantity,
+    //                                     );
+    //                                 })
+    //                             );
+    //                         },
+    //                     );
+    //                 });
+    //             if (isEqualData === false) {
+    //                 isDisable = false;
+    //             }
+    //         });
 
-        return isDisable;
-    }, [bookingSSRData, defaultSSRBookingGroupingItems]);
+    //     return isDisable;
+    // }, [bookingSSRData, defaultSSRBookingGroupingItems]);
 
     /**
-     * init old Data
+     * init formData with orderId
      */
     useEffect(() => {
-        setBookingSSRData({
+        setBookingSSRInformation((prev) => ({
+            ...prev,
             bookingOrder: { recId: orderId },
-            bookingDetails: defaultSSRBookingGroupingItems,
-        });
-    }, [defaultSSRBookingGroupingItems]);
+            bookingDetails: {},
+            bookingSsrDelete: [],
+        }));
+    }, []);
     return (
         <>
             <div className="manage__booking-service-head mb-6">
@@ -203,17 +210,21 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
                         pricingConfigs={priceConfigs}
                         bookingDetails={bookingDetails}
                         ssrListBooked={ssrListBooked}
-                        defaultSSRBookingItems={
-                            defaultSSRBookingGroupingItems
-                                ? defaultSSRBookingGroupingItems[serviceId]
-                                      ?.items
+                        // defaultSSRBookingItems={
+                        //     defaultSSRBookingGroupingItems
+                        //         ? defaultSSRBookingGroupingItems[serviceId]
+                        //               ?.items
+                        //         : undefined
+                        // }
+                        initSSRBookingItems={
+                            bookingSSRInformation?.bookingDetails
+                                ? bookingSSRInformation.bookingDetails[
+                                      serviceId
+                                  ]?.items
                                 : undefined
                         }
-                        initSSRBookingItems={
-                            bookingSSRData?.bookingDetails
-                                ? bookingSSRData.bookingDetails[serviceId]
-                                      ?.items
-                                : undefined
+                        initSSRBookingItemsRemove={
+                            bookingSSRInformation.bookingSsrDelete
                         }
                         onConfirm={onAddSSRBooking}
                     />
@@ -222,7 +233,7 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
             <div className="manage__booking-service-actions bg-white mb-6">
                 <Space>
                     <Button
-                        className="w-32"
+                        className="w-48"
                         onClick={() =>
                             router.push(`./portal/manage-booking/${orderId}`)
                         }
@@ -231,11 +242,11 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
                     </Button>
                     <Button
                         type="primary"
-                        className="w-32"
-                        onClick={() => onUpdateSSRByPax(bookingSSRData)}
-                        disabled={isDisableButton}
+                        className="w-48"
+                        onClick={() => onUpdateSSRByPax(bookingSSRInformation)}
+                        // disabled={isDisableButton}
                     >
-                        Xác nhận
+                        Tiến hành thanh toán
                     </Button>
                 </Space>
             </div>

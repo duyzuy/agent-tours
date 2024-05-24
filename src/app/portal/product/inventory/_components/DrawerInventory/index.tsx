@@ -10,6 +10,7 @@ import { Status } from "@/models/management/common.interface";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { inventorySchema } from "../../schema/inventory.schema";
+import SelectorSupplier, { SelectorSupplierProps } from "./SelectorSupplier";
 
 export enum EActionType {
     CREATE = "create",
@@ -45,7 +46,16 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
     const { data: productTypeList, isLoading: isLoadingProductTpe } =
         useGetProductTypeListCoreQuery({ enabled: isOpen });
 
-    let initFormData = new InventoryFormData("", "", "", undefined, undefined);
+    let initFormData = new InventoryFormData(
+        "",
+        "",
+        "",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        Status.QQ,
+    );
     const [formData, setFormData] = useState(initFormData);
 
     const { handlerSubmit, errors, clearErrors } = useFormSubmit({
@@ -75,6 +85,15 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
         onCancel();
         clearErrors();
     }, []);
+    const selectSupplier: SelectorSupplierProps["onChange"] = (
+        recId,
+        supplier,
+    ) => {
+        setFormData((prev) => ({
+            ...prev,
+            supplierId: recId,
+        }));
+    };
     const isDisableUpdateButton = useMemo(() => {
         return isEqual(initialValues?.name, formData.name);
     }, [formData]);
@@ -87,6 +106,9 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
                 initialValues.cmsIdentity,
                 initialValues.type,
                 initialValues.productType,
+                initialValues.supplierId,
+                initialValues.isStock,
+                initialValues.status,
             );
             initFormData.status = initialValues.status;
         }
@@ -111,6 +133,18 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
             }}
         >
             <Form layout="vertical" className=" max-w-4xl">
+                <FormItem
+                    label="Chọn Supplier"
+                    required
+                    validateStatus={errors?.supplierId ? "error" : ""}
+                    help={errors?.supplierId || ""}
+                >
+                    <SelectorSupplier
+                        value={formData.supplierId}
+                        onChange={selectSupplier}
+                        disabled={actionType === EActionType.EDIT}
+                    />
+                </FormItem>
                 <FormItem
                     label="Tên nhóm kho"
                     required
@@ -254,7 +288,7 @@ const DrawerInventory: React.FC<DrawerInventoryProps> = ({
                                 }
                                 disabled={false}
                             >
-                                Thêm và kích hoạt
+                                Lưu và duyệt
                             </Button>
                         </>
                     ) : (

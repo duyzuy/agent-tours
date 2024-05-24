@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { PassengerType } from "@/models/management/common.interface";
 import { Col, Form, Input, Row, Select, DatePickerProps } from "antd";
 import FormItem from "@/components/base/FormItem";
@@ -43,6 +43,9 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
     errors,
 }) => {
     const message = useMessage();
+    const [errorForm, setErrorForm] = useState<
+        { paxBirthDate?: string; expiredPassportDate?: string } | undefined
+    >();
     const onChange = (
         key: keyof PassengerInformationFormData,
         value: PassengerInformationFormData[keyof PassengerInformationFormData],
@@ -53,11 +56,13 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
     };
 
     const onChangeBirthDate: DatePickerProps["onChange"] = (date) => {
+        let errorMess = "";
         if (
             type === PassengerType.ADULT &&
             dayjs(startDate).diff(date, "years") < PASSENGER_AGES.adult.min
         ) {
-            message.error("Người lớn phải từ 12 tuổi trở lên");
+            errorMess = "Người lớn phải từ 12 tuổi trở lên";
+            setErrorForm((prev) => ({ ...prev, paxBirthDate: errorMess }));
             return;
         }
         if (
@@ -67,7 +72,8 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
             (type === PassengerType.CHILD &&
                 dayjs(startDate).diff(date, "years") > PASSENGER_AGES.child.max)
         ) {
-            message.error("Trẻ em từ 2 đến 12 tuổi");
+            errorMess = "Trẻ em từ 2 đến 12 tuổi";
+            setErrorForm((prev) => ({ ...prev, paxBirthDate: errorMess }));
             return;
         }
 
@@ -75,10 +81,11 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
             type === PassengerType.INFANT &&
             dayjs(startDate).diff(date, "years") > PASSENGER_AGES.infant.max
         ) {
-            message.error("Em bé từ 2 tuổi trở xuống.");
+            errorMess = "Em bé từ 2 tuổi trở xuống.";
+            setErrorForm((prev) => ({ ...prev, paxBirthDate: errorMess }));
             return;
         }
-
+        setErrorForm((prev) => ({ ...prev, paxBirthDate: undefined }));
         onChangeForm({
             index,
             data: {
@@ -96,6 +103,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
         onChangeForm({ index, data: newPaxInfo });
     };
 
+    console.log(initialValues);
     return (
         <div
             className={classNames("passenger__information-box-item", {
@@ -191,22 +199,27 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                                 label="Ngày sinh"
                                 required
                                 validateStatus={
-                                    errors?.paxBirthDate ? "error" : ""
+                                    errors?.paxBirthDate ||
+                                    errorForm?.paxBirthDate
+                                        ? "error"
+                                        : ""
                                 }
-                                help={errors?.paxBirthDate || ""}
+                                help={
+                                    errors?.paxBirthDate ||
+                                    errorForm?.paxBirthDate ||
+                                    ""
+                                }
                             >
                                 <CustomDatePicker
                                     format="DD/MM/YYYY"
                                     className="w-full"
                                     value={
-                                        dayjs(initialValues?.paxBirthDate, {
-                                            format: DATE_FORMAT,
-                                        }).isValid()
+                                        initialValues?.paxBirthDate
                                             ? dayjs(
                                                   initialValues?.paxBirthDate,
                                                   { format: DATE_FORMAT },
                                               )
-                                            : dayjs(initialValues?.paxBirthDate)
+                                            : undefined
                                     }
                                     disabledDate={(date) =>
                                         date.isAfter(dayjs())
@@ -218,7 +231,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         <Col span={12}>
                             <FormItem
                                 label="Số điện thoại"
-                                required
                                 validateStatus={
                                     errors?.paxPhoneNumber ? "error" : ""
                                 }
@@ -280,25 +292,27 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                             <FormItem
                                 label="Ngày hết hạn"
                                 validateStatus={
-                                    errors?.paxPassortExpiredDate ? "error" : ""
+                                    errors?.paxPassortExpiredDate ||
+                                    errorForm?.expiredPassportDate
+                                        ? "error"
+                                        : ""
                                 }
-                                help={errors?.paxPassortExpiredDate || ""}
+                                help={
+                                    errors?.paxPassortExpiredDate ||
+                                    errorForm?.expiredPassportDate ||
+                                    ""
+                                }
                             >
                                 <CustomDatePicker
                                     format="DD/MM/YYYY"
                                     className="w-full"
                                     value={
-                                        dayjs(
-                                            initialValues?.paxPassortExpiredDate,
-                                            DATE_FORMAT,
-                                        ).isValid()
+                                        initialValues?.paxPassortExpiredDate
                                             ? dayjs(
                                                   initialValues?.paxPassortExpiredDate,
                                                   DATE_FORMAT,
                                               )
-                                            : dayjs(
-                                                  initialValues?.paxPassortExpiredDate,
-                                              )
+                                            : undefined
                                     }
                                     disabledDate={(date) =>
                                         date.isBefore(dayjs())

@@ -4,6 +4,7 @@ import { CustomerInformation } from "@/models/management/booking/customer.interf
 export const customerInformationSchema: ObjectSchema<CustomerInformation> =
     object({
         custName: string().required("Họ tên không bỏ trống."),
+        referenceId: string(),
         custPhoneNumber: string()
             .required("Số điện thoại không bỏ trống.")
             .matches(/^[0-9]+$/, "Số điện thoại không hợp lệ.")
@@ -12,6 +13,6 @@ export const customerInformationSchema: ObjectSchema<CustomerInformation> =
         custEmail: string()
             .required("Email không bỏ trống.")
             .email("Email không hợp lệ."),
-        custAddress: string().default(""),
+        custAddress: string(),
         rmk: string(),
     });

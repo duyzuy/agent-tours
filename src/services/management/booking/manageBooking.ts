@@ -146,4 +146,18 @@ export const manageBookingAPIs = {
             },
         );
     },
+    extendBookingTimeLimit: async (payload?: {
+        orderId: number;
+        postponeHours: number;
+    }) => {
+        return await coreApi.post<IOrderDetailRs, BaseResponse<null>>(
+            "core/BookingOrder_PostponeBookingTimelimit",
+            {
+                requestObject: {
+                    ...payload,
+                },
+                localUsername: "99",
+            },
+        );
+    },
 };

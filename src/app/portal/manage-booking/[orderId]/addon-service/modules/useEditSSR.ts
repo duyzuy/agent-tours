@@ -35,14 +35,18 @@ const useEditSSR = () => {
     const transformToPayloadData = (
         bookingSSRData: BookingSSRData,
     ): IBookingSSRPayload => {
+        const { bookingDetails, bookingSsrDelete, bookingOrder } =
+            bookingSSRData;
+
         let payloadData: IBookingSSRPayload = {
-            bookingOrder: bookingSSRData.bookingOrder,
+            bookingOrder: bookingOrder,
+            bookingDetails: [],
+            bookingSsrDelete: [],
         };
-        let bookingDetailsPayload: Required<IBookingSSRPayload>["bookingDetails"] =
-            [];
-        const { bookingDetails } = bookingSSRData;
 
         if (bookingDetails) {
+            let bookingDetailsPayload: Required<IBookingSSRPayload>["bookingDetails"] =
+                [];
             Object.entries(bookingDetails).forEach(([key, svItem], _index) => {
                 svItem.items.forEach((bkSSRItem) => {
                     const indexBookingItem = bookingDetailsPayload.findIndex(
@@ -84,8 +88,7 @@ const useEditSSR = () => {
                                 ],
                             },
                         });
-                    }
-                    if (indexBookingItem === -1) {
+                    } else {
                         bookingDetailsPayload = [
                             ...bookingDetailsPayload,
                             {
@@ -100,8 +103,30 @@ const useEditSSR = () => {
                     }
                 });
             });
+            payloadData = {
+                ...payloadData,
+                bookingDetails: bookingDetailsPayload,
+            };
         }
-        payloadData = { ...payloadData, bookingDetails: bookingDetailsPayload };
+        if (bookingSsrDelete && bookingSsrDelete.length) {
+            let bookingRemoveItems: Required<IBookingSSRPayload>["bookingSsrDelete"] =
+                [];
+            bookingSsrDelete.forEach((bkSSRItemRemove) => {
+                bookingRemoveItems = [
+                    ...bookingRemoveItems,
+                    {
+                        bookingId: bkSSRItemRemove.recId,
+                        sellableConfigId: bkSSRItemRemove.config.recId,
+                    },
+                ];
+            });
+
+            payloadData = {
+                ...payloadData,
+                bookingSsrDelete: bookingRemoveItems,
+            };
+        }
+
         return payloadData;
     };
     const onAddSSRByBookingItem = () => {};

@@ -51,38 +51,34 @@ const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
 }) => {
     const router = useRouter();
     const [passengerListForm, setPassengerListForm] =
-        useState<PassengerListFormData>(() => {
-            const paxList = passengerList.reduce<PassengerListFormData>(
-                (acc, pax) => {
-                    acc = [
-                        ...acc,
-                        {
-                            index: pax.bookingIndex,
-                            type: pax.type,
-                            data:
-                                Object.keys(pax.passengerInfo).length !== 0
-                                    ? pax.passengerInfo
-                                    : new PassengerInformationFormData(
-                                          undefined,
-                                          undefined,
-                                          "",
-                                          "",
-                                          undefined,
-                                          "",
-                                          "",
-                                          "",
-                                          "",
-                                          "",
-                                          undefined,
-                                      ),
-                        },
-                    ];
-                    return acc;
-                },
-                [],
-            );
-            return paxList;
-        });
+        useState<PassengerListFormData>(() =>
+            passengerList.reduce<PassengerListFormData>((acc, pax) => {
+                acc = [
+                    ...acc,
+                    {
+                        index: pax.bookingIndex,
+                        type: pax.type,
+                        data:
+                            Object.keys(pax.passengerInfo).length !== 0
+                                ? pax.passengerInfo
+                                : new PassengerInformationFormData(
+                                      undefined,
+                                      undefined,
+                                      "",
+                                      "",
+                                      undefined,
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      undefined,
+                                  ),
+                    },
+                ];
+                return acc;
+            }, []),
+        );
     const [isShow, setShowModal] = useState(false);
     const { handlerSubmit, errors } = useFormSubmit({
         schema: passengerInformationSchema,

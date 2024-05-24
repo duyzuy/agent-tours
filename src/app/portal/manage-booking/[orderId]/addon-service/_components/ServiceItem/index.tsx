@@ -7,8 +7,8 @@ import { Button } from "antd";
 import DrawerServiceItem, { DrawerServiceItemProps } from "./DrawerServiceItem";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { IPassengerInformation } from "@/models/management/booking/passengerInformation.interface";
-import { BookingDetailItem, BookingDetailSSRItem } from "../../page";
-import { BookingSSRItem } from "../../modules/bookingSSR.interface";
+import { BookingDetailItemType, BookingDetailSSRItemType } from "../../page";
+import { BookingSSRItemType } from "../../modules/bookingSSR.interface";
 
 type ServiceGroupingByPassenger = {
     recId: number;
@@ -25,10 +25,11 @@ type ServiceGroupingByPassenger = {
 export interface ServiceItemProps {
     serviceName?: string;
     pricingConfigs?: PriceConfig[];
-    bookingDetails?: BookingDetailItem[];
-    ssrListBooked?: BookingDetailSSRItem[];
-    initSSRBookingItems?: BookingSSRItem[];
-    defaultSSRBookingItems?: BookingSSRItem[];
+    bookingDetails?: BookingDetailItemType[];
+    ssrListBooked?: BookingDetailSSRItemType[];
+    initSSRBookingItems?: BookingSSRItemType[];
+    initSSRBookingItemsRemove: BookingDetailSSRItemType[];
+    // defaultSSRBookingItems?: BookingSSRItemType[];
     render?: () => React.ReactNode;
     serviceId?: number;
     onConfirm?: DrawerServiceItemProps["onConfirm"];
@@ -40,7 +41,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
     pricingConfigs,
     ssrListBooked,
     initSSRBookingItems,
-    defaultSSRBookingItems,
+    // defaultSSRBookingItems,
     render,
     serviceId,
     onConfirm,
@@ -63,6 +64,19 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
 
     const closeDrawer = useCallback(() => setOpenDrawer(false), []);
     const showDrawer = useCallback(() => setOpenDrawer(true), []);
+
+    /**
+     *
+     * Filter BookingSSRItem by serviceItem from @ssrListBooked
+     * @param sellableDetailsId of an configs present an service type
+     */
+
+    const bookingSSRItemsOfService = useMemo(() => {
+        return ssrListBooked?.filter(
+            (bookingSSrItem) =>
+                bookingSSrItem.config.sellableDetailsId === serviceId,
+        );
+    }, [ssrListBooked]);
 
     const serviceListGroupingByPax = useMemo(() => {
         if (!ssrListBooked || !ssrListBooked.length) return undefined;
@@ -230,7 +244,9 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
             <DrawerServiceItem
                 isOpen={openDrawer}
                 initSSRBookingItems={initSSRBookingItems}
-                defaultSSRBookingItems={defaultSSRBookingItems}
+                // initSSRbookingItemRemove={}
+                // defaultSSRBookingItems={defaultSSRBookingItems}
+                bookingSSRItemsBooked={bookingSSRItemsOfService}
                 onClose={closeDrawer}
                 serviceName={serviceName}
                 serviceId={serviceId}

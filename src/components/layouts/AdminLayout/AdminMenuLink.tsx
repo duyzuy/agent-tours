@@ -64,6 +64,14 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
             label: "Quản lý sản phẩm",
             children: [
                 {
+                    key: "product/manage-vendor",
+                    label: "Quản lý vendor",
+                },
+                {
+                    key: "product/manage-supplier",
+                    label: "Quản lý supplier",
+                },
+                {
                     key: "product/inventory",
                     label: "Nhóm kho sản phẩm",
                 },

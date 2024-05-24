@@ -49,6 +49,7 @@ const useCreateBooking = () => {
             invoiceName: invoiceInfo.invoiceName,
             invoiceTaxCode: invoiceInfo.invoiceTaxCode,
             rmk: customerInfo.rmk,
+            referenceId: customerInfo.referenceId,
         };
         // console.table({ bookingInformation, bookingPayload });
         createBooking(bookingPayload, {

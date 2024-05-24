@@ -120,127 +120,85 @@ const SellableListPage: React.FC = () => {
                             pageCurrent: page,
                         }))
                     }
-                    render={() => {
-                        return (
-                            <div className="stock-list-filter pt-3">
-                                <Form layout="vertical">
-                                    <Row gutter={12}>
-                                        <Col>
-                                            <FormItem>
-                                                <FilterOutlined /> Lọc
-                                            </FormItem>
-                                        </Col>
-                                        <Col span={6}>
-                                            <FormItem>
-                                                <Select<
-                                                    number,
-                                                    ITemplateSellable
-                                                >
-                                                    placeholder="Chọn nhóm sản phẩm"
-                                                    showSearch
-                                                    optionFilterProp="children"
-                                                    loading={isLoadingTemplate}
-                                                    value={
-                                                        sellableQueryParams
-                                                            ?.requestObject
-                                                            ?.sellableTemplateId
-                                                    }
-                                                    // filterOption={(
-                                                    //     input,
-                                                    //     option,
-                                                    // ) =>
-                                                    //     (
-                                                    //         option?.name ?? ""
-                                                    //     ).includes(input)
-                                                    // }
-                                                    // filterSort={(
-                                                    //     optionA,
-                                                    //     optionB,
-                                                    // ) =>
-                                                    //     (optionA?.name ?? "")
-                                                    //         .toLowerCase()
-                                                    //         .localeCompare(
-                                                    //             (
-                                                    //                 optionB?.name ??
-                                                    //                 ""
-                                                    //             ).toLowerCase(),
-                                                    //         )
-                                                    // }
-                                                    fieldNames={{
-                                                        label: "code",
-                                                        value: "recId",
-                                                    }}
-                                                    options={templateList || []}
-                                                    optionRender={(option) => {
-                                                        return (
-                                                            <p>
-                                                                <span>
-                                                                    {
-                                                                        option
-                                                                            .data
-                                                                            .name
-                                                                    }
-                                                                </span>
-                                                                <span className="text-xs text-gray-500 ml-3">
-                                                                    {
-                                                                        option
-                                                                            .data
-                                                                            .code
-                                                                    }
-                                                                </span>
-                                                            </p>
-                                                        );
-                                                    }}
-                                                    onChange={onSelectTemplate}
-                                                />
-                                            </FormItem>
-                                        </Col>
-                                        <Col span={4}>
-                                            <FormItem>
-                                                <Select
-                                                    placeholder="Chọn loại sản phẩm"
-                                                    loading={
-                                                        isLoadingProductType
-                                                    }
-                                                    value={
-                                                        sellableQueryParams
-                                                            ?.requestObject
-                                                            ?.andType
-                                                    }
-                                                    options={productTypeOption}
-                                                    onChange={(value) =>
-                                                        setSellableQueryParams(
-                                                            (prev) => ({
-                                                                ...prev,
-                                                                requestObject: {
-                                                                    ...prev.requestObject,
-                                                                    andType:
-                                                                        value,
-                                                                },
-                                                            }),
-                                                        )
-                                                    }
-                                                />
-                                            </FormItem>
-                                        </Col>
-                                        <Col span={8}>
-                                            <FormItem>
-                                                <Input.Search
-                                                    placeholder="Nhập mã cần tìm"
-                                                    enterButton="Tìm kiếm"
-                                                    onSearch={(value, ev) =>
-                                                        onSearchSellableCode(
-                                                            value,
-                                                        )
-                                                    }
-                                                />
-                                            </FormItem>
-                                        </Col>
-                                    </Row>
-                                </Form>
-                            </div>
-                        );
-                    }}
+                    render={() => (
+                        <div className="stock-list-filter pt-3">
+                            <Form layout="vertical">
+                                <Row gutter={12}>
+                                    <Col>
+                                        <FormItem>
+                                            <FilterOutlined /> Lọc
+                                        </FormItem>
+                                    </Col>
+                                    <Col span={6}>
+                                        <FormItem>
+                                            <Select<number, ITemplateSellable>
+                                                placeholder="Chọn nhóm sản phẩm"
+                                                showSearch
+                                                optionFilterProp="children"
+                                                loading={isLoadingTemplate}
+                                                value={
+                                                    sellableQueryParams
+                                                        ?.requestObject
+                                                        ?.sellableTemplateId
+                                                }
+                                                fieldNames={{
+                                                    label: "code",
+                                                    value: "recId",
+                                                }}
+                                                options={templateList || []}
+                                                optionRender={(option) => (
+                                                    <p>
+                                                        <span>
+                                                            {option.data.name}
+                                                        </span>
+                                                        <span className="text-xs text-gray-500 ml-3">
+                                                            {option.data.code}
+                                                        </span>
+                                                    </p>
+                                                )}
+                                                onChange={onSelectTemplate}
+                                            />
+                                        </FormItem>
+                                    </Col>
+                                    <Col span={4}>
+                                        <FormItem>
+                                            <Select
+                                                placeholder="Chọn loại sản phẩm"
+                                                loading={isLoadingProductType}
+                                                value={
+                                                    sellableQueryParams
+                                                        ?.requestObject?.andType
+                                                }
+                                                options={productTypeOption}
+                                                onChange={(value) =>
+                                                    setSellableQueryParams(
+                                                        (prev) => ({
+                                                            ...prev,
+                                                            requestObject: {
+                                                                ...prev.requestObject,
+                                                                andType: value,
+                                                            },
+                                                        }),
+                                                    )
+                                                }
+                                            />
+                                        </FormItem>
+                                    </Col>
+                                    <Col span={8}>
+                                        <FormItem>
+                                            <Input.Search
+                                                placeholder="Nhập mã cần tìm"
+                                                enterButton="Tìm kiếm"
+                                                onSearch={(value, ev) =>
+                                                    onSearchSellableCode(value)
+                                                }
+                                            />
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </div>
+                    )}
                 />
             ),
         },

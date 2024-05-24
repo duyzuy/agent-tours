@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo } from "react";
 import { Form, Row, Col, Input, Space, Button, Divider } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
@@ -133,7 +133,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                         </Col>
                     </Row>
                 </Form>
-                <div className="note">
+                <div className="note border-b mb-3 pb-3">
                     <p>
                         <Link href="/portal/booking/passenger-information">
                             Nhập thông tin hành khách?
@@ -144,8 +144,22 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                         trong quản lý booking.
                     </p>
                 </div>
+                <Form layout="vertical">
+                    <FormItem label="Người giới thiệu">
+                        <Input
+                            placeholder="Nhập mã người giới thiệu nếu có"
+                            value={customerInformation.referenceId}
+                            onChange={(ev) =>
+                                onChangeCustomerInformation(
+                                    "referenceId",
+                                    ev.target.value,
+                                )
+                            }
+                        />
+                    </FormItem>
+                </Form>
             </div>
         </div>
     );
 };
-export default CustomerInformationForm;
+export default memo(CustomerInformationForm);

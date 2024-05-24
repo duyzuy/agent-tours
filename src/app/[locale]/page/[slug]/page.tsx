@@ -1,8 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { notFound } from "next/navigation";
-import { getPageContentDetail } from "@/server/pageContent";
-import Image from "next/image";
+import { getPageContentDetail } from "../_actions/getPageContentDetail";
 import { mediaConfig } from "@/configs";
 
 type PageParams = { slug: string; locale: LangCode };

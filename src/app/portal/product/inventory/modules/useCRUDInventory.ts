@@ -27,7 +27,6 @@ const useCRUDInventory = () => {
         makeCreateInventory(formData, {
             onSuccess: (data, variables) => {
                 message.success(`Tạo ${variables.name} thành công`);
-
                 queryClient.invalidateQueries({
                     queryKey: [queryCore.GET_INVENTORY_LIST],
                 });

@@ -117,8 +117,11 @@ export interface IReservation {
         };
         fops: IFormOfPayment[];
         rulesAndPolicies: IBookingTimeLitmit[];
+        referenceId: string;
+        referenceName: string;
     };
     bookingDetails: IBookingDetailItem[];
+    bookingSsr: any[];
     passengers: IPassengerInformation[];
     ssr: IBookingSSRItem[];
 }

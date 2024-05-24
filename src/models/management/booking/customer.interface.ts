@@ -4,6 +4,7 @@ export interface ICustomerInformation {
     custEmail?: string;
     custAddress?: string;
     rmk?: string;
+    referenceId?: string;
 }
 
 export class CustomerInformation implements ICustomerInformation {
@@ -12,6 +13,7 @@ export class CustomerInformation implements ICustomerInformation {
     custEmail?: string;
     custAddress?: string;
     rmk?: string;
+    referenceId?: string;
 
     constructor(
         custName: string | undefined,
@@ -19,11 +21,13 @@ export class CustomerInformation implements ICustomerInformation {
         custEmail: string | undefined,
         custAddress: string | undefined,
         rmk: string | undefined,
+        referenceId: string | undefined,
     ) {
         this.custName = custName;
         this.custPhoneNumber = custPhoneNumber;
         this.custEmail = custEmail;
         this.custAddress = custAddress;
         this.rmk = rmk;
+        this.referenceId = referenceId;
     }
 }

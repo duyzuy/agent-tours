@@ -40,10 +40,11 @@ export const passengerInformationSchema: ArraySchema<
             .required("Chưa chọn giới tính."),
         paxBirthDate: string().required("Ngày sinh không bỏ trống."),
         paxPhoneNumber: string()
+            .nullable()
+            .transform((curr, orig) => (orig === "" ? null : curr))
             .matches(/^[0-9]+$/, "Số điện thoại không hợp lệ.")
             .min(10, "Số điện thoại tối thiểu 10 số.")
-            .max(11, "Số điện thoại không quá 11 số.")
-            .required("Số điện thoại ko bỏ trống."),
+            .max(11, "Số điện thoại không quá 11 số."),
         paxAddress: string().optional().default(""),
         paxIdNumber: string().default(""),
         paxNationality: string().default(""),

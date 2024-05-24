@@ -21,6 +21,9 @@ export interface IOrderItem {
     custInfoJson: string;
     paymentStatus: PaymentStatus;
     totalAmount: number;
+    totalFop: number;
+    totalPaid: number;
+    totalRefunded: number;
     tourPrice: number;
     extraPrice: number;
     charge: number;
@@ -52,7 +55,10 @@ export interface IOrderItem {
         depositTimelimits: IDepositTimelimit[];
         penalties: [];
     };
+    referenceId: string;
+    referenceName: string;
 }
+
 export interface IOrderListRs extends BaseResponse<IOrderItem[]> {}
 
 export interface IOrderDetail extends IReservation {

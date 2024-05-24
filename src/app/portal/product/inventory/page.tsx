@@ -22,6 +22,7 @@ import { Status } from "@/models/management/common.interface";
 import { isUndefined } from "lodash";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
+
 const InventoryPage = () => {
     const router = useRouter();
 
