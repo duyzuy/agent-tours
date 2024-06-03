@@ -1,33 +1,41 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import ServiceItem, { ServiceItemProps } from "../ServiceItem";
-
-import useManageBooking from "../../hooks/useManageBooking";
-
 import { BookingDetailItemType, BookingDetailSSRItemType } from "../../page";
-import { BookingSSRItemType } from "../../modules/bookingSSR.interface";
-import useEditSSR from "../../modules/useEditSSR";
-import { Button, Space } from "antd";
+
+import { Button, Col, Row, Space } from "antd";
 import { useRouter } from "next/navigation";
+import { IOrderDetail } from "@/models/management/booking/order.interface";
+import {
+    useDispatchManageBooking,
+    useSelectorManageBooking,
+} from "../../../hooks/useManageBooking";
+import { addSSROrder } from "../../../actions";
+import ManageBookingOrderSummary from "../ManageBookingOrderSummary";
+import { useTransition } from "react";
 
 interface ServiceListContainerProps {
     orderId?: number;
     items: PriceConfig[];
     ssrListBooked?: BookingDetailSSRItemType[];
     bookingDetails?: BookingDetailItemType[];
+    bookingOrder?: IOrderDetail["bookingOrder"];
 }
 const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
     orderId,
     items,
     ssrListBooked,
     bookingDetails,
+    bookingOrder,
 }) => {
-    const [bookingSSRInformation, setBookingSSRInformation] =
-        useManageBooking();
-    const router = useRouter();
-    const { onUpdateSSRByPax } = useEditSSR();
+    const dispatch = useDispatchManageBooking();
+    const [isPending, startTransition] = useTransition();
+    const editSSROrder = useSelectorManageBooking(
+        (state) => state.editSSROrder,
+    );
 
-    console.log(bookingSSRInformation);
+    const router = useRouter();
+
     /**
      *
      * Grouping Booking service items by serviceitem
@@ -66,190 +74,93 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
         }, {});
     }, [items]);
 
-    // const defaultSSRBookingGroupingItems = useMemo(() => {
-    //     let initBookingSSRItems: Required<
-    //         typeof bookingSSRData
-    //     >["bookingDetails"] = {};
-
-    //     Object.entries(groupingServices).forEach(([key, service], _index) => {
-    //         const groupSSRListBooked = ssrListBooked?.filter(
-    //             (item) => item.config.sellableDetailsId === service.serviceId,
-    //         );
-
-    //         let bookingSSRByServiceItems: (typeof initBookingSSRItems)[0]["items"] =
-    //             [];
-    //         bookingDetails?.forEach((bkItem) => {
-    //             const ssrListBookedByBooking =
-    //                 groupSSRListBooked?.filter(
-    //                     (item) => item.bookingRefId === bkItem.recId,
-    //                 ) || [];
-
-    //             bookingSSRByServiceItems = [
-    //                 ...bookingSSRByServiceItems,
-    //                 {
-    //                     booking: bkItem,
-    //                     ssr: ssrListBookedByBooking.reduce<
-    //                         BookingSSRItemType["ssr"]
-    //                     >((acc, item) => {
-    //                         const indexConfig = acc.findIndex(
-    //                             (it) =>
-    //                                 it.priceConfig.recId === item.config.recId,
-    //                         );
-
-    //                         if (indexConfig !== -1) {
-    //                             acc.splice(indexConfig, 1, {
-    //                                 ...acc[indexConfig],
-    //                                 quantity: acc[indexConfig].quantity + 1,
-    //                             });
-    //                         } else {
-    //                             acc = [
-    //                                 ...acc,
-    //                                 {
-    //                                     quantity: 1,
-    //                                     type: item.pax.type,
-    //                                     priceConfig: item.config,
-    //                                 },
-    //                             ];
-    //                         }
-    //                         return acc;
-    //                     }, []),
-    //                 },
-    //             ];
-    //         });
-
-    //         initBookingSSRItems = {
-    //             ...initBookingSSRItems,
-    //             [service.serviceId]: {
-    //                 serviceId: service.serviceId,
-    //                 items: bookingSSRByServiceItems,
-    //             },
-    //         };
-    //     });
-    //     return initBookingSSRItems;
-    // }, [groupingServices, bookingDetails]);
-
+    const isDisableButton = useMemo(() => {
+        return (
+            (!editSSROrder.bookingSsrDelete.length &&
+                !editSSROrder.bookingDetails) ||
+            (!editSSROrder.bookingSsrDelete.length &&
+                editSSROrder.bookingDetails &&
+                Object.entries(editSSROrder.bookingDetails).every(
+                    ([key, values]) =>
+                        values.items.every((item) => !item.ssr.length),
+                ))
+        );
+    }, [editSSROrder]);
     const onAddSSRBooking = useCallback<
         Required<ServiceItemProps>["onConfirm"]
     >((ssrItems, ssrItemRemove, serviceId) => {
-        setBookingSSRInformation((oldData) => ({
-            ...oldData,
-            bookingDetails: {
-                ...oldData.bookingDetails,
-                [serviceId]: {
-                    serviceId: serviceId,
-                    items: ssrItems,
-                },
-            },
-            bookingSsrDelete: [...oldData.bookingSsrDelete, ...ssrItemRemove],
-        }));
+        dispatch(
+            addSSROrder({
+                ssrAdd: { serviceId: serviceId, items: ssrItems },
+                ssrRemove: [...ssrItemRemove],
+            }),
+        );
     }, []);
+    const gotoPaymentPage = () => {
+        startTransition(() =>
+            router.push(
+                `./portal/manage-booking/${orderId}/addon-service/payment`,
+            ),
+        );
+    };
 
-    // const isDisableButton = useMemo(() => {
-    //     const bookingDetailItems = bookingSSRData.bookingDetails;
-
-    //     let isDisable = true;
-
-    //     bookingDetailItems &&
-    //         Object.entries(bookingDetailItems).forEach(([key, serviceItem]) => {
-    //             const isEqualData =
-    //                 defaultSSRBookingGroupingItems[key] &&
-    //                 serviceItem.items.length ===
-    //                     defaultSSRBookingGroupingItems[key].items.length &&
-    //                 serviceItem.items.every((bookingItem) => {
-    //                     return defaultSSRBookingGroupingItems[key].items.some(
-    //                         (defaultItem) => {
-    //                             return (
-    //                                 defaultItem.booking.recId ===
-    //                                     bookingItem.booking.recId &&
-    //                                 defaultItem.ssr.length ===
-    //                                     bookingItem.ssr.length &&
-    //                                 bookingItem.ssr.every((ssrItem) => {
-    //                                     return defaultItem.ssr.some(
-    //                                         (defaultSsrItem) =>
-    //                                             defaultSsrItem.priceConfig
-    //                                                 .recId ===
-    //                                                 ssrItem.priceConfig.recId &&
-    //                                             defaultSsrItem.quantity ===
-    //                                                 ssrItem.quantity,
-    //                                     );
-    //                                 })
-    //                             );
-    //                         },
-    //                     );
-    //                 });
-    //             if (isEqualData === false) {
-    //                 isDisable = false;
-    //             }
-    //         });
-
-    //     return isDisable;
-    // }, [bookingSSRData, defaultSSRBookingGroupingItems]);
-
-    /**
-     * init formData with orderId
-     */
-    useEffect(() => {
-        setBookingSSRInformation((prev) => ({
-            ...prev,
-            bookingOrder: { recId: orderId },
-            bookingDetails: {},
-            bookingSsrDelete: [],
-        }));
-    }, []);
     return (
         <>
-            <div className="manage__booking-service-head mb-6">
-                <p className="font-[500] text-[16px]">Chọn dịch vụ</p>
-            </div>
-            {Object.entries(groupingServices)?.map(
-                ([key, { serviceId, serviceName, priceConfigs }]) => (
-                    <ServiceItem
-                        key={serviceId}
-                        serviceName={serviceName}
-                        serviceId={serviceId}
-                        pricingConfigs={priceConfigs}
+            <Row gutter={60}>
+                <Col span={15}>
+                    <div className="manage__booking-service-head mb-6">
+                        <p className="font-[500] text-[16px]">Chọn dịch vụ</p>
+                    </div>
+                    {Object.entries(groupingServices)?.map(
+                        ([key, { serviceId, serviceName, priceConfigs }]) => (
+                            <ServiceItem
+                                key={serviceId}
+                                serviceName={serviceName}
+                                serviceId={serviceId}
+                                pricingConfigs={priceConfigs}
+                                bookingDetails={bookingDetails}
+                                ssrListBooked={ssrListBooked}
+                                initSSRBookingItems={
+                                    editSSROrder?.bookingDetails
+                                        ? editSSROrder.bookingDetails[serviceId]
+                                              ?.items
+                                        : []
+                                }
+                                initSSRBookingItemsRemove={
+                                    editSSROrder.bookingSsrDelete
+                                }
+                                onConfirm={onAddSSRBooking}
+                            />
+                        ),
+                    )}
+                    <div className="manage__booking-service-actions bg-white mb-6">
+                        <Space>
+                            <Button
+                                className="w-48"
+                                onClick={() => router.back()}
+                            >
+                                Quay lại
+                            </Button>
+                            <Button
+                                type="primary"
+                                className="w-48"
+                                onClick={gotoPaymentPage}
+                                disabled={isDisableButton}
+                                loading={isPending}
+                            >
+                                Tiến hành thanh toán
+                            </Button>
+                        </Space>
+                    </div>
+                </Col>
+                <Col span={9}>
+                    <ManageBookingOrderSummary
                         bookingDetails={bookingDetails}
-                        ssrListBooked={ssrListBooked}
-                        // defaultSSRBookingItems={
-                        //     defaultSSRBookingGroupingItems
-                        //         ? defaultSSRBookingGroupingItems[serviceId]
-                        //               ?.items
-                        //         : undefined
-                        // }
-                        initSSRBookingItems={
-                            bookingSSRInformation?.bookingDetails
-                                ? bookingSSRInformation.bookingDetails[
-                                      serviceId
-                                  ]?.items
-                                : undefined
-                        }
-                        initSSRBookingItemsRemove={
-                            bookingSSRInformation.bookingSsrDelete
-                        }
-                        onConfirm={onAddSSRBooking}
+                        bookingOrder={bookingOrder}
+                        ssrList={ssrListBooked}
                     />
-                ),
-            )}
-            <div className="manage__booking-service-actions bg-white mb-6">
-                <Space>
-                    <Button
-                        className="w-48"
-                        onClick={() =>
-                            router.push(`./portal/manage-booking/${orderId}`)
-                        }
-                    >
-                        Quay lại
-                    </Button>
-                    <Button
-                        type="primary"
-                        className="w-48"
-                        onClick={() => onUpdateSSRByPax(bookingSSRInformation)}
-                        // disabled={isDisableButton}
-                    >
-                        Tiến hành thanh toán
-                    </Button>
-                </Space>
-            </div>
+                </Col>
+            </Row>
         </>
     );
 };

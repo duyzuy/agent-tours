@@ -73,11 +73,11 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
                 },
                 {
                     key: "product/inventory",
-                    label: "Nhóm kho sản phẩm",
+                    label: "Loại dịch vụ",
                 },
                 {
                     key: "product/stock",
-                    label: "Kho sản phẩm",
+                    label: "Kho dịch vụ",
                 },
                 {
                     key: "product/template-sellable",

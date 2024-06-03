@@ -32,8 +32,6 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({
     onBuyService,
     isLoading = false,
 }) => {
-    console.log(serviceList);
-
     const serviceListGroupingByPax = useMemo(() => {
         if (!serviceList || !serviceList.length) return undefined;
 
@@ -108,7 +106,6 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({
         }, {});
     }, [serviceList]);
 
-    console.log(serviceListGroupingByPax);
     return (
         <div
             className={classNames("booking__detail--ssr", {
@@ -180,7 +177,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({
                                                         _index,
                                                     ) => (
                                                         <div
-                                                            className="service__item-pax-item flex items-center py-1"
+                                                            className="service__item-pax-item flex items-start py-2"
                                                             key={recId}
                                                         >
                                                             <span className="pax-type w-24 xl:w-36 font-[500] pr-2">
@@ -223,7 +220,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({
                                                                                 }
                                                                             </span>
                                                                             <span className="block w-20 pr-2">
-                                                                                {`${item.quantity} x`}
+                                                                                {`1 x`}
                                                                             </span>
                                                                             <span className="block w-32 pr-2 text-primary-default">
                                                                                 {moneyFormatVND(

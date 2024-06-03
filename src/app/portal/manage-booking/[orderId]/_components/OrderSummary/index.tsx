@@ -158,9 +158,9 @@ OrderSummary.Pricings = function OrderSummaryPricings({
             <div className="order__detail--payment-detail mb-6 border-b pb-6">
                 <div className="flex items-center">
                     <div className="w-40 border-r mr-6">
-                        <span className="block">Tổng tiền phiếu thu</span>
+                        <span className="block">Đã thanh toán</span>
                         <span className="block text-[16px] font-semibold text-green-600">
-                            {totalFop}
+                            {totalPaid}
                         </span>
                     </div>
                     <div className="w-40 border-r mr-6">
@@ -170,9 +170,9 @@ OrderSummary.Pricings = function OrderSummaryPricings({
                         </span>
                     </div>
                     <div className="w-40 border-r mr-6">
-                        <span className="block">Đã thanh toán</span>
+                        <span className="block">Tổng thanh toán</span>
                         <span className="block text-[16px] font-semibold text-green-600">
-                            {totalPaid}
+                            {totalFop}
                         </span>
                     </div>
                 </div>

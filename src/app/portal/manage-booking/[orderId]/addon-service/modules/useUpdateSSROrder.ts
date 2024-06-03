@@ -1,51 +1,68 @@
+import { useState } from "react";
 import { useUpdateSSRByPassengerMutation } from "@/mutations/managements/booking";
-import useManageBooking from "../hooks/useManageBooking";
-import { BookingSSRData, IBookingSSRPayload } from "./bookingSSR.interface";
+
+import {
+    IEditOrderSSRPayload,
+    ManageBookingDetail,
+} from "../../modules/manageBooking.interface";
+
 import { useQueryClient } from "@tanstack/react-query";
 import useMessage from "@/hooks/useMessage";
 import { queryCore } from "@/queries/var";
-const useEditSSR = () => {
+import { useSelectorManageBooking } from "../../hooks/useManageBooking";
+import { useRouter } from "next/navigation";
+const useUpdateSSROrder = () => {
     const { mutate: doUpdate } = useUpdateSSRByPassengerMutation();
-
+    const [isLoading, setLoading] = useState(false);
     const message = useMessage();
     const queryClient = useQueryClient();
+    const router = useRouter();
+    const { order, editSSROrder } = useSelectorManageBooking((state) => state);
 
-    const [manageBooking, setManaageBooking] = useManageBooking();
-
-    const onUpdateSSRByPax = (data: BookingSSRData, cb?: () => void) => {
-        const payloadData = transformToPayloadData(data);
-        console.log(payloadData);
+    const onUpdateSSRByPax = () => {
+        const payloadData = transformToPayloadData({
+            bookingDetails: editSSROrder.bookingDetails,
+            bookingSsrDelete: editSSROrder.bookingSsrDelete,
+            orderId: order?.bookingOrder.recId,
+        });
+        setLoading(true);
         doUpdate(payloadData, {
             onSuccess(data, variables, context) {
+                router.push(
+                    `./portal/manage-booking/${variables.bookingOrder?.recId}/addon-service/reservation`,
+                );
                 queryClient.invalidateQueries({
                     queryKey: [
                         queryCore.GET_BOOKING_ORDER_DETAIL,
                         { recId: Number(variables.bookingOrder?.recId) },
                     ],
                 });
-                cb?.();
+                setLoading(false);
             },
             onError(error, variables, context) {
                 message.error(error.message);
-                console.log(data);
+                setLoading(false);
             },
         });
     };
 
     const transformToPayloadData = (
-        bookingSSRData: BookingSSRData,
-    ): IBookingSSRPayload => {
-        const { bookingDetails, bookingSsrDelete, bookingOrder } =
-            bookingSSRData;
+        bookingSSRData: ManageBookingDetail["editSSROrder"] & {
+            orderId?: number;
+        },
+    ): IEditOrderSSRPayload => {
+        const { bookingDetails, bookingSsrDelete, orderId } = bookingSSRData;
 
-        let payloadData: IBookingSSRPayload = {
-            bookingOrder: bookingOrder,
+        let payloadData: IEditOrderSSRPayload = {
+            bookingOrder: {
+                recId: orderId,
+            },
             bookingDetails: [],
             bookingSsrDelete: [],
         };
 
         if (bookingDetails) {
-            let bookingDetailsPayload: Required<IBookingSSRPayload>["bookingDetails"] =
+            let bookingDetailsPayload: Required<IEditOrderSSRPayload>["bookingDetails"] =
                 [];
             Object.entries(bookingDetails).forEach(([key, svItem], _index) => {
                 svItem.items.forEach((bkSSRItem) => {
@@ -109,7 +126,7 @@ const useEditSSR = () => {
             };
         }
         if (bookingSsrDelete && bookingSsrDelete.length) {
-            let bookingRemoveItems: Required<IBookingSSRPayload>["bookingSsrDelete"] =
+            let bookingRemoveItems: Required<IEditOrderSSRPayload>["bookingSsrDelete"] =
                 [];
             bookingSsrDelete.forEach((bkSSRItemRemove) => {
                 bookingRemoveItems = [
@@ -129,8 +146,7 @@ const useEditSSR = () => {
 
         return payloadData;
     };
-    const onAddSSRByBookingItem = () => {};
 
-    return { onUpdateSSRByPax, onAddSSRByBookingItem };
+    return { onUpdateSSRByPax, isLoading };
 };
-export default useEditSSR;
+export default useUpdateSSROrder;

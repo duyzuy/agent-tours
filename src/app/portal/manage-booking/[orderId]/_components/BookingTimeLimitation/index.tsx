@@ -4,7 +4,11 @@ import { IBookingTimeLitmit } from "@/models/management/core/bookingTimeLimit.in
 import { Button, Modal, Steps, StepProps, InputNumber, Form } from "antd";
 import { formatDate } from "@/utils/date";
 import FormItem from "@/components/base/FormItem";
-import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+    ClockCircleOutlined,
+    CloseCircleOutlined,
+    LoadingOutlined,
+} from "@ant-design/icons";
 
 interface BookingTimeLimitationProps {
     items?: IBookingTimeLitmit[];
@@ -36,7 +40,23 @@ const BookingTimeLimitation: React.FC<BookingTimeLimitationProps> = ({
         value !== null && setHours(value);
     };
 
-    console.log(items);
+    const currentStep = useMemo(() => {
+        let current = 0;
+        if (!items) return current;
+
+        const sortedItems = items.sort((a, b) => {
+            return (
+                new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+            );
+        });
+        for (const timeline in sortedItems) {
+            if (items[timeline].isExpired === false) {
+                current = Number(timeline);
+                break;
+            }
+        }
+        return current;
+    }, [items]);
     return (
         <div className="mb-6">
             <div className="mb-3">
@@ -45,9 +65,9 @@ const BookingTimeLimitation: React.FC<BookingTimeLimitationProps> = ({
                 </p>
             </div>
             <Steps
-                status="finish"
-                current={1}
-                items={items.map<StepProps>((item) => {
+                status="process"
+                current={currentStep}
+                items={items.map<StepProps>((item, _index) => {
                     return {
                         title: formatDate(item.deadline),
                         description: `${
@@ -57,13 +77,11 @@ const BookingTimeLimitation: React.FC<BookingTimeLimitationProps> = ({
                         }`,
                         icon: item.isExpired ? (
                             <CloseCircleOutlined />
-                        ) : (
+                        ) : _index === currentStep ? (
                             <LoadingOutlined />
+                        ) : (
+                            <ClockCircleOutlined />
                         ),
-                        subTitle:
-                            item.isExpired === true
-                                ? "Hết hạn"
-                                : "Chờ thanh toán",
                     };
                 })}
             />

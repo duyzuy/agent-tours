@@ -1,5 +1,7 @@
-import { Dispatch, SetStateAction, createContext } from "react";
-import { BookingSSRData } from "@/app/portal/manage-booking/[orderId]/addon-service/modules/bookingSSR.interface";
-export const ManageBookingContext = createContext<
-    [BookingSSRData, Dispatch<SetStateAction<BookingSSRData>>] | undefined
+import { createContext } from "react";
+import { ManageBookingDetail } from "@/app/portal/manage-booking/[orderId]/modules/manageBooking.interface";
+import { ManageBookingAction } from "@/app/portal/manage-booking/[orderId]/actions";
+
+export const ManageBookingDetailContext = createContext<
+    [ManageBookingDetail, React.Dispatch<ManageBookingAction>] | undefined
 >(undefined);

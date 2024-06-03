@@ -5,7 +5,7 @@ import { Divider } from "antd";
 import { useMemo } from "react";
 import { useBookingSelector } from "../../hooks/useBooking";
 import useBreakDownSummary from "../../modules/useBreakDownSummary";
-import { isUndefined } from "lodash";
+import { isEmpty, isUndefined } from "lodash";
 import { getPassengerType } from "@/utils/common";
 interface BookingBreakDownSummaryProps {
     label?: string;
@@ -80,14 +80,20 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
             <Divider />
             <div className="booking__summary-body px-6 pb-4">
                 <div className="product__item mb-3">
-                    <div className="product__item-label">
+                    <div className="product__item-label mb-3">
                         <span className="font-[500]">Sản phẩm</span>
                     </div>
                     <div className="product__item-body">
                         <ul>
-                            <li className="flex justify-between">
+                            <li className="flex justify-between mb-1">
+                                <span>Tên sản phẩm</span>
+                                <span>{productItem?.template.name}</span>
+                            </li>
+                            <li className="flex justify-between items-center">
                                 <span>Mã sản phẩm</span>
-                                <span>{productItem?.code}</span>
+                                <span className="text-xs">
+                                    {productItem?.code}
+                                </span>
                             </li>
                         </ul>
                     </div>
@@ -164,14 +170,12 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
                     </ul>
                 </div>
 
-                {!isUndefined(services) ? (
+                {!isUndefined(services) && !isEmpty(services) ? (
                     <>
                         <Divider />
                         <div className="passenger__item">
                             <div className="passenger__item-label mb-2">
-                                <span className="font-[500]">
-                                    Dịch vụ mua thêm
-                                </span>
+                                <span className="font-[500]">Dịch vụ</span>
                             </div>
                             <ul>
                                 {Object.keys(services).map((key, _index) => (
@@ -179,7 +183,7 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
                                         className="mb-2"
                                         key={`adult-${_index}`}
                                     >
-                                        <div className="flex justify-between items-center">
+                                        <div className="flex justify-between items-center py-3">
                                             <span className="passenger__item-passenger-type flex-1">
                                                 <span className="block">
                                                     {services[key].details}

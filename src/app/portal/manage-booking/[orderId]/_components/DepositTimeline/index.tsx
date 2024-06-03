@@ -1,14 +1,40 @@
-import React from "react";
-import { Steps, StepProps } from "antd";
+import React, { useMemo } from "react";
+import { Steps, StepProps, Tag } from "antd";
 import { IDepositTimelimit } from "@/models/management/core/bookingTimeLimit.interface";
 import { formatDate } from "@/utils/date";
 import { moneyFormatVND } from "@/utils/helper";
+import {
+    CheckCircleOutlined,
+    ClockCircleOutlined,
+    CloseCircleOutlined,
+    LoadingOutlined,
+} from "@ant-design/icons";
+import { CloseOutlined } from "@ant-design/icons";
 interface DepositTimelineProps {
     depositTimelimits?: IDepositTimelimit[];
 }
 const DepositTimeline: React.FC<DepositTimelineProps> = ({
     depositTimelimits,
 }) => {
+    const currentStep = useMemo(() => {
+        let current = 0;
+        if (!depositTimelimits) return current;
+
+        const depositTimelimitsSorted = depositTimelimits.sort((a, b) => {
+            return (
+                new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+            );
+        });
+        for (const timeline in depositTimelimitsSorted) {
+            console.log(depositTimelimitsSorted[timeline], current);
+            current = Number(timeline);
+            if (depositTimelimits[timeline].isExpired === false) {
+                break;
+            }
+        }
+        return current;
+    }, [depositTimelimits]);
+
     if (!depositTimelimits || !depositTimelimits.length) {
         return null;
     }
@@ -20,20 +46,58 @@ const DepositTimeline: React.FC<DepositTimelineProps> = ({
                 </p>
             </div>
             <Steps
-                current={depositTimelimits.length}
+                status="process"
+                current={currentStep}
                 labelPlacement="vertical"
                 size="small"
                 items={depositTimelimits
-                    .sort((a, b) => b.recId - a.recId)
+                    .sort(
+                        (a, b) =>
+                            new Date(a.deadline).getTime() -
+                            new Date(b.deadline).getTime(),
+                    )
                     .map<StepProps>((item, _index) => {
                         return {
-                            title: `Đợt: ${_index + 1} - ${formatDate(
-                                item.deadline,
-                            )}`,
-                            subTitle: `${moneyFormatVND(item.minimumAmount)}`,
-                            description: item.isCompleted
-                                ? "Đã thanh toán"
-                                : "Chưa thanh toán",
+                            title: (
+                                <>
+                                    <span className="block">{`Đợt: ${
+                                        _index + 1
+                                    }`}</span>
+                                    <span>
+                                        {`${moneyFormatVND(
+                                            item.minimumAmount,
+                                        )}`}
+                                    </span>
+                                    <span className="block text-xs">
+                                        {item.isCompleted ? (
+                                            <span className=" text-emerald-500">
+                                                Đã thanh toán
+                                            </span>
+                                        ) : (
+                                            <span>Chưa thanh toán</span>
+                                        )}
+                                    </span>
+                                </>
+                            ),
+                            subTitle: (
+                                <span className="text-xs">{`${formatDate(
+                                    item.deadline,
+                                    "dd/MM/yyyy",
+                                )}`}</span>
+                            ),
+                            // description: item.isCompleted
+                            //     ? "Đã thanh toán"
+                            //     : "Chưa thanh toán",
+                            icon:
+                                item.isExpired && !item.isCompleted ? (
+                                    <CloseCircleOutlined />
+                                ) : item.isExpired && item.isCompleted ? (
+                                    <CheckCircleOutlined />
+                                ) : _index === currentStep ? (
+                                    <LoadingOutlined />
+                                ) : (
+                                    <ClockCircleOutlined />
+                                ),
                         };
                     })}
             />

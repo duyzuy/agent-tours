@@ -13,7 +13,7 @@ interface Props {
     onBack?: () => void;
     hideAddButton?: boolean;
     hideBreadcrumb?: boolean;
-    breadCrumItems?: { title: string; href?: string }[];
+    breadCrumItems?: { title?: string; href?: string }[];
     children?: React.ReactNode;
     className?: string;
 }
@@ -31,7 +31,7 @@ const PageContainer: React.FC<Props> = ({
     breadCrumItems = [],
 }) => {
     const items = useMemo(() => {
-        return breadCrumItems.reduce<{ title: React.JSX.Element | string }[]>(
+        return breadCrumItems.reduce<{ title?: React.JSX.Element | string }[]>(
             (acc, item) => {
                 if (item.href) {
                     acc = [

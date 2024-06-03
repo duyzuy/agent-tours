@@ -15,7 +15,7 @@ import {
 } from "@/app/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IFormOfPaymentPayload } from "@/models/management/core/formOfPayment.interface";
-import { IBookingSSRPayload } from "@/app/portal/manage-booking/[orderId]/addon-service/modules/bookingSSR.interface";
+import { IEditOrderSSRPayload } from "@/app/portal/manage-booking/[orderId]/modules/manageBooking.interface";
 import {
     IOrderDetail,
     IOrderDetailRs,
@@ -98,8 +98,8 @@ export const useCreateFormOfPaymentMutation = () => {
 };
 
 export const useApprovalFormOfPaymentMutation = () => {
-    return useMutation<any, BaseResponse<null>, number>({
-        mutationFn: (recId) => formOfPaymentAPIs.approvalFOP(recId),
+    return useMutation({
+        mutationFn: (recId: number) => formOfPaymentAPIs.approvalFOP(recId),
     });
 };
 
@@ -110,8 +110,8 @@ export const useDeleteFormOfPaymentMutation = () => {
 };
 
 export const useUpdateSSRByPassengerMutation = () => {
-    return useMutation<any, BaseResponse<null>, IBookingSSRPayload>({
-        mutationFn: (payload) =>
+    return useMutation({
+        mutationFn: (payload: IEditOrderSSRPayload) =>
             manageBookingAPIs.updateSSRByPassenger(payload),
     });
 };

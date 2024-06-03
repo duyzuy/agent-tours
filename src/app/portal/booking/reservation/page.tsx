@@ -21,7 +21,6 @@ const ReservationPage = () => {
     const sellableProduct = useMemo(() => {
         return bookingInformation.reservation?.bookingOrder.sellable;
     }, [bookingInformation]);
-    console.log(bookingOrder);
     useEffect(() => {
         if (isUndefined(bookingOrder)) {
             router.push("./portal/booking");

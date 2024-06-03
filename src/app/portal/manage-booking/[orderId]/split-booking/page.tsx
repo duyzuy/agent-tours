@@ -19,7 +19,6 @@ import { customerInformationSchema, invoiceSchema } from "./hooks/validate";
 import useMessage from "@/hooks/useMessage";
 import InvoiceForm, { InvoiceFormProps } from "./_components/InvoiceForm";
 import SplitFeeForm, { SplitFeeFormProps } from "./_components/SplitFeeForm";
-import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
 
 import useSplitBookingProvider from "./hooks/useSplitBookingProvider";
 interface SplitBookingPageProps {

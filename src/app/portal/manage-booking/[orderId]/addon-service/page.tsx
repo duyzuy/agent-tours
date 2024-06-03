@@ -1,16 +1,14 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { isUndefined } from "lodash";
+import React, { useMemo } from "react";
+import { isEmpty, isUndefined } from "lodash";
 import { useRouter } from "next/navigation";
-import { Spin, Button, Space } from "antd";
+import { Spin } from "antd";
 import PageContainer from "@/components/admin/PageContainer";
-import {
-    useGetBookingTourServicesCoreQuery,
-    useGetBookingDetailCoreQuery,
-} from "@/queries/core/bookingOrder";
+import { useGetBookingTourServicesCoreQuery } from "@/queries/core/bookingOrder";
 import EmptyService from "@/components/admin/EmptyService";
 import ServiceListContainer from "./_components/ServiceListContainer";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
+import { useSelectorManageBooking } from "../hooks/useManageBooking";
 interface AddOnServiceProps {
     params: { orderId: number };
 }
@@ -21,42 +19,42 @@ export type BookingDetailSSRItemType = IOrderDetail["ssr"][0]["booking"];
 const AddonServicePage: React.FC<AddOnServiceProps> = ({ params }) => {
     const router = useRouter();
 
-    const { data: bookingOrderDetail, isLoading } =
-        useGetBookingDetailCoreQuery({
-            enabled: true,
-            reservationId: params.orderId,
-        });
+    const orderDetailInformation = useSelectorManageBooking(
+        (state) => state.order,
+    );
 
     const { data: serviceList, isLoading: isLoadingServices } =
         useGetBookingTourServicesCoreQuery({
-            enabled: !isUndefined(bookingOrderDetail?.bookingOrder.sellableId),
-            sellableId: bookingOrderDetail?.bookingOrder.sellableId,
+            enabled: !isUndefined(
+                orderDetailInformation?.bookingOrder.sellableId,
+            ),
+            sellableId: orderDetailInformation?.bookingOrder.sellableId,
         });
 
     const bookingDetails = useMemo(() => {
-        return bookingOrderDetail?.bookingDetails?.reduce<
+        return orderDetailInformation?.bookingDetails?.reduce<
             BookingDetailItemType[]
         >((acc, bookingItem) => {
             acc = [...acc, bookingItem.booking];
             return acc;
         }, []);
-    }, [bookingOrderDetail]);
+    }, [orderDetailInformation]);
 
     const ssrListBooked = useMemo(() => {
-        return bookingOrderDetail?.ssr?.reduce<BookingDetailSSRItemType[]>(
+        return orderDetailInformation?.ssr?.reduce<BookingDetailSSRItemType[]>(
             (acc, bookingItem) => {
                 acc = [...acc, bookingItem.booking];
                 return acc;
             },
             [],
         );
-    }, [bookingOrderDetail]);
+    }, [orderDetailInformation]);
 
     if (isLoadingServices) {
         return <Spin />;
     }
 
-    if (isUndefined(serviceList) || isUndefined(bookingOrderDetail)) {
+    if (isUndefined(serviceList) || isUndefined(orderDetailInformation)) {
         return null;
     }
     return (
@@ -77,11 +75,12 @@ const AddonServicePage: React.FC<AddOnServiceProps> = ({ params }) => {
             //className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
             hideAddButton
         >
-            <div className="manage__booking-service w-[760px]">
-                {serviceList ? (
+            <div className="manage__booking-service w-[1040px]">
+                {!isEmpty(serviceList) ? (
                     <ServiceListContainer
                         orderId={params.orderId}
                         items={serviceList}
+                        bookingOrder={orderDetailInformation?.bookingOrder}
                         ssrListBooked={ssrListBooked}
                         bookingDetails={bookingDetails}
                     />
@@ -90,6 +89,11 @@ const AddonServicePage: React.FC<AddOnServiceProps> = ({ params }) => {
                         title="Rất tiếc"
                         descriptions="Không có dịch vụ nào khả dụng cho tour này."
                         className="px-6 py-6 rounded-sm"
+                        onClick={() =>
+                            router.push(
+                                `./portal/manage-booking/${params.orderId}`,
+                            )
+                        }
                     />
                 )}
             </div>

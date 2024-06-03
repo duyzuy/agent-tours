@@ -39,7 +39,7 @@ export const useGetBookingDetailCoreQuery = ({
     localRuleAndPolicies,
 }: {
     enabled: boolean;
-    reservationId: number;
+    reservationId?: number;
     localRuleAndPolicies?: IRuleAndPolicy[];
 }) => {
     return useQuery({

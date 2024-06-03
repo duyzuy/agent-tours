@@ -1,11 +1,9 @@
 "use client";
-import React, { useEffect, useMemo, useTransition } from "react";
-import { Spin, Row, Col, Divider } from "antd";
-import { isUndefined } from "lodash";
+import React, { useMemo, useTransition } from "react";
+import { Row, Col, Divider } from "antd";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import PageContainer from "@/components/admin/PageContainer";
-import { useGetBookingDetailCoreQuery } from "@/queries/core/bookingOrder";
 
 import OrderSummary from "./_components/OrderSummary";
 
@@ -15,7 +13,7 @@ import useCancelBookingOrder from "../modules/useCancelBookingOrder";
 import ServiceDetail from "./_components/ServiceDetail";
 import CustomerInformation from "./_components/CustomerInformation";
 import TourBookingInfo from "./_components/TourBookingInfo";
-import { useLocalGetRuleAndPolicyQuery } from "@/queries/ruleAndPolicy";
+
 import { formatDate } from "@/utils/date";
 import InvoiceInformation from "./_components/InvoiceInformation";
 import BookingOrderActions from "./_components/BookingOrderActions";
@@ -24,8 +22,9 @@ import OrderInformation from "./_components/OrderInformation";
 
 import BookingTimeLimitation from "./_components/BookingTimeLimitation";
 import { PaymentStatus } from "@/models/management/common.interface";
-import { IBookingDetail } from "@/models/management/booking/bookingDetail.interface";
+
 import { IOrderDetail } from "@/models/management/booking/order.interface";
+import { useSelectorManageBooking } from "./hooks/useManageBooking";
 
 interface ReservationDetailPageProps {
     params: { orderId: number };
@@ -47,36 +46,29 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
     params,
 }) => {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
-    const { data: ruleAndPolicyList, isLoading: isLoadingRule } =
-        useLocalGetRuleAndPolicyQuery();
 
-    const { data: bookingOrderDetail, isLoading } =
-        useGetBookingDetailCoreQuery({
-            enabled: !isLoadingRule,
-            reservationId: params.orderId,
-            localRuleAndPolicies: ruleAndPolicyList,
-        });
+    const orderInformation = useSelectorManageBooking((state) => state.order);
+
+    const [isPending, startTransition] = useTransition();
+
     const { onUpdateCustomerInfo, onUpdatePassengerInfo } =
         useUpdateCustomerAndPassenger();
 
     const { onCancelBookingOrder } = useCancelBookingOrder();
     const { onUpdate: onUpdateInvoiceInfo } = useUpdateInvoiceInfo();
 
-    const bookingOrder = useMemo(() => {
-        return bookingOrderDetail?.bookingOrder;
-    }, [bookingOrderDetail]);
+    const bookingOrder = useMemo(
+        () => orderInformation?.bookingOrder,
+        [orderInformation],
+    );
 
     const bookingSSRList = useMemo(() => {
-        return bookingOrderDetail?.ssr.reduce<
+        return orderInformation?.ssr.reduce<
             IOrderDetail["ssr"][0]["booking"][]
         >((acc, item) => {
             return (acc = [...acc, item.booking]);
         }, []);
-    }, [bookingOrderDetail]);
-    const rulesAndPolicies = useMemo(() => {
-        return bookingOrderDetail?.rulesAndPolicies;
-    }, [bookingOrderDetail]);
+    }, [orderInformation]);
 
     const onClickBuyService = () => {
         startTransition(() => {
@@ -85,20 +77,6 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
             );
         });
     };
-
-    useEffect(() => {
-        if (isUndefined(bookingOrderDetail) && !isLoading && !isLoadingRule) {
-            router.push("./portal/manage-booking");
-        }
-    }, [bookingOrderDetail, isLoading, isLoadingRule]);
-
-    if (isLoading || isLoadingRule) {
-        return <Spin />;
-    }
-
-    if (isUndefined(bookingOrderDetail)) {
-        return null;
-    }
 
     return (
         <PageContainer
@@ -183,12 +161,15 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                     totalAmount={bookingOrder?.totalAmount}
                     totalPaid={bookingOrder?.totalPaid}
                 />
-                {bookingOrder?.paymentStatus === PaymentStatus.PAID ? null : (
+                {bookingOrder?.paymentStatus === PaymentStatus.NOTPAID ? (
                     <BookingTimeLimitation
                         orderId={params.orderId}
-                        items={rulesAndPolicies?.bookingTimelimits}
+                        items={
+                            orderInformation?.rulesAndPolicies
+                                ?.bookingTimelimits
+                        }
                     />
-                )}
+                ) : null}
                 <OrderSummary
                     orderId={bookingOrder?.recId}
                     data={{
@@ -202,7 +183,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                         totalRefunded: bookingOrder?.totalRefunded,
                         paymentStatus: bookingOrder?.paymentStatus,
                     }}
-                    rulesAndPolicies={rulesAndPolicies}
+                    rulesAndPolicies={orderInformation?.rulesAndPolicies}
                     // code={bookingOrder?.sellable.code}
                     // name={bookingOrder?.template.name}
                     // startDate={bookingOrder?.sellable.startDate}
@@ -210,12 +191,16 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                     className="mb-6"
                 />
                 <DepositTimeline
-                    depositTimelimits={rulesAndPolicies?.depositTimelimits}
+                    depositTimelimits={
+                        orderInformation?.rulesAndPolicies?.depositTimelimits
+                    }
                 />
 
                 <BookingDetailDynamic
                     orderId={bookingOrder?.recId}
-                    bookingOrderDetailList={bookingOrderDetail.bookingDetails}
+                    bookingOrderDetailList={
+                        orderInformation?.bookingDetails || []
+                    }
                     onSave={onUpdatePassengerInfo}
                 />
                 <ServiceDetail

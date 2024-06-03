@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useTransition } from "react";
 import { Breadcrumb, Col, Divider, Row } from "antd";
 import useBooking from "../hooks/useBooking";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,7 @@ import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 
 const PaymentPage = () => {
     const [bookingInformation, setBookingInfomation] = useBooking();
+    const [isPending, startTransition] = useTransition();
     const router = useRouter();
     const { onCreateBooking } = useCreateBooking();
 
@@ -46,6 +47,12 @@ const PaymentPage = () => {
         );
     }, [bookingInformation]);
 
+    const goToBuyService = () => {
+        startTransition(() => {
+            router.push("./portal/booking/tour-services");
+        });
+    };
+
     useEffect(() => {
         if (bookingInformation.bookingInfo?.customerInformation) {
             const customerInfo =
@@ -72,7 +79,7 @@ const PaymentPage = () => {
     // }, [bookingInformation]);
 
     return (
-        <div className="payment__page bg-slate-50 -mx-6 -my-6 p-6 h-full mb-8">
+        <div className="payment__page bg-slate-50 -mx-6 -my-6 p-6 min-h-full mb-8">
             <div className="max-w-6xl mx-auto">
                 <Breadcrumb
                     items={[
@@ -106,11 +113,8 @@ const PaymentPage = () => {
                                         type="primary"
                                         ghost
                                         disabled={isDisableNextAction}
-                                        onClick={() =>
-                                            router.push(
-                                                "./portal/booking/tour-services",
-                                            )
-                                        }
+                                        onClick={goToBuyService}
+                                        loading={isPending}
                                     >
                                         Mua thêm dịch vụ
                                     </Button>

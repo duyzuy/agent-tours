@@ -6,32 +6,22 @@ import { getPassengerType } from "@/utils/common";
 import { moneyFormatVND } from "@/utils/helper";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import useMessage from "@/hooks/useMessage";
-import { PassengerType } from "@/models/management/common.interface";
 import SellableConfigItem from "./SellableConfigItem";
-import { IPassengerInformation } from "@/models/management/booking/passengerInformation.interface";
 import { BookingDetailItemType, BookingDetailSSRItemType } from "../../page";
-import { BookingSSRItemType } from "../../modules/bookingSSR.interface";
+// import { BookingSSRItemType } from "../../modules/bookingSSR.interface";
+import { BookingSSRItemType } from "../../../modules/manageBooking.interface";
 import BookingSSRItem, { BookingSSRItemprops } from "./BookingSSRItem";
 
-type ServiceGroupingByPassenger = {
-    recId: number;
-    passengerInfo: IPassengerInformation;
-    bookingId: number;
-    bookingRefId: number;
-    priceConfigs: {
-        quantity: number;
-        priceConfig: PriceConfig;
-        type: PassengerType;
-    }[];
-};
 export interface DrawerServiceItemProps {
     isOpen?: boolean;
     onClose?: () => void;
-    initalValue?: any;
+    initalSSRItems?: {
+        addList?: BookingSSRItemType[];
+        removeList?: BookingDetailSSRItemType[];
+    };
     serviceName?: string;
     serviceId?: number;
     pricingConfigs?: PriceConfig[];
-    ssrBookedItemGroupByPax?: ServiceGroupingByPassenger[];
     bookingSSRItemsBooked?: BookingDetailSSRItemType[];
     onConfirm?: (
         bookingDetailSSRItems: BookingSSRItemType[],
@@ -39,9 +29,6 @@ export interface DrawerServiceItemProps {
         serviceId: number,
     ) => void;
     bookingItems?: BookingDetailItemType[];
-    initSSRBookingItems?: BookingSSRItemType[];
-    initSSRBookingItemsRemove?: BookingDetailSSRItemType[];
-    // defaultSSRBookingItems?: BookingSSRItemType[];
 }
 
 const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
@@ -49,20 +36,25 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
     onClose,
     serviceName = "",
     pricingConfigs = [],
-    ssrBookedItemGroupByPax,
-    initSSRBookingItems,
-    initSSRBookingItemsRemove,
-    // defaultSSRBookingItems = [],
     bookingSSRItemsBooked = [],
     serviceId,
     onConfirm,
     bookingItems,
+    initalSSRItems,
 }) => {
-    const [bookingDetailItems, setBookingDetailItems] = useState<
-        BookingSSRItemType[]
-    >([]);
-    const [bookingDetailSSRItemsRemove, setBookingDetailSSRItemsRemove] =
-        useState<BookingDetailSSRItemType[]>([]);
+    // const [bookingDetailItems, setBookingDetailItems] = useState<
+    //     BookingSSRItemType[]
+    // >([]);
+
+    // const [bookingDetailSSRItemsRemove, setBookingDetailSSRItemsRemove] =
+    //     useState<BookingDetailSSRItemType[]>([]);
+    const [ssrData, setSSRData] = useState<{
+        addList: BookingSSRItemType[];
+        removeList: BookingDetailSSRItemType[];
+    }>({
+        addList: [],
+        removeList: [],
+    });
     const [bookingItemSelecting, setBookingItemSelecting] =
         useState<BookingDetailItemType>();
     const message = useMessage();
@@ -83,6 +75,7 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
             throw new Error("Booking Item is undefined");
         }
 
+        const { addList } = ssrData;
         const totalSellableConfigSelecting = getTotalSellableConfigSelecting(
             priceConfig.recId,
         );
@@ -94,10 +87,10 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
             message.info("Số lượng dịch vụ đã hết.");
             return;
         }
-        const bookingItemIndex = bookingDetailItems.findIndex(
+        const bookingItemIndex = addList.findIndex(
             (item) => item.booking.recId === bookingItemSelecting.recId,
         );
-        let newBookingDetailItems = [...bookingDetailItems];
+        let newAddList = [...addList];
         /**
          * if bookingItem is added SSR
          */
@@ -106,8 +99,7 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
              * Check ssr exists
              */
 
-            const ssrListByBookingItem =
-                bookingDetailItems[bookingItemIndex]["ssr"];
+            const ssrListByBookingItem = addList[bookingItemIndex]["ssr"];
 
             let newSSRListByBookingItem = [...ssrListByBookingItem];
             const ssrIndex = ssrListByBookingItem.findIndex(
@@ -135,8 +127,8 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
                     },
                 ];
             }
-            newBookingDetailItems.splice(bookingItemIndex, 1, {
-                ...bookingDetailItems[bookingItemIndex],
+            newAddList.splice(bookingItemIndex, 1, {
+                ...addList[bookingItemIndex],
                 ssr: newSSRListByBookingItem,
             });
         }
@@ -145,8 +137,8 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
          * if bookingItem not exists
          */
         if (bookingItemIndex === -1) {
-            newBookingDetailItems = [
-                ...newBookingDetailItems,
+            newAddList = [
+                ...newAddList,
                 {
                     booking: bookingItemSelecting,
                     ssr: [
@@ -160,17 +152,21 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
             ];
         }
 
-        setBookingDetailItems(newBookingDetailItems);
+        setSSRData((oldData) => ({
+            ...oldData,
+            addList: newAddList,
+        }));
     };
 
     const getQuanitySSROfPaxByPriceConfig = (priceConfig: PriceConfig) => {
         let totalQuantity = 0;
 
+        const { addList } = ssrData;
         if (!bookingItemSelecting) {
             return totalQuantity;
         }
 
-        const bookingItem = bookingDetailItems.find(
+        const bookingItem = addList.find(
             (bkItem) => bkItem.booking.recId === bookingItemSelecting?.recId,
         );
 
@@ -182,19 +178,37 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
         return totalQuantity;
     };
 
-    const getTotalQuantitySSROfOneBooking = (bookingId: number) => {
-        return bookingDetailItems.reduce((totalQuantity, item) => {
-            if (item.booking.recId === bookingId) {
+    const getTotalQuantitySSROfOnePaxBooking = (paxBookingId: number) => {
+        const { addList, removeList } = ssrData;
+        const totalAdded = addList.reduce((totalQuantity, item) => {
+            if (item.booking.recId === paxBookingId) {
                 item.ssr.forEach((ssrItem) => {
                     totalQuantity += ssrItem.quantity;
                 });
             }
             return totalQuantity;
         }, 0);
+
+        const totalInitAddedBefore = bookingSSRItemsBooked.reduce(
+            (totalQty, itemRv) => {
+                if (
+                    itemRv.bookingRefId === paxBookingId &&
+                    removeList.every((item) => item.recId !== itemRv.recId)
+                ) {
+                    totalQty += 1;
+                }
+                return totalQty;
+            },
+            0,
+        );
+
+        return totalAdded + totalInitAddedBefore;
     };
 
     const getTotalSellableConfigSelecting = (sellableConfigId: number) => {
-        return bookingDetailItems.reduce((totalQuantity, bkItem) => {
+        const { addList, removeList } = ssrData;
+
+        return addList.reduce((totalQuantity, bkItem) => {
             bkItem.ssr.forEach((ssrItem) => {
                 if (ssrItem.priceConfig.recId === sellableConfigId) {
                     totalQuantity += ssrItem.quantity;
@@ -204,37 +218,38 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
         }, 0);
     };
 
-    const getTotalSellableConfigBookedItem = (sellableConfigId: number) => {
-        return (
-            ssrBookedItemGroupByPax?.reduce((totalQuantity, paxItem) => {
-                paxItem.priceConfigs.forEach((ssrItem) => {
-                    if (ssrItem.priceConfig.recId === sellableConfigId) {
-                        totalQuantity += ssrItem.quantity;
-                    }
-                });
-                return totalQuantity;
-            }, 0) ?? 0
-        );
-    };
-
     const subTotal = useMemo(() => {
-        return bookingDetailItems.reduce((subTotal, bkItem) => {
+        const { addList, removeList } = ssrData;
+        const totalNewAdded = addList.reduce((subTotal, bkItem) => {
             bkItem.ssr.forEach((ssrItem) => {
                 subTotal +=
                     ssrItem.quantity * ssrItem.priceConfig[ssrItem.type];
             });
             return subTotal;
         }, 0);
-    }, [bookingDetailItems]);
+
+        const totalBooked =
+            bookingSSRItemsBooked?.reduce((subTotalBooked, bkItem) => {
+                if (removeList.some((item) => item.recId === bkItem.recId)) {
+                } else {
+                    subTotalBooked = subTotalBooked + bkItem.amount;
+                }
+                return subTotalBooked;
+            }, 0) || 0;
+
+        return totalNewAdded + totalBooked;
+    }, [ssrData, bookingSSRItemsBooked]);
 
     /**
      * Get Booking SSR detail Item by pax selecting
      */
-    const bookingSSRItemsBookedByPax = useMemo(() => {
-        return bookingSSRItemsBooked.filter(
-            (item) => item.bookingRefId === bookingItemSelecting?.recId,
-        );
-    }, [bookingSSRItemsBooked, bookingItemSelecting]);
+    const bookingSSRItemsBookedByCurrentPax = useMemo(
+        () =>
+            bookingSSRItemsBooked.filter(
+                (item) => item.bookingRefId === bookingItemSelecting?.recId,
+            ),
+        [bookingSSRItemsBooked, bookingItemSelecting],
+    );
 
     const getFullnamePassenger = useCallback(
         (lastName?: string, middleAndFirstName?: string) => {
@@ -255,71 +270,61 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
     };
     const handleConfirmService = () => {
         serviceId &&
-            onConfirm?.(
-                bookingDetailItems,
-                bookingDetailSSRItemsRemove,
-                serviceId,
-            );
+            onConfirm?.(ssrData.addList, ssrData.removeList, serviceId);
         onClose?.();
         // bookingItems && setBookingItemSelecting(bookingItems[0]);
     };
 
-    console.log(bookingDetailItems, bookingDetailSSRItemsRemove, serviceId);
     const hasBookingSSRItemRemoved = useCallback(
         (bkDetailSSRItem: BookingDetailSSRItemType) => {
-            return bookingDetailSSRItemsRemove.some(
+            return ssrData.removeList.some(
                 (item) => item.recId === bkDetailSSRItem.recId,
             );
         },
-        [bookingDetailSSRItemsRemove],
+        [ssrData],
     );
     const onAddRemoveSSRItem: BookingSSRItemprops["onAdd"] = (data) => {
         if (!data) return;
-        setBookingDetailSSRItemsRemove((oldData) => {
-            let newData = [...oldData];
-            const indexItem = oldData.findIndex(
+        setSSRData((oldData) => {
+            const { removeList } = oldData;
+            let newRemoveList = [...removeList];
+            const indexItem = removeList.findIndex(
                 (item) => item.recId === data?.recId,
             );
 
             if (indexItem !== -1) {
-                newData.splice(indexItem, 1);
+                newRemoveList.splice(indexItem, 1);
             } else {
-                newData = [...newData, data];
+                newRemoveList = [...newRemoveList, data];
             }
 
-            return newData;
+            return {
+                ...oldData,
+                removeList: newRemoveList,
+            };
         });
     };
-    // const isDisableButton = useMemo(() => {
-    //     if (defaultSSRBookingItems?.length !== bookingDetailItems.length) {
-    //         return false;
-    //     }
-    //     return !!bookingDetailItems.every((bkItem) => {
-    //         return defaultSSRBookingItems.some((defaultItem) => {
-    //             return (
-    //                 bkItem.booking === defaultItem.booking &&
-    //                 bkItem.ssr.length === defaultItem.ssr.length &&
-    //                 bkItem.ssr.every((ssrIt) => {
-    //                     return defaultItem.ssr.some(
-    //                         (defaultSSr) =>
-    //                             defaultSSr.priceConfig.recId ===
-    //                                 ssrIt.priceConfig.recId &&
-    //                             defaultSSr.quantity === ssrIt.quantity,
-    //                     );
-    //                 })
-    //             );
-    //         });
-    //     });
-    // }, [bookingDetailItems, defaultSSRBookingItems]);
+
+    // const isDisableConfirmation = useMemo(() => {
+    //     return (
+    //         (!bookingDetailItems ||
+    //             !bookingDetailItems.some((item) => item.ssr.length)) &&
+    //         (!bookingDetailSSRItemsRemove ||
+    //             !bookingDetailSSRItemsRemove.length)
+    //     );
+    // }, [bookingDetailItems, bookingDetailSSRItemsRemove]);
 
     useEffect(() => {
-        initSSRBookingItems && setBookingDetailItems(initSSRBookingItems);
-        initSSRBookingItemsRemove &&
-            setBookingDetailSSRItemsRemove(initSSRBookingItemsRemove);
-    }, [initSSRBookingItems, initSSRBookingItemsRemove, isOpen]);
+        setSSRData(() => ({
+            addList: initalSSRItems?.addList || [],
+            removeList: initalSSRItems?.removeList || [],
+        }));
+    }, [isOpen, initalSSRItems]);
+
     useEffect(() => {
         bookingItems && setBookingItemSelecting(bookingItems[0]);
-    }, [isOpen, bookingItems]);
+    }, [isOpen]);
+
     return (
         <Drawer
             title={serviceName}
@@ -365,13 +370,13 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
                                     ) ?? `Hành khách ${_index + 1}`}
                                 </span>
 
-                                {getTotalQuantitySSROfOneBooking(
+                                {getTotalQuantitySSROfOnePaxBooking(
                                     bkItem.recId,
                                 ) === 0 ? (
                                     "--"
                                 ) : (
                                     <span className="w-5 h-5 bg-primary-default text-white inline-flex items-center justify-center rounded-full text-xs">
-                                        {getTotalQuantitySSROfOneBooking(
+                                        {getTotalQuantitySSROfOnePaxBooking(
                                             bkItem.recId,
                                         )}
                                     </span>
@@ -383,12 +388,12 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
             </div>
             <div className="service__item-body px-6 pt-6">
                 <div className="service-item-booked mb-6">
-                    {bookingSSRItemsBookedByPax ? (
+                    {bookingSSRItemsBookedByCurrentPax ? (
                         <div>
                             <div className="mb-6">
                                 <p className="font-[500]">Dịch vụ đã mua</p>
                             </div>
-                            {bookingSSRItemsBookedByPax.map(
+                            {bookingSSRItemsBookedByCurrentPax.map(
                                 (bookingSSRItem, _index) => (
                                     <BookingSSRItem
                                         key={_index}
@@ -447,7 +452,7 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
                             type="primary"
                             size="large"
                             className="w-36"
-                            // disabled={isDisableButton}
+                            // disabled={isDisableConfirmation}
                         >
                             Xác nhận
                         </Button>
