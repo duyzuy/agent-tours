@@ -123,7 +123,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({
                     onClick={onBuyService}
                     loading={isLoading}
                 >
-                    Thên dịch vụ
+                    Thêm dịch vụ
                 </Button>
             </div>
             <div className="booking__detail-body">

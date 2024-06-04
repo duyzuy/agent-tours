@@ -9,7 +9,6 @@ import OrderSummary from "./_components/OrderSummary";
 
 import useUpdateCustomerAndPassenger from "../modules/useUpdateCustomerAndPassenger";
 import useUpdateInvoiceInfo from "../modules/useUpdateInvoiceInfo";
-import useCancelBookingOrder from "../modules/useCancelBookingOrder";
 import ServiceDetail from "./_components/ServiceDetail";
 import CustomerInformation from "./_components/CustomerInformation";
 import TourBookingInfo from "./_components/TourBookingInfo";
@@ -25,6 +24,10 @@ import { PaymentStatus } from "@/models/management/common.interface";
 
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { useSelectorManageBooking } from "./hooks/useManageBooking";
+import {
+    FOP_PAYMENT_TYPE,
+    FOP_TYPE,
+} from "@/models/management/core/formOfPayment.interface";
 
 interface ReservationDetailPageProps {
     params: { orderId: number };
@@ -54,13 +57,18 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
     const { onUpdateCustomerInfo, onUpdatePassengerInfo } =
         useUpdateCustomerAndPassenger();
 
-    const { onCancelBookingOrder } = useCancelBookingOrder();
     const { onUpdate: onUpdateInvoiceInfo } = useUpdateInvoiceInfo();
 
     const bookingOrder = useMemo(
         () => orderInformation?.bookingOrder,
         [orderInformation],
     );
+
+    const fopListCoupon = useMemo(() => {
+        return orderInformation?.bookingOrder.fops.filter(
+            (item) => item.type === FOP_TYPE.COUPON,
+        );
+    }, [orderInformation]);
 
     const bookingSSRList = useMemo(() => {
         return orderInformation?.ssr.reduce<
@@ -101,7 +109,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                     referenceId={bookingOrder?.referenceId}
                     className="mb-6"
                 />
-                <div className="bg-slate-50 p-6 rounded-md">
+                <div className="bg-slate-50 p-6 rounded-md mb-6">
                     <TourBookingInfo
                         startDate={
                             bookingOrder?.sellable.startDate &&
@@ -154,13 +162,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                         </Col>
                     </Row>
                 </div>
-                <Divider />
-                <BookingOrderActions
-                    orderId={bookingOrder?.recId}
-                    onCancelBooking={onCancelBookingOrder}
-                    totalAmount={bookingOrder?.totalAmount}
-                    totalPaid={bookingOrder?.totalPaid}
-                />
+
                 {bookingOrder?.paymentStatus === PaymentStatus.NOTPAID ? (
                     <BookingTimeLimitation
                         orderId={params.orderId}
@@ -170,6 +172,19 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                         }
                     />
                 ) : null}
+                <DepositTimeline
+                    depositTimelimits={
+                        orderInformation?.rulesAndPolicies?.depositTimelimits
+                    }
+                    paymentStatus={bookingOrder?.paymentStatus}
+                />
+
+                <BookingOrderActions
+                    orderId={bookingOrder?.recId}
+                    totalAmount={bookingOrder?.totalAmount}
+                    totalPaid={bookingOrder?.totalPaid}
+                    paymentStatus={bookingOrder?.paymentStatus}
+                />
                 <OrderSummary
                     orderId={bookingOrder?.recId}
                     data={{
@@ -183,17 +198,13 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
                         totalRefunded: bookingOrder?.totalRefunded,
                         paymentStatus: bookingOrder?.paymentStatus,
                     }}
+                    coupons={fopListCoupon}
                     rulesAndPolicies={orderInformation?.rulesAndPolicies}
                     // code={bookingOrder?.sellable.code}
                     // name={bookingOrder?.template.name}
                     // startDate={bookingOrder?.sellable.startDate}
                     // endDate={bookingOrder?.sellable.endDate}
                     className="mb-6"
-                />
-                <DepositTimeline
-                    depositTimelimits={
-                        orderInformation?.rulesAndPolicies?.depositTimelimits
-                    }
                 />
 
                 <BookingDetailDynamic

@@ -69,6 +69,7 @@ interface FOPListProps {
     onDelete: (recId: number) => void;
     totalAmount?: number;
     totalPaid?: number;
+    loading?: boolean;
 }
 const FOPList: React.FC<FOPListProps> = ({
     items,
@@ -76,6 +77,7 @@ const FOPList: React.FC<FOPListProps> = ({
     onDelete,
     totalAmount = 0,
     totalPaid = 0,
+    loading,
 }) => {
     const [detailRecord, setDetailRecord] = useState<{
         isShow: boolean;
@@ -156,6 +158,7 @@ const FOPList: React.FC<FOPListProps> = ({
                 rowKey={"recId"}
                 columns={mergeColumns}
                 size="small"
+                loading={loading}
             />
             <ModalDetailFOP
                 isShowModal={detailRecord.isShow}

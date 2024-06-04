@@ -1,144 +1,106 @@
-import React, { useState, useMemo, useCallback } from "react";
-import { Button, Space, Tag, Form, Input } from "antd";
+import React, { useState, useCallback } from "react";
+import { Button, Space } from "antd";
 import { useRouter } from "next/navigation";
-import { isUndefined } from "lodash";
-
-import classNames from "classnames";
-import { moneyFormatVND } from "@/utils/helper";
-import { formatDate } from "@/utils/date";
-import FormItem from "@/components/base/FormItem";
-import { IOrderDetail } from "@/models/management/booking/order.interface";
-import { IBookingOrderCancelPayload } from "../../../modules/bookingOrder.interface";
-import ModalCancelBookingConfirmation from "./ModalCanelBookingConfirmation";
-import DrawerFormOfPayment from "./DrawerFormOfPayment";
 import { PaymentStatus } from "@/models/management/common.interface";
 import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
 import { FOPFormData } from "../../modules/formOfPayment.interface";
+import DrawerPaymentList from "./formOfPayment/DrawerPaymentList";
+import DrawerPaymentForm from "./formOfPayment/DrawerPaymentForm";
 
 interface BookingOrderActionsProps {
     orderId?: number;
     totalAmount?: number;
     totalPaid?: number;
-    onCancelBooking?: (
-        payload: IBookingOrderCancelPayload,
-        cb?: () => void,
-    ) => void;
+    paymentStatus?: PaymentStatus;
 }
 const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
-    onCancelBooking,
     orderId,
     totalAmount,
     totalPaid,
+    paymentStatus,
 }) => {
     const router = useRouter();
 
     const [formOfPaymentType, setFormOfPaymentType] =
         useState<FOPFormData["type"]>();
-    const [isShowModalConfirm, setShowModalConfirm] = useState(false);
-    const [cancelBookingData, setCancelBookingData] =
-        useState<IBookingOrderCancelPayload>({
-            bookingOrder: { recId: orderId, rmk4: "" },
-        });
 
-    const onConfirmCancelBookingOrder = () =>
-        onCancelBooking?.(cancelBookingData, () => {
-            setShowModalConfirm(false);
-            router.push("./portal/manage-booking/order-list");
-        });
-    const onShowModalCancelConfirm = useCallback(
-        () => setShowModalConfirm(true),
-        [],
-    );
-    const onCloseModalCancelConfirm = useCallback(
-        () => setShowModalConfirm(false),
-        [],
-    );
-    const onShowDrawerFOP = (type: FOPFormData["type"]) =>
-        setFormOfPaymentType(type);
+    const [drawerList, showDrawerList] = useState<{
+        show: boolean;
+        type?: FOPFormData["type"];
+    }>({ show: false, type: undefined });
+
+    const [drawerForm, showDrawerForm] = useState<{
+        show: boolean;
+        type?: FOPFormData["type"];
+    }>({ show: false, type: undefined });
+
+    const onShowDrawerForm = useCallback((type: FOPFormData["type"]) => {
+        showDrawerForm({ show: true, type });
+    }, []);
+
+    const onShowDrawerList = useCallback((type: FOPFormData["type"]) => {
+        showDrawerList({ show: true, type });
+    }, []);
+
+    const onCloseDrawerForm = useCallback(() => {
+        showDrawerForm({ show: false, type: undefined });
+    }, []);
+
+    const onCloseDrawerList = useCallback(() => {
+        showDrawerList({ show: false, type: undefined });
+    }, []);
 
     return (
         <>
             <div className="booking__order__Detail-actions pb-6 mb-6 border-b bg-white">
                 <Space>
-                    <Button
-                        type="primary"
-                        danger
-                        size="small"
-                        onClick={onShowModalCancelConfirm}
-                    >
-                        Huỷ
-                    </Button>
-                    <Button
-                        size="small"
-                        type="primary"
-                        onClick={() =>
-                            router.push(
-                                `./portal/manage-booking/${orderId}/split-booking`,
-                            )
-                        }
-                    >
-                        Tách
-                    </Button>
+                    {paymentStatus !== PaymentStatus.PAID ? (
+                        <Button
+                            type="primary"
+                            size="small"
+                            onClick={() => onShowDrawerForm(FOP_TYPE.PAYMENT)}
+                        >
+                            Thanh toán
+                        </Button>
+                    ) : null}
                     <Button
                         type="primary"
                         size="small"
-                        onClick={() =>
-                            router.push(
-                                `./portal/manage-booking/${orderId}/addon-service`,
-                            )
-                        }
-                    >
-                        Mua thêm dịch vụ
-                    </Button>
-                    <Button
-                        type="primary"
-                        size="small"
-                        onClick={() => onShowDrawerFOP(FOP_TYPE.PAYMENT)}
-                    >
-                        Thanh toán
-                    </Button>
-                    <Button
-                        type="primary"
-                        size="small"
-                        onClick={() => onShowDrawerFOP(FOP_TYPE.REFUND)}
+                        onClick={() => onShowDrawerForm(FOP_TYPE.REFUND)}
                     >
                         Hoàn tiền
                     </Button>
+                    <Button
+                        type="primary"
+                        ghost
+                        size="small"
+                        onClick={() => onShowDrawerList(FOP_TYPE.PAYMENT)}
+                    >
+                        Lịch sử thanh toán
+                    </Button>
+                    <Button
+                        type="primary"
+                        ghost
+                        size="small"
+                        onClick={() => onShowDrawerList(FOP_TYPE.REFUND)}
+                    >
+                        Lịch sử hoàn tiền
+                    </Button>
                 </Space>
             </div>
-            <DrawerFormOfPayment
+            <DrawerPaymentList
                 orderId={orderId}
                 totalAmount={totalAmount}
                 totalPaid={totalPaid}
-                isOpen={!isUndefined(formOfPaymentType)}
-                formOfPaymentType={formOfPaymentType}
-                onClose={() => setFormOfPaymentType(undefined)}
+                isOpen={drawerList.show}
+                formOfPaymentType={drawerList.type}
+                onClose={onCloseDrawerList}
             />
-            <ModalCancelBookingConfirmation
-                isShowModal={isShowModalConfirm}
-                title="Huỷ đặt chỗ!"
-                descriptions="Bạn chắc chắn muốn huỷ đặt chỗ?"
-                onCancel={onCloseModalCancelConfirm}
-                render={() => (
-                    <Form layout="vertical">
-                        <FormItem required>
-                            <Input.TextArea
-                                placeholder="Lý do huỷ"
-                                name="rmk4"
-                                onChange={(ev) =>
-                                    setCancelBookingData((prev) => ({
-                                        ...prev,
-                                        bookingOrder: {
-                                            ...prev?.bookingOrder,
-                                            rmk4: ev.target.value,
-                                        },
-                                    }))
-                                }
-                            />
-                        </FormItem>
-                    </Form>
-                )}
-                onConfirm={onConfirmCancelBookingOrder}
+            <DrawerPaymentForm
+                orderId={orderId}
+                isOpen={drawerForm.show}
+                formOfPaymentType={drawerForm.type}
+                onClose={onCloseDrawerForm}
             />
         </>
     );

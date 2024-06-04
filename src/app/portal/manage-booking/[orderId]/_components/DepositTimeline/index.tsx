@@ -9,24 +9,28 @@ import {
     CloseCircleOutlined,
     LoadingOutlined,
 } from "@ant-design/icons";
-import { CloseOutlined } from "@ant-design/icons";
+import { PaymentStatus } from "@/models/management/common.interface";
 interface DepositTimelineProps {
     depositTimelimits?: IDepositTimelimit[];
+    paymentStatus?: PaymentStatus;
 }
 const DepositTimeline: React.FC<DepositTimelineProps> = ({
     depositTimelimits,
+    paymentStatus,
 }) => {
     const currentStep = useMemo(() => {
         let current = 0;
         if (!depositTimelimits) return current;
 
+        if (paymentStatus === PaymentStatus.PAID) {
+            return depositTimelimits.length - 1;
+        }
         const depositTimelimitsSorted = depositTimelimits.sort((a, b) => {
             return (
                 new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
             );
         });
         for (const timeline in depositTimelimitsSorted) {
-            console.log(depositTimelimitsSorted[timeline], current);
             current = Number(timeline);
             if (depositTimelimits[timeline].isExpired === false) {
                 break;
@@ -91,7 +95,8 @@ const DepositTimeline: React.FC<DepositTimelineProps> = ({
                             icon:
                                 item.isExpired && !item.isCompleted ? (
                                     <CloseCircleOutlined />
-                                ) : item.isExpired && item.isCompleted ? (
+                                ) : (item.isExpired && item.isCompleted) ||
+                                  paymentStatus === PaymentStatus.PAID ? (
                                     <CheckCircleOutlined />
                                 ) : _index === currentStep ? (
                                     <LoadingOutlined />

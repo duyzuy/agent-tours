@@ -5,6 +5,7 @@ import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { PaymentStatus } from "@/models/management/common.interface";
+import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
 
 type DataType = Pick<
     IOrderDetail["bookingOrder"],
@@ -25,6 +26,7 @@ interface OrderDetailProps {
     data?: Partial<DataType>;
     rulesAndPolicies?: IOrderDetail["rulesAndPolicies"];
     className?: string;
+    coupons?: IFormOfPayment[];
 }
 const OrderSummary = ({
     orderId,
@@ -33,6 +35,7 @@ const OrderSummary = ({
     rulesAndPolicies,
     name,
     className = "",
+    coupons,
 }: OrderDetailProps) => {
     return (
         <>
@@ -62,6 +65,7 @@ const OrderSummary = ({
                             <Tag color="blue">Thanh toán 1 phần</Tag>
                         )) || <Tag color="red">Chưa thanh toán</Tag>
                     }
+                    coupons={coupons}
                     // timelimit={
                     //     data?.timelimits && data?.timelimits.length ? (
                     //         <div className="flex-1">
@@ -101,6 +105,7 @@ interface OrderSummaryPricings {
     totalFop?: string;
     totalRefunded?: string;
     totalPaid?: string;
+    coupons?: IFormOfPayment[];
 }
 OrderSummary.Pricings = function OrderSummaryPricings({
     tourPrice,
@@ -112,6 +117,7 @@ OrderSummary.Pricings = function OrderSummaryPricings({
     totalFop,
     totalRefunded,
     totalPaid,
+    coupons,
 }: OrderSummaryPricings) {
     return (
         <>
@@ -141,18 +147,6 @@ OrderSummary.Pricings = function OrderSummaryPricings({
                             {totalAmount}
                         </span>
                     </div>
-                    <div className="w-40 border-r mr-6">
-                        <span className="block">Ngày đặt</span>
-                        <span className="block text-[16px] font-semibold">
-                            {sysFstUpdate}
-                        </span>
-                    </div>
-                    <div className="w-40">
-                        <span className="block">Trạng thái</span>
-                        <span className="block text-[16px] mb-3">
-                            {paymentStatus}
-                        </span>
-                    </div>
                 </div>
             </div>
             <div className="order__detail--payment-detail mb-6 border-b pb-6">
@@ -173,6 +167,26 @@ OrderSummary.Pricings = function OrderSummaryPricings({
                         <span className="block">Tổng thanh toán</span>
                         <span className="block text-[16px] font-semibold text-green-600">
                             {totalFop}
+                        </span>
+                    </div>
+                    <div className="w-60 mr-6">
+                        <span className="block">Mã giảm giá</span>
+                        <span className="block">
+                            {coupons
+                                ? coupons?.map((item) => (
+                                      <div
+                                          className="coupon-item"
+                                          key={item.recId}
+                                      >
+                                          <span className="text-[16px] font-semibold text-green-600">
+                                              {moneyFormatVND(item.amount)}
+                                          </span>
+                                          <span className=" bg-pink-100 px-3 py-1 ml-2 text-pink-600 rounded-sm text-xs">
+                                              {item.fopDocument}
+                                          </span>
+                                      </div>
+                                  ))
+                                : "--"}
                         </span>
                     </div>
                 </div>

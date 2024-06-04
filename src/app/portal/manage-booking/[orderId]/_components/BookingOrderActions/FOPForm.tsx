@@ -2,10 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Space, Button, Form, Row, Col, Input, Select } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { FOPFormData } from "../../modules/formOfPayment.interface";
-import {
-    FOP_PAYMENT_TYPE_LIST,
-    FOP_TYPE_LIST,
-} from "../../modules/formOfPayment.interface";
+import { FOP_PAYMENT_TYPE_LIST } from "../../modules/formOfPayment.interface";
 import TextArea from "antd/es/input/TextArea";
 import { formOfPaymentSchema } from "../../schema/formOfPayment";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
