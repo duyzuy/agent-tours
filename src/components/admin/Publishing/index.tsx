@@ -45,8 +45,8 @@ export interface PublishingProps {
 }
 const Publishing: React.FC<PublishingProps> = ({
     label = "Đăng bài viết",
-    templateList = [templateDefault],
-    templateValue = templateDefault.value,
+    templateList,
+    templateValue,
     onChangeDate,
     onChangeTime,
     onApproval,
@@ -103,13 +103,19 @@ const Publishing: React.FC<PublishingProps> = ({
                         />
                     ) : null}
                 </div>
-                <FormItem label="Chọn template">
-                    <Select<string>
-                        options={templateList}
-                        value={templateValue}
-                        onChange={onChangeTemplate}
-                    />
-                </FormItem>
+                {templateList ? (
+                    <FormItem label="Chọn template">
+                        <Select<string>
+                            options={[templateDefault, ...(templateList || [])]}
+                            value={
+                                templateValue
+                                    ? templateValue
+                                    : templateDefault.value
+                            }
+                            onChange={onChangeTemplate}
+                        />
+                    </FormItem>
+                ) : null}
                 <FormItem label="Ngày hiển thị">
                     <div className="flex items-center gap-x-4">
                         <CustomDatePicker

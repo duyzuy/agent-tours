@@ -11,4 +11,6 @@ export const LINKS = {
     TemplateSellable: "/portal/product/template-sellable",
     Sellable: "/portal/product/template-sellable/{tempalteSellableId}",
     PageCreate: "/portal/contents/page/create",
+    CMSTemplateCreate: "/portal/cms-template/create",
+    CMSTemplatePageList: "/portal/cms-template/list",
 };

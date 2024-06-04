@@ -14,6 +14,7 @@ import {
     SearchOutlined,
     TagOutlined,
     GlobalOutlined,
+    FileTextOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 import { pathPermissions } from "@/constants/permission.constant";
@@ -139,6 +140,17 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
                 {
                     key: "geo-location/district",
                     label: "Quận/huyện",
+                },
+            ],
+        },
+        {
+            key: "cms-template",
+            icon: React.createElement(FileTextOutlined),
+            label: "Cms template",
+            children: [
+                {
+                    key: "cms-template/list",
+                    label: "Danh sách template",
                 },
             ],
         },

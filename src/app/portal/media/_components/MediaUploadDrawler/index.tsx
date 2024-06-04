@@ -33,6 +33,7 @@ const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
 
     const onSelectingFile: IMediaFilesProps["onSelect"] = (file) => {
         //Check file selected excepts.
+
         if (!exceptsSelect.includes(file.type)) {
             message.info(`Không cho phép chọn loại ${file.type} .`);
             return;
@@ -60,13 +61,17 @@ const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
             return newFiles;
         });
     };
-    console.log("redenr");
+
     const onConfirmSelect = () => {
         !isEmpty(selectedFiles) && onConfirm?.(selectedFiles),
             onClose?.(),
             setSelectedFiles([]);
     };
 
+    const closeDrawler = () => {
+        setSelectedFiles([]);
+        onClose?.();
+    };
     return (
         <React.Fragment>
             <Drawer
@@ -74,13 +79,13 @@ const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
                 placement={"bottom"}
                 width={500}
                 height="85vh"
-                onClose={onClose}
+                onClose={closeDrawler}
                 open={isOpen}
                 destroyOnClose={true}
                 zIndex={9999999}
                 extra={
                     <Space>
-                        <Button onClick={onClose}>Huỷ</Button>
+                        <Button onClick={closeDrawler}>Huỷ</Button>
                         <Button
                             type="primary"
                             onClick={onConfirmSelect}

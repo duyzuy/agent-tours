@@ -49,7 +49,7 @@ const TextEditor = ({
 
         editorRef.current.insertContent(contents);
     }, []);
-    const onShowMedia = useCallback(() => setShowMedia(true), []);
+    const onCloseMedia = useCallback(() => setShowMedia(false), []);
     return (
         <>
             <Editor
@@ -189,7 +189,7 @@ const TextEditor = ({
             />
             <MediaUploadDrawler
                 isOpen={isShowMedia}
-                onClose={onShowMedia}
+                onClose={onCloseMedia}
                 onConfirm={onConfirmSelection}
                 mode="multiple"
             />
