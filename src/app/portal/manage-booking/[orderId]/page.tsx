@@ -66,7 +66,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
 
     const fopListCoupon = useMemo(() => {
         return orderInformation?.bookingOrder.fops.filter(
-            (item) => item.type === FOP_TYPE.COUPON,
+            (item) => item.type === FOP_TYPE.DISCOUNT_COUPON,
         );
     }, [orderInformation]);
 
