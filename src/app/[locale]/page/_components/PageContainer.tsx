@@ -4,7 +4,7 @@ import { useLanguage } from "../../hooks/useLanguage";
 import {
     initPageContentAction,
     ELanguageActionType,
-} from "../../store/actions";
+} from "../../store/actions/languageActions";
 import { useEffect } from "react";
 import { LangCode } from "@/models/management/cms/language.interface";
 interface PageContainerProps {

@@ -10,6 +10,7 @@ export interface QuantityProps {
     minimum?: number;
     onChange?: (action: "minus" | "plus", value: number) => void;
     size?: "sm" | "md" | "lg";
+    shape?: "outline" | "default";
 }
 const Quantity: React.FC<QuantityProps> = ({
     value,
@@ -18,6 +19,7 @@ const Quantity: React.FC<QuantityProps> = ({
     minimum,
     onChange,
     size = "md",
+    shape = "default",
 }) => {
     const [quantity, setQuantity] = useState(0);
     useEffect(() => {
@@ -48,11 +50,15 @@ const Quantity: React.FC<QuantityProps> = ({
         <span className={classNames("quantity__control")}>
             <span
                 className={classNames(
-                    "quantity__control-btn inline-flex bg-slate-100 items-center justify-center cursor-pointer horder:drop-shadow-sm  hover:bg-primary-default hover:text-white",
+                    "quantity__control-btn inline-flex items-center justify-center cursor-pointer",
                     {
                         "w-10 h-10 rounded-[6px]": size === "lg",
                         "w-8 h-8 rounded-[6px]": size === "md",
                         "w-6 h-6 rounded-[3px] text-xs": size === "sm",
+                        "bg-white hover:drop-shadow-sm border hover:bg-primary-default hover:border-primary-default hover:text-white":
+                            shape === "outline",
+                        "bg-slate-100  hover:drop-shadow-sm hover:bg-primary-default hover:text-white":
+                            shape === "default",
                     },
                 )}
                 onClick={() => onChangeQuantity("minus")}
@@ -61,7 +67,7 @@ const Quantity: React.FC<QuantityProps> = ({
             </span>
             <span
                 className={classNames(
-                    "quantity__control-value  inline-flex items-center justify-center",
+                    "quantity__control-value inline-flex items-center justify-center",
                     {
                         "w-18 h-10": size === "lg",
                         "w-16 h-8": size === "md",
@@ -73,11 +79,15 @@ const Quantity: React.FC<QuantityProps> = ({
             </span>
             <span
                 className={classNames(
-                    "quantity__control-btn inline-flex bg-slate-100 items-center justify-center cursor-pointer hover:drop-shadow-sm hover:bg-primary-default hover:text-white",
+                    "quantity__control-btn inline-flex items-center justify-center cursor-pointer ",
                     {
                         "w-10 h-10 rounded-[6px]": size === "lg",
                         "w-8 h-8 rounded-[6px]": size === "md",
                         "w-6 h-6 rounded-[3px] text-xs": size === "sm",
+                        "bg-white hover:drop-shadow-sm border hover:bg-primary-default hover:border-primary-default hover:text-white":
+                            shape === "outline",
+                        "bg-slate-100  hover:drop-shadow-sm hover:bg-primary-default hover:text-white":
+                            shape === "default",
                     },
                 )}
                 onClick={() => onChangeQuantity("plus")}

@@ -26,6 +26,16 @@ const TourListContainer: React.FC<TourListContainerProps> = async ({
         return item.template.cms.find((cmsItem) => cmsItem.lang === lang);
     };
 
+    const getMinAdultPrice = (pricingList: FeProductItem["configs"]) => {
+        let minPrice = 99999999999;
+        pricingList.forEach((item) => {
+            if (item.open > 0 && item.adult < minPrice) {
+                minPrice = item.adult;
+            }
+        });
+
+        return minPrice;
+    };
     return (
         <section className="tour__list-wraper">
             <div className="container mx-auto px-3 md:px-6 lg:px-8">
@@ -42,7 +52,9 @@ const TourListContainer: React.FC<TourListContainerProps> = async ({
                             name={getCmsContentByLang(product)?.name}
                             price={
                                 product.configs.length
-                                    ? moneyFormatVND(product.configs[0].adult)
+                                    ? moneyFormatVND(
+                                          getMinAdultPrice(product.configs),
+                                      )
                                     : undefined
                             }
                             departDate={formatDate(

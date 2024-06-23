@@ -1,13 +1,16 @@
-import { ELanguageActionType, LanguageActions } from "./actions";
-import { LanguageContentContainer } from "./type";
-export const initLanguageContextState = new LanguageContentContainer(
+import {
+    ELanguageActionType,
+    LanguageActions,
+} from "../actions/languageActions";
+import { LanguageContentContainer } from "../type";
+export const initLanguageState = new LanguageContentContainer(
     undefined,
     [],
     [],
 );
 
 export const languageReducer = (
-    state = initLanguageContextState,
+    state = initLanguageState,
     action: LanguageActions,
 ) => {
     switch (action.type) {

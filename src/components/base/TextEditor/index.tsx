@@ -62,6 +62,9 @@ const TextEditor = ({
                 }}
                 value={value}
                 init={{
+                    relative_urls: false,
+                    remove_script_host: false,
+                    convert_urls: true,
                     ui_mode: "split",
                     skin_url: "/assets/libs/tinymce/skins/ui/custom",
                     language_url: "/assets/libs/tinymce/langs/vi.js",

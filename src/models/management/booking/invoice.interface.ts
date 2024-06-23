@@ -1,9 +1,9 @@
 export interface IInvoice {
-    invoiceName: string;
-    invoiceCompanyName: string;
-    invoiceAddress: string;
-    invoiceTaxCode: string;
-    invoiceEmail: string;
+    invoiceName?: string;
+    invoiceCompanyName?: string;
+    invoiceAddress?: string;
+    invoiceTaxCode?: string;
+    invoiceEmail?: string;
 }
 
 export class InvoiceFormData {

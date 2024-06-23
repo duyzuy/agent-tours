@@ -1,34 +1,35 @@
-import IconCalendar from "@/assets/icons/IconCalendar";
-import IconChevronRight from "@/assets/icons/IconChevronRight";
-import IconHotel from "@/assets/icons/IconHotel";
-import IconMeal from "@/assets/icons/IconMeal";
-import IconPlane from "@/assets/icons/IconPlane";
-import LineSpacing from "@/components/frontend/LineSpacing";
-import CustomTabs from "@/components/frontend/CustomTabs";
-
-import Image from "next/image";
-
-import {
-    IconScrollText,
-    IconCalendarCheck,
-    IconCalendarPlus,
-    IconClipboard,
-} from "@/assets/icons";
-
-import BookingBreakDownBox from "../_components/BookingBreakDownBox";
-import TourRelateds from "../_components/TourRelateds";
-import TourReviews from "../_components/TourReviews";
+import dynamic from "next/dynamic";
 import {
     getTemplateContentDetail,
     getSellableListByTemplateId,
 } from "../_actions/templateContent";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { BreadCrumb } from "@/components/frontend/BreadCrumb";
-import Galleries from "./_components/Galleries";
 import { notFound } from "next/navigation";
 import ProductHeader from "./_components/ProductHeader";
 import Benefit from "./_components/Benefit";
-import ProductContent from "./_components/ProductContent";
+
+import LineSpacing from "@/components/frontend/LineSpacing";
+const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
+    loading: () => <p>Loading galleries...</p>,
+    ssr: false,
+});
+
+const DynamicProductContent = dynamic(
+    () => import("./_components/ProductContent"),
+    {
+        loading: () => <p>Loading product content...</p>,
+        ssr: false,
+    },
+);
+
+const DynamicProductSummary = dynamic(
+    () => import("./_components/ProductSummary"),
+    {
+        loading: () => <p>Loading product summary...</p>,
+        ssr: false,
+    },
+);
 
 // export async function generateStaticParams() {
 //     const posts = await fetch('https://.../posts').then((res) => res.json())
@@ -63,11 +64,14 @@ export default async function PageTourDetail({
         (item) => item.recId === Number(sellableId),
     );
 
-    if (!cmsTemplateContent || !sellableList || !sellableList.length) {
+    if (
+        !cmsTemplateContent ||
+        !sellableList ||
+        !sellableList.length ||
+        !currentSellable
+    ) {
         notFound();
     }
-
-    console.log({ productResponse, cmsContentDetail });
 
     return (
         <div className="page-detail">
@@ -75,25 +79,32 @@ export default async function PageTourDetail({
             <div className="container mx-auto py-8">
                 <div className="flex flex-wrap">
                     <div
-                        className="tour-contents pr-8"
-                        style={{ width: "calc(100% - 380px)" }}
+                        className="tour-contents w-full lg:w-7/12"
+                        // style={{ width: "calc(100% - 380px)" }}
                     >
                         <ProductHeader
                             name={cmsTemplateContent.name}
                             tourCode={currentSellable?.template.code}
                         />
-                        <Galleries
-                            data={cmsContentDetail}
+
+                        <DynamicGalleries
+                            data={cmsTemplateContent}
                             data2={productResponse}
+                            images={cmsTemplateContent.images.listImage}
                         />
+
                         <Benefit items={cmsTemplateContent.metaData} />
                         <LineSpacing spaceY={12} />
-                        <ProductContent data={cmsTemplateContent} />
+                        <DynamicProductContent data={cmsTemplateContent} />
                         <div className="space h-8"></div>
                         {/* <TourRelateds className="mb-8" /> */}
                         {/* <TourReviews /> */}
                     </div>
-                    <BookingBreakDownBox className="w-full max-w-[380px] lg:block hidden" />
+                    <DynamicProductSummary
+                        defaultSellable={currentSellable}
+                        sellableList={sellableList}
+                        className="w-full lg:w-5/12 lg:pl-8 "
+                    />
                 </div>
             </div>
         </div>

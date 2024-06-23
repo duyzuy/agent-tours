@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { set } from "lodash";
 import { getTranslationFe } from "@/server/fe";
-import { LanguageProvider } from "./store/LanguageProvider";
+import { LanguageProvider } from "./store/providers/LanguageProvider";
 import LangContainer from "./containers/LangContainer";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
 import { locales } from "@/constants/locale.constant";
@@ -12,6 +12,7 @@ import Header from "./_components/commons/Header";
 import Footer from "./_components/commons/Footer";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import { FeBookingProvider } from "./store/providers/BookingProvider";
 
 interface Props {
     children: React.ReactNode;
@@ -61,10 +62,12 @@ export default async function RootClientLayout({
         <NextIntlClientProvider locale={locale} messages={output}>
             <NextAuthProvider session={session}>
                 <LanguageProvider>
-                    <LangContainer />
-                    <Header />
-                    {children}
-                    <Footer />
+                    <FeBookingProvider>
+                        <LangContainer />
+                        <Header />
+                        {children}
+                        <Footer />
+                    </FeBookingProvider>
                 </LanguageProvider>
             </NextAuthProvider>
         </NextIntlClientProvider>

@@ -1,17 +1,14 @@
 "use client";
-import { LanguageContext } from "./context";
+import { LanguageContext } from "../context";
 import { useReducer } from "react";
-import { initLanguageContextState } from "./reducer";
-import { languageReducer } from "./reducer";
+import { initLanguageState } from "../reducers";
+import { languageReducer } from "../reducers";
 type Props = {
     children?: React.ReactNode;
 };
 
 export const LanguageProvider = ({ children }: Props) => {
-    const [state, dispatch] = useReducer(
-        languageReducer,
-        initLanguageContextState,
-    );
+    const [state, dispatch] = useReducer(languageReducer, initLanguageState);
     return (
         <LanguageContext.Provider value={[state, dispatch]}>
             {children}
