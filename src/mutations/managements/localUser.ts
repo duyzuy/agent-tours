@@ -6,7 +6,7 @@ import {
 } from "@/models/management/localUser.interface";
 import { localUserAPIs } from "@/services/management/localUser.service";
 import { localAuthAPIs } from "@/services/management/localAuth.service";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import {
     ILocalUserProfileRs,
     ILocalUserProfilePayload,

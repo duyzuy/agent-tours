@@ -18,14 +18,14 @@ import { EInventoryType } from "@/models/management/core/inventoryType.interface
 import { EProductType } from "@/models/management/core/productType.interface";
 import { IDestination } from "@/models/management/region.interface";
 import { ITemplateSaleableListRs } from "@/models/management/core/templateSellable.interface";
-import { Status } from "@/models/management/common.interface";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { useGetDestinationsQuery } from "@/queries/misc/destination";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { TemplateSellableFormData } from "../../modules/templateSellable.interface";
 import { templateSellableSchema } from "../../schema/templateSellable.schema";
-
+import CMSTemplateSelectorContainer from "./CMSTemplateSelectorContainer";
+import { Status } from "@/models/common.interface";
 export enum EActionType {
     CREATE = "CREATE",
     EDIT = "EDIT",
@@ -213,22 +213,13 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
                 labelWrap
                 className="max-w-4xl"
             >
-                <FormItem
-                    label="Mẫu nội dung"
-                    required
-                    validateStatus={errors?.cmsIdentity ? "error" : ""}
-                    help={errors?.cmsIdentity || ""}
-                >
-                    <Select
-                        placeholder="Bản mẫu nội dung"
-                        value={templateSellableFormData.cmsIdentity}
-                        disabled={isWaitingApproval}
-                        onChange={(value) =>
-                            onChangeSellableFormData("cmsIdentity", value)
-                        }
-                        options={templateOptions}
-                    />
-                </FormItem>
+                <CMSTemplateSelectorContainer
+                    errors={errors?.cmsIdentity}
+                    onChange={(value) =>
+                        onChangeSellableFormData("cmsIdentity", value)
+                    }
+                    value={templateSellableFormData.cmsIdentity}
+                />
                 <FormItem
                     label="Tên nhóm sản phẩm"
                     required

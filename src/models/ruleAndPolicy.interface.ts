@@ -1,4 +1,4 @@
-import { BaseResponse } from "./management/common.interface";
+import { BaseResponse } from "./common.interface";
 import {
     PolicyCat,
     PolicyRule,

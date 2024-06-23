@@ -3,6 +3,7 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import { notFound } from "next/navigation";
 import { getPageContentDetail } from "../_actions/getPageContentDetail";
 import { mediaConfig } from "@/configs";
+import PageContainer from "../_components/PageContainer";
 
 type PageParams = { slug: string; locale: LangCode };
 
@@ -51,7 +52,6 @@ export default async function PageContentDetail({
         slug: params.slug,
     });
 
-    console.log(pageContent);
     if (!pageContent) {
         notFound();
     } else {
@@ -70,6 +70,7 @@ export default async function PageContentDetail({
                     <div className="post__page-head py-4">
                         <h1 className="text-xl">{pageContent.result.name}</h1>
                     </div>
+                    <PageContainer data={pageContent.result} />
                     <div className="post__page-body">
                         {/* <div className="page__thumbnail">
                             {pageContent.result.thumbnail ? (

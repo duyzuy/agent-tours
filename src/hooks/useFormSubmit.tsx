@@ -1,5 +1,6 @@
 import { ValidationError, Schema } from "yup";
 import { useState, useEffect, useCallback } from "react";
+import { zipObjectDeep } from "lodash";
 
 type FieldKeys<T> = keyof (T extends Array<infer U>
     ? U
@@ -46,52 +47,56 @@ export function useFormSubmit<T extends object | undefined>({
                                 }[] = Array.isArray(formData) ? [] : {};
 
                           error.inner.forEach((err) => {
-                              const { path } = err;
+                              const { path, message } = err;
+
                               if (path) {
+                                  //   console.log(
+                                  //       zipObjectDeep([path], [message, 1]),
+                                  //   );
+
                                   const pathSplit = path.split(".");
 
                                   const indexOfErr = Number(
                                       pathSplit[0].replace(/\D/g, ""),
                                   );
 
-                                  if (
-                                      pathSplit.length > 1 &&
-                                      Array.isArray(errors)
-                                  ) {
-                                      if (isNaN(indexOfErr)) {
-                                          throw new Error(
-                                              "index of Error is not number",
+                                  if (Array.isArray(errors)) {
+                                      if (pathSplit.length > 1) {
+                                          if (isNaN(indexOfErr)) {
+                                              throw new Error(
+                                                  "index of Error is not number",
+                                              );
+                                          }
+
+                                          const indexErr = errors.findIndex(
+                                              (err) => err.index === indexOfErr,
                                           );
-                                      }
 
-                                      const indexErr = errors.findIndex(
-                                          (err) => err.index === indexOfErr,
-                                      );
-
-                                      if (indexErr !== -1) {
-                                          errors.splice(indexErr, 1, {
-                                              ...errors[indexErr],
-                                              data: {
-                                                  ...errors[indexErr].data,
-                                                  [pathSplit[1]]: err.message,
-                                              },
-                                          });
-                                      } else {
-                                          errors = [
-                                              ...errors,
-                                              {
-                                                  index: indexOfErr,
+                                          if (indexErr !== -1) {
+                                              errors.splice(indexErr, 1, {
+                                                  ...errors[indexErr],
                                                   data: {
-                                                      [pathSplit[1]]:
-                                                          err.message,
+                                                      ...errors[indexErr].data,
+                                                      [pathSplit[1]]: message,
                                                   },
-                                              },
-                                          ] as ErrorsMesssageType<T>;
+                                              });
+                                          } else {
+                                              errors = [
+                                                  ...errors,
+                                                  {
+                                                      index: indexOfErr,
+                                                      data: {
+                                                          [pathSplit[1]]:
+                                                              message,
+                                                      },
+                                                  },
+                                              ] as ErrorsMesssageType<T>;
+                                          }
                                       }
                                   } else {
                                       errors = {
                                           ...(errors || {}),
-                                          [path]: err.message,
+                                          [path]: message,
                                       };
                                   }
                               }
@@ -112,9 +117,11 @@ export function useFormSubmit<T extends object | undefined>({
         inner.forEach((innerErr) => {
             const { path, message } = innerErr;
 
-            const pathArr = path?.split(".");
+            if (path) {
+                const pathArr = path.split(".");
 
-            pathArr;
+                pathArr;
+            }
         });
         //   const errIndex =
         //       pathSplit[0].match(/(?<=\[).+?(?=\])/g); remove two [ and ]

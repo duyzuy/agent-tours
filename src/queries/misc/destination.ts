@@ -5,7 +5,7 @@ import { destinationAPIs } from "@/services/management/misc/destination";
 import { isEmpty, isUndefined } from "lodash";
 import { localSearchAPIs } from "@/services/management/misc/localSearch";
 import { LocalSearchQueryParams } from "@/models/management/localSearchDestination.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 export const useGetDestinationsQuery = (options?: { enabled?: boolean }) => {
     const token = getAgToken() || "";

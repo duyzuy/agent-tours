@@ -34,7 +34,7 @@ export default config;
 
 export const coreAccountConfig = {
     privateKey: "OiH3bdXyJun1iEFbNMpkqaVIPhTAa8JSVGwsbBXL",
-    username: "admin",
+    userName: "admin",
     password: "test123",
     userId: "ANTHAI_DEMO",
 };

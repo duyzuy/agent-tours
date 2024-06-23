@@ -3,7 +3,7 @@ import { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
 import { Tag } from "antd";
 import { IOrderListRs } from "@/models/management/booking/order.interface";
-import { PaymentStatus, Status } from "@/models/management/common.interface";
+import { PaymentStatus, Status } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
 import Link from "next/link";
 
@@ -40,7 +40,7 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
                         {record.sellable.code}
                     </span>
                     <Link
-                        href={`./portal/manage-booking/${record.recId}`}
+                        href={`/portal/manage-booking/${record.recId}`}
                         className="block text-xs"
                     >
                         <span>Chi tiết</span>

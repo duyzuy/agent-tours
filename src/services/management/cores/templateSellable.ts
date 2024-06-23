@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import {
     ITemplateSaleableListRs,
@@ -15,7 +15,6 @@ export const templateSellableAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -28,7 +27,6 @@ export const templateSellableAPIs = {
                 },
                 pageCurrent: queryParams?.pageCurrent,
                 pageSize: queryParams?.pageSize,
-                localUsername: "99",
             },
         );
     },
@@ -39,7 +37,6 @@ export const templateSellableAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -51,7 +48,6 @@ export const templateSellableAPIs = {
                     recId,
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -62,7 +58,6 @@ export const templateSellableAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -73,7 +68,6 @@ export const templateSellableAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },

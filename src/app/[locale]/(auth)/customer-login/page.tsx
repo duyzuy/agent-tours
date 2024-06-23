@@ -1,9 +1,21 @@
-import Logo from "@/components/frontend/partials/Logo";
-import { Form, Input } from "antd";
+"use client";
 import Image from "next/image";
-import LoginForm from "./LoginForm";
-
+import LoginForm, { LoginFormProps } from "../_components/LoginForm";
+import { useTranslations } from "next-intl";
+import { useSignIn } from "../modules/useAuth";
+import { useSession } from "next-auth/react";
 const CustomerLogin = () => {
+    const t = useTranslations("String");
+
+    const data = useSession({
+        required: true,
+        onUnauthenticated() {
+            // The user is not authenticated, handle it here.
+        },
+    });
+    console.log(data);
+    const { signIn, error, loading } = useSignIn();
+
     return (
         <div className="login-page py-16 bg-slate-50">
             <div className="container mx-auto bg-white drop-shadow-lg rounded-lg overflow-hidden">
@@ -12,22 +24,25 @@ const CustomerLogin = () => {
                         <div className="login-form">
                             <div className="slogan py-2 mb-4">
                                 <p className="text-main-400 font-semibold uppercase">
-                                    by An Thái Travel
+                                    {t("byAgentName")}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                    Everything you need for a rewarding travel
-                                    career.
+                                    {t("slogan")}
                                 </p>
                             </div>
                             <div className="head mb-6">
                                 <h1 className="text-2xl font-semibold mb-2">
-                                    Đăng nhập
+                                    {t("login")}
                                 </h1>
                                 <p className="text-sm, text-gray-600 text-sm">
-                                    Vui lòng hoàn thành biểu mẫu bên dưới
+                                    {t("loginPage.note1")}
                                 </p>
                             </div>
-                            <LoginForm />
+                            <LoginForm
+                                onSubmit={signIn}
+                                error={error}
+                                loading={loading}
+                            />
                         </div>
                     </div>
                     <div className="w-full lg:w-1/2">

@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 
 import {
@@ -22,7 +22,6 @@ export const sellableAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -33,7 +32,6 @@ export const sellableAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -46,7 +44,6 @@ export const sellableAPIs = {
                 },
                 pageCurrent: queryParams?.pageCurrent,
                 pageSize: queryParams?.pageSize,
-                localUsername: "99",
             },
         );
     },
@@ -58,7 +55,6 @@ export const sellableAPIs = {
             requestObject: {
                 recId,
             },
-            localUsername: "99",
         });
     },
     getPriceConfigs: async (sellableRecId?: number) => {
@@ -68,7 +64,6 @@ export const sellableAPIs = {
                 requestObject: {
                     sellableRecId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -79,7 +74,6 @@ export const sellableAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },

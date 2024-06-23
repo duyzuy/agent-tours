@@ -3,12 +3,6 @@ import { queryCMS } from "../var";
 
 import { cmsTemplateAPIs } from "@/services/management/cms/cmsTemplate";
 import { getAgToken } from "@/utils/common";
-import {
-    IPageContentDetailRs,
-    PageContentQueryParams,
-} from "@/models/management/cms/pageContent.interface";
-import { LangCode } from "@/models/management/cms/language.interface";
-import { isUndefined } from "lodash";
 import { CMSTemplateQueryParams } from "@/models/management/cms/cmsTemplate.interface";
 
 export const useGetCMSTemplateListQuery = (
@@ -24,6 +18,18 @@ export const useGetCMSTemplateListQuery = (
                 pageCurrent: data.pageCurrent,
                 totalItems: data.totalItems,
             };
+        },
+        enabled: Boolean(getAgToken()),
+    });
+};
+
+export const useGetCMSTemplateDetailQuery = (code: string) => {
+    return useQuery({
+        queryKey: [queryCMS.GET_CMS_TEMPLATE_DETAIL, code],
+        queryFn: () =>
+            cmsTemplateAPIs.getList({ requestObject: { code: code } }),
+        select: (data) => {
+            return data.result[0];
         },
         enabled: Boolean(getAgToken()),
     });

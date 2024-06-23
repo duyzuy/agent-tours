@@ -10,7 +10,7 @@ import React, {
 import classNames from "classnames";
 import { IBookingItem } from "../../../modules/bookingInformation.interface";
 import PassengerForm, { PassengerFormProps } from "./PassengerForm";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { Space, Button } from "antd";

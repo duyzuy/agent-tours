@@ -1,7 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 import { Tag, Button } from "antd";
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IStockListOfInventoryRs } from "@/models/management/core/stock.interface";
 import { PlusOutlined } from "@ant-design/icons";
 

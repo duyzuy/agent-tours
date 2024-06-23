@@ -2,7 +2,7 @@ import { ColumnsType } from "antd/es/table";
 import Link from "next/link";
 import { Space, Tag } from "antd";
 import { IDestinationListRs } from "@/models/management/region.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
 export const columnsDestinationList: ColumnsType<
     IDestinationListRs["result"][0]

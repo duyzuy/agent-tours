@@ -76,3 +76,5 @@ export const PASSENGER_GENDER = [
     { label: "Nữ", value: EPassengerGender.MALE },
     { label: "Khác", value: EPassengerGender.OTHER },
 ];
+
+export const FE_PAGE_CONTENT_TYPE = ["page", "tour", "news", "information"];

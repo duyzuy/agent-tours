@@ -18,7 +18,7 @@ import DrawerInventory, {
     TDrawlerAction,
 } from "./_components/DrawerInventory";
 import useCRUDInventory from "./modules/useCRUDInventory";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { isUndefined } from "lodash";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";

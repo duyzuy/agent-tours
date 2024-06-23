@@ -8,7 +8,7 @@ import { getPassengerType } from "@/utils/common";
 import { moneyFormatVND } from "@/utils/helper";
 import { TServiceItemType } from "../../page";
 import useMessage from "@/hooks/useMessage";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { isUndefined } from "lodash";
 import { Button } from "antd";
 import DrawerServiceItem, {

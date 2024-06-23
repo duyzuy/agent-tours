@@ -2,7 +2,7 @@
 import { serverRequest } from "@/services/serverApi";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { IPageContentDetailPerLangRs } from "@/models/management/cms/pageContent.interface";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 
 export const getPageContentDetail = async (payload?: {
     lang?: LangCode;

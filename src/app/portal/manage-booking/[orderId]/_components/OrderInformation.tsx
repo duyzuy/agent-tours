@@ -1,6 +1,6 @@
 import React, { memo, useState, useCallback } from "react";
 import classNames from "classnames";
-import { PaymentStatus } from "@/models/management/common.interface";
+import { PaymentStatus } from "@/models/common.interface";
 import { Button, Tag, Form, Input, Space } from "antd";
 import { isEmpty } from "lodash";
 import ModalCancelBookingConfirmation from "./BookingOrderActions/ModalCanelBookingConfirmation";

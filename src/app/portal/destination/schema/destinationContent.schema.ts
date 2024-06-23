@@ -3,7 +3,6 @@ import {
     IDestinationContentPayload,
     IDestinationPayload,
 } from "@/models/management/region.interface";
-import { Status } from "@/models/management/common.interface";
 import { LocalSearchFormData } from "@/models/management/localSearchDestination.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 

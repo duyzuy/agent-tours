@@ -5,7 +5,6 @@ import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { bookingAPIs } from "@/services/management/booking/searchTour";
 import { BookingOrderListQueryParams } from "@/models/management/booking/reservation.interface";
 import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
-import { Status } from "@/models/management/common.interface";
 import { FormOfPaymmentQueryParams } from "@/models/management/core/formOfPayment.interface";
 
 export const useGetBookingOrderListCoreQuery = ({

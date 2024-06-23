@@ -39,6 +39,7 @@ interface StockFormContainerProps {
     inventoryList?: IInventoryListRs["result"];
     onSubmit?: ({ data }: { data: StockFormData }, cb?: () => void) => void;
     onCancel: () => void;
+    loading?: boolean;
 }
 type TRepeatType = "day" | "week";
 
@@ -47,6 +48,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     inventoryList,
     onSubmit,
     onCancel,
+    loading,
 }) => {
     const initStockFormData = new StockFormData(
         curInventory?.recId,
@@ -703,6 +705,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                                 onSubmitFormData,
                             )
                         }
+                        loading={loading}
                     >
                         Tạo kho
                     </Button>

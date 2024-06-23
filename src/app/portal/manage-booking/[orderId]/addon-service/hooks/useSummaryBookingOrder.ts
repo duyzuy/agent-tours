@@ -1,7 +1,7 @@
 import { useSelectorManageBooking } from "../../hooks/useManageBooking";
 import { useState, useMemo } from "react";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 const useSummaryBookingOrder = () => {
     const [orderSummary, setOrderSummary] = useState({});
     const orderDetail = useSelectorManageBooking((state) => state.order);

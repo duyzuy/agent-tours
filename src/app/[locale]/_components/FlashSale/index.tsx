@@ -33,17 +33,17 @@ const FlashSale = () => {
                     <div className="items flex flex-wrap -mx-3 flex-1">
                         <TourCard
                             thumbnail="/assets/images/article-1.jpg"
-                            title=" Liên Tuyến Trung Bắc: Đà Nẵng - Huế - Động Phong Nha & Thiên Đường"
+                            name=" Liên Tuyến Trung Bắc: Đà Nẵng - Huế - Động Phong Nha & Thiên Đường"
                             className="w-1/2 lg:w-1/3 px-3 lg:mb-0 mb-6"
                         />
                         <TourCard
                             thumbnail="/assets/images/article-2.jpg"
-                            title=" Liên Tuyến Trung Bắc: Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ"
+                            name=" Liên Tuyến Trung Bắc: Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ"
                             className="w-1/2 lg:w-1/3 px-3 lg:mb-0 mb-6"
                         />
                         <TourCard
                             thumbnail="/assets/images/article-3.jpg"
-                            title="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
+                            name="Động Phong Nha & Thiên Đường - Bà Nà - Cầu Vàng - Hội An - Hà Nội - Sapa - Fansipan - Vịnh Hạ
                     Long"
                             className="w-1/2 lg:w-1/3 px-3 lg:mb-0 mb-6"
                         />

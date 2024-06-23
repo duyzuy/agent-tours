@@ -16,7 +16,7 @@ import StockListContainer from "../../stock/_components/StockListContainer";
 import { StockQueryParams } from "@/models/management/core/stock.interface";
 import { DATE_TIME_FORMAT } from "@/constants/common";
 import dayjs from "dayjs";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
 import { LINKS } from "@/constants/links.constant";
 

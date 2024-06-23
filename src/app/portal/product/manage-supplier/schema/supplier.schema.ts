@@ -1,6 +1,6 @@
 import { object, string, ObjectSchema, number } from "yup";
 
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 import { SupplierFormData } from "../modules/manageSupplier.interface";
 

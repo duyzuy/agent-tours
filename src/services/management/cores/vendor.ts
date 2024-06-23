@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import {
     VendorListRs,
@@ -19,7 +19,6 @@ export const vendorAPIs = {
                 },
                 pageCurrent: queryParams?.pageCurrent,
                 pageSize: queryParams?.pageSize,
-                localUsername: "99",
             },
         );
     },
@@ -30,7 +29,6 @@ export const vendorAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -41,7 +39,6 @@ export const vendorAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -52,7 +49,6 @@ export const vendorAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -63,7 +59,6 @@ export const vendorAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -74,7 +69,6 @@ export const vendorAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -85,7 +79,6 @@ export const vendorAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },

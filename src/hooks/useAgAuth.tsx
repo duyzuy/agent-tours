@@ -1,5 +1,11 @@
 import { useCallback, useState } from "react";
-import { getAgToken, removeAgToken, setAgToken } from "@/utils/common";
+import {
+    getAgToken,
+    removeAgToken,
+    setAgToken,
+    setLocalUserName,
+    removeLocalUserName,
+} from "@/utils/common";
 
 const useAuth = () => {
     const [tokenState, setStateToken] = useState(getAgToken());
@@ -11,7 +17,14 @@ const useAuth = () => {
         [setAgToken],
     );
 
-    return { token: tokenState, setToken, isAuth: !!tokenState, clearToken: removeAgToken };
+    return {
+        token: tokenState,
+        setToken,
+        isAuth: !!tokenState,
+        clearToken: removeAgToken,
+        setLocalUserName,
+        removeLocalUserName,
+    };
 };
 
 export default useAuth;

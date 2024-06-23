@@ -1,5 +1,5 @@
 import { SearchBookingFormData } from "./searchBooking.interface";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
 import { IProductItem } from "@/models/management/booking/productItem.interface";
 import { IReservation } from "@/models/management/booking/reservation.interface";

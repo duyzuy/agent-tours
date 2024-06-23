@@ -1,6 +1,6 @@
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IInventoryPayload } from "@/models/management/core/inventory.interface";
 
 export class InventoryFormData implements IInventoryPayload {

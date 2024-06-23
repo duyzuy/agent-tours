@@ -15,7 +15,7 @@ import DrawerStockDetail, {
     DrawerStockDetailProps,
     EActionType,
 } from "../DrawerStockDetail";
-import { BaseResponse, Status } from "@/models/management/common.interface";
+import { BaseResponse, Status } from "@/models/common.interface";
 import { PaginationProps } from "antd";
 
 export interface StockListContainerProps {

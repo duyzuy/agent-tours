@@ -7,7 +7,6 @@ import { useGetRegionList } from "@/queries/core/region";
 
 import { useGetLocalSearchListMISCQuery } from "@/queries/misc/destination";
 
-import { Status } from "@/models/management/common.interface";
 import { LocalSearchDestinationListRs } from "@/models/management/localSearchDestination.interface";
 import DrawerGroupSearch, {
     DrawerGroupSearchProps,

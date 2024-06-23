@@ -1,7 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 import { Tag } from "antd";
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { SellableListRs } from "@/models/management/core/sellable.interface";
 
 export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [

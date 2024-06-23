@@ -10,7 +10,7 @@ import { IOrderListRs } from "@/models/management/booking/order.interface";
 import { useLocalGetRuleAndPolicyQuery } from "@/queries/ruleAndPolicy";
 import { Form, Row, Select, Col, DatePickerProps, PaginationProps } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import { DATE_FORMAT } from "@/constants/common";

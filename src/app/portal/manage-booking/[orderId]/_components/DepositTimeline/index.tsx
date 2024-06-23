@@ -9,7 +9,7 @@ import {
     CloseCircleOutlined,
     LoadingOutlined,
 } from "@ant-design/icons";
-import { PaymentStatus } from "@/models/management/common.interface";
+import { PaymentStatus } from "@/models/common.interface";
 interface DepositTimelineProps {
     depositTimelimits?: IDepositTimelimit[];
     paymentStatus?: PaymentStatus;

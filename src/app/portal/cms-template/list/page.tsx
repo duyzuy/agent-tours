@@ -3,50 +3,69 @@ import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
 import { useRouter } from "next/navigation";
-import { LINKS } from "@/constants/links.constant";
+
 import { useGetCMSTemplateListQuery } from "@/queries/cms/cmsTemplate";
-import { columns, PageContentDataType } from "./columns";
-import { useMemo } from "react";
-import { CMSTemplateQueryParams } from "@/models/management/cms/cmsTemplate.interface";
-import { LangCode } from "@/models/management/cms/language.interface";
-import DrawerCMSTemplate from "../_components/DrawerCMSTemplate";
+import { columns } from "./columns";
+
+import {
+    CMSTemplateQueryParams,
+    ICMSTemplate,
+} from "@/models/management/cms/cmsTemplate.interface";
+
+import DrawerCMSTemplate, {
+    DrawerCMSTemplateProps,
+} from "../_components/DrawerCMSTemplate";
+import useCreateCMSTemplate from "../modules/useCRUDCMSTemplate";
 const CMSTemplatePageList = () => {
     const router = useRouter();
     const [showDrawer, setShowDrawer] = useState(false);
+    const [editRecord, setEditRecord] = useState<ICMSTemplate>();
+    const [action, setAction] = useState<"create" | "edit">("create");
     const [queryParams, setQueryParams] = useState(
-        () =>
-            new CMSTemplateQueryParams(
-                {
-                    // lang: LangCode.VI,
-                    id: 275,
-                },
-                1,
-                10,
-            ),
+        () => new CMSTemplateQueryParams(undefined, 1, 10),
     );
+    const onEditCSMTemplate = (record: ICMSTemplate) => {
+        setAction("edit");
+        setEditRecord(record);
+        setShowDrawer(true);
+    };
     const { data: templateData, isLoading } =
         useGetCMSTemplateListQuery(queryParams);
+    const { onCreateTemplate, onUpdateTemplate } = useCreateCMSTemplate();
 
-    console.log(templateData);
-    // () => router.push(LINKS.CMSTemplateCreate)
+    const closeDrawer = () => {
+        setShowDrawer(false);
+        setEditRecord(undefined);
+    };
+    const handleSubmitForm: DrawerCMSTemplateProps["onSubmit"] = (formData) => {
+        if (action === "create") {
+            onCreateTemplate(formData, () => {
+                setShowDrawer(false);
+            });
+        }
+        if (action === "edit") {
+            onUpdateTemplate(formData, () => {
+                closeDrawer();
+            });
+        }
+    };
+
     return (
         <PageContainer
-            name="Cms template"
+            name="Danh sách template"
             modelName="template"
             onClick={() => setShowDrawer(true)}
-            breadCrumItems={[{ title: "Cms template" }]}
+            breadCrumItems={[{ title: "Danh sách template" }]}
         >
-            <TableListPage<PageContentDataType>
+            <TableListPage<ICMSTemplate>
                 scroll={{ x: 1000 }}
                 modelName="Trang nội dung"
-                dataSource={[]}
-                rowKey={"id"}
+                dataSource={templateData?.list || []}
+                rowKey={"code"}
                 size="small"
                 columns={columns}
                 isLoading={isLoading}
-                onEdit={(record) =>
-                    router.push(`./portal/contents/page/${record.originId}`)
-                }
+                onEdit={(record) => onEditCSMTemplate(record)}
                 pagination={{
                     total: templateData?.totalItems,
                     pageSize: templateData?.pageSize,
@@ -58,10 +77,14 @@ const CMSTemplatePageList = () => {
                         })),
                 }}
                 showActionsLess={false}
+                fixedActionsColumn={false}
             />
             <DrawerCMSTemplate
+                action={action}
                 isOpen={showDrawer}
-                onClose={() => setShowDrawer(false)}
+                onClose={closeDrawer}
+                onSubmit={handleSubmitForm}
+                initialValue={editRecord}
             />
         </PageContainer>
     );

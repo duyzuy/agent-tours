@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { SearchBookingFormData } from "../modules/searchBooking.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { MONTH_FORMAT } from "@/constants/common";
 import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
 const isValidDateFormat = (value: string) => {

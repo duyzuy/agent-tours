@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Button, Space } from "antd";
 import { useRouter } from "next/navigation";
-import { PaymentStatus } from "@/models/management/common.interface";
+import { PaymentStatus } from "@/models/common.interface";
 import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
 import { FOPFormData } from "../../modules/formOfPayment.interface";
 import DrawerPaymentList from "./formOfPayment/DrawerPaymentList";

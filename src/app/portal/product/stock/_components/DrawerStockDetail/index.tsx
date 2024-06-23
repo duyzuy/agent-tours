@@ -1,7 +1,7 @@
 import React from "react";
 import { Drawer, Tag, List, Divider } from "antd";
 
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IStockListOfInventoryRs } from "@/models/management/core/stock.interface";
 import {
     StockAdjustFormData,

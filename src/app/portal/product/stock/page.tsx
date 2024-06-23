@@ -15,7 +15,7 @@ import { isUndefined } from "lodash";
 import { StockQueryParams } from "@/models/management/core/stock.interface";
 import { DATE_TIME_FORMAT } from "@/constants/common";
 import dayjs from "dayjs";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { RangePickerProps } from "antd/es/date-picker";
 import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
@@ -51,7 +51,8 @@ const StockPage = () => {
         pageCurrent,
         totalItems,
     } = stockResponse || {};
-    const { onCreate, onConfirm, onAdjustQuantity } = useCRUDStockInventory();
+    const { onCreate, onConfirm, onAdjustQuantity, loading } =
+        useCRUDStockInventory();
 
     const onChangeValidDate: RangePickerProps["onChange"] = (dates) => {
         setStockQueryParams((prev) => ({
@@ -87,16 +88,158 @@ const StockPage = () => {
     };
     const onChangePage: StockListContainerProps["onChangeStockPage"] = (
         page,
+        pageSize,
     ) => {
-        setStockQueryParams((prev) => ({ ...prev, pageCurrent: page }));
+        setStockQueryParams((prev) => ({
+            ...prev,
+            pageCurrent: page,
+            pageSize: pageSize,
+        }));
     };
     const onCancel = () => {
         setStockTabKey("stockList");
     };
+
+    const renderSearchStockList = () => {
+        return (
+            <div className="stock-list-filter pt-3">
+                <Form layout="vertical">
+                    <Row gutter={12}>
+                        <Col>
+                            <FormItem>
+                                <FilterOutlined /> Lọc
+                            </FormItem>
+                        </Col>
+                        <Col span={4}>
+                            <FormItem>
+                                <Select
+                                    placeholder="Chọn nhóm kho"
+                                    value={
+                                        stockQueryParams?.requestObject
+                                            ?.inventoryId
+                                    }
+                                    fieldNames={{
+                                        value: "recId",
+                                        label: "name",
+                                    }}
+                                    options={inventoryList}
+                                    onChange={(value) =>
+                                        setStockQueryParams((prev) => ({
+                                            ...prev,
+                                            requestObject: {
+                                                ...prev.requestObject,
+                                                inventoryId: value,
+                                            },
+                                        }))
+                                    }
+                                />
+                            </FormItem>
+                        </Col>
+                        <Col span={4}>
+                            <FormItem>
+                                <Select
+                                    value={
+                                        stockQueryParams?.requestObject
+                                            ?.status ?? "All"
+                                    }
+                                    options={[
+                                        {
+                                            label: "Tất cả trạng thái",
+                                            value: "All",
+                                        },
+                                        {
+                                            label: "Đã duyệt",
+                                            value: Status.OK,
+                                        },
+                                        {
+                                            label: "Chờ duyệt",
+                                            value: Status.QQ,
+                                        },
+                                    ]}
+                                    onChange={(value) =>
+                                        setStockQueryParams((prev) => ({
+                                            ...prev,
+                                            requestObject: {
+                                                ...prev.requestObject,
+                                                status:
+                                                    value === "All"
+                                                        ? undefined
+                                                        : (value as Status),
+                                            },
+                                        }))
+                                    }
+                                />
+                            </FormItem>
+                        </Col>
+                        <Col span={6}>
+                            <FormItem>
+                                <CustomRangePicker
+                                    placeholder={["Mở bán từ", "Mở bán đến"]}
+                                    format={"DD/MM/YYYY"}
+                                    value={[
+                                        stockQueryParams?.requestObject?.valid
+                                            ? dayjs(
+                                                  stockQueryParams.requestObject
+                                                      .valid,
+                                                  {
+                                                      format: DATE_TIME_FORMAT,
+                                                  },
+                                              )
+                                            : null,
+                                        stockQueryParams?.requestObject?.validTo
+                                            ? dayjs(
+                                                  stockQueryParams.requestObject
+                                                      .validTo,
+                                                  {
+                                                      format: DATE_TIME_FORMAT,
+                                                  },
+                                              )
+                                            : null,
+                                    ]}
+                                    onChange={onChangeValidDate}
+                                    className="w-full"
+                                />
+                            </FormItem>
+                        </Col>
+                        <Col span={6}>
+                            <FormItem>
+                                <CustomRangePicker
+                                    placeholder={["Sử dụng từ", "Sử dụng đến"]}
+                                    format={"DD/MM/YYYY"}
+                                    value={[
+                                        stockQueryParams?.requestObject?.start
+                                            ? dayjs(
+                                                  stockQueryParams.requestObject
+                                                      .start,
+                                                  {
+                                                      format: DATE_TIME_FORMAT,
+                                                  },
+                                              )
+                                            : null,
+                                        stockQueryParams?.requestObject?.end
+                                            ? dayjs(
+                                                  stockQueryParams.requestObject
+                                                      .end,
+                                                  {
+                                                      format: DATE_TIME_FORMAT,
+                                                  },
+                                              )
+                                            : null,
+                                    ]}
+                                    onChange={onChangeUsedDate}
+                                    className="w-full"
+                                />
+                            </FormItem>
+                        </Col>
+                    </Row>
+                </Form>
+            </div>
+        );
+    };
     const tabItems: TabsProps["items"] = [
         {
             key: "stockList",
-            label: "Danh sách kho sản phẩm",
+            label: "Danh sách kho dịch vụ",
             children: (
                 <StockListContainer
                     items={stockList || []}
@@ -107,178 +250,19 @@ const StockPage = () => {
                     onConfirm={onConfirm}
                     onAdjustQuantity={onAdjustQuantity}
                     onChangeStockPage={onChangePage}
-                    render={() => {
-                        return (
-                            <div className="stock-list-filter pt-3">
-                                <Form layout="vertical">
-                                    <Row gutter={12}>
-                                        <Col>
-                                            <FormItem>
-                                                <FilterOutlined /> Lọc
-                                            </FormItem>
-                                        </Col>
-                                        <Col span={4}>
-                                            <FormItem>
-                                                <Select
-                                                    placeholder="Chọn nhóm kho"
-                                                    value={
-                                                        stockQueryParams
-                                                            ?.requestObject
-                                                            ?.inventoryId
-                                                    }
-                                                    fieldNames={{
-                                                        value: "recId",
-                                                        label: "name",
-                                                    }}
-                                                    options={inventoryList}
-                                                    onChange={(value) =>
-                                                        setStockQueryParams(
-                                                            (prev) => ({
-                                                                ...prev,
-                                                                requestObject: {
-                                                                    ...prev.requestObject,
-                                                                    inventoryId:
-                                                                        value,
-                                                                },
-                                                            }),
-                                                        )
-                                                    }
-                                                />
-                                            </FormItem>
-                                        </Col>
-                                        <Col span={4}>
-                                            <FormItem>
-                                                <Select
-                                                    value={
-                                                        stockQueryParams
-                                                            ?.requestObject
-                                                            ?.status ?? "All"
-                                                    }
-                                                    options={[
-                                                        {
-                                                            label: "Tất cả trạng thái",
-                                                            value: "All",
-                                                        },
-                                                        {
-                                                            label: "Đã duyệt",
-                                                            value: Status.OK,
-                                                        },
-                                                        {
-                                                            label: "Chờ duyệt",
-                                                            value: Status.QQ,
-                                                        },
-                                                    ]}
-                                                    onChange={(value) =>
-                                                        setStockQueryParams(
-                                                            (prev) => ({
-                                                                ...prev,
-                                                                requestObject: {
-                                                                    ...prev.requestObject,
-                                                                    status:
-                                                                        value ===
-                                                                        "All"
-                                                                            ? undefined
-                                                                            : (value as Status),
-                                                                },
-                                                            }),
-                                                        )
-                                                    }
-                                                />
-                                            </FormItem>
-                                        </Col>
-                                        <Col span={6}>
-                                            <FormItem>
-                                                <CustomRangePicker
-                                                    placeholder={[
-                                                        "Mở bán từ",
-                                                        "Mở bán đến",
-                                                    ]}
-                                                    format={"DD/MM/YYYY"}
-                                                    value={[
-                                                        stockQueryParams
-                                                            ?.requestObject
-                                                            ?.valid
-                                                            ? dayjs(
-                                                                  stockQueryParams
-                                                                      .requestObject
-                                                                      .valid,
-                                                                  {
-                                                                      format: DATE_TIME_FORMAT,
-                                                                  },
-                                                              )
-                                                            : null,
-                                                        stockQueryParams
-                                                            ?.requestObject
-                                                            ?.validTo
-                                                            ? dayjs(
-                                                                  stockQueryParams
-                                                                      .requestObject
-                                                                      .validTo,
-                                                                  {
-                                                                      format: DATE_TIME_FORMAT,
-                                                                  },
-                                                              )
-                                                            : null,
-                                                    ]}
-                                                    onChange={onChangeValidDate}
-                                                    className="w-full"
-                                                />
-                                            </FormItem>
-                                        </Col>
-                                        <Col span={6}>
-                                            <FormItem>
-                                                <CustomRangePicker
-                                                    placeholder={[
-                                                        "Sử dụng từ",
-                                                        "Sử dụng đến",
-                                                    ]}
-                                                    format={"DD/MM/YYYY"}
-                                                    value={[
-                                                        stockQueryParams
-                                                            ?.requestObject
-                                                            ?.start
-                                                            ? dayjs(
-                                                                  stockQueryParams
-                                                                      .requestObject
-                                                                      .start,
-                                                                  {
-                                                                      format: DATE_TIME_FORMAT,
-                                                                  },
-                                                              )
-                                                            : null,
-                                                        stockQueryParams
-                                                            ?.requestObject?.end
-                                                            ? dayjs(
-                                                                  stockQueryParams
-                                                                      .requestObject
-                                                                      .end,
-                                                                  {
-                                                                      format: DATE_TIME_FORMAT,
-                                                                  },
-                                                              )
-                                                            : null,
-                                                    ]}
-                                                    onChange={onChangeUsedDate}
-                                                    className="w-full"
-                                                />
-                                            </FormItem>
-                                        </Col>
-                                    </Row>
-                                </Form>
-                            </div>
-                        );
-                    }}
+                    render={renderSearchStockList}
                 />
             ),
         },
         {
             key: "createStock",
-            label: "Tạo kho sản phẩm",
+            label: "Tạo kho dịch vụ",
             children: (
                 <StockFormContainer
                     inventoryList={inventoryList}
                     onSubmit={onCreate}
                     onCancel={onCancel}
+                    loading={loading}
                 />
             ),
             icon: <PlusOutlined />,
@@ -287,9 +271,9 @@ const StockPage = () => {
 
     return (
         <PageContainer
-            name={"Kho sản phẩm"}
-            modelName="Kho sản phẩm"
-            breadCrumItems={[{ title: "Kho sản phẩm" }]}
+            name={"Kho dịch vụ"}
+            modelName="Kho dịch vụ"
+            breadCrumItems={[{ title: "Kho dịch vụ" }]}
             hideAddButton
         >
             <Tabs

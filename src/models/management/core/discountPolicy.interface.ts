@@ -1,4 +1,4 @@
-import { BaseResponse, Status } from "../common.interface";
+import { BaseResponse, Status } from "../../common.interface";
 import { IDestination } from "../region.interface";
 
 export enum DiscountType {

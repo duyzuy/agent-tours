@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { templateSellableAPIs } from "@/services/management/cores/templateSellable";
 
 import {

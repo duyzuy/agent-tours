@@ -18,12 +18,12 @@ interface TourBoxItemProps {
     hideBoxNotSelect: boolean;
     onSelect: () => void;
 }
-export const TourBoxItem: React.FC<TourBoxItemProps> = ({
+export const TourBoxItem = ({
     tour,
     isSelected,
     onSelect,
     hideBoxNotSelect,
-}) => {
+}: TourBoxItemProps) => {
     return (
         <WrapTourBoxItem
             className={classNames("tour__box__item border", {
@@ -63,61 +63,13 @@ export const TourBoxItem: React.FC<TourBoxItemProps> = ({
                             </div>
                         </div>
                     </div>
-
-                    <div className="tour__box__item-pricing-actions w-[380px]">
-                        <div className="flex items-center justify-end">
-                            {tour.open === 0 ? (
-                                <span className="w-32 block bg-slate-50 text-center px-3 py-2 rounded-sm">
-                                    Đã hết
-                                </span>
-                            ) : (
-                                <>
-                                    <div className="text-right mr-8">
-                                        <span className="block text-xs">
-                                            Giá chỉ từ
-                                        </span>
-                                        <span className="price-amount text-2xl text-primary-default font-semibold">
-                                            {moneyFormatVND(
-                                                getLowestPrice(tour.configs),
-                                            )}
-                                        </span>
-                                    </div>
-                                    {isSelected ? (
-                                        <span className="flex items-center text-primary-default">
-                                            <span className="bg-primary-default w-6 h-6 rounded-full text-white inline-flex items-center justify-center">
-                                                <CheckOutlined />
-                                            </span>
-                                        </span>
-                                    ) : (
-                                        <div className="action text-right">
-                                            <Space>
-                                                {tour.promotions.map((promo) =>
-                                                    promo.isValid ? (
-                                                        <span
-                                                            key={promo.name}
-                                                            className="border border-dashed inline-block px-2 rounded-sm text-xs bg-emerald-100 border-emerald-400 text-emerald-500 mb-2"
-                                                        >
-                                                            {`Giảm ${moneyFormatVND(
-                                                                promo.discountAmount,
-                                                            )}`}
-                                                        </span>
-                                                    ) : null,
-                                                )}
-                                            </Space>
-                                            <span className="block mb-2 rounded-sm text-xs">{`Số lượng đang còn ${tour.open}`}</span>
-                                            <Button
-                                                type="primary"
-                                                className="w-32"
-                                                onClick={onSelect}
-                                            >
-                                                Chọn
-                                            </Button>
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                    </div>
+                    <TourBoxItem.TourActions
+                        openAmount={tour.open}
+                        pricings={tour.configs}
+                        isSelected={isSelected}
+                        promotions={tour.promotions}
+                        onClick={onSelect}
+                    />
                 </div>
             </div>
         </WrapTourBoxItem>
@@ -174,3 +126,76 @@ const WrapTourBoxItem = styled("div")`
         font-weight: 500;
     }
 `;
+
+interface TourActionProps {
+    openAmount?: number;
+    pricings: IProductItem["configs"];
+    isSelected?: boolean;
+    promotions?: IProductItem["promotions"];
+    onClick?: () => void;
+}
+TourBoxItem.TourActions = function TourActions({
+    isSelected,
+
+    promotions,
+    pricings,
+    openAmount,
+    onClick,
+}: TourActionProps) {
+    return (
+        <div className="tour__box__item-pricing-actions w-[380px]">
+            <div className="flex items-center justify-end">
+                {openAmount === 0 ? (
+                    <span className="w-32 block bg-slate-50 text-center px-3 py-2 rounded-sm">
+                        Đã hết
+                    </span>
+                ) : !pricings.length ? (
+                    <span className="w-32 block bg-slate-50 text-center px-3 py-2 rounded-sm">
+                        Chưa có giá bán
+                    </span>
+                ) : (
+                    <React.Fragment>
+                        <div className="text-right mr-8">
+                            <span className="block text-xs">Giá chỉ từ</span>
+                            <span className="price-amount text-2xl text-primary-default font-semibold">
+                                {moneyFormatVND(getLowestPrice(pricings))}
+                            </span>
+                        </div>
+                        {isSelected ? (
+                            <span className="flex items-center text-primary-default">
+                                <span className="bg-primary-default w-6 h-6 rounded-full text-white inline-flex items-center justify-center">
+                                    <CheckOutlined />
+                                </span>
+                            </span>
+                        ) : (
+                            <div className="action text-right">
+                                <Space>
+                                    {promotions?.map((promo) =>
+                                        promo.isValid ? (
+                                            <span
+                                                key={promo.name}
+                                                className="border border-dashed inline-block px-2 rounded-sm text-xs bg-emerald-100 border-emerald-400 text-emerald-500 mb-2"
+                                            >
+                                                {`Giảm ${moneyFormatVND(
+                                                    promo.discountAmount,
+                                                )}`}
+                                            </span>
+                                        ) : null,
+                                    )}
+                                </Space>
+                                <span className="block mb-2 rounded-sm text-xs">{`Số lượng đang còn ${openAmount}`}</span>
+                                <Button
+                                    type="primary"
+                                    className="w-32"
+                                    onClick={onClick}
+                                >
+                                    Chọn
+                                </Button>
+                            </div>
+                        )}
+                    </React.Fragment>
+                )}
+            </div>
+        </div>
+    );
+};

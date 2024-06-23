@@ -1,7 +1,7 @@
 import { getAgToken } from "@/utils/common";
 import { client } from "@/services/api";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { ITranslationRs } from "@/models/management/cms/translations.interface";
 import { ITranslationPayload } from "@/models/management/cms/translations.interface";
 export const translationAPIs = {

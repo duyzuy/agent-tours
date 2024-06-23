@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import classNames from "classnames";
-import { PaymentStatus } from "@/models/management/common.interface";
+import { PaymentStatus } from "@/models/common.interface";
 import { Tag } from "antd";
 
 interface TourBookingInfoProps {

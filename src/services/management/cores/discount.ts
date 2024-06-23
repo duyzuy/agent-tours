@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import {
     DisCountQueryParams,
@@ -15,7 +15,6 @@ export const discountAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -26,7 +25,6 @@ export const discountAPIs = {
                 requestObject: { ...queryParams?.requestObject },
                 pageCurrent: queryParams?.pageCurrent,
                 pageSize: queryParams?.pageSize,
-                localUsername: "99",
             },
         );
     },
@@ -36,7 +34,6 @@ export const discountAPIs = {
             "core/Dc_Confirm",
             {
                 requestObject: { ...payload },
-                localUsername: "99",
             },
         );
     },
@@ -45,7 +42,6 @@ export const discountAPIs = {
             "core/Dc_Deactive",
             {
                 requestObject: { ...payload },
-                localUsername: "99",
             },
         );
     },
@@ -61,7 +57,6 @@ export const discountAPIs = {
             "core/Dc_CheckAvailability",
             {
                 requestObject: { ...payload },
-                localUsername: "99",
             },
         );
     },

@@ -9,7 +9,7 @@ import {
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryMisc } from "@/queries/var";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 export type TDestinationErrorsField = Partial<
     Record<
         keyof Pick<

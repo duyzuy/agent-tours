@@ -1,7 +1,7 @@
 import { destinationAPIs } from "@/services/management/misc/destination";
 import { localSearchAPIs } from "@/services/management/misc/localSearch";
 import { useMutation } from "@tanstack/react-query";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import {
     IDestinationContentPayload,
     IDestinationContentRs,

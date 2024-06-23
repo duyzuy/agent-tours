@@ -1,5 +1,5 @@
-import { BaseResponse, PaymentStatus } from "../common.interface";
-import { Status } from "../common.interface";
+import { BaseResponse, PaymentStatus } from "../../common.interface";
+import { Status } from "../../common.interface";
 import { ITemplateSellable } from "../core/templateSellable.interface";
 import { ISellable } from "../core/sellable.interface";
 import { PriceConfig } from "../core/priceConfig.interface";

@@ -1,7 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 import { Space, Tag, Table, Button } from "antd";
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import React from "react";
 import { ISupplier } from "@/models/management/supplier.interface";
 

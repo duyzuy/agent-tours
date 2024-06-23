@@ -1,5 +1,4 @@
 import { EPassengerGender, EPassengerTitle } from "@/constants/common";
-import { IPassengerInformation } from "@/models/management/booking/passengerInformation.interface";
 export class PassengerInformationFormData {
     paxTitle?: EPassengerTitle;
     paxGender?: EPassengerGender;

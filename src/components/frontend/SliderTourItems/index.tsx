@@ -76,7 +76,7 @@ const SliderTourItems = () => {
                     <SwiperSlide key={item.id} style={{ width: "40%" }}>
                         <TourCard
                             thumbnail={item.thumbnail}
-                            title={item.title}
+                            name={item.title}
                             className="w-full"
                             shadow="none"
                         />

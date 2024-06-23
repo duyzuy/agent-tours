@@ -2,6 +2,7 @@ import { coreOneTimeKeys } from "./cores/oneTimeKeyAccess";
 import { client } from "../api";
 import { createHash256 } from "@/utils/hash";
 import { coreAccountConfig } from "@/configs";
+import { getLocalUserName } from "@/utils/common";
 export const coreApi = {
     post: async <TSuccess, TError>(
         endpoint: string,
@@ -12,6 +13,8 @@ export const coreApi = {
             localUsername?: string;
         },
     ) => {
+        const localUsername = getLocalUserName();
+
         return await coreOneTimeKeys
             .getKey()
             .then(async (key) => {
@@ -44,7 +47,8 @@ export const coreApi = {
                         pageCurrent: queryParams?.pageCurrent,
                         pageSize: queryParams?.pageSize,
                         userId: coreAccountConfig.userId,
-                        localUsername: queryParams.localUsername ?? "",
+                        userName: coreAccountConfig.userName,
+                        localUsername: localUsername ?? "",
                         hashCheck: hashData,
                     },
                 });

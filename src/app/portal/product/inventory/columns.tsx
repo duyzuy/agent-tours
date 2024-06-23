@@ -2,7 +2,7 @@ import { ColumnsType } from "antd/es/table";
 import { Tag } from "antd";
 import { formatDate } from "@/utils/date";
 import { IInventoryListRs } from "@/models/management/core/inventory.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     {
         title: "#ID",

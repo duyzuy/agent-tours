@@ -11,7 +11,6 @@ import {
 } from "yup";
 import { PassengerInformationFormData } from "../../modules/passenger.interface";
 import { EPassengerGender, EPassengerTitle } from "@/constants/common";
-import { PassengerType } from "@/models/management/common.interface";
 
 export const passengerInformationSchema: ArraySchema<
     PassengerInformationFormData[] | undefined,

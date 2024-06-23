@@ -1,5 +1,5 @@
 import { bookingAPIs } from "@/services/management/booking/searchTour";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { useMutation } from "@tanstack/react-query";
 import { IBookingTourPayload } from "@/app/portal/booking/modules/bookingInformation.interface";
 import { ISearchBookingPayload } from "@/app/portal/booking/modules/searchBooking.interface";

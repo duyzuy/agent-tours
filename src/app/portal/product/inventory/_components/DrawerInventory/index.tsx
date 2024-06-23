@@ -6,7 +6,7 @@ import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { IInventoryListRs } from "@/models/management/core/inventory.interface";
 import { InventoryFormData } from "../../modules/inventory.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { inventorySchema } from "../../schema/inventory.schema";

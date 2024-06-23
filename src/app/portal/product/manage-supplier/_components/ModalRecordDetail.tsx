@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Modal, Tag } from "antd";
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { ISupplier } from "@/models/management/supplier.interface";
 export interface ModalVendorDetailProps {
     open?: boolean;

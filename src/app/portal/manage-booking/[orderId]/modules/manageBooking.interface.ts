@@ -1,4 +1,4 @@
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 

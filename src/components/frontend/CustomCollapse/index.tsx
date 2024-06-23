@@ -3,7 +3,7 @@ import { Collapse, CollapseProps } from "antd";
 import React from "react";
 import { DownCircleOutlined } from "@ant-design/icons";
 
-interface CustomCollapseProps extends CollapseProps {}
+export interface CustomCollapseProps extends CollapseProps {}
 const CustomCollapse: React.FC<CollapseProps> = (props) => {
     const expandIcon: CollapseProps["expandIcon"] = ({ isActive }) => (
         <span className="text-primary-default">

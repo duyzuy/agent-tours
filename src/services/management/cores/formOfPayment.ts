@@ -1,4 +1,4 @@
-import { BaseResponse, Status } from "@/models/management/common.interface";
+import { BaseResponse, Status } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 
 import {
@@ -13,7 +13,6 @@ export const formOfPaymentAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -22,7 +21,6 @@ export const formOfPaymentAPIs = {
             requestObject: {
                 recId,
             },
-            localUsername: "99",
         });
     },
     delete: async (recId?: number) => {
@@ -30,7 +28,6 @@ export const formOfPaymentAPIs = {
             requestObject: {
                 recId,
             },
-            localUsername: "99",
         });
     },
     getList: async (queryParams?: { status: Status }) => {
@@ -40,7 +37,6 @@ export const formOfPaymentAPIs = {
                 requestObject: {
                     ...queryParams,
                 },
-                localUsername: "99",
             },
         );
     },

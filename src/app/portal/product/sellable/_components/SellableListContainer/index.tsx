@@ -12,7 +12,7 @@ import DrawerSellable, {
     DrawerSellableProps,
     EActionType,
 } from "./DrawerSellable";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
 import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
 import { useGetSellablePriceConfigsCoreQuery } from "@/queries/core/Sellable";

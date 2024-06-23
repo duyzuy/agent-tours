@@ -1,7 +1,7 @@
 import { object, string, ObjectSchema, number, array, boolean } from "yup";
 
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 import { VendorFormData } from "../modules/manageVendor.interface";
 

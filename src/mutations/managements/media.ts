@@ -7,7 +7,7 @@ import {
     IMediaFolderPayload,
     IMediaFolderUpdatePayload,
 } from "@/models/management/media.interface";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 
 //create folder in public/uploads folder.
 

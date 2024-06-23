@@ -18,7 +18,7 @@ import {
 import FormItem from "@/components/base/FormItem";
 import { DatePickerProps, RangePickerProps } from "antd/es/date-picker";
 import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { SellableListRs } from "@/models/management/core/sellable.interface";
 import dayjs from "dayjs";
@@ -255,8 +255,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
         }
         setSellableConfirmFormData((prev) => ({
             ...prev,
-            start: date[0]?.format(DATE_TIME_FORMAT),
-            end: date[1]?.format(DATE_TIME_FORMAT),
+            start: date[0]?.locale("en").format(DATE_TIME_FORMAT),
+            end: date[1]?.locale("en").format(DATE_TIME_FORMAT),
         }));
     };
 

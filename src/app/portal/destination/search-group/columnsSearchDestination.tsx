@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Space, Tag } from "antd";
 import { IDestinationListRs } from "@/models/management/region.interface";
 import { LocalSearchDestinationListRs } from "@/models/management/localSearchDestination.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 export const columnsSearchDestination: ColumnsType<
     LocalSearchDestinationListRs["result"][0]
 > = [

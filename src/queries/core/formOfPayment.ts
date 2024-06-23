@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { queryCore } from "../var";
 import { formOfPaymentAPIs } from "@/services/management/cores/formOfPayment";
 
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 export const useGetFormOfPaymentListCoreQuery = ({
     enabled = false,

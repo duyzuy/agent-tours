@@ -3,7 +3,7 @@ import {
     IDestinationContentPayload,
     IDestinationPayload,
 } from "@/models/management/region.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { LocalSearchFormData } from "@/models/management/localSearchDestination.interface";
 
 const vietnameseNamePattern =

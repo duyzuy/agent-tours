@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     IStock,
     IStockConfirmPayload,
@@ -16,9 +17,10 @@ import {
     useConfirmStockMutation,
     useAdjustStockQuantityMutation,
 } from "@/mutations/managements/stock";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 
 const useCRUDStockInventory = () => {
+    const [loading, setLoading] = useState(false);
     const { mutate: makeCreateStock } = useCreateStockMutation();
     const { mutate: makeConfirmStock } = useConfirmStockMutation();
     const { mutate: makeAdjustStockQuantity } =
@@ -30,16 +32,18 @@ const useCRUDStockInventory = () => {
         { data }: { data: StockFormData },
         cb?: () => void,
     ) => {
+        setLoading(true);
         makeCreateStock(data as IStockPayload, {
             onSuccess: (data, variables) => {
                 message.success(`Tạo stock thành công`);
                 queryClient.invalidateQueries({
                     queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
                 });
+                setLoading(false);
                 cb?.();
             },
             onError: (error, variables) => {
-                console.log({ error, variables });
+                setLoading(false);
                 message.error(error.message);
             },
         });
@@ -51,16 +55,18 @@ const useCRUDStockInventory = () => {
             variables: IStockConfirmPayload,
         ) => void,
     ) => {
+        setLoading(true);
         makeConfirmStock(formData as IStockConfirmPayload, {
             onSuccess: (response, variables) => {
                 message.success(`Duyệt stock thành công`);
                 queryClient.invalidateQueries({
                     queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
                 });
+                setLoading(false);
                 cb?.(response, variables);
             },
             onError: (error, variables) => {
-                console.log({ error, variables });
+                setLoading(false);
                 message.error(error.message);
             },
         });
@@ -70,6 +76,7 @@ const useCRUDStockInventory = () => {
         formData: StockAdjustFormData,
         cb?: () => void,
     ) => {
+        setLoading(true);
         makeAdjustStockQuantity(formData, {
             onSuccess: (data, variables) => {
                 message.success(`Thêm số lượng stock thành công`);
@@ -82,10 +89,11 @@ const useCRUDStockInventory = () => {
                         formData.inventoryStockId,
                     ],
                 });
+                setLoading(false);
                 cb?.();
             },
             onError: (error, variables) => {
-                console.log({ error, variables });
+                setLoading(false);
                 message.error(error.message);
             },
         });
@@ -95,6 +103,7 @@ const useCRUDStockInventory = () => {
         onCreate: onCreateStock,
         onConfirm: onConfirmStock,
         onAdjustQuantity: onAdjustStockQuantity,
+        loading,
     };
 };
 export default useCRUDStockInventory;

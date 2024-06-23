@@ -2,7 +2,7 @@ import {
     IDiscountPolicyPayload,
     DiscountType,
 } from "@/models/management/core/discountPolicy.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import {
     IDestination,
     IStateProvince,

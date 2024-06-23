@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
-import { PaymentStatus } from "@/models/management/common.interface";
+import { PaymentStatus } from "@/models/common.interface";
 import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
 
 type DataType = Pick<

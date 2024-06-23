@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { moneyFormatVND } from "@/utils/helper";
 import { Divider } from "antd";
 import { useMemo } from "react";

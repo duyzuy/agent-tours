@@ -23,7 +23,7 @@ import {
 import FormItem from "@/components/base/FormItem";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 import { isEmpty, isEqual } from "lodash";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import ProvinceStateSelection from "./ProvinceStateSelection";
 
 export enum EActionType {

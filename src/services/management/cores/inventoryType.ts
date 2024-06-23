@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import { IInventoryTypeRs } from "@/models/management/core/inventoryType.interface";
 export const inventoryTypeAPIs = {
@@ -7,7 +7,6 @@ export const inventoryTypeAPIs = {
             "core/MiscInventoryType",
             {
                 requestObject: {},
-                localUsername: "99",
             },
         );
     },

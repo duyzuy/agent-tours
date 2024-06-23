@@ -5,13 +5,21 @@ import {
 import { useSearchBookingMutation } from "@/mutations/managements/booking";
 import useBooking from "../hooks/useBooking";
 import { useState } from "react";
-import { initBookingInfo } from "../layout";
 import useMessage from "@/hooks/useMessage";
+import { BookingInfo } from "./bookingInformation.interface";
+
+export const initBookingInfo = new BookingInfo(
+    undefined,
+    [],
+    undefined,
+    undefined,
+);
 const useSearchBookingInformation = () => {
     const { mutate: makeSearchBooking } = useSearchBookingMutation();
     const [_, setBookingInformation] = useBooking();
     const [isLoading, setLoading] = useState(false);
     const message = useMessage();
+
     const onSearchBooking = (formData: SearchBookingFormData) => {
         const searchPayload: ISearchBookingPayload = {
             byMonth: formData.byMonth,

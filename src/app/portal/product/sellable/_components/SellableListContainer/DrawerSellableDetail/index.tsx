@@ -3,7 +3,7 @@ import { Divider, Drawer, Table } from "antd";
 import { SellableDetail } from "@/models/management/core/sellable.interface";
 import ContentDetail from "@/components/admin/ContentDetail";
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import CustomTable from "@/components/admin/CustomTable";
 export interface DrawerSellableDetailProps {
     isOpen?: boolean;

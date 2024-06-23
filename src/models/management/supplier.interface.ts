@@ -1,4 +1,4 @@
-import { BaseResponse, Status } from "./common.interface";
+import { BaseResponse, Status } from "../common.interface";
 import { IVendor } from "./vendor.interface";
 
 export interface ISupplier {

@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Row, Col } from "antd";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
 interface ModalDetailFOPProps {
     onConfirm?: () => void;

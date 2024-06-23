@@ -29,7 +29,7 @@ const AdminLayout = ({ children }: Props) => {
     const userProfile = useLocalUserProfile();
 
     const [collapsed, setCollapsed] = useState(false);
-    const onLogoutPortal = useLogoutPortal();
+    const logoutPortal = useLogoutPortal();
     const {
         token: { colorBgContainer },
     } = theme.useToken();
@@ -149,7 +149,7 @@ const AdminLayout = ({ children }: Props) => {
                                         label: "Đăng xuất",
                                         key: "2",
                                         icon: <LogoutOutlined />,
-                                        onClick: onLogoutPortal,
+                                        onClick: logoutPortal,
                                     },
                                 ],
                             }}

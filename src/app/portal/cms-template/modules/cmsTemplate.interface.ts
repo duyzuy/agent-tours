@@ -1,16 +1,16 @@
-import { CMSTemplatePayload } from "@/models/management/cms/cmsTemplate.interface";
+import { CMSTemplateContentPayload } from "@/models/management/cms/cmsTemplateContent.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
-import { IMediaFile } from "@/models/management/media.interface";
 
-export class CMSTemplateFormData {
+export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
     id?: number;
     code?: string;
     name?: string;
     thumb?: string;
     images?: {
-        listImage: IMediaFile[];
+        listImage: string[];
     };
+    downloads?: { title: string; link: string }[];
     content?: string;
     subContent?: string;
     metaData?: {
@@ -34,9 +34,10 @@ export class CMSTemplateFormData {
         thumb: string | undefined,
         images:
             | {
-                  listImage: IMediaFile[];
+                  listImage: string[];
               }
             | undefined,
+        downloads: { title: string; link: string }[] | undefined,
         content: string | undefined,
         subContent: string | undefined,
         metaData: {
@@ -57,6 +58,7 @@ export class CMSTemplateFormData {
         this.thumb = thumb;
         this.images = images;
         this.content = content;
+        this.downloads = downloads;
         this.subContent = subContent;
         this.metaData = metaData;
         this.metaTitle = metaTitle;
@@ -66,5 +68,61 @@ export class CMSTemplateFormData {
         this.status = status;
         this.slug = slug;
         this.lang = lang;
+    }
+}
+
+export class CMSTemplateFormData {
+    codeName?: string;
+    code?: string;
+    codeImage?: string;
+    descriptions?: string;
+    templates: {
+        name?: string;
+        slug?: string;
+        lang?: LangCode;
+    }[];
+
+    constructor(
+        codeName: string | undefined,
+        code: string | undefined,
+        codeImage: string | undefined,
+        descriptions: string | undefined,
+        templates: {
+            name?: string;
+            slug?: string;
+            lang?: LangCode;
+        }[],
+    ) {
+        this.codeName = codeName;
+        this.code = code;
+        this.codeImage = codeImage;
+        this.descriptions = descriptions;
+        this.templates = templates;
+    }
+}
+
+export class CMSTemplateContentMetaDataForm {
+    id?: number;
+    refId?: number;
+    content?: string;
+    metaContent: {
+        title?: string;
+        content?: string;
+    }[];
+    status?: PageContentStatus;
+    lang?: LangCode;
+    constructor(
+        id: number | undefined,
+        refId: number | undefined,
+        content: string | undefined,
+        metaContent: {
+            title?: string;
+            content?: string;
+        }[],
+    ) {
+        this.id = id;
+        this.refId = refId;
+        this.metaContent = metaContent;
+        this.content = content;
     }
 }

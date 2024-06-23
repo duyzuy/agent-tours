@@ -1,6 +1,6 @@
 import useMessage from "@/hooks/useMessage";
 import useBooking from "../hooks/useBooking";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import {
     BookingInformation,

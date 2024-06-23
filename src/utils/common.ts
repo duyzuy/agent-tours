@@ -1,21 +1,34 @@
 import { LOCAL_STORAGE_KEY } from "@/constants/common";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 
 export const isSSR = () => typeof window === "undefined";
 
 export const getAgToken = () => {
-    if (isSSR()) return "";
-    return localStorage.getItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN);
+    return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN);
 };
 
 export const setAgToken = (token: string) => {
-    if (isSSR()) return "";
-    return localStorage.setItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN, token);
+    !isSSR() && localStorage.setItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN, token);
 };
 
 export const removeAgToken = () => {
-    if (isSSR()) return "";
-    return localStorage.removeItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN);
+    !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN);
+};
+
+export const setLocalUserName = (username?: string) => {
+    !isSSR() &&
+        username &&
+        localStorage.setItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME, username);
+};
+
+export const getLocalUserName = () => {
+    return isSSR()
+        ? ""
+        : localStorage.getItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME);
+};
+
+export const removeLocalUserName = () => {
+    !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME);
 };
 
 // export const moneyFormat = (money: number) =>

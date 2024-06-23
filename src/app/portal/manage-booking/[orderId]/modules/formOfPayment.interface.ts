@@ -1,4 +1,4 @@
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import {
     FOP_TYPE,
     FOP_PAYMENT_TYPE,

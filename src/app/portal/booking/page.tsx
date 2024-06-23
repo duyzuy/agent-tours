@@ -6,7 +6,7 @@ import useBooking from "./hooks/useBooking";
 import TourBoxItem from "./_components/TourBoxItem";
 import { isUndefined } from "lodash";
 import { UndoOutlined } from "@ant-design/icons";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import useSelectProductTour from "./modules/useSelectProductTour";
 import { moneyFormatVND } from "@/utils/helper";
 import PassengerTourClassItem from "./_components/PassengerTourClassItem";

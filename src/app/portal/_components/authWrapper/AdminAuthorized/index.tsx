@@ -14,7 +14,7 @@ interface Props {
 const AdminAuthorized: React.FC<Props> = ({ children }) => {
     const router = useRouter();
 
-    const { clearToken } = useAuth();
+    const { clearToken, setLocalUserName } = useAuth();
     const [isAuthorized, setAuthorize] = useState(false);
 
     const { data: userProfile, isLoading } = useLocalUserGetProfileQuery();
@@ -26,6 +26,7 @@ const AdminAuthorized: React.FC<Props> = ({ children }) => {
             router.push(LINKS.PortalLogin);
         } else {
             setAuthorize(() => true);
+            setLocalUserName(userProfile?.username || "");
         }
     }, [userProfile, isLoading]);
 

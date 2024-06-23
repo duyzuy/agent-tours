@@ -3,7 +3,7 @@ import {
     PassengerType,
     Status,
     PaymentStatus,
-} from "../common.interface";
+} from "../../common.interface";
 import { IBookingTimeLitmit } from "../core/bookingTimeLimit.interface";
 import { IFormOfPayment } from "../core/formOfPayment.interface";
 import { PriceConfig } from "../core/priceConfig.interface";

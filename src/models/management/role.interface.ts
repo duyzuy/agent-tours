@@ -1,4 +1,4 @@
-import { BaseResponse } from "./common.interface";
+import { BaseResponse } from "../common.interface";
 type TStatus = "OK" | "OX" | "XX";
 interface IPermission {
     groupKey: string;

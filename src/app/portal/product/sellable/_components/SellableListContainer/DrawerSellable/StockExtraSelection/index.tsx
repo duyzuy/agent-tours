@@ -15,7 +15,7 @@ import ModalContent from "@/components/admin/ModalContent";
 import ContentDetail from "@/components/admin/ContentDetail";
 import { formatDate } from "@/utils/date";
 import { StockQueryParams } from "@/models/management/core/stock.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import StockExtraList, { StockExtraListProps } from "./StockExtraList";
 import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
 import CustomTable from "@/components/admin/CustomTable";

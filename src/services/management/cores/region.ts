@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import { IStateProvinceListRs } from "@/models/management/region.interface";
 export const regionAPIs = {
@@ -7,7 +7,6 @@ export const regionAPIs = {
             "core/CountryListGetall",
             {
                 requestObject: { type: "REGIONLIST" },
-                localUsername: "99",
             },
         );
     },

@@ -16,6 +16,7 @@ export interface SlugProps {
     onSave?: (value: string) => void;
     className?: string;
     hiddenLabel?: boolean;
+    disabled?: boolean;
 }
 const Slug: React.FC<SlugProps> = ({
     domainName = config.DOMAIN_ROOT,
@@ -27,6 +28,7 @@ const Slug: React.FC<SlugProps> = ({
     validateStatus,
     help,
     hiddenLabel = false,
+    disabled = false,
 }) => {
     const [error, setError] = useState(help);
     const [slug, setSlug] = useState(slugName);
@@ -50,66 +52,76 @@ const Slug: React.FC<SlugProps> = ({
 
     return (
         <div
-            className={classNames(
-                "post-slug text-xs w-full flex items-center",
-                {
-                    [className]: className,
-                },
-            )}
+            className={classNames("post-slug text-xs w-full", {
+                [className]: className,
+            })}
         >
-            {hiddenLabel && <span className="mr-2">Đường dẫn:</span>}
-            <div className="flex items-center flex-1 whitespace-nowrap">
-                <span>{domainName}</span>
-                <span>{`/${lang}`}</span>
-                <span>{`/${type}/`}</span>
-                <div className="flex items-center max-w-[280px]">
-                    <div className="mr-2 w-full">
-                        {!isEdit ? (
-                            <p className="overflow-hidden text-ellipsis bg-slate-100">
-                                <span>{`${slugName}`}</span>
-                            </p>
-                        ) : (
-                            <Input
-                                size="small"
-                                value={slug}
-                                onChange={(evt) =>
-                                    onChangeSlug(evt.target.value)
-                                }
-                            />
-                        )}
+            <div className="flex items-center">
+                {hiddenLabel ? null : <span className="mr-2">Đường dẫn:</span>}
+                <div className="flex items-center flex-1 whitespace-nowrap">
+                    <span>{domainName}</span>
+                    <span>{`/${lang}`}</span>
+                    <span>{`/${type}/`}</span>
+                    <div className="flex items-center max-w-[280px]">
+                        <div className="mr-2 w-full">
+                            {!isEdit ? (
+                                <p className="overflow-hidden text-ellipsis bg-slate-100">
+                                    <span>{`${slugName}`}</span>
+                                </p>
+                            ) : (
+                                <Input
+                                    size="small"
+                                    value={slug}
+                                    onChange={(evt) =>
+                                        onChangeSlug(evt.target.value)
+                                    }
+                                />
+                            )}
+                        </div>
+                        {disabled === false ? (
+                            <>
+                                {isEdit ? (
+                                    <Space>
+                                        <Button
+                                            type="primary"
+                                            size="small"
+                                            ghost
+                                            onClick={onSaveSlug}
+                                        >
+                                            Lưu
+                                        </Button>
+                                        <Button
+                                            type={isEdit ? "text" : "primary"}
+                                            size="small"
+                                            ghost={isEdit ? false : true}
+                                            onClick={onCancel}
+                                        >
+                                            Huỷ bỏ
+                                        </Button>
+                                    </Space>
+                                ) : (
+                                    <Button
+                                        type="text"
+                                        size="small"
+                                        className="ml-2"
+                                        icon={<EditOutlined />}
+                                        onClick={onEdit}
+                                    >
+                                        Sửa
+                                    </Button>
+                                )}
+                            </>
+                        ) : null}
                     </div>
-                    {isEdit ? (
-                        <Space>
-                            <Button
-                                type="primary"
-                                size="small"
-                                ghost
-                                onClick={onSaveSlug}
-                            >
-                                Lưu
-                            </Button>
-                            <Button
-                                type={isEdit ? "text" : "primary"}
-                                size="small"
-                                ghost={isEdit ? false : true}
-                                onClick={onCancel}
-                            >
-                                Huỷ bỏ
-                            </Button>
-                        </Space>
-                    ) : (
-                        <Button
-                            type="text"
-                            size="small"
-                            className="ml-2"
-                            icon={<EditOutlined />}
-                            onClick={onEdit}
-                        >
-                            Sửa
-                        </Button>
-                    )}
                 </div>
             </div>
+            <p
+                className={classNames({
+                    "text-red-500": validateStatus === "error",
+                })}
+            >
+                {help ?? null}
+            </p>
         </div>
     );
 };

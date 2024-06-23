@@ -4,7 +4,7 @@ import {
     IMediaFolderUpdatePayload,
 } from "@/models/management/media.interface";
 import { headers } from "next/headers";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 export async function PUT(
     request: NextRequest,

@@ -12,7 +12,7 @@ export const coreOneTimeKeys = {
                 body: JSON.stringify({
                     requestObject: {
                         userId: coreAccountConfig.userId,
-                        username: coreAccountConfig.username,
+                        username: coreAccountConfig.userName,
                         password: coreAccountConfig.password,
                     },
                 }),

@@ -9,7 +9,6 @@ import { useEffect, useMemo, useState } from "react";
 import classNames from "classnames";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import useMessage from "@/hooks/useMessage";
-import { PassengerType } from "@/models/management/common.interface";
 
 export type TBookingServicePricingItem = {
     bookingItem: IBookingItem;

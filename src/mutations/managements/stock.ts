@@ -1,6 +1,6 @@
 import { stockInventoryAPIs } from "@/services/management/cores/stockInventory";
 import { useMutation } from "@tanstack/react-query";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import {
     IStock,
     IStockAdjustPayload,

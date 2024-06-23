@@ -10,7 +10,7 @@ import { queryCore } from "@/queries/var";
 import { useQueryClient } from "@tanstack/react-query";
 import { SupplierFormData } from "./manageSupplier.interface";
 import useMessage from "@/hooks/useMessage";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { ISupplier } from "@/models/management/supplier.interface";
 
 export interface UseManageSupplier {

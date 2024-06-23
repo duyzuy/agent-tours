@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Select, SelectProps } from "antd";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { useGetVendorListCoreQuery } from "@/queries/core/vendor";
 import { VendorQueryParams } from "@/models/management/vendor.interface";
 import { IVendor } from "@/models/management/vendor.interface";

@@ -1,4 +1,4 @@
-import { PassengerType, Status } from "../common.interface";
+import { PassengerType, Status } from "../../common.interface";
 
 export interface IBookingDetail {
     recId: number;

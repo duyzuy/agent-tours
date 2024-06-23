@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useGetFormOfPaymentListCoreQuery } from "@/queries/core/formOfPayment";
 import { columnsFOPs } from "./columns";
 import { useRouter } from "next/navigation";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import {
     IFormOfPayment,
     IFormOfPaymentListRs,

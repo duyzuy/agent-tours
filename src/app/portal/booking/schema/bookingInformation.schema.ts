@@ -1,6 +1,6 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
 import { IBookingTourPayload } from "../modules/bookingInformation.interface";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 
 export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> =
     object({

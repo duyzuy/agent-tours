@@ -15,7 +15,7 @@ import {
     IDestinationListRs,
     IDestinationPayload,
 } from "@/models/management/region.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { useRouter } from "next/navigation";
 
 const GroupDestinationPage = () => {

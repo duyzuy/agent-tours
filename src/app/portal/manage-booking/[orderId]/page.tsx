@@ -20,7 +20,7 @@ import DepositTimeline from "./_components/DepositTimeline";
 import OrderInformation from "./_components/OrderInformation";
 
 import BookingTimeLimitation from "./_components/BookingTimeLimitation";
-import { PaymentStatus } from "@/models/management/common.interface";
+import { PaymentStatus } from "@/models/common.interface";
 
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { useSelectorManageBooking } from "./hooks/useManageBooking";

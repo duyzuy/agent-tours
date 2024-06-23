@@ -7,6 +7,7 @@ export enum LangCode {
 export interface Locale {
     key: LangCode;
     name: string;
+    nativeName: string;
     shortName: string;
     icon: ElementType;
 }

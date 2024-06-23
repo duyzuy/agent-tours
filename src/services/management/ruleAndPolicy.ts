@@ -1,6 +1,6 @@
 import { getAgToken } from "@/utils/common";
 import { client } from "../api";
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { IRuleAndPolicyPayload } from "@/app/portal/rule-policy/modules/ruleAndPolicy.interface";
 import {
     IRuleAndPolicyListRs,

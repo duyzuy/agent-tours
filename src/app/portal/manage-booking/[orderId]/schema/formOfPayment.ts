@@ -4,7 +4,7 @@ import {
     FOP_TYPE,
     FOP_PAYMENT_TYPE,
 } from "@/models/management/core/formOfPayment.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 export const formOfPaymentSchema: ObjectSchema<FOPFormData> = object({
     orderId: number().required("Thiếu order Id"),

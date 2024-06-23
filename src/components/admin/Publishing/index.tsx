@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import FormItem from "@/components/base/FormItem";
 import CustomTimePicker from "../CustomTimePicker";
 import CustomDatePicker from "../CustomDatePicker";
@@ -20,6 +20,7 @@ import {
     CheckOutlined,
     CloseOutlined,
 } from "@ant-design/icons";
+import ModalDeleteConfirm from "./ModalDeleteConfirm";
 
 export interface PublishingProps {
     label?: string;
@@ -32,16 +33,20 @@ export interface PublishingProps {
     onApproval?: () => void;
     onSaveForApproval?: () => void;
     onSaveAndPublish?: () => void;
+    onDelete?: () => void;
     disableSubmit?: boolean;
     disableSaveForApproval?: boolean;
     disableApproval?: boolean;
     hideApproval?: boolean;
+    hideDelete?: boolean;
     hideSaveForApproval?: boolean;
-
     onChangeTemplate?: SelectProps["onChange"];
     action?: "create" | "update";
     status?: PageContentStatus;
     onChangeStatus?: SwitchProps["onChange"];
+    errors?: {
+        publishDate?: string;
+    };
 }
 const Publishing: React.FC<PublishingProps> = ({
     label = "Đăng bài viết",
@@ -52,18 +57,31 @@ const Publishing: React.FC<PublishingProps> = ({
     onApproval,
     onSaveAndPublish,
     onSaveForApproval,
+    onDelete,
     dateValue,
     timeValue,
     disableSubmit,
     disableSaveForApproval,
     hideApproval = !onApproval,
+    hideDelete = !onDelete,
     hideSaveForApproval = false,
     disableApproval,
     onChangeTemplate,
     action = "create",
     status,
     onChangeStatus,
+    errors,
 }) => {
+    const [showModalDelete, setShowModalDelete] = useState(false);
+
+    const showModal = () => setShowModalDelete(true);
+
+    const closeModal = () => setShowModalDelete(false);
+
+    const confirmDelete = () => {
+        onDelete?.();
+        closeModal();
+    };
     return (
         <div className="box border rounded-[4px] mb-6">
             <div className="py-4 border-b px-4">
@@ -116,7 +134,11 @@ const Publishing: React.FC<PublishingProps> = ({
                         />
                     </FormItem>
                 ) : null}
-                <FormItem label="Ngày hiển thị">
+                <FormItem
+                    label="Ngày hiển thị"
+                    validateStatus={errors?.publishDate ? "error" : ""}
+                    help={errors?.publishDate || ""}
+                >
                     <div className="flex items-center gap-x-4">
                         <CustomDatePicker
                             onChange={onChangeDate}
@@ -171,8 +193,21 @@ const Publishing: React.FC<PublishingProps> = ({
                     >
                         {action === "create" ? "Lưu và duyệt" : "Cập nhật"}
                     </Button>
+
+                    {onDelete && !hideDelete ? (
+                        <Button type="primary" ghost danger onClick={showModal}>
+                            Xoá
+                        </Button>
+                    ) : null}
                 </div>
             </div>
+            <ModalDeleteConfirm
+                title="Xoá bài"
+                descriptions="Nội dung sau khi xoá sẽ không thể phục hồi, bạn vẫn muốn xoá?"
+                isShowModal={showModalDelete}
+                onCancel={closeModal}
+                onConfirm={confirmDelete}
+            />
         </div>
     );
 };

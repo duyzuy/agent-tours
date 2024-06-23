@@ -7,7 +7,7 @@ import BookingSummary from "../_components/BookingSummary";
 import PassengersInformationForm from "./_components/PassengersInformationForm";
 import usePassenger from "../modules/usePassenger";
 import { IBookingItem } from "../modules/bookingInformation.interface";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { isUndefined } from "lodash";
 
 const CustomerInformationPage = () => {

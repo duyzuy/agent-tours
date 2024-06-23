@@ -14,7 +14,6 @@ import {
 } from "@/models/management/vendor.interface";
 import useManageVendor from "./modules/useManageVendor";
 import { useGetVendorListCoreQuery } from "@/queries/core/vendor";
-import { Status } from "@/models/management/common.interface";
 import ModalVendorDetail from "./_components/ModalVendorDetail";
 import FilterVendor from "./_components/FilterVendor";
 const ManageVendorPage = () => {
@@ -39,7 +38,7 @@ const ManageVendorPage = () => {
         queryParams: queryParams,
     });
 
-    const onCreateVendor = () => {
+    const createVendor = () => {
         setShowDrawer(true);
         setActionType(EActionType.CREATE);
     };
@@ -76,7 +75,7 @@ const ManageVendorPage = () => {
             name={"Quản lý Vendor"}
             modelName="Vendor"
             breadCrumItems={[{ title: "Quản lý Vendor" }]}
-            onClick={onCreateVendor}
+            onClick={createVendor}
         >
             <FilterVendor
                 setFilter={setQueryParams}

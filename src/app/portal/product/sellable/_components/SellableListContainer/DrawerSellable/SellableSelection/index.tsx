@@ -10,7 +10,7 @@ import { isArray, isEmpty, isUndefined } from "lodash";
 import { useGetTemplateSellableListCoreQuery } from "@/queries/core/templateSellable";
 
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { useGetSellableListCoreQuery } from "@/queries/core/Sellable";
 import SellableList, { SellableListProps } from "./SellableList";
 import {

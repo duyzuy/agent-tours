@@ -11,7 +11,7 @@ import { moneyFormatVND } from "@/utils/helper";
 import { IDestination } from "@/models/management/region.interface";
 import { formatDate } from "@/utils/date";
 import { SwapRightOutlined } from "@ant-design/icons";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import dayjs from "dayjs";
 import { DATE_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
 

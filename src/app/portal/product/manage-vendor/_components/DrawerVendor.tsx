@@ -19,7 +19,7 @@ import {
 import FormItem from "@/components/base/FormItem";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 
 import { useFormSubmit } from "@/hooks/useFormSubmit";
@@ -132,6 +132,30 @@ const DrawerVendor: React.FC<DrawerVendorProps> = ({
             });
         }
     };
+
+    const renderExtraDrawer = () => {
+        return actionType === EActionType.EDIT ? (
+            formData?.status !== Status.QQ ? (
+                <Space>
+                    <span className="font-normal text-sm">Kích hoạt:</span>
+                    <Switch
+                        value={formData?.status === Status.OK ? true : false}
+                        onChange={handleUpdateStatus}
+                        loading={isLoadingStatus}
+                    />
+                </Space>
+            ) : (
+                <Button
+                    type="primary"
+                    onClick={() =>
+                        formData.recId && onApproval?.(formData.recId)
+                    }
+                >
+                    Duyệt
+                </Button>
+            )
+        ) : null;
+    };
     const isDisableSubmitButton = useMemo(() => {
         if (actionType === EActionType.EDIT && initialValues) {
             const { recId, typeList, ...restInitValues } = initialValues;
@@ -227,27 +251,7 @@ const DrawerVendor: React.FC<DrawerVendorProps> = ({
                     ? "Thêm mới"
                     : initialValues?.fullName
             }
-            extra={
-                initialValues?.status !== Status.QQ ? (
-                    <Space>
-                        <span className="font-normal text-sm">Kích hoạt:</span>
-                        <Switch
-                            value={
-                                formData?.status === Status.OK ? true : false
-                            }
-                            onChange={handleUpdateStatus}
-                            loading={isLoadingStatus}
-                        />
-                    </Space>
-                ) : (
-                    <Button
-                        type="primary"
-                        onClick={() => onApproval?.(initialValues.recId)}
-                    >
-                        Duyệt
-                    </Button>
-                )
-            }
+            extra={renderExtraDrawer()}
             destroyOnClose
             width={550}
             onClose={onCancel}
@@ -413,13 +417,14 @@ const DrawerVendor: React.FC<DrawerVendorProps> = ({
                     </Col>
                     <Col span={12}>
                         <FormItem
-                            label="Payment type"
+                            label="Hình thức thanh toán"
                             validateStatus={errors?.paymentType ? "error" : ""}
                             help={errors?.paymentType || ""}
                         >
                             <Input
-                                placeholder="Payment type"
-                                disabled={formData.status === Status.QQ}
+                                placeholder="Hình thức thanh toán"
+                                // disabled={formData.status === Status.QQ}
+                                disabled
                                 value={formData.paymentType}
                                 onChange={(ev) =>
                                     onChangeFormData(
@@ -497,14 +502,18 @@ const DrawerVendor: React.FC<DrawerVendorProps> = ({
             <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
                 <Space>
                     <Button onClick={onCancel}>Huỷ bỏ</Button>
-                    {initialValues?.status === Status.OK ? (
+                    {formData.status === Status.QQ ? null : (
                         <>
-                            {actionType === EActionType.EDIT ? (
+                            {actionType === EActionType.EDIT &&
+                            formData.status === Status.OK ? (
                                 <Button
                                     type="primary"
                                     onClick={() =>
                                         handlerSubmit(formData, (data) =>
-                                            onSubmit?.(actionType, data),
+                                            onSubmit?.(
+                                                actionType,
+                                                data as VendorFormData,
+                                            ),
                                         )
                                     }
                                     disabled={isDisableSubmitButton}
@@ -545,7 +554,7 @@ const DrawerVendor: React.FC<DrawerVendorProps> = ({
                                 </>
                             ) : null}
                         </>
-                    ) : null}
+                    )}
                 </Space>
             </div>
         </Drawer>

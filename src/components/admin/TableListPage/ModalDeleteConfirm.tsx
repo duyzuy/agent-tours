@@ -38,6 +38,7 @@ const ModalDeleteConfirm: React.FC<Props> = ({
             onCancel={onCancel}
             footer={renderModalFooter}
             width={380}
+            closeIcon={null}
         >
             <div className="body py-4">
                 <div className="icon text-red-600 text-center">

@@ -1,28 +1,6 @@
-import { BaseResponse, Status } from "../common.interface";
+import { BaseResponse, Status } from "../../common.interface";
 import { IInventory } from "./inventory.interface";
 import { IStock } from "./stock.interface";
-
-interface RequestObject {
-    sellableTemplateId?: number;
-    andType?: string;
-    andCodeLike?: string;
-    status?: Status;
-}
-export class SellableQueryParams {
-    requestObject?: RequestObject;
-    pageCurrent?: number;
-    pageSize?: number;
-
-    constructor(
-        requestObject: RequestObject | undefined,
-        pageCurrent: number | undefined,
-        pageSize: number | undefined,
-    ) {
-        this.requestObject = requestObject;
-        this.pageCurrent = pageCurrent;
-        this.pageSize = pageSize;
-    }
-}
 
 export interface ISellable {
     recId: number;
@@ -36,6 +14,7 @@ export interface ISellable {
     deadlineJson: string;
     endDate: string;
     logStatus: string;
+    limitPerBooking: number;
     startDate: string;
     status: Status;
     sysBelongTo: string;
@@ -216,4 +195,26 @@ export interface SellableDetail {
     extraInventories: InventoryOfSellableItem[];
     extraStocks: StockOfSellableItem[];
     otherSellables: SellableOfSellableItem[];
+}
+
+interface RequestObject {
+    sellableTemplateId?: number;
+    andType?: string;
+    andCodeLike?: string;
+    status?: Status;
+}
+export class SellableQueryParams {
+    requestObject?: RequestObject;
+    pageCurrent?: number;
+    pageSize?: number;
+
+    constructor(
+        requestObject: RequestObject | undefined,
+        pageCurrent: number | undefined,
+        pageSize: number | undefined,
+    ) {
+        this.requestObject = requestObject;
+        this.pageCurrent = pageCurrent;
+        this.pageSize = pageSize;
+    }
 }

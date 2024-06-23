@@ -1,52 +1,35 @@
-import { BaseResponse } from "../common.interface";
+import { BaseResponse, Status } from "../../common.interface";
 import { LangCode } from "./language.interface";
 import { PageContentStatus } from "./pageContent.interface";
+import { ICMSTemplateContent } from "./cmsTemplateContent.interface";
 
 export interface ICMSTemplate {
     id: number;
     cat: "cms_template";
     type: "DETAILS";
     code: string;
-    name: string;
-    thumb: string;
-    images: {
-        listImage: string[];
-    };
-    content: string;
-    subContent: string;
-    metaData: { key?: string; value?: string; icon?: string }[];
-    metaTitle: string;
-    metaDescription: string;
-    metaKeyword: string;
-    publishDate: string;
-    status: PageContentStatus;
-    includeAndNotes: [];
-    itineraries: [];
-    slug: string;
-    lang: LangCode;
+    codeName: string;
+    codeImage: string;
+    descriptions: string;
+    templates: ICMSTemplateContent[];
 }
+
 export interface CMSTemplateListRs extends BaseResponse<ICMSTemplate[]> {}
+export interface CMSTemplateRs extends BaseResponse<ICMSTemplate> {}
+
+export interface CMSTemplateContentRs
+    extends BaseResponse<ICMSTemplateContent> {}
+
 export interface CMSTemplatePayload {
     code?: string;
-    name?: string;
-    thumb?: string;
-    images?: {
-        listImage: string[];
-    };
-    content?: string;
-    subContent?: string;
-    metaData?: {
-        key?: string;
-        value?: string;
-        icon?: string;
+    codeName?: string;
+    codeImage?: string;
+    descriptions?: string;
+    templates: {
+        name?: string;
+        slug?: string;
+        lang?: LangCode;
     }[];
-    metaTitle?: string;
-    metaDescription?: string;
-    metaKeyword?: string;
-    publishDate?: string;
-    status?: PageContentStatus;
-    slug?: string;
-    lang?: LangCode;
 }
 
 export class CMSTemplateQueryParams {

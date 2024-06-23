@@ -1,7 +1,7 @@
 import { ObjectSchema, object, string, number, array, boolean } from "yup";
 import { DiscountPolicyFormData } from "../modules/discountPolicy.interface";
 import { DiscountType } from "@/models/management/core/discountPolicy.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IDestination } from "@/models/management/region.interface";
 
 export const discountPolicySchema: ObjectSchema<DiscountPolicyFormData> =

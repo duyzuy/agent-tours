@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import { IProductTypeRs } from "@/models/management/core/productType.interface";
 export const productTypeAPIs = {
@@ -7,7 +7,6 @@ export const productTypeAPIs = {
             "core/MiscProductType",
             {
                 requestObject: {},
-                localUsername: "99",
             },
         );
     },

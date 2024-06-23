@@ -36,13 +36,13 @@ const TextEditor = ({
                 file.type === MediaTypes.ICON
             ) {
                 contents = contents.concat(
-                    `<img src="${mediaConfig.rootPath}/${file.fullPath}" class="max-w-full" alt="${file.slug}" style="max-width: 100%"/>`,
+                    `<img src="${mediaConfig.rootApiPath}/${file.fullPath}" class="max-w-full" alt="${file.slug}" style="max-width: 100%"/>`,
                 );
             }
 
             if (file.type === MediaTypes.FILE) {
                 contents = contents.concat(
-                    `<a href="${mediaConfig.rootPath}/${file.fullPath}" target="_blank">${mediaConfig.rootPath}/${file.fullPath}</a>`,
+                    `<a href="${mediaConfig.rootApiPath}/${file.fullPath}" target="_blank">${mediaConfig.rootPath}/${file.fullPath}</a>`,
                 );
             }
         });
@@ -108,8 +108,8 @@ const TextEditor = ({
                         "emoticons",
                     ],
                     toolbar: [
-                        "undo redo | blocks fontfamily fontsize | bold italic underline | align numlist bullist | image media link",
-                        "table lineheight outdent indent | forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | pagebreak anchor codesample",
+                        "undo redo | blocks fontfamily fontsize | bold italic underline | align numlist bullist | image media link | table lineheight outdent indent | forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | pagebreak anchor codesample",
+                        // "table lineheight outdent indent | forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | pagebreak anchor codesample",
                     ],
                     menubar: "file edit view table insert mediaLib",
                     menu: {

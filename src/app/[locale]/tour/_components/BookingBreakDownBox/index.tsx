@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { IconChevronDown } from "@/assets/icons";
 import QuantityInput from "@/components/frontend/QuantityInput";

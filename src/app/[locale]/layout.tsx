@@ -1,13 +1,17 @@
-import { locales } from "@/constants/locale.constant";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import Header from "./_components/commons/Header";
-import Footer from "./_components/commons/Footer";
+
 import { LangCode } from "@/models/management/cms/language.interface";
 import { set } from "lodash";
 import { getTranslationFe } from "@/server/fe";
-import ServiceWorker from "./_components/ServiceWorker";
-import PureClient from "@/components/admin/PureClient";
+import { LanguageProvider } from "./store/LanguageProvider";
+import LangContainer from "./containers/LangContainer";
+import { NextAuthProvider } from "@/providers/NextAuthProvider";
+import { locales } from "@/constants/locale.constant";
+import Header from "./_components/commons/Header";
+import Footer from "./_components/commons/Footer";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 interface Props {
     children: React.ReactNode;
@@ -19,42 +23,50 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params: { locale } }: Props) {
+    // const t = await getTranslations({ locale, namespace: "String" });
+    // console.log(t("passwordConfirm.label"));
     return {
-        // title: t('LocaleLayout.title'),
         title: "Agent Hub",
     };
 }
 
-export default async function RootClientLayout({ children, params }: Props) {
+export default async function RootClientLayout({
+    children,
+    params: { locale },
+}: Props) {
     let translationKeys;
-
     try {
-        // messages = (await import(`@/i18n/${params.locale}/message.json`))
-        //     .default;
-
-        translationKeys = await getTranslationFe(params.locale);
+        translationKeys = await getTranslationFe(locale);
     } catch (error) {
+        console.log(error);
         notFound();
     }
 
-    const message = translationKeys?.result?.reduce<{
+    const messageObject = translationKeys?.result?.reduce<{
         [key: string]: string;
     }>((acc, item) => ({ ...acc, [item.keyName]: item.name }), {});
 
-    const output = Object.entries(message || {}).reduce(
+    const output = Object.entries(messageObject || {}).reduce(
         (acc, [key, value]) => set(acc, key, value),
         {},
     );
 
-    //"a.b.c" => [a,b,c] => {a: {b: {c: 1}}}
+    /**
+     * Session next auth
+     */
+
+    const session = await getServerSession(authOptions);
+
     return (
-        <NextIntlClientProvider locale={params.locale} messages={output}>
-            <Header />
-            {children}
-            <PureClient>
-                <ServiceWorker />
-            </PureClient>
-            <Footer />
+        <NextIntlClientProvider locale={locale} messages={output}>
+            <NextAuthProvider session={session}>
+                <LanguageProvider>
+                    <LangContainer />
+                    <Header />
+                    {children}
+                    <Footer />
+                </LanguageProvider>
+            </NextAuthProvider>
         </NextIntlClientProvider>
     );
 }

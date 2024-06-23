@@ -1,7 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 import { Tag } from "antd";
 import { formatDate } from "@/utils/date";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IStockListOfInventoryRs } from "@/models/management/core/stock.interface";
 
 export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [

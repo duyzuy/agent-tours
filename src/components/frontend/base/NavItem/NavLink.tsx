@@ -1,6 +1,5 @@
-import React, { ElementType, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
-import styled from "styled-components";
 
 export interface NavLinkProps {
     prefix?: ReactNode;
@@ -22,6 +21,6 @@ const NavLinkBase: React.FC<NavLinkProps> = ({
     );
 };
 
-const NavLink = styled(NavLinkBase)``;
+const NavLink = NavLinkBase;
 
 export default NavLink;

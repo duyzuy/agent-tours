@@ -1,7 +1,7 @@
 import useBooking from "../../hooks/useBooking";
 
 import useMessage from "@/hooks/useMessage";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import {
     IBookingItem,
     IPricingBookingItem,

@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { Col, Form, Input, Row, Select, DatePickerProps } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";

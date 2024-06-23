@@ -1,6 +1,6 @@
 import React from "react";
 import Quantity from "@/components/admin/Quantity";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { SearchBookingFormData } from "../../modules/searchBooking.interface";
 
 export interface PassengerQuantityProps {

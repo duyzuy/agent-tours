@@ -13,7 +13,7 @@ import { formatDate } from "@/utils/date";
 import ModalContent from "@/components/admin/ModalContent";
 import ContentDetail from "@/components/admin/ContentDetail";
 import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IInventory } from "@/models/management/core/inventory.interface";
 import {
     IStock,

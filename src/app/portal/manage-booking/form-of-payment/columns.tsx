@@ -1,7 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
 import { Tag } from "antd";
-import { PaymentStatus, Status } from "@/models/management/common.interface";
+import { PaymentStatus, Status } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
 import { IFormOfPaymentListRs } from "@/models/management/core/formOfPayment.interface";
 import Link from "next/link";

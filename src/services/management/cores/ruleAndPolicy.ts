@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import {
     RuleAndPolicyCatListRs,
@@ -10,7 +10,6 @@ export const ruleAndPolicyAPIs = {
             "core/RuleAndPolicy_GetDeposit_Rule",
             {
                 requestObject: {},
-                localUsername: "99",
             },
         );
     },
@@ -19,7 +18,6 @@ export const ruleAndPolicyAPIs = {
             "core/RuleAndPolicy_GetDeposit_Cat",
             {
                 requestObject: {},
-                localUsername: "99",
             },
         );
     },
@@ -29,7 +27,6 @@ export const ruleAndPolicyAPIs = {
             "core/RuleAndPolicy_GetBookingTimeLimit_Cat",
             {
                 requestObject: {},
-                localUsername: "99",
             },
         );
     },
@@ -38,7 +35,6 @@ export const ruleAndPolicyAPIs = {
             "core/RuleAndPolicy_GetBookingTimeLimit_Rule",
             {
                 requestObject: {},
-                localUsername: "99",
             },
         );
     },
@@ -47,7 +43,6 @@ export const ruleAndPolicyAPIs = {
             "core/RuleAndPolicy_GetPenalty_Cat",
             {
                 requestObject: {},
-                localUsername: "99",
             },
         );
     },
@@ -56,7 +51,6 @@ export const ruleAndPolicyAPIs = {
             "core/RuleAndPolicy_GetPenalty_Rule",
             {
                 requestObject: {},
-                localUsername: "99",
             },
         );
     },

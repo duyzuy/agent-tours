@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import {
     IStockListOfInventoryRs,
@@ -19,7 +19,6 @@ export const stockInventoryAPIs = {
                 requestObject: {
                     type,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -32,7 +31,6 @@ export const stockInventoryAPIs = {
                 },
                 pageCurrent: queryParams?.pageCurrent,
                 pageSize: queryParams?.pageSize,
-                localUsername: "99",
             },
         );
     },
@@ -43,7 +41,6 @@ export const stockInventoryAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -54,7 +51,6 @@ export const stockInventoryAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -66,7 +62,6 @@ export const stockInventoryAPIs = {
             requestObject: {
                 inventoryStockId,
             },
-            localUsername: "99",
         });
     },
 
@@ -77,7 +72,6 @@ export const stockInventoryAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },

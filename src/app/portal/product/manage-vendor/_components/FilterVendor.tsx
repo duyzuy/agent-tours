@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { Form, Row, Col, Input, Select, Button, SelectProps } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { FilterOutlined } from "@ant-design/icons";
 import { VendorQueryParams } from "@/models/management/vendor.interface";
 export interface FilterVendorProps {

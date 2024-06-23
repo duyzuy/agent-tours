@@ -2,7 +2,7 @@ import { object, string, ObjectSchema, number, array } from "yup";
 
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { TemplateSellableFormData } from "../modules/templateSellable.interface";
 import { IDestination } from "@/models/management/region.interface";
 

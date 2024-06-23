@@ -13,7 +13,7 @@ import {
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetSellableListCoreQuery } from "@/queries/core/Sellable";
 import { SellableQueryParams } from "@/models/management/core/sellable.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import FormItem from "@/components/base/FormItem";
 import SellableListContainer from "./_components/SellableListContainer";
 import {

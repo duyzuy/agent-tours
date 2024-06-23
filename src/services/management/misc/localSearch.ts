@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import {
     LocalSearchPayload,
     LocalSearchDestinationListRs,

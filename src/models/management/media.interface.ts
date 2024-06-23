@@ -1,5 +1,5 @@
 import { UploadFile } from "antd";
-import { BaseResponse } from "./common.interface";
+import { BaseResponse } from "../common.interface";
 export interface IMedia {
     name: string;
     slug: string;

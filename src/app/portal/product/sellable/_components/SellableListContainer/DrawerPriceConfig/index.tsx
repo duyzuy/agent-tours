@@ -313,7 +313,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
         <Drawer
             title={"Thiết lập giá"}
             destroyOnClose
-            height={"90vh"}
+            height={"95vh"}
             onClose={onCancel}
             placement="bottom"
             extra={
@@ -398,7 +398,7 @@ const DrawerPriceConfig: React.FC<DrawerTemplateSellableProps> = ({
             <Form form={form} component={false}>
                 <CustomTable
                     size="small"
-                    scroll={{ x: 1600, y: "60vh" }}
+                    scroll={{ x: 1600 }}
                     dataSource={data}
                     columns={mergedColumns as PriceConfigColumnTypes}
                     rowKey={(record) => record.index}

@@ -10,7 +10,7 @@ import { queryCore } from "@/queries/var";
 import { useQueryClient } from "@tanstack/react-query";
 import { VendorFormData } from "./manageVendor.interface";
 import useMessage from "@/hooks/useMessage";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IVendor } from "@/models/management/vendor.interface";
 
 export interface UseManageVendor {

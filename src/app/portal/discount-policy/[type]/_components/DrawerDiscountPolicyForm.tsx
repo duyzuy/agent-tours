@@ -22,7 +22,7 @@ import { DiscountType } from "@/models/management/core/discountPolicy.interface"
 
 import { DiscountPolicyFormData } from "../../modules/discountPolicy.interface";
 import { discountPolicySchema } from "../../schema/discountPolicy.schema";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IDestination } from "@/models/management/region.interface";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";

@@ -17,7 +17,7 @@ import {
     isInValidFileSize,
     isInvalidFile,
 } from "@/helpers/mediaFiles";
-import { BaseResponse, Status } from "@/models/management/common.interface";
+import { BaseResponse, Status } from "@/models/common.interface";
 
 export async function POST(request: NextRequest) {
     const headersList = headers();

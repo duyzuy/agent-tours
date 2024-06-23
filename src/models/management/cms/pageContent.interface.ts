@@ -1,4 +1,4 @@
-import { BaseResponse } from "../common.interface";
+import { BaseResponse } from "../../common.interface";
 import { LangCode } from "./language.interface";
 export enum PageContentStatus {
     PUBLISH = "publish",

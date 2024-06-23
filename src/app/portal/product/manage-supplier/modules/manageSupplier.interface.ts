@@ -1,4 +1,4 @@
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { IVendor } from "@/models/management/vendor.interface";
 

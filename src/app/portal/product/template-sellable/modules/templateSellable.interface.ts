@@ -1,7 +1,7 @@
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { IDestination } from "@/models/management/region.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 export class TemplateSellableFormData {
     cmsIdentity?: string;

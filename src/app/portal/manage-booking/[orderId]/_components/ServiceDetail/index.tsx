@@ -8,7 +8,7 @@ import { PlusCircleFilled } from "@ant-design/icons";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { IPassengerInformation } from "@/models/management/booking/passengerInformation.interface";
 import { isEmpty } from "lodash";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 
 interface ServiceDetailProps {
     serviceList: IOrderDetail["ssr"][0]["booking"][];

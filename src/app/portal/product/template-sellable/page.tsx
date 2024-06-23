@@ -18,7 +18,7 @@ import { Divider, Space, Tag, Form, Radio, TablePaginationConfig } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { FilterValue } from "antd/es/table/interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 const SellTemplatePage = () => {
     const [isOpen, setOpenDrawer] = useState(false);

@@ -1,4 +1,4 @@
-import { BaseResponse } from "../common.interface";
+import { BaseResponse } from "../../common.interface";
 export enum EProductType {
     EXTRA = "EXTRA",
     TOUR = "TOUR",

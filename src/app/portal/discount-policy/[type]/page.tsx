@@ -16,7 +16,7 @@ import { createDynamicDiscountColumns } from "./columns";
 import { PaginationProps } from "antd";
 import { DiscountPolicyFormData } from "../modules/discountPolicy.interface";
 import ModalDiscountDetail from "./_components/ModalDiscountDetail";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 interface DiscountPolicyPageProps {
     params: {

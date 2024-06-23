@@ -13,7 +13,7 @@ import {
 } from "@/models/management/core/inventory.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IStock } from "@/models/management/core/stock.interface";
 import {
     ISellable,
@@ -145,7 +145,6 @@ export const stockSchemaDetail: ObjectSchema<Partial<IStock>> = object({
 });
 
 export const sellableSchemaDetail: ObjectSchema<Partial<ISellable>> = object({
-    //
     recId: number().required("SellableId bị thiếu."),
     type: string(),
     validFrom: string(),
@@ -155,6 +154,7 @@ export const sellableSchemaDetail: ObjectSchema<Partial<ISellable>> = object({
     open: number(),
     used: number(),
     closeDate: string(),
+    limitPerBooking: number(),
     code: string(),
     deadlineJson: string(),
     endDate: string(),

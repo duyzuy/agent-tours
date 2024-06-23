@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 
-import DrawerVendor, {
+import DrawerSupplier, {
     DrawerSupplierProps,
     EActionType,
 } from "./_components/DrawerSupplier";
@@ -14,7 +14,6 @@ import {
 } from "@/models/management/supplier.interface";
 import useManageSupplier from "./modules/useManageSupplier";
 import { useGetSupplierListCoreQuery } from "@/queries/core/supplier";
-import { Status } from "@/models/management/common.interface";
 import ModalRecordDetail from "./_components/ModalRecordDetail";
 import FilterFormData from "./_components/FilterFormData";
 
@@ -110,7 +109,7 @@ const ManageSupplierPage = () => {
                         })),
                 }}
             />
-            <DrawerVendor
+            <DrawerSupplier
                 isOpen={showDrawer}
                 actionType={actionType}
                 initialValues={editRecord}

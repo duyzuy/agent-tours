@@ -5,7 +5,7 @@ import {
     SupplierQueryParams,
 } from "@/models/management/supplier.interface";
 import { useGetSupplierListCoreQuery } from "@/queries/core/supplier";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 export type SelectorSupplierProps = SelectProps<number, ISupplier> & {
     value?: number;

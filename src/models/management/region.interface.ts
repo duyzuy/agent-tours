@@ -1,5 +1,5 @@
 import { LangCode } from "./cms/language.interface";
-import { BaseResponse, Status } from "./common.interface";
+import { BaseResponse, Status } from "../common.interface";
 
 export interface IStateProvince {
     recId: number;

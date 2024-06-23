@@ -1,10 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
-import styled from "styled-components";
-import BoxSearchTour from "./BoxSearchTour";
 import NavbarSecond from "./NavbarSecond";
+import BoxSearchTourFe from "../BoxSearchTourFe";
+import { Suspense } from "react";
 
-const TopSliderSection = () => {
+const TopSliderSection = async () => {
     return (
         <div className="page-middle relative pt-8 pb-6 lg:pb-16 w-full flex flex-col justify-end lg:justify-between min-h-[500px] lg:h-[650px]">
             <NavbarSecond className="hidden lg:block" />
@@ -30,7 +29,9 @@ const TopSliderSection = () => {
                             tốt nhất
                         </p>
                     </div>
-                    <BoxSearchTour />
+                    <Suspense fallback="loadingnn">
+                        <BoxSearchTourFe />
+                    </Suspense>
                 </div>
             </div>
         </div>

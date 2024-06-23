@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import {
     IInventoryListRs,
@@ -16,7 +16,6 @@ export const inventoryAPIs = {
                 },
                 pageCurrent: queryParams?.pageCurrent,
                 pageSize: queryParams?.pageSize,
-                localUsername: "99",
             },
         );
     },
@@ -25,7 +24,6 @@ export const inventoryAPIs = {
             "core/Inventory_List",
             {
                 requestObject: { recId },
-                localUsername: "99",
             },
         );
     },
@@ -34,7 +32,6 @@ export const inventoryAPIs = {
             "core/Inventory_Addnew",
             {
                 requestObject: { ...payload },
-                localUsername: "99",
             },
         );
     },
@@ -43,7 +40,6 @@ export const inventoryAPIs = {
             "core/Inventory_Edit",
             {
                 requestObject: { recId, name },
-                localUsername: "99",
             },
         );
     },
@@ -52,7 +48,6 @@ export const inventoryAPIs = {
             "core/Inventory_Confirm",
             {
                 requestObject: { recId },
-                localUsername: "99",
             },
         );
     },
@@ -61,7 +56,6 @@ export const inventoryAPIs = {
             "core/Inventory_Delete",
             {
                 requestObject: { recId },
-                localUsername: "99",
             },
         );
     },

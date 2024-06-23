@@ -1,5 +1,5 @@
 import { useBookingSelector } from "../hooks/useBooking";
-import { PassengerType } from "@/models/management/common.interface";
+import { PassengerType } from "@/models/common.interface";
 import { IBookingItem } from "./bookingInformation.interface";
 import { useCallback } from "react";
 const useBreakDownSummary = () => {

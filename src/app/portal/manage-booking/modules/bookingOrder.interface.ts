@@ -1,5 +1,5 @@
 import { IInvoice } from "@/models/management/booking/invoice.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 
 export interface IBookingOrderCustomerItem {
     recId?: number;

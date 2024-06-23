@@ -11,7 +11,7 @@ import useCRUDSellable from "../../sellable/modules/useCRUDSellable";
 import PageContainer from "@/components/admin/PageContainer";
 import SellableListContainer from "../../sellable/_components/SellableListContainer";
 import SellableFormContainer from "../../sellable/_components/SellableFormContainer";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { IDestination } from "@/models/management/region.interface";
 import { formatDate } from "@/utils/date";
 import { SellableQueryParams } from "@/models/management/core/sellable.interface";

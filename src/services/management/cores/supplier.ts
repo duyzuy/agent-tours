@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/management/common.interface";
+import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
 import {
     SupplierListRs,
@@ -17,7 +17,6 @@ export const supplierAPIs = {
                 },
                 pageCurrent: queryParams?.pageCurrent,
                 pageSize: queryParams?.pageSize,
-                localUsername: "99",
             },
         );
     },
@@ -28,7 +27,6 @@ export const supplierAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -39,7 +37,6 @@ export const supplierAPIs = {
                 requestObject: {
                     ...payload,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -50,7 +47,6 @@ export const supplierAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -61,7 +57,6 @@ export const supplierAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -72,7 +67,6 @@ export const supplierAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },
@@ -83,7 +77,6 @@ export const supplierAPIs = {
                 requestObject: {
                     recId,
                 },
-                localUsername: "99",
             },
         );
     },

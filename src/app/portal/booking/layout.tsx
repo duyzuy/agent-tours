@@ -1,26 +1,22 @@
 "use client";
 import React, { useState } from "react";
 import { BookingContext } from "@/context/bookingContext";
-
+import { initBookingInfo } from "./modules/useSearchBookingInformation";
 import {
     BookingInformation,
     BookingInfo,
 } from "./modules/bookingInformation.interface";
 import { SearchBookingFormData } from "./modules/searchBooking.interface";
-export const initBookingInfo = new BookingInfo(
-    undefined,
-    [],
-    undefined,
-    undefined,
-);
-export const initSearchFormData = new SearchBookingFormData(
-    undefined,
-    undefined,
-    [],
-    [],
-    [],
-);
+
 const BookingProvider = ({ children }: { children: React.ReactNode }) => {
+    const initSearchFormData = new SearchBookingFormData(
+        undefined,
+        undefined,
+        [],
+        [],
+        [],
+    );
+
     const [bookingInformation, setBookingInformation] = useState(
         () =>
             new BookingInformation(

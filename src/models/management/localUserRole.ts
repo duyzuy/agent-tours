@@ -1,4 +1,4 @@
-import { BaseResponse } from "./common.interface";
+import { BaseResponse } from "../common.interface";
 import { IRolesPermissionsRs } from "./role.interface";
 interface ILocalUserRoles {
     action: string;

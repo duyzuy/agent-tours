@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CustomTable from "@/components/admin/CustomTable";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
-import { Status } from "@/models/management/common.interface";
+import { Status } from "@/models/common.interface";
 import { moneyFormatVND } from "@/utils/helper";
 import {
     CheckCircleOutlined,
