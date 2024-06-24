@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-// Import Swiper React components
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper";
-// Import Swiper styles
+
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";

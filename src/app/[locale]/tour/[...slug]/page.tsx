@@ -85,7 +85,11 @@ export default async function PageTourDetail({
                         <ProductHeader
                             name={cmsTemplateContent.name}
                             tourCode={currentSellable?.template.code}
-                        />
+                        >
+                            <h1 className="text-xl text-primary-default font-bold">
+                                {cmsTemplateContent.name}
+                            </h1>
+                        </ProductHeader>
 
                         <DynamicGalleries
                             data={cmsTemplateContent}

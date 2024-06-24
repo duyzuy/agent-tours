@@ -3,7 +3,7 @@ import HamburgerButton from "@/components/frontend/HamburgerButton";
 import HeaderTop from "./HeaderTop";
 import HeaderMain from "./HeaderMain";
 
-const Header = () => {
+export default async function Header() {
     return (
         <header className="bg-white drop-shadow-sm relative z-20">
             <nav className="mx-auto flex items-center justify-between py-4 container px-4 lg:px-0">
@@ -25,5 +25,4 @@ const Header = () => {
             </nav>
         </header>
     );
-};
-export default Header;
+}

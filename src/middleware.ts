@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { locales, localeDefault } from "./constants/locale.constant";
 import createMiddleware from "next-intl/middleware";
-import { withAuth } from "next-auth/middleware";
 import { CLIENT_LINKS } from "./constants/client/clientRouter.constant";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./auth";
 
 const intlMiddleware = createMiddleware({
     locales: ["vi", "en"],

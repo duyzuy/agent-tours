@@ -1,6 +1,5 @@
+"use client";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { Space } from "antd";
 import { Link } from "@/utils/navigation";
@@ -11,11 +10,17 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
 
-const AccountItem = () => {
+interface CardDropdownProps {
+    isAuth?: boolean;
+    username?: string | null;
+    children?: React.ReactNode;
+}
+const CardDropdown: React.FC<CardDropdownProps> = ({
+    isAuth,
+    username,
+    children,
+}) => {
     const t = useTranslations("String");
-    const params = useParams();
-    const { data: session } = useSession();
-    // const { session } = data;
 
     const [showDropdown, setShowDropdown] = useState(false);
     const toggleDropdown = () => {
@@ -27,7 +32,7 @@ const AccountItem = () => {
     });
     return (
         <div className="item-account">
-            {!session ? (
+            {!isAuth ? (
                 <Space className="inner">
                     <div>
                         <Button type="primary" shape="round">
@@ -53,7 +58,7 @@ const AccountItem = () => {
                         <span className="mr-2">
                             <IconAccount className="w-5 h-5" />
                         </span>
-                        <span className="name">{session?.user?.name}</span>
+                        <span className="name">{username}</span>
                     </div>
                     {showDropdown ? (
                         <div
@@ -64,7 +69,7 @@ const AccountItem = () => {
                                 <ul className="">
                                     <li>
                                         <Link
-                                            href="/my-account"
+                                            href={CLIENT_LINKS.Customer}
                                             className="block py-2 px-3 hover:bg-gray-100 rounded-md"
                                         >
                                             <span className="block  text-gray-600">
@@ -93,4 +98,4 @@ const AccountItem = () => {
         </div>
     );
 };
-export default AccountItem;
+export default CardDropdown;
