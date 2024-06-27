@@ -33,8 +33,8 @@ export interface ICMSTemplateContent {
     metaKeyword: string;
     publishDate: string;
     status: PageContentStatus;
-    includeAndNotes: ICMSTemplateContentMetaData;
-    itineraries: ICMSTemplateContentMetaData;
+    includeAndNotes: ICMSTemplateContentMetaData | null;
+    itineraries: ICMSTemplateContentMetaData | null;
     slug: string;
     lang: LangCode;
 }

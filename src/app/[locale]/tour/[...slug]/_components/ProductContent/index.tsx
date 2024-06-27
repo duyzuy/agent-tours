@@ -16,20 +16,21 @@ interface ProductContentProps {
     data: FeTemplateContentResponse["result"][0];
 }
 const ProductContent: React.FC<ProductContentProps> = ({ data }) => {
-    const tourInformationsListContent = data.includeAndNotes.metaContent.reduce<
-        { content: string; key: string; name: string }[]
-    >((acc, item, _index) => {
-        return [
-            ...acc,
-            {
-                name: item.title,
-                content: item.content,
-                key: (_index + 1).toString(),
-            },
-        ];
-    }, []);
+    const tourInformationsListContent =
+        data.includeAndNotes?.metaContent.reduce<
+            { content: string; key: string; name: string }[]
+        >((acc, item, _index) => {
+            return [
+                ...acc,
+                {
+                    name: item.title,
+                    content: item.content,
+                    key: (_index + 1).toString(),
+                },
+            ];
+        }, []);
 
-    const tourScheduleContent = data.itineraries.metaContent.reduce<
+    const tourScheduleContent = data.itineraries?.metaContent.reduce<
         { content: string; key: string; name: string }[]
     >((acc, item, _index) => {
         return [
@@ -49,8 +50,8 @@ const ProductContent: React.FC<ProductContentProps> = ({ data }) => {
             icon: <IconScrollText />,
             children: (
                 <TourInformationPanel
-                    descriptions={data.includeAndNotes.content}
-                    items={tourInformationsListContent}
+                    descriptions={data.includeAndNotes?.content}
+                    items={tourInformationsListContent ?? []}
                 />
             ),
         },
@@ -60,8 +61,8 @@ const ProductContent: React.FC<ProductContentProps> = ({ data }) => {
             icon: <IconCalendarCheck />,
             children: (
                 <TourInformationPanel
-                    descriptions={data.itineraries.content}
-                    items={tourScheduleContent}
+                    descriptions={data.itineraries?.content}
+                    items={tourScheduleContent ?? []}
                 />
             ),
         },

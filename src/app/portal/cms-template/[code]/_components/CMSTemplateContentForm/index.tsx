@@ -526,7 +526,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                             type="includeAndNote"
                             referenceId={formData.id}
                             lang={lang}
-                            initialData={initData?.includeAndNotes}
+                            initialData={initData?.includeAndNotes ?? undefined}
                             className="mb-6"
                             onSubmit={onSubmitMetaContent}
                         />
@@ -535,7 +535,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                             type="itinerary"
                             referenceId={formData.id}
                             lang={lang}
-                            initialData={initData?.itineraries}
+                            initialData={initData?.itineraries ?? undefined}
                             className="mb-6"
                             onSubmit={onSubmitMetaContent}
                         />
