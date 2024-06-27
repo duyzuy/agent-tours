@@ -2,6 +2,8 @@ import { BookingActions, EBookingActions } from "../actions/bookingActions";
 import { FeBookingFormData } from "../../(booking)/modules/booking.interface";
 export const initBookingState = new FeBookingFormData(
     undefined,
+    undefined,
+    [],
     { adult: 1, child: 0, infant: 0 },
     [],
     undefined,
@@ -38,6 +40,14 @@ export const bookingReducer = (
                 bookingPassenger: {
                     ...initBookingState.bookingPassenger,
                 },
+            };
+            return state;
+        }
+        case EBookingActions.SET_PRODUCT_DETAIL_ITEMS: {
+            const { payload } = action;
+            state = {
+                ...state,
+                bookingDetails: [...(payload || [])],
             };
             return state;
         }

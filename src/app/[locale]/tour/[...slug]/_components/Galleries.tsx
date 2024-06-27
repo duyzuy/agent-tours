@@ -55,7 +55,7 @@ const Galleries: React.FC<GalleriesProps> = ({ data, data2, images = [] }) => {
                                     alt="thumbnail"
                                     fill
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    style={{ objectFit: "contain" }}
+                                    className="bg-slate-50 object-contain italic"
                                 />
                             </div>
                         </SwiperSlide>
@@ -85,9 +85,7 @@ const Galleries: React.FC<GalleriesProps> = ({ data, data2, images = [] }) => {
                                 alt={`thumbnail-${_index}`}
                                 fill
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                style={{
-                                    objectFit: "cover",
-                                }}
+                                className="bg-slate-50 object-cover italic"
                             />
                         </div>
                     </SwiperSlide>

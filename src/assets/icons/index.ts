@@ -24,6 +24,7 @@ import IconShippingCart from "./IconShoppingCart";
 import IconSearch from "./IconSearch";
 import IconPlane from "./IconPlane";
 import IconMeal from "./IconMeal";
+import IConTicketPercent from "./IconTicketPercent";
 
 export {
     IconAccount,
@@ -52,4 +53,5 @@ export {
     IconSearch,
     IconPlane,
     IconMeal,
+    IConTicketPercent,
 };

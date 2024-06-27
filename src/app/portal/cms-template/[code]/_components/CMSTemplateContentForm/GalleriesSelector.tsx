@@ -58,7 +58,7 @@ const GallerySelector: React.FC<GallerySelectorProps> = ({
                                 className="group/item w-20 h-20 bg-slate-100 flex items-center justify-center overflow-hidden relative rounded-sm"
                             >
                                 <Image
-                                    src={`${mediaConfig.rootPath}/${pathItem}`}
+                                    src={`${mediaConfig.rootApiPath}/${pathItem}`}
                                     alt="thumb"
                                     fill
                                     style={{

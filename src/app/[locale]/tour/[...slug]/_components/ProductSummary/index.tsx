@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useTransition } from "react";
 import QuantityInput from "@/components/frontend/QuantityInput";
 import { Flex, Button, Form, DatePickerProps } from "antd";
 import classNames from "classnames";
@@ -18,6 +18,9 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
 import HotlineBox from "@/components/frontend/HotlineBox";
 import SummaryCard from "@/components/frontend/SummaryCard";
+import { formatDate } from "@/utils/date";
+import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
+
 interface Props {
     className?: string;
     sellableList?: FeProductItem[];
@@ -33,8 +36,13 @@ const ProductSummary = ({
     );
 
     const [showBreakDown, setShowBreakDown] = useState(false);
-    const { onInitProduct, onSetQuantityPassenger, initBookingDetailItems } =
-        useSetProductItem();
+    const {
+        initProduct,
+        setQuantityPassenger,
+        resetQuantityPassenger,
+        initBookingDetailItemsThenGoToPassengerInfo,
+    } = useSetProductItem();
+    const { addCouponPolicy, removeCouponPolicy } = useCoupon();
     const { productBreakdown, subtotal } = useSummaryPricingSelect();
     const t = useTranslations("String");
 
@@ -48,6 +56,10 @@ const ProductSummary = ({
         },
         [],
     );
+
+    const [isPending, startTransition] = useTransition();
+    const [isUpdateTingPaxQuantity, setStartUpdateQuantity] = useTransition();
+
     const isSameDate = (d: Dayjs) => {
         return departureDates?.some((item) => {
             return d.isSame(dayjs(item.departDate), "date");
@@ -85,9 +97,13 @@ const ProductSummary = ({
 
         newProduct && setProductItem(newProduct);
     };
-
+    const goToPasssenger = () => {
+        startTransition(() => {
+            initBookingDetailItemsThenGoToPassengerInfo();
+        });
+    };
     useEffect(() => {
-        onInitProduct(productItem);
+        initProduct(productItem);
     }, [productItem]);
 
     return (
@@ -104,6 +120,17 @@ const ProductSummary = ({
                         : undefined
                 }
                 open={lowestPriceConfigItem?.open}
+                promotions={productItem?.promotions.map((item) => {
+                    return {
+                        name: item.name,
+                        code: item.code,
+                        price: moneyFormatVND(item.discountAmount),
+                        validFrom: formatDate(item.validFrom, "dd/MM/yyyy"),
+                        validTo: formatDate(item.validTo, "dd/MM/yyyy"),
+                        type: item.type,
+                    };
+                })}
+                onSelectPromotion={() => {}}
             >
                 <Form layout="vertical">
                     <FormItem label="Ngày khởi hành">
@@ -131,7 +158,7 @@ const ProductSummary = ({
                         infant: bookingPassenger.infant,
                     }}
                     onChangePassenger={(type, quantity, action) =>
-                        onSetQuantityPassenger({
+                        setQuantityPassenger({
                             type: type,
                             quantity: quantity,
                             action,
@@ -143,16 +170,17 @@ const ProductSummary = ({
                     onClick={() => setShowBreakDown(true)}
                     subtotal={moneyFormatVND(subtotal)}
                 />
-
                 <div className="actions py-2 mt-2">
                     <Flex gap="middle">
                         <Button
                             type="primary"
                             block
-                            className="h-11 bg-primary-default"
-                            onClick={initBookingDetailItems}
+                            className="bg-primary-default"
+                            onClick={goToPasssenger}
+                            size="large"
+                            loading={isPending}
                         >
-                            Đặt tour ngay
+                            Đặt ngay
                         </Button>
                     </Flex>
                 </div>
@@ -166,7 +194,7 @@ const ProductSummary = ({
             >
                 <div className="modal__breakdown-header mb-4">
                     <p className="text-center text-lg">
-                        {t("modal.breakdown.title")}
+                        {t("modalBreakdown.title")}
                     </p>
                 </div>
                 <div className="modal__breakdown-body">
@@ -198,7 +226,7 @@ const ProductSummary = ({
                         },
                     )}
                     <div className="subtotal border-t pt-3 mt-3 justify-between flex">
-                        <span>Tạm tính</span>
+                        <span>{t("subtotal")}</span>
                         <span className="text-lg text-red-600 font-[500]">
                             {moneyFormatVND(subtotal)}
                         </span>

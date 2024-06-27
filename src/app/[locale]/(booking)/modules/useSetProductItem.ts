@@ -6,38 +6,41 @@ import { useCallback } from "react";
 import useMessage from "@/hooks/useMessage";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { FeBookingInformation } from "./booking.interface";
+import { useRouter } from "@/utils/navigation";
+
 const useSetProductItem = () => {
     const [bookingInformation, dispatch] = useBookingInformation();
 
     const message = useMessage();
+    const router = useRouter();
 
     const { product, bookingPassenger, bookingDetails } = bookingInformation;
-    const onInitProduct = (product?: FeProductItem) => {
+    const initProduct = (product?: FeProductItem) => {
         dispatch({ type: EBookingActions.SET_PRODUCT, payload: product });
     };
 
     const getProductFlatPricings = useCallback(() => {
         let items: FeProductItem["configs"] = [];
 
-        bookingInformation?.product?.configs.forEach((configItem) => {
+        product?.configs.forEach((configItem) => {
             Array.from({ length: configItem.open }, (v, k) => {
                 items = [...items, configItem];
             });
         });
         return items.sort((a, b) => a.adult - b.adult);
-    }, []);
+    }, [product]);
     const getTotalAmountPax = () => {
         return Object.entries(bookingPassenger).reduce(
             (acc, [k, v]) => (acc += v),
             0,
         );
     };
-    const onResetQuantityPassenger = () => {
+    const resetQuantityPassenger = () => {
         dispatch({
             type: EBookingActions.RESET_PASSENGER_QUANTITY,
         });
     };
-    const onSetQuantityPassenger = (passenger: {
+    const setQuantityPassenger = (passenger: {
         type: PassengerType;
         quantity: number;
         action: "plus" | "minus";
@@ -67,7 +70,7 @@ const useSetProductItem = () => {
             payload: { passengerType: type, quantity: quantity },
         });
     };
-    const initBookingDetailItems = () => {
+    const initBookingDetailItemsThenGoToPassengerInfo = () => {
         const totalAmountPax = getTotalAmountPax();
         let pricingListPicker = getProductFlatPricings();
 
@@ -111,12 +114,13 @@ const useSetProductItem = () => {
             type: EBookingActions.SET_PRODUCT_DETAIL_ITEMS,
             payload: bookingDetailItemBookedList,
         });
+        router.push("/passenger");
     };
     return {
-        onInitProduct,
-        onSetQuantityPassenger,
-        onResetQuantityPassenger,
-        initBookingDetailItems,
+        initProduct,
+        setQuantityPassenger,
+        resetQuantityPassenger,
+        initBookingDetailItemsThenGoToPassengerInfo,
     };
 };
 export default useSetProductItem;

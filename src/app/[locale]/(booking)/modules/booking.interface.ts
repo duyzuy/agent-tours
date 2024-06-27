@@ -3,24 +3,27 @@ import { ICustomerInformation } from "@/models/management/booking/customer.inter
 import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { PassengerType } from "@/models/common.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
-import { IPassengerInformation } from "@/models/management/booking/passengerInformation.interface";
+import { FePassengerInformationFormData } from "../passenger/modules/passegner.interface";
+import { IPromotion } from "@/models/management/core/promotion.interface";
 
 export interface IFeSSRItem {
-    priceConfig?: PriceConfig;
-    qty?: number;
-    amount?: number;
-    type?: PassengerType;
+    priceConfig: PriceConfig;
+    qty: number;
+    amount: number;
+    type: PassengerType;
 }
 export interface IFeBookingDetailItem {
-    priceConfig?: PriceConfig;
-    index?: number;
-    amount?: number;
-    type?: PassengerType;
-    pax?: IPassengerInformation;
+    priceConfig: PriceConfig;
+    index: number;
+    amount: number;
+    type: PassengerType;
+    pax?: FePassengerInformationFormData;
     ssr?: IFeSSRItem[];
 }
 export interface FeBookingInformation {
     product?: FeProductItem;
+    couponPolicy?: IPromotion;
+    coupons?: IPromotion[];
     bookingPassenger: {
         [PassengerType.ADULT]: number;
         [PassengerType.CHILD]: number;
@@ -33,6 +36,8 @@ export interface FeBookingInformation {
 }
 export class FeBookingFormData implements FeBookingInformation {
     product?: FeProductItem;
+    couponPolicy?: IPromotion;
+    coupons?: IPromotion[];
     bookingDetails?: IFeBookingDetailItem[];
     bookingPassenger: {
         [PassengerType.ADULT]: number;
@@ -45,6 +50,8 @@ export class FeBookingFormData implements FeBookingInformation {
 
     constructor(
         product: FeProductItem | undefined,
+        couponPolicy: IPromotion | undefined,
+        coupons: IPromotion[] | undefined,
         bookingPassenger: {
             [PassengerType.ADULT]: number;
             [PassengerType.CHILD]: number;
@@ -56,6 +63,8 @@ export class FeBookingFormData implements FeBookingInformation {
         invoiceInformation: IInvoice | undefined,
     ) {
         this.product = product;
+        this.coupons = coupons;
+        this.couponPolicy = couponPolicy;
         this.bookingDetails = bookingDetails;
         this.bookingPassenger = bookingPassenger;
         this.bookingSsr = bookingSsr;

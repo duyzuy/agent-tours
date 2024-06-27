@@ -76,7 +76,7 @@ export default async function PageTourDetail({
     return (
         <div className="page-detail">
             <BreadCrumb items={[{ title: cmsTemplateContent.name }]} />
-            <div className="container mx-auto py-8">
+            <div className="container mx-auto py-8 lg:px-8 md:px-6 px-4">
                 <div className="flex flex-wrap">
                     <div
                         className="tour-contents w-full lg:w-7/12"

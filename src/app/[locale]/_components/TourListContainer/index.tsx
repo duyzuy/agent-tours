@@ -42,7 +42,7 @@ const TourListContainer: React.FC<TourListContainerProps> = async ({
                 <div className="tour__list-head mb-6 font-[500]">
                     <h3 className="text-2xl">{title}</h3>
                 </div>
-                <div className="tour__list-items grid grid-cols-4 gap-6">
+                <div className="tour__list-items grid lg:grid-cols-4 grid-cols-2 gap-3 lg:gap-6">
                     {productList?.map((product) => (
                         <TourCard
                             key={product.recId}

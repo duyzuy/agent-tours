@@ -8,5 +8,6 @@ export interface IPromotion {
     type: DiscountType;
     name: string;
     descriptions: string;
+    code: string;
     discountAmount: number;
 }

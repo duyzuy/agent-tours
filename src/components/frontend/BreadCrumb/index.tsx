@@ -9,7 +9,7 @@ export const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
     const t = useTranslations("String");
     return (
         <div className="breakcrumb bg-gray-100">
-            <div className="container mx-auto">
+            <div className="container mx-auto px-4 md:px-6 lg:px-8">
                 <ul className="flex items-center py-4">
                     <li className="text-xs font-bold text-gray-600">
                         <Link href="/">{t("home")}</Link>

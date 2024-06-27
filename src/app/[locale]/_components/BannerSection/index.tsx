@@ -2,9 +2,9 @@ import Image from "next/image";
 const BannerSection = () => {
     return (
         <section className="banners">
-            <div className="container mx-auto lg:px-0 px-4">
-                <div className="items-center flex flex-wrap -mx-3">
-                    <div className="banner overflow-hidden mb-3 px-3 w-1/2 md:w-1/3">
+            <div className="container mx-auto px-3 md:px-6 lg:px-8">
+                <div className="items-center grid grid-cols-2 lg:grid-cols-4 lg:gap-6 gap-3">
+                    <div className="banner overflow-hidden">
                         <Image
                             src="/assets/images/banner-1.jpg"
                             alt="banner"
@@ -13,7 +13,7 @@ const BannerSection = () => {
                             className="rounded-md"
                         />
                     </div>
-                    <div className="banner  overflow-hidden mb-3 px-3 w-1/2 md:w-1/3">
+                    <div className="banner  overflow-hidden">
                         <Image
                             src="/assets/images/banner-2.jpg"
                             alt="banner"
@@ -22,7 +22,7 @@ const BannerSection = () => {
                             className="rounded-md"
                         />
                     </div>
-                    <div className="banner overflow-hidden mb-3 px-3 w-1/2 md:w-1/3">
+                    <div className="banner overflow-hidden">
                         <Image
                             src="/assets/images/banner-3.jpg"
                             alt="banner"
