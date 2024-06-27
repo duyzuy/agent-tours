@@ -23,7 +23,7 @@ const ReservationPage = () => {
     }, [bookingInformation]);
     useEffect(() => {
         if (isUndefined(bookingOrder)) {
-            router.push("./portal/booking");
+            router.push("/portal/booking");
         }
     }, [bookingOrder]);
     return (
@@ -155,7 +155,7 @@ const ReservationPage = () => {
                             <Space>
                                 <Button
                                     onClick={() =>
-                                        router.push("./portal/booking")
+                                        router.push("/portal/booking")
                                     }
                                 >
                                     Về trang đặt chỗ
@@ -164,7 +164,7 @@ const ReservationPage = () => {
                                     type="primary"
                                     onClick={() =>
                                         router.push(
-                                            `./portal/manage-booking/${bookingOrder?.recId}`,
+                                            `/portal/manage-booking/${bookingOrder?.recId}`,
                                         )
                                     }
                                 >

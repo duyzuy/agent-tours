@@ -81,7 +81,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
     const onClickBuyService = () => {
         startTransition(() => {
             router.push(
-                `./portal/manage-booking/${params.orderId}/addon-service`,
+                `/portal/manage-booking/${params.orderId}/addon-service`,
             );
         });
     };
@@ -91,10 +91,10 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
             name="Chi tiết booking"
             modelName="Chi tiết booking"
             breadCrumItems={[
-                { title: "Quản lý booking", href: "./portal/manage-booking" },
+                { title: "Quản lý booking", href: "/portal/manage-booking" },
                 { title: "Chi tiết booking" },
             ]}
-            onBack={() => router.push("./portal/manage-booking/order-list")}
+            onBack={() => router.push("/portal/manage-booking/order-list")}
             // className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
             hideAddButton
         >

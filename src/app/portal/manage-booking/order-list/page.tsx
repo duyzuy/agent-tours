@@ -162,7 +162,7 @@ export default function ManageBookingOrderListPage() {
                 size="small"
                 rowKey={"recId"}
                 onView={(record) =>
-                    router.push(`./portal/manage-booking/${record.recId}`)
+                    router.push(`/portal/manage-booking/${record.recId}`)
                 }
                 pagination={{
                     total: reservationResponse?.totalItems,

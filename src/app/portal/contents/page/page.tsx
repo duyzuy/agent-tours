@@ -52,7 +52,7 @@ const PageManagement = () => {
                 columns={columns}
                 isLoading={isLoading}
                 onEdit={(record) =>
-                    router.push(`./portal/contents/page/${record.originId}`)
+                    router.push(`/portal/contents/page/${record.originId}`)
                 }
                 pagination={{
                     total: pageContentData?.totalItems,

@@ -33,7 +33,7 @@ const pageColumns = () => {
                             <div>no image</div>
                         ) : (
                             <Image
-                                src={`${mediaConfig.rootPath}/${record.thumbnail}`}
+                                src={`${mediaConfig.rootApiPath}/${record.thumbnail}`}
                                 alt="thumbnail"
                                 fill
                                 style={{ objectFit: "contain" }}

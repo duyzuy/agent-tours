@@ -55,7 +55,7 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
     };
     useEffect(() => {
         if (isUndefined(data) && !isLoading) {
-            router.push("./portal/contents/page");
+            router.push("/portal/contents/page");
         }
     }, [isLoading]);
 
@@ -71,7 +71,7 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
         <PageContainer
             name="Cập nhật và tạo bài viết"
             hideAddButton
-            onBack={() => router.push("./portal/contents/page")}
+            onBack={() => router.push("/portal/contents/page")}
             breadCrumItems={[
                 { title: "Trang nội dung", href: "/portal/contents/page" },
                 { title: "Cập nhật và tạo bài viết" },

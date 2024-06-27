@@ -188,7 +188,7 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
         setSplitType(type);
     useEffect(() => {
         if (isUndefined(bookingOrderDetail) && !isLoading) {
-            router.push("./portal/manage-booking");
+            router.push("/portal/manage-booking");
         }
     }, [bookingOrderDetail, isLoading]);
 
@@ -213,7 +213,7 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
                 { title: "Tách booking" },
             ]}
             onBack={() =>
-                router.push(`./portal/manage-booking/${params.orderId}`)
+                router.push(`/portal/manage-booking/${params.orderId}`)
             }
             // className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
             hideAddButton

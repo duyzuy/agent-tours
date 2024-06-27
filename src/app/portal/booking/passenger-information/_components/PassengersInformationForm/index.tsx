@@ -124,7 +124,7 @@ const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
         }, []);
         handlerSubmit(paxFormList, () => {
             onSetPassengerInformationBooking?.(passengerListForm);
-            router.push("./portal/booking/payment");
+            router.push("/portal/booking/payment");
         });
     };
 
@@ -155,14 +155,12 @@ const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
             }
         }
 
-        isChanged
-            ? setShowModal(true)
-            : router.push("./portal/booking/payment");
+        isChanged ? setShowModal(true) : router.push("/portal/booking/payment");
     };
 
     const onModalCancel = useCallback(() => setShowModal(false), []);
     const onModalConfirm = useCallback(
-        () => router.push("./portal/booking/payment"),
+        () => router.push("/portal/booking/payment"),
         [],
     );
     return (
@@ -203,7 +201,7 @@ const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
                         type="primary"
                         ghost
                         onClick={() =>
-                            router.push("./portal/booking/tour-services")
+                            router.push("/portal/booking/tour-services")
                         }
                     >
                         Mua thêm dịch vụ

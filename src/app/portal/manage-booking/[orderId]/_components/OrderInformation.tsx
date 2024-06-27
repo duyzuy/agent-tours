@@ -37,7 +37,7 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
     const onConfirmCancelBookingOrder = () =>
         onCancelBookingOrder?.(cancelBookingData, () => {
             setShowModalConfirm(false);
-            router.push("./portal/manage-booking/order-list");
+            router.push("/portal/manage-booking/order-list");
         });
     const onShowModalCancelConfirm = useCallback(
         () => setShowModalConfirm(true),
@@ -111,7 +111,7 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
                             type="primary"
                             onClick={() =>
                                 router.push(
-                                    `./portal/manage-booking/${orderId}/split-booking`,
+                                    `/portal/manage-booking/${orderId}/split-booking`,
                                 )
                             }
                         >

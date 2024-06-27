@@ -36,7 +36,7 @@ const useCRUDPageContent = () => {
                         queryKey: [queryCMS.GET_PAGE_DETAIL],
                     });
                     router.push(
-                        `./portal/contents/page/${data.result.originId}`,
+                        `/portal/contents/page/${data.result.originId}`,
                     );
                     cb?.();
                 },

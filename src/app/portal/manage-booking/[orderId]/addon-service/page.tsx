@@ -62,15 +62,15 @@ const AddonServicePage: React.FC<AddOnServiceProps> = ({ params }) => {
             name="Mua thêm dịch vụ"
             modelName="Mua thêm dịch vụ"
             breadCrumItems={[
-                { title: "Quản lý booking", href: "./portal/manage-booking" },
+                { title: "Quản lý booking", href: "/portal/manage-booking" },
                 {
                     title: "Chi tiết booking",
-                    href: `./portal/manage-booking/${params.orderId}`,
+                    href: `/portal/manage-booking/${params.orderId}`,
                 },
                 { title: "Mua thêm dịch vụ" },
             ]}
             onBack={() =>
-                router.push(`./portal/manage-booking/${params.orderId}`)
+                router.push(`/portal/manage-booking/${params.orderId}`)
             }
             //className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
             hideAddButton
@@ -91,7 +91,7 @@ const AddonServicePage: React.FC<AddOnServiceProps> = ({ params }) => {
                         className="px-6 py-6 rounded-sm"
                         onClick={() =>
                             router.push(
-                                `./portal/manage-booking/${params.orderId}`,
+                                `/portal/manage-booking/${params.orderId}`,
                             )
                         }
                     />

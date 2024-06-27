@@ -24,7 +24,7 @@ export const columnsFOPs: ColumnsType<IFormOfPaymentListRs["result"][0]> = [
                     <span className="block mb-1">{record.type}</span>
                     <span className="block text-xs mb-2">{record.fopType}</span>
                     <Link
-                        href={`./portal/manage-booking/${record.orderId}`}
+                        href={`/portal/manage-booking/${record.orderId}`}
                         className="block text-xs"
                     >
                         <span>Chi tiết đặt chỗ</span>

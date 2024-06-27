@@ -57,7 +57,7 @@ const PageCreate = () => {
         <PageContainer
             name="Tạo trang mới"
             hideAddButton
-            onBack={() => router.push("./portal/contents/page")}
+            onBack={() => router.push("/portal/contents/page")}
             breadCrumItems={[
                 { title: "Trang nội dung", href: "/portal/contents/page" },
                 { title: "Thêm mới" },

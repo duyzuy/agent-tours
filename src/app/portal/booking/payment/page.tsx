@@ -20,7 +20,7 @@ const PaymentPage = () => {
     const [bookingInformation, setBookingInfomation] = useBooking();
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
-    const { onCreateBooking } = useCreateBooking();
+    const { createBooking } = useCreateBooking();
 
     const [customerInformation, setCustomerInformation] =
         useState<CustomerInformation>(
@@ -37,7 +37,7 @@ const PaymentPage = () => {
         customerInfo,
     ) => {
         invoiceInformation;
-        onCreateBooking({ customerInfo, invoiceInfo: invoiceInformation });
+        createBooking({ customerInfo, invoiceInfo: invoiceInformation });
     };
 
     const isDisableNextAction = useMemo(() => {
@@ -49,7 +49,7 @@ const PaymentPage = () => {
 
     const goToBuyService = () => {
         startTransition(() => {
-            router.push("./portal/booking/tour-services");
+            router.push("/portal/booking/tour-services");
         });
     };
 

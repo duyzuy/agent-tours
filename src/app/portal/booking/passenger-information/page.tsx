@@ -44,7 +44,7 @@ const CustomerInformationPage = () => {
             isUndefined(bookingInformation?.bookingInfo?.bookingItems) ||
             !bookingInformation?.bookingInfo?.bookingItems.length
         ) {
-            router.push("./portal/booking");
+            router.push("/portal/booking");
         }
     }, [bookingInformation]);
 

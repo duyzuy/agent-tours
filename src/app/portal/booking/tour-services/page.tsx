@@ -108,7 +108,7 @@ const CustomerInformationPage = ({}: Props) => {
     //         isUndefined(bookingInformation?.bookingInfo?.bookingItems) ||
     //         !bookingInformation?.bookingInfo?.bookingItems.length
     //     ) {
-    //         router.push("./portal/booking");
+    //         router.push("/portal/booking");
     //     }
     // }, [bookingInformation]);
 
@@ -178,7 +178,7 @@ const CustomerInformationPage = ({}: Props) => {
                                         type="primary"
                                         onClick={() =>
                                             router.push(
-                                                "./portal/booking/payment",
+                                                "/portal/booking/payment",
                                             )
                                         }
                                     >

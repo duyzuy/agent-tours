@@ -11,12 +11,13 @@ import { CustomerInformation } from "@/models/management/booking/customer.interf
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 
 const useCreateBooking = () => {
-    const { mutate: createBooking } = useCreateBookingMutation();
+    const { mutate: makeCreateBooking } = useCreateBookingMutation();
     const [bookingInformation, setBookingInformation] = useBooking();
 
     const message = useMessage();
     const router = useRouter();
-    const onCreateBooking = ({
+
+    const createBooking = ({
         customerInfo,
         invoiceInfo,
     }: {
@@ -52,7 +53,7 @@ const useCreateBooking = () => {
             referenceId: customerInfo.referenceId,
         };
         // console.table({ bookingInformation, bookingPayload });
-        createBooking(bookingPayload, {
+        makeCreateBooking(bookingPayload, {
             onSuccess: (response) => {
                 console.log(response);
                 setBookingInformation((prev) => ({
@@ -65,7 +66,7 @@ const useCreateBooking = () => {
                     },
                     reservation: response["result"],
                 }));
-                router.push("./portal/booking/reservation");
+                router.push("/portal/booking/reservation");
             },
             onError(error, variables, context) {
                 message.error(error.message);
@@ -115,6 +116,6 @@ const useCreateBooking = () => {
         );
         return bookingDetails;
     };
-    return { onCreateBooking };
+    return { createBooking };
 };
 export default useCreateBooking;
