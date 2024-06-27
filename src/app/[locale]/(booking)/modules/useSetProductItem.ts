@@ -46,28 +46,53 @@ const useSetProductItem = () => {
         action: "plus" | "minus";
     }) => {
         const { type, quantity, action } = passenger;
+        const newPassengers = { ...bookingPassenger };
 
         if (!product) {
             throw new Error("Product invalid");
         }
         const totalAmountPax = getTotalAmountPax();
-        if (quantity < 0 && type !== PassengerType.ADULT) {
-            message.error("Số lượng không thể nhỏ hơn 0");
-            return;
-        }
-        if (quantity < 1 && type === PassengerType.ADULT) {
-            message.error("Hành khách người lớn tối thiểu phải lớn hơn 1.");
-            return;
-        }
 
         if (totalAmountPax === product.open && action === "plus") {
             message.error("Số lượng vé không đủ.");
             return;
         }
 
+        switch (type) {
+            case PassengerType.ADULT: {
+                if (
+                    (action === "plus" && quantity > 9) ||
+                    (action === "plus" &&
+                        quantity + bookingPassenger["child"] > 9)
+                ) {
+                    message.error("Số lượng hành khách tối đa là 9");
+                    return;
+                }
+                break;
+            }
+            case PassengerType.CHILD: {
+                if (
+                    (action === "plus" && quantity > 9) ||
+                    (action === "plus" &&
+                        quantity + bookingPassenger["adult"] > 9)
+                ) {
+                    message.error("Số lượng hành khách tối đa là 9");
+                    return;
+                }
+                break;
+            }
+            case PassengerType.INFANT: {
+                if (action === "plus" && quantity > bookingPassenger["adult"]) {
+                    message.error("Số lượng trẻ em tối đa bằng người lớn");
+                    return;
+                }
+                break;
+            }
+        }
+
         dispatch({
             type: EBookingActions.SET_PASSENGER_QUANTITY,
-            payload: { passengerType: type, quantity: quantity },
+            payload: newPassengers,
         });
     };
     const initBookingDetailItemsThenGoToPassengerInfo = () => {

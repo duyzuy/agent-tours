@@ -78,7 +78,7 @@ const useSelectProductTour = () => {
                 bookingItems: [...bookingItems],
             },
         }));
-        router.push("./portal/booking/payment");
+        router.push("/portal/booking/payment");
     };
     const onSetQuantityPassenger = (
         passengers: BookingInformation["searchBooking"]["passengers"],

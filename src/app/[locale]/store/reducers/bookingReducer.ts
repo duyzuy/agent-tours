@@ -28,8 +28,7 @@ export const bookingReducer = (
             state = {
                 ...state,
                 bookingPassenger: {
-                    ...state.bookingPassenger,
-                    [payload.passengerType]: payload.quantity,
+                    ...payload,
                 },
             };
             return state;

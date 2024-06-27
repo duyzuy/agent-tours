@@ -54,7 +54,6 @@ const PassengerPage = () => {
                 <div className="page-passenger__head mb-3">
                     <h1 className="text-2xl">{t("page.title")}</h1>
                 </div>
-
                 <div className="page-passenger__body">
                     <div className="page-passenger__note mb-6 text-gray-600 rounded-md">
                         <p>
@@ -65,10 +64,19 @@ const PassengerPage = () => {
                     <PassengerFormWraper passengerList={passengerList}>
                         <div className="text-right">
                             <Space align="end">
-                                <Button type="primary" ghost onClick={() => {}}>
+                                <Button
+                                    type="primary"
+                                    ghost
+                                    size="large"
+                                    onClick={() => {}}
+                                >
                                     Mua thêm dịch vụ
                                 </Button>
-                                <Button type="primary" onClick={() => {}}>
+                                <Button
+                                    type="primary"
+                                    size="large"
+                                    onClick={() => {}}
+                                >
                                     Tiến hành thanh toán
                                 </Button>
                             </Space>

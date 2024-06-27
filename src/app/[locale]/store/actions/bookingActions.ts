@@ -21,14 +21,11 @@ export type BookingActions =
       }
     | {
           type: EBookingActions.SET_PASSENGER_QUANTITY;
-          payload: { passengerType: PassengerType; quantity: number };
+          payload: FeBookingInformation["bookingPassenger"];
       }
     | {
           type: EBookingActions.SET_PRODUCT_DETAIL_ITEMS;
           payload: FeBookingInformation["bookingDetails"];
-      }
-    | {
-          type: EBookingActions.RESET_PASSENGER_QUANTITY;
       }
     | {
           type: EBookingActions.RESET_PASSENGER_QUANTITY;
