@@ -144,26 +144,6 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
         }));
     };
 
-    const templateOptions = useMemo(() => {
-        return CMS_TEMPLATES.reduce<
-            {
-                label: string;
-                value: string;
-                templateName: string;
-                templateKey: string;
-            }[]
-        >((acc, template) => {
-            return (acc = [
-                ...acc,
-                {
-                    ...template,
-                    label: template.templateName,
-                    value: template.templateKey,
-                },
-            ]);
-        }, []);
-    }, [initialValues, isOpen]);
-
     const handleSubmitForm: HandleSubmit<TemplateSellableFormData> = (data) => {
         actionType && onSubmit?.(actionType, data);
     };
