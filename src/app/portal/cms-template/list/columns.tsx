@@ -24,7 +24,7 @@ const templateColumns = () => {
                             </div>
                         ) : (
                             <Image
-                                src={`${mediaConfig.rootPath}/${record.codeImage}`}
+                                src={`${mediaConfig.rootApiPath}/${record.codeImage}`}
                                 alt="thumbnail"
                                 fill
                                 style={{ objectFit: "contain" }}
