@@ -1,17 +1,16 @@
 import React, { memo, useState } from "react";
-import { PassengerType } from "@/models/common.interface";
 import { Col, Form, Input, Row, Select, DatePickerProps } from "antd";
-import FormItem from "@/components/base/FormItem";
-
-import { DATE_FORMAT, PASSENGER_AGES } from "@/constants/common";
-import { FePassengerInformationFormData } from "../../modules/passegner.interface";
-import { getPassengerType } from "@/utils/common";
 import classNames from "classnames";
 import dayjs, { Dayjs } from "dayjs";
-import CustomDatePicker from "@/components/admin/CustomDatePicker";
-import { getPassengerGenderList } from "@/utils/passenger";
 import { isUndefined } from "lodash";
 import { useTranslations } from "next-intl";
+import { PassengerType } from "@/models/common.interface";
+import { getPassengerType } from "@/utils/common";
+import { getPassengerGenderList } from "@/utils/passenger";
+import { DATE_FORMAT, PASSENGER_AGES } from "@/constants/common";
+import CustomDatePicker from "@/components/admin/CustomDatePicker";
+import FormItem from "@/components/base/FormItem";
+
 import {
     Control,
     Controller,
@@ -21,7 +20,6 @@ import {
     UseFormClearErrors,
 } from "react-hook-form";
 import { PassengerFormValues } from ".";
-import { removeVietnameseTones } from "@/utils/helper";
 
 export interface PassengerFormProps {
     index: number;
@@ -30,7 +28,6 @@ export interface PassengerFormProps {
     field?: FieldArrayWithId<PassengerFormValues, "passengerItem", "id">;
     clearErrors?: UseFormClearErrors<PassengerFormValues>;
     setValue?: UseFormSetValue<PassengerFormValues>;
-    errors?: FieldErrors<PassengerFormValues>;
     startDate?: string;
     className?: string;
 }
@@ -39,13 +36,11 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
     index,
     type,
     clearErrors,
-
     setValue,
     field,
     control,
     startDate,
     className = "",
-    errors,
 }) => {
     const t = useTranslations("Passenger");
     const er = useTranslations("Error");
@@ -55,7 +50,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
 
     const passengerGenderList = getPassengerGenderList(type);
 
-    console.log(errors, index);
     const onChangeBirthDate: DatePickerProps["onChange"] = (
         date: Dayjs | null,
     ) => {
@@ -100,11 +94,8 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
         }
         setErrorForm((prev) => ({ ...prev, paxBirthDate: errorMess }));
         paxDOB &&
-            setValue?.(
-                `passengerItem.${index}.passengerinfo.paxBirthDate`,
-                paxDOB,
-            ),
-            clearErrors?.(`passengerItem.${index}.passengerinfo.paxBirthDate`);
+            setValue?.(`passengerItem.${index}.info.paxBirthDate`, paxDOB),
+            clearErrors?.(`passengerItem.${index}.info.paxBirthDate`);
     };
 
     const hasError = (
@@ -112,13 +103,14 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
             PassengerFormValues,
             "passengerItem",
             "id"
-        >["passengerinfo"],
-        _index: number,
+        >["info"],
+
+        errors: FieldErrors<PassengerFormValues>,
     ) => {
         return (
             errors?.passengerItem &&
-            errors?.passengerItem[_index]?.passengerinfo &&
-            errors?.passengerItem[_index]?.passengerinfo?.[key]
+            errors?.passengerItem[index]?.info &&
+            errors?.passengerItem[index]?.info?.[key]
         );
     };
     const getErrorMesssage = (
@@ -126,12 +118,14 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
             PassengerFormValues,
             "passengerItem",
             "id"
-        >["passengerinfo"],
+        >["info"],
+
+        errors: FieldErrors<PassengerFormValues>,
     ) => {
         return errors?.passengerItem &&
-            errors?.passengerItem[index]?.passengerinfo &&
-            errors?.passengerItem[index]?.passengerinfo?.[key]
-            ? t(errors?.passengerItem[index]?.passengerinfo?.[key]?.message)
+            errors?.passengerItem[index]?.info &&
+            errors?.passengerItem[index]?.info?.[key]
+            ? t(errors?.passengerItem[index]?.info?.[key]?.message)
             : "";
     };
     const renderLabelDOBPax = () => {
@@ -169,20 +163,24 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                     <Row gutter={16}>
                         <Col span={24} md={6}>
                             <Controller
-                                key={field?.passengerinfo?.paxGender}
+                                key={field?.info?.paxGender}
                                 control={control}
-                                name={`passengerItem.${index}.passengerinfo.paxGender`}
-                                render={({ field }) => (
+                                name={`passengerItem.${index}.info.paxGender`}
+                                render={({ field, formState: { errors } }) => (
                                     <FormItem
                                         label={t("input.gender.label")}
                                         required
                                         validateStatus={
-                                            hasError("paxGender", index)
+                                            hasError("paxGender", errors)
                                                 ? "error"
                                                 : undefined
                                         }
                                         help={
-                                            getErrorMesssage("paxGender") ?? ""
+                                            getErrorMesssage(
+                                                "paxGender",
+
+                                                errors,
+                                            ) ?? ""
                                         }
                                     >
                                         <Select
@@ -198,26 +196,32 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
                         <Col span={24} md={9}>
                             <Controller
-                                key={field?.passengerinfo?.paxLastname}
+                                key={field?.info?.paxLastname}
                                 control={control}
-                                name={`passengerItem.${index}.passengerinfo.paxLastname`}
-                                render={({ field }) => (
+                                name={`passengerItem.${index}.info.paxLastname`}
+                                render={({ field, formState: { errors } }) => (
                                     <FormItem
                                         label={t("input.lastname.label")}
                                         required
                                         validateStatus={
-                                            hasError("paxLastname", index)
+                                            hasError(
+                                                "paxLastname",
+
+                                                errors,
+                                            )
                                                 ? "error"
                                                 : undefined
                                         }
                                         help={
-                                            getErrorMesssage("paxLastname") ??
-                                            ""
+                                            getErrorMesssage(
+                                                "paxLastname",
+
+                                                errors,
+                                            ) ?? ""
                                         }
                                     >
                                         <Input
                                             {...field}
-                                            autoFocus
                                             placeholder={t(
                                                 "input.lastname.placeholder",
                                             )}
@@ -228,12 +232,10 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
                         <Col span={24} md={9}>
                             <Controller
-                                key={field?.passengerinfo?.paxMiddleFirstName}
+                                key={field?.info?.paxMiddleFirstName}
                                 control={control}
-                                name={`passengerItem.${index}.passengerinfo.paxMiddleFirstName`}
-                                render={({
-                                    field: { value, onChange, onBlur },
-                                }) => (
+                                name={`passengerItem.${index}.info.paxMiddleFirstName`}
+                                render={({ field, formState: { errors } }) => (
                                     <FormItem
                                         label={t(
                                             "input.middleAndFirstName.label",
@@ -242,7 +244,8 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                                         validateStatus={
                                             hasError(
                                                 "paxMiddleFirstName",
-                                                index,
+
+                                                errors,
                                             )
                                                 ? "error"
                                                 : undefined
@@ -250,20 +253,13 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                                         help={
                                             getErrorMesssage(
                                                 "paxMiddleFirstName",
+
+                                                errors,
                                             ) ?? ""
                                         }
                                     >
                                         <Input
                                             {...field}
-                                            value={value}
-                                            onChange={(ev) =>
-                                                onChange(
-                                                    removeVietnameseTones(
-                                                        ev.target.value,
-                                                    ),
-                                                )
-                                            }
-                                            autoFocus
                                             placeholder={t(
                                                 "input.middleAndFirstName.placeholder",
                                             )}
@@ -274,22 +270,33 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
                         <Col span={24} md={12}>
                             <Controller
-                                key={field?.passengerinfo?.paxBirthDate}
+                                key={field?.info?.paxBirthDate}
                                 control={control}
-                                name={`passengerItem.${index}.passengerinfo.paxBirthDate`}
-                                render={({ field: { value: birthDate } }) => (
+                                name={`passengerItem.${index}.info.paxBirthDate`}
+                                render={({
+                                    field: { value: birthDate },
+                                    formState: { errors },
+                                }) => (
                                     <FormItem
                                         label={renderLabelDOBPax()}
                                         required
                                         validateStatus={
                                             errorForm?.paxBirthDate ||
-                                            hasError("paxBirthDate", index)
+                                            hasError(
+                                                "paxBirthDate",
+
+                                                errors,
+                                            )
                                                 ? "error"
                                                 : undefined
                                         }
                                         help={
                                             errorForm?.paxBirthDate ||
-                                            getErrorMesssage("paxBirthDate") ||
+                                            getErrorMesssage(
+                                                "paxBirthDate",
+
+                                                errors,
+                                            ) ||
                                             ""
                                         }
                                     >

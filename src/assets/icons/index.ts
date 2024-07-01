@@ -25,6 +25,12 @@ import IconSearch from "./IconSearch";
 import IconPlane from "./IconPlane";
 import IconMeal from "./IconMeal";
 import IConTicketPercent from "./IconTicketPercent";
+import IconCheck from "./IconCheck";
+import IconBus from "./IconBus";
+import IconBuilding from "./IconBuilding";
+import IconStarOutline from "./IconStarOutline";
+import IconUtensilOutline from "./IconUtensilOutline";
+import IconPen from "./IconPen";
 
 export {
     IconAccount,
@@ -54,4 +60,10 @@ export {
     IconPlane,
     IconMeal,
     IConTicketPercent,
+    IconCheck,
+    IconBus,
+    IconBuilding,
+    IconStarOutline,
+    IconUtensilOutline,
+    IconPen,
 };

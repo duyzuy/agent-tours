@@ -1,33 +1,20 @@
-import React, {
-    memo,
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
-
+"use client";
+import React, { memo, useState } from "react";
+import {
+    Control,
+    FieldArrayWithId,
+    UseFormClearErrors,
+    UseFormSetValue,
+} from "react-hook-form";
 import classNames from "classnames";
-import PassengerForm, { PassengerFormProps } from "./PassengerForm";
-import { PassengerType } from "@/models/common.interface";
-import { FePassengerInformationFormData } from "../../modules/passegner.interface";
-
-import { Space, Button } from "antd";
-import { useRouter } from "next/navigation";
-
-import { object } from "yup";
-import { isEqualObject } from "@/utils/compare";
-
+import dayjs from "dayjs";
+import { useTranslations } from "next-intl";
+import PassengerForm from "./PassengerForm";
 import ModalConfirmation from "./ModalConfirmation";
-import { passengerInformationSchema } from "../../schema/passenger.schema";
-
-export type PassengerItemType = {
-    index: number;
-    type: PassengerType;
-    passengerinfo: FePassengerInformationFormData;
-};
+import { FeBookingInformation } from "../../../modules/booking.interface";
+import { IconPen } from "@/assets/icons";
+export type PassengerItemType =
+    FeBookingInformation["bookingInfo"]["passengers"][0];
 
 export type PassengerFormValues = {
     passengerItem: PassengerItemType[];
@@ -35,44 +22,37 @@ export type PassengerFormValues = {
 export interface FePassengerInformationFormProps {
     className?: string;
     startDate?: string;
-    passengerList?: PassengerItemType[];
+    passengerList: FeBookingInformation["bookingInfo"]["passengers"];
+    title?: string;
+    descriptions?: React.ReactNode;
     children?: React.ReactNode;
-    onSetPassengerInfo?: ({
-        index,
-        data,
-    }: {
-        index: number;
-        data: FePassengerInformationFormData;
-    }) => void;
-    onSetPassengerInformationBooking?: (data: PassengerItemType[]) => void;
+    isCompleted?: boolean;
+    canEditPax?: boolean;
+    control?: Control<PassengerFormValues>;
+    fields?: FieldArrayWithId<PassengerFormValues, "passengerItem", "id">[];
+    clearErrors?: UseFormClearErrors<PassengerFormValues>;
+    setValue?: UseFormSetValue<PassengerFormValues>;
+    onEditPax?: () => void;
 }
 
-const PassengerFormWraper: React.FC<FePassengerInformationFormProps> = ({
+const PassengerFormWraper = ({
     className = "",
     passengerList,
     startDate,
+    title,
+    descriptions,
     children,
-    onSetPassengerInfo,
-    onSetPassengerInformationBooking,
-}) => {
+    isCompleted = false,
+    canEditPax = true,
+    setValue,
+    clearErrors,
+    fields,
+    control,
+    onEditPax,
+}: FePassengerInformationFormProps) => {
     const [isShow, setShowModal] = useState(false);
-    const {
-        handleSubmit,
-        formState: { errors },
-        control,
-        setValue,
-        clearErrors,
-    } = useForm<PassengerFormValues>({
-        resolver: yupResolver(passengerInformationSchema),
-        defaultValues: {
-            passengerItem: passengerList,
-        },
-    });
 
-    const { fields } = useFieldArray({
-        control,
-        name: "passengerItem",
-    });
+    const t = useTranslations("String");
 
     return (
         <>
@@ -81,25 +61,51 @@ const PassengerFormWraper: React.FC<FePassengerInformationFormProps> = ({
                     [className]: className,
                 })}
             >
+                <div className="page-passenger__head mb-3">
+                    <h1 className="text-xl font-[500]">{title}</h1>
+                </div>
+                <div className="page-passenger__note mb-6 text-gray-600 rounded-md">
+                    <p>{descriptions}</p>
+                </div>
                 <div className="passenger__information-body">
-                    {fields.map((field, index) => (
-                        <PassengerForm
-                            key={field.id}
-                            {...{ control, index, field }}
-                            startDate={startDate}
-                            type={field.type}
-                            setValue={setValue}
-                            clearErrors={clearErrors}
-                            errors={errors}
-                            className="bg-white mb-6 border-b"
-                        />
-                    ))}
+                    {isCompleted && !canEditPax
+                        ? passengerList.map(({ info, index, type }) => (
+                              <PassengerFormWraper.Info
+                                  key={index}
+                                  className={classNames(
+                                      "pax-item-info border rounded-md px-4",
+                                      {
+                                          "mt-6": index !== 0,
+                                      },
+                                  )}
+                                  paxLastname={info.paxLastname}
+                                  paxBirthDate={
+                                      info.paxBirthDate
+                                          ? dayjs(info.paxBirthDate)
+                                                .locale("en")
+                                                .format("DD/MM/YYYY")
+                                          : "--"
+                                  }
+                                  paxGender={t(`gender.${info.paxGender}`)}
+                                  paxMiddleFirstName={info.paxMiddleFirstName}
+                                  onClick={onEditPax}
+                              />
+                          ))
+                        : fields?.map((paxField, index) => (
+                              <PassengerForm
+                                  key={paxField.id}
+                                  {...{ control, index, field: paxField }}
+                                  startDate={startDate}
+                                  type={paxField.type}
+                                  setValue={setValue}
+                                  clearErrors={clearErrors}
+                                  className={classNames("bg-white ", {
+                                      "mt-6 pt-6 border-t": index !== 0,
+                                  })}
+                              />
+                          ))}
                 </div>
             </div>
-            {/* <Button onClick={() => setShowModal((prev) => !prev)}>
-                submittt
-            </Button> */}
-            {children}
             <ModalConfirmation
                 isShowModal={isShow}
                 onCancel={() => {}}
@@ -109,3 +115,61 @@ const PassengerFormWraper: React.FC<FePassengerInformationFormProps> = ({
     );
 };
 export default memo(PassengerFormWraper);
+
+interface PassengerFormWrapperInfomationItemProps {
+    className?: string;
+    paxLastname?: string;
+    paxMiddleFirstName?: string;
+    paxType?: string;
+    paxGender?: string;
+    paxBirthDate?: string;
+    onClick?: () => void;
+}
+PassengerFormWraper.Info = function PassengerFormWrapperInfomationItem({
+    className = "",
+    paxLastname,
+    paxMiddleFirstName,
+    paxType,
+    paxGender,
+    paxBirthDate,
+    onClick,
+}: PassengerFormWrapperInfomationItemProps) {
+    const t = useTranslations("String");
+    return (
+        <div
+            className={classNames("pax-item-info border rounded-md px-4", {
+                [className]: className,
+            })}
+        >
+            <div className="pax-item-info__head py-3 flex justify-between">
+                <span className="flex items-center gap-x-2">
+                    <span className="text-[16px] uppercase">{`${paxLastname}, ${paxMiddleFirstName}`}</span>
+                    <span className="text-xs text-gray-500">{paxType}</span>
+                </span>
+                <span
+                    className="flex items-center gap-x-1 cursor-pointer text-primary-default"
+                    onClick={onClick}
+                >
+                    <IconPen width={14} height={14} />
+                    {t("button.edit")}
+                </span>
+            </div>
+            <div className="pax-item-info__body">
+                <div className="flex flex-wrap -mx-3">
+                    <div className="w-1/2 px-3 mb-3">
+                        <span className="block w-24 text-xs text-gray-500">
+                            {t("gender")}
+                        </span>
+                        <span>{paxGender}</span>
+                    </div>
+                    <div className="w-1/2 px-3 mb-3">
+                        <span className="block w-24 text-xs text-gray-500">
+                            {t("DOB")}
+                        </span>
+                        <span>{paxBirthDate}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};

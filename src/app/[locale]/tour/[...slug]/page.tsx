@@ -92,8 +92,6 @@ export default async function PageTourDetail({
                         </ProductHeader>
 
                         <DynamicGalleries
-                            data={cmsTemplateContent}
-                            data2={productResponse}
                             images={cmsTemplateContent.images.listImage}
                         />
 

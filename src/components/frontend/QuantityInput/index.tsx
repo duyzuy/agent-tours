@@ -16,7 +16,7 @@ const QuantityInput: React.FC<
             })}
         >
             <label className="block mb-2">{label}</label>
-            <Quantity size="sm" {...restProps} />
+            <Quantity size="md" {...restProps} />
         </div>
     );
 };

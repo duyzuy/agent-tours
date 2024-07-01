@@ -1,14 +1,19 @@
 import { BookingActions, EBookingActions } from "../actions/bookingActions";
 import { FeBookingFormData } from "../../(booking)/modules/booking.interface";
 export const initBookingState = new FeBookingFormData(
+    {
+        product: undefined,
+        couponPolicy: undefined,
+        coupons: undefined,
+        bookingDetails: [],
+        bookingSsrWithPax: undefined,
+        bookingSsr: undefined,
+        customerInformation: undefined,
+        invoiceInformation: undefined,
+        passengers: [],
+    },
     undefined,
-    undefined,
-    [],
     { adult: 1, child: 0, infant: 0 },
-    [],
-    undefined,
-    undefined,
-    undefined,
 );
 
 export const bookingReducer = (
@@ -17,9 +22,13 @@ export const bookingReducer = (
 ) => {
     switch (action.type) {
         case EBookingActions.SET_PRODUCT: {
+            const { payload: product } = action;
             state = {
                 ...state,
-                product: action.payload,
+                bookingInfo: {
+                    ...state.bookingInfo,
+                    product: product,
+                },
             };
             return state;
         }
@@ -42,11 +51,87 @@ export const bookingReducer = (
             };
             return state;
         }
+        case EBookingActions.INIT_PASSENGERS_INFORMATION_FORMDATA: {
+            const { payload: passengersInformation } = action;
+            state = {
+                ...state,
+                bookingInfo: {
+                    ...state.bookingInfo,
+                    passengers: passengersInformation,
+                },
+            };
+            return state;
+        }
+        case EBookingActions.SET_PASSENGER_INFORMATION: {
+            const { payload: passengersInformation } = action;
+            state = {
+                ...state,
+                bookingInfo: {
+                    ...state.bookingInfo,
+                    passengers: passengersInformation,
+                },
+            };
+            return state;
+        }
         case EBookingActions.SET_PRODUCT_DETAIL_ITEMS: {
             const { payload } = action;
             state = {
                 ...state,
-                bookingDetails: [...(payload || [])],
+                bookingInfo: {
+                    ...state.bookingInfo,
+                    bookingDetails: [...(payload || [])],
+                },
+            };
+            return state;
+        }
+        case EBookingActions.ADD_COUPON_POLICY: {
+            const { payload: coupon } = action;
+            state = {
+                ...state,
+                bookingInfo: {
+                    ...state.bookingInfo,
+                    couponPolicy: coupon,
+                },
+            };
+            return state;
+        }
+        case EBookingActions.ADD_COUPONS: {
+            const { payload: coupon } = action;
+            state = {
+                ...state,
+                bookingInfo: {
+                    ...state.bookingInfo,
+                    coupons: [...(state.bookingInfo.coupons || []), coupon],
+                },
+            };
+            return state;
+        }
+        case EBookingActions.REMOVE_COUPON_POLICY: {
+            state = {
+                ...state,
+                bookingInfo: {
+                    ...state.bookingInfo,
+                    couponPolicy: undefined,
+                },
+            };
+            return state;
+        }
+        case EBookingActions.SET_SERVICE_LIST: {
+            const { payload: serviceList } = action;
+            state = {
+                ...state,
+                servicePriceConfigs: serviceList,
+            };
+            return state;
+        }
+        case EBookingActions.ADD_BOOKING_SERVICE_LIST: {
+            const { payload: bookingSSRItems } = action;
+            state = {
+                ...state,
+                bookingInfo: {
+                    ...state.bookingInfo,
+                    bookingSsrWithPax: bookingSSRItems,
+                },
             };
             return state;
         }

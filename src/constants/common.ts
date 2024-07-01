@@ -37,6 +37,7 @@ export enum EPassengerTitle {
 export enum EPassengerGender {
     FEMALE = "female",
     MALE = "male",
+    UNISEX = "unisex",
     OTHER = "other",
 }
 
@@ -72,9 +73,10 @@ export const PASSENGER_TITLES = [
 ];
 
 export const PASSENGER_GENDER = [
-    { label: "Nam", value: EPassengerGender.FEMALE },
-    { label: "Nữ", value: EPassengerGender.MALE },
+    { label: "Nam", value: EPassengerGender.MALE },
+    { label: "Nữ", value: EPassengerGender.FEMALE },
     { label: "Khác", value: EPassengerGender.OTHER },
+    // { label: "Khác", value: EPassengerGender.UNISEX },
 ];
 
 export const FE_PAGE_CONTENT_TYPE = ["page", "tour", "news", "information"];

@@ -19,7 +19,7 @@ export const passengerInformationSchema: ObjectSchema<PassengerFormValues> =
                             "Danh xưng không hợp lệ.",
                         )
                         .required("Missing paxType"),
-                    passengerinfo: object({
+                    info: object({
                         paxTitle: string(),
                         paxLastname: string()
                             .required("paxLastname.required")

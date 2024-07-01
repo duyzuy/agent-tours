@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useTransition } from "react";
 import QuantityInput from "@/components/frontend/QuantityInput";
-import { Flex, Button, Form, DatePickerProps } from "antd";
+import { Form, DatePickerProps } from "antd";
 import classNames from "classnames";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import FeDatePicker from "@/components/frontend/FeDatePicker";
@@ -10,14 +10,12 @@ import FormItem from "@/components/base/FormItem";
 import { useState } from "react";
 import { moneyFormatVND } from "@/utils/helper";
 import { useTranslations } from "next-intl";
-import useSetProductItem from "@/app/[locale]/(booking)/modules/useSetProductItem";
+import useInitProductItemAndPassengersInformation from "@/app/[locale]/(booking)/modules/useInitProductItemAndPassengersInformation";
 import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import { PassengerType } from "@/models/common.interface";
 import useSummaryPricingSelect from "@/app/[locale]/(booking)/modules/useSummaryPricingSelect";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { Modal } from "antd";
 import HotlineBox from "@/components/frontend/HotlineBox";
-import SummaryCard from "@/components/frontend/SummaryCard";
+import ProductSummaryWraper from "@/components/frontend/ProductSummaryWraper";
 import { formatDate } from "@/utils/date";
 import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
 
@@ -34,14 +32,17 @@ const ProductSummary = ({
     const bookingPassenger = useBookingSelector(
         (state) => state.bookingPassenger,
     );
+    const bookingCounponPolicy = useBookingSelector(
+        (state) => state.bookingInfo.couponPolicy,
+    );
 
-    const [showBreakDown, setShowBreakDown] = useState(false);
     const {
         initProduct,
         setQuantityPassenger,
-        resetQuantityPassenger,
-        initBookingDetailItemsThenGoToPassengerInfo,
-    } = useSetProductItem();
+        // resetQuantityPassenger,
+        // initBookingDetailItemsThenGoToPassengerInfo,
+        initPassengerInfoThenGoToPassenger,
+    } = useInitProductItemAndPassengersInformation();
     const { addCouponPolicy, removeCouponPolicy } = useCoupon();
     const { productBreakdown, subtotal } = useSummaryPricingSelect();
     const t = useTranslations("String");
@@ -57,7 +58,8 @@ const ProductSummary = ({
         [],
     );
 
-    const [isPending, startTransition] = useTransition();
+    const [isPendingInitBookingDetails, startTransitionInitBookingDetailItems] =
+        useTransition();
     const [isUpdateTingPaxQuantity, setStartUpdateQuantity] = useTransition();
 
     const isSameDate = (d: Dayjs) => {
@@ -98,10 +100,30 @@ const ProductSummary = ({
         newProduct && setProductItem(newProduct);
     };
     const goToPasssenger = () => {
-        startTransition(() => {
-            initBookingDetailItemsThenGoToPassengerInfo();
+        startTransitionInitBookingDetailItems(() => {
+            initPassengerInfoThenGoToPassenger();
         });
     };
+    const breakDownItems = useMemo(() => {
+        return Object.entries(productBreakdown).reduce<
+            {
+                type: PassengerType;
+                pricing: string;
+                id: number;
+                configClass: string;
+            }[]
+        >((acc, [type, configList]) => {
+            const items = configList.map((configItem, _index) => ({
+                type: type as PassengerType,
+                pricing: moneyFormatVND(configItem[type as PassengerType]),
+                id: configItem.recId,
+                configClass: configItem.class,
+            }));
+            acc = [...acc, ...items];
+            return acc;
+        }, []);
+    }, [productBreakdown]);
+
     useEffect(() => {
         initProduct(productItem);
     }, [productItem]);
@@ -112,32 +134,51 @@ const ProductSummary = ({
                 [className]: className,
             })}
         >
-            <SummaryCard
+            <ProductSummaryWraper
                 label={t("productSummary.title")}
                 productPrice={
                     productItem?.configs.length
                         ? moneyFormatVND(getLowestPrice(productItem.configs))
                         : undefined
                 }
-                open={lowestPriceConfigItem?.open}
-                promotions={productItem?.promotions.map((item) => {
-                    return {
+                openAmount={lowestPriceConfigItem?.open}
+                promotion={{
+                    selectedCode: bookingCounponPolicy?.code,
+                    items: productItem?.promotions.map((item) => ({
                         name: item.name,
                         code: item.code,
                         price: moneyFormatVND(item.discountAmount),
                         validFrom: formatDate(item.validFrom, "dd/MM/yyyy"),
                         validTo: formatDate(item.validTo, "dd/MM/yyyy"),
                         type: item.type,
-                    };
-                })}
-                onSelectPromotion={() => {}}
+                    })),
+                    onSelect: (code) => {
+                        bookingCounponPolicy?.code === code
+                            ? removeCouponPolicy()
+                            : addCouponPolicy(code);
+                    },
+                }}
+                onBookNow={goToPasssenger}
+                isLoading={isPendingInitBookingDetails}
+                breakDown={{
+                    pricingConfigs: breakDownItems,
+                    couponPolicy: bookingCounponPolicy && {
+                        code: bookingCounponPolicy.code,
+                        discountAmount: moneyFormatVND(
+                            bookingCounponPolicy.discountAmount,
+                        ),
+                    },
+                    subtotal: moneyFormatVND(subtotal),
+                }}
             >
-                <Form layout="vertical">
+                <Form layout="vertical" component="div">
                     <FormItem label="Ngày khởi hành">
                         <FeDatePicker
                             value={dayjs(productItem?.startDate)}
                             placeholder="Ngày khởi hành"
                             size="large"
+                            inputReadOnly
+                            allowClear={false}
                             onChange={onChangeProduct}
                             disabledDate={(date) => {
                                 if (isSameDate(date) && date.isAfter(dayjs())) {
@@ -165,74 +206,8 @@ const ProductSummary = ({
                         })
                     }
                 />
-                <ProductSummary.Subtotal
-                    label={t("subtotal")}
-                    onClick={() => setShowBreakDown(true)}
-                    subtotal={moneyFormatVND(subtotal)}
-                />
-                <div className="actions py-2 mt-2">
-                    <Flex gap="middle">
-                        <Button
-                            type="primary"
-                            block
-                            className="bg-primary-default"
-                            onClick={goToPasssenger}
-                            size="large"
-                            loading={isPending}
-                        >
-                            Đặt ngay
-                        </Button>
-                    </Flex>
-                </div>
-            </SummaryCard>
-            <Modal
-                open={showBreakDown}
-                centered
-                onCancel={() => setShowBreakDown(false)}
-                width={420}
-                footer={null}
-            >
-                <div className="modal__breakdown-header mb-4">
-                    <p className="text-center text-lg">
-                        {t("modalBreakdown.title")}
-                    </p>
-                </div>
-                <div className="modal__breakdown-body">
-                    <div className="breadown-row-head flex items-center border-b mb-2 pb-2">
-                        <span className="w-32">{t("passenger.title")}</span>
-                        <span className="w-24">{t("productClass")}</span>
-                        <span className="flex-1 text-right">{t("price")}</span>
-                    </div>
-                    {Object.entries(productBreakdown).map(
-                        ([type, configList]) => {
-                            return configList.map((configitem, _index) => (
-                                <div
-                                    className="break-down-item flex items-center py-1"
-                                    key={`${type}-${_index}`}
-                                >
-                                    <span className="pax-type w-32">
-                                        {t(type)}
-                                    </span>
-                                    <span className="config-class w-24">
-                                        {configitem.class}
-                                    </span>
-                                    <span className="price flex-1 text-right text-primary-default">
-                                        {moneyFormatVND(
-                                            configitem[type as PassengerType],
-                                        )}
-                                    </span>
-                                </div>
-                            ));
-                        },
-                    )}
-                    <div className="subtotal border-t pt-3 mt-3 justify-between flex">
-                        <span>{t("subtotal")}</span>
-                        <span className="text-lg text-red-600 font-[500]">
-                            {moneyFormatVND(subtotal)}
-                        </span>
-                    </div>
-                </div>
-            </Modal>
+            </ProductSummaryWraper>
+
             <HotlineBox label="Hotline" phoneNumber={"0982.013.089"} />
         </div>
     );
@@ -274,6 +249,7 @@ ProductSummary.PassengerQuantity = function ProductSummaryPassengerQuantity({
                 </div>
                 <div className="select flex">
                     <QuantityInput
+                        size="sm"
                         label={t("adult")}
                         value={passenger["adult"]}
                         className="w-1/3"
@@ -288,6 +264,7 @@ ProductSummary.PassengerQuantity = function ProductSummaryPassengerQuantity({
                         }
                     />
                     <QuantityInput
+                        size="sm"
                         label={t("children")}
                         value={passenger["children"]}
                         maximum={9}
@@ -302,6 +279,7 @@ ProductSummary.PassengerQuantity = function ProductSummaryPassengerQuantity({
                         }
                     />
                     <QuantityInput
+                        size="sm"
                         label={t("infant")}
                         value={passenger["infant"]}
                         maximum={9}
@@ -318,33 +296,5 @@ ProductSummary.PassengerQuantity = function ProductSummaryPassengerQuantity({
                 </div>
             </div>
         </>
-    );
-};
-
-interface ProductSummarySubtotalProps {
-    label?: string;
-    subtotal?: string;
-    onClick?: () => void;
-}
-ProductSummary.Subtotal = function ProductSummarySubtotal({
-    label,
-    subtotal,
-    onClick,
-}: ProductSummarySubtotalProps) {
-    return (
-        <div className="subtotal py-2">
-            <p className="flex items-center justify-between font-semibold">
-                <span
-                    className="text-gray-600 cursor-pointer"
-                    onClick={onClick}
-                >
-                    {label}
-                    <span className="ml-2  text-blue-500">
-                        <InfoCircleOutlined />
-                    </span>
-                </span>
-                <span className="text-red-600">{subtotal}</span>
-            </p>
-        </div>
     );
 };

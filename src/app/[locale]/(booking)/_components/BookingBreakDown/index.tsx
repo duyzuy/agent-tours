@@ -5,7 +5,7 @@ import { useLocale } from "next-intl";
 import { useMemo } from "react";
 import { mediaConfig } from "@/configs";
 import Image from "next/image";
-import useSummaryBooking from "../../modules/useSummaryBooking";
+import useBookingSummary from "../../modules/useBookingSummary";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import { PassengerType } from "@/models/common.interface";
@@ -17,15 +17,29 @@ interface BookingBreakDownProps {
 const BookingBreakDown: React.FC<BookingBreakDownProps> = ({
     className = "",
 }) => {
-    const bookingDetails = useBookingSelector((state) => state.bookingDetails);
-    const { productBreakdown, subtotal } = useSummaryBooking();
-    const product = useBookingSelector((state) => state.product);
+    const {
+        productBreakdown,
+        subTotal,
+        subTotalProduct,
+        lastTotalPayment,
+        servicesBreakdown,
+        discountBreakdown,
+    } = useBookingSummary();
+    const product = useBookingSelector((state) => state.bookingInfo.product);
     const locale = useLocale();
     const t = useTranslations("String");
 
     const productCmsContent = useMemo(() => {
         return product?.template?.cms.find((item) => item.lang === locale);
     }, [product]);
+
+    const subtotalServices = useMemo(() => {
+        return servicesBreakdown
+            ? Object.entries(servicesBreakdown).reduce((acc, [key, svItem]) => {
+                  return (acc += svItem.subTotal);
+              }, 0)
+            : 0;
+    }, [servicesBreakdown]);
     return (
         <div
             className={classNames("booking__breakdown", {
@@ -59,7 +73,7 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({
                             <span className="text-gray-500">
                                 {t("departDate")}
                             </span>
-                            <span>
+                            <span className="text-lg text-primary-default">
                                 {product?.startDate
                                     ? formatDate(
                                           product?.startDate,
@@ -68,7 +82,7 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({
                                     : null}
                             </span>
                         </div>
-                        <div>
+                        <div className="breakdown__products">
                             {Object.entries(productBreakdown)?.map(
                                 ([type, configs]) =>
                                     configs.length ? (
@@ -76,20 +90,23 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({
                                             className="breakdown-pax flex justify-between mb-2"
                                             key={type}
                                         >
-                                            <div className="pax-name w-32 text-gray-500">
+                                            <div className="pax-name flex-1 text-gray-500">
                                                 {t(type)}
                                             </div>
-                                            <div className="price-list flex-1 text-right">
+                                            <div className="price-list w-48">
                                                 {configs.map(
                                                     (config, _index) => (
                                                         <div
                                                             key={`${type}-${_index}`}
-                                                            className="flex-1"
+                                                            className="flex justify-end"
                                                         >
-                                                            <span className="config-class w-">
-                                                                {config.class}
+                                                            <span className="breakdown__quantity">
+                                                                <span className="config-class text-gray-500 text-xs mr-1">
+                                                                    {`(${config.class})`}
+                                                                </span>
+                                                                <span>1 x</span>
                                                             </span>
-                                                            <span className="w-32 text-right ml-3">
+                                                            <span className="block text-right ml-2">
                                                                 {moneyFormatVND(
                                                                     config[
                                                                         type as PassengerType
@@ -109,23 +126,159 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({
                                 {t("subtotal")}
                             </span>
                             <span className="font-[500] text-lg">
-                                {moneyFormatVND(subtotal)}
+                                {moneyFormatVND(subTotalProduct)}
                             </span>
                         </div>
                     </div>
                 </div>
+                {servicesBreakdown ? (
+                    <div className="service__breakdown px-6 py-4 bg-white rounded-md mb-6">
+                        <div className="service__breakdown-head mb-6">
+                            <span className="text-lg font-500">Dịch vụ</span>
+                        </div>
+                        <div className="service__breakdown-body">
+                            {Object.entries(servicesBreakdown).map(
+                                ([key, svItem]) => (
+                                    <div
+                                        className="service__breakdown-item"
+                                        key={key}
+                                    >
+                                        <div className="service__breakdown-item__inner">
+                                            <div className="service__breakdown-item__name mb-3 bg-slate-50 rounded-md px-3 py-2">
+                                                <span className="text-primary-default block font-[500]">
+                                                    {svItem.serviceName}
+                                                </span>
+                                            </div>
+                                            <div className="service__breakdown-item__passengers">
+                                                {svItem.passengers.map(
+                                                    (
+                                                        {
+                                                            info,
+                                                            index,
+                                                            priceConfigs,
+                                                            type,
+                                                        },
+                                                        _index,
+                                                    ) => (
+                                                        <div
+                                                            key={_index}
+                                                            className="service__breakdown-item__passenger-item flex justify-between mb-2"
+                                                        >
+                                                            <div className="service__breakdown-item__passenger-item-name flex-1">
+                                                                <span>
+                                                                    {`${info.paxLastname}, ${info.paxMiddleFirstName}`}
+                                                                </span>
+                                                            </div>
+                                                            <div className="service__breakdown-item__passenger-item__price-configs w-48">
+                                                                {priceConfigs.map(
+                                                                    (
+                                                                        configItem,
+                                                                    ) => (
+                                                                        <div
+                                                                            className="service__breakdown-item__passenger-item__price-config"
+                                                                            key={
+                                                                                configItem
+                                                                                    .priceConfig
+                                                                                    .recId
+                                                                            }
+                                                                        >
+                                                                            <div className="flex justify-end">
+                                                                                <span className="breakdown__quantity">
+                                                                                    <span className="text-xs text-gray-500 blockk mr-1">
+                                                                                        {`(${configItem.priceConfig.class})`}
+                                                                                    </span>
+                                                                                    <span>{`${configItem.quantity} x`}</span>
+                                                                                </span>
 
-                <div className="box total px-6 py-4 bg-white rounded-lg">
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-500">{t("subtotal")}</span>
-                        <span>{moneyFormatVND(subtotal)}</span>
+                                                                                <span className="block ml-2 text-right">
+                                                                                    {moneyFormatVND(
+                                                                                        configItem
+                                                                                            .priceConfig[
+                                                                                            type
+                                                                                        ],
+                                                                                    )}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    ),
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ),
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ),
+                            )}
+                        </div>
+                        <div className="flex items-center justify-between border-t pt-4 mt-4">
+                            <span className="text-gray-500">
+                                {t("subtotal")}
+                            </span>
+                            <span className="font-[500] text-lg">
+                                {moneyFormatVND(subtotalServices)}
+                            </span>
+                        </div>
                     </div>
+                ) : null}
+                <div className="box total px-6 py-4 bg-white rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-gray-500">{t("subtotal")}</span>
+                        <span>{moneyFormatVND(subTotal)}</span>
+                    </div>
+
+                    {discountBreakdown?.couponPolicy ||
+                    discountBreakdown?.coupons.length ? (
+                        <div className="discount__policy">
+                            <div className="discount__policy-label">
+                                Mã giảm giá
+                            </div>
+                            {discountBreakdown?.couponPolicy ? (
+                                <div className="discount__policy-item flex justify-between">
+                                    <span className="discount__policy-code">
+                                        {discountBreakdown?.couponPolicy.code}
+                                    </span>
+                                    <div className="text-right">
+                                        <span className="price text-emerald-500">
+                                            {`-${moneyFormatVND(
+                                                discountBreakdown?.couponPolicy
+                                                    .discountAmount,
+                                            )}`}
+                                        </span>
+                                    </div>
+                                </div>
+                            ) : null}
+                            {discountBreakdown?.coupons
+                                ? discountBreakdown?.coupons.map(
+                                      (coupon, _index) => (
+                                          <div
+                                              className="discount__policy-item flex justify-between"
+                                              key={_index}
+                                          >
+                                              <span className="discount__policy-code">
+                                                  {coupon.code}
+                                              </span>
+                                              <div className="text-right">
+                                                  <span className="price text-emerald-500">
+                                                      {`-${moneyFormatVND(
+                                                          coupon.discountAmount,
+                                                      )}`}
+                                                  </span>
+                                              </div>
+                                          </div>
+                                      ),
+                                  )
+                                : null}
+                        </div>
+                    ) : null}
+
                     <div className="flex items-center justify-between border-t pt-4 mt-4">
                         <span className="text-gray-500">
                             {t("totalPayment")}
                         </span>
                         <span className="text-red-600 text-lg font-[500]">
-                            {moneyFormatVND(subtotal)}
+                            {moneyFormatVND(lastTotalPayment)}
                         </span>
                     </div>
                 </div>

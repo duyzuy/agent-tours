@@ -7,6 +7,7 @@ import useMessage from "@/hooks/useMessage";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { FeBookingInformation } from "./booking.interface";
 import { useRouter } from "@/utils/navigation";
+import { FePassengerInformationFormData } from "../passenger/modules/passegner.interface";
 
 const useSetProductItem = () => {
     const [bookingInformation, dispatch] = useBookingInformation();
@@ -14,7 +15,10 @@ const useSetProductItem = () => {
     const message = useMessage();
     const router = useRouter();
 
-    const { product, bookingPassenger, bookingDetails } = bookingInformation;
+    const {
+        bookingInfo: { product },
+        bookingPassenger,
+    } = bookingInformation;
     const initProduct = (product?: FeProductItem) => {
         dispatch({ type: EBookingActions.SET_PRODUCT, payload: product });
     };
@@ -29,8 +33,10 @@ const useSetProductItem = () => {
         });
         return items.sort((a, b) => a.adult - b.adult);
     }, [product]);
+
     const getTotalAmountPax = () => {
-        return Object.entries(bookingPassenger).reduce(
+        const { infant, ...restBookingPax } = bookingPassenger;
+        return Object.entries(restBookingPax).reduce(
             (acc, [k, v]) => (acc += v),
             0,
         );
@@ -46,7 +52,7 @@ const useSetProductItem = () => {
         action: "plus" | "minus";
     }) => {
         const { type, quantity, action } = passenger;
-        const newPassengers = { ...bookingPassenger };
+        let newPassengers = { ...bookingPassenger };
 
         if (!product) {
             throw new Error("Product invalid");
@@ -67,6 +73,11 @@ const useSetProductItem = () => {
                 ) {
                     message.error("Số lượng hành khách tối đa là 9");
                     return;
+                } else {
+                    newPassengers = {
+                        ...newPassengers,
+                        [PassengerType.ADULT]: quantity,
+                    };
                 }
                 break;
             }
@@ -78,6 +89,11 @@ const useSetProductItem = () => {
                 ) {
                     message.error("Số lượng hành khách tối đa là 9");
                     return;
+                } else {
+                    newPassengers = {
+                        ...newPassengers,
+                        [PassengerType.CHILD]: quantity,
+                    };
                 }
                 break;
             }
@@ -85,6 +101,11 @@ const useSetProductItem = () => {
                 if (action === "plus" && quantity > bookingPassenger["adult"]) {
                     message.error("Số lượng trẻ em tối đa bằng người lớn");
                     return;
+                } else {
+                    newPassengers = {
+                        ...newPassengers,
+                        [PassengerType.INFANT]: quantity,
+                    };
                 }
                 break;
             }
@@ -112,7 +133,7 @@ const useSetProductItem = () => {
             return;
         }
 
-        let bookingDetailItemBookedList: Required<FeBookingInformation>["bookingDetails"] =
+        let bookingDetailItemBookedList: Required<FeBookingInformation>["bookingInfo"]["bookingDetails"] =
             [];
         let _index = 0;
         Object.entries(bookingPassenger).forEach(([type, amount]) => {
@@ -141,11 +162,61 @@ const useSetProductItem = () => {
         });
         router.push("/passenger");
     };
+    const initPassengerInfoThenGoToPassenger = () => {
+        const totalAmountPax = getTotalAmountPax();
+
+        if (!product) {
+            throw new Error("Product invalid");
+        }
+        if (totalAmountPax > product.open || totalAmountPax <= 0) {
+            message.error("Số lượng không hợp lệ.");
+            return;
+        }
+
+        let passengersInformation: Required<FeBookingInformation>["bookingInfo"]["passengers"] =
+            [];
+        let _index = 0;
+        Object.entries(bookingPassenger).forEach(([type, quantity]) => {
+            for (let i = 0; i < quantity; i++) {
+                passengersInformation = [
+                    ...passengersInformation,
+                    {
+                        index: _index,
+                        type: type as PassengerType,
+                        info: new FePassengerInformationFormData(
+                            undefined,
+                            undefined,
+                            "",
+                            "",
+                            undefined,
+                            undefined,
+                            undefined,
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            undefined,
+                        ),
+                    },
+                ];
+
+                _index++;
+            }
+        });
+
+        dispatch({
+            type: EBookingActions.INIT_PASSENGERS_INFORMATION_FORMDATA,
+            payload: passengersInformation,
+        });
+        router.push("/passenger");
+    };
     return {
         initProduct,
         setQuantityPassenger,
         resetQuantityPassenger,
         initBookingDetailItemsThenGoToPassengerInfo,
+        initPassengerInfoThenGoToPassenger,
     };
 };
 export default useSetProductItem;

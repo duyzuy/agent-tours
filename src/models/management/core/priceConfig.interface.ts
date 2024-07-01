@@ -9,6 +9,7 @@ export interface PriceConfig {
     maxAvaiable: number;
     open: number;
     sold: number;
+    oldSold: number;
     avaiable: number;
     details: string;
     limitPerBooking: number;

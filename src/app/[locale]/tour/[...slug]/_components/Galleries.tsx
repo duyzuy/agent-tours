@@ -20,15 +20,11 @@ import {
     IconChevronRight,
 } from "@/assets/icons";
 interface GalleriesProps {
-    data: any;
-    data2: any;
     images?: string[];
 }
-const Galleries: React.FC<GalleriesProps> = ({ data, data2, images = [] }) => {
+const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
-    console.log(data);
-    console.log(data2);
     return (
         <>
             <div className="relative bg-gray-50 rounded-md overflow-hidden w-full mb-6">

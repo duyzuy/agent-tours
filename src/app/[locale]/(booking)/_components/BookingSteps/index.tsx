@@ -1,5 +1,6 @@
-
+"use client";
 import classNames from "classnames";
+import { usePathname } from "@/utils/navigation";
 
 interface BookingStepsProps {
     activeKey?: number;

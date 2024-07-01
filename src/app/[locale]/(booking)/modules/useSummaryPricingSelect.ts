@@ -4,10 +4,11 @@ import { useCallback } from "react";
 import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 const useSummaryPricingSelect = () => {
-    const bookingPassenger = useBookingSelector(
-        (state) => state.bookingPassenger,
-    );
-    const product = useBookingSelector((state) => state.product);
+    const bookingInformations = useBookingSelector((state) => state);
+    const {
+        bookingPassenger,
+        bookingInfo: { product, couponPolicy },
+    } = bookingInformations;
 
     const getProductFlatPricings = useCallback(() => {
         let items: FeProductItem["configs"] = [];
@@ -47,6 +48,9 @@ const useSummaryPricingSelect = () => {
                 subtotal += configItem[type as PassengerType];
             });
         });
+        if (couponPolicy) {
+            subtotal = subtotal - couponPolicy.discountAmount;
+        }
         return subtotal;
     };
     return {
