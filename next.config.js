@@ -24,9 +24,9 @@ const nextConfig = {
     compiler: {
         styledComponents: true,
     },
-    api: {
-        bodyParser: false,
-    },
+    // api: {
+    //     bodyParser: false,
+    // },
     // i18n: {
     //     locales: ["en", "vi"],
     //     defaultLocale: "vi",
