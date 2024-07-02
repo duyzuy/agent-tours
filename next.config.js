@@ -12,7 +12,7 @@ const nextConfig = {
         LOCAL_API: "http://localhost:3000/api",
         CDN_ROOT: "",
         SECRET: "YOUR_SECRET_VALUE_HERE",
-        NEXTAUTH_SECRET: "FsLMgzHS34zRJP3mbgCi7ZkRyuP15ZTE8bKVa1CfU34",
+        NEXTAUTH_SECRET: "4ive5LE/Wgxa/W9p1NhnPxK5qP9LOSLsmejxdGfgOrI=",
         NEXTAUTH_URL:
             process.env.NODE_ENV === "production"
                 ? "https://tours.frdev.asia"

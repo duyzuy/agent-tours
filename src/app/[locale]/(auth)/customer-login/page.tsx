@@ -1,21 +1,13 @@
 "use client";
 import Image from "next/image";
-import LoginForm, { LoginFormProps } from "../_components/LoginForm";
+import LoginForm from "../_components/LoginForm";
 import { useTranslations } from "next-intl";
 import { useSignIn } from "../modules/useAuth";
-import { useSession } from "next-auth/react";
 import { Link } from "@/utils/navigation";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 const CustomerLogin = () => {
     const t = useTranslations("String");
 
-    const data = useSession({
-        required: true,
-        onUnauthenticated() {
-            // The user is not authenticated, handle it here.
-        },
-    });
-    console.log(data);
     const { signIn, error, loading } = useSignIn();
 
     return (
