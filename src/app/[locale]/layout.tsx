@@ -13,6 +13,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { FeBookingProvider } from "./store/providers/BookingProvider";
 import ModalAuth from "./(auth)/_components/ModalAuth";
+import { ModalManagerProvider } from "./store/providers/ModalManagerProvider";
 
 interface Props {
     children: React.ReactNode;
@@ -63,11 +64,13 @@ export default async function RootClientLayout({
             <NextAuthProvider session={session}>
                 <LanguageProvider>
                     <FeBookingProvider>
-                        <LangContainer />
-                        <Header />
-                        {children}
-                        <Footer />
-                        <ModalAuth />
+                        <ModalManagerProvider>
+                            <LangContainer />
+                            <Header />
+                            {children}
+                            <Footer />
+                            <ModalAuth />
+                        </ModalManagerProvider>
                     </FeBookingProvider>
                 </LanguageProvider>
             </NextAuthProvider>

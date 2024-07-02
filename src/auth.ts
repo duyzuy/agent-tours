@@ -13,6 +13,7 @@ export const authOptions: NextAuthOptions = {
         // maxAge: 30 * 60 * 60,
     },
     secret: process.env.NEXTAUTH_SECRET || "123456",
+    debug: process.env.NODE_ENV !== "production" ? true : false,
     providers: [
         CredentialsProvider({
             name: "Credentials",

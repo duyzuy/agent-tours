@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { IconChevronRight } from "@/assets/icons";
 import { Link } from "@/utils/navigation";

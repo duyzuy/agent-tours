@@ -19,6 +19,7 @@ import ProductSummaryWraper from "@/components/frontend/ProductSummaryWraper";
 import { formatDate } from "@/utils/date";
 import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
 import useAuth from "@/app/[locale]/hooks/useAuth";
+import useAuthModal from "@/app/[locale]/(auth)/hooks";
 
 interface Props {
     className?: string;
@@ -37,6 +38,7 @@ const ProductSummary = ({
         (state) => state.bookingInfo.couponPolicy,
     );
     const { session } = useAuth();
+    const { showAuthModal, hideAuthModal } = useAuthModal();
 
     const {
         initProduct,
@@ -102,13 +104,14 @@ const ProductSummary = ({
         newProduct && setProductItem(newProduct);
     };
     const goToPasssenger = () => {
-        // if (
-        //     session.status === "unauthenticated" ||
-        //     session.status === "loading"
-        // ) {
-        //     message.info("Vui long Thuc hien dang nhap.");
-        //     return;
-        // }
+        if (
+            session.status === "unauthenticated" ||
+            session.status === "loading"
+        ) {
+            // message.info("Vui long Thuc hien dang nhap.");
+            showAuthModal();
+            return;
+        }
         startTransitionInitBookingDetailItems(() => {
             initPassengerInfoThenGoToPassenger();
         });

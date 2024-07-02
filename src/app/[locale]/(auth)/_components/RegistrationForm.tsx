@@ -1,11 +1,6 @@
 "use client";
 import { useState } from "react";
-import {
-    LockOutlined,
-    MailOutlined,
-    PhoneOutlined,
-    UserOutlined,
-} from "@ant-design/icons";
+import { MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, FormItemProps, Input, InputProps } from "antd";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -17,6 +12,7 @@ import { removeVietnameseTones } from "@/utils/helper";
 import { useForm, Controller } from "react-hook-form";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
 import { yupResolver } from "@hookform/resolvers/yup";
+import FormItem from "@/components/base/FormItem";
 
 enum EFieldType {
     TEXT = "TEXT",
@@ -111,7 +107,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
                         name={name}
                         control={control}
                         render={({ field: { value, onChange, onBlur } }) => (
-                            <Form.Item
+                            <FormItem
                                 label={label}
                                 help={help}
                                 validateStatus={validateStatus}
@@ -151,12 +147,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
                                         suffix={suffix}
                                     />
                                 )}
-                            </Form.Item>
+                            </FormItem>
                         )}
                     />
                 ),
             )}
-            <Form.Item>
+            <FormItem>
                 <Button
                     type="primary"
                     block
@@ -165,7 +161,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 >
                     {t("button.register")}
                 </Button>
-            </Form.Item>
+            </FormItem>
             <div className="content-form">
                 <p className="text-center text-xs">
                     <Link

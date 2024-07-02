@@ -7,7 +7,6 @@ import IconSearch from "@/assets/icons/IconSearch";
 import { useGetLocalSearchListMISCQuery } from "@/queries/misc/destination";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import dayjs from "dayjs";
-import { MONTH_FORMAT } from "@/constants/common";
 import { LocalSearchDestinationListRs } from "@/models/management/localSearchDestination.interface";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -20,6 +19,7 @@ const BoxSearchTourFe = () => {
     const t = useTranslations("String");
 
     const [formData, serchFormData] = useState();
+    const selectDate = () => {};
     return (
         <PureClient>
             <div className="search-box-tour px-6">
@@ -83,7 +83,7 @@ const BoxSearchTourFe = () => {
                                         //           })
                                         //         : undefined
                                         // }
-                                        // onChange={handleSelectDate}
+                                        //onChange={handleSelectDate}
                                     />
                                 </div>
                             </div>

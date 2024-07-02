@@ -4,16 +4,17 @@ import { Button, Form, FormItemProps, Input, InputProps } from "antd";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { CustomerLoginFormData } from "../modules/customerAuth.interface";
 import { customerLoginSchema } from "../schema/customerAuth.schema";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
+import FormItem from "@/components/base/FormItem";
 export interface LoginFormProps {
     onSubmit?: (data: CustomerLoginFormData) => void;
     error?: string | null;
     loading?: boolean;
+    children?: React.ReactNode;
 }
 enum EFieldType {
     TEXT = "TEXT",
@@ -34,6 +35,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     onSubmit,
     error,
     loading = false,
+    children,
 }) => {
     const t = useTranslations("String");
     const params = useParams();
@@ -117,12 +119,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
                     />
                 ),
             )}
-            <Form.Item>
-                <Link href="/">
+            <FormItem style={{ marginBottom: 0 }}>
+                <div className="text-right mb-6">
                     <span className="text-gray-400">{t("forgotPassword")}</span>
-                </Link>
-            </Form.Item>
-            <Form.Item>
+                </div>
+            </FormItem>
+            <div>
                 <Button
                     type="primary"
                     block
@@ -132,14 +134,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 >
                     {t("button.login")}
                 </Button>
-            </Form.Item>
-            <p className="text-center text-xs">
-                <Link
-                    href={`/${params.locale}/${CLIENT_LINKS.CustomerRegister}`}
-                >
-                    {t("noAccount")}
-                </Link>
-            </p>
+            </div>
+            {children}
         </Form>
     );
 };

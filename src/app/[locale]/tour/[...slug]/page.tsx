@@ -82,8 +82,8 @@ export default async function PageTourDetail({
     if (
         !cmsTemplateContent ||
         !sellableList ||
-        !sellableList.length
-        // !currentSellable
+        !sellableList.length ||
+        !currentSellable
     ) {
         notFound();
     }
