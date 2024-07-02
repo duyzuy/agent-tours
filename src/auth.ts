@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
         strategy: "jwt",
         // maxAge: 30 * 60 * 60,
     },
-    secret: process.env.NEXTAUTH_SECRET || "123456",
+    secret: process.env.NEXTAUTH_SECRET,
     debug: process.env.NODE_ENV !== "production" ? true : false,
     providers: [
         CredentialsProvider({
