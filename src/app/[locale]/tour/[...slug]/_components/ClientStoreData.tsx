@@ -5,7 +5,7 @@ import { ICMSTemplateContent } from "@/models/management/cms/cmsTemplateContent.
 import { useEffect } from "react";
 
 interface ClientStoreDataProps {
-    data: ICMSTemplateContent["languages"];
+    data?: ICMSTemplateContent["languages"];
 }
 const ClientStoreData: React.FC<ClientStoreDataProps> = ({ data }) => {
     const [langInfo, dispatch] = useLanguage();

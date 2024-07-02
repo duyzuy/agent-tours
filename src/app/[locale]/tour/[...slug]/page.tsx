@@ -74,18 +74,18 @@ export default async function PageTourDetail({
         (item) => item.recId === Number(sellableId),
     );
 
-    if (
-        !cmsTemplateContent ||
-        !sellableList ||
-        !sellableList.length ||
-        !currentSellable
-    ) {
-        notFound();
-    }
+    // if (
+    //     !cmsTemplateContent ||
+    //     !sellableList ||
+    //     !sellableList.length ||
+    //     !currentSellable
+    // ) {
+    //     notFound();
+    // }
 
     return (
         <div className="page-detail">
-            <BreadCrumb items={[{ title: cmsTemplateContent.name }]} />
+            <BreadCrumb items={[{ title: cmsTemplateContent?.name }]} />
             <div className="container mx-auto py-8 lg:px-8 md:px-6 px-4">
                 <div className="flex flex-wrap">
                     <div
@@ -93,19 +93,19 @@ export default async function PageTourDetail({
                         // style={{ width: "calc(100% - 380px)" }}
                     >
                         <ProductHeader
-                            name={cmsTemplateContent.name}
+                            name={cmsTemplateContent?.name}
                             tourCode={currentSellable?.template.code}
                         >
                             <h1 className="text-xl text-primary-default font-bold">
-                                {cmsTemplateContent.name}
+                                {cmsTemplateContent?.name}
                             </h1>
                         </ProductHeader>
 
                         <DynamicGalleries
-                            images={cmsTemplateContent.images.listImage}
+                            images={cmsTemplateContent?.images.listImage}
                         />
 
-                        <Benefit items={cmsTemplateContent.metaData} />
+                        <Benefit items={cmsTemplateContent?.metaData} />
                         <LineSpacing spaceY={12} />
                         <DynamicProductContent
                             data={cmsTemplateContent}

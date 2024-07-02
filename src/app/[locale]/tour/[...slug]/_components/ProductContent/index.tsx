@@ -13,13 +13,13 @@ import TourInformationPanel from "./tourPanels/TourInformationPanel";
 import { FeTemplateContentResponse } from "@/models/fe/templateContent.interface";
 
 interface ProductContentProps {
-    data: FeTemplateContentResponse["result"][0];
-    log: any;
+    data?: FeTemplateContentResponse["result"][0];
+    log?: any;
 }
 const ProductContent: React.FC<ProductContentProps> = ({ data, log }) => {
     console.log(log);
     const tourInformationsListContent =
-        data.includeAndNotes?.metaContent.reduce<
+        data?.includeAndNotes?.metaContent.reduce<
             { content: string; key: string; name: string }[]
         >((acc, item, _index) => {
             return [
@@ -32,7 +32,7 @@ const ProductContent: React.FC<ProductContentProps> = ({ data, log }) => {
             ];
         }, []);
 
-    const tourScheduleContent = data.itineraries?.metaContent.reduce<
+    const tourScheduleContent = data?.itineraries?.metaContent.reduce<
         { content: string; key: string; name: string }[]
     >((acc, item, _index) => {
         return [
@@ -52,7 +52,7 @@ const ProductContent: React.FC<ProductContentProps> = ({ data, log }) => {
             icon: <IconScrollText />,
             children: (
                 <TourInformationPanel
-                    descriptions={data.includeAndNotes?.content}
+                    descriptions={data?.includeAndNotes?.content}
                     items={tourInformationsListContent ?? []}
                 />
             ),
@@ -63,7 +63,7 @@ const ProductContent: React.FC<ProductContentProps> = ({ data, log }) => {
             icon: <IconCalendarCheck />,
             children: (
                 <TourInformationPanel
-                    descriptions={data.itineraries?.content}
+                    descriptions={data?.itineraries?.content}
                     items={tourScheduleContent ?? []}
                 />
             ),
