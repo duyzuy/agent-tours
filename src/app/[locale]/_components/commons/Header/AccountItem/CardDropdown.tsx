@@ -69,7 +69,7 @@ const CardDropdown: React.FC<CardDropdownProps> = ({
                                 <ul className="">
                                     <li>
                                         <Link
-                                            href={CLIENT_LINKS.Customer}
+                                            href={`/${CLIENT_LINKS.Customer}`}
                                             className="block py-2 px-3 hover:bg-gray-100 rounded-md"
                                         >
                                             <span className="block  text-gray-600">

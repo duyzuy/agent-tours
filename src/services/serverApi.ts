@@ -43,6 +43,7 @@ const request = async <TSuccess, TError>(
     try {
         const response = await fetch(requestUrl, configs);
         const data = await response.json();
+
         // console.log({ data, configs });
         if (response.ok && data.status === "OK") {
             return Promise.resolve(data as TSuccess);
