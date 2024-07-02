@@ -6,6 +6,8 @@ import { LangCode, Locale } from "@/models/management/cms/language.interface";
 import { useLanguageSelector } from "../../hooks/useLanguage";
 import LanguageSelector from "@/components/frontend/LanguageSelector";
 import { getPathname } from "@/utils/navigation";
+import { useParams } from "next/navigation";
+import { isArray } from "lodash";
 
 // When the user is on `/de/ueber-uns`, this will be `/about`
 
@@ -21,9 +23,12 @@ interface LanguageSwitcherProps {
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     className = "",
 }) => {
-    const languageInformation = useLanguageSelector((state) => state);
+    const { page: pageContent, tour: tourContent } = useLanguageSelector(
+        (state) => state,
+    );
 
     const pathname = usePathname();
+    const params = useParams();
 
     // console.log(languageInformation);
     const router = useRouter();
@@ -77,7 +82,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         //     }
         // }
         if (pageContentType === PageContentType.Page) {
-            const itemNextLang = languageInformation.page.find(
+            const itemNextLang = pageContent.find(
                 (item) => item.lang === langCode,
             );
 
@@ -85,6 +90,23 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                 newPathname = PageContentType["Page"].concat(
                     "/",
                     itemNextLang.slug,
+                );
+            } else {
+                newPathname = pathname.split("/").slice(2).join("/");
+            }
+        } else if (pageContentType === PageContentType.Tour) {
+            const slugPathStr = isArray(params.slug)
+                ? params.slug.slice(0, 2).join("/")
+                : params.slug;
+
+            const itemNextLang = tourContent.find(
+                (item) => item.lang === langCode,
+            );
+
+            if (itemNextLang) {
+                newPathname = PageContentType["Tour"].concat(
+                    "/",
+                    `${slugPathStr}/${itemNextLang.slug}`,
                 );
             } else {
                 newPathname = pathname.split("/").slice(2).join("/");

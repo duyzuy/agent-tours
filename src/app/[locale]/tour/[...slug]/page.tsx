@@ -10,6 +10,7 @@ import ProductHeader from "./_components/ProductHeader";
 import Benefit from "./_components/Benefit";
 
 import LineSpacing from "@/components/frontend/LineSpacing";
+import ClientStoreData from "./_components/ClientStoreData";
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
     loading: () => <p>Loading galleries...</p>,
     ssr: false,
@@ -119,6 +120,7 @@ export default async function PageTourDetail({
                         sellableList={sellableList}
                         className="w-full lg:w-5/12 lg:pl-8 "
                     />
+                    <ClientStoreData data={cmsTemplateContent?.languages} />
                 </div>
             </div>
         </div>

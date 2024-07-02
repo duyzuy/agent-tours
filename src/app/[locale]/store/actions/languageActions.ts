@@ -1,9 +1,11 @@
 import { ICustomerProfile } from "@/models/customerAuth.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
+import { LanguageContentContainer } from "../type";
 
 export enum ELanguageActionType {
     INIT_LANGUAGE = "INIT_LANGUAGE",
     FETCH_CONTENT_TYPE = "FETCH_CONTENT_TYPE",
+    SET_CMSCONTENT_TOUR = "SET_CMSCONTENT_TOUR",
 }
 
 export type LanguageActions =
@@ -17,6 +19,10 @@ export type LanguageActions =
     | {
           type: ELanguageActionType.FETCH_CONTENT_TYPE;
           payload: { lang: LangCode; slug: string }[];
+      }
+    | {
+          type: ELanguageActionType.SET_CMSCONTENT_TOUR;
+          payload: LanguageContentContainer["tour"];
       };
 
 export const initLanguageAction = (data: { name: string; code: LangCode }) => {

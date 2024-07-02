@@ -37,6 +37,13 @@ export interface ICMSTemplateContent {
     itineraries: ICMSTemplateContentMetaData | null;
     slug: string;
     lang: LangCode;
+    languages: {
+        lang: LangCode;
+        name: string;
+        slug: string;
+        thumb: string;
+        metaData: { key: string; value: string; icon: string }[];
+    }[];
 }
 
 export interface CMSTemplateContentListRs

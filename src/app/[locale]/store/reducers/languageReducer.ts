@@ -28,6 +28,14 @@ export const languageReducer = (
             };
             return state;
         }
+        case ELanguageActionType.SET_CMSCONTENT_TOUR: {
+            const { payload } = action;
+            state = {
+                ...state,
+                tour: payload,
+            };
+            return state;
+        }
         default: {
             return state;
         }

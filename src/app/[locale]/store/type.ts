@@ -1,5 +1,14 @@
 import { LangCode } from "@/models/management/cms/language.interface";
-export class LanguageContentContainer {
+
+interface ILanguageContentContainer {
+    locale?: {
+        name: string;
+        code: LangCode;
+    };
+    page: { lang: LangCode; slug: string }[];
+    tour: { lang: LangCode; slug: string }[];
+}
+export class LanguageContentContainer implements ILanguageContentContainer {
     locale?: {
         name: string;
         code: LangCode;

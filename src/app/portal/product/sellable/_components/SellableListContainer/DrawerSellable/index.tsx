@@ -724,7 +724,10 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                                             : null,
                                     ]}
                                     disabledDate={(date) => {
-                                        return dayjs().isAfter(date);
+                                        return (
+                                            dayjs().isAfter(date) &&
+                                            !dayjs().isSame(date, "date")
+                                        );
                                     }}
                                     onChange={onChangeValidDateRange}
                                     className="w-full "

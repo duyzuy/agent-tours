@@ -164,7 +164,10 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
                                 : null,
                         ]}
                         disabledDate={(date) => {
-                            return dayjs().isAfter(date);
+                            return (
+                                dayjs().isAfter(date) &&
+                                !dayjs().isSame(date, "date")
+                            );
                         }}
                         onChange={onChangeValidDateRange}
                         className="w-full "

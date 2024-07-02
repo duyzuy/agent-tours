@@ -32,14 +32,3 @@ const LangContainer: React.FC = () => {
     return null;
 };
 export default LangContainer;
-// initLanguageAction({
-//     name: currentLocale.name,
-//     code: currentLocale.key,
-// }),
-
-// export const initLanguageAction = (data: { name: string; code: LangCode }) => {
-//     return {
-//         type: ELanguageActionType.INIT_LANGUAGE,
-//         payload: data,
-//     };
-// };
