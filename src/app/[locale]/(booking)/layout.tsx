@@ -3,6 +3,11 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import BookingBreakDown from "./_components/BookingBreakDown";
 import BookingSteps from "./_components/BookingSteps";
 import { usePathname } from "@/utils/navigation";
+import { useSession } from "next-auth/react";
+import { useBookingSelector } from "../hooks/useBookingInformation";
+import { isUndefined } from "lodash";
+import { redirect } from "@/utils/navigation";
+import { useMemo } from "react";
 interface Props {
     children: React.ReactNode;
     params: { locale: LangCode };
@@ -12,18 +17,27 @@ export default function FeBookingLayout({
     children,
     params: { locale },
 }: Props) {
+    const session = useSession();
+    const product = useBookingSelector((state) => state.bookingInfo.product);
     const pathname = usePathname();
-    let activeKey = 0;
 
-    if (pathname.startsWith("/passenger")) {
-        activeKey = 1;
-    }
+    const activeKey = useMemo(() => {
+        let step = 0;
+        if (pathname.startsWith("/passenger")) {
+            step = 1;
+        }
 
-    if (pathname.startsWith("/payment")) {
-        activeKey = 2;
-    }
-    if (pathname.startsWith("/thankyou")) {
-        activeKey = 3;
+        if (pathname.startsWith("/payment")) {
+            step = 2;
+        }
+        if (pathname.startsWith("/thankyou")) {
+            step = 3;
+        }
+        return step;
+    }, [pathname]);
+
+    if (isUndefined(product) || session.status !== "authenticated") {
+        redirect("/");
     }
     return (
         <div className="bg-gray-100">

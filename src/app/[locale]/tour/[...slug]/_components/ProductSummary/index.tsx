@@ -38,7 +38,7 @@ const ProductSummary = ({
         (state) => state.bookingInfo.couponPolicy,
     );
     const { session } = useAuth();
-    const { showAuthModal, hideAuthModal } = useAuthModal();
+    const { showAuthModal } = useAuthModal();
 
     const {
         initProduct,
