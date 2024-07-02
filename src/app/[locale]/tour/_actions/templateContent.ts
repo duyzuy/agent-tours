@@ -15,6 +15,7 @@ export const getTemplateContentDetail = async (
         BaseResponse<null>
     >("localfront/getCms_templateDetails", {
         next: { tags: ["templateContent"] },
+
         params: {
             requestObject: {
                 ...payload,
@@ -28,6 +29,7 @@ export const getSellableListByTemplateId = async (templateId: number) => {
         "localfront/BookingOrder_SearchByTemplateId",
         {
             next: { tags: ["sellableListByTemplateId"] },
+            cache: "no-store",
             params: {
                 requestObject: {
                     byTemplateId: templateId,

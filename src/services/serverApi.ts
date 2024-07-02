@@ -39,7 +39,7 @@ const request = async <TSuccess, TError>(
         };
     }
 
-    console.log({ params, requestUrl });
+    // console.log({ params, requestUrl });
     try {
         const response = await fetch(requestUrl, configs);
         const data = await response.json();

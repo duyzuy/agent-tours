@@ -13,6 +13,7 @@ export const getProductList = async ({
         "localfront/BookingOrder_Search",
         {
             next: { tags: ["productListItem"] },
+            cache: "no-store",
             params: {
                 requestObject,
                 pageCurrent,
