@@ -37,7 +37,6 @@ const ProductSummary = ({
         (state) => state.bookingInfo.couponPolicy,
     );
     const { session } = useAuth();
-    console.log(session);
 
     const {
         initProduct,
@@ -103,13 +102,13 @@ const ProductSummary = ({
         newProduct && setProductItem(newProduct);
     };
     const goToPasssenger = () => {
-        if (
-            session.status === "unauthenticated" ||
-            session.status === "loading"
-        ) {
-            message.info("Vui long Thuc hien dang nhap.");
-            return;
-        }
+        // if (
+        //     session.status === "unauthenticated" ||
+        //     session.status === "loading"
+        // ) {
+        //     message.info("Vui long Thuc hien dang nhap.");
+        //     return;
+        // }
         startTransitionInitBookingDetailItems(() => {
             initPassengerInfoThenGoToPassenger();
         });
