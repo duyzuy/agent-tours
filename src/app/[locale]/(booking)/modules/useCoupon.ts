@@ -26,7 +26,9 @@ const useCoupon = () => {
     };
 
     const addCoupon = (payload: { sellableId: number; code: string }) => {
-        const couponItem = coupons?.find((item) => item.code === payload.code);
+        const couponItem = coupons?.find(
+            (item) => item.code.toLowerCase() === payload.code.toLowerCase(),
+        );
         if (couponItem) {
             message.error("Mã code hiện đang áp dụng. không thể áp dụng thêm");
             return;

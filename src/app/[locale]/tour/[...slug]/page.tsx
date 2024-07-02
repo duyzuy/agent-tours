@@ -11,9 +11,11 @@ import Benefit from "./_components/Benefit";
 
 import LineSpacing from "@/components/frontend/LineSpacing";
 import ClientStoreData from "./_components/ClientStoreData";
+import ProductSummaryCard from "@/components/frontend/skeletons/ProductSummaryCard";
+import ProductGalleries from "@/components/frontend/skeletons/ProductGalleries";
 
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
-    loading: () => <p>Loading galleries...</p>,
+    loading: () => <ProductGalleries className="w-full mb-6" />,
     ssr: false,
 });
 
@@ -28,7 +30,9 @@ const DynamicProductContent = dynamic(
 const DynamicProductSummary = dynamic(
     () => import("./_components/ProductSummary"),
     {
-        loading: () => <p>Loading product summary...</p>,
+        loading: () => (
+            <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />
+        ),
         ssr: false,
     },
 );

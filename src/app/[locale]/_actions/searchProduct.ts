@@ -12,8 +12,7 @@ export const getProductList = async ({
     return await serverRequest.post<ProductListResponse, BaseResponse<null>>(
         "localfront/BookingOrder_Search",
         {
-            next: { tags: ["productListItem"] },
-            cache: "no-store",
+            next: { tags: ["productListItem"], revalidate: 1 },
             params: {
                 requestObject,
                 pageCurrent,

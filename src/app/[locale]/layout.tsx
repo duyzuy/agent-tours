@@ -12,6 +12,7 @@ import Footer from "./_components/commons/Footer";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { FeBookingProvider } from "./store/providers/BookingProvider";
+import ModalAuth from "./(auth)/_components/ModalAuth";
 
 interface Props {
     children: React.ReactNode;
@@ -66,6 +67,7 @@ export default async function RootClientLayout({
                         <Header />
                         {children}
                         <Footer />
+                        <ModalAuth />
                     </FeBookingProvider>
                 </LanguageProvider>
             </NextAuthProvider>

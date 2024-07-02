@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useTransition } from "react";
 import QuantityInput from "@/components/frontend/QuantityInput";
-import { Form, DatePickerProps } from "antd";
+import { Form, DatePickerProps, message } from "antd";
 import classNames from "classnames";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import FeDatePicker from "@/components/frontend/FeDatePicker";
@@ -18,6 +18,7 @@ import HotlineBox from "@/components/frontend/HotlineBox";
 import ProductSummaryWraper from "@/components/frontend/ProductSummaryWraper";
 import { formatDate } from "@/utils/date";
 import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
+import useAuth from "@/app/[locale]/hooks/useAuth";
 
 interface Props {
     className?: string;
@@ -35,6 +36,8 @@ const ProductSummary = ({
     const bookingCounponPolicy = useBookingSelector(
         (state) => state.bookingInfo.couponPolicy,
     );
+    const { session } = useAuth();
+    console.log(session);
 
     const {
         initProduct,
@@ -100,6 +103,13 @@ const ProductSummary = ({
         newProduct && setProductItem(newProduct);
     };
     const goToPasssenger = () => {
+        if (
+            session.status === "unauthenticated" ||
+            session.status === "loading"
+        ) {
+            message.info("Vui long Thuc hien dang nhap.");
+            return;
+        }
         startTransitionInitBookingDetailItems(() => {
             initPassengerInfoThenGoToPassenger();
         });
