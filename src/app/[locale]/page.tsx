@@ -80,7 +80,7 @@ export default async function FeHomePage({
                     <TourListContainer
                         lang={locale}
                         querySearch={travelthaiAug}
-                        title="Du lich thailand"
+                        title="Du lich thailand thang 8"
                     />
                 </Suspense>
                 <LineSpacing spaceY={12} className="lg:px-0 px-4" />
@@ -94,7 +94,7 @@ export default async function FeHomePage({
                     <TourListContainer
                         lang={locale}
                         querySearch={traveltaiwanAug}
-                        title="Du lich Dailoan"
+                        title="Du lich Dailoan thang 8"
                     />
                 </Suspense>
 

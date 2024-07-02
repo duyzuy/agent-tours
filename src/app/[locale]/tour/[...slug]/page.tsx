@@ -11,7 +11,7 @@ import Benefit from "./_components/Benefit";
 
 import LineSpacing from "@/components/frontend/LineSpacing";
 import ClientStoreData from "./_components/ClientStoreData";
-import ProductSummary from "./_components/ProductSummary";
+
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
     loading: () => <p>Loading galleries...</p>,
     ssr: false,
@@ -75,14 +75,14 @@ export default async function PageTourDetail({
         (item) => item.recId === Number(sellableId),
     );
 
-    // if (
-    //     !cmsTemplateContent ||
-    //     !sellableList ||
-    //     !sellableList.length ||
-    //     !currentSellable
-    // ) {
-    //     notFound();
-    // }
+    if (
+        !cmsTemplateContent ||
+        !sellableList ||
+        !sellableList.length
+        // !currentSellable
+    ) {
+        notFound();
+    }
 
     return (
         <div className="page-detail">
@@ -116,7 +116,7 @@ export default async function PageTourDetail({
                         {/* <TourRelateds className="mb-8" /> */}
                         {/* <TourReviews /> */}
                     </div>
-                    <ProductSummary
+                    <DynamicProductSummary
                         defaultSellable={currentSellable}
                         sellableList={sellableList}
                         className="w-full lg:w-5/12 lg:pl-8 "
