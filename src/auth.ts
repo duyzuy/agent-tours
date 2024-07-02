@@ -63,7 +63,7 @@ export const authOptions: NextAuthOptions = {
                     };
                 }
                 if (data.status === Status.XX) {
-                    throw new Error(data.message);
+                    throw new Error(data.errorCode);
                 }
                 return null;
             },

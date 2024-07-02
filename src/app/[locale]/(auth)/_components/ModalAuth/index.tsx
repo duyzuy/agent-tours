@@ -6,20 +6,43 @@ import useAuthModal from "../../hooks";
 import { TabsProps, Tabs } from "antd";
 import LoginForm from "../LoginForm";
 import RegistrationForm from "../RegistrationForm";
+import { useSignUp } from "../../modules/useAuth";
+import { signIn } from "next-auth/react";
+import { CustomerLoginFormData } from "../../modules/customerAuth.interface";
+import { useRouter } from "next/navigation";
 const ModalAuth = () => {
     const authModal = useModalManagerSelector((state) => state.authModal);
+    const router = useRouter();
     const { hideAuthModal } = useAuthModal();
+
+    const { signUp } = useSignUp();
+
+    const onSignIn = async (formData: CustomerLoginFormData) => {
+        try {
+            const response = await signIn("credentials", {
+                username: formData.username,
+                password: formData.password,
+                redirect: false,
+            });
+            if (response?.status) {
+                router.refresh();
+                hideAuthModal();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const items: TabsProps["items"] = [
         {
             key: "signin",
             label: <span className="text-lg">Đăng nhập</span>,
-            children: <LoginForm />,
+            children: <LoginForm onSubmit={onSignIn} />,
         },
         {
             key: "signup",
             label: <span className="text-lg">Đăng ký</span>,
-            children: <RegistrationForm />,
+            children: <RegistrationForm onSubmit={signUp} />,
         },
     ];
     return (

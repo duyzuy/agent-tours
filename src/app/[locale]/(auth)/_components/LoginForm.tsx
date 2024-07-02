@@ -1,7 +1,6 @@
 "use client";
 import { LockOutlined } from "@ant-design/icons";
 import { Button, Form, FormItemProps, Input, InputProps } from "antd";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { CustomerLoginFormData } from "../modules/customerAuth.interface";
@@ -44,7 +43,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
         handleSubmit,
         formState: { errors },
         control,
-        watch,
     } = useForm<CustomerLoginFormData>({
         resolver: yupResolver(customerLoginSchema),
     });

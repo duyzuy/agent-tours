@@ -7,12 +7,13 @@ import {
     CustomerLoginFormData,
     CustomerRegisterFormData,
 } from "./customerAuth.interface";
-import { useRouter } from "next/navigation";
-import { useLanguageSelector } from "../../hooks/useLanguage";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import useMessage from "@/hooks/useMessage";
+import { useLocale } from "next-intl";
+import { LangCode } from "@/models/management/cms/language.interface";
+import { useRouter } from "@/utils/navigation";
 
 const useCustomerAuth = () => {
     const { mutate: login } = useCustomerLoginMutation();
@@ -31,12 +32,14 @@ const useCustomerAuth = () => {
 };
 export default useCustomerAuth;
 
-export const useSignUp = () => {
+export const useSignUp = (options?: {
+    redirect?: boolean;
+    callbackUrl?: string;
+}) => {
     const { mutate: register } = useCustomerRegisterMutation();
-
+    const { redirect = false, callbackUrl } = options || {};
     const router = useRouter();
     const message = useMessage();
-    const language = useLanguageSelector((state) => state.locale);
     const [error, setError] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -48,7 +51,9 @@ export const useSignUp = () => {
                 message.success(
                     "Tạo tài khoản thành công, vui lòng thực hiện đăng nhập",
                 );
-                router.push(`/${language?.code}/${CLIENT_LINKS.CustomerLogin}`);
+                if (redirect) {
+                    router.push(`/${CLIENT_LINKS.CustomerLogin}`);
+                }
                 setLoading(false);
             },
             onError(error, variables, context) {
@@ -64,16 +69,25 @@ export const useSignUp = () => {
         error,
     };
 };
-export const useSignIn = () => {
+export const useSignIn = (options?: {
+    redirect?: boolean;
+    callbackUrl?: string;
+}) => {
     const [error, setError] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
-    const onSignIn = (formData: CustomerLoginFormData) => {
+    const locale = useLocale() as LangCode;
+
+    const callbackUrl = options?.callbackUrl
+        ? `/${locale}/${options.callbackUrl}`
+        : `/${locale}`;
+
+    const onSignIn = (formData: CustomerLoginFormData, cb?: () => void) => {
         setLoading(true);
         signIn("credentials", {
             username: formData.username,
             password: formData.password,
-            redirect: true,
-            callbackUrl: "/customer",
+            redirect: options?.redirect || true,
+            callbackUrl: callbackUrl,
         })
             .then((data) => {
                 console.log(data);

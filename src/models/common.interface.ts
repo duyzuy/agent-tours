@@ -4,6 +4,7 @@ export interface BaseResponse<T> {
     message: string;
     jwt: string;
     pageCurrent: number;
+    errorCode: string;
     pageSize: number;
     totalPages: number;
     totalItems: number;
