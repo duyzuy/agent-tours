@@ -92,6 +92,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                 break;
             }
         }
+        console.log(paxDOB);
         setErrorForm((prev) => ({ ...prev, paxBirthDate: errorMess }));
         paxDOB &&
             setValue?.(`passengerItem.${index}.info.paxBirthDate`, paxDOB),

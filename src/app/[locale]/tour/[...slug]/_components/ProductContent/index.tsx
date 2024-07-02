@@ -14,8 +14,10 @@ import { FeTemplateContentResponse } from "@/models/fe/templateContent.interface
 
 interface ProductContentProps {
     data: FeTemplateContentResponse["result"][0];
+    log: any;
 }
-const ProductContent: React.FC<ProductContentProps> = ({ data }) => {
+const ProductContent: React.FC<ProductContentProps> = ({ data, log }) => {
+    console.log(log);
     const tourInformationsListContent =
         data.includeAndNotes?.metaContent.reduce<
             { content: string; key: string; name: string }[]

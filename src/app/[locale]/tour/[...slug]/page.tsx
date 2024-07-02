@@ -50,15 +50,24 @@ export default async function PageTourDetail({
 }: PageTourDetailProps) {
     const [templateId, sellableId, contentSlug] = slug;
 
-    const cmsContentDetail = await getTemplateContentDetail({
-        slug: contentSlug,
-        lang: locale,
-    });
+    const [productResponse, cmsContentDetail] = await Promise.all([
+        getSellableListByTemplateId(Number(templateId)),
+        getTemplateContentDetail({
+            slug: contentSlug,
+            lang: locale,
+        }),
+    ]);
+
+    // const cmsContentDetail = await getTemplateContentDetail({
+    //     slug: contentSlug,
+    //     lang: locale,
+    // });
+    // const productResponse = await getSellableListByTemplateId(
+    //     Number(templateId),
+    // );
 
     const cmsTemplateContent = cmsContentDetail?.result[0];
-    const productResponse = await getSellableListByTemplateId(
-        Number(templateId),
-    );
+
     const sellableList = productResponse?.result;
     const currentSellable = sellableList?.find(
         (item) => item.recId === Number(sellableId),
@@ -97,7 +106,10 @@ export default async function PageTourDetail({
 
                         <Benefit items={cmsTemplateContent.metaData} />
                         <LineSpacing spaceY={12} />
-                        <DynamicProductContent data={cmsTemplateContent} />
+                        <DynamicProductContent
+                            data={cmsTemplateContent}
+                            log={{ productResponse, cmsContentDetail }}
+                        />
                         <div className="space h-8"></div>
                         {/* <TourRelateds className="mb-8" /> */}
                         {/* <TourReviews /> */}

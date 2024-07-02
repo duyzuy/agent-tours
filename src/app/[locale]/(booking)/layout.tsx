@@ -29,8 +29,10 @@ export default function FeBookingLayout({
         <div className="bg-gray-100">
             <BookingSteps activeKey={activeKey} />
             <div className="container lg:px-8 md:px-6 px-3 mx-auto py-12 flex flex-wrap">
-                <div className="page__layout-wraper lg:w-7/12">{children}</div>
-                <BookingBreakDown className="lg:w-5/12 lg:pl-8" />
+                <div className="page__layout-wraper w-full lg:w-7/12 lg:mb-0 mb-6">
+                    {children}
+                </div>
+                <BookingBreakDown className="w-full lg:w-5/12 lg:pl-8" />
             </div>
         </div>
     );

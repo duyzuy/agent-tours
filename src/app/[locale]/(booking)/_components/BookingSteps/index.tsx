@@ -22,11 +22,11 @@ const BookingSteps: React.FC<BookingStepsProps> = ({ activeKey = 1 }) => {
                             className="step relative flex-1 flex items-center justify-center"
                             key={step.key}
                         >
-                            <div className="content w-28 lg:w-48 text-center relative z-10">
+                            <div className="content w-20 md:w-28 lg:w-48 text-center relative z-10">
                                 <span className="w-8 h-8 bg-white rounded-full flex items-center justify-center mx-auto mb-2">
                                     <span
                                         className={classNames(
-                                            "rounded-full w-6 h-6 mx-auto flex items-center justify-center",
+                                            "rounded-full w-5 h-5 lg:w-6 lg:h-6 mx-auto flex items-center justify-center",
                                             {
                                                 "bg-emerald-500":
                                                     step.index < activeKey,
@@ -48,7 +48,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({ activeKey = 1 }) => {
                                                 strokeWidth="2"
                                                 strokeLinecap="round"
                                                 strokeLinejoin="round"
-                                                className="w-4 h-4 stroke-white"
+                                                className="w-3 h-3 lg:w-4 lg:h-4 stroke-white"
                                             >
                                                 <path d="M20 6 9 17l-5-5" />
                                             </svg>
@@ -63,7 +63,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({ activeKey = 1 }) => {
                                                 strokeWidth="2"
                                                 strokeLinecap="round"
                                                 strokeLinejoin="round"
-                                                className="w-4 h-4 stroke-white"
+                                                className="w-3 h-3 lg:w-4 lg:h-4 stroke-white"
                                             >
                                                 <circle cx="12" cy="12" r="1" />
                                                 <circle cx="19" cy="12" r="1" />
@@ -72,7 +72,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({ activeKey = 1 }) => {
                                         ) : null}
                                     </span>
                                 </span>
-                                <span className="lg:text-base text-xs">
+                                <span className="lg:text-base md:text-xs text-[10px]">
                                     {step.name}
                                 </span>
                             </div>
