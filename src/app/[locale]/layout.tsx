@@ -1,6 +1,5 @@
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-
 import { LangCode } from "@/models/management/cms/language.interface";
 import { set } from "lodash";
 import { getTranslationFe } from "@/server/fe";
@@ -39,7 +38,7 @@ export default async function RootClientLayout({
     try {
         translationKeys = await getTranslationFe(locale);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         notFound();
     }
 
