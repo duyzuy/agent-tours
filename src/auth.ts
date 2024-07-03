@@ -8,23 +8,6 @@ import { Status } from "@/models/common.interface";
 import { parseJWT } from "@/utils/jwt";
 
 export const authOptions: NextAuthOptions = {
-    session: {
-        strategy: "jwt",
-        // maxAge: 30 * 60 * 60,
-    },
-    secret: process.env.NEXTAUTH_SECRET,
-    debug: process.env.NODE_ENV !== "production" ? true : false,
-    logger: {
-        error(code, metadata) {
-            console.error(code, metadata);
-        },
-        warn(code) {
-            console.warn(code);
-        },
-        debug(code, metadata) {
-            console.debug(code, metadata);
-        },
-    },
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -90,6 +73,23 @@ export const authOptions: NextAuthOptions = {
             },
         }),
     ],
+    session: {
+        strategy: "jwt",
+        // maxAge: 30 * 60 * 60,
+    },
+    secret: process.env.NEXTAUTH_SECRET,
+    debug: process.env.NODE_ENV !== "production" ? true : false,
+    logger: {
+        error(code, metadata) {
+            console.error(code, metadata);
+        },
+        warn(code) {
+            console.warn(code);
+        },
+        debug(code, metadata) {
+            console.debug(code, metadata);
+        },
+    },
     callbacks: {
         // async signIn({ user, account, profile, email, credentials }) {
         //     /* on successful sign in */

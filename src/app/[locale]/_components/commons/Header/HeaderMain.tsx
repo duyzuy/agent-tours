@@ -14,14 +14,14 @@ const HeaderMain = () => {
                             description:
                                 "Your customers’ data will be safe and secure",
                             href: "",
-                            iconPath:
-                                "http://localhost:3000/api/uploads/ninh-binh/logo-1703491889324.svg",
+                            // iconPath:
+                            //     "http://localhost:3000/api/uploads/ninh-binh/logo-1703491889324.svg",
                         },
                         {
                             title: "Security 2",
                             href: "",
-                            iconPath:
-                                "http://localhost:3000/api/uploads/ninh-binh/logo-1703491889324.svg",
+                            // iconPath:
+                            //     "http://localhost:3000/api/uploads/ninh-binh/logo-1703491889324.svg",
                         },
                         {
                             title: "Security 3",
