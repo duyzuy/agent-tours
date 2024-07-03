@@ -32,7 +32,7 @@ const CouponCard: React.FC<CouponCardProps> = ({
             )}
         >
             <div className="promocode-item__inner relative flex">
-                <div className="promocode-item__left w-16 flex items-center border-r border-dashed mr-3 px-3 py-2 bg-slate-50">
+                <div className="promocode-item__left w-24 flex items-center justify-center border-r border-dashed mr-3 px-3 py-2 bg-slate-50 rounded-md">
                     <span className="text-base -rotate-90 text-center whitespace-nowrap leading-none">
                         <span className="block text-[10px] text-gray-500 uppercase">
                             {t("promocodeItem.code")}

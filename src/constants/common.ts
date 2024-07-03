@@ -9,6 +9,10 @@ export const DATE_FORMAT = "DDMMMYYYY";
 export const MONTH_FORMAT = "MMMYYYY";
 export const TIME_FORMAT = "HH:mm";
 export const DATE_TIME_FORMAT = "DDMMMYYYY HH:mm";
+export const DATE_FORMATS = {
+    "DD/MM/YYYY": "DD/MM/YYYY",
+    DDMMMYYYY: "DDMMMYYYY",
+};
 //  Monday Tuesday Wednesday Thursday Friday Saturday
 export const DAYS_OF_WEEK = [
     { label: "CN", value: "Sunday" },
@@ -25,7 +29,7 @@ export const TIME_SLOTS = [
 ];
 export const PASSENGER_AGES = {
     adult: { min: 12 },
-    child: { min: 2, max: 12 },
+    child: { min: 2, max: 11 },
     infant: { max: 2 },
 };
 export enum EPassengerTitle {

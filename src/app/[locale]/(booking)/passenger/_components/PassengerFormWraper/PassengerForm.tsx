@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { PassengerType } from "@/models/common.interface";
 import { getPassengerType } from "@/utils/common";
 import { getPassengerGenderList } from "@/utils/passenger";
-import { DATE_FORMAT, PASSENGER_AGES } from "@/constants/common";
+import { DATE_FORMAT, DATE_FORMATS, PASSENGER_AGES } from "@/constants/common";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import FormItem from "@/components/base/FormItem";
 
@@ -54,7 +54,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
         date: Dayjs | null,
     ) => {
         let errorMess: string | undefined = undefined;
-        let paxDOB = date ? date.locale("en").format(DATE_FORMAT) : null;
 
         switch (type) {
             case PassengerType.ADULT: {
@@ -63,9 +62,12 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                     PASSENGER_AGES.adult.min
                 ) {
                     errorMess = er("passenger.age.adult.invalidLess");
-                    paxDOB = null;
+                    setErrorForm((prev) => ({
+                        ...prev,
+                        paxBirthDate: errorMess,
+                    }));
+                    return;
                 }
-
                 break;
             }
             case PassengerType.CHILD: {
@@ -76,26 +78,39 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         PASSENGER_AGES.child.max
                 ) {
                     errorMess = er("passenger.age.child.invalid");
-                    paxDOB = null;
+                    setErrorForm((prev) => ({
+                        ...prev,
+                        paxBirthDate: errorMess,
+                    }));
+                    return;
                 }
-
                 break;
             }
             case PassengerType.INFANT: {
                 if (
-                    dayjs(startDate).diff(date, "years") >
+                    dayjs(startDate).diff(date, "years") + 1 >
                     PASSENGER_AGES.infant.max
                 ) {
                     errorMess = er("passenger.age.infant.invalid");
-                    paxDOB = null;
+                    setErrorForm((prev) => ({
+                        ...prev,
+                        paxBirthDate: errorMess,
+                    }));
+                    return;
                 }
                 break;
             }
         }
-        console.log(paxDOB);
-        setErrorForm((prev) => ({ ...prev, paxBirthDate: errorMess }));
-        paxDOB &&
-            setValue?.(`passengerItem.${index}.info.paxBirthDate`, paxDOB),
+        setErrorForm((prev) => ({
+            ...prev,
+            paxBirthDate: undefined,
+        }));
+
+        date &&
+            setValue?.(
+                `passengerItem.${index}.info.paxBirthDate`,
+                date.toDate(),
+            ),
             clearErrors?.(`passengerItem.${index}.info.paxBirthDate`);
     };
 
@@ -164,7 +179,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                     <Row gutter={16}>
                         <Col span={24} md={6}>
                             <Controller
-                                key={field?.info?.paxGender}
                                 control={control}
                                 name={`passengerItem.${index}.info.paxGender`}
                                 render={({ field, formState: { errors } }) => (
@@ -197,7 +211,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
                         <Col span={24} md={9}>
                             <Controller
-                                key={field?.info?.paxLastname}
                                 control={control}
                                 name={`passengerItem.${index}.info.paxLastname`}
                                 render={({ field, formState: { errors } }) => (
@@ -233,7 +246,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
                         <Col span={24} md={9}>
                             <Controller
-                                key={field?.info?.paxMiddleFirstName}
                                 control={control}
                                 name={`passengerItem.${index}.info.paxMiddleFirstName`}
                                 render={({ field, formState: { errors } }) => (
@@ -271,7 +283,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                         </Col>
                         <Col span={24} md={12}>
                             <Controller
-                                key={field?.info?.paxBirthDate}
                                 control={control}
                                 name={`passengerItem.${index}.info.paxBirthDate`}
                                 render={({
@@ -311,7 +322,9 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                                             value={
                                                 birthDate
                                                     ? dayjs(birthDate, {
-                                                          format: DATE_FORMAT,
+                                                          format: DATE_FORMATS[
+                                                              "DD/MM/YYYY"
+                                                          ],
                                                       })
                                                     : null
                                             }

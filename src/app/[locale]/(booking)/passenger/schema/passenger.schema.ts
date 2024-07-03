@@ -1,5 +1,5 @@
-import { ObjectSchema, object, string, array, number } from "yup";
-import { EPassengerGender, EPassengerTitle } from "@/constants/common";
+import { ObjectSchema, object, string, array, number, date } from "yup";
+import { EPassengerGender } from "@/constants/common";
 import { PassengerFormValues } from "../_components/PassengerFormWraper";
 import { PassengerType } from "@/models/common.interface";
 
@@ -40,7 +40,7 @@ export const passengerInformationSchema: ObjectSchema<PassengerFormValues> =
                                 "Giới tính không hợp lệ",
                             )
                             .required("paxGender.required"),
-                        paxBirthDate: string().required("paxBirthDay.required"),
+                        paxBirthDate: date().required("paxBirthDay.required"),
                         // .when("type", {
                         //     is: PassengerType.ADULT,
                         //     then: (schema) => {

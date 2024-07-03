@@ -51,5 +51,3 @@ export interface FeBookingPayload {
     invoiceTaxCode?: string;
     invoiceEmail?: string;
 }
-
-export interface ReservationResponse extends BaseResponse<any> {}

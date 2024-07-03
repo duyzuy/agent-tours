@@ -2,10 +2,8 @@ import { client } from "@/services/api";
 import { BaseResponse } from "@/models/common.interface";
 import { PriceConfigServiceListResponse } from "@/models/fe/serviceItem.interface";
 import { DiscountType } from "@/models/management/core/discountPolicy.interface";
-import {
-    FeBookingPayload,
-    ReservationResponse,
-} from "@/models/fe/booking.interface";
+import { FeBookingPayload } from "@/models/fe/booking.interface";
+import { FeReservationResponse } from "@/models/fe/reservation.interface";
 import { IPromotion } from "@/models/management/core/promotion.interface";
 
 export const feBookingAPIs = {
@@ -39,14 +37,17 @@ export const feBookingAPIs = {
             },
         );
     },
-    createBooking: async (payload: FeBookingPayload) => {
-        return await client.post<ReservationResponse, BaseResponse<null>>(
+    createBooking: async (payload: FeBookingPayload, token: string) => {
+        return await client.post<FeReservationResponse, BaseResponse<null>>(
             "localfront/BookingOrder_Addnew",
             {
                 params: {
                     requestObject: {
                         ...payload,
                     },
+                },
+                headers: {
+                    Authorization: `Bearer ${encodeURIComponent(token)}`,
                 },
             },
         );

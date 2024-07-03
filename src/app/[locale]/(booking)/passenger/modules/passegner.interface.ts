@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
+
 export class FePassengerInformationFormData {
     recId?: number;
     paxTitle?: string;
     paxLastname?: string;
     paxMiddleFirstName?: string;
     paxGender?: string;
-    paxBirthDate?: string;
+    paxBirthDate?: Date | null;
     paxBirthYear?: number;
     paxPhoneNumber?: string;
     paxAddress?: string;
@@ -19,7 +21,7 @@ export class FePassengerInformationFormData {
         paxLastname: string | undefined,
         paxMiddleFirstName: string | undefined,
         paxGender: string | undefined,
-        paxBirthDate: string | undefined,
+        paxBirthDate: Date | undefined | null,
         paxBirthYear: number | undefined,
         paxPhoneNumber: string | undefined,
         paxAddress: string | undefined,

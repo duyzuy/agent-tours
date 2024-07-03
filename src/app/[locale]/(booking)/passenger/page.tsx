@@ -6,12 +6,13 @@ import { Space, Button } from "antd";
 import { useTranslations } from "next-intl";
 import ServiceContainer from "./_components/ServiceContainer";
 import usePassengerInformation from "./modules/usePassengerInformation";
-import { isEmpty } from "lodash";
+import { isEmpty, isNull, isUndefined } from "lodash";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { passengerInformationSchema } from "./schema/passenger.schema";
 import { FeBookingInformation } from "../modules/booking.interface";
 import { useTransition } from "react";
 import { useRouter } from "@/utils/navigation";
+import { useBookingSelector } from "../../hooks/useBookingInformation";
 export type PassengerItemType =
     FeBookingInformation["bookingInfo"]["passengers"][0];
 
@@ -30,6 +31,10 @@ const PassengerPage = () => {
      * PassengerInfomation form data has been init from hook @useInitProductItemAndPassengersInformation
      */
     const { setPassengerInformation, passengers } = usePassengerInformation();
+    const startDate = useBookingSelector(
+        (state) => state.bookingInfo.product?.startDate,
+    );
+
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
@@ -75,7 +80,8 @@ const PassengerPage = () => {
             (pax) =>
                 isEmpty(pax.info.paxLastname) ||
                 isEmpty(pax.info.paxMiddleFirstName) ||
-                isEmpty(pax.info.paxBirthDate) ||
+                // !pax.info.paxBirthDate?.toDateString() ||
+                isEmpty(pax.info.paxBirthDate?.toDateString()) ||
                 isEmpty(pax.info.paxGender),
         );
     }, [passengers]);
@@ -94,6 +100,7 @@ const PassengerPage = () => {
                     passengerList={passengers}
                     isCompleted={isCompletePassengerInformation}
                     canEditPax={canEditPax}
+                    startDate={startDate}
                     onEditPax={setEditPassengerInformation}
                     fields={fields}
                     control={control}

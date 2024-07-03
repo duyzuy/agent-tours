@@ -27,7 +27,12 @@ export const useCheckCouponMutation = () => {
 
 export const useCreateBookingOrderMutation = () => {
     return useMutation({
-        mutationFn: (payload: FeBookingPayload) =>
-            feBookingAPIs.createBooking(payload),
+        mutationFn: ({
+            payload,
+            token,
+        }: {
+            payload: FeBookingPayload;
+            token: string;
+        }) => feBookingAPIs.createBooking(payload, token),
     });
 };

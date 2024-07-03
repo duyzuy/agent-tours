@@ -6,11 +6,15 @@ import { useCallback } from "react";
 import { FeBookingInformation } from "./booking.interface";
 import { PassengerType } from "@/models/common.interface";
 import { IPaymentInformation } from "../payment/modules/payment.interface";
+import dayjs from "dayjs";
+import { DATE_FORMAT } from "@/constants/common";
+import { useSession } from "next-auth/react";
 
 const useCreateBooking = () => {
     const { mutate: makeBooking, isPending } = useCreateBookingOrderMutation();
     const { passengers, product, couponPolicy, coupons, bookingSsrWithPax } =
         useBookingSelector((state) => state.bookingInfo);
+    const session = useSession();
 
     const getProductFlatPricings = useCallback(() => {
         let items: FeProductItem["configs"] = [];
@@ -74,6 +78,10 @@ const useCreateBooking = () => {
 
             const ssrItem = getSSRItemByPassenger(pax);
 
+            /**
+             * correct date format from paxInfo
+             */
+
             bookingDetailsItem = priceConfigItem
                 ? [
                       ...bookingDetailsItem,
@@ -82,7 +90,14 @@ const useCreateBooking = () => {
                           index: pax.index,
                           type: pax.type as PassengerType,
                           amount: priceConfigItem[pax.type as PassengerType],
-                          pax: pax.info,
+                          pax: {
+                              ...pax.info,
+                              paxBirthDate: pax.info.paxBirthDate
+                                  ? dayjs(pax.info.paxBirthDate).format(
+                                        DATE_FORMAT,
+                                    )
+                                  : undefined,
+                          },
                           ssr: ssrItem,
                       },
                   ]
@@ -92,6 +107,9 @@ const useCreateBooking = () => {
         return bookingDetailsItem;
     };
     const onCreateBooking = (paymentInformation: IPaymentInformation) => {
+        if (!session || !session.data?.user.accessToken) {
+            throw new Error("Unauthorized");
+        }
         let payload: FeBookingPayload = { sellableId: product?.recId };
         const { invoice, customerInformation } = paymentInformation;
 
@@ -106,15 +124,17 @@ const useCreateBooking = () => {
             ...invoice,
         };
 
-        console.log(payload);
-        makeBooking(payload, {
-            onSuccess(data, variables, context) {
-                console.log(data, variables, context);
+        makeBooking(
+            { payload, token: session.data.user.accessToken },
+            {
+                onSuccess(data, variables, context) {
+                    console.log(data, variables, context);
+                },
+                onError(error, variables, context) {
+                    console.log(error);
+                },
             },
-            onError(error, variables, context) {
-                console.log(error);
-            },
-        });
+        );
     };
 
     return {

@@ -20,6 +20,7 @@ const BoxSearchTourFe = () => {
 
     const [formData, serchFormData] = useState();
     const selectDate = () => {};
+
     return (
         <PureClient>
             <div className="search-box-tour px-6">
