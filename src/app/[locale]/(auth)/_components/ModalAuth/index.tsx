@@ -7,7 +7,7 @@ import { TabsProps, Tabs } from "antd";
 import LoginForm from "../LoginForm";
 import RegistrationForm from "../RegistrationForm";
 import { useSignUp } from "../../modules/useAuth";
-import { signIn } from "next-auth/react";
+import { getCsrfToken, signIn } from "next-auth/react";
 import { CustomerLoginFormData } from "../../modules/customerAuth.interface";
 import { useRouter } from "next/navigation";
 const ModalAuth = () => {
@@ -23,6 +23,7 @@ const ModalAuth = () => {
                 username: formData.username,
                 password: formData.password,
                 redirect: false,
+                // nonce: await getCsrfToken(),
             });
             if (response?.status) {
                 router.refresh();

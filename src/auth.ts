@@ -41,46 +41,52 @@ export const authOptions: NextAuthOptions = {
                 },
             },
             async authorize(credentials, req) {
-                const { username, password } = credentials || {};
+                console.log({ credentials, req });
+                try {
+                    const { username, password } = credentials || {};
 
-                const response = await fetch(
-                    `${process.env.API_ROOT}/localfront/Login`,
-                    {
-                        body: JSON.stringify({
-                            requestObject: { username, password },
-                        }),
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
+                    const response = await fetch(
+                        `${process.env.API_ROOT}/localfront/Login`,
+                        {
+                            body: JSON.stringify({
+                                requestObject: { username, password },
+                            }),
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
                         },
-                    },
-                );
-                const data = (await response.json()) as CustomerLoginResponse;
+                    );
+                    const data =
+                        (await response.json()) as CustomerLoginResponse;
 
-                // console.log(data);
-                if (data.status === Status.OK) {
-                    const dataParse = parseJWT<{
-                        result: string;
-                        nbf: number;
-                        exp: number;
-                        iat: number;
-                    }>(data.result);
+                    // console.log(data);
+                    if (data.status === Status.OK) {
+                        const dataParse = parseJWT<{
+                            result: string;
+                            nbf: number;
+                            exp: number;
+                            iat: number;
+                        }>(data.result);
 
-                    const userInfo = JSON.parse(
-                        dataParse.result,
-                    ) as ICustomerAuthInformation;
+                        const userInfo = JSON.parse(
+                            dataParse.result,
+                        ) as ICustomerAuthInformation;
 
-                    return {
-                        id: userInfo.recId.toString(),
-                        email: userInfo.email,
-                        name: userInfo.username,
-                        accessToken: data.result,
-                    };
+                        return {
+                            id: userInfo.recId.toString(),
+                            email: userInfo.email,
+                            name: userInfo.username,
+                            accessToken: data.result,
+                        };
+                    }
+                    if (data.status === Status.XX) {
+                        throw new Error(data.errorCode);
+                    }
+                    return null;
+                } catch (err) {
+                    return null;
                 }
-                if (data.status === Status.XX) {
-                    throw new Error(data.errorCode);
-                }
-                return null;
             },
         }),
     ],
