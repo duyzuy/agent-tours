@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import PassengerFormWraper from "./_components/PassengerFormWraper";
 import { Space, Button } from "antd";
 
@@ -13,14 +13,16 @@ import { FeBookingInformation } from "../modules/booking.interface";
 import { useTransition } from "react";
 import { useRouter } from "@/utils/navigation";
 import { useBookingSelector } from "../../hooks/useBookingInformation";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useFieldArray } from "react-hook-form";
+
 export type PassengerItemType =
     FeBookingInformation["bookingInfo"]["passengers"][0];
 
 export type PassengerFormValues = {
     passengerItem: PassengerItemType[];
 };
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useFieldArray } from "react-hook-form";
 
 enum ESubmitAction {
     SET_PASSENGER_INFO = "SET_PASSENGER_INFO",
@@ -66,7 +68,6 @@ const PassengerPage = () => {
             }
 
             if (nextSubmitAction === ESubmitAction.NEXT_TO_PAYMENT) {
-                console.log("payment");
                 router.push("/payment");
             }
         });
@@ -85,6 +86,11 @@ const PassengerPage = () => {
                 isEmpty(pax.info.paxGender),
         );
     }, [passengers]);
+
+    useEffect(() => {
+        isCompletePassengerInformation &&
+            setNextAction(ESubmitAction.NEXT_TO_PAYMENT);
+    }, []);
 
     if (!passengers?.length || !passengers) {
         return null;
@@ -110,14 +116,19 @@ const PassengerPage = () => {
                 />
                 <div className="h-6"></div>
                 {isCompletePassengerInformation && !canEditPax ? (
-                    <>
-                        <ServiceContainer
-                            passengerList={passengers}
-                            className="bg-white rounded-lg"
-                        />
-                        <div className="h-6"></div>
-                    </>
+                    <ServiceContainer
+                        showService={
+                            isCompletePassengerInformation && !canEditPax
+                        }
+                        isCompletedPassengerInfo={
+                            isCompletePassengerInformation
+                        }
+                        passengerList={passengers}
+                        setNextAction={setNextAction}
+                        className="bg-white rounded-lg mb-6 p-6"
+                    />
                 ) : null}
+
                 <div className="text-right">
                     <Space align="end">
                         <Button

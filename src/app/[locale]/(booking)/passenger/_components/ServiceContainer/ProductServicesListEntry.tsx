@@ -1,11 +1,9 @@
-import { useState, useMemo, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 import { FePriceConfig } from "@/models/fe/serviceItem.interface";
 import { groupingProductServices } from "@/utils/productService";
 
 import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
-import useBookingServices, {
-    UseBookingServicesProps,
-} from "../../../modules/useBookingServices";
+import useBookingServices from "../../../modules/useBookingServices";
 import BoxService from "./BoxService";
 import { isEmpty } from "lodash";
 
@@ -35,7 +33,7 @@ const ProductServicesListEntry: React.FC<ProductServicesListEntryProps> = ({
             (pax) =>
                 isEmpty(pax.info.paxLastname) ||
                 isEmpty(pax.info.paxMiddleFirstName) ||
-                isEmpty(pax.info.paxBirthDate) ||
+                isEmpty(pax.info.paxBirthDate?.toDateString()) ||
                 isEmpty(pax.info.paxGender),
         );
     }, [passengers]);

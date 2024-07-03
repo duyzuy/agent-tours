@@ -32,7 +32,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                 <h3 className="font-[500] text-base">Thông tin người đặt</h3>
             </div>
             <div className="customer__information-body">
-                <Form layout="vertical">
+                <Form layout="vertical" component="div">
                     <Row gutter={16}>
                         <Col span={12}>
                             <Controller

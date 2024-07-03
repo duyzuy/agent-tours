@@ -6,6 +6,7 @@ import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { FePassengerInformationFormData } from "../passenger/modules/passegner.interface";
 import { IPromotion } from "@/models/management/core/promotion.interface";
 import { FePriceConfig } from "@/models/fe/serviceItem.interface";
+import { FeReservation } from "@/models/fe/reservation.interface";
 
 export interface IFeSSRItem {
     priceConfig: PriceConfig;
@@ -50,6 +51,7 @@ export interface FeBookingInformation {
         [PassengerType.CHILD]: number;
         [PassengerType.INFANT]: number;
     };
+    reservation?: FeReservation;
 }
 
 export class FeBookingFormData implements FeBookingInformation {
@@ -75,7 +77,7 @@ export class FeBookingFormData implements FeBookingInformation {
         [PassengerType.CHILD]: number;
         [PassengerType.INFANT]: number;
     };
-
+    reservation?: FeReservation;
     constructor(
         bookingInfo: {
             product: FeProductItem | undefined;
@@ -98,9 +100,11 @@ export class FeBookingFormData implements FeBookingInformation {
             [PassengerType.CHILD]: number;
             [PassengerType.INFANT]: number;
         },
+        reservation: FeReservation | undefined,
     ) {
         this.bookingInfo = bookingInfo;
         this.bookingPassenger = bookingPassenger;
         this.servicePriceConfigs = servicePriceConfigs;
+        this.reservation = reservation;
     }
 }

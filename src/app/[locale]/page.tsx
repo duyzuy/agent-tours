@@ -16,7 +16,8 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { getTranslations } from "next-intl/server";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 export default async function FeHomePage({
     params,
 }: {
@@ -25,8 +26,8 @@ export default async function FeHomePage({
     const { locale } = params;
 
     // const t = useTranslations("home");
-    // const { data: session } = useSession();
-    // console.log(session);
+    // const dataa = await getServerSession(authOptions);
+    // console.log({ dataa });
 
     const travelthaiAug = new FeSearchTourQueryParams({
         byMonth: "Aug2024",

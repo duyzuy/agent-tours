@@ -14,6 +14,7 @@ export const initBookingState = new FeBookingFormData(
     },
     undefined,
     { adult: 1, child: 0, infant: 0 },
+    undefined,
 );
 
 export const bookingReducer = (
@@ -132,6 +133,23 @@ export const bookingReducer = (
                     ...state.bookingInfo,
                     bookingSsrWithPax: bookingSSRItems,
                 },
+            };
+            return state;
+        }
+        case EBookingActions.SET_RESERVATION: {
+            const { payload: reservation } = action;
+            state = {
+                ...state,
+                reservation: reservation,
+            };
+            return state;
+        }
+        case EBookingActions.RESET_BOOKING: {
+            state = {
+                ...state,
+                bookingInfo: initBookingState.bookingInfo,
+                bookingPassenger: initBookingState.bookingPassenger,
+                servicePriceConfigs: initBookingState.servicePriceConfigs,
             };
             return state;
         }

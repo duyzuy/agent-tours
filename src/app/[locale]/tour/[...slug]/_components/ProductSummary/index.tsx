@@ -19,7 +19,9 @@ import ProductSummaryWraper from "@/components/frontend/ProductSummaryWraper";
 import { formatDate } from "@/utils/date";
 import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
 import useAuth from "@/app/[locale]/hooks/useAuth";
+import { useSession } from "next-auth/react";
 import useAuthModal from "@/app/[locale]/(auth)/hooks";
+import { getSession } from "next-auth/react";
 
 interface Props {
     className?: string;

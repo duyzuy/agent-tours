@@ -5,6 +5,7 @@ import {
 } from "../../(booking)/modules/booking.interface";
 import { IPromotion } from "@/models/management/core/promotion.interface";
 import { FePriceConfig } from "@/models/fe/serviceItem.interface";
+import { FeReservation } from "@/models/fe/reservation.interface";
 
 export enum EBookingActions {
     SET_PRODUCT = "SET_PRODUCT",
@@ -19,6 +20,8 @@ export enum EBookingActions {
     REMOVE_COUPONS = "REMOVE_COUPONS",
     SET_SERVICE_LIST = "SET_SERVICE_LIST",
     ADD_BOOKING_SERVICE_LIST = "ADD_BOOKING_SERVICE_LIST",
+    SET_RESERVATION = "SET_RESERVATION",
+    RESET_BOOKING = "RESET_BOOKING",
 }
 
 export type BookingActions =
@@ -66,4 +69,15 @@ export type BookingActions =
     | {
           type: EBookingActions.SET_PASSENGER_INFORMATION;
           payload: FeBookingInformation["bookingInfo"]["passengers"];
+      }
+    | {
+          type: EBookingActions.SET_RESERVATION;
+          payload: FeReservation;
+      }
+    | {
+          type: EBookingActions.SET_RESERVATION;
+          payload: FeReservation;
+      }
+    | {
+          type: EBookingActions.RESET_BOOKING;
       };

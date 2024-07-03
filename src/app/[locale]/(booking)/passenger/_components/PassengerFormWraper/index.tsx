@@ -64,6 +64,7 @@ const PassengerFormWraper = ({
                 <div className="page-passenger__head mb-3">
                     <h1 className="text-xl font-[500]">{title}</h1>
                 </div>
+
                 <div className="page-passenger__note mb-6 text-gray-600 rounded-md">
                     <p>{descriptions}</p>
                 </div>
@@ -158,7 +159,7 @@ PassengerFormWraper.Info = function PassengerFormWrapperInfomationItem({
                 <div className="flex flex-wrap -mx-3">
                     <div className="w-1/2 px-3 mb-3">
                         <span className="block w-24 text-xs text-gray-500">
-                            {t("gender")}
+                            {t("gender.label")}
                         </span>
                         <span>{paxGender}</span>
                     </div>

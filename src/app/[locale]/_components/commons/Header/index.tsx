@@ -2,7 +2,8 @@ import Logo from "@/components/frontend/partials/Logo";
 import HamburgerButton from "@/components/frontend/HamburgerButton";
 import HeaderTop from "./HeaderTop";
 import HeaderMain from "./HeaderMain";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 export default async function Header() {
     return (
         <header className="bg-white drop-shadow-sm relative z-20">

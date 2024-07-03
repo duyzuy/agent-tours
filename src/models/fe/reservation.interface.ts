@@ -2,7 +2,7 @@ import { BaseResponse, PaymentStatus, Status } from "../common.interface";
 import { IPassengerInformation } from "../management/booking/passengerInformation.interface";
 import { ISellable } from "../management/core/sellable.interface";
 import { ITemplateSellable } from "../management/core/templateSellable.interface";
-interface FeReservation {
+export interface FeReservation {
     recId: number;
     bookingOrder: {
         recId: number;

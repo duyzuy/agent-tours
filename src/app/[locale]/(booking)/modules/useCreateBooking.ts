@@ -1,4 +1,5 @@
 import { useBookingSelector } from "../../hooks/useBookingInformation";
+import { useBookingInformation } from "../../hooks/useBookingInformation";
 import { FeBookingPayload } from "@/models/fe/booking.interface";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import { useCreateBookingOrderMutation } from "@/mutations/fe/booking";
@@ -8,13 +9,17 @@ import { PassengerType } from "@/models/common.interface";
 import { IPaymentInformation } from "../payment/modules/payment.interface";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "@/constants/common";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { useRouter } from "@/utils/navigation";
+import { EBookingActions } from "../../store/actions/bookingActions";
+import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 
 const useCreateBooking = () => {
     const { mutate: makeBooking, isPending } = useCreateBookingOrderMutation();
+    const router = useRouter();
+    const [{ bookingInfo }, dispatch] = useBookingInformation();
     const { passengers, product, couponPolicy, coupons, bookingSsrWithPax } =
-        useBookingSelector((state) => state.bookingInfo);
-    const session = useSession();
+        bookingInfo;
 
     const getProductFlatPricings = useCallback(() => {
         let items: FeProductItem["configs"] = [];
@@ -106,9 +111,12 @@ const useCreateBooking = () => {
 
         return bookingDetailsItem;
     };
-    const onCreateBooking = (paymentInformation: IPaymentInformation) => {
-        if (!session || !session.data?.user.accessToken) {
-            throw new Error("Unauthorized");
+    const onCreateBooking = async (
+        paymentInformation: IPaymentInformation,
+        session: Session | null,
+    ) => {
+        if (!session || !session.user.accessToken) {
+            throw new Error("Invalid token or session");
         }
         let payload: FeBookingPayload = { sellableId: product?.recId };
         const { invoice, customerInformation } = paymentInformation;
@@ -125,10 +133,16 @@ const useCreateBooking = () => {
         };
 
         makeBooking(
-            { payload, token: session.data.user.accessToken },
+            { payload, token: session.user.accessToken },
             {
                 onSuccess(data, variables, context) {
                     console.log(data, variables, context);
+
+                    dispatch({
+                        type: EBookingActions.SET_RESERVATION,
+                        payload: data.result,
+                    });
+                    router.push("/reservation");
                 },
                 onError(error, variables, context) {
                     console.log(error);

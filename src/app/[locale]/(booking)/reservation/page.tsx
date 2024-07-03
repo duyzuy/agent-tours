@@ -3,33 +3,33 @@ import React, { useEffect, useMemo } from "react";
 import { Space, Button, Tag } from "antd";
 import { useBookingSelector } from "../../hooks/useBookingInformation";
 import IconSuccess from "@/assets/icons/IconSuccess";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/utils/navigation";
 import { isUndefined } from "lodash";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 
 const ReservationPage = () => {
-    const bookingInformation = useBookingSelector((state) => state.bookingInfo);
+    const reservation = useBookingSelector((state) => state.reservation);
+    const { bookingOrder } = reservation || {};
+    console.log(reservation);
     const router = useRouter();
 
-    // const bookingOrder = useMemo(() => {
-    //     return bookingInformation.reservation?.bookingOrder;
-    // }, [bookingInformation]);
+    const templateProduct = useMemo(() => {
+        return bookingOrder?.template;
+    }, [bookingOrder]);
 
-    // const templateProduct = useMemo(() => {
-    //     return bookingInformation.reservation?.bookingOrder.template;
-    // }, [bookingInformation]);
-    // const sellableProduct = useMemo(() => {
-    //     return bookingInformation.reservation?.bookingOrder.sellable;
-    // }, [bookingInformation]);
+    const sellableProduct = useMemo(() => {
+        return bookingOrder?.sellable;
+    }, [bookingOrder]);
+
     // useEffect(() => {
     //     if (isUndefined(bookingOrder)) {
     //         router.push("/portal/booking");
     //     }
     // }, [bookingOrder]);
     return (
-        <div className="page bg-slate-50 -mx-6 -my-6 p-6 min-h-full">
-            <div className="max-w-4xl mx-auto">
+        <div className="page min-h-full">
+            <div className="mx-auto">
                 <div className="customer__page">
                     <div className="text-center pt-8 mb-6">
                         <IconSuccess
@@ -46,13 +46,13 @@ const ReservationPage = () => {
                             </span>
                         </div>
                     </div>
-                    <div className="customer__information bg-white rounded-md max-w-xl mx-auto mb-6 drop-shadow-sm">
+                    <div className="customer__information bg-white rounded-md  mb-6 drop-shadow-sm">
                         <div className="customer__information-head border-b px-6 py-6">
                             <h3 className="font-bold text-lg">
                                 Thông tin đặt chỗ
                             </h3>
                         </div>
-                        {/* <div className="customer__information-body px-6 pt-6 pb-3">
+                        <div className="customer__information-body px-6 pt-6 pb-3">
                             <DetailItem
                                 title="Mã đơn hàng"
                                 value={`#${bookingOrder?.recId}`}
@@ -81,15 +81,15 @@ const ReservationPage = () => {
                                         : undefined
                                 }
                             />
-                        </div> */}
+                        </div>
                     </div>
-                    <div className="customer__information bg-white rounded-md max-w-xl mx-auto mb-6 drop-shadow-sm">
+                    <div className="customer__information bg-white rounded-md  mb-6 drop-shadow-sm">
                         <div className="customer__information-head border-b px-6 py-6">
                             <h3 className="font-bold text-lg">
                                 Thông tin người đặt
                             </h3>
                         </div>
-                        {/* <div className="customer__information-body px-6 pt-6 pb-3">
+                        <div className="customer__information-body px-6 pt-6 pb-3">
                             <DetailItem
                                 title="Họ và tên"
                                 value={bookingOrder?.custName}
@@ -106,28 +106,28 @@ const ReservationPage = () => {
                                 title="Địa chỉ"
                                 value={bookingOrder?.custAddress}
                             />
-                        </div> */}
+                        </div>
                     </div>
-                    <div className="customer__information bg-white rounded-md max-w-xl mx-auto drop-shadow-sm mb-6">
+                    <div className="customer__information bg-white rounded-md  drop-shadow-sm mb-6">
                         <div className="customer__information-body px-6 pt-6 pb-3">
-                            {/* <DetailItem
+                            <DetailItem
                                 title="Trạng thái"
                                 value={
                                     <Tag color="red">
                                         {bookingOrder?.paymentStatus}
                                     </Tag>
                                 }
-                            /> */}
+                            />
                         </div>
                     </div>
-                    <div className="customer__information bg-white rounded-md max-w-xl mx-auto drop-shadow-sm">
+                    <div className="customer__information bg-white rounded-md  drop-shadow-sm">
                         <div className="customer__information-head border-b px-6 py-6">
                             <h3 className="font-bold text-lg">
                                 Chi tiết thanh toán
                             </h3>
                         </div>
                         <div className="customer__information-body px-6 pt-6 pb-3">
-                            {/* <DetailItem
+                            <DetailItem
                                 title="Tour price"
                                 value={moneyFormatVND(bookingOrder?.tourPrice)}
                             />
@@ -148,10 +148,10 @@ const ReservationPage = () => {
                                         )}
                                     </span>
                                 }
-                            /> */}
+                            />
                         </div>
                     </div>
-                    <div className="customer__information py-4 rounded-md max-w-xl mx-auto">
+                    {/* <div className="customer__information py-4 rounded-md ">
                         <div className="flex justify-center">
                             <Space>
                                 <Button
@@ -163,7 +163,7 @@ const ReservationPage = () => {
                                 </Button>
                             </Space>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
