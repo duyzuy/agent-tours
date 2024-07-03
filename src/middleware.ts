@@ -75,9 +75,9 @@ export default function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         // Skip all internal paths (_next)
-        "/((?!_next|favicon.ico|image|static|api|assets|auth|uploads|service-worker).*)",
+        "/((?!_next|favicon.ico|image|static|assets|uploads|service-worker).*)",
         // Optional: only run on root (/) URL
-        // '/'
+        // "/",
         // "/portal/:path*",
     ],
 };
