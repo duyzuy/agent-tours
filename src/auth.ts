@@ -32,9 +32,13 @@ export const authOptions: NextAuthOptions = {
                 username: {
                     label: "Tên tài khoản",
                     type: "text",
-                    placeholder: "jsmith",
+                    placeholder: "Username",
                 },
-                password: { label: "Mật khẩu", type: "password" },
+                password: {
+                    label: "Mật khẩu",
+                    type: "password",
+                    placeholder: "Password",
+                },
             },
             async authorize(credentials, req) {
                 const { username, password } = credentials || {};
