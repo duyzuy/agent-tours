@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { BaseResponse } from "@/models/common.interface";
 import { localRuleAndPolicyAPIs } from "@/services/management/ruleAndPolicy";
-import { IRuleAndPolicyPayload } from "@/app/portal/rule-policy/modules/ruleAndPolicy.interface";
+import { IRuleAndPolicyPayload } from "@/app/(management)/portal/rule-policy/modules/ruleAndPolicy.interface";
 import { IRuleAndPolicyRs } from "@/models/ruleAndPolicy.interface";
 
 //create folder in public/uploads folder.

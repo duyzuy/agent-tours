@@ -22,7 +22,6 @@ interface PageWraperProps {
     session: Session | null;
 }
 const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
-    const [isPending, startTransition] = useTransition();
     const initCustomerInformation = new FeCustomerInformationFormData(
         "",
         "",
@@ -39,12 +38,10 @@ const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
             invoice: initInvoiceData,
         },
     });
-    const { createBooking } = useCreateBooking();
+    const { createBooking, isPending } = useCreateBooking();
 
     const handleSubmitForm: SubmitHandler<IPaymentInformation> = (data) => {
-        startTransition(() => {
-            createBooking(data, session);
-        });
+        createBooking(data, session);
     };
 
     return (

@@ -14,9 +14,9 @@ const NavLinkBase: React.FC<NavLinkProps> = ({
     href = "/",
 }) => {
     return (
-        <Link href={href} className="flex items-center text-sm font-[600]">
+        <Link href={href} className="flex items-center text-sm font-[500]">
             {prefix ? prefix : null}
-            <span className="text text-gray-600">{title}</span>
+            <span className="text-gray-600">{title}</span>
         </Link>
     );
 };

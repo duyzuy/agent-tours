@@ -13,15 +13,15 @@ import {
     IBookingOrderPassengersPayload,
     IBookingOrderCancelPayload,
     IBookingOrderInvoiceInfoPayload,
-} from "@/app/portal/manage-booking/modules/bookingOrder.interface";
-import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
+} from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
+import { ISplitBookingPayload } from "@/app/(management)/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
 import {
     FormOfPaymmentQueryParams,
     IFormOfPaymentListRs,
 } from "@/models/management/core/formOfPayment.interface";
 // import { IBookingSSRPayload } from "@/app/portal/manage-booking/[orderId]/addon-service/modules/bookingSSR.interface";
-import { IEditOrderSSRPayload } from "@/app/portal/manage-booking/[orderId]/modules/manageBooking.interface";
+import { IEditOrderSSRPayload } from "@/app/(management)/portal/manage-booking/[orderId]/modules/manageBooking.interface";
 
 export const manageBookingAPIs = {
     getOrderList: async (

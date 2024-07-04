@@ -1,8 +1,10 @@
 import { bookingAPIs } from "@/services/management/booking/searchTour";
 import { BaseResponse } from "@/models/common.interface";
 import { useMutation } from "@tanstack/react-query";
-import { IBookingTourPayload } from "@/app/portal/booking/modules/bookingInformation.interface";
-import { ISearchBookingPayload } from "@/app/portal/booking/modules/searchBooking.interface";
+
+import { IBookingTourPayload } from "@/app/(management)/portal/booking/modules/bookingInformation.interface";
+import { ISearchBookingPayload } from "@/app/(management)/portal/booking/modules/searchBooking.interface";
+
 import { IProductListRs } from "@/models/management/booking/productItem.interface";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
@@ -12,10 +14,10 @@ import {
     IBookingOrderCustomerPayload,
     IBookingOrderPassengersPayload,
     IBookingOrderInvoiceInfoPayload,
-} from "@/app/portal/manage-booking/modules/bookingOrder.interface";
-import { ISplitBookingPayload } from "@/app/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
+} from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
+import { ISplitBookingPayload } from "@/app/(management)/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IFormOfPaymentPayload } from "@/models/management/core/formOfPayment.interface";
-import { IEditOrderSSRPayload } from "@/app/portal/manage-booking/[orderId]/modules/manageBooking.interface";
+import { IEditOrderSSRPayload } from "@/app/(management)/portal/manage-booking/[orderId]/modules/manageBooking.interface";
 import {
     IOrderDetail,
     IOrderDetailRs,

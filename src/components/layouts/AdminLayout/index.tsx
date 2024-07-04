@@ -15,7 +15,7 @@ import { removeAgToken } from "@/utils/common";
 import { LINKS } from "@/constants/links.constant";
 import AdminMenuLink from "./AdminMenuLink";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
-import { useLogoutPortal } from "@/app/(adminAuth)/ag/hooks/useAgAuth";
+import { useLogoutPortal } from "@/app/(management)/(adminAuth)/ag/hooks/useAgAuth";
 interface Props {
     children: React.ReactNode;
 }

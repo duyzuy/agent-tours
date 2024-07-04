@@ -7,11 +7,14 @@ import { useRouter } from "@/utils/navigation";
 import { isUndefined } from "lodash";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
+import { useLocale } from "next-intl";
 
 const ReservationPage = () => {
     const reservation = useBookingSelector((state) => state.reservation);
+    const product = useBookingSelector((state) => state.bookingInfo.product);
+    const locale = useLocale();
     const { bookingOrder } = reservation || {};
-    console.log(reservation);
+    console.log(reservation, locale);
     const router = useRouter();
 
     const templateProduct = useMemo(() => {
@@ -59,7 +62,7 @@ const ReservationPage = () => {
                             />
                             <DetailItem
                                 title="Tên tour"
-                                value={templateProduct?.name}
+                                value={product?.template.name}
                             />
                             <DetailItem
                                 title="Mã Tour"

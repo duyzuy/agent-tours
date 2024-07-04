@@ -1,7 +1,7 @@
 import { getAgToken } from "@/utils/common";
 import { client } from "../api";
 import { BaseResponse } from "@/models/common.interface";
-import { IRuleAndPolicyPayload } from "@/app/portal/rule-policy/modules/ruleAndPolicy.interface";
+import { IRuleAndPolicyPayload } from "@/app/(management)/portal/rule-policy/modules/ruleAndPolicy.interface";
 import {
     IRuleAndPolicyListRs,
     IRuleAndPolicyRs,

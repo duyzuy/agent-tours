@@ -15,6 +15,7 @@ import { EBookingActions } from "../../store/actions/bookingActions";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import useMessage from "@/hooks/useMessage";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 const useCreateBooking = () => {
     const { mutate: makeBooking, isPending } = useCreateBookingOrderMutation();
     const router = useRouter();
@@ -24,6 +25,7 @@ const useCreateBooking = () => {
     const message = useMessage();
     const t = useTranslations("String");
 
+    const [isLoading, setLoading] = useState(false);
     const getProductFlatPricings = useCallback(() => {
         let items: FeProductItem["configs"] = [];
 

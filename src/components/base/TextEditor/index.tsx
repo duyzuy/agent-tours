@@ -2,7 +2,7 @@ import React, { useRef, useState, memo, useCallback } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import MediaUploadDrawler, {
     MediaUploadProps,
-} from "@/app/portal/media/_components/MediaUploadDrawler";
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
 import { MediaTypes } from "@/models/management/media.interface";
 import { mediaConfig } from "@/configs";
 export interface TextEditorProps {

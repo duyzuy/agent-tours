@@ -13,6 +13,8 @@ import LineSpacing from "@/components/frontend/LineSpacing";
 import ClientStoreData from "./_components/ClientStoreData";
 import ProductSummaryCard from "@/components/frontend/skeletons/ProductSummaryCard";
 import ProductGalleries from "@/components/frontend/skeletons/ProductGalleries";
+import { ResolvingMetadata, Metadata } from "next";
+import { mediaConfig } from "@/configs";
 
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
     loading: () => <ProductGalleries className="w-full mb-6" />,
@@ -36,24 +38,49 @@ const DynamicProductSummary = dynamic(
         ssr: false,
     },
 );
-
-// export async function generateStaticParams() {
-//     const posts = await fetch('https://.../posts').then((res) => res.json())
-
-//     return posts.map((post) => ({
-//       slug: post.slug,
-//     }))
-//   }
-
-type PageTourDetailProps = {
+type PageProps = {
     params: {
         locale: LangCode;
         slug: string[];
     };
+    searchParams: { [key: string]: string | string[] | undefined };
 };
+
+export async function generateMetadata(
+    { params, searchParams }: PageProps,
+    parent: ResolvingMetadata,
+): Promise<Metadata> {
+    // read route params
+    const [templateId, sellableId, contentSlug] = params.slug;
+
+    // fetch data
+    const tourContent = await getTemplateContentDetail({
+        slug: contentSlug,
+        lang: params.locale,
+    });
+
+    // optionally access and extend (rather than replace) parent metadata
+    const previousImages = (await parent).openGraph?.images || [];
+
+    const totalImages = tourContent?.result[0].thumb
+        ? [
+              `${mediaConfig.rootApiPath}/${tourContent.result[0].thumb}`,
+              ...previousImages,
+          ]
+        : [...previousImages];
+
+    return {
+        title: tourContent?.result[0].name || "",
+        openGraph: {
+            title: tourContent?.result[0].name || "",
+            images: [...totalImages],
+        },
+    };
+}
+
 export default async function PageTourDetail({
     params: { locale, slug },
-}: PageTourDetailProps) {
+}: PageProps) {
     const [templateId, sellableId, contentSlug] = slug;
 
     const [productResponse, cmsContentDetail] = await Promise.all([
