@@ -1,130 +1,104 @@
 import { bookingAPIs } from "@/services/management/booking/searchTour";
-import { BaseResponse } from "@/models/common.interface";
-import { useMutation } from "@tanstack/react-query";
-
 import { IBookingTourPayload } from "@/app/(management)/portal/booking/modules/bookingInformation.interface";
 import { ISearchBookingPayload } from "@/app/(management)/portal/booking/modules/searchBooking.interface";
-
 import { IProductListRs } from "@/models/management/booking/productItem.interface";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { formOfPaymentAPIs } from "@/services/management/cores/formOfPayment";
 import {
-    IBookingOrderCancelPayload,
-    IBookingOrderCustomerPayload,
-    IBookingOrderPassengersPayload,
-    IBookingOrderInvoiceInfoPayload,
+  IBookingOrderCancelPayload,
+  IBookingOrderCustomerPayload,
+  IBookingOrderPassengersPayload,
+  IBookingOrderInvoiceInfoPayload,
 } from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/(management)/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IFormOfPaymentPayload } from "@/models/management/core/formOfPayment.interface";
 import { IEditOrderSSRPayload } from "@/app/(management)/portal/manage-booking/[orderId]/modules/manageBooking.interface";
-import {
-    IOrderDetail,
-    IOrderDetailRs,
-} from "@/models/management/booking/order.interface";
-
+import { IOrderDetailRs } from "@/models/management/booking/order.interface";
+import { useCustomMutation } from "../useCustomMutation";
 //create folder in public/uploads folder.
 
 export const useSearchBookingMutation = () => {
-    return useMutation<
-        IProductListRs,
-        BaseResponse<null>,
-        ISearchBookingPayload
-    >({
-        mutationFn: (payload) => bookingAPIs.search(payload),
-    });
+  return useCustomMutation<IProductListRs, ISearchBookingPayload>({
+    mutationFn: (payload) => bookingAPIs.search(payload),
+  });
 };
 
 export const useCreateBookingMutation = () => {
-    return useMutation<ReservationRs, BaseResponse<null>, IBookingTourPayload>({
-        mutationFn: (payload) => bookingAPIs.create(payload),
-    });
+  return useCustomMutation<ReservationRs, IBookingTourPayload>({
+    mutationFn: (payload) => bookingAPIs.create(payload),
+  });
 };
 
 export const useGetBookingTourServicesMutation = () => {
-    return useMutation<any, BaseResponse<null>, number>({
-        mutationFn: (sellableId) => bookingAPIs.getServices(sellableId),
-    });
+  return useCustomMutation<any, number>({
+    mutationFn: (sellableId) => bookingAPIs.getServices(sellableId),
+  });
 };
 
 /**
  * manage booking APIS
  */
 export const useUpdateCustomerInformationMutation = () => {
-    return useMutation<any, BaseResponse<null>, IBookingOrderCustomerPayload>({
-        mutationFn: (payload) => manageBookingAPIs.updateCustomer(payload),
-    });
+  return useCustomMutation<any, IBookingOrderCustomerPayload>({
+    mutationFn: (payload) => manageBookingAPIs.updateCustomer(payload),
+  });
 };
 export const useUpdatePassengersInformationMutation = () => {
-    return useMutation<any, BaseResponse<null>, IBookingOrderPassengersPayload>(
-        {
-            mutationFn: (payload) =>
-                manageBookingAPIs.updatePassengers(payload),
-        },
-    );
+  return useCustomMutation<any, IBookingOrderPassengersPayload>({
+    mutationFn: (payload) => manageBookingAPIs.updatePassengers(payload),
+  });
 };
 
 export const useCancelBookingOrderMutation = () => {
-    return useMutation<any, BaseResponse<null>, IBookingOrderCancelPayload>({
-        mutationFn: (payload) => manageBookingAPIs.cancelBookingOrder(payload),
-    });
+  return useCustomMutation<any, IBookingOrderCancelPayload>({
+    mutationFn: (payload) => manageBookingAPIs.cancelBookingOrder(payload),
+  });
 };
 
 export const useSplitBookingInTwoOrderMutation = () => {
-    return useMutation<ReservationRs, BaseResponse<null>, ISplitBookingPayload>(
-        {
-            mutationFn: (payload) => manageBookingAPIs.splitBooking(payload),
-        },
-    );
+  return useCustomMutation<ReservationRs, ISplitBookingPayload>({
+    mutationFn: (payload) => manageBookingAPIs.splitBooking(payload),
+  });
 };
 
 export const useSplitBookingToOnceOrderMutation = () => {
-    return useMutation<ReservationRs, BaseResponse<null>, ISplitBookingPayload>(
-        {
-            mutationFn: (payload) =>
-                manageBookingAPIs.splitBookingAndCancel(payload),
-        },
-    );
+  return useCustomMutation<ReservationRs, ISplitBookingPayload>({
+    mutationFn: (payload) => manageBookingAPIs.splitBookingAndCancel(payload),
+  });
 };
 export const useUpdateBookingOrderInvoiceInfoMutation = () => {
-    return useMutation({
-        mutationFn: (payload: IBookingOrderInvoiceInfoPayload) =>
-            manageBookingAPIs.updateInvoiceInfo(payload),
-    });
+  return useCustomMutation({
+    mutationFn: (payload: IBookingOrderInvoiceInfoPayload) => manageBookingAPIs.updateInvoiceInfo(payload),
+  });
 };
 
 export const useCreateFormOfPaymentMutation = () => {
-    return useMutation<any, BaseResponse<null>, IFormOfPaymentPayload>({
-        mutationFn: (payload) => formOfPaymentAPIs.createFormOfPayment(payload),
-    });
+  return useCustomMutation<any, IFormOfPaymentPayload>({
+    mutationFn: (payload) => formOfPaymentAPIs.createFormOfPayment(payload),
+  });
 };
 
 export const useApprovalFormOfPaymentMutation = () => {
-    return useMutation({
-        mutationFn: (recId: number) => formOfPaymentAPIs.approvalFOP(recId),
-    });
+  return useCustomMutation({
+    mutationFn: (recId: number) => formOfPaymentAPIs.approvalFOP(recId),
+  });
 };
 
 export const useDeleteFormOfPaymentMutation = () => {
-    return useMutation<any, BaseResponse<null>, number>({
-        mutationFn: (recId) => formOfPaymentAPIs.delete(recId),
-    });
+  return useCustomMutation<any, number>({
+    mutationFn: (recId) => formOfPaymentAPIs.delete(recId),
+  });
 };
 
 export const useUpdateSSRByPassengerMutation = () => {
-    return useMutation({
-        mutationFn: (payload: IEditOrderSSRPayload) =>
-            manageBookingAPIs.updateSSRByPassenger(payload),
-    });
+  return useCustomMutation({
+    mutationFn: (payload: IEditOrderSSRPayload) => manageBookingAPIs.updateSSRByPassenger(payload),
+  });
 };
 
 export const useExtendBookingTimeLimitMutation = () => {
-    return useMutation<
-        IOrderDetailRs,
-        BaseResponse<null>,
-        { orderId: number; postponeHours: number }
-    >({
-        mutationFn: (payload) =>
-            manageBookingAPIs.extendBookingTimeLimit(payload),
-    });
+  return useCustomMutation<IOrderDetailRs, { orderId: number; postponeHours: number }>({
+    mutationFn: (payload) => manageBookingAPIs.extendBookingTimeLimit(payload),
+  });
 };

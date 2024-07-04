@@ -1,18 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
-import { CMSTemplatePayload } from "@/models/management/cms/cmsTemplate.interface";
-import {
-    CMSTemplateContentPayload,
-    CMSTemplateContentMetaDataPayload,
-} from "@/models/management/cms/cmsTemplateContent.interface";
 import { visaTemplateAPIs } from "@/services/management/cms/visaTemplate";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import { VisaTemplateKeyPayload } from "@/models/management/cms/visaTemplate.interface";
+import { useCustomMutation } from "../useCustomMutation";
 
 export const useCreateVisaTempalateKeyMutation = () => {
-    return useMutation({
-        mutationFn: (payload: VisaTemplateKeyPayload) =>
-            visaTemplateAPIs.createTemplateKey(payload),
-    });
+  return useCustomMutation({
+    mutationFn: (payload: VisaTemplateKeyPayload) => visaTemplateAPIs.createTemplateKey(payload),
+  });
 };
 
 // export const useUpdateCMSTemplateContentMutation = () => {

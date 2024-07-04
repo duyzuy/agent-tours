@@ -1,79 +1,49 @@
 import { destinationAPIs } from "@/services/management/misc/destination";
 import { localSearchAPIs } from "@/services/management/misc/localSearch";
-import { useMutation } from "@tanstack/react-query";
 import { BaseResponse } from "@/models/common.interface";
 import {
-    IDestinationContentPayload,
-    IDestinationContentRs,
-    IDestinationEditPayload,
-    IDestinationPayload,
-    IDestinationRs,
+  IDestinationContentPayload,
+  IDestinationContentRs,
+  IDestinationEditPayload,
+  IDestinationPayload,
+  IDestinationRs,
 } from "@/models/management/region.interface";
-import {
-    ILocalSeachDestination,
-    LocalSearchPayload,
-} from "@/models/management/localSearchDestination.interface";
-
+import { ILocalSeachDestination, LocalSearchPayload } from "@/models/management/localSearchDestination.interface";
+import { useCustomMutation } from "../useCustomMutation";
 //create folder in public/uploads folder.
 
 export const useCreateDestinationMutation = () => {
-    return useMutation<IDestinationRs, BaseResponse<null>, IDestinationPayload>(
-        {
-            mutationFn: (payload) => destinationAPIs.createDestination(payload),
-        },
-    );
+  return useCustomMutation<IDestinationRs, IDestinationPayload>({
+    mutationFn: (payload) => destinationAPIs.createDestination(payload),
+  });
 };
 
 export const useUpdateDestinationMutation = () => {
-    return useMutation<
-        IDestinationRs,
-        BaseResponse<null>,
-        IDestinationEditPayload
-    >({
-        mutationFn: (payload) => destinationAPIs.updateDestination(payload),
-    });
+  return useCustomMutation<IDestinationRs, IDestinationEditPayload>({
+    mutationFn: (payload) => destinationAPIs.updateDestination(payload),
+  });
 };
 
 export const useCreateDestinationCMSContentMutation = () => {
-    return useMutation<
-        IDestinationContentRs,
-        BaseResponse<null>,
-        IDestinationContentPayload
-    >({
-        mutationFn: (payload) => destinationAPIs.createCMSContent(payload),
-    });
+  return useCustomMutation<IDestinationContentRs, IDestinationContentPayload>({
+    mutationFn: (payload) => destinationAPIs.createCMSContent(payload),
+  });
 };
 
 export const useUpdateDestinationCMSContentMutation = () => {
-    return useMutation<
-        IDestinationContentRs,
-        BaseResponse<null>,
-        IDestinationContentPayload & { id: number }
-    >({
-        mutationFn: (payload) =>
-            destinationAPIs.updateCMSContent({ ...payload }),
-    });
+  return useCustomMutation<IDestinationContentRs, IDestinationContentPayload & { id: number }>({
+    mutationFn: (payload) => destinationAPIs.updateCMSContent({ ...payload }),
+  });
 };
 
 export const useCreateLocalSearchMutation = () => {
-    return useMutation<
-        BaseResponse<ILocalSeachDestination>,
-        BaseResponse<null>,
-        LocalSearchPayload
-    >({
-        mutationFn: (payload) => localSearchAPIs.create(payload),
-        onSuccess(data, variables, context) {
-            return data.result;
-        },
-    });
+  return useCustomMutation<BaseResponse<ILocalSeachDestination>, LocalSearchPayload>({
+    mutationFn: (payload) => localSearchAPIs.create(payload),
+  });
 };
 
 export const useUpdateLocalSearchMutation = () => {
-    return useMutation<
-        BaseResponse<ILocalSeachDestination>,
-        BaseResponse<null>,
-        LocalSearchPayload & { id: number }
-    >({
-        mutationFn: (payload) => localSearchAPIs.update({ ...payload }),
-    });
+  return useCustomMutation<BaseResponse<ILocalSeachDestination>, LocalSearchPayload & { id: number }>({
+    mutationFn: (payload) => localSearchAPIs.update({ ...payload }),
+  });
 };

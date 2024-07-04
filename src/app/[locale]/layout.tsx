@@ -14,78 +14,69 @@ import { FeBookingProvider } from "./store/providers/BookingProvider";
 import ModalAuth from "./(auth)/_components/ModalAuth";
 import { ModalManagerProvider } from "./store/providers/ModalManagerProvider";
 import { getTranslationFe } from "./_actions/feTranslations";
-import { FE_SITE_NAME } from "@/configs/site";
+import { SITE_NAME } from "@/configs/site";
 
 import ThemeProvider from "@/providers/ThemeProvider";
 import { RQClientProvider } from "@/providers/RQClientProvider";
 
 interface Props {
-    children: React.ReactNode;
-    params: { locale: LangCode };
+  children: React.ReactNode;
+  params: { locale: LangCode };
 }
 
 export async function generateStaticParams() {
-    return locales.map((locale) => ({ locale: locale.key }));
+  return locales.map((locale) => ({ locale: locale.key }));
 }
 
 export async function generateMetadata({ params: { locale } }: Props) {
-    return {
-        title: `Agent Hub | ${FE_SITE_NAME}`,
-    };
+  return {
+    title: `Agent Hub | ${SITE_NAME}`,
+  };
 }
 
-export default async function RootClientLayout({
-    children,
-    params: { locale },
-}: Props) {
-    let messages: AbstractIntlMessages | undefined;
-    try {
-        const translationsResponse = await getTranslationFe(locale);
+export default async function RootClientLayout({ children, params: { locale } }: Props) {
+  let messages: AbstractIntlMessages | undefined;
+  try {
+    const translationsResponse = await getTranslationFe(locale);
 
-        const messageObject = translationsResponse?.result?.reduce<{
-            [key: string]: string;
-        }>((acc, item) => ({ ...acc, [item.keyName]: item.name }), {});
+    const messageObject = translationsResponse?.result?.reduce<{
+      [key: string]: string;
+    }>((acc, item) => ({ ...acc, [item.keyName]: item.name }), {});
 
-        messages = Object.entries(messageObject || {}).reduce(
-            (acc, [key, value]) => set(acc, key, value),
-            {},
-        );
-    } catch (error) {
-        notFound();
-    }
+    messages = Object.entries(messageObject || {}).reduce((acc, [key, value]) => set(acc, key, value), {});
+  } catch (error) {
+    notFound();
+  }
 
-    /**
-     * Session next auth
-     */
+  /**
+   * Session next auth
+   */
 
-    const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-    return (
-        <html lang={locale}>
-            <body suppressHydrationWarning={true}>
-                <ThemeProvider>
-                    <RQClientProvider>
-                        <NextIntlClientProvider
-                            locale={locale}
-                            messages={messages}
-                        >
-                            <NextAuthProvider session={session}>
-                                <LanguageProvider>
-                                    <FeBookingProvider>
-                                        <ModalManagerProvider>
-                                            <LangContainer />
-                                            <Header />
-                                            {children}
-                                            <Footer />
-                                            <ModalAuth />
-                                        </ModalManagerProvider>
-                                    </FeBookingProvider>
-                                </LanguageProvider>
-                            </NextAuthProvider>
-                        </NextIntlClientProvider>
-                    </RQClientProvider>
-                </ThemeProvider>
-            </body>
-        </html>
-    );
+  return (
+    <html lang={locale}>
+      <body suppressHydrationWarning={true}>
+        <ThemeProvider>
+          <RQClientProvider>
+            <NextIntlClientProvider locale={locale} messages={messages}>
+              <NextAuthProvider session={session}>
+                <LanguageProvider>
+                  <FeBookingProvider>
+                    <ModalManagerProvider>
+                      <LangContainer />
+                      <Header />
+                      {children}
+                      <Footer />
+                      <ModalAuth />
+                    </ModalManagerProvider>
+                  </FeBookingProvider>
+                </LanguageProvider>
+              </NextAuthProvider>
+            </NextIntlClientProvider>
+          </RQClientProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
 }

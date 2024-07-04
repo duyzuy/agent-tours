@@ -7,34 +7,31 @@ import { UploadFile } from "antd";
 import { RcFile } from "antd/es/upload";
 
 const useMediaFile = () => {
-    const { mutate: makeUploadMediaFiles } = useUploadMediaFilesMutation();
-    const message = useMessage();
-    const queryClient = useQueryClient();
-    const onUploadMedia = (
-        { folder, fileList }: { folder: TFolderSelect; fileList: UploadFile[] },
-        cb?: () => void,
-    ) => {
-        const formData = new FormData();
-        fileList.forEach((file) => {
-            formData.append("files[]", file as RcFile);
-        });
-        formData.append("folder", JSON.stringify(folder));
+  const { mutate: makeUploadMediaFiles } = useUploadMediaFilesMutation();
+  const message = useMessage();
+  const queryClient = useQueryClient();
+  const onUploadMedia = ({ folder, fileList }: { folder: TFolderSelect; fileList: UploadFile[] }, cb?: () => void) => {
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      formData.append("files[]", file as RcFile);
+    });
+    formData.append("folder", JSON.stringify(folder));
 
-        makeUploadMediaFiles(formData, {
-            onSuccess: (data) => {
-                message.success("Upload File thành công.");
-                queryClient.invalidateQueries({
-                    queryKey: [GET_MEDIA_FILES, folder.id],
-                });
-                cb?.();
-            },
-            onError: (error) => {
-                console.log(error);
-                message.error("Upload File Thất bại.");
-            },
+    makeUploadMediaFiles(formData, {
+      onSuccess: (data) => {
+        message.success("Upload File thành công.");
+        queryClient.invalidateQueries({
+          queryKey: [GET_MEDIA_FILES, folder.id],
         });
-    };
+        cb?.();
+      },
+      onError: (error) => {
+        console.log(error);
+        message.error("Upload File Thất bại.");
+      },
+    });
+  };
 
-    return onUploadMedia;
+  return onUploadMedia;
 };
 export default useMediaFile;

@@ -13,13 +13,13 @@ import "@/styles/globals.scss";
 const inter = Inter({ subsets: ["latin"] });
 
 interface Props {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 export default function DashboardLayout({ children }: Props) {
-    return (
-        <AdminAuthorized>
-            <AdminLayout>{children}</AdminLayout>
-            {/* <MediaUploadManager /> */}
-        </AdminAuthorized>
-    );
+  return (
+    <AdminAuthorized>
+      <AdminLayout>{children}</AdminLayout>
+      {/* <MediaUploadManager /> */}
+    </AdminAuthorized>
+  );
 }

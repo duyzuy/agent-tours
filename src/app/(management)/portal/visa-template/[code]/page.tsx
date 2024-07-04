@@ -8,101 +8,94 @@ import { localeDefault } from "@/constants/locale.constant";
 import PageContainer from "@/components/admin/PageContainer";
 import LocaleContainer from "@/components/admin/LocaleContainer";
 import { LangCode } from "@/models/management/cms/language.interface";
-import CMSTemplateContentForm, {
-    CMSTemplateContentFormProps,
-} from "./_components/CMSTemplateContentForm";
+import CMSTemplateContentForm, { CMSTemplateContentFormProps } from "./_components/CMSTemplateContentForm";
 import { useGetCMSTemplateDetailQuery } from "@/queries/cms/cmsTemplate";
 // import useCRUDCMSTemplateContent from "../modules/useCRUDCMSTemplateContent";
 import useCRUDCMSTemplateContentMetadata from "../modules/useCRUDCMSTemplateContentMetadata";
 interface PageContentDetailProps {
-    params: { code: string };
+  params: { code: string };
 }
 const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
-    const { locale, setLocale } = useLocale(localeDefault);
+  const { locale, setLocale } = useLocale(localeDefault);
 
-    const { data, isLoading } = useGetCMSTemplateDetailQuery(params.code);
+  const { data, isLoading } = useGetCMSTemplateDetailQuery(params.code);
 
-    useGetCMSTemplateDetailQuery;
-    const router = useRouter();
+  useGetCMSTemplateDetailQuery;
+  const router = useRouter();
 
-    const templateContent = useMemo(() => {
-        return data?.templates.find((item) => item.lang === locale?.key);
-    }, [data, locale]);
+  const templateContent = useMemo(() => {
+    return data?.templates.find((item) => item.lang === locale?.key);
+  }, [data, locale]);
 
-    const langCodes = useMemo(() => {
-        return data?.templates.reduce<LangCode[]>((acc, item) => {
-            return [...acc, item.lang];
-        }, []);
-    }, [data]);
+  const langCodes = useMemo(() => {
+    return data?.templates.reduce<LangCode[]>((acc, item) => {
+      return [...acc, item.lang];
+    }, []);
+  }, [data]);
 
-    // const { onUpdateTemplateContent, onUpdateStatus, onDeleteTemplateContent } =
-    //     useCRUDCMSTemplateContent();
+  // const { onUpdateTemplateContent, onUpdateStatus, onDeleteTemplateContent } =
+  //     useCRUDCMSTemplateContent();
 
-    const {
-        onCreateMetaContentAndIncludeAndNote,
-        onUpdateMetaContentAndIncludeAndNote,
-        onCreateMetaContentItinerary,
-        onUpdateMetaContentItinerary,
-    } = useCRUDCMSTemplateContentMetadata();
+  const {
+    onCreateMetaContentAndIncludeAndNote,
+    onUpdateMetaContentAndIncludeAndNote,
+    onCreateMetaContentItinerary,
+    onUpdateMetaContentItinerary,
+  } = useCRUDCMSTemplateContentMetadata();
 
-    const handleSubmitMetadataContent: CMSTemplateContentFormProps["onSubmitMetaContent"] =
-        (type, action, data) => {
-            console.log(type, data);
+  const handleSubmitMetadataContent: CMSTemplateContentFormProps["onSubmitMetaContent"] = (type, action, data) => {
+    console.log(type, data);
 
-            if (type === "includeAndNote" && data) {
-                action === "create"
-                    ? onCreateMetaContentAndIncludeAndNote(data)
-                    : onUpdateMetaContentAndIncludeAndNote(data);
-            }
-            if (type === "itinerary" && data) {
-                action === "create"
-                    ? onCreateMetaContentItinerary(data)
-                    : onUpdateMetaContentItinerary(data);
-            }
-        };
-
-    // const handleSubmitFormData: CMSTemplateContentFormProps["onSubmit"] = (
-    //     formData,
-    // ) => {
-    //     if (formData.id) {
-    //         onUpdateTemplateContent(formData);
-    //     }
-    // };
-
-    // const onChangeStatus: CMSTemplateContentFormProps["onChangeStatus"] = (
-    //     id,
-    //     status,
-    // ) => {
-    //     onUpdateStatus({ id, status: status });
-    // };
-    useEffect(() => {
-        if ((isUndefined(data) && !isLoading) || (!data && !isLoading)) {
-            router.push("./portal/visa-template/list");
-        }
-    }, [isLoading, data]);
-
-    if (isLoading) {
-        return <Spin />;
+    if (type === "includeAndNote" && data) {
+      action === "create" ? onCreateMetaContentAndIncludeAndNote(data) : onUpdateMetaContentAndIncludeAndNote(data);
     }
-
-    if (isUndefined(data) || !data) {
-        return null;
+    if (type === "itinerary" && data) {
+      action === "create" ? onCreateMetaContentItinerary(data) : onUpdateMetaContentItinerary(data);
     }
+  };
 
-    return (
-        <PageContainer
-            name="Visa template content"
-            hideAddButton
-            onBack={() => router.push("./portal/visa-template/list")}
-            breadCrumItems={[
-                {
-                    title: "Danh sách visa template",
-                    href: "/portal/visa-template/list",
-                },
-                { title: params.code },
-            ]}
-        >
-            {/* <LocaleContainer
+  // const handleSubmitFormData: CMSTemplateContentFormProps["onSubmit"] = (
+  //     formData,
+  // ) => {
+  //     if (formData.id) {
+  //         onUpdateTemplateContent(formData);
+  //     }
+  // };
+
+  // const onChangeStatus: CMSTemplateContentFormProps["onChangeStatus"] = (
+  //     id,
+  //     status,
+  // ) => {
+  //     onUpdateStatus({ id, status: status });
+  // };
+  useEffect(() => {
+    if ((isUndefined(data) && !isLoading) || (!data && !isLoading)) {
+      router.push("./portal/visa-template/list");
+    }
+  }, [isLoading, data]);
+
+  if (isLoading) {
+    return <Spin />;
+  }
+
+  if (isUndefined(data) || !data) {
+    return null;
+  }
+
+  return (
+    <PageContainer
+      name="Visa template content"
+      hideAddButton
+      onBack={() => router.push("./portal/visa-template/list")}
+      breadCrumItems={[
+        {
+          title: "Danh sách visa template",
+          href: "/portal/visa-template/list",
+        },
+        { title: params.code },
+      ]}
+    >
+      {/* <LocaleContainer
                 defaultValue={localeDefault}
                 onChange={(lc) => setLocale(lc)}
                 value={locale}
@@ -122,7 +115,7 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
                     onChangeStatus={onChangeStatus}
                 />
             ) : null} */}
-        </PageContainer>
-    );
+    </PageContainer>
+  );
 };
 export default PageContentDetail;

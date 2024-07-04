@@ -1,1 +1,2 @@
-export const FE_SITE_NAME = "An Thái";
+export const SITE_NAME = "AN THÁI TRAVEL";
+export const SITE_LOGO = "/assets/images/logo-anthai.svg";
