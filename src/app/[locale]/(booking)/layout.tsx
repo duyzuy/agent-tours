@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { useBookingSelector } from "../hooks/useBookingInformation";
 import { isUndefined } from "lodash";
 import { redirect } from "@/utils/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 interface Props {
     children: React.ReactNode;
     params: { locale: LangCode };
@@ -26,23 +26,21 @@ export default function FeBookingLayout({
         if (pathname.startsWith("/passenger")) {
             step = 1;
         }
-
         if (pathname.startsWith("/payment")) {
             step = 2;
         }
-        if (pathname.startsWith("/thankyou")) {
+        if (pathname.startsWith("/reservation")) {
             step = 3;
         }
         return step;
     }, [pathname]);
-
     if (isUndefined(product) || session.status !== "authenticated") {
         redirect("/");
     }
     return (
         <div className="bg-gray-100">
             <BookingSteps activeKey={activeKey} />
-            <div className="container lg:px-8 md:px-6 px-3 mx-auto py-12 flex flex-wrap">
+            <div className="container lg:px-8 md:px-6 px-4 mx-auto py-12 flex flex-wrap justify-center">
                 <div className="page__layout-wraper w-full lg:w-7/12 lg:mb-0 mb-6">
                     {children}
                 </div>

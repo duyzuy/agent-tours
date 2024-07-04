@@ -9,7 +9,7 @@ import classNames from "classnames";
 export interface SlugProps {
     domainName?: string;
     lang?: LangCode;
-    type?: "post" | "page" | "category" | "destination" | "tour";
+    type?: string; //slug for define post type template
     validateStatus?: "" | "error" | "success" | "warning" | "validating";
     help?: string;
     slugName?: string;

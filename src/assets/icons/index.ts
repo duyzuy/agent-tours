@@ -31,6 +31,8 @@ import IconBuilding from "./IconBuilding";
 import IconStarOutline from "./IconStarOutline";
 import IconUtensilOutline from "./IconUtensilOutline";
 import IconPen from "./IconPen";
+import IconRecieptText from "./IconReceiptText";
+import IconLogout from "./IconLogout";
 
 export {
     IconAccount,
@@ -66,4 +68,6 @@ export {
     IconStarOutline,
     IconUtensilOutline,
     IconPen,
+    IconRecieptText,
+    IconLogout,
 };

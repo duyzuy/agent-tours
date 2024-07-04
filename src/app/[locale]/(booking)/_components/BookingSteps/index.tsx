@@ -10,7 +10,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({ activeKey = 1 }) => {
         { index: 0, name: "Chọn sản phẩm", key: "product-detail", path: "" },
         { index: 1, name: "Điền thông tin", key: "passenger", path: "" },
         { index: 2, name: "Thanh toán", key: "payment", path: "" },
-        { index: 3, name: "Hoàn thành", key: "thank-you", path: "" },
+        { index: 3, name: "Hoàn thành", key: "reservation", path: "" },
     ];
 
     return (

@@ -1,6 +1,6 @@
 import React from "react";
 
-const IconAccount: React.FC<React.SVGProps<SVGSVGElement>> = ({
+const IconKeyRound: React.FC<React.SVGProps<SVGSVGElement>> = ({
     className,
     ...rest
 }) => {
@@ -18,10 +18,9 @@ const IconAccount: React.FC<React.SVGProps<SVGSVGElement>> = ({
             className={className}
             {...rest}
         >
-            <path d="M18 20a6 6 0 0 0-12 0" />
-            <circle cx="12" cy="10" r="4" />
-            <circle cx="12" cy="12" r="10" />
+            <path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
+            <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
         </svg>
     );
 };
-export default IconAccount;
+export default IconKeyRound;

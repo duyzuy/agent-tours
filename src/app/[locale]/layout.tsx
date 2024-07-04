@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { set } from "lodash";
-import { getTranslationFe } from "@/server/fe";
+
 import { LanguageProvider } from "./store/providers/LanguageProvider";
 import LangContainer from "./containers/LangContainer";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
@@ -14,7 +14,7 @@ import { authOptions } from "@/auth";
 import { FeBookingProvider } from "./store/providers/BookingProvider";
 import ModalAuth from "./(auth)/_components/ModalAuth";
 import { ModalManagerProvider } from "./store/providers/ModalManagerProvider";
-
+import { getTranslationFe } from "./_actions/feTranslations";
 interface Props {
     children: React.ReactNode;
     params: { locale: LangCode };

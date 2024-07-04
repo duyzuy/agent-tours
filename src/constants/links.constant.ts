@@ -13,4 +13,6 @@ export const LINKS = {
     PageCreate: "/portal/contents/page/create",
     CMSTemplateCreate: "/portal/cms-template/create",
     CMSTemplatePageList: "/portal/cms-template/list",
+    VisaTemplateList: "/portal/visa-template/list",
+    VisaTemplateCreate: "/portal/visa-template/list",
 };

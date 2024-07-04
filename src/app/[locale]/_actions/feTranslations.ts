@@ -8,7 +8,7 @@ export const getTranslationFe = async (lang?: LangCode) => {
     return await serverRequest.post<ITranslationListFeRs, BaseResponse<null>>(
         "local/getCms_translation_frontend_Bylang",
         {
-            next: { tags: ["feTranslations"] },
+            next: { tags: ["feTranslations"], revalidate: 1 },
             params: {
                 requestObject: {
                     lang: lang,

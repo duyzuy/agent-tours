@@ -9,7 +9,8 @@ import { signOut } from "next-auth/react";
 import { LogoutOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
-
+import { useEffect } from "react";
+import { usePathname } from "@/utils/navigation";
 interface CardDropdownProps {
     isAuth?: boolean;
     username?: string | null;
@@ -21,7 +22,7 @@ const CardDropdown: React.FC<CardDropdownProps> = ({
     children,
 }) => {
     const t = useTranslations("String");
-
+    const pathname = usePathname();
     const [showDropdown, setShowDropdown] = useState(false);
     const toggleDropdown = () => {
         setShowDropdown((prev) => !prev);
@@ -30,6 +31,10 @@ const CardDropdown: React.FC<CardDropdownProps> = ({
     useClickOutSide(dropdownRef, () => {
         setShowDropdown(false);
     });
+
+    useEffect(() => {
+        setShowDropdown(false);
+    }, [pathname]);
     return (
         <div className="item-account">
             {!isAuth ? (

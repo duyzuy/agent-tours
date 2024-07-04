@@ -3,6 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { feBookingAPIs } from "@/services/fe/booking";
 import { DiscountType } from "@/models/management/core/discountPolicy.interface";
 import { FeBookingPayload } from "@/models/fe/booking.interface";
+import { FeReservationResponse } from "@/models/fe/reservation.interface";
+import { BaseResponse } from "@/models/common.interface";
 
 export const useGetServiceListMutation = () => {
     return useMutation({
@@ -26,7 +28,15 @@ export const useCheckCouponMutation = () => {
 };
 
 export const useCreateBookingOrderMutation = () => {
-    return useMutation({
+    return useMutation<
+        FeReservationResponse,
+        BaseResponse<null>,
+        {
+            payload: FeBookingPayload;
+            token: string;
+        },
+        unknown
+    >({
         mutationFn: ({
             payload,
             token,

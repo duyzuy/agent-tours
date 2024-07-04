@@ -37,7 +37,7 @@ const CustomerLogin = () => {
                                 error={error}
                                 loading={loading}
                             >
-                                <p className="text-center text-xs">
+                                <p className="text-center text-xs py-2 mt-3">
                                     <Link
                                         href={`/${CLIENT_LINKS.CustomerRegister}`}
                                     >

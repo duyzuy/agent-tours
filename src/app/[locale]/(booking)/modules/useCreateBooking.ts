@@ -13,13 +13,16 @@ import { Session } from "next-auth";
 import { useRouter } from "@/utils/navigation";
 import { EBookingActions } from "../../store/actions/bookingActions";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
-
+import useMessage from "@/hooks/useMessage";
+import { useTranslations } from "next-intl";
 const useCreateBooking = () => {
     const { mutate: makeBooking, isPending } = useCreateBookingOrderMutation();
     const router = useRouter();
     const [{ bookingInfo }, dispatch] = useBookingInformation();
     const { passengers, product, couponPolicy, coupons, bookingSsrWithPax } =
         bookingInfo;
+    const message = useMessage();
+    const t = useTranslations("String");
 
     const getProductFlatPricings = useCallback(() => {
         let items: FeProductItem["configs"] = [];
@@ -146,6 +149,7 @@ const useCreateBooking = () => {
                 },
                 onError(error, variables, context) {
                     console.log(error);
+                    message.error(t(error.errorCode));
                 },
             },
         );

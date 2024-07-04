@@ -155,6 +155,17 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
             ],
         },
         {
+            key: "visa-template",
+            icon: React.createElement(FileTextOutlined),
+            label: "Visa template",
+            children: [
+                {
+                    key: "visa-template/list",
+                    label: "Danh sách Visa",
+                },
+            ],
+        },
+        {
             key: "menu",
             icon: React.createElement(UnorderedListOutlined),
             label: "Menu",
