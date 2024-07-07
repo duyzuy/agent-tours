@@ -1,191 +1,150 @@
 import { client } from "../api";
-import {
-    TRolePermissionPayload,
-    IRolesPermissionsRs,
-    TRolePayload,
-} from "@/models/management/role.interface";
-import { BaseResponse } from "@/models/common.interface";
+import { TRolePermissionPayload, IRolesPermissionsRs, TRolePayload } from "@/models/management/role.interface";
 export const roleAndPermissionAPIs = {
-    getPermissions: async (token: string) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Getbycat",
-            {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: "LOCALUSER_PERMISSION",
-                },
-            },
-        );
-    },
+  getPermissions: async (token: string) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Getbycat", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: "LOCALUSER_PERMISSION",
+      },
+    });
+  },
 
-    getRolePermission: async (token: string) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Getbycat",
-            {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: "LOCALUSER_ROLEPERMISSION",
-                },
-            },
-        );
-    },
-    getRoles: async (token: string) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Getbycat",
-            {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: "LOCALUSER_ROLE",
-                },
-            },
-        );
-    },
+  getRolePermission: async (token: string) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Getbycat", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: "LOCALUSER_ROLEPERMISSION",
+      },
+    });
+  },
+  getRoles: async (token: string) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Getbycat", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: "LOCALUSER_ROLE",
+      },
+    });
+  },
 
-    createRolePermissions: async (
-        token: string,
-        payload: TRolePermissionPayload,
-    ) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Addnew",
+  createRolePermissions: async (token: string, payload: TRolePermissionPayload) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Addnew", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: {
+          cat: "LOCALUSER_ROLEPERMISSION",
+          rolePermissionList: [
             {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        cat: "LOCALUSER_ROLEPERMISSION",
-                        rolePermissionList: [
-                            {
-                                localUser_RolePermissionValue:
-                                    payload.localUser_RolePermissionValue,
-                                localUser_PermissionList:
-                                    payload.localUser_PermissionList,
-                            },
-                        ],
-                    },
-                },
+              localUser_RolePermissionValue: payload.localUser_RolePermissionValue,
+              localUser_PermissionList: payload.localUser_PermissionList,
             },
-        );
-    },
+          ],
+        },
+      },
+    });
+  },
 
-    updateRolePermissions: async (
-        token: string,
-        localUser_RolePermissionKey: string,
-        payload: TRolePermissionPayload,
-    ) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Edit",
+  updateRolePermissions: async (
+    token: string,
+    localUser_RolePermissionKey: string,
+    payload: TRolePermissionPayload,
+  ) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Edit", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: {
+          cat: "LOCALUSER_ROLEPERMISSION",
+          rolePermissionList: [
             {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        cat: "LOCALUSER_ROLEPERMISSION",
-                        rolePermissionList: [
-                            {
-                                localUser_RolePermissionKey,
-                                ...payload,
-                            },
-                        ],
-                    },
-                },
+              localUser_RolePermissionKey,
+              ...payload,
             },
-        );
-    },
+          ],
+        },
+      },
+    });
+  },
 
-    deleteRolePermissions: async (token: string, key: string) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Delete",
+  deleteRolePermissions: async (token: string, key: string) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Delete", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: {
+          cat: "LOCALUSER_ROLEPERMISSION",
+          rolePermissionList: [
             {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        cat: "LOCALUSER_ROLEPERMISSION",
-                        rolePermissionList: [
-                            {
-                                localUser_RolePermissionKey: key,
-                            },
-                        ],
-                    },
-                },
+              localUser_RolePermissionKey: key,
             },
-        );
-    },
+          ],
+        },
+      },
+    });
+  },
 
-    createRole: async (token: string, payload: TRolePayload) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Addnew",
+  createRole: async (token: string, payload: TRolePayload) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Addnew", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: {
+          cat: "LOCALUSER_ROLE",
+          roleList: [
             {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        cat: "LOCALUSER_ROLE",
-                        roleList: [
-                            {
-                                ...payload,
-                            },
-                        ],
-                    },
-                },
+              ...payload,
             },
-        );
-    },
-    updateRoleByRoleKey: async (
-        token: string,
-        localUser_RoleKey: string,
-        payload: TRolePayload,
-    ) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Edit",
+          ],
+        },
+      },
+    });
+  },
+  updateRoleByRoleKey: async (token: string, localUser_RoleKey: string, payload: TRolePayload) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Edit", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: {
+          cat: "LOCALUSER_ROLE",
+          roleList: [
             {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        cat: "LOCALUSER_ROLE",
-                        roleList: [
-                            {
-                                localUser_RoleKey: localUser_RoleKey,
-                                ...payload,
-                            },
-                        ],
-                    },
-                },
+              localUser_RoleKey: localUser_RoleKey,
+              ...payload,
             },
-        );
-    },
-    deleteRole: async (token: string, roleKey: string) => {
-        return await client.post<IRolesPermissionsRs, BaseResponse<null>>(
-            "local/LocalUser_RoleAndPermission_Delete",
+          ],
+        },
+      },
+    });
+  },
+  deleteRole: async (token: string, roleKey: string) => {
+    return await client.post<IRolesPermissionsRs>("local/LocalUser_RoleAndPermission_Delete", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+      params: {
+        requestObject: {
+          cat: "LOCALUSER_ROLE",
+          roleList: [
             {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(token)}`,
-                },
-                params: {
-                    requestObject: {
-                        cat: "LOCALUSER_ROLE",
-                        roleList: [
-                            {
-                                localUser_RoleKey: roleKey,
-                            },
-                        ],
-                    },
-                },
+              localUser_RoleKey: roleKey,
             },
-        );
-    },
+          ],
+        },
+      },
+    });
+  },
 };
 // {
 //     "requestObject": {

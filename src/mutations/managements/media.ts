@@ -1,5 +1,4 @@
 import { mediaApis } from "@/services/management/localMedia.service";
-
 import { getAgToken } from "@/utils/common";
 import {
   IMediaFileListRs,
@@ -7,7 +6,6 @@ import {
   IMediaFolderPayload,
   IMediaFolderUpdatePayload,
 } from "@/models/management/media.interface";
-import { BaseResponse } from "@/models/common.interface";
 import { useCustomMutation } from "../useCustomMutation";
 
 //create folder in public/uploads folder.

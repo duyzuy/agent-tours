@@ -4,72 +4,81 @@ import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
 import { useRouter } from "next/navigation";
 
-import { useGetVisaTemplateKeyListQuery } from "@/queries/cms/visaTemplate";
+import { useGetVisaTemplateKeyMinimalListQuery } from "@/queries/cms/visaTemplate";
 import { columns } from "./columns";
 
-import { ICMSTemplate } from "@/models/management/cms/cmsTemplate.interface";
-import { VisaTemplateQueryParams } from "@/models/management/cms/visaTemplate.interface";
+import {
+  IVisaTemplateKeyMinimalItem,
+  VisaTemplateKeyListResponse,
+  VisaTemplateQueryParams,
+} from "@/models/management/cms/visaTemplate.interface";
 
 import DrawerCMSTemplate, { DrawerCMSTemplateProps } from "../_components/DrawerCMSTemplate";
 import useCRUDVisaTemplateKey from "../modules/useCRUDVisaTemplateKey";
+
+type VisaTemplateKeyItem = VisaTemplateKeyListResponse["result"][0];
 const CMSTemplatePageList = () => {
   const router = useRouter();
   const [showDrawer, setShowDrawer] = useState(false);
-  const [editRecord, setEditRecord] = useState<ICMSTemplate>();
+  const [editRecord, setEditRecord] = useState<IVisaTemplateKeyMinimalItem>();
   const [action, setAction] = useState<"create" | "edit">("create");
   const [queryParams, setQueryParams] = useState(() => new VisaTemplateQueryParams(undefined, 1, 10));
-  const onEditCSMTemplate = (record: ICMSTemplate) => {
+  const onEditCSMTemplate = (record: IVisaTemplateKeyMinimalItem) => {
     setAction("edit");
     setEditRecord(record);
     setShowDrawer(true);
   };
-  const { data: templateData, isLoading } = useGetVisaTemplateKeyListQuery(queryParams);
 
-  console.log(templateData);
+  const { data: templateData, isLoading } = useGetVisaTemplateKeyMinimalListQuery(queryParams);
+
   const closeDrawer = () => {
     setShowDrawer(false);
     setEditRecord(undefined);
   };
-  const { createTemplateKey } = useCRUDVisaTemplateKey();
+  const createContent = () => {
+    setShowDrawer(true);
+    setAction("create");
+  };
+  const { createTemplateKey, updateTemplate } = useCRUDVisaTemplateKey();
   const handleSubmitForm: DrawerCMSTemplateProps["onSubmit"] = (formData) => {
     if (action === "create") {
       createTemplateKey(formData, () => {
         setShowDrawer(false);
       });
     }
-    // if (action === "edit") {
-    //     onUpdateTemplate(formData, () => {
-    //         closeDrawer();
-    //     });
-    // }
+    if (action === "edit") {
+      updateTemplate(formData, () => {
+        closeDrawer();
+      });
+    }
   };
 
   return (
     <PageContainer
       name="Visa template"
       modelName="visa template"
-      onClick={() => setShowDrawer(true)}
+      onClick={createContent}
       breadCrumItems={[{ title: "Danh sách visa template" }]}
     >
-      <TableListPage<ICMSTemplate>
+      <TableListPage<IVisaTemplateKeyMinimalItem>
         scroll={{ x: 1000 }}
         modelName="Trang nội dung"
-        dataSource={[]}
+        dataSource={templateData?.list || []}
         rowKey={"code"}
         size="small"
         columns={columns}
         isLoading={isLoading}
         onEdit={(record) => onEditCSMTemplate(record)}
-        // pagination={{
-        //     total: templateData?.totalItems,
-        //     pageSize: templateData?.pageSize,
-        //     current: templateData?.pageCurrent,
-        //     onChange: (page) =>
-        //         setQueryParams((params) => ({
-        //             ...params,
-        //             pageCurrent: page,
-        //         })),
-        // }}
+        pagination={{
+          total: templateData?.totalItems,
+          pageSize: templateData?.pageSize,
+          current: templateData?.pageCurrent,
+          onChange: (page) =>
+            setQueryParams((params) => ({
+              ...params,
+              pageCurrent: page,
+            })),
+        }}
         showActionsLess={false}
         fixedActionsColumn={false}
       />

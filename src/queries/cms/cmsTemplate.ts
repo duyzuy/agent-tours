@@ -5,32 +5,45 @@ import { cmsTemplateAPIs } from "@/services/management/cms/cmsTemplate";
 import { getAgToken } from "@/utils/common";
 import { CMSTemplateQueryParams } from "@/models/management/cms/cmsTemplate.interface";
 
-export const useGetCMSTemplateListQuery = (
-    queryParams?: CMSTemplateQueryParams,
-) => {
-    return useQuery({
-        queryKey: [queryCMS.GET_CMS_TEMPLATE_LIST, { ...queryParams }],
-        queryFn: () => cmsTemplateAPIs.getList(queryParams),
-        select: (data) => {
-            return {
-                list: data.result,
-                pageSize: data.pageSize,
-                pageCurrent: data.pageCurrent,
-                totalItems: data.totalItems,
-            };
-        },
-        enabled: Boolean(getAgToken()),
-    });
+export const useGetCMSTemplateListQuery = (queryParams?: CMSTemplateQueryParams) => {
+  return useQuery({
+    queryKey: [queryCMS.GET_CMS_TEMPLATE_LIST, { ...queryParams }],
+    queryFn: () => cmsTemplateAPIs.getList(queryParams),
+    select: (data) => {
+      return {
+        list: data.result,
+        pageSize: data.pageSize,
+        pageCurrent: data.pageCurrent,
+        totalItems: data.totalItems,
+      };
+    },
+    enabled: Boolean(getAgToken()),
+  });
+};
+
+export const useGetCMSTemplateListMinimalQuery = (queryParams?: CMSTemplateQueryParams) => {
+  return useQuery({
+    queryKey: [queryCMS.GET_CMS_TEMPLATE_SHORT_LIST, { ...queryParams }],
+    queryFn: () => cmsTemplateAPIs.getMinimalList(queryParams),
+    select: (data) => {
+      return {
+        list: data.result,
+        pageSize: data.pageSize,
+        pageCurrent: data.pageCurrent,
+        totalItems: data.totalItems,
+      };
+    },
+    enabled: Boolean(getAgToken()),
+  });
 };
 
 export const useGetCMSTemplateDetailQuery = (code: string) => {
-    return useQuery({
-        queryKey: [queryCMS.GET_CMS_TEMPLATE_DETAIL, code],
-        queryFn: () =>
-            cmsTemplateAPIs.getList({ requestObject: { code: code } }),
-        select: (data) => {
-            return data.result[0];
-        },
-        enabled: Boolean(getAgToken()),
-    });
+  return useQuery({
+    queryKey: [queryCMS.GET_CMS_TEMPLATE_DETAIL, code],
+    queryFn: () => cmsTemplateAPIs.getDetailsTemplateKey({ requestObject: { code: code } }),
+    select: (data) => {
+      return data.result;
+    },
+    enabled: Boolean(getAgToken()),
+  });
 };

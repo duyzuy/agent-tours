@@ -11,7 +11,7 @@ import {
 
 export const localMediaAPIs = {
   getFolders: async () => {
-    return await client.post<IMediaFolderListRs, BaseResponse<null>>("local/Cms_Media", {
+    return await client.post<IMediaFolderListRs>("local/Cms_Media", {
       params: {
         requestObject: {
           type: "MEDIA_FOLDER", //MEDIA_FOLDER
@@ -23,7 +23,7 @@ export const localMediaAPIs = {
     });
   },
   getFiles: async (params: TQueryParamsMediaFiles) => {
-    return await client.post<IMediaFileListRs, BaseResponse<null>>("local/Cms_Media", {
+    return await client.post<IMediaFileListRs>("local/Cms_Media", {
       params: {
         requestObject: {
           type: "MEDIA", //MEDIA_FOLDER
@@ -35,6 +35,11 @@ export const localMediaAPIs = {
   },
 };
 
+/**
+ *
+ * APIS excutive on this local
+ *
+ */
 export const mediaApis = {
   createFolderFromLocal: async (token: string, payload: IMediaFolderPayload) => {
     const response = await fetch(`${config.LOCAL_API_URL}/mediaFolder`, {

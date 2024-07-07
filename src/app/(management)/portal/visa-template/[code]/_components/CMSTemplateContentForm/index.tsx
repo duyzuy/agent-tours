@@ -21,10 +21,9 @@ import { PlusOutlined } from "@ant-design/icons";
 import MetaDataFields, { MetaDataFieldsProps } from "./MetaDataFields";
 import { isEmpty, isUndefined } from "lodash";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
-import { ICMSTemplateContent } from "@/models/management/cms/cmsTemplateContent.interface";
-import GallerySelector from "./GalleriesSelector";
 import TemplateMetaContentForm, { TemplateMetaContentFormProps } from "./TemplateMetaContentForm";
 import FileDownloadSelector, { FileDownloadSelectorProps } from "./FilesDownloadSelector";
+import { IVisaTemplateContent } from "@/models/management/cms/visaTemplateContent.interface";
 
 type RequirePageContentFormData = Required<VisaTemplateContentFormData>;
 
@@ -32,7 +31,7 @@ const FILES_EXCERPT = ["IMAGE", "ICON"] as MediaUploadProps["exceptsSelect"];
 
 export interface CMSTemplateContentFormProps {
   lang?: LangCode;
-  initData?: ICMSTemplateContent;
+  initData?: IVisaTemplateContent;
   code?: string;
   onSubmit?: (data: VisaTemplateContentFormData) => void;
   onSubmitMetaContent?: TemplateMetaContentFormProps["onSubmit"];
@@ -48,7 +47,6 @@ export const initCmsTemplate = new VisaTemplateContentFormData(
   "",
   "",
   "",
-  undefined,
   undefined,
   "",
   "",
@@ -222,7 +220,6 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
           "content",
           "subContent",
           "status",
-          "images",
           "publishDate",
           "downloads",
           "thumb",
@@ -299,7 +296,6 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
             content: initData.content,
             subContent: initData.subContent,
             downloads: initData.downloads,
-            images: initData.images,
             metaData: initData.metaData,
             metaTitle: initData.metaTitle,
             metaDescription: initData.metaDescription,
@@ -317,27 +313,12 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
     clearErrors();
   }, [lang, initData]);
 
-  console.log(initData, formData);
+  console.log(initData);
   return (
     <>
       <Form layout="vertical">
         <div className="flex w-full">
           <div className="post-left flex-1 mr-8" style={{ width: "calc(100% - 380px)" }}>
-            {/* <FormItem
-                            label="Code"
-                            required
-                            validateStatus={errors?.code ? "error" : ""}
-                            help={errors?.code || ""}
-                        >
-                            <Input
-                                placeholder="Code"
-                                disabled
-                                value={formData.code}
-                                onChange={(ev) =>
-                                    onChangeForm("code", ev.target.value)
-                                }
-                            />
-                        </FormItem> */}
             <FormItem
               label="Tiêu đề template"
               required
@@ -353,7 +334,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
             <Slug
               slugName={formData.slug}
               lang={lang}
-              type="tour"
+              type="visa"
               onSave={onSaveSlug}
               validateStatus={errors?.slug ? "error" : ""}
               help={errors?.slug || ""}
@@ -378,7 +359,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                   icon={<PlusOutlined />}
                   type="primary"
                   ghost
-                  disabled={formData.metaData?.length === 4}
+                  disabled={formData.metaData?.length === 6}
                   onClick={addMetaDataFields}
                   size="small"
                 >
@@ -387,27 +368,20 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
               </div>
             </div>
 
-            <GallerySelector
-              images={formData.images?.listImage}
-              error={errors?.["images.listImage" as "images"]}
-              onSave={onSaveGallery}
-            />
             <FileDownloadSelector files={formData.downloads} setFiles={onSaveFilesDownload} />
-            {/* <FormItem
-                            label="Mô tả ngắn"
-                            help={errors?.subContent || ""}
-                            validateStatus={errors?.subContent ? "error" : ""}
-                        >
-                            <Input.TextArea
-                                className="resize-none"
-                                rows={3}
-                                value={formData.subContent}
-                                onChange={(ev) =>
-                                    onChangeForm("subContent", ev.target.value)
-                                }
-                            ></Input.TextArea>
-                        </FormItem>
-                        <FormItem
+            <FormItem
+              label="Mô tả ngắn"
+              help={errors?.subContent || ""}
+              validateStatus={errors?.subContent ? "error" : ""}
+            >
+              <Input.TextArea
+                className="resize-none"
+                rows={3}
+                value={formData.subContent}
+                onChange={(ev) => onChangeForm("subContent", ev.target.value)}
+              ></Input.TextArea>
+            </FormItem>
+            {/*<FormItem
                             label="Chi tiết"
                             help={errors?.content || ""}
                             validateStatus={errors?.content ? "error" : ""}
@@ -456,20 +430,10 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
               </FormItem>
             </div>
             <TemplateMetaContentForm
-              contentlabel="Thông tin tour"
-              type="includeAndNote"
+              contentlabel="Thông tin Visa"
               referenceId={formData.id}
               lang={lang}
-              initialData={initData?.includeAndNotes ?? undefined}
-              className="mb-6"
-              onSubmit={onSubmitMetaContent}
-            />
-            <TemplateMetaContentForm
-              contentlabel="Lịch trình"
-              type="itinerary"
-              referenceId={formData.id}
-              lang={lang}
-              initialData={initData?.itineraries ?? undefined}
+              initialData={initData?.visaContent ?? undefined}
               className="mb-6"
               onSubmit={onSubmitMetaContent}
             />

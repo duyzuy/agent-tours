@@ -86,7 +86,13 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
   return (
     <div className="page-detail">
-      <BreadCrumb items={[{ title: cmsTemplateContent?.name }]} />
+      <div className="bg-gray-100">
+        <BreadCrumb
+          items={[{ title: cmsTemplateContent?.name }]}
+          classname="container mx-auto py-4 lg:px-8 md:px-6 px-4"
+        />
+      </div>
+
       <div className="container mx-auto py-8 lg:px-8 md:px-6 px-4">
         <div className="flex flex-wrap">
           <div
@@ -100,7 +106,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
             <DynamicGalleries images={cmsTemplateContent?.images.listImage} />
 
             <Benefit items={cmsTemplateContent?.metaData} />
-            <LineSpacing spaceY={12} />
+            <LineSpacing spaceY={6} />
             <DynamicProductContent data={cmsTemplateContent} log={{ productResponse, cmsContentDetail }} />
             <div className="space h-8"></div>
             {/* <TourRelateds className="mb-8" /> */}

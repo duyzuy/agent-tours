@@ -61,22 +61,23 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
         }}
       >
         {/* <FlashSale /> */}
-        {/* <LineSpacing spaceY={12} className="lg:px-0 px-4" /> */}
+
         <BannerSection />
-        <LineSpacing spaceY={12} className="lg:px-0 px-4" />
+
+        <div className="lg:h-12 h-4"></div>
         <Suspense
           fallback={
-            <div className="container mx-auto">
+            <div className="container mx-auto px-4 md:px-6 lg:px-8">
               <SkeletonLoadingCards length={4} />
             </div>
           }
         >
           <TourListContainer lang={locale} querySearch={travelthaiAug} title="Du lich thailand thang 8" />
         </Suspense>
-        <LineSpacing spaceY={12} className="lg:px-0 px-4" />
+        <div className="lg:h-12 h-4"></div>
         <Suspense
           fallback={
-            <div className="container mx-auto">
+            <div className="container mx-auto px-4 md:px-6 lg:px-8">
               <SkeletonLoadingCards length={4} />
             </div>
           }
@@ -84,11 +85,11 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
           <TourListContainer lang={locale} querySearch={traveltaiwanAug} title="Du lich Dailoan thang 8" />
         </Suspense>
 
-        <LineSpacing spaceY={12} className="lg:px-0 px-4" />
+        <div className="lg:h-12 h-4"></div>
         <VisaSection />
-        <LineSpacing spaceY={12} className="lg:px-0 px-4" />
+        <div className="lg:h-12 h-4"></div>
         <PostsSection />
-        <LineSpacing spaceY={12} className="lg:px-0 px-4" />
+        <div className="lg:h-12 h-4"></div>
         <ExploreSection />
       </div>
     </div>

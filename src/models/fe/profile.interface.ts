@@ -1,33 +1,48 @@
 import { BaseResponse, Status } from "../common.interface";
 
 export interface IProfile {
-    recId: number;
-    userId: number;
-    fullname: string;
-    dob: string | null;
-    address: string;
-    district: string;
-    city: string;
-    country: string;
-    idNumber: string;
-    idDoi: null;
-    idDoe: null;
-    passportNumber: string;
-    passportDoi: null;
-    passportDoe: null;
-    status: Status;
-    sysFstUser: string;
-    sysFstUpdate: string;
-    sysBelongTo: string;
-    user: {
-        recId: 3;
-        faceBookId: string;
-        googleId: string;
-        username: string;
-        email: string;
-        phoneNumber: string;
-        webSession: string;
-    };
+  recId: number;
+  userId: number;
+  fullname: string;
+  dob: string | null;
+  address: string;
+  district: string;
+  city: string;
+  country: string;
+  idNumber: string;
+  idDoi: null;
+  idDoe: null;
+  passportNumber: string;
+  passportDoi: null;
+  passportDoe: null;
+  status: Status;
+  sysFstUser: string;
+  sysFstUpdate: string;
+  sysBelongTo: string;
+  user: {
+    recId: 3;
+    faceBookId: string;
+    googleId: string;
+    username: string;
+    email: string;
+    phoneNumber: string;
+    webSession: string;
+  };
 }
 
 export interface FeUserProfileResponse extends BaseResponse<IProfile> {}
+
+export interface UserProfilePayload {
+  fullname?: string;
+  dob?: string;
+  address?: string;
+  district?: string;
+  city?: string;
+  country?: string;
+  idNumber?: string;
+  idDoi?: string;
+  idDoe?: string;
+  passportNumber?: string;
+  passportDoi?: string;
+  passportDoe?: string;
+}

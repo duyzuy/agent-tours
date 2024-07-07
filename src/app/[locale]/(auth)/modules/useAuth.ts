@@ -7,6 +7,7 @@ import useMessage from "@/hooks/useMessage";
 import { useLocale } from "next-intl";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { useRouter } from "@/utils/navigation";
+import { isUndefined } from "lodash";
 
 const useCustomerAuth = () => {
   const { mutate: login } = useCustomerLoginMutation();
@@ -62,18 +63,18 @@ export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string }
   const locale = useLocale() as LangCode;
 
   const callbackUrl = options?.callbackUrl ? `/${locale}/${options.callbackUrl}` : `/${locale}`;
-
+  const redirect = options && isUndefined(options.redirect) ? options.redirect : true;
   const onSignIn = (formData: CustomerLoginFormData) => {
     setLoading(true);
     signIn("credentials", {
       username: formData.username,
       password: formData.password,
-      redirect: options?.redirect || false,
+      redirect: redirect,
       callbackUrl: callbackUrl,
     })
       .then((data) => {
         console.log(data);
-        if (data?.status !== 200) {
+        if (data?.status === 200) {
           setError(data?.error);
         }
       })

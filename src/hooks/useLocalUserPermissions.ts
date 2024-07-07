@@ -2,6 +2,8 @@ import { useContext } from "react";
 import { LocalUserPermissionContext } from "@/context/permissionContext";
 
 const useLocalUserPermissions = () => {
-    return useContext(LocalUserPermissionContext);
+  const context = useContext(LocalUserPermissionContext);
+
+  return context;
 };
 export default useLocalUserPermissions;

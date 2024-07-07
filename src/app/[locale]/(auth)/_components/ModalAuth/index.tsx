@@ -53,7 +53,7 @@ const ModalAuth: React.FC = () => {
   return (
     <Modal centered open={authModal.open} onCancel={hideAuthModal} footer={null} width={420} destroyOnClose>
       <div className="px-4 py-2">
-        <div className="modal__auth-head mb-6">
+        <div className="modal__auth-head mb-3">
           <Logo width={60} height={60} className="mb-3" />
           <p>{t("modalAuth.slogan")}</p>
         </div>

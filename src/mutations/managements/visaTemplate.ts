@@ -2,6 +2,10 @@ import { visaTemplateAPIs } from "@/services/management/cms/visaTemplate";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import { VisaTemplateKeyPayload } from "@/models/management/cms/visaTemplate.interface";
 import { useCustomMutation } from "../useCustomMutation";
+import {
+  VisaTemplateContentMetaBlockPayload,
+  VisaTemplateContentPayload,
+} from "@/models/management/cms/visaTemplateContent.interface";
 
 export const useCreateVisaTempalateKeyMutation = () => {
   return useCustomMutation({
@@ -9,19 +13,40 @@ export const useCreateVisaTempalateKeyMutation = () => {
   });
 };
 
-// export const useUpdateCMSTemplateContentMutation = () => {
-//     return useMutation({
-//         mutationFn: (payload: CMSTemplateContentPayload) =>
-//             cmsTemplateAPIs.updateTemplateContent(payload),
-//     });
-// };
+export const useUpdateVisaTemplateKeyMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: VisaTemplateKeyPayload) => visaTemplateAPIs.updateTemplate(payload),
+  });
+};
 
-// export const useCreateCMSTemplateMutation = () => {
-//     return useMutation({
-//         mutationFn: (payload: CMSTemplatePayload) =>
-//             cmsTemplateAPIs.create(payload),
-//     });
-// };
+export const useUpdateVisaTemplateContentMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: VisaTemplateContentPayload) => visaTemplateAPIs.updateTemplateContent(payload),
+  });
+};
+export const useUpdateStatusVisaTemplateContentMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: { id: number; status: PageContentStatus }) =>
+      visaTemplateAPIs.updateStatusTemplateContent(payload),
+  });
+};
+export const useDeleteVisaTemplateContentMutation = () => {
+  return useCustomMutation({
+    mutationFn: (recId?: number) => visaTemplateAPIs.deleteTemplateContent(recId),
+  });
+};
+
+export const useCreateVisaTemplateContentBlockMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: VisaTemplateContentMetaBlockPayload) => visaTemplateAPIs.createTemplateContentBlock(payload),
+  });
+};
+
+export const useUpdateVisaTemplateContentBlockMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: VisaTemplateContentMetaBlockPayload) => visaTemplateAPIs.updateTemplateContentBlock(payload),
+  });
+};
 
 // export const useUpdateCMSTemplateMutation = () => {
 //     return useMutation({
@@ -34,13 +59,6 @@ export const useCreateVisaTempalateKeyMutation = () => {
 //     return useMutation({
 //         mutationFn: (payload: CMSTemplatePayload) =>
 //             cmsTemplateAPIs.create(payload),
-//     });
-// };
-
-// export const useUpdateStatusCMSTemplateContentMutation = () => {
-//     return useMutation({
-//         mutationFn: (payload: { id: number; status: PageContentStatus }) =>
-//             cmsTemplateAPIs.updateStatusTemplateContent(payload),
 //     });
 // };
 

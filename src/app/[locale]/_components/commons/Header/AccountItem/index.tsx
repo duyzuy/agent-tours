@@ -5,12 +5,7 @@ import CardDropdown from "./CardDropdown";
 import PureClient from "@/components/admin/PureClient";
 import { Button } from "antd";
 export default async function AccountItem() {
-    const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-    return (
-        <CardDropdown
-            isAuth={!!session}
-            username={session?.user.name}
-        ></CardDropdown>
-    );
+  return <CardDropdown isAuth={!!session} username={session?.user.name}></CardDropdown>;
 }

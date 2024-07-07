@@ -5,20 +5,20 @@ import { ICMSTemplateContent } from "@/models/management/cms/cmsTemplateContent.
 import { useEffect } from "react";
 
 interface ClientStoreDataProps {
-    data?: ICMSTemplateContent["languages"];
+  data?: ICMSTemplateContent["languages"];
 }
 const ClientStoreData: React.FC<ClientStoreDataProps> = ({ data }) => {
-    const [langInfo, dispatch] = useLanguage();
+  const [langInfo, dispatch] = useLanguage();
 
-    console.log("store data", langInfo);
-    useEffect(() => {
-        if (data) {
-            dispatch({
-                type: ELanguageActionType.SET_CMSCONTENT_TOUR,
-                payload: data,
-            });
-        }
-    }, [data]);
-    return null;
+  console.log("store data", langInfo);
+  useEffect(() => {
+    if (data) {
+      dispatch({
+        type: ELanguageActionType.SET_CMSCONTENT_TOUR,
+        payload: data,
+      });
+    }
+  }, [data]);
+  return null;
 };
 export default ClientStoreData;

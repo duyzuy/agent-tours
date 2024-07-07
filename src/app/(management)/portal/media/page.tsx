@@ -9,6 +9,7 @@ import { useGetMediaFolders, useGetMediaFiles } from "@/queries/media";
 import { IMediaFolderListRs, QueryParamsMediaFiles } from "@/models/management/media.interface";
 import MediaFolder from "./_components/MediaUploadContainer/MediaFolder";
 import MediaFiles from "./_components/MediaUploadContainer/MediaFiles";
+import { ERolesFunctions } from "@/constants/permission.constant";
 
 const MediaPage = () => {
   const { data: folderList, isLoading: isLoadingFolder } = useGetMediaFolders();
@@ -23,6 +24,14 @@ const MediaPage = () => {
 
   const [pers, checkPermission] = useLocalUserPermissions();
 
+  // console.log(
+  //   checkPermission?.([
+  //     ERolesFunctions.MEDIA_CREATE,
+  //     ERolesFunctions.MEDIA_LIST,
+  //     ERolesFunctions.MEDIA_UPDATE,
+  //     ERolesFunctions.MEDIA_DELETE,
+  //   ]),
+  // );
   /**
    * Refetch Files when open other folder.
    * @param item
@@ -50,6 +59,7 @@ const MediaPage = () => {
             onSave={onUpdateFolder}
             onCreateFolder={onCreateFolder}
             onOpen={handleOnpenFilesInFolder}
+            hasRoleCreate={checkPermission?.([ERolesFunctions.MEDIA_CREATE])}
           />
         </div>
         <MediaFiles
@@ -57,6 +67,7 @@ const MediaPage = () => {
           isLoading={isLoadingFile}
           onUpload={onUploadMediaFile}
           folderList={folderList || []}
+          hasRoleCreate={checkPermission?.([ERolesFunctions.MEDIA_CREATE])}
         />
       </div>
     </PageContainer>

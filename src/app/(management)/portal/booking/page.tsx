@@ -14,240 +14,170 @@ import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import useMessage from "@/hooks/useMessage";
 
 const BookingPage = () => {
-    const [bookingInformation, setBookingInformation] = useBooking();
-    const message = useMessage();
+  const [bookingInformation, setBookingInformation] = useBooking();
+  const message = useMessage();
 
-    const { onNext, onSetPassengerConfig, onReset } = useSelectProductTour();
+  const { onNext, onSetPassengerConfig, onReset } = useSelectProductTour();
 
-    const productList = useMemo(
-        () => bookingInformation?.productList,
-        [bookingInformation],
-    );
+  const productList = useMemo(() => bookingInformation?.productList, [bookingInformation]);
 
-    const isSearched = useMemo(() => {
-        return (
-            !isUndefined(bookingInformation.searchBooking?.byMonth) &&
-            !isUndefined(bookingInformation.searchBooking?.byDest)
-        );
-    }, [bookingInformation]);
-
-    const productSelectedItem = useMemo(() => {
-        return bookingInformation.bookingInfo?.product;
-    }, [bookingInformation]);
-
-    const isDisableNextButton = useMemo(() => {
-        return (
-            bookingInformation.passengerPriceConfigs.adult.length === 0 &&
-            bookingInformation.passengerPriceConfigs.child.length === 0
-        );
-    }, [bookingInformation]);
-
-    const onSelectPassenger = (
-        type: PassengerType,
-        quantity: number,
-        priceConfig: PriceConfig,
-        action: "minus" | "plus",
-    ) => {
-        const { passengerPriceConfigs } = bookingInformation;
-
-        if (quantity < 0) {
-            message.error("Số lượng không nhỏ hơn 0");
-            return;
-        }
-        const adultOfConfig = passengerPriceConfigs[PassengerType.ADULT].find(
-            (item) => item.priceConfig.recId === priceConfig.recId,
-        );
-        const childOfConfig = passengerPriceConfigs[PassengerType.CHILD].find(
-            (item) => item.priceConfig.recId === priceConfig.recId,
-        );
-
-        const infantOfConfig = passengerPriceConfigs[PassengerType.INFANT].find(
-            (item) => item.priceConfig.recId === priceConfig.recId,
-        );
-
-        const childAmout = childOfConfig?.qty || 0;
-        const adultAmount = adultOfConfig?.qty || 0;
-        const inFantAmount = infantOfConfig?.qty || 0;
-
-        if (type === PassengerType.ADULT || type === PassengerType.CHILD) {
-            if (
-                action === "plus" &&
-                childAmout + adultAmount === priceConfig.open
-            ) {
-                message.error(
-                    `Bạn đã chọn đủ số lượng hạng ${priceConfig.class}.`,
-                );
-                return;
-            }
-        }
-
-        if (
-            type === PassengerType.INFANT &&
-            inFantAmount === adultAmount &&
-            action === "plus"
-        ) {
-            message.error(
-                "`Số lượng hành khách em bé tối đa bằng số lượng hành khách người lớn.",
-            );
-            return;
-        }
-        if (
-            type === PassengerType.ADULT &&
-            action === "minus" &&
-            adultAmount === inFantAmount
-        ) {
-            onSetPassengerConfig(PassengerType.INFANT, quantity, priceConfig);
-        }
-        onSetPassengerConfig(type, quantity, priceConfig);
-    };
-    const getPassengerAmount = useCallback(
-        (paxType: PassengerType, priceConfig: PriceConfig) => {
-            const passengerPriceConfis = {
-                ...bookingInformation.passengerPriceConfigs,
-            };
-
-            const paxPriceConfig = passengerPriceConfis[paxType].find(
-                (configItem) =>
-                    configItem.priceConfig.recId === priceConfig.recId,
-            );
-            return paxPriceConfig?.qty || 0;
-        },
-        [bookingInformation.passengerPriceConfigs],
-    );
+  const isSearched = useMemo(() => {
     return (
-        <div className="page">
-            <div
-                className="header-page p-6 bg-gray-200 rounded-lg mb-14"
-                style={{
-                    background: "url('/assets/images/bg-header.png')",
-                    backgroundSize: "cover",
-                    backgroundPosition: "bottom center",
-                }}
-            >
-                <div className="h-44"></div>
-                <BoxBooking className="searchbox" />
-            </div>
-            <div className="tours-wrapper">
-                {isSearched ? (
-                    <div className="tour-list">
-                        {(productList?.length &&
-                            productList.map((item) => (
-                                <TourBoxItem
-                                    key={item.recId}
-                                    tour={item}
-                                    isSelected={
-                                        item.recId ===
-                                        productSelectedItem?.recId
-                                    }
-                                    hideBoxNotSelect={
-                                        !isUndefined(productSelectedItem)
-                                    }
-                                    onSelect={() =>
-                                        setBookingInformation((prev) => ({
-                                            ...prev,
-                                            bookingInfo: {
-                                                ...prev.bookingInfo,
-                                                product: item,
-                                            },
-                                        }))
-                                    }
-                                />
-                            ))) || <Empty description="Không có tour nào" />}
-                    </div>
-                ) : null}
-                {!isUndefined(productSelectedItem) ? (
-                    <div className="text-right mb-2">
-                        <span
-                            className="inline-flex text-primary-default cursor-pointer"
-                            onClick={onReset}
-                        >
-                            <UndoOutlined size={12} />
-                            <span className="ml-2 inline-block">Chọn lại</span>
-                        </span>
-                    </div>
-                ) : null}
-                {productSelectedItem ? (
-                    <>
-                        <div className="tour__item-classes">
-                            <Divider />
-                            <div className="tour__item-classes-head mb-3">
-                                <span className="block text-lg font-[500]">
-                                    Nhập số lượng khách
-                                </span>
-                                <p>
-                                    * Giá lựa chọn sẽ dc áp dụng cho toàn bộ
-                                    hành khách trong tour.
-                                </p>
-                            </div>
-                            <div className="tour__item-classes-body">
-                                {productSelectedItem.configs.map((config) => (
-                                    <PassengerTourClassItem
-                                        key={config.recId}
-                                        channel={config.channel}
-                                        classChannel={config.class}
-                                        open={config.open}
-                                        adultPricing={moneyFormatVND(
-                                            config.adult,
-                                        )}
-                                        childPricing={moneyFormatVND(
-                                            config.child,
-                                        )}
-                                        infantPricing={moneyFormatVND(
-                                            config.infant,
-                                        )}
-                                        adultAmount={getPassengerAmount(
-                                            PassengerType.ADULT,
-                                            config,
-                                        )}
-                                        childAmount={getPassengerAmount(
-                                            PassengerType.CHILD,
-                                            config,
-                                        )}
-                                        infantAmount={getPassengerAmount(
-                                            PassengerType.INFANT,
-                                            config,
-                                        )}
-                                        onSelectPassenger={(
-                                            type,
-                                            value,
-                                            action,
-                                        ) =>
-                                            onSelectPassenger(
-                                                type,
-                                                value,
-                                                config,
-                                                action,
-                                            )
-                                        }
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        <div className="sticky py-4 bottom-0 bg-white">
-                            <Space>
-                                <Button
-                                    type="primary"
-                                    ghost
-                                    className="w-32"
-                                    onClick={onReset}
-                                    icon={<UndoOutlined size={12} />}
-                                >
-                                    Chọn lại
-                                </Button>
-                                <Button
-                                    type="primary"
-                                    className="w-32"
-                                    onClick={onNext}
-                                    disabled={isDisableNextButton}
-                                >
-                                    Đi tiếp
-                                </Button>
-                            </Space>
-                        </div>
-                    </>
-                ) : null}
-            </div>
-        </div>
+      !isUndefined(bookingInformation.searchBooking?.byMonth) && !isUndefined(bookingInformation.searchBooking?.byDest)
     );
+  }, [bookingInformation]);
+
+  const productSelectedItem = useMemo(() => {
+    return bookingInformation.bookingInfo?.product;
+  }, [bookingInformation]);
+
+  const isDisableNextButton = useMemo(() => {
+    return (
+      bookingInformation.passengerPriceConfigs.adult.length === 0 &&
+      bookingInformation.passengerPriceConfigs.child.length === 0
+    );
+  }, [bookingInformation]);
+
+  const onSelectPassenger = (
+    type: PassengerType,
+    quantity: number,
+    priceConfig: PriceConfig,
+    action: "minus" | "plus",
+  ) => {
+    const { passengerPriceConfigs } = bookingInformation;
+
+    if (quantity < 0) {
+      message.error("Số lượng không nhỏ hơn 0");
+      return;
+    }
+    const adultOfConfig = passengerPriceConfigs[PassengerType.ADULT].find(
+      (item) => item.priceConfig.recId === priceConfig.recId,
+    );
+    const childOfConfig = passengerPriceConfigs[PassengerType.CHILD].find(
+      (item) => item.priceConfig.recId === priceConfig.recId,
+    );
+
+    const infantOfConfig = passengerPriceConfigs[PassengerType.INFANT].find(
+      (item) => item.priceConfig.recId === priceConfig.recId,
+    );
+
+    const childAmout = childOfConfig?.qty || 0;
+    const adultAmount = adultOfConfig?.qty || 0;
+    const inFantAmount = infantOfConfig?.qty || 0;
+
+    if (type === PassengerType.ADULT || type === PassengerType.CHILD) {
+      if (action === "plus" && childAmout + adultAmount === priceConfig.open) {
+        message.error(`Bạn đã chọn đủ số lượng hạng ${priceConfig.class}.`);
+        return;
+      }
+    }
+
+    if (type === PassengerType.INFANT && inFantAmount === adultAmount && action === "plus") {
+      message.error("`Số lượng hành khách em bé tối đa bằng số lượng hành khách người lớn.");
+      return;
+    }
+    if (type === PassengerType.ADULT && action === "minus" && adultAmount === inFantAmount) {
+      onSetPassengerConfig(PassengerType.INFANT, quantity, priceConfig);
+    }
+    onSetPassengerConfig(type, quantity, priceConfig);
+  };
+  const getPassengerAmount = useCallback(
+    (paxType: PassengerType, priceConfig: PriceConfig) => {
+      const passengerPriceConfis = {
+        ...bookingInformation.passengerPriceConfigs,
+      };
+
+      const paxPriceConfig = passengerPriceConfis[paxType].find(
+        (configItem) => configItem.priceConfig.recId === priceConfig.recId,
+      );
+      return paxPriceConfig?.qty || 0;
+    },
+    [bookingInformation.passengerPriceConfigs],
+  );
+  return (
+    <div className="page">
+      <div
+        className="header-page p-6 bg-gray-200 rounded-lg mb-14"
+        style={{
+          background: "url('/assets/admin/images/bg-header.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "bottom center",
+        }}
+      >
+        <div className="h-44"></div>
+        <BoxBooking className="searchbox" />
+      </div>
+      <div className="tours-wrapper">
+        {isSearched ? (
+          <div className="tour-list">
+            {(productList?.length &&
+              productList.map((item) => (
+                <TourBoxItem
+                  key={item.recId}
+                  tour={item}
+                  isSelected={item.recId === productSelectedItem?.recId}
+                  hideBoxNotSelect={!isUndefined(productSelectedItem)}
+                  onSelect={() =>
+                    setBookingInformation((prev) => ({
+                      ...prev,
+                      bookingInfo: {
+                        ...prev.bookingInfo,
+                        product: item,
+                      },
+                    }))
+                  }
+                />
+              ))) || <Empty description="Không có tour nào" />}
+          </div>
+        ) : null}
+        {!isUndefined(productSelectedItem) ? (
+          <div className="text-right mb-2">
+            <span className="inline-flex text-primary-default cursor-pointer" onClick={onReset}>
+              <UndoOutlined size={12} />
+              <span className="ml-2 inline-block">Chọn lại</span>
+            </span>
+          </div>
+        ) : null}
+        {productSelectedItem ? (
+          <>
+            <div className="tour__item-classes">
+              <Divider />
+              <div className="tour__item-classes-head mb-3">
+                <span className="block text-lg font-[500]">Nhập số lượng khách</span>
+                <p>* Giá lựa chọn sẽ dc áp dụng cho toàn bộ hành khách trong tour.</p>
+              </div>
+              <div className="tour__item-classes-body">
+                {productSelectedItem.configs.map((config) => (
+                  <PassengerTourClassItem
+                    key={config.recId}
+                    channel={config.channel}
+                    classChannel={config.class}
+                    open={config.open}
+                    adultPricing={moneyFormatVND(config.adult)}
+                    childPricing={moneyFormatVND(config.child)}
+                    infantPricing={moneyFormatVND(config.infant)}
+                    adultAmount={getPassengerAmount(PassengerType.ADULT, config)}
+                    childAmount={getPassengerAmount(PassengerType.CHILD, config)}
+                    infantAmount={getPassengerAmount(PassengerType.INFANT, config)}
+                    onSelectPassenger={(type, value, action) => onSelectPassenger(type, value, config, action)}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="sticky py-4 bottom-0 bg-white">
+              <Space>
+                <Button type="primary" ghost className="w-32" onClick={onReset} icon={<UndoOutlined size={12} />}>
+                  Chọn lại
+                </Button>
+                <Button type="primary" className="w-32" onClick={onNext} disabled={isDisableNextButton}>
+                  Đi tiếp
+                </Button>
+              </Space>
+            </div>
+          </>
+        ) : null}
+      </div>
+    </div>
+  );
 };
 export default BookingPage;

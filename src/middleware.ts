@@ -4,80 +4,70 @@ import createMiddleware from "next-intl/middleware";
 import { CLIENT_LINKS } from "./constants/client/clientRouter.constant";
 
 const intlMiddleware = createMiddleware({
-    locales: ["vi", "en"],
-    defaultLocale: "vi",
+  locales: ["vi", "en"],
+  defaultLocale: "vi",
 });
 
-// const authMiddleware = withAuth(
-//     // Note that this callback is only invoked if
-//     // the `authorized` callback has returned `true`
-//     // and not for pages listed in `pages`.
-//     (req: NextRequest) => intlMiddleware(req),
-//     {
-//         callbacks: {
-//             authorized: ({ req: { cookies } }) => {
-//                 const sessionToken = cookies.get("next-auth.session-token");
-//                 return sessionToken != null;
-//             },
-//         },
-//         pages: {
-//             signIn: CLIENT_LINKS.CustomerLogin,
-//         },
-//     },
-// );
-
 export default function middleware(request: NextRequest) {
-    // Check if there is any supported locale in the pathname
-    const { pathname } = request.nextUrl;
-    const { cookies } = request;
+  // Check if there is any supported locale in the pathname
+  const { pathname } = request.nextUrl;
+  const { cookies } = request;
 
-    const sessionToken = cookies.get("next-auth.session-token");
-    // const session = await getServerSession(authOptions);
+  /**
+   * Add url to request
+   */
 
-    const isAuth = !!sessionToken;
+  const url = new URL(request.url);
+  const origin = url.origin;
+  const requestHeaders = new Headers(request.headers);
+  //   requestHeaders.set("x-url", request.url);
+  //   requestHeaders.set("x-origin", origin);
+  //   requestHeaders.set("x-pathname", pathname);
 
-    const [_, locale, pathStr] = pathname.split("/");
+  request.headers.set("x-url", request.url);
+  request.headers.set("x-pathname", pathname);
+  const sessionToken = cookies.get("next-auth.session-token");
+  // const session = await getServerSession(authOptions);
 
-    const isAuthPage =
-        pathStr === CLIENT_LINKS.CustomerLogin ||
-        pathStr === CLIENT_LINKS.CustomerRegister;
+  const isAuth = !!sessionToken;
 
-    // const isAuth = !!session;
-    /**
-     * IF IS PORTAL NO NEED TO CONFIG LANGUAGE
-     */
-    const isAdminPortal =
-        pathname.startsWith("/portal/") || pathname.startsWith("/ag/");
+  const [_, locale, pathStr] = pathname.split("/");
 
-    if (isAdminPortal) {
-        return NextResponse.next();
-    }
+  const isAuthPage = pathStr === CLIENT_LINKS.CustomerLogin || pathStr === CLIENT_LINKS.CustomerRegister;
 
-    if (isAuthPage && isAuth) {
-        return NextResponse.redirect(new URL("/customer", request.url));
-    }
+  // const isAuth = !!session;
+  /**
+   * IF IS PORTAL NO NEED TO CONFIG LANGUAGE
+   */
+  const isAdminPortal = pathname.startsWith("/portal/") || pathname.startsWith("/ag/");
 
-    const pathnameHasLocale = locales.some(
-        (locale) =>
-            pathname.startsWith(`/${locale.key}/`) ||
-            pathname === `/${locale.key}`,
-    );
+  if (isAdminPortal) {
+    return NextResponse.next();
+  }
 
-    if (!pathnameHasLocale) {
-        // const locale = getLocale(request);
-        const pathnameWithLocale = `${request.nextUrl.origin}/${localeDefault.key}`;
-        return NextResponse.redirect(pathnameWithLocale);
-    }
+  if (isAuthPage && isAuth) {
+    return NextResponse.redirect(new URL("/customer", request.url));
+  }
 
-    return intlMiddleware(request);
+  const pathnameHasLocale = locales.some(
+    (locale) => pathname.startsWith(`/${locale.key}/`) || pathname === `/${locale.key}`,
+  );
+
+  if (!pathnameHasLocale) {
+    // const locale = getLocale(request);
+    const pathnameWithLocale = `${request.nextUrl.origin}/${localeDefault.key}`;
+    return NextResponse.redirect(pathnameWithLocale);
+  }
+
+  return intlMiddleware(request);
 }
 
 export const config = {
-    matcher: [
-        // Skip all internal paths (_next)
-        "/((?!_next|favicon.ico|image|static|api|auth|assets|uploads|service-worker).*)",
-        // Optional: only run on root (/) URL
-        // "/",
-        // "/portal/:path*",
-    ],
+  matcher: [
+    // Skip all internal paths (_next)
+    "/((?!_next|favicon.ico|image|static|api|auth|assets|uploads|service-worker).*)",
+    // Optional: only run on root (/) URL
+    // "/",
+    // "/portal/:path*",
+  ],
 };

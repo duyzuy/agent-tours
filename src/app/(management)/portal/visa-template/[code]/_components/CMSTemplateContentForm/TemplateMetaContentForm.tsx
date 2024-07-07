@@ -12,20 +12,14 @@ import { isEqualObject } from "@/utils/compare";
 export interface TemplateMetaContentFormProps {
   referenceId?: number;
   lang?: LangCode;
-  type?: "includeAndNote" | "itinerary";
   contentlabel?: string;
   className?: string;
-  onSubmit?: (
-    type?: "includeAndNote" | "itinerary",
-    action?: "create" | "update",
-    data?: VisaTemplateContentMetaDataForm,
-  ) => void;
-  initialData?: ICMSTemplateContentMetaData;
+  onSubmit?: (action?: "create" | "update", data?: VisaTemplateContentMetaDataForm) => void;
+  initialData?: VisaTemplateContentMetaDataForm;
 }
 const TemplateMetaContentForm: React.FC<TemplateMetaContentFormProps> = ({
   referenceId,
   lang,
-  type,
   contentlabel,
   initialData,
   onSubmit,
@@ -155,7 +149,7 @@ const TemplateMetaContentForm: React.FC<TemplateMetaContentFormProps> = ({
       <div className="px-4 pt-6 mt-6 border-t pb-6">
         <Space>
           <Button
-            onClick={() => onSubmit?.(type, formData.id ? "update" : "create", formData)}
+            onClick={() => onSubmit?.(formData.id ? "update" : "create", formData)}
             size="small"
             type="primary"
             disabled={isDisabledButton}

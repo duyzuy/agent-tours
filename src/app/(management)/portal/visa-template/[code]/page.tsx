@@ -9,68 +9,50 @@ import PageContainer from "@/components/admin/PageContainer";
 import LocaleContainer from "@/components/admin/LocaleContainer";
 import { LangCode } from "@/models/management/cms/language.interface";
 import CMSTemplateContentForm, { CMSTemplateContentFormProps } from "./_components/CMSTemplateContentForm";
-import { useGetCMSTemplateDetailQuery } from "@/queries/cms/cmsTemplate";
-// import useCRUDCMSTemplateContent from "../modules/useCRUDCMSTemplateContent";
-import useCRUDCMSTemplateContentMetadata from "../modules/useCRUDCMSTemplateContentMetadata";
+import { useGetVisaTemplateDetailQuery } from "@/queries/cms/visaTemplate";
+import useCRUDCMSTemplateContent from "../modules/useCRUDVisaTemplateContent";
+import useCRUDVisaTemplateContentBlock from "../modules/useCRUDVisaTemplateContentBlock";
 interface PageContentDetailProps {
   params: { code: string };
 }
 const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
   const { locale, setLocale } = useLocale(localeDefault);
 
-  const { data, isLoading } = useGetCMSTemplateDetailQuery(params.code);
+  const { data, isLoading } = useGetVisaTemplateDetailQuery(params.code);
 
-  useGetCMSTemplateDetailQuery;
+  const { onDeleteTemplateContent, onUpdateStatus, onUpdateTemplateContent } = useCRUDCMSTemplateContent();
+
   const router = useRouter();
 
-  const templateContent = useMemo(() => {
-    return data?.templates.find((item) => item.lang === locale?.key);
+  const currentTemplateContentLang = useMemo(() => {
+    return data?.find((item) => item.lang === locale?.key);
   }, [data, locale]);
 
   const langCodes = useMemo(() => {
-    return data?.templates.reduce<LangCode[]>((acc, item) => {
+    return data?.reduce<LangCode[]>((acc, item) => {
       return [...acc, item.lang];
     }, []);
   }, [data]);
 
-  // const { onUpdateTemplateContent, onUpdateStatus, onDeleteTemplateContent } =
-  //     useCRUDCMSTemplateContent();
-
-  const {
-    onCreateMetaContentAndIncludeAndNote,
-    onUpdateMetaContentAndIncludeAndNote,
-    onCreateMetaContentItinerary,
-    onUpdateMetaContentItinerary,
-  } = useCRUDCMSTemplateContentMetadata();
-
-  const handleSubmitMetadataContent: CMSTemplateContentFormProps["onSubmitMetaContent"] = (type, action, data) => {
-    console.log(type, data);
-
-    if (type === "includeAndNote" && data) {
-      action === "create" ? onCreateMetaContentAndIncludeAndNote(data) : onUpdateMetaContentAndIncludeAndNote(data);
-    }
-    if (type === "itinerary" && data) {
-      action === "create" ? onCreateMetaContentItinerary(data) : onUpdateMetaContentItinerary(data);
+  const { createVisaTemplateBlockContent, updateVisaTemplateBlockContent } = useCRUDVisaTemplateContentBlock();
+  const handleSubmitMetadataContent: CMSTemplateContentFormProps["onSubmitMetaContent"] = (action, data) => {
+    if (data) {
+      action === "create" ? createVisaTemplateBlockContent(data) : updateVisaTemplateBlockContent(data);
     }
   };
 
-  // const handleSubmitFormData: CMSTemplateContentFormProps["onSubmit"] = (
-  //     formData,
-  // ) => {
-  //     if (formData.id) {
-  //         onUpdateTemplateContent(formData);
-  //     }
-  // };
+  const handleSubmitFormData: CMSTemplateContentFormProps["onSubmit"] = (formData) => {
+    if (formData.id) {
+      onUpdateTemplateContent(formData);
+    }
+  };
 
-  // const onChangeStatus: CMSTemplateContentFormProps["onChangeStatus"] = (
-  //     id,
-  //     status,
-  // ) => {
-  //     onUpdateStatus({ id, status: status });
-  // };
+  const onChangeStatus: CMSTemplateContentFormProps["onChangeStatus"] = (id, status) => {
+    onUpdateStatus({ id, status: status });
+  };
   useEffect(() => {
     if ((isUndefined(data) && !isLoading) || (!data && !isLoading)) {
-      router.push("./portal/visa-template/list");
+      router.push("/portal/visa-template/list");
     }
   }, [isLoading, data]);
 
@@ -86,7 +68,7 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
     <PageContainer
       name="Visa template content"
       hideAddButton
-      onBack={() => router.push("./portal/visa-template/list")}
+      onBack={() => router.push("/portal/visa-template/list")}
       breadCrumItems={[
         {
           title: "Danh sách visa template",
@@ -95,26 +77,26 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
         { title: params.code },
       ]}
     >
-      {/* <LocaleContainer
-                defaultValue={localeDefault}
-                onChange={(lc) => setLocale(lc)}
-                value={locale}
-                langCodes={langCodes}
-                className="mb-6 border-b"
-            />
-            {locale ? (
-                <CMSTemplateContentForm
-                    initData={templateContent}
-                    code={params.code}
-                    lang={locale?.key}
-                    onSubmit={handleSubmitFormData}
-                    onSubmitMetaContent={handleSubmitMetadataContent}
-                    // onPublish={(id) => id && onPublish(id)}
-                    onDelete={onDeleteTemplateContent}
-                    action={templateContent ? "update" : "create"}
-                    onChangeStatus={onChangeStatus}
-                />
-            ) : null} */}
+      <LocaleContainer
+        defaultValue={localeDefault}
+        onChange={(lc) => setLocale(lc)}
+        value={locale}
+        langCodes={langCodes}
+        className="mb-6 border-b"
+      />
+      {locale ? (
+        <CMSTemplateContentForm
+          initData={currentTemplateContentLang}
+          code={params.code}
+          lang={locale?.key}
+          onSubmit={handleSubmitFormData}
+          onSubmitMetaContent={handleSubmitMetadataContent}
+          //onPublish={(id) => id && onPublish(id)}
+          onDelete={onDeleteTemplateContent}
+          action={currentTemplateContentLang ? "update" : "create"}
+          onChangeStatus={onChangeStatus}
+        />
+      ) : null}
     </PageContainer>
   );
 };

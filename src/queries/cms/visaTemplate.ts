@@ -7,34 +7,43 @@ import { getAgToken } from "@/utils/common";
 
 import { VisaTemplateQueryParams } from "@/models/management/cms/visaTemplate.interface";
 
-export const useGetVisaTemplateKeyListQuery = (
-    queryParams?: VisaTemplateQueryParams,
-) => {
-    return useQuery({
-        queryKey: [queryCMS.GET_VISA_TEMPLATE_LIST, { ...queryParams }],
-        queryFn: () => visaTemplateAPIs.getTemplateKeyList(queryParams),
-        // select: (data) => {
-
-        //     console.log(data)
-        //     // return {
-        //     //     list: data.result,
-        //     //     pageSize: data.pageSize,
-        //     //     pageCurrent: data.pageCurrent,
-        //     //     totalItems: data.totalItems,
-        //     // };
-        // },
-        // enabled: Boolean(getAgToken()),
-    });
+export const useGetVisaTemplateKeyListQuery = (queryParams?: VisaTemplateQueryParams) => {
+  return useQuery({
+    queryKey: [queryCMS.GET_VISA_TEMPLATE_LIST, { ...queryParams }],
+    queryFn: () => visaTemplateAPIs.getTemplateKeyList(queryParams),
+    select: (data) => {
+      return {
+        list: data.result,
+        pageSize: data.pageSize,
+        pageCurrent: data.pageCurrent,
+        totalItems: data.totalItems,
+      };
+    },
+  });
 };
 
-// export const useGetCMSTemplateDetailQuery = (code: string) => {
-//     return useQuery({
-//         queryKey: [queryCMS.GET_CMS_TEMPLATE_DETAIL, code],
-//         queryFn: () =>
-//             cmsTemplateAPIs.getList({ requestObject: { code: code } }),
-//         select: (data) => {
-//             return data.result[0];
-//         },
-//         enabled: Boolean(getAgToken()),
-//     });
-// };
+export const useGetVisaTemplateKeyMinimalListQuery = (queryParams?: VisaTemplateQueryParams) => {
+  return useQuery({
+    queryKey: [queryCMS.GET_VISA_TEMPLATE_SHORT_LIST, { ...queryParams }],
+    queryFn: () => visaTemplateAPIs.getTemplateKeyMinimalList(queryParams),
+    select: (data) => {
+      return {
+        list: data.result,
+        pageSize: data.pageSize,
+        pageCurrent: data.pageCurrent,
+        totalItems: data.totalItems,
+      };
+    },
+  });
+};
+
+export const useGetVisaTemplateDetailQuery = (code: string) => {
+  return useQuery({
+    queryKey: [queryCMS.GET_VISA_TEMPLATE_DETAIL, code],
+    queryFn: () => visaTemplateAPIs.getTemplateKeyDetail({ requestObject: { code: code } }),
+    select: (data) => {
+      return data.result;
+    },
+    enabled: Boolean(getAgToken()),
+  });
+};
