@@ -15,7 +15,7 @@ import { FeDestinationSearchConfig } from "@/models/fe/destination.interface";
 
 import { FeSearchProductFormData } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import { SelectProps } from "semantic-ui-react";
+import { SelectProps } from "antd";
 import { MONTH_FORMAT } from "@/constants/common";
 import { isArray } from "lodash";
 import { useRouter } from "@/utils/navigation";
@@ -64,7 +64,7 @@ const BoxSearchTourFe: React.FC<BoxSearchTourFeProps> = ({ className = "", onSub
 
   const t = useTranslations("String");
 
-  const onChangeDestination: SelectProps["onChange"] = (value, option) => {
+  const onChangeDestination: SelectProps<number, FeDestinationSearchConfig>["onChange"] = (value, option) => {
     setFormData((prev) => ({
       ...prev,
       byDest: isArray(option) ? option : [option],
