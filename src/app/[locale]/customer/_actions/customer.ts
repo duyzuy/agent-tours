@@ -5,9 +5,9 @@ import { BaseResponse } from "@/models/common.interface";
 
 import { authOptions } from "@/auth";
 import { getServerSession } from "next-auth";
-import { FeUserProfileResponse } from "@/models/fe/profile.interface";
+import { CustomerProfileResponse } from "@/models/fe/profile.interface";
 
-export const getCustomerProfile = async (): Promise<FeUserProfileResponse["result"] | undefined> => {
+export const getCustomerProfile = async (): Promise<CustomerProfileResponse["result"] | undefined> => {
   const session = await getServerSession(authOptions);
 
   const data = await serverRequest.post<any, BaseResponse<null>>("localfront/getProfile", {
@@ -20,7 +20,7 @@ export const getCustomerProfile = async (): Promise<FeUserProfileResponse["resul
     },
   });
 
-  return data.result as FeUserProfileResponse["result"];
+  return data.result as CustomerProfileResponse["result"];
   // if (!response) {
   //     return {
   //         errorCode: "invalidToken",

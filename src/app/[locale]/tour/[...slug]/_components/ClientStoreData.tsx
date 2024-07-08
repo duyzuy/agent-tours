@@ -6,11 +6,12 @@ import { useEffect } from "react";
 
 interface ClientStoreDataProps {
   data?: ICMSTemplateContent["languages"];
+  log: any;
 }
-const ClientStoreData: React.FC<ClientStoreDataProps> = ({ data }) => {
+const ClientStoreData: React.FC<ClientStoreDataProps> = ({ data, log }) => {
   const [langInfo, dispatch] = useLanguage();
 
-  console.log("store data", langInfo);
+  console.log(log);
   useEffect(() => {
     if (data) {
       dispatch({

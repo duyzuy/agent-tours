@@ -12,7 +12,6 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({ name, tourCode, children 
   return (
     <div className="tour-content-head mb-6">
       {children}
-
       <p className="text-red-600 text-lg font-bold">{`${t("productSingle.tourCode")} #${tourCode}`}</p>
     </div>
   );

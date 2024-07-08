@@ -4,7 +4,7 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import { VisaDetailsByLangResponse } from "@/models/fe/visa.interface";
 import { BaseResponse } from "@/models/common.interface";
 
-export const getVisaDetail = async (payload?: { lang?: LangCode; slug?: string }) => {
+export const getVisaTemplateDetail = async (payload?: { lang?: LangCode; slug?: string }) => {
   return await serverRequest.post<VisaDetailsByLangResponse, BaseResponse<null>>(
     "localfront/getCms_visatemplateDetails",
     {

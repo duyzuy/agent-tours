@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import BoxSearchSkeleton from "../BoxSearchTourFe/BoxSearchSkeleton";
 const DynamicSearchBox = dynamic(() => import("../BoxSearchTourFe"), {
   loading: () => (
-    <div className="container mx-auto max-w-2xl lg:px-8 px-4 md:px-6">
+    <div className="container mx-auto lg:px-8 px-4 md:px-6">
       <BoxSearchSkeleton />
     </div>
   ),

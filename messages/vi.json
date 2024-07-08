@@ -1,5 +1,32 @@
 {
-    "Index": {
-        "title": "xin chao"
+  "Index": {
+    "title": "xin chao"
+  },
+  "Customer": {
+    "navItem": {
+      "accountInformation": "Thông tin tài khoản",
+      "order": "Đơn hàng",
+      "changePassword": "Đổi mật khẩu",
+      "signOut": "Đăng xuất"
+    },
+    "subPage": {
+      "accountInformation": {
+        "title": "Thông tin tài khoản"
+      }
     }
+  },
+  "String": {
+    "edit": "Chỉnh sửa",
+    "label": {
+      "phoneNumber": "Số điện thoại",
+      "email": "Email",
+      "username": "Tên tài khoản"
+    },
+    "profile": {
+      "sidebar": {
+        "memberLabel": "Thành viên",
+        "viewmore": "Chi tiết thành viên"
+      }
+    }
+  }
 }

@@ -119,7 +119,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
       setFormData((oldData) => {
         const { publishDate } = oldData;
         const [_, time] = (publishDate || "").split(" ");
-        const newPublishDate = [date.format(DATE_FORMAT), time].join(" ");
+        const newPublishDate = [date.locale("en").format(DATE_FORMAT), time].join(" ");
 
         return { ...oldData, publishDate: newPublishDate };
       });
@@ -145,15 +145,12 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
   const publishDateTime = useMemo(() => {
     return formData.publishDate
       ? {
-          publishTime: dayjs(formData.publishDate, {
-            format: TIME_FORMAT,
-          }),
-          publishDate: dayjs(formData.publishDate, {
-            format: DATE_FORMAT,
-          }),
+          publishTime: dayjs(formData.publishDate, TIME_FORMAT),
+          publishDate: dayjs(formData.publishDate, DATE_FORMAT),
         }
       : undefined;
   }, [formData.publishDate]);
+
   const onConfirmSelectMediaImage = useCallback<Required<MediaUploadProps>["onConfirm"]>(
     (files) => {
       if (showMedia.type === "thumb") {

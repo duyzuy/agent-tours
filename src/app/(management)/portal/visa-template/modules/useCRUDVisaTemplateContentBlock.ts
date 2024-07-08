@@ -24,7 +24,7 @@ const useCRUDVisaTemplateContentBlock = () => {
         message.success(`Tạo thành công`);
         console.log(data);
         queryClient.invalidateQueries({
-          queryKey: [queryCMS.GET_CMS_TEMPLATE_DETAIL],
+          queryKey: [queryCMS.GET_VISA_TEMPLATE_DETAIL],
         });
 
         cb?.();
@@ -42,7 +42,7 @@ const useCRUDVisaTemplateContentBlock = () => {
         message.success(`Cập nhật công`);
         console.log(data);
         queryClient.invalidateQueries({
-          queryKey: [queryCMS.GET_CMS_TEMPLATE_DETAIL],
+          queryKey: [queryCMS.GET_VISA_TEMPLATE_DETAIL, data.result.code],
         });
 
         cb?.();

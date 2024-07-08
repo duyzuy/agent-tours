@@ -1,6 +1,6 @@
 import { BaseResponse, Status } from "../common.interface";
 
-export interface IProfile {
+export interface ICustomerProfile {
   recId: number;
   userId: number;
   fullname: string;
@@ -30,9 +30,9 @@ export interface IProfile {
   };
 }
 
-export interface FeUserProfileResponse extends BaseResponse<IProfile> {}
+export interface CustomerProfileResponse extends BaseResponse<ICustomerProfile> {}
 
-export interface UserProfilePayload {
+export interface CustomerProfilePayload {
   fullname?: string;
   dob?: string;
   address?: string;
@@ -40,9 +40,51 @@ export interface UserProfilePayload {
   city?: string;
   country?: string;
   idNumber?: string;
-  idDoi?: string;
-  idDoe?: string;
+  idDoi?: string | null;
+  idDoe?: string | null;
   passportNumber?: string;
-  passportDoi?: string;
-  passportDoe?: string;
+  passportDoi?: string | null;
+  passportDoe?: string | null;
+}
+
+export class CustomerProfileFormData implements CustomerProfilePayload {
+  fullname?: string;
+  dob?: string;
+  address?: string;
+  district?: string;
+  city?: string;
+  country?: string;
+  idNumber?: string;
+  idDoi?: string | null;
+  idDoe?: string | null;
+  passportNumber?: string;
+  passportDoi?: string | null;
+  passportDoe?: string | null;
+  constructor(
+    fullname: string,
+    dob: string,
+    address: string,
+    district: string,
+    city: string,
+    country: string,
+    idNumber: string,
+    idDoi: string | null,
+    idDoe: string | null,
+    passportNumber: string,
+    passportDoi: string | null,
+    passportDoe: string | null,
+  ) {
+    this.fullname = fullname;
+    this.dob = dob;
+    this.address = address;
+    this.district = district;
+    this.city = city;
+    this.country = country;
+    this.idNumber = idNumber;
+    this.idDoi = idDoi;
+    this.idDoe = idDoe;
+    this.passportNumber = passportNumber;
+    this.passportDoi = passportDoi;
+    this.passportDoe = passportDoe;
+  }
 }

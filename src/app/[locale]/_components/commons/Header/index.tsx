@@ -5,8 +5,12 @@ import HeaderNavitationTop from "@/components/frontend/HeaderNavigationTop";
 import { Suspense } from "react";
 import AccountItem from "./AccountItem";
 import LanguageSwitcher from "../../LanguageSwitcher";
+import { isMobile } from "@/utils/detectMobile";
+import MobileHeaderMainWraper from "./MobileHeaderMainWraper";
 
 export default async function Header() {
+  const isMobileDevice = isMobile();
+
   const items: HeaderMainWraperProps["items"] = [
     {
       title: "Tra cứu Booking",
@@ -45,25 +49,27 @@ export default async function Header() {
     },
   ];
   return (
-    <header className="bg-white drop-shadow-sm relative z-20">
-      <nav className="mx-auto flex items-center justify-between py-4 container px-4 md:px-6 lg:px-8">
-        <div className="flex lg:flex-1">
-          <Logo alt="Logo An Thai" width={80} height={80} className="w-12 lg:w-auto" />
-        </div>
-        <div className="flex lg:hidden">
-          <HamburgerButton />
-        </div>
-        <div className="hidden lg:block lg:gap-x-12">
-          <HeaderNavitationTop>
-            <Suspense fallback={<SkeletonAccountItem />}>
-              <AccountItem />
-            </Suspense>
-            <LanguageSwitcher />
-          </HeaderNavitationTop>
-          <HeaderMainWraper items={items} />
-        </div>
-      </nav>
-    </header>
+    <>
+      <header className="bg-white drop-shadow-sm relative z-20">
+        <nav className="mx-auto flex items-center justify-between lg:py-4 py-3 container px-4 md:px-6 lg:px-8">
+          <div className="flex lg:flex-1">
+            <Logo alt="Logo An Thai" width={240} height={80} className="w-32 lg:w-52" />
+          </div>
+          <div className="flex items-center justify-center lg:hidden">
+            <MobileHeaderMainWraper isMobile={isMobileDevice} />
+          </div>
+          <div className="hidden lg:block lg:gap-x-12">
+            <HeaderNavitationTop>
+              <Suspense fallback={<SkeletonAccountItem />}>
+                <AccountItem />
+              </Suspense>
+              <LanguageSwitcher />
+            </HeaderNavitationTop>
+            <HeaderMainWraper items={items} />
+          </div>
+        </nav>
+      </header>
+    </>
   );
 }
 

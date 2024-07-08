@@ -22,7 +22,6 @@ import { useRouter } from "@/utils/navigation";
 import useMessage from "@/hooks/useMessage";
 import { useSearchParams } from "next/navigation";
 import classNames from "classnames";
-import { ButtonPrimary, ButtonSecondary } from "@/components/base/buttons";
 
 export interface BoxSearchTourFeProps {
   className?: string;
@@ -128,7 +127,7 @@ const BoxSearchTourFe: React.FC<BoxSearchTourFeProps> = ({ className = "", onSub
         [className]: className,
       })}
     >
-      <div className="search-box-inner bg-white px-3 md:px-4 py-2 rounded-md shadow-md max-w-2xl mx-auto">
+      <div className="search-box-inner bg-white px-3 md:px-4 py-3 rounded-md shadow-md max-w-2xl mx-auto">
         <Form layout="vertical">
           <div className="flex flex-wrap md:flex-nowrap items-center gap-x-4">
             <div className="control mb-4 md:mb-0 w-full md:w-1/2">

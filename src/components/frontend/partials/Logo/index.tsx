@@ -13,8 +13,8 @@ export interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({
-  width = 100,
-  height = 100,
+  width = 240,
+  height = 80,
   alt = SITE_NAME,
   className = "",
   href = "/",

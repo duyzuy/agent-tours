@@ -13,4 +13,7 @@ const StyledTabs = styled(Tabs)`
     margin-right: auto;
     margin-bottom: 8px;
   }
+  &&&.travel-tabs .travel-tabs-tab-btn .travel-tabs-tab-icon:not(:last-child) {
+    margin-inline-end: 0;
+  }
 `;

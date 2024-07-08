@@ -42,6 +42,16 @@ export const antdTheme: ThemeConfig = {
       borderRadius: 4,
       borderRadiusLG: 6,
     },
+    DatePicker: {
+      fontSizeSM: 12,
+      paddingInlineSM: 8,
+      paddingBlockSM: 2,
+      fontSizeLG: 16,
+      paddingInlineLG: 16,
+      borderRadiusSM: 3,
+      borderRadius: 4,
+      borderRadiusLG: 6,
+    },
     Menu: {
       radiusItem: 0,
       itemBorderRadius: 0,

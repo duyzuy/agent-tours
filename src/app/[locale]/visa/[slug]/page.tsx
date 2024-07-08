@@ -2,7 +2,7 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { notFound } from "next/navigation";
 
-import { getVisaDetail } from "../_actions/getVisaDetail";
+import { getVisaTemplateDetail } from "../_actions/getVisaTemplateDetail";
 import { mediaConfig } from "@/configs";
 
 import PageWraper from "./_components/PageWraper";
@@ -16,7 +16,7 @@ export async function generateMetadata(
   const slug = params.slug;
 
   // fetch data
-  const visaContentResponse = await getVisaDetail({
+  const visaContentResponse = await getVisaTemplateDetail({
     lang: params.locale,
     slug: params.slug,
   });
@@ -41,7 +41,7 @@ export async function generateMetadata(
 }
 
 export default async function PageContentDetail({ params }: { params: PageParams }) {
-  const visaContentResponse = await getVisaDetail({
+  const visaContentResponse = await getVisaTemplateDetail({
     lang: params.locale,
     slug: params.slug,
   });

@@ -1,10 +1,10 @@
 "use client";
 import NavItem from "@/components/frontend/base/NavItem";
-import { IconSearch, IconShippingCart } from "@/assets/icons";
+import { IconSearch } from "@/assets/icons";
 import React, { useMemo } from "react";
 import classNames from "classnames";
 import { isUndefined } from "lodash";
-import { usePathname } from "@/utils/navigation";
+import { Link, usePathname } from "@/utils/navigation";
 
 type MenuItem = {
   title: string;
@@ -51,9 +51,13 @@ const HeaderMainWraper: React.FC<HeaderMainWraperProps> = ({ children, className
       <div className="space mx-1 text-xs text-gray-400">|</div>
       <ul className="flex items-center">
         <li className="relative px-3 py-2">
-          <IconSearch />
+          <Link href="/search">
+            <span className="text-gray-800">
+              <IconSearch />
+            </span>
+          </Link>
         </li>
-        <li className="relative px-3 py-2">
+        {/* <li className="relative px-3 py-2">
           <div className="relative flex items-center pr-8">
             <span>
               <IconShippingCart />
@@ -62,7 +66,7 @@ const HeaderMainWraper: React.FC<HeaderMainWraperProps> = ({ children, className
               3
             </span>
           </div>
-        </li>
+        </li> */}
       </ul>
     </div>
   );

@@ -63,6 +63,11 @@ const CardDropdown: React.FC<CardDropdownProps> = ({ isAuth, username, children 
                       <span className="block  text-gray-600">{t("myAccount")}</span>
                     </Link>
                   </li>
+                  <li>
+                    <Link href={`/${CLIENT_LINKS.Customer}`} className="block py-2 px-3 hover:bg-gray-100 rounded-md">
+                      <span className="block  text-gray-600">{t("order")}</span>
+                    </Link>
+                  </li>
                 </ul>
                 <div className="border-t pt-3 mt-3">
                   <Button type="text" onClick={() => signOut()} className="w-full" icon={<LogoutOutlined />}>

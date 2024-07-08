@@ -3,7 +3,7 @@ import CustomCollapse from "@/components/frontend/CustomCollapse";
 import { CollapseProps } from "antd";
 import { isEmpty } from "lodash";
 
-interface BlockPanelsProps {
+export interface BlockPanelsProps {
   items: { key: string; name: string; content: string }[];
   descriptions?: string;
 }

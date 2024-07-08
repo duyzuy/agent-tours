@@ -1,5 +1,32 @@
 {
-    "Index": {
-        "title": "Hello world!"
+  "Index": {
+    "title": "xin chao"
+  },
+  "Customer": {
+    "navItem": {
+      "accountInformation": "Account Information",
+      "order": "Order",
+      "changePassword": "Change password",
+      "signOut": "Sign-out"
+    },
+    "subPage": {
+      "accountInformation": {
+        "title": "Account Information"
+      }
     }
+  },
+  "String": {
+    "edit": "Edit",
+    "label": {
+      "phoneNumber": "Phone number",
+      "email": "Email",
+      "username": "User name"
+    },
+    "profile": {
+      "sidebar": {
+        "memberLabel": "Member",
+        "viewmore": "Member detail information"
+      }
+    }
+  }
 }

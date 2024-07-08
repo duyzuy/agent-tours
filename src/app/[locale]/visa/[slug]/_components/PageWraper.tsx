@@ -1,13 +1,25 @@
 import { VisaDetailsByLangResponse } from "@/models/fe/visa.interface";
 import BlockPanels from "@/components/frontend/TabsBlockContentPanel/BlockPanels";
-import AreaContentHtml from "@/components/frontend/AreaContentHtml";
-import BoxSearchTourFe from "@/app/[locale]/_components/BoxSearchTourFe";
+import BoxSearchSkeleton from "@/app/[locale]/_components/BoxSearchTourFe/BoxSearchSkeleton";
 import { BreadCrumb } from "@/components/frontend/BreadCrumb";
+import dynamic from "next/dynamic";
+import RegisterVisaForm from "./RegisterVisaForm";
 interface PageWraperProps {
   data: VisaDetailsByLangResponse["result"][0];
 }
+
+const DynamicSearchBox = dynamic(() => import("@/app/[locale]/_components/BoxSearchTourFe"), {
+  loading: () => (
+    <div className="container mx-auto lg:px-8 md:px-6 px-4">
+      <BoxSearchSkeleton />
+    </div>
+  ),
+  ssr: false,
+});
+
 const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
-  const panelItems = data.visaContent.metaContent.reduce<{ key: string; name: string; content: string }[]>(
+  const { visaContent } = data;
+  const panelItems = visaContent?.metaContent.reduce<{ key: string; name: string; content: string }[]>(
     (acc, pItem, _index) => {
       return [...acc, { key: (_index + 1).toString(), name: pItem.title, content: pItem.content }];
     },
@@ -15,10 +27,11 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
   );
   return (
     <div className="single__page">
-      <div className="py-8 bg-gray-100 mb-6">
-        <div className="search">
-          <BoxSearchTourFe />
-        </div>
+      <div
+        className="py-8 mb-6 h:240px lg:h-[320px] flex items-end justify-center"
+        style={{ background: "url(/assets/images/bg-visa.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+      >
+        <DynamicSearchBox />
       </div>
       <div className="single__page-inner visa container mx-auto pb-12 pt-4 px-4 lg:px-8 md:px-6">
         <BreadCrumb
@@ -35,15 +48,17 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
           <div className="flex flex-wrap -mx-3">
             <div className="col-left w-7/12 px-3">
               {/* <AreaContentHtml content={data.subContent} /> */}
-              <div className="content-block">
-                <BlockPanels descriptions={data.visaContent.content} items={panelItems} />
-              </div>
+              {visaContent && panelItems ? (
+                <div className="content-block">
+                  <BlockPanels descriptions={visaContent.content} items={panelItems} />
+                </div>
+              ) : null}
             </div>
             <div className="col-left w-5/12 px-3">
-              <div>
+              <div className="mb-6">
                 <div className="box border rounded-lg px-4 py-4">
                   <div className="head py-3">
-                    <p className="text-red-600 font-[500]">Vì sao chọn An Thái Travel</p>
+                    <p className="text-red-600 font-[500] text-base">Vì sao chọn An Thái Travel</p>
                   </div>
                   <ul className="list-disc pl-5">
                     <li>Thủ tục đơn giản.</li>
@@ -53,6 +68,7 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
                   </ul>
                 </div>
               </div>
+              <RegisterVisaForm />
             </div>
           </div>
         </div>

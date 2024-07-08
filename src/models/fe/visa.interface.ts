@@ -36,7 +36,7 @@ export interface FeVisaDetail {
     refId: number;
     lang: LangCode;
     slug: string;
-  };
+  } | null;
   id: number;
   slug: string;
   lang: LangCode;
