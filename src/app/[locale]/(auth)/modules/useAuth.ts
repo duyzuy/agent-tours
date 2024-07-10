@@ -13,7 +13,6 @@ import { useLocale } from "next-intl";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { useRouter } from "@/utils/navigation";
 import { isUndefined } from "lodash";
-import { ICustomerForgotPassword } from "@/models/customerAuth.interface";
 
 /**
  * Customer forgot password
@@ -92,21 +91,27 @@ export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string }
 
   const callbackUrl = options?.callbackUrl ? `/${locale}/${options.callbackUrl}` : `/${locale}`;
   const redirect = options && isUndefined(options.redirect) ? options.redirect : true;
+  const router = useRouter();
+
   const onSignIn = (formData: CustomerLoginFormData) => {
     setLoading(true);
     signIn("credentials", {
       username: formData.username,
       password: formData.password,
-      redirect: redirect,
+      redirect: false,
       callbackUrl: callbackUrl,
     })
       .then((data) => {
         console.log(data);
         if (data?.status === 200) {
+          router.push("/");
+          router.refresh();
+        } else {
           setError(data?.error);
         }
       })
       .catch((errors: { error: string; ok: boolean; status: number; url: string | null }) => {
+        console.log(errors);
         setError(errors.error);
       })
       .finally(() => {

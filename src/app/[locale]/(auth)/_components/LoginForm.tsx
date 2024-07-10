@@ -32,7 +32,7 @@ type TFieldInputs = {
   placeholder: InputProps["placeholder"];
   type: EFieldType;
 };
-
+import { PASSWORD_MIN_LENGTH } from "../schema/customerAuth.schema";
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false, children, onForgotPassword }) => {
   const t = useTranslations("String");
   const er = useTranslations("Error");
@@ -62,7 +62,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
       type: EFieldType.PASSWORD,
       label: t("password.label"),
       validateStatus: errors?.password ? "error" : "",
-      help: errors?.password?.message ? er(errors?.password?.message) : "",
+      help: errors?.password?.message ? er(errors?.password?.message, { length: PASSWORD_MIN_LENGTH }) : "",
       size: "large",
       placeholder: t("password.placeholder"),
     },
