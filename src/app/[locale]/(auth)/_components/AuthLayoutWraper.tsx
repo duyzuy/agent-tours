@@ -7,8 +7,14 @@ interface AuthLayoutWraperProps {
   title?: string;
   children?: React.ReactNode;
   renderExtra?: React.ReactNode;
+  bgUrl?: string;
 }
-const AuthLayoutWraper: React.FC<AuthLayoutWraperProps> = ({ title, children, renderExtra }) => {
+const AuthLayoutWraper: React.FC<AuthLayoutWraperProps> = ({
+  title,
+  children,
+  renderExtra,
+  bgUrl = "/assets/images/bg-auth.png",
+}) => {
   const t = useTranslations("String");
 
   return (
@@ -18,8 +24,8 @@ const AuthLayoutWraper: React.FC<AuthLayoutWraperProps> = ({ title, children, re
           <div className="w-full lg:w-1/2 px-8 py-8 lg:px-16 lg:py-16">
             <div className="login-form">
               <div className="slogan py-2 mb-4">
-                <p className="text-main-400 font-semibold uppercase">{t("byAgentName")}</p>
-                <p className="text-sm text-gray-600">{t("slogan")}</p>
+                <p className="text-primary-default font-semibold uppercase">{t("byAgentName")}</p>
+                <p className="text-sm text-gray-500">{t("slogan")}</p>
               </div>
               <div className="head mb-6">
                 <h1 className="text-2xl font-semibold mb-2">{title}</h1>
@@ -30,7 +36,7 @@ const AuthLayoutWraper: React.FC<AuthLayoutWraperProps> = ({ title, children, re
           </div>
           <div className="w-full lg:w-1/2">
             <div className="auth__image h-42 lg:h-full w-full relative">
-              <Image fill src="/assets/images/bg-customer-auth.png" alt="bg auth" style={{ objectFit: "cover" }} />
+              <Image src={bgUrl} fill alt="bg auth" style={{ objectFit: "cover" }} />
             </div>
           </div>
         </div>

@@ -114,7 +114,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
             descriptions: initialValue?.descriptions,
             visaTemplates: initialValue?.visaTemplatesMinimal || [],
             templates:
-              initialValue?.templates.reduce<CMSTemplateFormData["templates"]>((acc, item) => {
+              initialValue?.templatesMinimal.reduce<CMSTemplateFormData["templates"]>((acc, item) => {
                 return [
                   ...acc,
                   {

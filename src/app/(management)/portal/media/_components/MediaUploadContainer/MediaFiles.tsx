@@ -6,13 +6,10 @@ import { mediaConfig } from "@/configs";
 import MediaFileItem from "@/components/admin/media/MediaFileItem";
 import UploadFileForm, { UploadFileFormProps } from "./UploadFileForm";
 import ModalPreview from "./ModalPreview";
-
+import useMediaFile from "../../modules/useMediaFile";
 export interface IMediaFilesProps {
   items: IMediaFileListRs["result"];
   isLoading?: boolean;
-  onUpload: UploadFileFormProps["onUpload"];
-  uploading?: boolean;
-  folderList: IMediaFolderListRs["result"];
   onSelect?: (item: IMediaFileListRs["result"][0]) => void;
   selectedFiles?: IMediaFileListRs["result"];
   hasRoleCreate?: boolean;
@@ -22,14 +19,14 @@ type MediaFileTabPanel = "mediaFiles" | "upload";
 const MediaFiles = ({
   items,
   isLoading = false,
-  onUpload,
-  uploading = false,
-  folderList,
   selectedFiles = [],
   onSelect,
   hasRoleCreate = false,
 }: IMediaFilesProps) => {
   const [mediaTab, setMediaTab] = useState<MediaFileTabPanel>("mediaFiles");
+
+  const { onUploadMedia: onUploadFile, isPending: isUploading } = useMediaFile();
+
   const onResetTab = () => {
     setMediaTab("mediaFiles");
   };
@@ -53,9 +50,7 @@ const MediaFiles = ({
       {
         key: "upload",
         label: "Tải file",
-        children: (
-          <UploadFileForm folderList={folderList} onUpload={onUpload} uploading={uploading} onResetTab={onResetTab} />
-        ),
+        children: <UploadFileForm onUpload={onUploadFile} uploading={isUploading} onResetTab={onResetTab} />,
       },
     ];
   }

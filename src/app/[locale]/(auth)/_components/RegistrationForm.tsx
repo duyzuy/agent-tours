@@ -30,10 +30,11 @@ type TFieldInputs = {
 interface RegistrationFormProps {
   onSubmit?: (data: CustomerRegisterFormData) => void;
   loading?: boolean;
+  children?: React.ReactNode;
 }
-const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading = false }) => {
+const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading = false, children }) => {
   const t = useTranslations("String");
-
+  const er = useTranslations("Error");
   const {
     control,
     formState: { errors },
@@ -47,7 +48,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
       label: t("username.label"),
       placeholder: t("username.placeholder"),
       validateStatus: errors?.username ? "error" : "",
-      help: errors?.username?.message ? t(errors?.username?.message) : "",
+      help: errors?.username?.message ? er(errors?.username?.message) : "",
       size: "large",
       suffix: <UserOutlined className="site-form-item-icon" />,
     },
@@ -57,7 +58,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
       label: t("email.label"),
       placeholder: t("email.placeholder"),
       validateStatus: errors?.email ? "error" : "",
-      help: errors?.email?.message ? t(errors?.email?.message) : "",
+      help: errors?.email?.message ? er(errors?.email?.message) : "",
       size: "large",
       suffix: <MailOutlined className="site-form-item-icon" />,
     },
@@ -66,7 +67,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
       type: EFieldType.PASSWORD,
       label: t("password.label"),
       validateStatus: errors?.password ? "error" : "",
-      help: errors?.password?.message ? t(errors?.password?.message) : "",
+      help: errors?.password?.message ? er(errors?.password?.message) : "",
       size: "large",
       placeholder: t("password.placeholder"),
     },
@@ -75,7 +76,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
       type: EFieldType.PASSWORD,
       label: t("passwordConfirm.label"),
       validateStatus: errors?.passwordConfirm ? "error" : "",
-      help: errors?.passwordConfirm?.message ? t(errors?.passwordConfirm?.message) : "",
+      help: errors?.passwordConfirm?.message ? er(errors?.passwordConfirm?.message) : "",
       size: "large",
       placeholder: t("passwordConfirm.placeholder"),
     },
@@ -122,11 +123,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
           {t("button.register")}
         </Button>
       </FormItem>
-      <div className="content-form">
-        <p className="text-center text-xs">
-          <Link href={`/${CLIENT_LINKS.CustomerLogin}`}>{t("hasAccount")}</Link>
-        </p>
-      </div>
+      {children}
     </Form>
   );
 };

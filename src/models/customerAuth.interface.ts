@@ -46,7 +46,25 @@ export interface ICustomerProfile {
   passportDoi: string;
   passportDoe: string;
 }
+export interface ICustomerForgotPasswordPayload {
+  email?: string;
+  userName?: string;
+}
+
+export interface ICustomerSetPasswordPayload {
+  id?: number;
+  password?: string;
+}
+
+export interface ICustomerForgotPassword {
+  email: string;
+  expiredAfter: number;
+  isSuccess: boolean;
+  secretKey: string;
+  username: string;
+}
 
 export interface CustomerLoginResponse extends BaseResponse<string> {}
 
 export interface CustomerInformationResponse extends BaseResponse<ICustomerAuthInformation> {}
+export interface CustomerForgotPasswordResponse extends BaseResponse<ICustomerForgotPassword> {}

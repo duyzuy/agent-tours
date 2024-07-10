@@ -1,65 +1,85 @@
-import React, { useMemo, useState } from "react";
-import { Empty, Spin, Tabs, Space, Input, Button } from "antd";
+import React, { memo, useMemo, useState } from "react";
+import { Empty, Spin, Tabs, Space, Input, Button, Pagination } from "antd";
 import FormItem from "@/components/base/FormItem";
-import type { TabsProps } from "antd";
+import type { PaginationProps, TabsProps } from "antd";
 import { IMediaFolder, IMediaFolderListRs } from "@/models/management/media.interface";
 import classNames from "classnames";
 import { isEmpty, isEqual } from "lodash";
 import MediaFolderItem from "@/components/admin/media/MediaFolderItem";
 import styled from "styled-components";
-import FolderCreateForm, { FolderCreateFormProps } from "./FolderCreateForm";
+import FolderCreateForm from "./FolderCreateForm";
 import { MediaFolderUpdateFormData } from "../../modules/media.interface";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { mediaFolderUpdateSchema } from "../../schema/media.schema";
-
+import useMediaFolder, { UseMediaFolderProps } from "../../modules/useMediaFolder";
 export interface IMediaFolderProps {
   items: IMediaFolderListRs["result"];
   isLoading?: boolean;
-  onSave: (formData: MediaFolderUpdateFormData, cb?: () => void) => void;
   onOpen?: (item: IMediaFolderListRs["result"][0]) => void;
-  onCreateFolder: FolderCreateFormProps["onCreate"];
   hasRoleCreate?: boolean;
+  paginations?: {
+    onChangePage?: PaginationProps["onChange"];
+    currentPage?: number;
+    totalItems?: number;
+    pageSize?: number;
+  };
 }
 type FolderTabKeys = "folderList" | "addFolder";
-const MediaFolder = ({
-  items,
-  isLoading,
-  onSave,
-  onOpen,
-  onCreateFolder,
-  hasRoleCreate = false,
-}: IMediaFolderProps) => {
+const MediaFolder = ({ items, isLoading, onOpen, paginations, hasRoleCreate = false }: IMediaFolderProps) => {
   const [folderTabKey, setFolderTabKey] = useState<FolderTabKeys>("folderList");
+  const { onCreateFolder, onUpdateFolder, isCreating, isUpdateing } = useMediaFolder();
 
   const onChangeTab: TabsProps["onChange"] = (activeKey) => {
     setFolderTabKey(activeKey as FolderTabKeys);
+  };
+  const { onChangePage, currentPage, totalItems, pageSize } = paginations || {};
+
+  const renderFolderList = () => {
+    return (
+      <React.Fragment>
+        <div className="pagination py-2 bg-slate-50 rounded-md mb-3">
+          <Pagination
+            simple
+            showLessItems
+            showSizeChanger={false}
+            size="small"
+            current={currentPage}
+            total={totalItems}
+            onChange={onChangePage}
+          />
+        </div>
+        {isLoading ? (
+          <Spin tip="Loading..." size="small">
+            <div style={{ padding: 50, borderRadius: 4 }}></div>
+          </Spin>
+        ) : (
+          <>
+            {items.length ? (
+              <MediaFolder.FolderList
+                items={items}
+                depth={1}
+                isLoading={isUpdateing}
+                onSave={onUpdateFolder}
+                onOpen={onOpen}
+              />
+            ) : (
+              <Empty
+                imageStyle={{ height: 40 }}
+                description={<span className="text-xs text-gray-500">Không có thư mục nào</span>}
+                className="py-6"
+              />
+            )}
+          </>
+        )}
+      </React.Fragment>
+    );
   };
 
   let tabFolderItems: TabsProps["items"] = [
     {
       key: "folderList",
       label: "Thư mục",
-      children: (
-        <React.Fragment>
-          {isLoading ? (
-            <div className="flex items-center justify-center py-2">
-              <Spin />
-            </div>
-          ) : (
-            <React.Fragment>
-              {items.length ? (
-                <MediaFolder.FolderList items={items} depth={1} onSave={onSave} onOpen={onOpen} />
-              ) : (
-                <Empty
-                  imageStyle={{ height: 40 }}
-                  description={<span className="text-xs text-gray-500">Không có thư mục nào</span>}
-                  className="py-6"
-                />
-              )}
-            </React.Fragment>
-          )}
-        </React.Fragment>
-      ),
+      children: renderFolderList(),
     },
   ];
 
@@ -75,6 +95,7 @@ const MediaFolder = ({
             onCreate={onCreateFolder}
             onChangeTabPanel={() => setFolderTabKey("folderList")}
             folderList={items}
+            isLoading={isCreating}
           />
         ),
       },
@@ -98,10 +119,11 @@ export default MediaFolder;
 interface IMediaFolderListProps {
   items: IMediaFolderListRs["result"];
   openKeys?: string[];
-  onSave: IMediaFolderProps["onSave"];
+  onSave: UseMediaFolderProps["onUpdateFolder"];
   onOpen?: (item: IMediaFolderListRs["result"][0]) => void;
   depth: number;
   className?: string;
+  isLoading?: boolean;
 }
 MediaFolder.FolderList = function MediaFolderList({
   items,
@@ -109,6 +131,7 @@ MediaFolder.FolderList = function MediaFolderList({
   className = "",
   onSave,
   onOpen,
+  isLoading,
 }: IMediaFolderListProps) {
   const initFormEditItem = useMemo(() => new MediaFolderUpdateFormData(undefined, undefined, undefined, undefined), []);
   const [formData, setFormData] = useState(initFormEditItem);
@@ -170,8 +193,9 @@ MediaFolder.FolderList = function MediaFolderList({
 
   return (
     <ul
-      className={classNames(`folders ${depth}`, {
+      className={classNames(`folders depth-${depth}`, {
         [className]: className,
+        "border-l ml-[8px]": depth > 1,
       })}
     >
       {items.map((item) => (
@@ -198,11 +222,12 @@ MediaFolder.FolderList = function MediaFolderList({
                     value={formData?.folderName}
                     size="small"
                     onChange={(e) => onChangeFolderName(e.target.value)}
+                    disabled={isLoading}
                   />
                 </StyledFormItem>
                 <FormItem>
                   <Space>
-                    <Button onClick={onCancelEdit} size="small">
+                    <Button onClick={onCancelEdit} size="small" disabled={isLoading}>
                       Huỷ
                     </Button>
                     <Button
@@ -210,6 +235,7 @@ MediaFolder.FolderList = function MediaFolderList({
                       size="small"
                       onClick={() => handlerSubmit(formData, onSubmitForm)}
                       disabled={isEqual(formData?.folderName, editItem?.folderName)}
+                      loading={isLoading}
                     >
                       Lưu
                     </Button>

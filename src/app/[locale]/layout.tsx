@@ -1,3 +1,5 @@
+import { unstable_setRequestLocale } from "next-intl/server";
+
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { LangCode } from "@/models/management/cms/language.interface";
@@ -35,6 +37,8 @@ export async function generateMetadata({ params: { locale } }: Props) {
 }
 
 export default async function RootClientLayout({ children, params: { locale } }: Props) {
+  unstable_setRequestLocale(locale);
+
   let messages: AbstractIntlMessages | undefined;
   try {
     const translationsResponse = await getTranslationFe(locale);

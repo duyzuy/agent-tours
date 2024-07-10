@@ -121,7 +121,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
       setFormData((oldData) => {
         const { publishDate } = oldData;
         const [_, time] = (publishDate || "").split(" ");
-        const newPublishDate = [date.format(DATE_FORMAT), time].join(" ");
+        const newPublishDate = [date.locale("en").format(DATE_FORMAT), time].join(" ");
 
         return { ...oldData, publishDate: newPublishDate };
       });

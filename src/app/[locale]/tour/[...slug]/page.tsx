@@ -70,10 +70,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
       <div className="container mx-auto py-8 lg:px-8 md:px-6 px-4">
         <div className="flex flex-wrap">
-          <div
-            className="tour-contents w-full lg:w-7/12"
-            // style={{ width: "calc(100% - 380px)" }}
-          >
+          <div className="tour-contents w-full lg:w-7/12">
             <ProductHeader name={cmsTemplateContent?.name} tourCode={currentSellable?.template.code}>
               <h1 className="text-xl text-primary-default font-bold">{cmsTemplateContent?.name}</h1>
             </ProductHeader>

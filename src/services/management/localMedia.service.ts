@@ -7,17 +7,18 @@ import {
   IMediaFolderPayload,
   IMediaFolderUpdatePayload,
   TQueryParamsMediaFiles,
+  TQueryParamsMediaFolders,
 } from "@/models/management/media.interface";
 
 export const localMediaAPIs = {
-  getFolders: async () => {
+  getFolders: async (params: TQueryParamsMediaFolders) => {
     return await client.post<IMediaFolderListRs>("local/Cms_Media", {
       params: {
         requestObject: {
           type: "MEDIA_FOLDER", //MEDIA_FOLDER
         },
-        pageCurrent: 1,
-        pageSize: 10,
+        pageCurrent: params.pageCurrent,
+        pageSize: params.pageSize,
       },
       isAuth: true,
     });

@@ -2,10 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import {
   CustomerInformationResponse,
   ICusTomerRegisterPayload,
+  ICustomerForgotPasswordPayload,
   ICustomerLoginPayload,
+  ICustomerSetPasswordPayload,
 } from "@/models/customerAuth.interface";
 import { authAPIs } from "@/services/fe/auth";
-import { BaseResponse } from "@/models/common.interface";
 import { useCustomMutation } from "./useCustomMutation";
 
 export const useCustomerLoginMutation = () => {
@@ -19,9 +20,13 @@ export const useCustomerRegisterMutation = () => {
     mutationFn: (payload) => authAPIs.register(payload),
   });
 };
-
-// export const useCustomerGetProfileMutation = () => {
-//   return useMutation({
-//     mutationFn: () => authAPIs.getProfile(),
-//   });
-// };
+export const useCustomerResetPasswordMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: ICustomerForgotPasswordPayload) => authAPIs.resetPassword(payload),
+  });
+};
+export const useCustomerSetNewPasswordMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: ICustomerSetPasswordPayload) => authAPIs.setNewPassword(payload),
+  });
+};

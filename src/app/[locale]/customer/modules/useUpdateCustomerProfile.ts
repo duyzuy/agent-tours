@@ -1,5 +1,5 @@
 import { CustomerProfileFormData } from "@/models/fe/profile.interface";
-import { useUpdateCustomerProfileMutation } from "@/mutations/fe/customer";
+import { useCustomerUpdateProfileMutation } from "@/mutations/fe/customer";
 import { useQueryClient } from "@tanstack/react-query";
 import useMessage from "@/hooks/useMessage";
 import { queryFE } from "@/queries/var";
@@ -9,7 +9,7 @@ import { revalidateTag } from "next/cache";
 // console.log(sesss.data?.user.accessToken);
 
 const useUpdateCustomerProfile = () => {
-  const { mutate: makeUpdate, isPending, isIdle } = useUpdateCustomerProfileMutation();
+  const { mutate: makeUpdate, isPending, isIdle } = useCustomerUpdateProfileMutation();
 
   const queryClient = useQueryClient();
   const message = useMessage();

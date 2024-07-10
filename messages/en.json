@@ -27,6 +27,14 @@
         "memberLabel": "Member",
         "viewmore": "Member detail information"
       }
+    },
+    "button": {
+      "backHome": "Back home",
+      "resetPassword": "Reset password"
+    },
+    "notFound": {
+      "content1": "The content page you are looking for does not exist or has changed.",
+      "content2": "Go back or search for another product."
     }
   }
 }

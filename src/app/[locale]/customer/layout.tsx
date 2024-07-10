@@ -1,3 +1,4 @@
+import { unstable_setRequestLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { locales } from "@/constants/locale.constant";
 import { authOptions } from "@/auth";
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params: { locale } }: Props) {
+  unstable_setRequestLocale(locale);
   // const t = await getTranslations({ locale, namespace: "String" });
   // console.log(t("passwordConfirm.label"));
   return {

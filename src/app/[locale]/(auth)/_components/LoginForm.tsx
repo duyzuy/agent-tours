@@ -9,8 +9,11 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
 import FormItem from "@/components/base/FormItem";
+import { Link } from "@/utils/navigation";
+import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 export interface LoginFormProps {
   onSubmit?: (data: CustomerLoginFormData) => void;
+  onForgotPassword?: () => void;
   error?: string | null;
   loading?: boolean;
   children?: React.ReactNode;
@@ -30,8 +33,9 @@ type TFieldInputs = {
   type: EFieldType;
 };
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false, children }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false, children, onForgotPassword }) => {
   const t = useTranslations("String");
+  const er = useTranslations("Error");
   const params = useParams();
 
   const {
@@ -49,7 +53,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
       label: t("username.label"),
       placeholder: t("username.placeholder"),
       validateStatus: errors?.username ? "error" : "",
-      help: errors?.username?.message ? t(errors?.username?.message) : "",
+      help: errors?.username?.message ? er(errors?.username?.message) : "",
       size: "large",
       suffix: <LockOutlined className="site-form-item-icon" />,
     },
@@ -58,7 +62,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
       type: EFieldType.PASSWORD,
       label: t("password.label"),
       validateStatus: errors?.password ? "error" : "",
-      help: errors?.password?.message ? t(errors?.password?.message) : "",
+      help: errors?.password?.message ? er(errors?.password?.message) : "",
       size: "large",
       placeholder: t("password.placeholder"),
     },
@@ -99,7 +103,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
       ))}
       <FormItem style={{ marginBottom: 0 }}>
         <div className="text-right mb-6">
-          <span className="text-gray-400">{t("forgotPassword")}</span>
+          <span className="text-gray-400 hover:text-primary-default cursor-pointer" onClick={onForgotPassword}>
+            {t("forgotPassword")}
+          </span>
         </div>
       </FormItem>
       <div>

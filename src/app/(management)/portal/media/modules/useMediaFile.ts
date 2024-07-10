@@ -7,7 +7,7 @@ import { UploadFile } from "antd";
 import { RcFile } from "antd/es/upload";
 
 const useMediaFile = () => {
-  const { mutate: makeUploadMediaFiles } = useUploadMediaFilesMutation();
+  const { mutate: makeUploadMediaFiles, isPending, isIdle } = useUploadMediaFilesMutation();
   const message = useMessage();
   const queryClient = useQueryClient();
   const onUploadMedia = ({ folder, fileList }: { folder: FolderItemTree; fileList: UploadFile[] }, cb?: () => void) => {
@@ -32,6 +32,10 @@ const useMediaFile = () => {
     });
   };
 
-  return onUploadMedia;
+  return {
+    onUploadMedia,
+    isPending,
+    isIdle,
+  };
 };
 export default useMediaFile;

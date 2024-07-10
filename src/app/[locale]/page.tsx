@@ -1,10 +1,8 @@
-import Link from "next/link";
-import ArticleTour from "@/components/frontend/TourCard";
+import { unstable_setRequestLocale } from "next-intl/server";
 import VisaSection from "./_components/VisaSection";
 import PostsSection from "./_components/PostsSection";
 import ExploreSection from "./_components/ExploreSection";
 
-import LineSpacing from "@/components/frontend/LineSpacing";
 import BannerSection from "./_components/BannerSection";
 import TopSliderSection from "./_components/TopSliderSection";
 
@@ -17,6 +15,8 @@ import { EProductType } from "@/models/management/core/productType.interface";
 
 export default async function FeHomePage({ params }: { params: { locale: LangCode } }) {
   const { locale } = params;
+
+  unstable_setRequestLocale(locale);
 
   // const t = useTranslations("home");
   // const dataa = await getServerSession(authOptions);

@@ -2,28 +2,28 @@
 import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
-
-import useMediaFolder from "./modules/useMediaFolder";
-import useMediaFile from "./modules/useMediaFile";
 import { useGetMediaFolders, useGetMediaFiles } from "@/queries/media";
-import { IMediaFolderListRs, QueryParamsMediaFiles } from "@/models/management/media.interface";
+import {
+  IMediaFolderListRs,
+  QueryParamsMediaFiles,
+  QueryParamsMediaFolders,
+} from "@/models/management/media.interface";
 import MediaFolder from "./_components/MediaUploadContainer/MediaFolder";
 import MediaFiles from "./_components/MediaUploadContainer/MediaFiles";
 import { ERolesFunctions } from "@/constants/permission.constant";
 
 const MediaPage = () => {
-  const { data: folderList, isLoading: isLoadingFolder } = useGetMediaFolders();
+  const initQueryFolters = new QueryParamsMediaFolders(1, 20);
+  const [queryFolder, setQueryFolder] = useState(initQueryFolters);
+  const { data: folderData, isLoading: isLoadingFolder } = useGetMediaFolders(queryFolder);
 
   const [queryMediaFileParams, setQueryMediaFileParams] = useState(() => new QueryParamsMediaFiles(0, 1, 30));
 
-  const { data: fileList, isLoading: isLoadingFile } = useGetMediaFiles(queryMediaFileParams);
-
-  const { onCreateFolder, onUpdateFolder } = useMediaFolder();
-
-  const onUploadMediaFile = useMediaFile();
+  const { data: fileList, isLoading: isLoadingFileList } = useGetMediaFiles(queryMediaFileParams);
 
   const [pers, checkPermission] = useLocalUserPermissions();
 
+  console.log(queryFolder);
   // console.log(
   //   checkPermission?.([
   //     ERolesFunctions.MEDIA_CREATE,
@@ -54,19 +54,23 @@ const MediaPage = () => {
       <div className="flex h-full">
         <div className="col-left w-[260px] h-full pr-4 border-r">
           <MediaFolder
-            items={folderList || []}
+            items={folderData?.list || []}
             isLoading={isLoadingFolder}
-            onSave={onUpdateFolder}
-            onCreateFolder={onCreateFolder}
             onOpen={handleOnpenFilesInFolder}
             hasRoleCreate={checkPermission?.([ERolesFunctions.MEDIA_CREATE])}
+            paginations={{
+              onChangePage: (page, pageSize) => {
+                setQueryFolder((oldData) => ({ ...oldData, pageCurrent: page }));
+              },
+              totalItems: folderData?.totalItems,
+              pageSize: folderData?.pageSize,
+              currentPage: folderData?.pageCurrent,
+            }}
           />
         </div>
         <MediaFiles
           items={fileList || []}
-          isLoading={isLoadingFile}
-          onUpload={onUploadMediaFile}
-          folderList={folderList || []}
+          isLoading={isLoadingFileList}
           hasRoleCreate={checkPermission?.([ERolesFunctions.MEDIA_CREATE])}
         />
       </div>

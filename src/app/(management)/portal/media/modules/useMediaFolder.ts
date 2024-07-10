@@ -9,14 +9,19 @@ import { MediaFolderCreateFormData, MediaFolderUpdateFormData } from "./media.in
 export type TMediaFolderErrorsField = Partial<
   Record<keyof Pick<IMediaFolderPayload, "folderName" | "folderSlug">, string>
 >;
+
+export interface UseMediaFolderProps {
+  onCreateFolder: (formData: MediaFolderCreateFormData, cb?: () => void) => void;
+  onUpdateFolder: (formData: MediaFolderUpdateFormData, cb?: () => void) => void;
+}
 const useMediaFolder = () => {
-  const { mutate: makeCreateFolder } = useCreateMediaFoldersMutation();
-  const { mutate: makeUpdateFolder } = useUpdateFolderMutation();
+  const { mutate: makeCreateFolder, isPending: isCreating } = useCreateMediaFoldersMutation();
+  const { mutate: makeUpdateFolder, isPending: isUpdateing } = useUpdateFolderMutation();
 
   const queryClient = useQueryClient();
 
   const message = useMessage();
-  const onCreateFolder = (formData: MediaFolderCreateFormData, cb?: () => void) => {
+  const onCreateFolder: UseMediaFolderProps["onCreateFolder"] = (formData, cb) => {
     makeCreateFolder(formData, {
       onSuccess: (data, variables) => {
         message.success(`Tạo thư mục ${variables.folderName} thành công`);
@@ -33,7 +38,7 @@ const useMediaFolder = () => {
     });
   };
 
-  const onUpdateFolder = (formData: MediaFolderUpdateFormData, cb?: () => void) => {
+  const onUpdateFolder: UseMediaFolderProps["onUpdateFolder"] = (formData, cb) => {
     makeUpdateFolder(formData, {
       onSuccess: (data, variables) => {
         message.success(`Cập nhật tên thư mục "${variables.folderName}" thành công`);
@@ -52,6 +57,8 @@ const useMediaFolder = () => {
 
   return {
     onCreateFolder,
+    isCreating,
+    isUpdateing,
     onUpdateFolder,
   };
 };

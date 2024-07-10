@@ -27,6 +27,14 @@
         "memberLabel": "Thành viên",
         "viewmore": "Chi tiết thành viên"
       }
+    },
+    "button": {
+      "backHome": "Về trang chủ",
+      "resetPassword": "Lấy lại mật khẩu"
+    },
+    "notFound": {
+      "content1": "Trang nội dung bạn tìm hiện không tồn tại hoặc đã thay đổi.",
+      "content2": "Quay trở lại hoặc tìm kiếm sản phẩm khác."
     }
   }
 }

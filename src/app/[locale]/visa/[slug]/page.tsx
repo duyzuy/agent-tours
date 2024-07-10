@@ -1,3 +1,4 @@
+import { unstable_setRequestLocale } from "next-intl/server";
 import type { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { notFound } from "next/navigation";
@@ -41,6 +42,8 @@ export async function generateMetadata(
 }
 
 export default async function PageContentDetail({ params }: { params: PageParams }) {
+  unstable_setRequestLocale(params.locale);
+
   const visaContentResponse = await getVisaTemplateDetail({
     lang: params.locale,
     slug: params.slug,
