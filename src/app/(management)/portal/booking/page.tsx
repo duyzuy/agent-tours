@@ -99,7 +99,7 @@ const BookingPage = () => {
       <div
         className="header-page p-6 bg-gray-200 rounded-lg mb-14"
         style={{
-          background: "url('/assets/admin/images/bg-header.png')",
+          background: "url('/assets/images/admin/bg-header.png')",
           backgroundSize: "cover",
           backgroundPosition: "bottom center",
         }}

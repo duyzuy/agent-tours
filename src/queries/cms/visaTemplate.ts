@@ -6,6 +6,7 @@ import { visaTemplateAPIs } from "@/services/management/cms/visaTemplate";
 import { getAgToken } from "@/utils/common";
 
 import { VisaTemplateQueryParams } from "@/models/management/cms/visaTemplate.interface";
+import { VisaTemplateContentMinimalQueryParams } from "@/models/management/cms/visaTemplateContent.interface";
 
 export const useGetVisaTemplateKeyListQuery = (queryParams?: VisaTemplateQueryParams) => {
   return useQuery({
@@ -19,6 +20,25 @@ export const useGetVisaTemplateKeyListQuery = (queryParams?: VisaTemplateQueryPa
         totalItems: data.totalItems,
       };
     },
+  });
+};
+
+export const useGetVisaTemplateContentMinimalListQuery = (
+  queryParams: VisaTemplateContentMinimalQueryParams,
+  enabled?: boolean,
+) => {
+  return useQuery({
+    queryKey: [queryCMS.GET_VISA_TEMPLATE_CONTENT_SHORT_LIST, { ...queryParams }],
+    queryFn: () => visaTemplateAPIs.getTemplateContentMinimalList(queryParams),
+    select: (data) => {
+      return {
+        list: data.result,
+        pageSize: data.pageSize,
+        pageCurrent: data.pageCurrent,
+        totalItems: data.totalItems,
+      };
+    },
+    enabled: enabled,
   });
 };
 

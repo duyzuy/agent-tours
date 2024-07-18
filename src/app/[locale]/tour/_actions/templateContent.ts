@@ -5,15 +5,19 @@ import { BaseResponse } from "@/models/common.interface";
 import { ProductListResponse } from "@/models/fe/productItem.interface";
 
 export const getTemplateContentDetail = async (payload: FeTemplateContentPayload) => {
-  return await serverRequest.post<FeTemplateContentResponse, BaseResponse<null>>("localfront/getCms_templateDetails", {
-    next: { tags: ["templateContent"] },
+  const response = await serverRequest.post<FeTemplateContentResponse, BaseResponse<null>>(
+    "localfront/getCms_templateDetails",
+    {
+      next: { tags: ["templateContent"] },
 
-    params: {
-      requestObject: {
-        ...payload,
+      params: {
+        requestObject: {
+          ...payload,
+        },
       },
     },
-  });
+  );
+  return response?.result[0];
 };
 
 export const getSellableListByTemplateId = async (templateId: number) => {
@@ -29,4 +33,20 @@ export const getSellableListByTemplateId = async (templateId: number) => {
       },
     },
   );
+};
+
+export const getSellableListByTemplateCode = async (templateCode: string) => {
+  const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>(
+    "localfront/BookingOrder_SearchByTemplateId",
+    {
+      next: { tags: ["sellableListByTemplateCode"] },
+
+      params: {
+        requestObject: {
+          byTemplateCmsIdentity: templateCode,
+        },
+      },
+    },
+  );
+  return response?.result;
 };

@@ -1,75 +1,49 @@
 import Logo from "@/components/frontend/partials/Logo";
 import HamburgerButton from "@/components/frontend/HamburgerButton";
-import HeaderMainWraper, { HeaderMainWraperProps } from "./HeaderMainWraper";
+import HeaderMainWraper from "./HeaderMainWraper";
 import HeaderNavitationTop from "@/components/frontend/HeaderNavigationTop";
 import { Suspense } from "react";
 import AccountItem from "./AccountItem";
 import LanguageSwitcher from "../../LanguageSwitcher";
 import { isMobile } from "@/utils/detectMobile";
 import MobileHeaderMainWraper from "./MobileHeaderMainWraper";
+import { getPrimaryMenu } from "@/app/[locale]/_actions/menu";
+import { getLocale } from "next-intl/server";
+import { LangCode } from "@/models/management/cms/language.interface";
+import { IMenuItem } from "@/models/management/cms/menu.interface";
+
+import { getMenuListFomatedTypes } from "@/utils/menu";
 
 export default async function Header() {
   const isMobileDevice = isMobile();
+  const locale = await getLocale();
 
-  const items: HeaderMainWraperProps["items"] = [
-    {
-      title: "Tra cứu Booking",
-      description: "",
-      href: "/",
-      iconPath: "",
-      isBlank: false,
-      children: [
-        {
-          title: "Tra cứu Booking",
-          description: "Your customers’ data will be safe and secure",
-          href: "/",
-          iconPath: "",
-          isBlank: false,
-        },
-        {
-          title: "Tra cứu Booking",
-          description: "Your customers’ data will be safe and secure",
-          href: "/",
-          iconPath: "",
-          isBlank: false,
-        },
-      ],
-    },
-    {
-      title: "Giới thiệu",
-      href: "/",
-    },
-    {
-      title: "Tuyển dụng",
-      href: "/",
-    },
-    {
-      title: "Tin tức sự kiện",
-      href: "/",
-    },
-  ];
+  const primaryMenuResult = await getPrimaryMenu(locale as LangCode);
+
+  const { menuPosition, menuItems: primaryItems, lang } = primaryMenuResult || {};
+
+  const menuItems = primaryItems ? getMenuListFomatedTypes(primaryItems) : [];
+
   return (
-    <>
-      <header className="bg-white drop-shadow-sm relative z-20">
-        <nav className="mx-auto flex items-center justify-between lg:py-4 py-3 container px-4 md:px-6 lg:px-8">
-          <div className="flex lg:flex-1">
-            <Logo alt="Logo An Thai" width={240} height={80} className="w-32 lg:w-52" />
-          </div>
-          <div className="flex items-center justify-center lg:hidden">
-            <MobileHeaderMainWraper isMobile={isMobileDevice} />
-          </div>
-          <div className="hidden lg:block lg:gap-x-12">
-            <HeaderNavitationTop>
-              <Suspense fallback={<SkeletonAccountItem />}>
-                <AccountItem />
-              </Suspense>
-              <LanguageSwitcher />
-            </HeaderNavitationTop>
-            <HeaderMainWraper items={items} />
-          </div>
-        </nav>
-      </header>
-    </>
+    <header className="bg-white drop-shadow-sm relative z-20">
+      <nav className="mx-auto flex items-center justify-between lg:py-4 py-3 container px-4 md:px-6 lg:px-8">
+        <div className="flex lg:flex-1">
+          <Logo alt="Logo An Thai" width={240} height={80} className="w-32 lg:w-52" />
+        </div>
+        <div className="flex items-center justify-center lg:hidden">
+          <MobileHeaderMainWraper isMobile={isMobileDevice} />
+        </div>
+        <div className="hidden lg:block lg:gap-x-12">
+          <HeaderNavitationTop>
+            <Suspense fallback={<SkeletonAccountItem />}>
+              <AccountItem />
+            </Suspense>
+            <LanguageSwitcher />
+          </HeaderNavitationTop>
+          <HeaderMainWraper items={menuItems} />
+        </div>
+      </nav>
+    </header>
   );
 }
 

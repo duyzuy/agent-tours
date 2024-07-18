@@ -33,7 +33,7 @@ const ProductListEntry: React.FC<ProductListEntryProps> = ({ items }) => {
         {items?.map((product) => (
           <TourCard
             key={product.recId}
-            thumbnail={`${mediaConfig.rootApiPath}/${getCmsContentByLang(product)?.thumb}`}
+            thumbnail={`${mediaConfig.rootApiPath}/${getCmsContentByLang(product)?.thumbnail.original}`}
             name={getCmsContentByLang(product)?.name}
             price={product.configs.length ? moneyFormatVND(getMinAdultPrice(product.configs)) : undefined}
             departDate={formatDate(product.startDate, "dd/MM/yyyy")}

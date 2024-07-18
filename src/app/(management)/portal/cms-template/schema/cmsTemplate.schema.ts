@@ -9,10 +9,18 @@ export const cmsTemplateContentSchema: ObjectSchema<CMSTemplateContentFormData> 
   code: string().required("Code không bỏ trống."),
   name: string().required("Tiêu đề không bỏ trống"),
   slug: string().required("Slug không bỏ trống."),
-  thumb: string().required("Ảnh bài viết không bỏ trống."),
-  images: object({
-    listImage: array().required("Thư viện ảnh không bỏ trống."),
-  }),
+  thumbnail: object({
+    id: number().required("Ảnh bài viết không bỏ trống."),
+    original: string().default(""),
+  }).required("Ảnh bài viết không bỏ trống."),
+  images: array()
+    .of(
+      object({
+        id: number().required("Ảnh bài viết không bỏ trống."),
+        original: string().default(""),
+      }),
+    )
+    .default([]),
   downloads: array().of(
     object({
       title: string().required("Không bỏ trống tên."),
@@ -44,7 +52,9 @@ export const cmsTemplateSchema: ObjectSchema<CMSTemplateFormData> = object({
   code: string().required("Code không bỏ trống."),
   codeName: string().required("Tên không bỏ trống"),
   descriptions: string(),
-  codeImage: string().required("Ảnh bài viết không bỏ trống."),
+  codeImage: object({
+    id: number().required("Thiếu Id thmbnail."),
+  }).required("Ảnh bài viết không bỏ trống."),
   visaTemplates: array()
     .of(
       object({

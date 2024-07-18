@@ -4,7 +4,6 @@ import PostsSection from "./_components/PostsSection";
 import ExploreSection from "./_components/ExploreSection";
 
 import BannerSection from "./_components/BannerSection";
-import TopSliderSection from "./_components/TopSliderSection";
 
 import TourListContainer from "./_components/TourListContainer";
 import { Suspense } from "react";
@@ -12,6 +11,7 @@ import SkeletonLoadingCards from "@/components/frontend/skeletons/SkeletonLoadin
 import { LangCode } from "@/models/management/cms/language.interface";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
+import HeroHomeWraper from "./_components/HeroHomeWraper";
 
 export default async function FeHomePage({ params }: { params: { locale: LangCode } }) {
   const { locale } = params;
@@ -52,7 +52,11 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
 
   return (
     <div className="page-home">
-      <TopSliderSection />
+      <HeroHomeWraper
+        title="Trải nghiệm kỳ nghỉ tuyệt vời"
+        subTitle="Combo khách sạn - vé máy bay - đưa đón sân bay giá tốt nhất"
+      />
+
       <div
         className="page-bottom pt-12"
         style={{

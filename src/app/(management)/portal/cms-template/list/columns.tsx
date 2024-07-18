@@ -6,6 +6,8 @@ import { mediaConfig } from "@/configs";
 import { isEmpty } from "lodash";
 import { ICMSTemplate, ICMSTemplateMinimal } from "@/models/management/cms/cmsTemplate.interface";
 import Link from "next/link";
+import classNames from "classnames";
+import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 
 const templateColumns = () => {
   let columns: ColumnsType<ICMSTemplateMinimal> = [
@@ -14,16 +16,16 @@ const templateColumns = () => {
       key: "thumb",
       dataIndex: "thumb",
       width: 100,
-      render(value, record, index) {
+      render(value, { codeImage }, index) {
         return (
           <div className="thumb w-14 h-14 relative bg-slate-100 flex items-center justify-center rounded-md overflow-hidden">
-            {isEmpty(record.codeImage) || record.codeImage === "" ? (
+            {!codeImage ? (
               <div className="flex items-center justify-center text-xs text-gray-500">
                 <span>No image</span>
               </div>
             ) : (
               <Image
-                src={`${mediaConfig.rootApiPath}/${record.codeImage}`}
+                src={`${mediaConfig.rootApiPath}/${codeImage.small}`}
                 alt="thumbnail"
                 fill
                 style={{ objectFit: "contain" }}
@@ -67,9 +69,19 @@ const templateColumns = () => {
         key: locale.key,
         dataIndex: locale.key,
         width: 50,
-        render(value, record, index) {
-          const item = record.templatesMinimal.find((lang) => lang.lang === locale.key);
-          return item ? <GlobalOutlined /> : "-";
+        render(value, { templatesMinimal }, index) {
+          const template = templatesMinimal.find((item) => item.lang === locale.key);
+          return template ? (
+            <span
+              className={classNames({
+                "text-emerald-500": template.status === PageContentStatus.PUBLISH,
+              })}
+            >
+              <GlobalOutlined />
+            </span>
+          ) : (
+            "-"
+          );
         },
       },
     ]);

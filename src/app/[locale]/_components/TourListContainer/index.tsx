@@ -18,9 +18,7 @@ const TourListContainer: React.FC<TourListContainerProps> = async ({
   querySearch,
   title,
 }) => {
-  const productResponse = await getProductList(querySearch);
-
-  const { result: productList } = productResponse || {};
+  const productList = await getProductList(querySearch);
 
   const getCmsContentByLang = (item: FeProductItem) => {
     return item.template.cms.find((cmsItem) => cmsItem.lang === lang);
@@ -46,13 +44,13 @@ const TourListContainer: React.FC<TourListContainerProps> = async ({
           {productList?.map((product) => (
             <TourCard
               key={product.recId}
-              thumbnail={`${mediaConfig.rootApiPath}/${getCmsContentByLang(product)?.thumb}`}
+              thumbnail={`${mediaConfig.rootApiPath}/${getCmsContentByLang(product)?.thumbnail.original}`}
               name={getCmsContentByLang(product)?.name}
               price={product.configs.length ? moneyFormatVND(getMinAdultPrice(product.configs)) : undefined}
               departDate={formatDate(product.startDate, "dd/MM/yyyy")}
               tourCode={product.template.code}
               openAmount={product.open}
-              href={`/tour/${product.sellableTemplateId}/${product.recId}/${getCmsContentByLang(product)?.slug}`}
+              href={`/tour/detail/${product.recId}/${getCmsContentByLang(product)?.slug}`}
             />
           ))}
         </div>

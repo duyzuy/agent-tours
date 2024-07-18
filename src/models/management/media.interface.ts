@@ -55,6 +55,7 @@ export interface IMediaFile {
   type: MediaTypes;
   fileType: FileTypes;
   fullPath: string;
+  thumb: string;
 }
 export type TQueryParamsMediaFiles = {
   mediaInFolderRecid: number;

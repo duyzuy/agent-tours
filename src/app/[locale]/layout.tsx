@@ -1,5 +1,4 @@
 import { unstable_setRequestLocale } from "next-intl/server";
-
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { LangCode } from "@/models/management/cms/language.interface";
@@ -17,7 +16,6 @@ import ModalAuth from "./(auth)/_components/ModalAuth";
 import { ModalManagerProvider } from "./store/providers/ModalManagerProvider";
 import { getTranslationFe } from "./_actions/feTranslations";
 import { SITE_NAME } from "@/configs/site";
-
 import ThemeProvider from "@/providers/ThemeProvider";
 import { RQClientProvider } from "@/providers/RQClientProvider";
 

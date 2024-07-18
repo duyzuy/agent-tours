@@ -4,11 +4,12 @@ import {
   VisaTemplateContentMetaBlockPayload,
   VisaTemplateContentPayload,
 } from "@/models/management/cms/visaTemplateContent.interface";
+import { IThumbnail } from "@/models/thumbnail.interface";
 
 export class VisaTemplateKeyFormData {
   codeName?: string;
   code?: string;
-  codeImage?: string;
+  codeImage?: Partial<IThumbnail>;
   visaTemplates: {
     name: string;
     slug: string;
@@ -18,7 +19,7 @@ export class VisaTemplateKeyFormData {
   constructor(
     codeName: string | undefined,
     code: string | undefined,
-    codeImage: string | undefined,
+    codeImage: Partial<IThumbnail> | undefined,
     visaTemplates: {
       name: string;
       slug: string;
@@ -36,7 +37,7 @@ export class VisaTemplateContentFormData implements VisaTemplateContentPayload {
   id?: number;
   code?: string;
   name?: string;
-  thumb?: string;
+  thumbnail?: Partial<IThumbnail>;
   downloads?: { title: string; link: string }[];
   content?: string;
   subContent?: string;
@@ -58,7 +59,7 @@ export class VisaTemplateContentFormData implements VisaTemplateContentPayload {
     code: string | undefined,
     name: string | undefined,
     slug: string | undefined,
-    thumb: string | undefined,
+    thumbnail: Partial<IThumbnail> | undefined,
     downloads: { title: string; link: string }[] | undefined,
     content: string | undefined,
     subContent: string | undefined,
@@ -77,7 +78,7 @@ export class VisaTemplateContentFormData implements VisaTemplateContentPayload {
     this.id = id;
     this.code = code;
     this.name = name;
-    this.thumb = thumb;
+    this.thumbnail = thumbnail;
     this.content = content;
     this.downloads = downloads;
     this.subContent = subContent;

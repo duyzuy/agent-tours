@@ -2,6 +2,7 @@ import { BaseResponse } from "@/models/common.interface";
 import { LangCode } from "./language.interface";
 import { IVisaTemplateContent } from "./visaTemplateContent.interface";
 import { PageContentStatus } from "./pageContent.interface";
+import { IThumbnail } from "@/models/thumbnail.interface";
 
 export interface IVisaTemplateKey {
   id: number;
@@ -9,14 +10,14 @@ export interface IVisaTemplateKey {
   type: "DETAILS";
   code: string;
   codeName: string;
-  codeImage: string;
+  codeImage: IThumbnail | null;
   visaTemplates: IVisaTemplateContent[];
 }
 
 export interface IVisaTemplateKeyMinimalItem {
   code: string;
   codeName: string;
-  codeImage: string;
+  codeImage: IThumbnail | null;
   visaTemplates: any[];
   visaTemplatesMinimal: {
     code: string;
@@ -24,7 +25,7 @@ export interface IVisaTemplateKeyMinimalItem {
     lang: LangCode;
     slug: string;
     status: PageContentStatus;
-    thumb: string;
+    thumbnail: IThumbnail;
     metaData: {
       key: string;
       value: string;
@@ -39,7 +40,7 @@ export interface VisaTemplateKeyDetailResponse extends BaseResponse<IVisaTemplat
 export interface VisaTemplateKeyPayload {
   code?: string;
   codeName?: string;
-  codeImage?: string;
+  codeImage?: Partial<IThumbnail>;
   visaTemplates: {
     name: string;
     slug: string;

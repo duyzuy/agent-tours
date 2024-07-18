@@ -4,15 +4,12 @@ import { Button, DatePickerProps, Form, Select } from "antd";
 import IconMapPin from "@/assets/icons/IconMapPin";
 import IconCalendar from "@/assets/icons/IconCalendar";
 import IconSearch from "@/assets/icons/IconSearch";
-import { useGetLocalSearchListMISCQuery } from "@/queries/misc/destination";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
-import { LocalSearchDestinationListRs } from "@/models/management/localSearchDestination.interface";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { useGetDestinationsSearchConfigQuery } from "@/queries/fe/searchTour";
 import { FeDestinationSearchConfig } from "@/models/fe/destination.interface";
-
 import { FeSearchProductFormData } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { SelectProps } from "antd";

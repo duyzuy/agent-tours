@@ -2,6 +2,7 @@ import { BaseResponse, Status } from "../../common.interface";
 import { LangCode } from "./language.interface";
 import { PageContentStatus } from "./pageContent.interface";
 import { ICMSTemplateContent } from "./cmsTemplateContent.interface";
+import { IThumbnail } from "@/models/thumbnail.interface";
 
 export interface ICMSTemplate {
   id: number;
@@ -9,7 +10,7 @@ export interface ICMSTemplate {
   type: "DETAILS";
   code: string;
   codeName: string;
-  codeImage: string;
+  codeImage: IThumbnail;
   descriptions: string;
   visaTemplates: { code: string }[];
   templates: ICMSTemplateContent[];
@@ -21,7 +22,7 @@ export interface ICMSTemplateMinimal {
   type: "DETAILS";
   code: string;
   codeName: string;
-  codeImage: string;
+  codeImage: IThumbnail;
   descriptions: string;
   visaTemplates: { code: string }[];
   templates: ICMSTemplateContent[];
@@ -40,13 +41,12 @@ export interface ICMSTemplateMinimal {
 export interface CMSTemplateListRs extends BaseResponse<ICMSTemplate[]> {}
 export interface CMSTemplateMinimalListRs extends BaseResponse<ICMSTemplateMinimal[]> {}
 export interface CMSTemplateRs extends BaseResponse<ICMSTemplate> {}
-
 export interface CMSTemplateContentRs extends BaseResponse<ICMSTemplateContent> {}
 
 export interface CMSTemplatePayload {
   code?: string;
   codeName?: string;
-  codeImage?: string;
+  codeImage?: Partial<IThumbnail>;
   descriptions?: string;
   visaTemplates: { code: string }[];
   templates: {

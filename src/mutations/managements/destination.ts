@@ -1,5 +1,5 @@
-import { destinationAPIs } from "@/services/management/misc/destination";
-import { localSearchAPIs } from "@/services/management/misc/localSearch";
+import { destinationAPIs } from "@/services/management/cms/destination";
+import { localSearchAPIs } from "@/services/management/cms/localSearch";
 import { BaseResponse } from "@/models/common.interface";
 import {
   IDestinationContentPayload,

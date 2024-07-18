@@ -7,16 +7,10 @@ import { useRouter } from "next/navigation";
 import { useGetVisaTemplateKeyMinimalListQuery } from "@/queries/cms/visaTemplate";
 import { columns } from "./columns";
 
-import {
-  IVisaTemplateKeyMinimalItem,
-  VisaTemplateKeyListResponse,
-  VisaTemplateQueryParams,
-} from "@/models/management/cms/visaTemplate.interface";
-
+import { IVisaTemplateKeyMinimalItem, VisaTemplateQueryParams } from "@/models/management/cms/visaTemplate.interface";
 import DrawerCMSTemplate, { DrawerCMSTemplateProps } from "../_components/DrawerCMSTemplate";
 import useCRUDVisaTemplateKey from "../modules/useCRUDVisaTemplateKey";
 
-type VisaTemplateKeyItem = VisaTemplateKeyListResponse["result"][0];
 const CMSTemplatePageList = () => {
   const router = useRouter();
   const [showDrawer, setShowDrawer] = useState(false);

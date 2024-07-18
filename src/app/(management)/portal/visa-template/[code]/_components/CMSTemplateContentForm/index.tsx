@@ -46,7 +46,7 @@ export const initCmsTemplate = new VisaTemplateContentFormData(
   "",
   "",
   "",
-  "",
+  undefined,
   undefined,
   "",
   "",
@@ -156,7 +156,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
       if (showMedia.type === "thumb") {
         setFormData((oldData) => ({
           ...oldData,
-          thumb: files[0].fullPath,
+          thumbnail: { id: files[0].id, original: files[0].fullPath },
         }));
       }
 
@@ -219,7 +219,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
           "status",
           "publishDate",
           "downloads",
-          "thumb",
+          "thumbnail",
           "metaData",
         ],
         formData,
@@ -289,7 +289,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
             code: initData.code,
             name: initData.name,
             slug: initData.slug,
-            thumb: initData.thumb,
+            thumbnail: initData.thumbnail ?? undefined,
             content: initData.content,
             subContent: initData.subContent,
             downloads: initData.downloads,
@@ -468,10 +468,12 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                 }}
               />
               <ThumbnailImage
-                thumbnailUrl={formData.thumb ? `${mediaConfig.rootPath}/${formData.thumb}` : undefined}
+                thumbnailUrl={
+                  formData.thumbnail?.original ? `${mediaConfig.rootPath}/${formData.thumbnail.original}` : undefined
+                }
                 onRemove={onRemoveThumbnail}
                 onAdd={onOpenMediaToSelectThumbail}
-                error={errors?.thumb}
+                error={errors?.thumbnail}
               />
             </div>
           </div>

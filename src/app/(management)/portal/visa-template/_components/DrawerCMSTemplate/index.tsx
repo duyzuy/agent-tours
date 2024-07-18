@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import { Form, Button, Input, Space, Tag, Drawer, Tabs } from "antd";
+import { Form, Button, Input, Space, Drawer, Tabs } from "antd";
 import FormItem from "@/components/base/FormItem";
 import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
 import Image from "next/image";
@@ -38,7 +38,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
   initialValue,
   action = "create",
 }) => {
-  const initFormData = new VisaTemplateKeyFormData("", "", "", [
+  const initFormData = new VisaTemplateKeyFormData("", "", undefined, [
     { name: "", lang: LangCode.VI, slug: "" },
     { name: "", lang: LangCode.EN, slug: "" },
   ]);
@@ -48,7 +48,6 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
   });
   const [showMedia, setShowMedia] = useState(false);
 
-  console.log(action);
   const onChangeFormData = (
     key: keyof VisaTemplateKeyFormData,
     value: VisaTemplateKeyFormData[keyof VisaTemplateKeyFormData],
@@ -66,13 +65,12 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
     const file = files[0];
     setFormData((oldData) => ({
       ...oldData,
-      codeImage: file.fullPath,
+      codeImage: { id: file.id, original: file.fullPath, small: file.thumb },
     }));
   };
 
   const onChangeTemplateFormContent: Required<FormContentTemplateByLangProps>["onChangeForm"] = useCallback(
     (lang, data) => {
-      console.log(123123);
       setFormData((oldData) => {
         const { visaTemplates } = oldData;
         let newTemplates = [...visaTemplates];
@@ -102,7 +100,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
         ? {
             code: initialValue?.code,
             codeName: initialValue?.codeName,
-            codeImage: initialValue?.codeImage,
+            codeImage: initialValue?.codeImage ?? undefined,
             visaTemplates:
               initialValue?.visaTemplatesMinimal.reduce<VisaTemplateKeyFormData["visaTemplates"]>((acc, item) => {
                 return [
@@ -119,6 +117,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
     });
   }, [isOpen]);
 
+  console.log(formData);
   return (
     <Drawer
       open={isOpen}
@@ -167,7 +166,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
             <span className="no-image border border-dashed w-24 h-24 p-1 rounded-md flex items-center justify-center bg-gray-50 mb-2 overflow-hidden">
               {formData.codeImage ? (
                 <Image
-                  src={`${mediaConfig.rootApiPath}/${formData.codeImage}`}
+                  src={`${mediaConfig.rootApiPath}/${formData.codeImage.original}`}
                   alt="feature image"
                   width={80}
                   height={80}

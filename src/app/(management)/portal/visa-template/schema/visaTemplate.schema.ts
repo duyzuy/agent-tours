@@ -9,7 +9,9 @@ export const visaTemplateContentSchema: ObjectSchema<VisaTemplateContentFormData
   code: string().required("Code không bỏ trống."),
   name: string().required("Tiêu đề không bỏ trống"),
   slug: string().required("Slug không bỏ trống."),
-  thumb: string().required("Ảnh bài viết không bỏ trống."),
+  thumbnail: object({
+    id: number().required("Thiếu ID thumbnail"),
+  }).required("Ảnh bài viết không bỏ trống"),
   downloads: array().of(
     object({
       title: string().required("Không bỏ trống tên."),
@@ -41,7 +43,9 @@ export const visaTemplateSchema: ObjectSchema<VisaTemplateKeyFormData> = object(
   code: string().required("Code không bỏ trống."),
   codeName: string().required("Tên không bỏ trống"),
   descriptions: string(),
-  codeImage: string().required("Ảnh bài viết không bỏ trống."),
+  codeImage: object({
+    id: number().required("Thiếu ID ảnh."),
+  }).required("Vui lòng chọn ảnh"),
   visaTemplates: array()
     .of(
       object({

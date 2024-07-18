@@ -1,15 +1,22 @@
 import { CMSTemplateContentPayload } from "@/models/management/cms/cmsTemplateContent.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
+import { IThumbnail } from "@/models/thumbnail.interface";
 
 export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
   id?: number;
   code?: string;
   name?: string;
-  thumb?: string;
-  images?: {
-    listImage: string[];
+  thumbnail?: {
+    id: number;
+    small?: string;
+    original: string;
   };
+  images?: {
+    id: number;
+    small?: string;
+    original: string;
+  }[];
   downloads?: { title: string; link: string }[];
   content?: string;
   subContent?: string;
@@ -31,11 +38,19 @@ export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
     code: string | undefined,
     name: string | undefined,
     slug: string | undefined,
-    thumb: string | undefined,
+    thumbnail:
+      | {
+          id: number;
+          small?: string;
+          original: string;
+        }
+      | undefined,
     images:
       | {
-          listImage: string[];
-        }
+          id: number;
+          small?: string;
+          original: string;
+        }[]
       | undefined,
     downloads: { title: string; link: string }[] | undefined,
     content: string | undefined,
@@ -55,7 +70,7 @@ export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
     this.id = id;
     this.code = code;
     this.name = name;
-    this.thumb = thumb;
+    this.thumbnail = thumbnail;
     this.images = images;
     this.content = content;
     this.downloads = downloads;
@@ -74,7 +89,7 @@ export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
 export class CMSTemplateFormData {
   codeName?: string;
   code?: string;
-  codeImage?: string;
+  codeImage?: Partial<IThumbnail>;
   descriptions?: string;
   visaTemplates: { code: string }[];
   templates: {
@@ -86,7 +101,7 @@ export class CMSTemplateFormData {
   constructor(
     codeName: string | undefined,
     code: string | undefined,
-    codeImage: string | undefined,
+    codeImage: Partial<IThumbnail> | undefined,
     descriptions: string | undefined,
     visaTemplates: { code: string }[],
     templates: {

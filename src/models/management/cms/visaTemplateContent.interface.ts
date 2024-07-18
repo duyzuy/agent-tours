@@ -1,3 +1,4 @@
+import { IThumbnail } from "@/models/thumbnail.interface";
 import { BaseResponse, Status } from "../../common.interface";
 import { LangCode } from "./language.interface";
 import { PageContentStatus } from "./pageContent.interface";
@@ -19,10 +20,10 @@ export interface IVisaTemplateContent {
   cat: "cms_visatemplate";
   type: "DETAILS";
   code: string;
-  codeImage: string;
+  codeImage: IThumbnail | null;
   codeName: string;
   name: string;
-  thumb: string;
+  thumbnail: IThumbnail | null;
   downloads: { title: string; link: string }[];
   content: string;
   subContent: string;
@@ -38,7 +39,7 @@ export interface IVisaTemplateContent {
     lang: LangCode;
     name: string;
     slug: string;
-    thumb: string;
+    thumbnail: IThumbnail;
     metaData: { key: string; value: string; icon: string }[];
   }[];
   visaContent: {
@@ -53,7 +54,48 @@ export interface IVisaTemplateContent {
     slug: string;
   } | null;
 }
+export interface IVisaTemplateContentMinimal {
+  id: number;
+  code: string;
+  name: string;
+  thumbnail: IThumbnail;
+  slug: string;
+}
+export class VisaTemplateContentMinimalQueryParams {
+  requestObject?: {
+    status?: PageContentStatus;
+    lang?: LangCode;
+  };
+  pageCurrent?: number;
+  pageSize?: number;
+  orderBy?: {
+    sortColumn: "id" | "slug";
+    direction: "asc" | "desc";
+  };
+  constructor(
+    requestObject:
+      | {
+          status: PageContentStatus;
+          lang: LangCode;
+        }
+      | undefined,
+    pageCurrent: number | undefined,
+    pageSize: number | undefined,
+    orderBy:
+      | {
+          sortColumn: "id" | "slug";
+          direction: "asc" | "desc";
+        }
+      | undefined,
+  ) {
+    this.requestObject = requestObject;
+    this.pageCurrent = pageCurrent;
+    this.pageSize = pageSize;
+    this.orderBy = orderBy;
+  }
+}
 
+export interface VisaTemplateContentMinimalListResponse extends BaseResponse<IVisaTemplateContentMinimal[]> {}
 export interface VisaTemplateContentListResponse extends BaseResponse<IVisaTemplateContent[]> {}
 export interface VisaTemplateContentResponse extends BaseResponse<IVisaTemplateContent> {}
 
@@ -63,7 +105,7 @@ export interface VisaTemplateContentPayload {
   id?: number;
   code?: string;
   name?: string;
-  thumb?: string;
+  thumbnail?: Partial<IThumbnail>;
   downloads?: { title: string; link: string }[];
   content?: string;
   subContent?: string;

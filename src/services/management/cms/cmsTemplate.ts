@@ -17,8 +17,11 @@ import {
   CMSTemplateContentMetaDataPayload,
   ICMSTemplateContentMetaData,
   CMSTemplateContentMetaDataRs,
+  CMSTemplateContentMinimalListRs,
+  CMSTemplateContentMinimalQueryParams,
 } from "@/models/management/cms/cmsTemplateContent.interface";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
+import { sortBy } from "lodash";
 export const cmsTemplateAPIs = {
   create: async (payload?: CMSTemplatePayload) => {
     return await client.post<ICMSTemplateContent>("local/cms_template_Addnew_ByKey", {
@@ -55,6 +58,21 @@ export const cmsTemplateAPIs = {
         },
         pageCurrent: queryParams?.pageCurrent,
         pageSize: queryParams?.pageSize,
+      },
+    });
+  },
+  getMinimalContentList: async (queryParams?: CMSTemplateContentMinimalQueryParams) => {
+    return await client.post<CMSTemplateContentMinimalListRs>("local/cms_template_ListMinimal", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
+      },
+      params: {
+        requestObject: {
+          ...queryParams?.requestObject,
+        },
+        pageCurrent: queryParams?.pageCurrent,
+        pageSize: queryParams?.pageSize,
+        orderBy: queryParams?.orderBy,
       },
     });
   },

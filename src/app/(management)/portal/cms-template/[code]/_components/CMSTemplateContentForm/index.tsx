@@ -22,9 +22,10 @@ import MetaDataFields, { MetaDataFieldsProps } from "./MetaDataFields";
 import { isEmpty, isUndefined } from "lodash";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 import { ICMSTemplateContent } from "@/models/management/cms/cmsTemplateContent.interface";
-import GallerySelector from "./GalleriesSelector";
+import GallerySelector, { GallerySelectorProps } from "./GalleriesSelector";
 import TemplateMetaContentForm, { TemplateMetaContentFormProps } from "./TemplateMetaContentForm";
 import FileDownloadSelector, { FileDownloadSelectorProps } from "./FilesDownloadSelector";
+import { IThumbnail } from "@/models/thumbnail.interface";
 
 type RequirePageContentFormData = Required<CMSTemplateContentFormData>;
 
@@ -47,8 +48,8 @@ export const initCmsTemplate = new CMSTemplateContentFormData(
   "",
   "",
   "",
-  "",
   undefined,
+  [],
   undefined,
   "",
   "",
@@ -156,23 +157,25 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
         }
       : undefined;
   }, [formData.publishDate]);
+
   const onConfirmSelectMediaImage = useCallback<Required<MediaUploadProps>["onConfirm"]>(
     (files) => {
       if (showMedia.type === "thumb") {
         setFormData((oldData) => ({
           ...oldData,
-          thumb: files[0].fullPath,
+          thumbnail: {
+            id: files[0].id,
+            original: files[0].fullPath,
+          },
         }));
       }
 
       if (showMedia.type === "images") {
         setFormData((oldData) => ({
           ...oldData,
-          images: {
-            listImage: files.reduce<string[]>((acc, item) => {
-              return [...acc, item.fullPath];
-            }, []),
-          },
+          images: files.reduce<{ id: number; original: string }[]>((acc, item) => {
+            return [...acc, { id: item.id, original: files[0].fullPath }];
+          }, []),
         }));
       }
     },
@@ -225,7 +228,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
           "images",
           "publishDate",
           "downloads",
-          "thumb",
+          "thumbnail",
           "metaData",
         ],
         formData,
@@ -267,12 +270,10 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
       };
     });
   };
-  const onSaveGallery = (images: string[]) => {
+  const onSaveGallery: GallerySelectorProps["onSave"] = (images) => {
     setFormData((oldData) => ({
       ...oldData,
-      images: {
-        listImage: images,
-      },
+      images: images,
     }));
   };
 
@@ -295,7 +296,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
             code: initData.code,
             name: initData.name,
             slug: initData.slug,
-            thumb: initData.thumb,
+            thumbnail: initData.thumbnail,
             content: initData.content,
             subContent: initData.subContent,
             downloads: initData.downloads,
@@ -388,37 +389,26 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
             </div>
 
             <GallerySelector
-              images={formData.images?.listImage}
+              images={formData.images || []}
               error={errors?.["images.listImage" as "images"]}
               onSave={onSaveGallery}
             />
             <FileDownloadSelector files={formData.downloads} setFiles={onSaveFilesDownload} />
-            {/* <FormItem
-                            label="Mô tả ngắn"
-                            help={errors?.subContent || ""}
-                            validateStatus={errors?.subContent ? "error" : ""}
-                        >
-                            <Input.TextArea
-                                className="resize-none"
-                                rows={3}
-                                value={formData.subContent}
-                                onChange={(ev) =>
-                                    onChangeForm("subContent", ev.target.value)
-                                }
-                            ></Input.TextArea>
-                        </FormItem>
-                        <FormItem
-                            label="Chi tiết"
-                            help={errors?.content || ""}
-                            validateStatus={errors?.content ? "error" : ""}
-                        >
-                            <TextEditor
-                                onEditorChange={(data, editor) =>
-                                    onChangeForm("content", data)
-                                }
-                                value={formData.content}
-                            />
-                        </FormItem> */}
+            <FormItem
+              label="Mô tả ngắn"
+              help={errors?.subContent || ""}
+              validateStatus={errors?.subContent ? "error" : ""}
+            >
+              <Input.TextArea
+                className="resize-none"
+                rows={3}
+                value={formData.subContent}
+                onChange={(ev) => onChangeForm("subContent", ev.target.value)}
+              ></Input.TextArea>
+            </FormItem>
+            {/* <FormItem label="Chi tiết" help={errors?.content || ""} validateStatus={errors?.content ? "error" : ""}>
+              <TextEditor onEditorChange={(data, editor) => onChangeForm("content", data)} value={formData.content} />
+            </FormItem> */}
             <Typography.Title level={4}>SEO Meta</Typography.Title>
             <div className="box border rounded-md px-4 pt-6 mb-6">
               <FormItem
@@ -507,10 +497,10 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                 }}
               />
               <ThumbnailImage
-                thumbnailUrl={formData.thumb ? `${mediaConfig.rootPath}/${formData.thumb}` : undefined}
+                thumbnailUrl={formData.thumbnail ? `${mediaConfig.rootPath}/${formData.thumbnail.original}` : undefined}
                 onRemove={onRemoveThumbnail}
                 onAdd={onOpenMediaToSelectThumbail}
-                error={errors?.thumb}
+                error={errors?.thumbnail}
               />
             </div>
           </div>

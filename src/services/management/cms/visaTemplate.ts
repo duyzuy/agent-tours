@@ -11,8 +11,10 @@ import {
 import {
   VisaTemplateContentListResponse,
   VisaTemplateContentMetaBlockPayload,
+  VisaTemplateContentMinimalQueryParams,
   VisaTemplateContentPayload,
   VisaTemplateContentResponse,
+  VisaTemplateContentMinimalListResponse,
 } from "@/models/management/cms/visaTemplateContent.interface";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 export const visaTemplateAPIs = {
@@ -41,6 +43,21 @@ export const visaTemplateAPIs = {
         },
         pageCurrent: queryParams?.pageCurrent,
         pageSize: queryParams?.pageSize,
+      },
+    });
+  },
+  getTemplateContentMinimalList: async (queryParams?: VisaTemplateContentMinimalQueryParams) => {
+    return await client.post<VisaTemplateContentMinimalListResponse>("local/cms_visaTemplate_ListMinimal", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
+      },
+      params: {
+        requestObject: {
+          ...queryParams?.requestObject,
+        },
+        pageCurrent: queryParams?.pageCurrent,
+        pageSize: queryParams?.pageSize,
+        orderBy: queryParams?.orderBy,
       },
     });
   },

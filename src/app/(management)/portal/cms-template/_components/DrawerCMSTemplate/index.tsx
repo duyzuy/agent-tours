@@ -70,7 +70,11 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
     const file = files[0];
     setFormData((oldData) => ({
       ...oldData,
-      codeImage: file.fullPath,
+      codeImage: {
+        id: file.id,
+        original: file.fullPath,
+        small: file.thumb,
+      },
     }));
   };
 
@@ -179,7 +183,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
             <span className="no-image border border-dashed w-24 h-24 p-1 rounded-md flex items-center justify-center bg-gray-50 mb-2 overflow-hidden">
               {formData.codeImage ? (
                 <Image
-                  src={`${mediaConfig.rootApiPath}/${formData.codeImage}`}
+                  src={`${mediaConfig.rootApiPath}/${formData.codeImage.small}`}
                   alt="feature image"
                   width={80}
                   height={80}

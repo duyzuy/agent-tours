@@ -3,8 +3,6 @@ import MediaFiles, { IMediaFilesProps } from "./MediaFiles";
 import MediaFolder from "./MediaFolder";
 import { useGetMediaFiles, useGetMediaFolders } from "@/queries/media";
 import { IMediaFileListRs, QueryParamsMediaFiles, QueryParamsMediaFolders } from "@/models/management/media.interface";
-import useMediaFolder from "../../modules/useMediaFolder";
-import useMediaFile from "../../modules/useMediaFile";
 import classNames from "classnames";
 import { IMediaFolderListRs } from "@/models/management/media.interface";
 import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";

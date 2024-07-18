@@ -4,6 +4,7 @@ import { queryCMS } from "../var";
 import { cmsTemplateAPIs } from "@/services/management/cms/cmsTemplate";
 import { getAgToken } from "@/utils/common";
 import { CMSTemplateQueryParams } from "@/models/management/cms/cmsTemplate.interface";
+import { CMSTemplateContentMinimalQueryParams } from "@/models/management/cms/cmsTemplateContent.interface";
 
 export const useGetCMSTemplateListQuery = (queryParams?: CMSTemplateQueryParams) => {
   return useQuery({
@@ -34,6 +35,25 @@ export const useGetCMSTemplateListMinimalQuery = (queryParams?: CMSTemplateQuery
       };
     },
     enabled: Boolean(getAgToken()),
+  });
+};
+
+export const useGetCMSTemplateContentMinimalListQuery = (
+  queryParams: CMSTemplateContentMinimalQueryParams,
+  enabled?: boolean,
+) => {
+  return useQuery({
+    queryKey: [queryCMS.GET_CMS_TEMPLATE_CONTENT_MINIMAL_LIST, { ...queryParams }],
+    queryFn: () => cmsTemplateAPIs.getMinimalContentList(queryParams),
+    select: (data) => {
+      return {
+        list: data.result,
+        pageSize: data.pageSize,
+        pageCurrent: data.pageCurrent,
+        totalItems: data.totalItems,
+      };
+    },
+    enabled: enabled,
   });
 };
 

@@ -1,25 +1,16 @@
 "use client";
-import NavItem from "@/components/frontend/base/NavItem";
+import NavItem, { NavItemProps } from "@/components/frontend/base/NavItem";
 import { IconSearch } from "@/assets/icons";
 import React, { useMemo } from "react";
 import classNames from "classnames";
 import { isUndefined } from "lodash";
 import { Link, usePathname } from "@/utils/navigation";
-
-type MenuItem = {
-  title: string;
-  description?: string;
-  href?: string;
-  iconPath?: string;
-  isBlank?: boolean;
-  children?: MenuItem[];
-};
-
+import { MenuItemType } from "@/utils/menu";
 const bookingRoutes = ["passenger", "payment", "reservation"];
 export interface HeaderMainWraperProps {
   className?: string;
   children?: React.ReactNode;
-  items?: MenuItem[];
+  items?: MenuItemType[];
 }
 const HeaderMainWraper: React.FC<HeaderMainWraperProps> = ({ children, className = "", items }) => {
   const pathname = usePathname();
@@ -30,6 +21,7 @@ const HeaderMainWraper: React.FC<HeaderMainWraperProps> = ({ children, className
   if (isBookingProcess) {
     return null;
   }
+
   return (
     <div
       className={classNames("bottom-menu flex items-center justify-end", {
@@ -41,9 +33,11 @@ const HeaderMainWraper: React.FC<HeaderMainWraperProps> = ({ children, className
           {items.map((item, _index) => (
             <NavItem
               key={_index}
-              title={item.title}
-              hasDropdown={!isUndefined(item.children)}
-              dropdownItems={item.children}
+              name={item.name}
+              slug={`${item.slug}`}
+              objectType={item.objectType}
+              items={item.children}
+              navType="primary"
             />
           ))}
         </div>
