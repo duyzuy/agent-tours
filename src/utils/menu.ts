@@ -63,7 +63,7 @@ export const getMenuListFomatedTypes = (items: IMenuItem[]) => {
       ...acc,
       {
         ...item,
-        slug: menuSlug,
+        slug: item.objectType === "custom" ? menuSlug : `/${menuSlug}`,
         children: childItems || [],
       },
     ];

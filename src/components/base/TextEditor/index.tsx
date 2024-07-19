@@ -66,7 +66,8 @@ const TextEditor = ({
           language_load: false,
           toolbar_mode: "sliding",
           contextmenu: "link table",
-          content_style: "body { font-family: Helvetica,Arial,sans-serif; font-size:14px }",
+          content_style:
+            "body { font-family: Helvetica,Arial,sans-serif; font-size:14px, img.center: {margin-left: auto; margin-right: auto} }",
           quickbars_selection_toolbar: "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
           noneditable_class: "mceNonEditable",
           // icons: "thin",

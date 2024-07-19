@@ -75,13 +75,9 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = ({ name, items, classN
         </div>
         <div className="menu-secondary-item__dropdown-body">
           <div className="sub-item-list">
-            {items?.map((child) => (
-              <div className="child-item mb-2 py-1" key={child.id}>
-                <NavLink
-                  href={child.slug}
-                  title={child.name}
-                  target={child.objectType === "custom" ? "_blank" : "_self"}
-                />
+            {items?.map(({ name, slug, objectType, id }) => (
+              <div className="child-item mb-2 py-1" key={id}>
+                <NavLink href={slug} title={name} target={objectType === "custom" ? "_blank" : "_self"} />
               </div>
             ))}
           </div>
@@ -136,9 +132,9 @@ const MegaMenuColumn: React.FC<MegaMenuColumnProps> = ({ name, items }) => {
         <span className="text-red-600 font-[500] text-base">{name}</span>
       </div>
       <div className="sub-item-list">
-        {items?.map((child) => (
-          <div className="child-item mb-2 py-1" key={child.id}>
-            <NavLink href={child.slug} title={child.name} target={child.objectType === "custom" ? "_blank" : "_self"} />
+        {items?.map(({ id, slug, name, objectType }) => (
+          <div className="child-item mb-2 py-1" key={id}>
+            <NavLink href={slug} title={name} target={objectType === "custom" ? "_blank" : "_self"} />
           </div>
         ))}
       </div>

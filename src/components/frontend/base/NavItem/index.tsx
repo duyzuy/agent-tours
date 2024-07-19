@@ -32,7 +32,7 @@ const NavItem = ({ className = "", name, slug, icon, items, objectType, navType 
     >
       <span className="flex items-center gap-x-1 font-[500] leading-6 cursor-pointer" aria-expanded="false">
         {slug ? (
-          <NavLink prefix={IconComp?.icon ? <IconComp.icon /> : undefined} href={`/${slug}`} title={name} />
+          <NavLink prefix={IconComp?.icon ? <IconComp.icon /> : undefined} href={slug} title={name} />
         ) : (
           <span>{name}</span>
         )}
@@ -78,7 +78,7 @@ NavItem.Dropdown = function NavItemDropdown({ className = "", items }: NavItemDr
               <NavLink
                 className="block"
                 target={item.menuType === "custom" ? "_blank" : "_self"}
-                href={item.slug && !isEmpty(item.slug) ? `/${item.slug}` : "/"}
+                href={item.slug && !isEmpty(item.slug) ? item.slug : "/"}
               >
                 <span className="text-gray-800 font-[500]">{item.name}</span>
               </NavLink>
