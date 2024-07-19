@@ -20,10 +20,9 @@ import Slug, { SlugProps } from "@/components/admin/Slug";
 import PageParentList from "./PageParentList";
 import { isEqualObject } from "@/utils/compare";
 import { templateDefault, CONTENTS_LAYOUT_PAGE_TEMPLATE } from "@/constants/cmsTemplate.constant";
+import { MediaTypes } from "@/models/management/media.interface";
 
 type RequirePageContentFormData = Required<PageContentFormData>;
-
-const FILES_EXCERPT = ["IMAGE", "ICON"] as MediaUploadProps["exceptsSelect"];
 
 export interface ContentPageFormProps {
   lang: LangCode;
@@ -403,7 +402,7 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
         isOpen={showDrawerMedia.isShow}
         onClose={onCloseMediaUpload}
         onConfirm={onConfirmSelectMediaImage}
-        exceptsSelect={FILES_EXCERPT}
+        mediaTypes={[MediaTypes.ICON, MediaTypes.IMAGE]}
       />
     </>
   );

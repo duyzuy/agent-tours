@@ -8,6 +8,7 @@ import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/
 import { VisaTemplateContentFormData } from "../../../modules/visaTemplate.interface";
 import Link from "next/link";
 import { isEmpty, isUndefined } from "lodash";
+import { MediaTypes } from "@/models/management/media.interface";
 
 export interface FileDownloadSelectorProps {
   files?: VisaTemplateContentFormData["downloads"];
@@ -95,7 +96,7 @@ const FileDownloadSelector: React.FC<FileDownloadSelectorProps> = ({ files = [],
         </div>
       </div>
       <MediaUploadDrawler
-        exceptsSelect={["FILE"]}
+        mediaTypes={[MediaTypes.FILE]}
         isOpen={openMedia}
         onClose={closeMediaUpload}
         onConfirm={confirmSelect}

@@ -24,10 +24,9 @@ import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 import TemplateMetaContentForm, { TemplateMetaContentFormProps } from "./TemplateMetaContentForm";
 import FileDownloadSelector, { FileDownloadSelectorProps } from "./FilesDownloadSelector";
 import { IVisaTemplateContent } from "@/models/management/cms/visaTemplateContent.interface";
+import { MediaTypes } from "@/models/management/media.interface";
 
 type RequirePageContentFormData = Required<VisaTemplateContentFormData>;
-
-const FILES_EXCERPT = ["IMAGE", "ICON"] as MediaUploadProps["exceptsSelect"];
 
 export interface CMSTemplateContentFormProps {
   lang?: LangCode;
@@ -483,7 +482,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
         isOpen={showMedia.isShow}
         onClose={onCloseMediaUpload}
         onConfirm={onConfirmSelectMediaImage}
-        exceptsSelect={FILES_EXCERPT}
+        mediaTypes={[MediaTypes.IMAGE, MediaTypes.ICON]}
         mode={showMedia.type === "images" ? "multiple" : "single"}
       />
     </>

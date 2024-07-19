@@ -27,13 +27,13 @@ const TextEditor = ({
   const onConfirmSelection = useCallback<Required<MediaUploadProps>["onConfirm"]>((files) => {
     let contents = "";
     files.forEach((file) => {
-      if (file.type === MediaTypes.IMAGE || file.type === MediaTypes.ICON) {
+      if (file.mediaType === MediaTypes.IMAGE || file.mediaType === MediaTypes.ICON) {
         contents = contents.concat(
           `<img src="${mediaConfig.rootApiPath}/${file.fullPath}" class="max-w-full" alt="${file.slug}" style="max-width: 100%"/>`,
         );
       }
 
-      if (file.type === MediaTypes.FILE) {
+      if (file.mediaType === MediaTypes.FILE) {
         contents = contents.concat(
           `<a href="${mediaConfig.rootApiPath}/${file.fullPath}" target="_blank">${mediaConfig.rootPath}/${file.fullPath}</a>`,
         );

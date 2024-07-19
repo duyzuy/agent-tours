@@ -26,10 +26,9 @@ import GallerySelector, { GallerySelectorProps } from "./GalleriesSelector";
 import TemplateMetaContentForm, { TemplateMetaContentFormProps } from "./TemplateMetaContentForm";
 import FileDownloadSelector, { FileDownloadSelectorProps } from "./FilesDownloadSelector";
 import { IThumbnail } from "@/models/thumbnail.interface";
+import { MediaTypes } from "@/models/management/media.interface";
 
 type RequirePageContentFormData = Required<CMSTemplateContentFormData>;
-
-const FILES_EXCERPT = ["IMAGE", "ICON"] as MediaUploadProps["exceptsSelect"];
 
 export interface CMSTemplateContentFormProps {
   lang?: LangCode;
@@ -510,7 +509,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
         isOpen={showMedia.isShow}
         onClose={onCloseMediaUpload}
         onConfirm={onConfirmSelectMediaImage}
-        exceptsSelect={FILES_EXCERPT}
+        mediaTypes={[MediaTypes.IMAGE, MediaTypes.ICON]}
         mode={showMedia.type === "images" ? "multiple" : "single"}
       />
     </>
