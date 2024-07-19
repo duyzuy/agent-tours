@@ -81,12 +81,18 @@ export default async function DestinationPageDetail({ params: { locale, slug } }
     [],
   );
 
-  const initQueryParams = new FeSearchTourQueryParams({
-    byProductType: [EProductType.TOUR],
-    byDest: destList,
-  });
+  const initQueryParams = new FeSearchTourQueryParams(
+    {
+      byProductType: [EProductType.TOUR],
+      byDest: destList,
+    },
+    1,
+    999,
+  );
+
+  console.log({ destList, initQueryParams });
+
   const productList = await getProductList(initQueryParams);
-  console.log({ productList });
 
   if (!destinationContent) {
     notFound();
@@ -139,7 +145,7 @@ export default async function DestinationPageDetail({ params: { locale, slug } }
               departDate={formatDate(product.startDate, "dd/MM/yyyy")}
               tourCode={product.template.code}
               openAmount={product.open}
-              href={`/tour/detail/${product.recId}/${getCmsContentByLang(product)?.slug}`}
+              href={`/tour/${product.sellableTemplateId}/${product.recId}/${getCmsContentByLang(product)?.slug}`}
             />
           ))}
         </div>

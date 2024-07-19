@@ -1,4 +1,5 @@
 import { mediaConfig } from "@/configs";
+import { MediaTypes } from "@/models/management/media.interface";
 export const isValidMediaFileTypes = (fileType: string) => {
   let isValid = false;
   Object.keys(mediaConfig.fileType).forEach((key: string) => {
@@ -15,35 +16,22 @@ export const isValidMediaFileTypes = (fileType: string) => {
   return isValid;
 };
 
-export const getMediaFileType = (fType: string) => {
-  let typeOfFile: string = "";
-  let isValid = false;
-  Object.keys(mediaConfig.fileType).forEach((key: string) => {
-    if (!isValid) {
-      mediaConfig.fileType[key as keyof typeof mediaConfig.fileType].forEach((type) => {
-        if (fType === type) {
-          isValid = true;
-          switch (key) {
-            case "image": {
-              typeOfFile = "IMAGE";
-              break;
-            }
-            case "file": {
-              typeOfFile = "FILE";
-              break;
-            }
-            case "icon": {
-              typeOfFile = "ICON";
-              break;
-            }
-          }
-          return;
-        }
-      });
+export const getMediaFileType = (fType: string): MediaTypes | undefined => {
+  let typeOfFile: string | undefined;
+  let fileIsValid = false;
+
+  Object.entries(mediaConfig.fileType).forEach(([key, types]) => {
+    if (fileIsValid) {
+      return;
+    }
+
+    if (types.includes(fType)) {
+      fileIsValid = true;
+      typeOfFile = key;
     }
   });
 
-  return typeOfFile;
+  return typeOfFile ? (typeOfFile.toUpperCase() as MediaTypes) : undefined;
 };
 
 export const isInValidFileSize = (files: File[]) => {

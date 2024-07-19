@@ -79,23 +79,23 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
     onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
   };
 
-  const handleAddMenuCMSTemplate: MenuTemplateContentSelectorProps["onAdd"] = (value, options) => {
-    const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
-      return [
-        ...acc,
-        {
-          ...initItem,
-          name: opt.name,
-          thumb: opt.thumbnail?.original,
-          objectSlug: opt.slug,
-          objectId: opt.id,
-          menuType: "templateType",
-          objectType: "cmsTemplate",
-        },
-      ];
-    }, []);
-    onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
-  };
+  // const handleAddMenuCMSTemplate: MenuTemplateContentSelectorProps["onAdd"] = (value, options) => {
+  //   const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
+  //     return [
+  //       ...acc,
+  //       {
+  //         ...initItem,
+  //         name: opt.name,
+  //         thumb: opt.thumbnail?.original,
+  //         objectSlug: opt.slug,
+  //         objectId: opt.id,
+  //         menuType: "templateType",
+  //         objectType: "cmsTemplate",
+  //       },
+  //     ];
+  //   }, []);
+  //   onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
+  // };
 
   const handleAddMenuVisaTemplate: MenuTemplateContentSelectorProps["onAdd"] = (value, options) => {
     const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
@@ -148,13 +148,13 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
         <MenuVisaTemplateSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuVisaTemplate} />
       ),
     },
-    {
-      key: "cmsTemplate",
-      label: "CMS Template",
-      children: (
-        <MenuTemplateContentSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuCMSTemplate} />
-      ),
-    },
+    // {
+    //   key: "cmsTemplate",
+    //   label: "CMS Template",
+    //   children: (
+    //     <MenuTemplateContentSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuCMSTemplate} />
+    //   ),
+    // },
     {
       key: "custom",
       label: "Liên kết tự tạo",

@@ -11,7 +11,7 @@ export enum MediaTypes {
   FILE = "FILE",
   ICON = "ICON",
 }
-export enum FileTypes {
+export enum ExtensionType {
   DOCX = "docx",
   XLSX = "xlsx",
   JPEG = "jpeg",
@@ -46,25 +46,26 @@ export interface IMediaFolder {
 }
 
 export interface IMediaFile {
-  cat: string;
+  cat: "MEDIA";
   id: number;
   key: string;
   parent: number;
   path: string;
   slug: string;
-  type: MediaTypes;
-  fileType: FileTypes;
+  mediaType: MediaTypes;
+  extension: ExtensionType;
   fullPath: string;
   thumb: string;
 }
+
 export type TQueryParamsMediaFiles = {
-  mediaInFolderRecid: number;
+  requestObject: { objectType: "MEDIA"; mediaType: MediaTypes[]; mediaInFolderRecid: number };
   pageCurrent: number;
   pageSize: number;
 };
 
 export type TQueryParamsMediaFolders = {
-  requestObject: { type: "MEDIA_FOLDER" };
+  requestObject: { objectType: "MEDIA_FOLDER" };
   pageCurrent: number;
   pageSize: number;
 };
@@ -76,23 +77,27 @@ export interface IMediaFilePayload {
   };
 }
 export class QueryParamsMediaFiles implements TQueryParamsMediaFiles {
-  mediaInFolderRecid: number;
+  requestObject: { objectType: "MEDIA"; mediaType: MediaTypes[]; mediaInFolderRecid: number };
   pageCurrent: number;
   pageSize: number;
 
-  constructor(mediaInFolderRecid: number, pageCurrent: number, pageSize: number) {
-    this.mediaInFolderRecid = mediaInFolderRecid;
+  constructor(
+    requestObject: { objectType: "MEDIA"; mediaType: MediaTypes[]; mediaInFolderRecid: number },
+    pageCurrent: number,
+    pageSize: number,
+  ) {
+    this.requestObject = requestObject;
     this.pageCurrent = pageCurrent;
     this.pageSize = pageSize;
   }
 }
 export class QueryParamsMediaFolders implements TQueryParamsMediaFolders {
-  requestObject: { type: "MEDIA_FOLDER" };
+  requestObject: { objectType: "MEDIA_FOLDER" };
   pageCurrent: number;
   pageSize: number;
 
   constructor(pageCurrent: number, pageSize: number) {
-    this.requestObject = { type: "MEDIA_FOLDER" };
+    this.requestObject = { objectType: "MEDIA_FOLDER" };
     this.pageCurrent = pageCurrent;
     this.pageSize = pageSize;
   }

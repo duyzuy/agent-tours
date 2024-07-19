@@ -1,7 +1,7 @@
 import { unstable_setRequestLocale } from "next-intl/server";
 import { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { getTemplateContentDetail } from "../../../_actions/templateContent";
+import { getTemplateContentDetail } from "../_actions/templateContent";
 import { mediaConfig } from "@/configs";
 
 export const dynamic = "force-dynamic";
@@ -9,8 +9,7 @@ export const dynamic = "force-dynamic";
 type Props = {
   params: {
     locale: LangCode;
-    sellableId: string;
-    templateSlug: string;
+    slug: string[];
   };
 };
 
@@ -22,14 +21,14 @@ type Props = {
 // }
 
 export async function generateMetadata(
-  { params: { sellableId, templateSlug, locale } }: Props,
+  { params: { slug, locale } }: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   // read route params
-
+  const [templateId, sellableId, templateContentSlug] = slug;
   // fetch data
   const tourContentResponse = await getTemplateContentDetail({
-    slug: templateSlug,
+    slug: templateContentSlug,
     lang: locale,
   });
   const cmsTemplateDetail = tourContentResponse;

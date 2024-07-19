@@ -3,18 +3,19 @@ import dynamic from "next/dynamic";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { BreadCrumb } from "@/components/frontend/BreadCrumb";
 import { notFound } from "next/navigation";
-import ProductHeader from "../_components/ProductHeader";
-import Benefit from "../_components/Benefit";
-import ClientStoreData from "../_components/ClientStoreData";
+import ProductHeader from "./_components/ProductHeader";
+import Benefit from "./_components/Benefit";
+import ClientStoreData from "./_components/ClientStoreData";
 import ProductSummaryCard from "@/components/frontend/skeletons/ProductSummaryCard";
 import ProductGalleries from "@/components/frontend/skeletons/ProductGalleries";
-import { getTemplateContentDetail, getSellableListByTemplateCode } from "../../../_actions/templateContent";
+import { getTemplateContentDetail, getSellableListByTemplateId } from "../_actions/templateContent";
 
 // import { ProductTourTabsContentSkeleton } from "./_components/ProductContent";
-import ProductContent from "../_components/ProductContent";
+
+import ProductContent from "./_components/ProductContent";
 import { isUndefined } from "lodash";
 
-const DynamicGalleries = dynamic(() => import("../_components/Galleries"), {
+const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
   loading: () => <ProductGalleries className="w-full mb-6" />,
   ssr: false,
 });
@@ -24,40 +25,41 @@ const DynamicGalleries = dynamic(() => import("../_components/Galleries"), {
 //   ssr: true,
 // });
 
-const DynamicProductSummary = dynamic(() => import("../_components/ProductSummary"), {
+const DynamicProductSummary = dynamic(() => import("./_components/ProductSummary"), {
   loading: () => <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />,
   ssr: false,
 });
 type PageProps = {
   params: {
     locale: LangCode;
-    sellableId: string;
-    templateSlug: string;
+    slug: string[];
   };
 };
 
-export default async function PageTourDetail({ params: { locale, templateSlug, sellableId } }: PageProps) {
+export default async function PageTourDetail({ params: { locale, slug } }: PageProps) {
   /**
    *
    * define the path: lang/templateId/sellableId/content-slug
    *
    */
+  const [templateId, sellableId, templateContentSlug] = slug;
 
   const cmsTemplateContent = await getTemplateContentDetail({
-    slug: templateSlug,
+    slug: templateContentSlug,
     lang: locale,
   });
 
-  if (isUndefined(cmsTemplateContent)) {
-    notFound();
-  }
-
-  const productList = await getSellableListByTemplateCode(cmsTemplateContent.code);
-  console.log({ productList, cmsTemplateContent });
-
+  const productList = await getSellableListByTemplateId(Number(templateId));
   const currentSellable = productList?.find((item) => item.recId === Number(sellableId));
-
-  if (isUndefined(productList) || !productList.length) {
+  if (
+    isUndefined(cmsTemplateContent) ||
+    isUndefined(templateId) ||
+    isUndefined(sellableId) ||
+    isUndefined(templateContentSlug) ||
+    isUndefined(productList) ||
+    !productList.length ||
+    !currentSellable
+  ) {
     notFound();
   }
 

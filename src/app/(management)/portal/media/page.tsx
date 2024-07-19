@@ -5,6 +5,7 @@ import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
 import { useGetMediaFolders, useGetMediaFiles } from "@/queries/media";
 import {
   IMediaFolderListRs,
+  MediaTypes,
   QueryParamsMediaFiles,
   QueryParamsMediaFolders,
 } from "@/models/management/media.interface";
@@ -17,13 +18,19 @@ const MediaPage = () => {
   const [queryFolder, setQueryFolder] = useState(initQueryFolters);
   const { data: folderData, isLoading: isLoadingFolder } = useGetMediaFolders(queryFolder);
 
-  const [queryMediaFileParams, setQueryMediaFileParams] = useState(() => new QueryParamsMediaFiles(0, 1, 30));
+  const [queryMediaFileParams, setQueryMediaFileParams] = useState(
+    () =>
+      new QueryParamsMediaFiles(
+        { mediaType: [MediaTypes.FILE, MediaTypes.ICON, MediaTypes.IMAGE], mediaInFolderRecid: 0, objectType: "MEDIA" },
+        1,
+        60,
+      ),
+  );
 
-  const { data: fileList, isLoading: isLoadingFileList } = useGetMediaFiles(queryMediaFileParams);
+  const { data: filesData, isLoading: isLoadingFileList } = useGetMediaFiles(queryMediaFileParams);
 
   const [pers, checkPermission] = useLocalUserPermissions();
 
-  console.log(queryFolder);
   // console.log(
   //   checkPermission?.([
   //     ERolesFunctions.MEDIA_CREATE,
@@ -39,7 +46,10 @@ const MediaPage = () => {
   const handleOnpenFilesInFolder = (item: IMediaFolderListRs["result"][0]) => {
     setQueryMediaFileParams((prev) => ({
       ...prev,
-      mediaInFolderRecid: item.id,
+      requestObject: {
+        ...prev.requestObject,
+        mediaInFolderRecid: item.id,
+      },
     }));
   };
 
@@ -69,9 +79,17 @@ const MediaPage = () => {
           />
         </div>
         <MediaFiles
-          items={fileList || []}
+          items={filesData?.list || []}
           isLoading={isLoadingFileList}
           hasRoleCreate={checkPermission?.([ERolesFunctions.MEDIA_CREATE])}
+          paginations={{
+            onChangePage: (page, pageSize) => {
+              setQueryMediaFileParams((oldData) => ({ ...oldData, pageCurrent: page }));
+            },
+            totalItems: filesData?.totalItems,
+            pageSize: filesData?.pageSize,
+            currentPage: filesData?.pageCurrent,
+          }}
         />
       </div>
     </PageContainer>

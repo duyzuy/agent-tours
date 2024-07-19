@@ -11,25 +11,28 @@ import {
 } from "@/models/management/media.interface";
 
 export const localMediaAPIs = {
-  getFolders: async (params: TQueryParamsMediaFolders) => {
+  getFolders: async (queryParams: TQueryParamsMediaFolders) => {
     return await client.post<IMediaFolderListRs>("local/Cms_Media", {
       params: {
         requestObject: {
-          type: "MEDIA_FOLDER", //MEDIA_FOLDER
+          ...queryParams.requestObject,
+          objectType: "MEDIA_FOLDER", //MEDIA_FOLDER
         },
-        pageCurrent: params.pageCurrent,
-        pageSize: params.pageSize,
+        pageCurrent: queryParams.pageCurrent,
+        pageSize: queryParams.pageSize,
       },
       isAuth: true,
     });
   },
-  getFiles: async (params: TQueryParamsMediaFiles) => {
+  getFiles: async (queryParams: TQueryParamsMediaFiles) => {
     return await client.post<IMediaFileListRs>("local/Cms_Media", {
       params: {
         requestObject: {
-          type: "MEDIA", //MEDIA_FOLDER
-          ...params,
+          ...queryParams.requestObject,
+          objectType: "MEDIA",
         },
+        pageCurrent: queryParams.pageCurrent,
+        pageSize: queryParams.pageSize,
       },
       isAuth: true,
     });

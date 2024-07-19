@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { stringToSlug } from "@/utils/stringToSlug";
 import { mediaConfig } from "@/configs";
 import { isEmpty } from "lodash";
-import { FileTypes, IMediaFile, IMediaFilePayload } from "@/models/management/media.interface";
+import { ExtensionType, IMediaFile, IMediaFilePayload } from "@/models/management/media.interface";
 import { getMediaFileType, isInValidFileSize, isInvalidFile } from "@/helpers/mediaFiles";
 import { BaseResponse, Status } from "@/models/common.interface";
 import { FolderItemTree } from "@/app/(management)/portal/media/_components/MediaUploadContainer/UploadFileForm";
@@ -98,11 +98,11 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           requestObject: {
-            fileType: `${fileExtension}`,
+            extension: `${fileExtension}`,
             parent: folderParse.id,
             slug: fileSlugName,
             path: `${fileSlugName}.${fileExtension}`,
-            type: getMediaFileType(file.type) || "",
+            mediaType: getMediaFileType(file.type) || "",
           },
         }),
       });
@@ -116,10 +116,10 @@ export async function POST(request: NextRequest) {
         await writeFile(path.join(process.cwd(), originalFilePath), buffer);
 
         if (
-          fileExtension === FileTypes.JPEG ||
-          fileExtension === FileTypes.PNG ||
-          fileExtension === FileTypes.GIF ||
-          fileExtension === FileTypes.JPG
+          fileExtension === ExtensionType.JPEG ||
+          fileExtension === ExtensionType.PNG ||
+          fileExtension === ExtensionType.GIF ||
+          fileExtension === ExtensionType.JPG
         ) {
           const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
 

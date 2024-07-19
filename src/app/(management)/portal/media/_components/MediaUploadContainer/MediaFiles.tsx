@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useState } from "react";
-import { Tabs, TabsProps, Spin, Empty } from "antd";
+import { Tabs, TabsProps, Spin, Empty, Pagination, PaginationProps } from "antd";
 import { isEmpty } from "lodash";
 import { IMediaFileListRs, IMediaFolderListRs } from "@/models/management/media.interface";
 import { mediaConfig } from "@/configs";
@@ -13,6 +13,7 @@ export interface IMediaFilesProps {
   onSelect?: (item: IMediaFileListRs["result"][0]) => void;
   selectedFiles?: IMediaFileListRs["result"];
   hasRoleCreate?: boolean;
+  paginations?: MediaFilesItemListProps["paginations"];
 }
 type MediaFileTabPanel = "mediaFiles" | "upload";
 
@@ -22,6 +23,7 @@ const MediaFiles = ({
   selectedFiles = [],
   onSelect,
   hasRoleCreate = false,
+  paginations,
 }: IMediaFilesProps) => {
   const [mediaTab, setMediaTab] = useState<MediaFileTabPanel>("mediaFiles");
 
@@ -39,7 +41,13 @@ const MediaFiles = ({
       key: "mediaFiles",
       label: "Thư viện",
       children: (
-        <MediaFiles.ItemList items={items} isLoading={isLoading} onSelect={onSelect} selectedFiles={selectedFiles} />
+        <MediaFiles.ItemList
+          items={items}
+          isLoading={isLoading}
+          onSelect={onSelect}
+          selectedFiles={selectedFiles}
+          paginations={paginations}
+        />
       ),
     },
   ];
@@ -74,12 +82,19 @@ interface MediaFilesItemListProps {
   isLoading?: IMediaFilesProps["isLoading"];
   onSelect?: IMediaFilesProps["onSelect"];
   selectedFiles?: IMediaFilesProps["selectedFiles"];
+  paginations?: {
+    onChangePage?: PaginationProps["onChange"];
+    currentPage?: number;
+    totalItems?: number;
+    pageSize?: number;
+  };
 }
 MediaFiles.ItemList = function MediaFilesItemList({
   items,
   isLoading,
   onSelect,
   selectedFiles,
+  paginations,
 }: MediaFilesItemListProps) {
   const [preview, setPreview] = useState<{
     isShow: boolean;
@@ -100,47 +115,58 @@ MediaFiles.ItemList = function MediaFilesItemList({
     [],
   );
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-2">
+        <Spin />
+      </div>
+    );
+  }
   return (
-    <React.Fragment>
-      {isLoading ? (
-        <div className="flex items-center justify-center py-2">
-          <Spin />
-        </div>
-      ) : (
-        <React.Fragment>
-          {isEmpty(items) ? (
-            <Empty
-              description={
-                <div className="text-center">
-                  <p>Chưa có file nào trong thư mục này.</p>
-                  <p>Vui lòng chọn tải file để upload</p>
-                </div>
-              }
-            />
-          ) : (
-            <div className="thumbnail-list flex items-center flex-wrap gap-4 py-8">
-              {items.map((item) => (
-                <MediaFileItem
-                  key={item.key}
-                  type={item.type}
-                  item={item}
-                  fileType={item.fileType.replace(".", "")}
-                  filePath={`${mediaConfig.rootApiPath}/${item.fullPath}`}
-                  fileName={item.slug}
-                  onSelect={onSelect}
-                  isSelected={hasSelectedFile(item, selectedFiles)}
-                  onPreview={onPreviewImage}
-                />
-              ))}
+    <>
+      {isEmpty(items) ? (
+        <Empty
+          description={
+            <div className="text-center">
+              <p>Chưa có file nào trong thư mục này.</p>
+              <p>Vui lòng chọn tải file để upload</p>
             </div>
-          )}
-          <ModalPreview
-            isOpen={preview.isShow}
-            onClose={() => setPreview({ isShow: false, thumbnail: undefined })}
-            thumbUrl={preview.thumbnail}
-          />
-        </React.Fragment>
+          }
+        />
+      ) : (
+        <div className="thumbnail-list mb-12">
+          <div className="text-right pt-4 pb-6 px-3 border-b">
+            <Pagination
+              total={paginations?.totalItems}
+              pageSize={paginations?.pageSize}
+              current={paginations?.currentPage}
+              onChange={paginations?.onChangePage}
+              size="small"
+              showTotal={(total) => `Có tất cả ${total} items`}
+            />
+          </div>
+          <div className="flex items-center flex-wrap gap-4 py-8 mb-12">
+            {items.map((item) => (
+              <MediaFileItem
+                key={item.key}
+                type={item.mediaType}
+                item={item}
+                fileType={item.extension.replace(".", "")}
+                filePath={`${mediaConfig.rootApiPath}/${item.fullPath}`}
+                fileName={item.slug}
+                onSelect={onSelect}
+                isSelected={hasSelectedFile(item, selectedFiles)}
+                onPreview={onPreviewImage}
+              />
+            ))}
+          </div>
+        </div>
       )}
-    </React.Fragment>
+      <ModalPreview
+        isOpen={preview.isShow}
+        onClose={() => setPreview({ isShow: false, thumbnail: undefined })}
+        thumbUrl={preview.thumbnail}
+      />
+    </>
   );
 };

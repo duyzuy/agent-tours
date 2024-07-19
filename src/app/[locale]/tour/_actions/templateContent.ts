@@ -8,7 +8,7 @@ export const getTemplateContentDetail = async (payload: FeTemplateContentPayload
   const response = await serverRequest.post<FeTemplateContentResponse, BaseResponse<null>>(
     "localfront/getCms_templateDetails",
     {
-      next: { tags: ["templateContent"] },
+      next: { tags: ["templateDetailContent"] },
 
       params: {
         requestObject: {
@@ -21,7 +21,7 @@ export const getTemplateContentDetail = async (payload: FeTemplateContentPayload
 };
 
 export const getSellableListByTemplateId = async (templateId: number) => {
-  return await serverRequest.post<ProductListResponse, BaseResponse<null>>(
+  const resoponse = await serverRequest.post<ProductListResponse, BaseResponse<null>>(
     "localfront/BookingOrder_SearchByTemplateId",
     {
       next: { tags: ["sellableListByTemplateId"] },
@@ -33,20 +33,18 @@ export const getSellableListByTemplateId = async (templateId: number) => {
       },
     },
   );
+  return resoponse?.result;
 };
 
-export const getSellableListByTemplateCode = async (templateCode: string) => {
-  const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>(
-    "localfront/BookingOrder_SearchByTemplateId",
-    {
-      next: { tags: ["sellableListByTemplateCode"] },
+export const getSellableListByTemplateCode = async (templateCode: string[]) => {
+  const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>("localfront/BookingOrder_Search", {
+    next: { tags: ["sellableListByTemplateCode"] },
 
-      params: {
-        requestObject: {
-          byTemplateCmsIdentity: templateCode,
-        },
+    params: {
+      requestObject: {
+        byTemplateCmsIdentity: templateCode,
       },
     },
-  );
+  });
   return response?.result;
 };

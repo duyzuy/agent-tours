@@ -50,7 +50,7 @@ const TourListContainer: React.FC<TourListContainerProps> = async ({
               departDate={formatDate(product.startDate, "dd/MM/yyyy")}
               tourCode={product.template.code}
               openAmount={product.open}
-              href={`/tour/detail/${product.recId}/${getCmsContentByLang(product)?.slug}`}
+              href={`/tour/${product.sellableTemplateId}/${product.recId}/${getCmsContentByLang(product)?.slug}`}
             />
           ))}
         </div>

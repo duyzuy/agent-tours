@@ -1,6 +1,7 @@
 import { BaseResponse } from "../common.interface";
 import { ICMSTemplateContent } from "../management/cms/cmsTemplateContent.interface";
 import { LangCode } from "../management/cms/language.interface";
+import { IThumbnail } from "../thumbnail.interface";
 
 export interface FeTemplateContentPayload {
   slug: string;
@@ -25,6 +26,10 @@ export class FeTemplateContentQueryParams {
 export interface FeTemplateContentResponse
   extends BaseResponse<
     (ICMSTemplateContent & {
+      templateCodes: string[];
+      codeImage: IThumbnail | null;
+      codeName: string;
+
       languages: {
         lang: LangCode;
         name: string;

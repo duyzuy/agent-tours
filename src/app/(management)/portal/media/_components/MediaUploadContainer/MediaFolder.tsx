@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Empty, Spin, Tabs, Space, Input, Button, Pagination } from "antd";
 import FormItem from "@/components/base/FormItem";
 import type { PaginationProps, TabsProps } from "antd";
@@ -37,7 +37,7 @@ const MediaFolder = ({ items, isLoading, onOpen, paginations, hasRoleCreate = fa
   const renderFolderList = () => {
     return (
       <React.Fragment>
-        <div className="pagination py-2 bg-slate-50 rounded-md mb-3">
+        <div className="pagination pt-4 pb-6 border-b rounded-md mb-3">
           <Pagination
             simple
             showLessItems
@@ -45,6 +45,7 @@ const MediaFolder = ({ items, isLoading, onOpen, paginations, hasRoleCreate = fa
             size="small"
             current={currentPage}
             total={totalItems}
+            pageSize={pageSize}
             onChange={onChangePage}
           />
         </div>
