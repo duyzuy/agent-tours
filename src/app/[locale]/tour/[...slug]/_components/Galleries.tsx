@@ -51,7 +51,7 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
           }}
         >
           {images?.map(({ id, original, small }, _index) => (
-            <SwiperSlide key={id}>
+            <SwiperSlide key={_index}>
               <div className="relative pt-[66.67%]">
                 <Image
                   src={`${mediaConfig.rootApiPath}/${original}`}
@@ -90,7 +90,7 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
         className="thumbnail-gallery"
       >
         {images?.map(({ id, original, small }, _index) => (
-          <SwiperSlide key={id}>
+          <SwiperSlide key={_index}>
             <div className="w-full pt-[55.25%] relative rounded-md overflow-hidden">
               <Image
                 src={`${mediaConfig.rootApiPath}/${original}`}
@@ -108,9 +108,3 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
   );
 };
 export default Galleries;
-
-interface ButtonNavigationProps {
-  children?: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
-}
