@@ -39,7 +39,7 @@ export const getSellableListByTemplateId = async (templateId: number) => {
 export const getSellableListByTemplateCode = async (templateCode: string[]) => {
   const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>("localfront/BookingOrder_Search", {
     next: { tags: ["sellableListByTemplateCode"] },
-
+    cache: "no-store",
     params: {
       requestObject: {
         byTemplateCmsIdentity: templateCode,
