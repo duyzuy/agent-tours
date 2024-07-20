@@ -11,7 +11,7 @@ const request = async <TSuccess, TError>(
   method: "POST" | "GET" | "PUT" | "PATCH",
   options?: Options,
 ): Promise<TSuccess | undefined> => {
-  const { headers, next, params } = options || {};
+  const { headers, next, params, ...rest } = options || {};
 
   let baseUrl = `${process.env.API_ROOT}`;
   url = url.startsWith("/") ? url.replace("/", "") : url;
@@ -41,7 +41,7 @@ const request = async <TSuccess, TError>(
 
   // console.log({ params, requestUrl });
   try {
-    const response = await fetch(requestUrl, configs);
+    const response = await fetch(requestUrl, { ...configs, ...rest });
     const data = await response.json();
 
     // console.log({ data, configs });

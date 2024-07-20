@@ -81,7 +81,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
               <h1 className="text-xl text-primary-default font-bold">{cmsTemplateContent?.name}</h1>
             </ProductHeader>
 
-            {/* <DynamicGalleries images={cmsTemplateContent?.images} /> */}
+            <DynamicGalleries images={cmsTemplateContent?.images} />
 
             <Benefit items={cmsTemplateContent?.metaData} />
 

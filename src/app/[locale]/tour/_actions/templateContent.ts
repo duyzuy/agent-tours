@@ -9,7 +9,7 @@ export const getTemplateContentDetail = async (payload: FeTemplateContentPayload
     "localfront/getCms_templateDetails",
     {
       next: { tags: ["templateDetailContent"] },
-
+      cache: "no-store",
       params: {
         requestObject: {
           ...payload,
