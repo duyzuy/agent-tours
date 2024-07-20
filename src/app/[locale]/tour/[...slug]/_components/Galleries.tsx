@@ -16,23 +16,33 @@ import Image from "next/image";
 import { mediaConfig } from "@/configs";
 import { IconChevronLeft, IconChevronRight } from "@/assets/icons";
 import { IThumbnail } from "@/models/thumbnail.interface";
+import classNames from "classnames";
 interface GalleriesProps {
-  images?: IThumbnail[];
+  images: IThumbnail[] | null;
 }
 const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
-
+  const swiperRef = useRef<SwiperType>();
+  if (!images) {
+    return null;
+  }
   return (
     <>
       <div className="relative bg-gray-50 rounded-md overflow-hidden w-full mb-3">
         <Swiper
           spaceBetween={10}
-          navigation={{
-            nextEl: ".gallery-next",
-            prevEl: ".gallery-prev",
-          }}
           thumbs={{ swiper: thumbsSwiper }}
           modules={[FreeMode, Navigation, Thumbs]}
+          pagination={{
+            el: ".swiper-pagination",
+            clickable: true,
+            renderBullet: (index, className) => {
+              return `<span class="${className}"></span>`;
+            },
+          }}
+          onBeforeInit={(swiper) => {
+            swiperRef.current = swiper;
+          }}
           className="galleries"
           breakpoints={{
             1400: {
@@ -55,11 +65,19 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
             </SwiperSlide>
           ))}
         </Swiper>
-        <div className="gallery-prev absolute bg-gray-950/30 rounded-full p-1 opacity-30 hover:opacity-100 left-0 top-1/2 -translate-y-1/2 text-white z-10 cursor-pointer hidden lg:block">
-          <IconChevronLeft className="w-8 h-8" />
-        </div>
-        <div className="gallery-next absolute bg-gray-950/30 rounded-full p-1 opacity-30 hover:opacity-100 right-0 top-1/2 -translate-y-1/2 text-white z-10 cursor-pointer hidden lg:block">
-          <IconChevronRight className="w-8 h-8" />
+        <div className="swiper-pagination">
+          <div
+            className="gallery-prev absolute bg-gray-950/30 rounded-full p-1 opacity-30 hover:opacity-100 left-0 top-1/2 -translate-y-1/2 text-white z-10 cursor-pointer hidden lg:block"
+            onClick={() => swiperRef.current?.slidePrev()}
+          >
+            <IconChevronLeft className="w-8 h-8" />
+          </div>
+          <div
+            className="gallery-next absolute bg-gray-950/30 rounded-full p-1 opacity-30 hover:opacity-100 right-0 top-1/2 -translate-y-1/2 text-white z-10 cursor-pointer hidden lg:block"
+            onClick={() => swiperRef.current?.slideNext()}
+          >
+            <IconChevronRight className="w-8 h-8" />
+          </div>
         </div>
       </div>
       <Swiper
@@ -90,3 +108,9 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
   );
 };
 export default Galleries;
+
+interface ButtonNavigationProps {
+  children?: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+}

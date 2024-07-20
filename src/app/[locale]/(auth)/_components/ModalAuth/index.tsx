@@ -12,13 +12,13 @@ import { CustomerLoginFormData } from "../../modules/customerAuth.interface";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/frontend/partials/Logo";
-
+import { usePathname } from "@/utils/navigation";
 const ModalAuth: React.FC = () => {
   const authModal = useModalManagerSelector((state) => state.authModal);
   const router = useRouter();
   const t = useTranslations("String");
   const { hideAuthModal } = useAuthModal();
-
+  const pathname = usePathname();
   const { signUp } = useSignUp();
 
   const onSignIn = async (formData: CustomerLoginFormData) => {
@@ -50,6 +50,11 @@ const ModalAuth: React.FC = () => {
       children: <RegistrationForm onSubmit={signUp} />,
     },
   ];
+  useEffect(() => {
+    if (authModal.open) {
+      hideAuthModal();
+    }
+  }, [pathname]);
   return (
     <Modal centered open={authModal.open} onCancel={hideAuthModal} footer={null} width={420} destroyOnClose>
       <div className="px-4 py-2">

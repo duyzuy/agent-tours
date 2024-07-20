@@ -14,6 +14,7 @@ import { getTemplateContentDetail, getSellableListByTemplateId } from "../_actio
 
 import ProductContent from "./_components/ProductContent";
 import { isUndefined } from "lodash";
+import TourRelateds from "../_components/TourRelateds";
 
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
   loading: () => <ProductGalleries className="w-full mb-6" />,
@@ -88,7 +89,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
             <ProductContent data={cmsTemplateContent} />
 
             <div className="space h-8"></div>
-            {/* <TourRelateds className="mb-8" /> */}
+            <TourRelateds className="mb-8" />
             {/* <TourReviews /> */}
           </div>
           <DynamicProductSummary

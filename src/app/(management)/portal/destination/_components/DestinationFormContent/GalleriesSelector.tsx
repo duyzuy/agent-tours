@@ -6,8 +6,7 @@ import { mediaConfig } from "@/configs";
 import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
 import { isUndefined } from "lodash";
 import { IThumbnail } from "@/models/thumbnail.interface";
-
-type ImageItem = { id: number; original: string };
+import { MediaTypes } from "@/models/management/media.interface";
 
 export interface GallerySelectorProps {
   images?: Partial<IThumbnail>[];
@@ -26,8 +25,8 @@ const GallerySelector: React.FC<GallerySelectorProps> = ({ images, onSave, error
   };
 
   const onConfirmSelect: MediaUploadProps["onConfirm"] = (files) => {
-    const newImages = files.reduce<IThumbnail[]>((acc, item) => {
-      return [...acc, { id: item.id, original: item.fullPath, small: item.thumb }];
+    const newImages = files.reduce<Partial<IThumbnail>[]>((acc, item) => {
+      return [...acc, { id: item.id, original: item.fullPath }];
     }, []);
 
     onSave ? onSave([...items, ...newImages]) : setItems((oldItem) => [...oldItem, ...newImages]);
@@ -35,7 +34,8 @@ const GallerySelector: React.FC<GallerySelectorProps> = ({ images, onSave, error
   const removeItem = (index: number) => {
     let newItems = [...items];
     newItems.splice(index, 1);
-    onSave ? onSave([...newItems]) : setItems(newItems);
+    console.log(index, newItems);
+    onSave ? onSave(newItems) : setItems(newItems);
   };
 
   useEffect(() => {
@@ -44,7 +44,6 @@ const GallerySelector: React.FC<GallerySelectorProps> = ({ images, onSave, error
 
   return (
     <>
-      <Typography.Title level={4}>Gallery</Typography.Title>
       <div className="gallery-container mb-6 rounded-md">
         <div className="list-image">
           <Space wrap>
@@ -93,7 +92,13 @@ const GallerySelector: React.FC<GallerySelectorProps> = ({ images, onSave, error
         </div>
         {error ? <p className=" text-red-500 text-xs">{error}</p> : null}
       </div>
-      <MediaUploadDrawler isOpen={openMedia} onClose={onCloseMediaUpload} mode="multiple" onConfirm={onConfirmSelect} />
+      <MediaUploadDrawler
+        isOpen={openMedia}
+        mediaTypes={[MediaTypes.IMAGE]}
+        onClose={onCloseMediaUpload}
+        mode="multiple"
+        onConfirm={onConfirmSelect}
+      />
     </>
   );
 };

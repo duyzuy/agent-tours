@@ -118,7 +118,7 @@ export interface FooterWraperProps {
 }
 
 const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems }) => {
-  console.log(menuItems);
+  // console.log(menuItems);
   return (
     <footer className="footer">
       <div

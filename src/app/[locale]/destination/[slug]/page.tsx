@@ -1,5 +1,3 @@
-import dynamic from "next/dynamic";
-
 import { LangCode } from "@/models/management/cms/language.interface";
 import { BreadCrumb } from "@/components/frontend/BreadCrumb";
 import { notFound } from "next/navigation";
@@ -18,6 +16,7 @@ import IconQuote from "@/assets/icons/IconQuote";
 import Title from "@/components/frontend/Title";
 import { Metadata, ResolvingMetadata } from "next";
 import { SITE_NAME } from "@/configs/site";
+import DestionationGallery from "../_components/DestinationGallery";
 
 interface PageProps {
   params: { locale: LangCode; slug: string };
@@ -32,22 +31,21 @@ export async function generateMetadata(
     slug: slug,
     lang: locale,
   });
-  // // optionally access and extend (rather than replace) parent metadata
-  // const previousImages = (await parent).openGraph?.images || [];
-  // const nextImage =
-  //   pageContent && pageContent.result
-  //     ? [`${mediaConfig.rootApiPath}/${pageContent.result.thumbnail}`, ...previousImages]
-  //     : previousImages;
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+  const nextImage = destinationContent
+    ? [`${mediaConfig.rootApiPath}/${destinationContent.thumbnail?.original}`, ...previousImages]
+    : previousImages;
 
   // const title = pageContent?.result?.metaTitle ?? "404";
   return {
     title: `${destinationContent?.title} | ${SITE_NAME}`,
-    // keywords: pageContent?.result?.metaKeyword,
-    // description: pageContent?.result?.metaDescription,
-    // openGraph: {
-    //   images: nextImage,
-    //   description: pageContent?.result?.metaDescription,
-    // },
+    keywords: destinationContent?.metaKeyword,
+    description: destinationContent?.metaDescription,
+    openGraph: {
+      images: nextImage,
+      description: destinationContent?.metaDescription,
+    },
   };
 }
 
@@ -90,7 +88,7 @@ export default async function DestinationPageDetail({ params: { locale, slug } }
     999,
   );
 
-  console.log({ destList, initQueryParams });
+  console.log({ destList, initQueryParams: JSON.stringify(initQueryParams) });
 
   const productList = await getProductList(initQueryParams);
 
@@ -133,6 +131,7 @@ export default async function DestinationPageDetail({ params: { locale, slug } }
             </span>
             <div className="recap-content italic">{destinationContent.shortDescriptions}</div>
           </div>
+          <DestionationGallery images={destinationContent.images} />
           <AreaContentHtml content={destinationContent.descriptions} />
         </div>
         <div className="product-list grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">

@@ -7,16 +7,8 @@ export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
   id?: number;
   code?: string;
   name?: string;
-  thumbnail?: {
-    id: number;
-    small?: string;
-    original: string;
-  };
-  images?: {
-    id: number;
-    small?: string;
-    original: string;
-  }[];
+  thumbnail?: Partial<IThumbnail>;
+  images?: Partial<IThumbnail>[];
   downloads?: { title: string; link: string }[];
   content?: string;
   subContent?: string;
@@ -38,20 +30,8 @@ export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
     code: string | undefined,
     name: string | undefined,
     slug: string | undefined,
-    thumbnail:
-      | {
-          id: number;
-          small?: string;
-          original: string;
-        }
-      | undefined,
-    images:
-      | {
-          id: number;
-          small?: string;
-          original: string;
-        }[]
-      | undefined,
+    thumbnail: Partial<IThumbnail> | undefined,
+    images: Partial<IThumbnail>[] | undefined,
     downloads: { title: string; link: string }[] | undefined,
     content: string | undefined,
     subContent: string | undefined,

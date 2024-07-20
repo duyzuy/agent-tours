@@ -17,6 +17,16 @@ export const destinationContentSchema: ObjectSchema<IDestinationContentPayload> 
   thumbnail: object({
     id: number().required("Thiếu ID thumbnail"),
   }).required("Ảnh đại diện không bỏ trống."),
+  images: array()
+    .of(
+      object({
+        id: number().required("Thiếu ID thumbnail"),
+      }),
+    )
+    .default([]),
+  metaTitle: string(),
+  metaDescription: string(),
+  metaKeyword: string(),
   slug: string().required("Đường dẫn không bỏ trống."),
   lang: string()
     .oneOf<IDestinationContentPayload["lang"]>([LangCode.VI, LangCode.EN])

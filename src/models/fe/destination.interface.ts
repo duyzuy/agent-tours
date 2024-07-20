@@ -78,6 +78,10 @@ export interface FeDestinationContentDetail {
   descriptions: string;
   shortDescriptions: string;
   thumbnail: IThumbnail | null;
+  images: IThumbnail[] | null;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyword: string;
   slug: string;
   lang: LangCode;
   status: Status;

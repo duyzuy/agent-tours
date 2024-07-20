@@ -21,9 +21,9 @@ export interface ICMSTemplateContent {
   type: "DETAILS";
   code: string;
   name: string;
-  thumbnail: IThumbnail;
+  thumbnail: IThumbnail | null;
   downloads: { title: string; link: string }[];
-  images: IThumbnail[];
+  images: IThumbnail[] | null;
   content: string;
   subContent: string;
   metaData: { key?: string; value?: string; icon?: string }[];

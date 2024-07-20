@@ -9,6 +9,10 @@ export class DestinationContentFormData implements IDestinationContentPayload {
   descriptions?: string;
   shortDescriptions?: string;
   thumbnail?: Partial<IThumbnail>;
+  images?: Partial<IThumbnail>[];
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeyword?: string;
   slug?: string;
   lang?: LangCode;
 
@@ -18,6 +22,10 @@ export class DestinationContentFormData implements IDestinationContentPayload {
     descriptions: string | undefined,
     shortDescriptions: string | undefined,
     thumbnail: Partial<IThumbnail> | undefined,
+    images: Partial<IThumbnail>[] | undefined,
+    metaTitle: string | undefined,
+    metaDescription: string | undefined,
+    metaKeyword: string | undefined,
     slug: string | undefined,
     codeKey: string | undefined,
     lang: LangCode | undefined,
@@ -26,6 +34,10 @@ export class DestinationContentFormData implements IDestinationContentPayload {
     this.descriptions = descriptions;
     this.shortDescriptions = shortDescriptions;
     this.thumbnail = thumbnail;
+    this.images = images;
+    this.metaTitle = metaTitle;
+    this.metaDescription = metaDescription;
+    this.metaKeyword = metaKeyword;
     this.title = title;
     this.slug = slug;
     this.lang = lang;

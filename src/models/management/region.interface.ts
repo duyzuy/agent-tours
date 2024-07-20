@@ -58,8 +58,11 @@ export interface IDestinationContentDetail {
   title: string;
   descriptions: string;
   shortDescriptions: string;
-  thumbnail: Partial<IThumbnail> | null;
-  thumbPath: string;
+  thumbnail: IThumbnail | null;
+  images: IThumbnail[] | null;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyword: string;
   slug: string;
   lang: LangCode;
   status: string;
@@ -72,6 +75,10 @@ export interface IDestinationContentPayload {
   descriptions?: string;
   shortDescriptions?: string;
   thumbnail?: Partial<IThumbnail>;
+  images?: Partial<IThumbnail>[];
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeyword?: string;
   slug?: string;
   lang?: LangCode;
 }

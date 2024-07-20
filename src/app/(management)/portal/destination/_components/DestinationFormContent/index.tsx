@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Form, Input, Button, Space, Tag } from "antd";
+import { Form, Input, Button, Space, Tag, Typography } from "antd";
 import { isEqual } from "lodash";
 import Image from "next/image";
 import TextEditor from "@/components/base/TextEditor";
@@ -15,6 +15,7 @@ import { PictureOutlined } from "@ant-design/icons";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { LangCode } from "@/models/management/cms/language.interface";
 import Slug, { SlugProps } from "@/components/admin/Slug";
+import GallerySelector, { GallerySelectorProps } from "./GalleriesSelector";
 
 const TextArea = Input.TextArea;
 
@@ -34,6 +35,10 @@ export const initDestinationCMSFormData = new DestinationContentFormData(
   "",
   "",
   undefined,
+  undefined,
+  "",
+  "",
+  "",
   "",
   "",
   undefined,
@@ -53,7 +58,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
   });
 
   const [formData, setFormData] = useState(initDestinationCMSFormData);
-  const [previewImageUrl, setPreviewImageUrl] = useState<string>();
+
   const [isOpenDrawler, setOpenDrawler] = useState(false);
 
   const onChangeFormData = (
@@ -99,6 +104,10 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
         descriptions: formData?.descriptions,
         shortDescriptions: formData?.shortDescriptions,
         thumbnail: formData?.thumbnail,
+        images: formData.images,
+        metaTitle: formData.metaTitle,
+        metaKeyword: formData.metaKeyword,
+        metaDescription: formData.metaDescription,
         slug: formData?.slug,
       }),
       JSON.stringify({
@@ -107,6 +116,10 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
         descriptions: initValues?.descriptions,
         shortDescriptions: initValues?.shortDescriptions,
         thumbnail: initValues?.thumbnail,
+        images: initValues?.images,
+        metaTitle: initValues?.metaTitle,
+        metaKeyword: initValues?.metaKeyword,
+        metaDescription: initValues?.metaDescription,
         slug: initValues?.slug,
       }),
     );
@@ -116,6 +129,12 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
     onSubmit?.(formData);
   };
 
+  const onSaveGallery: GallerySelectorProps["onSave"] = (images) => {
+    setFormData((oldData) => ({
+      ...oldData,
+      images: [...images],
+    }));
+  };
   useEffect(() => {
     onWatchFormChange?.(formData);
   }, [formData]);
@@ -127,6 +146,10 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
         descriptions: initValues.descriptions,
         shortDescriptions: initValues.shortDescriptions,
         thumbnail: initValues.thumbnail || undefined,
+        images: initValues.images || undefined,
+        metaDescription: initValues.metaDescription,
+        metaTitle: initValues.metaTitle,
+        metaKeyword: initValues.metaKeyword,
         slug: initValues.slug,
         codeKey: codeKey,
         lang: initValues.lang,
@@ -210,11 +233,48 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
             onChange={(ev) => onChangeFormData("shortDescriptions", ev.target.value)}
           ></TextArea>
         </FormItem>
+        <FormItem label="Thư viện ảnh">
+          <GallerySelector
+            images={formData.images || []}
+            error={errors?.["images" as "images"]}
+            onSave={onSaveGallery}
+          />
+        </FormItem>
+        <FormItem label="Seo Meta">
+          <div className="box border rounded-md px-4 pt-6 mb-6">
+            <div className="mb-6">
+              <Input
+                placeholder="Meta title"
+                value={formData.metaTitle}
+                onChange={(ev) => onChangeFormData("metaTitle", ev.target.value)}
+              />
+            </div>
+
+            <div className="mb-6">
+              <Input.TextArea
+                rows={2}
+                placeholder="Meta description"
+                value={formData.metaDescription}
+                onChange={(ev) => onChangeFormData("metaDescription", ev.target.value)}
+              ></Input.TextArea>
+            </div>
+            <div className="mb-6">
+              <Input
+                placeholder="Keywords"
+                value={formData.metaKeyword}
+                onChange={(ev) => onChangeFormData("metaKeyword", ev.target.value)}
+              />
+            </div>
+          </div>
+        </FormItem>
         <FormItem label="Mô tả">
           <TextEditor
             initialValue={initValues?.descriptions || ""}
             value={formData.descriptions}
             onEditorChange={(content, editor) => onChangeFormData("descriptions", content)}
+            minHeight={800}
+            height={800}
+            maxHeight={1200}
           />
         </FormItem>
         <FormItem

@@ -295,11 +295,11 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
             code: initData.code,
             name: initData.name,
             slug: initData.slug,
-            thumbnail: initData.thumbnail,
+            thumbnail: initData.thumbnail || undefined,
             content: initData.content,
             subContent: initData.subContent,
             downloads: initData.downloads,
-            images: initData.images,
+            images: initData.images || undefined,
             metaData: initData.metaData,
             metaTitle: initData.metaTitle,
             metaDescription: initData.metaDescription,
@@ -389,7 +389,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
 
             <GallerySelector
               images={formData.images || []}
-              error={errors?.["images.listImage" as "images"]}
+              error={errors?.["images" as "images"]}
               onSave={onSaveGallery}
             />
             <FileDownloadSelector files={formData.downloads} setFiles={onSaveFilesDownload} />

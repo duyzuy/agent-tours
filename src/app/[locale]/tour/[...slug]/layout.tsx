@@ -36,7 +36,7 @@ export async function generateMetadata(
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
-  const totalImages = cmsTemplateDetail?.thumbnail.original
+  const totalImages = cmsTemplateDetail?.thumbnail?.original
     ? [`${mediaConfig.rootApiPath}/${cmsTemplateDetail?.thumbnail.original}`, ...previousImages]
     : [...previousImages];
 

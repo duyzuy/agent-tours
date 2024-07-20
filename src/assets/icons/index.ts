@@ -78,6 +78,7 @@ import IconMessageSquareMore from "./IconMessageSqureMore";
 import IconPackageCheck from "./IconPackageCheck";
 import IconPartyPopper from "./IconPartyPopper";
 import IconKeyRound from "./IconKeyRound";
+import IconImages from "./IconImages";
 export {
   IconAccount,
   IconArrowLeftCircle,
@@ -159,4 +160,5 @@ export {
   IconPackageCheck,
   IconPartyPopper,
   IconKeyRound,
+  IconImages,
 };

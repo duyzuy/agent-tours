@@ -64,6 +64,10 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
             descriptions: formData.descriptions,
             shortDescriptions: formData.shortDescriptions,
             thumbnail: formData.thumbnail,
+            images: formData.images,
+            metaDescription: formData.metaDescription,
+            metaKeyword: formData.metaKeyword,
+            metaTitle: formData.metaTitle,
             slug: formData.slug,
           },
           {
@@ -72,6 +76,10 @@ const GroupArrivalContentPage = ({ params }: { params: { id: string } }) => {
             descriptions: initFormContent.descriptions,
             shortDescriptions: initFormContent.shortDescriptions,
             thumbnail: initFormContent.thumbnail,
+            metaDescription: initFormContent.metaDescription,
+            metaKeyword: initFormContent.metaKeyword,
+            metaTitle: initFormContent.metaTitle,
+            images: formData.images,
             slug: initFormContent.slug,
           },
         )
