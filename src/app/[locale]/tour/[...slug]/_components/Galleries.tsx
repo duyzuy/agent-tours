@@ -23,7 +23,7 @@ interface GalleriesProps {
 const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const swiperRef = useRef<SwiperType>();
-  if (!images) {
+  if (!images || !images.length) {
     return null;
   }
   return (
