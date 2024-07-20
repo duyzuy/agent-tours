@@ -23,9 +23,9 @@ interface GalleriesProps {
 const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const swiperRef = useRef<SwiperType>();
-  if (!images || !images.length) {
-    return null;
-  }
+  // if (!images || !images.length) {
+  //   return null;
+  // }
   return (
     <>
       <div className="relative bg-gray-50 rounded-md overflow-hidden w-full mb-3">
