@@ -29,7 +29,6 @@ export interface FeTemplateContentResponse
       templateCodes: string[];
       codeImage: IThumbnail | null;
       codeName: string;
-
       languages: {
         lang: LangCode;
         name: string;

@@ -52,6 +52,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
   const productList = await getSellableListByTemplateId(Number(templateId));
   const currentSellable = productList?.find((item) => item.recId === Number(sellableId));
+
   if (
     isUndefined(cmsTemplateContent) ||
     isUndefined(templateId) ||
@@ -80,7 +81,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
               <h1 className="text-xl text-primary-default font-bold">{cmsTemplateContent?.name}</h1>
             </ProductHeader>
 
-            <DynamicGalleries images={cmsTemplateContent?.images} />
+            {/* <DynamicGalleries images={cmsTemplateContent?.images} /> */}
 
             <Benefit items={cmsTemplateContent?.metaData} />
 
