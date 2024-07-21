@@ -27,6 +27,8 @@ const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => 
     body.style.overflowY = "hidden";
     body.style.position = "fixed";
     body.style.top = `-${scrollY}px`;
+    body.style.left = "0px";
+    body.style.right = "0px";
     setOpen(true);
   };
   const handleClose = () => {
