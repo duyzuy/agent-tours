@@ -33,6 +33,13 @@ const MenuMobileNavs: React.FC<MenuMobileNavsProps> = ({ className, items }) => 
         onClose={closeMenu}
         placement="bottom"
         height={"90vh"}
+        afterOpenChange={(open) => {
+          if (open) {
+            document.getElementsByTagName("body")[0].style.overflowY = "hidden";
+          } else {
+            document.getElementsByTagName("body")[0].removeAttribute("style");
+          }
+        }}
         style={{ padding: 0 }}
       >
         <div>

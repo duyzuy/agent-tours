@@ -132,7 +132,7 @@ const PostsSection = () => {
               </SwiperSlide>
             ))}
           </Swiper>
-          <div className="swiper-navigation">
+          <div className="post-navigation hidden md:block">
             <ButtonNavigation
               className="-left-5 top-[50%] -translate-y-[50%]"
               onClick={() => swiperRef.current?.slidePrev()}

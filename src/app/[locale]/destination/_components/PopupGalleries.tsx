@@ -41,8 +41,8 @@ const PopupGalleries: React.FC<PopUpGalleriesProps> = ({ onClose, images }) => {
           <span className="absolute top-8 right-8 text-4xl text-white/60 cursor-pointer" onClick={onClose}>
             <CloseOutlined className="stroke-none" />
           </span>
-          <div className="w-full h-full max-w-[1560px] flex flex-col justify-between px-16 pt-24 pb-12">
-            <div className="relative rounded-md mb-12" style={{ height: "calc(100vh - 100px)" }}>
+          <div className="w-full h-full max-w-[1560px] flex flex-col justify-between px-6 lg:px-16 pt-24 pb-12">
+            <div className="relative rounded-md pb-12 h-full">
               <Swiper
                 spaceBetween={10}
                 pagination={{

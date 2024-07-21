@@ -19,7 +19,7 @@ const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => 
 
   const handleClickOpen = () => {
     document.getElementsByTagName("body")[0].style.overflowY = "hidden";
-    document.getElementsByTagName("body")[0].style.width = "calc(100% - 15px)";
+    //document.getElementsByTagName("body")[0].style.width = "calc(100% - 15px)";
 
     setOpen(true);
   };
@@ -43,7 +43,7 @@ const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => 
             })}
             key={_index}
           >
-            <div className="thumb h-32">
+            <div className="thumb h-16 lg:h-32">
               <Image src={`${mediaConfig.rootApiPath}/${item.original}`} fill className=" object-cover" alt="" />
               {_index === 2 ? (
                 <div
