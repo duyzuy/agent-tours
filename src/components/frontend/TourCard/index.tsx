@@ -43,9 +43,9 @@ const TourCard = ({
     >
       <div
         className={classNames("inner bg-white rounded-lg overflow-hidden h-full", {
-          "drop-shadow-sm": shadow === "sm",
-          "drop-shadow-md": shadow === "md",
-          "drop-shadow-lg": shadow === "lg",
+          "shadow-sm": shadow === "sm",
+          "shadow-md": shadow === "md",
+          "shadow-lg": shadow === "lg",
         })}
       >
         <div className="thumbnail w-full pt-[57.25%] relative italic">

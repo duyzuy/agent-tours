@@ -32,7 +32,7 @@ const MenuMobileNavs: React.FC<MenuMobileNavsProps> = ({ className, items }) => 
         open={showMenu}
         onClose={closeMenu}
         placement="bottom"
-        height={"90vh"}
+        height={"calc(90vh - env(safe-area-inset-bottom))"}
         afterOpenChange={(open) => {
           const body = document.getElementsByTagName("body")[0];
           const scrollY = window.scrollY;
@@ -46,7 +46,6 @@ const MenuMobileNavs: React.FC<MenuMobileNavsProps> = ({ className, items }) => 
             body.removeAttribute("style");
           }
         }}
-        style={{ padding: 0 }}
       >
         <div>
           {items.map((sItem) => (
@@ -84,11 +83,11 @@ const NavItem = ({ className = "", name, slug = "/", icon, items, isMega }: Part
       })}
     >
       {isMega ? (
-        <div className="flex items-center justify-between py-2" onClick={() => setShowDropdown((prev) => !prev)}>
+        <div className="flex items-center justify-between py-3" onClick={() => setShowDropdown((prev) => !prev)}>
           <span className="flex items-center">
             {IconComp ? (
-              <span className="text-gray-500 mr-2">
-                <IconComp.icon />
+              <span className="text-gray-600 mr-2">
+                <IconComp.icon width={18} height={18} />
               </span>
             ) : null}
             <span className="text-gray-600 font-[500]">{name}</span>
@@ -98,7 +97,7 @@ const NavItem = ({ className = "", name, slug = "/", icon, items, isMega }: Part
           </span>
         </div>
       ) : (
-        <Link href={slug} title={name} className="flex items-center py-2 hover:bg-slate-50">
+        <Link href={slug} title={name} className="flex items-center py-3 hover:bg-slate-50">
           {IconComp ? (
             <span className="text-gray-600 font-[500] mr-2">
               <IconComp.icon />
