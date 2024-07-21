@@ -4,7 +4,7 @@ import { mediaConfig } from "@/configs";
 import { IThumbnail } from "@/models/thumbnail.interface";
 import classNames from "classnames";
 import Image from "next/image";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import PopupGalleries from "./PopupGalleries";
 
 interface DestionationGalleryProps {
@@ -12,19 +12,26 @@ interface DestionationGalleryProps {
 }
 const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => {
   const [open, setOpen] = useState(false);
+  const windowRef = useRef(0);
 
   const thirdImageFirst = useMemo(() => {
     return images?.slice(0, 3);
   }, [images]);
 
   const handleClickOpen = () => {
-    document.getElementsByTagName("body")[0].style.overflowY = "hidden";
-    //document.getElementsByTagName("body")[0].style.width = "calc(100% - 15px)";
+    const body = document.getElementsByTagName("body")[0];
 
+    const scrollY = window.scrollY;
+    windowRef.current = scrollY;
+
+    body.style.overflowY = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
     setOpen(true);
   };
   const handleClose = () => {
     document.getElementsByTagName("body")[0].removeAttribute("style");
+    window.scrollTo({ top: windowRef.current });
     setOpen(false);
   };
 

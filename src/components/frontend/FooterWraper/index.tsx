@@ -100,9 +100,9 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                     <ul className="list w-1/3 px-2 lg:px-3" key={`doms-${childColumnItems.id}`}>
                       {childColumnItems.children?.map(({ title, slug, id }) => (
                         <li className="py-[6px]" key={id}>
-                          <Link href={`/${slug}`} className="flex items-center">
-                            <IconChevronRight width={14} className="stroke-white mr-2" />
-                            <span className="text-white text-sm">{title}</span>
+                          <Link href={`/${slug}`} className="flex">
+                            <IconChevronRight width={14} height={14} className="stroke-white mr-2 lg:mt-[2px]" />
+                            <span className="text-white text-xs lg:text-sm flex-1">{title}</span>
                           </Link>
                         </li>
                       ))}
@@ -122,9 +122,9 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                 {informationItems?.map((item, _index) => (
                   <ul className="list w-1/3 px-2 lg:px-3" key={_index}>
                     <li className="py-[6px]" key={item.id}>
-                      <Link href={item.slug} className="flex items-center">
-                        <IconChevronRight width={14} className="stroke-white mr-2" />
-                        <span className="text-white text-sm">{item.title}</span>
+                      <Link href={item.slug} className="flex">
+                        <IconChevronRight width={14} height={14} className="stroke-white mr-2 lg:mt-[2px]" />
+                        <span className="text-white flex-1 text-xs lg:text-sm ">{item.title}</span>
                       </Link>
                     </li>
                   </ul>
@@ -160,13 +160,15 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
             <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6 lg:mb-0">
               <div className="cotnent text-xs">
                 <h6 className="text-xl font-semibold text-main-400 mb-4">CÔNG TY CỔ PHẦN AN THÁI TRAVEL</h6>
-                <div className="flex items-center mb-1">
+                <div className="flex mb-1">
                   <span className="w-12 mr-2">Địa chỉ:</span>
-                  <span>302/3 Phố Kim Mã, Phường Ngọc Khánh, Quận Ba Đình, TP. Hà Nội, Việt Nam.</span>
+                  <span className="flex-1">
+                    302/3 Phố Kim Mã, Phường Ngọc Khánh, Quận Ba Đình, TP. Hà Nội, Việt Nam.
+                  </span>
                 </div>
-                <div className="flex items-center mb-1">
+                <div className="flex mb-1">
                   <span className="w-12 mr-2">Hotline:</span>
-                  <ul className="flex items-center">
+                  <ul className="flex flex-1 items-center">
                     <li>PKD: +084 988 308 520</li>
                     <li className="w-[1px] h-[6px] bg-slate-300 mx-2"></li>
                     <li>Sale: +084 988 308 520</li>
@@ -174,9 +176,9 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                     <li>CSKH: +084 988 308 520</li>
                   </ul>
                 </div>
-                <div className="flex items-center mb-1">
+                <div className="flex mb-1">
                   <span className="w-12 mr-2">Email:</span>
-                  <span>support@domain.com.vn</span>
+                  <span className="flex-1">support@domain.com.vn</span>
                 </div>
               </div>
             </div>
@@ -209,7 +211,7 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
 
                 <div className="qr lg:px-6 lg:mx-6 px-2 mx-2 border-l border-r">
                   <div className="text-center">
-                    <Image src="/assets/images/icon-qr.svg" alt="qr" width={80} height={80} className="block mx-auto" />
+                    <Image src="/assets/images/icon-qr.svg" alt="qr" width={60} height={60} className="block mx-auto" />
                     <p className="text-sm py-2 max-w-[160px] text-center mx-auto">
                       <span className="block">Tải ứng dụng</span>
                       <span>di động AnThai Travel</span>

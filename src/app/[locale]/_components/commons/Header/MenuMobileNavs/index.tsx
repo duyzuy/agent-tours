@@ -34,10 +34,16 @@ const MenuMobileNavs: React.FC<MenuMobileNavsProps> = ({ className, items }) => 
         placement="bottom"
         height={"90vh"}
         afterOpenChange={(open) => {
+          const body = document.getElementsByTagName("body")[0];
+          const scrollY = window.scrollY;
+
           if (open) {
-            document.getElementsByTagName("body")[0].style.overflowY = "hidden";
+            body.style.overflowY = "hidden";
+            body.style.position = "fixed";
+            body.style.top = `-${scrollY}px`;
+            body.style.overflowY = "hidden";
           } else {
-            document.getElementsByTagName("body")[0].removeAttribute("style");
+            body.removeAttribute("style");
           }
         }}
         style={{ padding: 0 }}
