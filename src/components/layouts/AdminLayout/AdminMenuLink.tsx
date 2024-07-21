@@ -182,6 +182,14 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
           key: "menu/footer",
           label: "Footer",
         },
+        {
+          key: "menu/footer-info",
+          label: "Footer information",
+        },
+        {
+          key: "menu/mobile",
+          label: "Mobile menu",
+        },
       ],
     },
     {

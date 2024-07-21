@@ -46,7 +46,7 @@ const PopupGalleries: React.FC<PopUpGalleriesProps> = ({ onClose, images }) => {
               <Swiper
                 spaceBetween={10}
                 pagination={{
-                  el: ".swiper-pagination",
+                  el: ".galleries-pagination",
                   clickable: true,
                   renderBullet: (index, className) => {
                     return `<span class="${className}"></span>`;
@@ -80,7 +80,7 @@ const PopupGalleries: React.FC<PopUpGalleriesProps> = ({ onClose, images }) => {
                   </SwiperSlide>
                 ))}
               </Swiper>
-              <div className="swiper-pagination">
+              <div className="galleries-pagination">
                 <div
                   className="gallery-prev absolute bg-gray-950/30 rounded-full p-1 opacity-30 hover:opacity-100 -left-12 top-1/2 -translate-y-1/2 text-white z-10 cursor-pointer hidden lg:block"
                   onClick={() => swiperRef.current?.slidePrev()}

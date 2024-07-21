@@ -25,7 +25,7 @@ export const getSellableListByTemplateId = async (templateId: number) => {
     "localfront/BookingOrder_SearchByTemplateId",
     {
       next: { tags: ["sellableListByTemplateId"] },
-
+      cache: "no-store",
       params: {
         requestObject: {
           byTemplateId: templateId,

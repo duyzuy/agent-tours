@@ -26,11 +26,11 @@ const NavItem = ({ className = "", name, slug, icon, items, objectType, navType 
 
   return (
     <div
-      className={classNames("relative group/item px-3 py-2", {
+      className={classNames("relative group/item", {
         [className]: className,
       })}
     >
-      <span className="flex items-center gap-x-1 font-[500] leading-6 cursor-pointer" aria-expanded="false">
+      <span className="flex items-center gap-x-1 font-[500] leading-6 cursor-pointer px-3 py-2" aria-expanded="false">
         {slug ? (
           <NavLink prefix={IconComp?.icon ? <IconComp.icon /> : undefined} href={slug} title={name} />
         ) : (
@@ -43,7 +43,7 @@ const NavItem = ({ className = "", name, slug, icon, items, objectType, navType 
         ) : null}
       </span>
       {items && items.length ? (
-        <NavItem.Dropdown className="invisible group-hover/item:visible" items={items} navType={navType} />
+        <NavItem.Dropdown className="invisible group-hover/item:visible -left-[100%]" items={items} navType={navType} />
       ) : null}
     </div>
   );

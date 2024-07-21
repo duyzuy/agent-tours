@@ -79,6 +79,9 @@ import IconPackageCheck from "./IconPackageCheck";
 import IconPartyPopper from "./IconPartyPopper";
 import IconKeyRound from "./IconKeyRound";
 import IconImages from "./IconImages";
+import IconAlbum from "./IconAlbum";
+import IconEarth from "./IconEarth";
+import IconClipboardList from "./IconClipboardList";
 export {
   IconAccount,
   IconArrowLeftCircle,
@@ -161,4 +164,7 @@ export {
   IconPartyPopper,
   IconKeyRound,
   IconImages,
+  IconAlbum,
+  IconEarth,
+  IconClipboardList,
 };

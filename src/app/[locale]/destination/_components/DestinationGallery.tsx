@@ -17,9 +17,6 @@ const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => 
     return images?.slice(0, 3);
   }, [images]);
 
-  if (!images) {
-    return null;
-  }
   const handleClickOpen = () => {
     document.getElementsByTagName("body")[0].style.overflowY = "hidden";
     document.getElementsByTagName("body")[0].style.width = "calc(100% - 15px)";
@@ -30,6 +27,10 @@ const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => 
     document.getElementsByTagName("body")[0].removeAttribute("style");
     setOpen(false);
   };
+
+  if (!images || !images.length) {
+    return null;
+  }
   return (
     <>
       <div className="gallery grid grid-rows-3 grid-cols-3 grid-flow-dense gap-2 rounded-lg overflow-hidden mb-6">

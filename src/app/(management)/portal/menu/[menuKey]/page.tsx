@@ -61,6 +61,10 @@ const MenuPageType = ({ params }: Props) => {
           ? "Menu secondary"
           : menuKey === "footer"
           ? "Menu footer"
+          : menuKey === "footer-info"
+          ? "Footer information"
+          : menuKey === "mobile"
+          ? "Mobile"
           : ""
       }
       loading={isLoading}

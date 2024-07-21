@@ -17,6 +17,7 @@ import Title from "@/components/frontend/Title";
 import { Metadata, ResolvingMetadata } from "next";
 import { SITE_NAME } from "@/configs/site";
 import DestionationGallery from "../_components/DestinationGallery";
+import { isEmpty } from "lodash";
 
 interface PageProps {
   params: { locale: LangCode; slug: string };
@@ -88,8 +89,6 @@ export default async function DestinationPageDetail({ params: { locale, slug } }
     999,
   );
 
-  console.log({ destList, initQueryParams: JSON.stringify(initQueryParams) });
-
   const productList = await getProductList(initQueryParams);
 
   if (!destinationContent) {
@@ -125,12 +124,14 @@ export default async function DestinationPageDetail({ params: { locale, slug } }
           <div className="page-detail-head mb-6">
             <Title>{destinationContent.title}</Title>
           </div>
-          <div className="recap bg-slate-50 pl-12 pt-6 pb-6 pr-6 rounded-lg mb-6 relative">
-            <span className="absolute left-3 top-3">
-              <IconQuote className=" fill-rose-300 stroke-none" />
-            </span>
-            <div className="recap-content italic">{destinationContent.shortDescriptions}</div>
-          </div>
+          {destinationContent.shortDescriptions && !isEmpty(destinationContent.shortDescriptions) ? (
+            <div className="recap bg-slate-50 pl-12 pt-6 pb-6 pr-6 rounded-lg mb-6 relative">
+              <span className="absolute left-3 top-3">
+                <IconQuote className=" fill-rose-300 stroke-none" />
+              </span>
+              <div className="recap-content italic">{destinationContent.shortDescriptions}</div>
+            </div>
+          ) : null}
           <DestionationGallery images={destinationContent.images} />
           <AreaContentHtml content={destinationContent.descriptions} />
         </div>

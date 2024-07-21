@@ -8,6 +8,7 @@ const useInitMenuPositionList = (menuKey: MenuPositionType, lang: LangCode) => {
   const { data, isLoading } = useGetMenuPositionListQuery({ menuPosition: menuKey, lang: lang });
   const [_, dispatch] = useMenuManager();
 
+  console.log(data, isLoading);
   useEffect(() => {
     if (data && !isLoading) {
       dispatch({

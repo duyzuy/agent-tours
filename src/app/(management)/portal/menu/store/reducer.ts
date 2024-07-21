@@ -3,7 +3,13 @@ import { MenuManagerData } from "./menuType";
 import { localeDefault } from "@/constants/locale.constant";
 import { MenuManagerActionsType } from "./actions";
 
-export const initMenuManagerState = new MenuManagerData(localeDefault, [], { primary: [], secondary: [], footer: [] });
+export const initMenuManagerState = new MenuManagerData(localeDefault, [], {
+  primary: [],
+  secondary: [],
+  footer: [],
+  "footer-info": [],
+  mobile: [],
+});
 
 export const menuManagerReducer = (state = initMenuManagerState, action: MenuManagerActionsType) => {
   switch (action.type) {

@@ -1,5 +1,5 @@
 "use client";
-import { Modal, message } from "antd";
+import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useModalManagerSelector } from "@/app/[locale]/hooks/useModalManager";
 import useAuthModal from "../../hooks";
@@ -13,8 +13,11 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/frontend/partials/Logo";
 import { usePathname } from "@/utils/navigation";
+import useMessage from "@/hooks/useMessage";
 const ModalAuth: React.FC = () => {
   const authModal = useModalManagerSelector((state) => state.authModal);
+  const message = useMessage();
+  const [error, setError] = useState<string | undefined | null>();
   const router = useRouter();
   const t = useTranslations("String");
   const { hideAuthModal } = useAuthModal();
@@ -28,9 +31,14 @@ const ModalAuth: React.FC = () => {
         password: formData.password,
         redirect: false,
       });
-      if (response?.status) {
+
+      if (response?.status === 200) {
         router.refresh();
+        message.success("Đăng nhập thành công.");
+        setError(undefined);
         hideAuthModal();
+      } else {
+        setError(response?.error);
       }
     } catch (error) {
       message.error("Login failed!");
@@ -42,7 +50,7 @@ const ModalAuth: React.FC = () => {
     {
       key: "signin",
       label: <span className="text-lg">{t("login")}</span>,
-      children: <LoginForm onSubmit={onSignIn} />,
+      children: <LoginForm error={error} onSubmit={onSignIn} />,
     },
     {
       key: "signup",

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { getFooterMenu } from "@/app/[locale]/_actions/menu";
+import { getFooterMenu, getFooterMenuInformation } from "@/app/[locale]/_actions/menu";
 import FooterWraper from "@/components/frontend/FooterWraper";
 import { IMenuItem, MenuObjectType } from "@/models/management/cms/menu.interface";
 
@@ -21,9 +21,11 @@ export default async function Footer() {
   const locale = await getLocale();
   const menuFooter = await getFooterMenu(locale as LangCode);
 
+  const menuFooterInfo = await getFooterMenuInformation(locale as LangCode);
+
   // const menuItems = menuFooter?.menuItems.
 
-  const getMenuListItem = (items: IMenuItem[], depth: number) => {
+  const getMenuListItem = (items: IMenuItem[], depth = 0) => {
     return items.reduce<MenuFooterItem[]>((acc, item) => {
       let childItems: MenuFooterItem[] = [];
       if (item.children && item.children.length) {
@@ -71,5 +73,10 @@ export default async function Footer() {
     }, []);
   };
 
-  return <FooterWraper menuItems={menuFooter ? getMenuListItem(menuFooter.menuItems, 0) : []} />;
+  return (
+    <FooterWraper
+      menuItems={menuFooter ? getMenuListItem(menuFooter.menuItems, 0) : []}
+      informationItems={menuFooterInfo ? getMenuListItem(menuFooterInfo.menuItems) : []}
+    />
+  );
 }

@@ -40,8 +40,16 @@ import {
   IconSend,
   IconCalendarDays,
   IconMapPinned,
+  IconAlbum,
+  IconEarth,
+  IconClipboardList,
 } from "@/assets/icons";
 export const ICON_LIST = [
+  {
+    name: "Album",
+    key: "IconAlbum",
+    icon: IconAlbum,
+  },
   {
     name: "Ban",
     key: "IconBan",
@@ -76,6 +84,11 @@ export const ICON_LIST = [
     name: "Calendar days",
     key: "IconCalendarDays",
     icon: IconCalendarDays,
+  },
+  {
+    name: "Clipboard list",
+    key: "IconClipboardList",
+    icon: IconClipboardList,
   },
   {
     name: "Citrus",
@@ -123,6 +136,11 @@ export const ICON_LIST = [
     name: "Dollar circle",
     key: "IconDollarSignCircle",
     icon: IconDollarSignCircle,
+  },
+  {
+    name: "Earth",
+    key: "IconEarth",
+    icon: IconEarth,
   },
   {
     name: "Star outline",

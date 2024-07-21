@@ -1,7 +1,7 @@
 import { BaseResponse } from "@/models/common.interface";
 import { LangCode } from "./language.interface";
 
-export type MenuPositionType = "primary" | "secondary" | "footer";
+export type MenuPositionType = "primary" | "secondary" | "footer" | "mobile" | "footer-info";
 export type MenuType = "custom" | "templateType" | "";
 export type MenuObjectType = "custom" | "page" | "tour" | "cmsTemplate" | "visaTemplate" | "destination" | "";
 

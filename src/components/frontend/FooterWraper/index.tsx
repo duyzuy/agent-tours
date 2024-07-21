@@ -2,50 +2,9 @@
 import IconChevronRight from "@/assets/icons/IconChevronRight";
 import IconChevronUp from "@/assets/icons/IconChevronUp";
 import { MenuObjectType } from "@/models/management/cms/menu.interface";
-import { MenuItemType } from "@/utils/menu";
 import classNames from "classnames";
 import Image from "next/image";
 import { Link } from "@/utils/navigation";
-
-const THONGTIN = [
-  [
-    {
-      id: 111,
-      name: "Về chúng tôi",
-      slug: "a-1",
-    },
-    {
-      id: 21,
-      name: "Tuyển dụng",
-      slug: "a-1",
-    },
-  ],
-  [
-    {
-      id: 611,
-      name: "Điểm tim Visa",
-      slug: "a-1",
-    },
-    {
-      id: 711,
-      name: "Chính sách bảo mật",
-      slug: "a-1",
-    },
-  ],
-  [
-    {
-      id: 111,
-      name: "Trải nghiệm du lịch",
-      slug: "a-1",
-    },
-    {
-      id: 1211,
-      name: "Điều khoản sử dụng",
-      slug: "a-1",
-    },
-  ],
-];
-
 const PAYS = [
   {
     id: 123,
@@ -114,10 +73,11 @@ export type MenuFooterItem = {
 
 export interface FooterWraperProps {
   menuItems?: MenuFooterItem[];
+  informationItems?: MenuFooterItem[];
   children?: React.ReactNode;
 }
 
-const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems }) => {
+const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, informationItems }) => {
   // console.log(menuItems);
   return (
     <footer className="footer">
@@ -158,17 +118,15 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems }) => {
                 <h5 className="text-white font-semibold">THÔNG TIN CHUNG</h5>
               </div>
               <div className="w-full h-[1px] bg-gray-400 mb-3 opacity-50"></div>
-              <div className="ft-contents flex -mx-2 lg:-mx-3">
-                {THONGTIN.map((item, _index) => (
-                  <ul className="list w-1/3 px-2 lg:px-3" key={`tt-${_index}`}>
-                    {item.map((_item) => (
-                      <li className="py-[6px]" key={_item.id}>
-                        <Link href={_item.slug} className="flex items-center">
-                          <IconChevronRight width={14} className="stroke-white mr-2" />
-                          <span className="text-white text-sm">{_item.name}</span>
-                        </Link>
-                      </li>
-                    ))}
+              <div className="ft-contents flex -mx-2 lg:-mx-3 flex-wrap">
+                {informationItems?.map((item, _index) => (
+                  <ul className="list w-1/3 px-2 lg:px-3" key={_index}>
+                    <li className="py-[6px]" key={item.id}>
+                      <Link href={item.slug} className="flex items-center">
+                        <IconChevronRight width={14} className="stroke-white mr-2" />
+                        <span className="text-white text-sm">{item.title}</span>
+                      </Link>
+                    </li>
                   </ul>
                 ))}
               </div>

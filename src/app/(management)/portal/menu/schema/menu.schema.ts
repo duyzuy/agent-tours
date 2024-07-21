@@ -6,7 +6,7 @@ import { LangCode } from "@/models/management/cms/language.interface";
 export const updateMenuItemSchema: ObjectSchema<MenuItemFormData> = object({
   name: string().required("Tên menu không bỏ trống."),
   parentId: number(),
-  menuPosition: string().oneOf<MenuPositionType>(["footer", "primary", "secondary"]),
+  menuPosition: string().oneOf<MenuPositionType>(["footer", "primary", "secondary", "footer-info", "mobile"]),
   lang: string().oneOf<LangCode>([LangCode.VI, LangCode.EN]),
   slug: string(),
   menuType: string().oneOf<MenuType>(["custom", "templateType"]),

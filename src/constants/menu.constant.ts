@@ -13,4 +13,12 @@ export const MENU_POSITION_LIST: { name: string; key: MenuPositionType }[] = [
     key: "footer",
     name: "Footer",
   },
+  {
+    key: "mobile",
+    name: "Mobile menu",
+  },
+  {
+    key: "footer-info",
+    name: "Footer information",
+  },
 ];

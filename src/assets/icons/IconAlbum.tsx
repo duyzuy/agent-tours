@@ -1,6 +1,6 @@
 import React from "react";
 
-const IconBookMark: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...rest }) => {
+const IconAlbum: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...rest }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,8 +15,9 @@ const IconBookMark: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...r
       className={className}
       {...rest}
     >
-      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+      <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+      <polyline points="11 3 11 11 14 8 17 11 17 3" />
     </svg>
   );
 };
-export default IconBookMark;
+export default IconAlbum;
