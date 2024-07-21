@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HamburgerButton from "@/components/frontend/HamburgerButton";
 import { Drawer } from "antd";
 import { MenuItemType } from "@/utils/menu";
@@ -9,14 +9,14 @@ import { IconChevronDown } from "@/assets/icons";
 import classNames from "classnames";
 import { ICON_LIST } from "@/constants/icons.constant";
 import styled from "styled-components";
-
+import { usePathname } from "@/utils/navigation";
 export interface MenuMobileNavsProps {
   className?: string;
   items: MenuItemType[];
 }
 const MenuMobileNavs: React.FC<MenuMobileNavsProps> = ({ className, items }) => {
   const [showMenu, setShowMenu] = useState(false);
-
+  const pathname = usePathname();
   const closeMenu = () => {
     setShowMenu(false);
   };
@@ -24,6 +24,11 @@ const MenuMobileNavs: React.FC<MenuMobileNavsProps> = ({ className, items }) => 
     setShowMenu(true);
   };
 
+  useEffect(() => {
+    if (showMenu) {
+      closeMenu();
+    }
+  }, [pathname]);
   return (
     <>
       <HamburgerButton onClick={openMenu} />
