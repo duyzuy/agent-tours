@@ -9,6 +9,7 @@ import ClientStoreData from "./_components/ClientStoreData";
 import ProductSummaryCard from "@/components/frontend/skeletons/ProductSummaryCard";
 import ProductGalleries from "@/components/frontend/skeletons/ProductGalleries";
 import { getTemplateContentDetail, getSellableListByTemplateId } from "../_actions/templateContent";
+import { isMobile } from "@/utils/detectMobile";
 
 // import { ProductTourTabsContentSkeleton } from "./_components/ProductContent";
 
@@ -30,6 +31,11 @@ const DynamicProductSummary = dynamic(() => import("./_components/ProductSummary
   loading: () => <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />,
   ssr: false,
 });
+const DynamicMobProductSummary = dynamic(() => import("./_components/mobile/MobProductSummary"), {
+  loading: () => <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />,
+  ssr: false,
+});
+
 type PageProps = {
   params: {
     locale: LangCode;
@@ -93,11 +99,20 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
             <TourRelateds className="mb-8" />
             {/* <TourReviews /> */}
           </div>
-          <DynamicProductSummary
-            defaultSellable={currentSellable}
-            sellableList={productList}
-            className="w-full lg:w-5/12 lg:pl-8 "
-          />
+          {isMobile() ? (
+            <DynamicMobProductSummary
+              defaultSellable={currentSellable}
+              name={cmsTemplateContent?.name}
+              sellableList={productList}
+              className="w-full"
+            />
+          ) : (
+            <DynamicProductSummary
+              defaultSellable={currentSellable}
+              sellableList={productList}
+              className="w-full lg:w-5/12 lg:pl-8"
+            />
+          )}
           <ClientStoreData data={cmsTemplateContent?.languages} log={{ productList, cmsTemplateContent }} />
         </div>
       </div>

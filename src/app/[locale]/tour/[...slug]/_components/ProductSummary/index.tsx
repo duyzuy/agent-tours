@@ -22,6 +22,11 @@ import useAuth from "@/app/[locale]/hooks/useAuth";
 import { useSession } from "next-auth/react";
 import useAuthModal from "@/app/[locale]/(auth)/hooks";
 import { getSession } from "next-auth/react";
+import DateRangPicker from "@/components/base/DateRangePicker";
+import SingleDatePiker from "@/components/base/SingleDatePiker";
+import FeCustomDatePicker from "@/components/base/FeCustomDatePicker";
+import { IconCalendar } from "@/assets/icons";
+import CalendarSelector from "./CalendarSelector";
 
 interface Props {
   className?: string;
@@ -52,9 +57,8 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
   }, []);
 
   const [isPendingInitBookingDetails, startTransitionInitBookingDetailItems] = useTransition();
-  const [isUpdateTingPaxQuantity, setStartUpdateQuantity] = useTransition();
 
-  const isSameDate = (d: Dayjs) => {
+  const isInBookingDate = (d: Dayjs) => {
     return departureDates?.some((item) => {
       return d.isSame(dayjs(item.departDate), "date");
     });
@@ -91,16 +95,6 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
 
     newProduct && setProductItem(newProduct);
   };
-  const goToPasssenger = () => {
-    if (session.status === "unauthenticated" || session.status === "loading") {
-      // message.info("Vui long Thuc hien dang nhap.");
-      showAuthModal();
-      return;
-    }
-    startTransitionInitBookingDetailItems(() => {
-      initPassengerInfoThenGoToPassenger();
-    });
-  };
   const breakDownItems = useMemo(() => {
     return Object.entries(productBreakdown).reduce<
       {
@@ -120,6 +114,17 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
       return acc;
     }, []);
   }, [productBreakdown]);
+
+  const handleNextToPassengerInfo = () => {
+    if (session.status === "unauthenticated" || session.status === "loading") {
+      // message.info("Vui long Thuc hien dang nhap.");
+      showAuthModal();
+      return;
+    }
+    startTransitionInitBookingDetailItems(() => {
+      initPassengerInfoThenGoToPassenger();
+    });
+  };
 
   useEffect(() => {
     initProduct(productItem);
@@ -149,7 +154,7 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
             bookingCounponPolicy?.code === code ? removeCouponPolicy() : addCouponPolicy(code);
           },
         }}
-        onBookNow={goToPasssenger}
+        onBookNow={handleNextToPassengerInfo}
         isLoading={isPendingInitBookingDetails}
         breakDown={{
           pricingConfigs: breakDownItems,
@@ -161,7 +166,7 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
         }}
       >
         <Form layout="vertical" component="div">
-          <FormItem label="Ngày khởi hành">
+          {/* <FormItem label="Ngày khởi hành">
             <FeDatePicker
               value={dayjs(productItem?.startDate)}
               placeholder="Ngày khởi hành"
@@ -170,13 +175,26 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
               allowClear={false}
               onChange={onChangeProduct}
               disabledDate={(date) => {
-                if (isSameDate(date) && date.isAfter(dayjs())) {
+                if (isInBookingDate(date) && date.isAfter(dayjs())) {
                   return false;
                 }
 
                 return true;
               }}
               className="w-full bg-red-100"
+            />
+          </FormItem> */}
+          <FormItem label="Ngày khởi hành" className="relative z-10">
+            <CalendarSelector
+              value={dayjs(productItem?.startDate)}
+              disabledDate={(date) => {
+                if (isInBookingDate(date) && date.isAfter(dayjs())) {
+                  return false;
+                }
+
+                return true;
+              }}
+              onChange={onChangeProduct}
             />
           </FormItem>
         </Form>
@@ -196,7 +214,6 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
           }
         />
       </ProductSummaryWraper>
-
       <HotlineBox label="Hotline" phoneNumber={"0982.013.089"} />
     </div>
   );

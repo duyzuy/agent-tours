@@ -58,7 +58,7 @@ const ProductSummaryWraper = ({
   };
   return (
     <>
-      <div className="box-booking border lg:px-6 px-4 lg:py-4 py-3 mb-4 rounded-md bg-white drop-shadow-sm">
+      <div className="box-booking border lg:px-6 px-4 lg:py-4 py-3 mb-4 rounded-md bg-white drop-shadow-sm relative z-10">
         <div className="header py-3 flex items-center justify-between">
           <h3 className="font-semibold text-red-600 uppercase">{label}</h3>
           <span>

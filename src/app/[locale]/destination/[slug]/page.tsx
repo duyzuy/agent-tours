@@ -86,7 +86,7 @@ export default async function DestinationPageDetail({ params: { locale, slug } }
       byDest: destList,
     },
     1,
-    999,
+    20,
   );
 
   const productList = await getProductList(initQueryParams);

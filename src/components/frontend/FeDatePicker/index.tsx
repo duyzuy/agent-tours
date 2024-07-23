@@ -3,6 +3,6 @@ import "dayjs/locale/vi";
 import { DatePicker, DatePickerProps } from "antd";
 
 const FeDatePicker: React.FC<DatePickerProps> = (props) => {
-    return <DatePicker locale={locale} format="DD/MM/YYYY" {...props} />;
+  return <DatePicker locale={locale} format="DD/MM/YYYY" {...props} />;
 };
 export default FeDatePicker;

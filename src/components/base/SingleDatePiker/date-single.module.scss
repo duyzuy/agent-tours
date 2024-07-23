@@ -1,0 +1,28 @@
+.wrapper {
+  :global {
+    position: relative;
+
+    .single-date-item {
+      .item-active {
+        top: -0.5rem;
+      }
+    }
+    .single-date-btn {
+      width: 30px;
+      height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      top: calc(50% - 15px);
+
+      &.prev {
+        left: 10px;
+      }
+
+      &.next {
+        right: 10px;
+      }
+    }
+  }
+}

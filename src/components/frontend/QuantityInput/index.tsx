@@ -4,20 +4,20 @@ import Quantity, { QuantityProps } from "@/components/admin/Quantity";
 import classNames from "classnames";
 
 const QuantityInput: React.FC<
-    QuantityProps & {
-        label?: string;
-        className?: string;
-    }
+  QuantityProps & {
+    label?: string;
+    className?: string;
+  }
 > = ({ label, className = "", ...restProps }) => {
-    return (
-        <div
-            className={classNames("quantity-input", {
-                [className]: className,
-            })}
-        >
-            <label className="block mb-2">{label}</label>
-            <Quantity size="md" {...restProps} />
-        </div>
-    );
+  return (
+    <div
+      className={classNames("quantity-input", {
+        [className]: className,
+      })}
+    >
+      <label className="block mb-2">{label}</label>
+      <Quantity size="md" {...restProps} />
+    </div>
+  );
 };
 export default QuantityInput;

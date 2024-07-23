@@ -1,8 +1,3 @@
-import IconChevronRight from "@/assets/icons/IconChevronRight";
-import IconChevronUp from "@/assets/icons/IconChevronUp";
-import classNames from "classnames";
-import Image from "next/image";
-import Link from "next/link";
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getFooterMenu, getFooterMenuInformation } from "@/app/[locale]/_actions/menu";

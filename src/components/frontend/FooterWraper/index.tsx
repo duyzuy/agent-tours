@@ -159,16 +159,18 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
           <div className="inner flex flex-wrap items-center -mx-4 lg:-mx-8">
             <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6 lg:mb-0">
               <div className="cotnent text-xs">
-                <h6 className="text-xl font-semibold text-main-400 mb-4">CÔNG TY CỔ PHẦN AN THÁI TRAVEL</h6>
-                <div className="flex mb-1">
+                <h6 className="text-base lg:text-xl font-semibold text-main-400 mb-4">
+                  CÔNG TY CỔ PHẦN AN THÁI TRAVEL
+                </h6>
+                <div className="flex mb-2">
                   <span className="w-12 mr-2">Địa chỉ:</span>
                   <span className="flex-1">
                     302/3 Phố Kim Mã, Phường Ngọc Khánh, Quận Ba Đình, TP. Hà Nội, Việt Nam.
                   </span>
                 </div>
-                <div className="flex mb-1">
+                <div className="flex mb-2">
                   <span className="w-12 mr-2">Hotline:</span>
-                  <ul className="flex flex-1 items-center">
+                  <ul className="flex flex-1 gap-1 items-center flex-wrap">
                     <li>PKD: +084 988 308 520</li>
                     <li className="w-[1px] h-[6px] bg-slate-300 mx-2"></li>
                     <li>Sale: +084 988 308 520</li>
@@ -176,7 +178,7 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                     <li>CSKH: +084 988 308 520</li>
                   </ul>
                 </div>
-                <div className="flex mb-1">
+                <div className="flex mb-2">
                   <span className="w-12 mr-2">Email:</span>
                   <span className="flex-1">support@domain.com.vn</span>
                 </div>
@@ -212,7 +214,7 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                 <div className="qr lg:px-6 lg:mx-6 px-2 mx-2 border-l border-r">
                   <div className="text-center">
                     <Image src="/assets/images/icon-qr.svg" alt="qr" width={60} height={60} className="block mx-auto" />
-                    <p className="text-sm py-2 max-w-[160px] text-center mx-auto">
+                    <p className="text-xs lg:text-sm py-2 max-w-[160px] text-center mx-auto">
                       <span className="block">Tải ứng dụng</span>
                       <span>di động AnThai Travel</span>
                     </p>
