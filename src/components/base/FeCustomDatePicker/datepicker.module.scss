@@ -57,11 +57,12 @@
     }
     .calendar-weeks-name {
       display: flex;
+      justify-content: space-around;
       list-style-type: none;
       padding: 0;
       margin: 0;
 
-      .day-name {
+      .day-name > span {
         width: 45px;
         height: 40px;
         align-items: center;
@@ -85,16 +86,20 @@
     }
     .calendar-days {
       display: flex;
+      justify-content: space-around;
       .date {
-        width: 42px;
-        height: 42px;
-        padding: 4px 6px;
         margin: 2px;
-        font-size: 16px;
-        border: 1px solid #f1f1f1;
-        border-radius: 3px;
-        cursor: pointer;
-        position: relative;
+        & > span {
+          display: block;
+          width: 42px;
+          height: 42px;
+          padding: 4px 6px;
+          font-size: 16px;
+          border: 1px solid #f1f1f1;
+          border-radius: 3px;
+          cursor: pointer;
+          position: relative;
+        }
         .luna-date {
           font-size: 10px;
         }
@@ -103,8 +108,10 @@
         }
         &.disable {
           opacity: 0.3;
-          background-color: #f1f1f1;
           cursor: not-allowed;
+          span {
+            background-color: #f1f1f1;
+          }
         }
         &.is-today {
           border-color: #11b981;
@@ -119,12 +126,17 @@
         &.is-selected {
           color: #fff;
           z-index: 20;
-          box-shadow: 0 1px 6px #ccc;
           &.end {
-            background-color: #ff5722;
+            span {
+              background-color: #ff5722;
+              border-color: #ff5722;
+            }
           }
           &.start {
-            background-color: #11b981;
+            span {
+              background-color: #11b981;
+              border-color: #11b981;
+            }
           }
           .luna-date {
             color: #fff;

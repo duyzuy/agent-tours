@@ -63,7 +63,7 @@ const TourCard = ({
             {price ? (
               <p className="text-red-600 text-md font-semibold">{price}</p>
             ) : (
-              <p className="text-xs">{t("card.contact")}</p>
+              <p className="text-xs h-[22px]">{t("card.contact")}</p>
             )}
           </div>
           <p className="line w-full h-[1px] my-3 bg-gray-100"></p>

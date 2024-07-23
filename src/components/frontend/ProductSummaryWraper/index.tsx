@@ -53,8 +53,19 @@ const ProductSummaryWraper = ({
 }: ProductSummaryWraperProps) => {
   const t = useTranslations("String");
   const [openBreakDown, setShowBreakDown] = useState(false);
+  const [showModalPromotion, setShowModalPromotion] = useState(false);
   const closeBreakDown = () => {
     setShowBreakDown(false);
+  };
+  const closeModalPromotion = () => {
+    setShowModalPromotion(false);
+  };
+  const openModalPromotion = () => {
+    setShowModalPromotion(true);
+  };
+  const selectPromotion = (code?: string) => {
+    promotion?.onSelect?.(code);
+    setShowModalPromotion(false);
   };
   return (
     <>
@@ -81,27 +92,14 @@ const ProductSummaryWraper = ({
               </div>
             </div>
             {promotion?.items?.length ? (
-              <div className="card-promocode">
-                <div className="card-promocode-label mb-2">
-                  <span className="flex items-center text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md">
-                    <IconTicketPercent className="w-4 h-4 mr-1" />
-                    <span>{t("promoCode")}</span>
-                  </span>
-                </div>
-                <div className="card-promocode-items">
-                  {promotion.items.map((promo, _index) => (
-                    <CouponCard
-                      key={_index}
-                      className={_index !== 0 ? "mt-3" : ""}
-                      isSelecting={promotion.selectedCode === promo.code}
-                      code={promo.code}
-                      price={promo.price}
-                      validTo={promo.validTo}
-                      validFrom={promo.validTo}
-                      onClick={() => promotion?.onSelect?.(promo.code)}
-                    />
-                  ))}
-                </div>
+              <div className="card-promocode-label mb-2">
+                <span
+                  className="flex items-center text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md cursor-pointer"
+                  onClick={openModalPromotion}
+                >
+                  <IconTicketPercent className="w-4 h-4 mr-2" />
+                  <span>{t("promoCode")}</span>
+                </span>
               </div>
             ) : null}
           </div>
@@ -133,6 +131,25 @@ const ProductSummaryWraper = ({
           </>
         )}
       </div>
+      <Modal open={showModalPromotion} centered onCancel={closeModalPromotion} width={420} footer={null}>
+        <div className="modal__breakdown-header mb-4">
+          <p className="text-center text-lg">{t("modalPromotion.title")}</p>
+        </div>
+        <div>
+          {promotion?.items?.map((promo, _index) => (
+            <CouponCard
+              key={_index}
+              className={_index !== 0 ? "mt-3" : ""}
+              isSelecting={promotion.selectedCode === promo.code}
+              code={promo.code}
+              price={promo.price}
+              validTo={promo.validTo}
+              validFrom={promo.validTo}
+              onClick={() => selectPromotion(promo.code)}
+            />
+          ))}
+        </div>
+      </Modal>
       <Modal open={openBreakDown} centered onCancel={closeBreakDown} width={420} footer={null}>
         <div className="modal__breakdown-header mb-4">
           <p className="text-center text-lg">{t("modalBreakdown.title")}</p>

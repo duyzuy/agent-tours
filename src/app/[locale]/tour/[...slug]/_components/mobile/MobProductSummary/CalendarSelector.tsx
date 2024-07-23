@@ -2,7 +2,8 @@ import { useCallback, useRef, useState } from "react";
 import FeCustomDatePicker, { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import dayjs from "dayjs";
 import { IconCalendar } from "@/assets/icons";
-import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
+import { Drawer } from "antd";
+import styled from "styled-components";
 interface CalendarSelectorProps {
   value?: dayjs.Dayjs;
   dateList?: dayjs.Dayjs;
@@ -11,7 +12,7 @@ interface CalendarSelectorProps {
 }
 const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate, onChange }) => {
   const [open, setOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+
   const openCalendar = useCallback(() => {
     setOpen(true);
   }, []);
@@ -20,35 +21,53 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate
     onChange(value, dateStr);
     setOpen(false);
   };
-  useClickOutSide(modalRef, () => {
-    setOpen(false);
-  });
+
   return (
-    <div>
-      <div
-        className="control border border-gray-300 rounded-sm px-3 py-2 flex justify-between items-center cursor-pointer"
-        onClick={openCalendar}
-      >
-        <span className="text-base">{dayjs(value).format("DD/MM/YYYY")}</span>
-        <span>
-          <IconCalendar width={16} height={16} />
-        </span>
-      </div>
-      {open ? (
-        <div ref={modalRef} className="absolute">
-          <FeCustomDatePicker
-            value={value}
-            numberOfMonth={1}
-            layout="vertical"
-            // minDate={dayjs().toDate()}
-            startDate={value}
-            maxDate={dayjs().add(1, "year")}
-            disabledDate={disabledDate}
-            onChange={handleChangeDate}
-          />
+    <>
+      <div className="control border border-gray-200 rounded-lg px-4 py-4 flex justify-between items-center">
+        <div className="depart-date w-full">
+          <div className="mb-4 border-b pb-4 flex justify-between">
+            <span className="block">Ngày khởi hành</span>
+            <span className="text-base inline-block rounded-lg  text-primary-default ">
+              {dayjs(value).format("DD/MM/YYYY")}
+            </span>
+          </div>
+          <div className="block">
+            <span className="flex items-center cursor-pointer" onClick={openCalendar}>
+              <IconCalendar width={16} height={16} className="mr-2" />
+              Chọn ngày khác
+            </span>
+          </div>
         </div>
-      ) : null}
-    </div>
+      </div>
+      <DrawerCalendar
+        open={open}
+        placement="bottom"
+        height={"calc(80vh - env(safe-area-inset-bottom))"}
+        onClose={() => setOpen(false)}
+      >
+        <FeCustomDatePicker
+          value={value}
+          numberOfMonth={12}
+          layout="vertical"
+          hideNextAndPrev={true}
+          // minDate={dayjs().toDate()}
+          // startDate={value}
+          // maxDate={dayjs().add(1, "year")}
+          disabledDate={disabledDate}
+          onChange={handleChangeDate}
+        />
+      </DrawerCalendar>
+    </>
   );
 };
 export default CalendarSelector;
+
+const DrawerCalendar = styled(Drawer)`
+  &.travel-drawer-content {
+    border-radius: 10px 10px 0 0;
+    .travel-drawer-body {
+      padding: 0;
+    }
+  }
+`;

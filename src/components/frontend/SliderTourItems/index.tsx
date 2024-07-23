@@ -41,7 +41,8 @@ const TOUR_ITEMS = [
     title: " Liên Tuyến Trung Bắc: Đà Nẵng - Huế - Động Phong Nha & Thiên Đường",
   },
 ];
-const SliderTourItems = () => {
+export interface SliderProducts {}
+const SliderTourItems: React.FC<SliderProducts> = () => {
   const swiperRef = useRef<SwiperType>();
 
   return (

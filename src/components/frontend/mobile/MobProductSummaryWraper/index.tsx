@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IconChevronDown } from "@/assets/icons";
 import { useTranslations } from "next-intl";
 import { IconTicketPercent } from "@/assets/icons";
@@ -54,10 +54,17 @@ const MobProductSummaryWraper = ({
 }: MobProductSummaryWraperProps) => {
   const t = useTranslations("String");
   const [openBreakDown, setShowBreakDown] = useState(false);
+  const positionRef = useRef(0);
   const closeBreakDown = () => {
     setShowBreakDown(false);
   };
   const [showDrawerBookingContainer, setShowDrawerBookingContainer] = useState(false);
+  const [showPromotionDrawer, setShowPromotionDrawer] = useState(false);
+
+  const onSelectPromotion = (code?: string) => {
+    promotion?.onSelect?.(code);
+    setShowPromotionDrawer(false);
+  };
   return (
     <>
       <div
@@ -87,83 +94,116 @@ const MobProductSummaryWraper = ({
         open={showDrawerBookingContainer}
         placement="bottom"
         height={"calc(80vh - env(safe-area-inset-bottom))"}
+        push={false}
+        destroyOnClose={true}
+        afterOpenChange={(open) => {
+          const body = document.getElementsByTagName("body")[0];
+          const scrollY = window.scrollY;
+          if (open) {
+            body.style.overflowY = "hidden";
+            body.style.position = "fixed";
+            body.style.top = `-${scrollY}px`;
+            positionRef.current = scrollY;
+            body.style.left = "0px";
+            body.style.right = "0px";
+
+            body.style.overflowY = "hidden";
+          } else {
+            body.removeAttribute("style");
+            window.scrollTo({ top: positionRef.current });
+          }
+        }}
         onClose={() => setShowDrawerBookingContainer(false)}
       >
-        <div className="mb-box-summary-booking__container">
+        <div className="mb-box-summary-booking__container pb-24">
           <div className="mb-box-summary-booking rounded-md bg-white drop-shadow-sm relative z-10">
             <div className="header mb-3">
               <h3 className="font-[500] text-lg">{label}</h3>
             </div>
             {productPrice ? (
-              <div className="mb-3 py-2">
-                <div className="pricing mb-3">
-                  <div className="price block">
-                    <span className="text-xs block">{t("justFrom")}</span>
-                    <span className="text-red-600 font-semibold text-xl block">{productPrice}</span>
+              <>
+                <div className="mb-3 py-2">
+                  <div className="pricing mb-3">
+                    <div className="price block">
+                      <span className="text-xs block">{t("justFrom")}</span>
+                      <span className="text-red-600 font-semibold text-xl block">{productPrice}</span>
+                    </div>
+                    <div className="amount inline-block">
+                      <span className="text-xs block">
+                        {t("productSummary.amountRemain", {
+                          amount: openAmount,
+                        })}
+                      </span>
+                    </div>
                   </div>
-                  <div className="amount inline-block">
-                    <span className="text-xs block">
-                      {t("productSummary.amountRemain", {
-                        amount: openAmount,
-                      })}
-                    </span>
-                  </div>
-                </div>
-                {promotion?.items?.length ? (
-                  <div className="card-promocode">
+                  {promotion?.items?.length ? (
                     <div className="card-promocode-label mb-2">
-                      <span className="flex items-center text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md">
-                        <IconTicketPercent className="w-4 h-4 mr-1" />
+                      <span
+                        className="flex items-center text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md"
+                        onClick={() => setShowPromotionDrawer(true)}
+                      >
+                        <IconTicketPercent className="w-4 h-4 mr-2" />
                         <span>{t("promoCode")}</span>
                       </span>
                     </div>
-                    <div className="card-promocode-items">
-                      {promotion.items.map((promo, _index) => (
-                        <CouponCard
-                          key={_index}
-                          className={_index !== 0 ? "mt-3" : ""}
-                          isSelecting={promotion.selectedCode === promo.code}
-                          code={promo.code}
-                          price={promo.price}
-                          validTo={promo.validTo}
-                          validFrom={promo.validTo}
-                          onClick={() => promotion?.onSelect?.(promo.code)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-              </div>
+                  ) : null}
+                </div>
+              </>
             ) : (
-              <p className="text-red-600 font-semibold text-2xl mb-6">{t("card.contact")}</p>
+              <div className="notice-empty-price mb-6">
+                <p className="text-red-600 font-semibold text-xl mb-6">{t("card.contact")}</p>
+                <p>{t("productSummary.emptyPrices")}</p>
+              </div>
             )}
             {children}
-            {!productPrice ? (
-              <p>{t("productSummary.emptyPrices")}</p>
-            ) : (
-              <>
-                <MobProductSummaryWraper.Subtotal
-                  label={t("subtotal")}
-                  onClick={() => setShowBreakDown(true)}
-                  subtotal={breakDown?.subtotal}
-                />
-                <Flex gap="middle">
-                  <Button
-                    type="primary"
-                    block
-                    className="bg-primary-default"
-                    onClick={onBookNow}
-                    size="large"
-                    loading={isLoading}
-                  >
-                    Đặt ngay
-                  </Button>
-                </Flex>
-              </>
-            )}
           </div>
         </div>
+
+        {productPrice ? (
+          <div className="absolute bottom-0 left-0 right-0 z-20 bg-white px-4 py-4 border-t">
+            <MobProductSummaryWraper.Subtotal
+              label={t("subtotal")}
+              onClick={() => setShowBreakDown(true)}
+              subtotal={breakDown?.subtotal}
+            />
+            <Flex gap="middle">
+              <Button
+                type="primary"
+                block
+                className="bg-primary-default"
+                onClick={onBookNow}
+                size="large"
+                loading={isLoading}
+              >
+                Đặt ngay
+              </Button>
+            </Flex>
+          </div>
+        ) : null}
       </DrawerMobileBookingSummary>
+      <DrawerMobilePromotion
+        open={showPromotionDrawer}
+        placement="bottom"
+        height={"calc(80vh - env(safe-area-inset-bottom))"}
+        onClose={() => setShowPromotionDrawer(false)}
+        title="Chọn mã giảm"
+        destroyOnClose={true}
+      >
+        <>
+          {promotion?.items?.map((promo, _index) => (
+            <CouponCard
+              key={_index}
+              className={_index !== 0 ? "mt-3" : ""}
+              isSelecting={promotion.selectedCode === promo.code}
+              code={promo.code}
+              price={promo.price}
+              validTo={promo.validTo}
+              validFrom={promo.validTo}
+              onClick={() => onSelectPromotion(promo?.code)}
+            />
+          ))}
+        </>
+      </DrawerMobilePromotion>
       <Modal open={openBreakDown} centered onCancel={closeBreakDown} width={420} footer={null}>
         <div className="modal__breakdown-header mb-4">
           <p className="text-center text-lg">{t("modalBreakdown.title")}</p>
@@ -233,7 +273,15 @@ MobProductSummaryWraper.Subtotal = function ProductSummarySubtotal({
 
 const DrawerMobileBookingSummary = styled(Drawer)`
   &.travel-drawer-content {
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
+    .travel-drawer-body {
+      padding: 16px;
+    }
+  }
+`;
+const DrawerMobilePromotion = styled(Drawer)`
+  &.travel-drawer-content {
+    border-radius: 10px 10px 0 0;
     .travel-drawer-body {
       padding: 16px;
     }

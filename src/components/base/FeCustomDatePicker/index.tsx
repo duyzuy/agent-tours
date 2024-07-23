@@ -46,8 +46,10 @@ export type FeCustomDatePickerProps = {
   layout?: "horizontal" | "vertical";
   disabledDate?: (date: dayjs.Dayjs) => boolean;
   className?: string;
+  hideNextAndPrev?: boolean;
 };
 const FeCustomDatePicker: React.FC<FeCustomDatePickerProps> = ({
+  hideNextAndPrev = false,
   numberOfMonth = 2,
   lang = "vi",
   onUpdateCalendar,
@@ -204,13 +206,19 @@ const FeCustomDatePicker: React.FC<FeCustomDatePickerProps> = ({
            * get date for rest
            */
           datesInWeek = [...datesInWeek, ...[...datesInMonth].splice(0, NUMBER_OF_WEEK - dayOfset)];
-          console.log(w, datesInWeek);
         } else {
           const startPosition =
             startDayOfMonth !== 0
               ? NUMBER_OF_WEEK * (w - 1) + (NUMBER_OF_WEEK - startDayOfMonth + 1)
               : NUMBER_OF_WEEK * (w - 1) + 1;
           datesInWeek = [...datesInMonth].splice(startPosition, NUMBER_OF_WEEK);
+
+          if (w === 4 && datesInWeek.length < 7) {
+            const dateFaker = Array.from({ length: NUMBER_OF_WEEK - datesInWeek.length }, (v, k) => {
+              return null;
+            });
+            datesInWeek = [...datesInWeek, ...dateFaker];
+          }
         }
 
         datesInWeekInMonth[w] = { week: w + 1, dates: datesInWeek };
@@ -254,10 +262,12 @@ const FeCustomDatePicker: React.FC<FeCustomDatePickerProps> = ({
     >
       <div className="datepicker-container">
         <div className="datepicker-body relative">
-          <div className="calendar-actions">
-            <PrevCalendarButton onClick={handleNextAndPrevMonth} />
-            <NextCalendarButton onClick={handleNextAndPrevMonth} />
-          </div>
+          {hideNextAndPrev ? null : (
+            <div className="calendar-actions">
+              <PrevCalendarButton onClick={handleNextAndPrevMonth} />
+              <NextCalendarButton onClick={handleNextAndPrevMonth} />
+            </div>
+          )}
           <div
             className={classNames("calendar-months", {
               [layout]: layout,
@@ -284,7 +294,9 @@ const FeCustomDatePicker: React.FC<FeCustomDatePickerProps> = ({
                             onClick={handleSelectDate}
                           />
                         ) : (
-                          <li className="date invalid faker" key={`faker-${dateInd}`}></li>
+                          <li className="date invalid faker" key={`faker-${dateInd}`}>
+                            <span className="date-item-inner faker"></span>
+                          </li>
                         ),
                       )}
                     </ul>

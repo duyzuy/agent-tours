@@ -16,6 +16,8 @@ import { isMobile } from "@/utils/detectMobile";
 import ProductContent from "./_components/ProductContent";
 import { isUndefined } from "lodash";
 import TourRelateds from "../_components/TourRelateds";
+import { getProductListByCMSIdentity } from "../../_actions/searchProduct";
+import { FeProductItem } from "@/models/fe/productItem.interface";
 
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
   loading: () => <ProductGalleries className="w-full mb-6" />,
@@ -55,6 +57,11 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
     slug: templateContentSlug,
     lang: locale,
   });
+
+  let productRelatedList: FeProductItem[] | undefined = [];
+  if (cmsTemplateContent) {
+    productRelatedList = await getProductListByCMSIdentity(cmsTemplateContent?.code, 10);
+  }
 
   const productList = await getSellableListByTemplateId(Number(templateId));
   const currentSellable = productList?.find((item) => item.recId === Number(sellableId));
@@ -96,7 +103,14 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
             <ProductContent data={cmsTemplateContent} />
 
             <div className="space h-8"></div>
-            <TourRelateds className="mb-8" />
+            {productRelatedList?.length ? (
+              <TourRelateds
+                className="mb-8"
+                items={productRelatedList}
+                sellableTemplateCode={cmsTemplateContent.templateCodes}
+              />
+            ) : null}
+
             {/* <TourReviews /> */}
           </div>
           {isMobile() ? (

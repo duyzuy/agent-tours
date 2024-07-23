@@ -1,0 +1,25 @@
+.pagination {
+  :global {
+    position: absolute;
+    right: 0;
+    top: -30px;
+    display: flex;
+    align-items: center;
+    .swiper-pagination-bullet {
+      border-radius: 10px;
+      width: 8px;
+      height: 8px;
+      background: #f1f1f1;
+      display: block;
+      margin-left: 3px;
+      margin-right: 3px;
+      transition: all linear 240ms;
+      cursor: pointer;
+
+      &.swiper-pagination-bullet-active {
+        width: 30px;
+        background-color: #dc2627;
+      }
+    }
+  }
+}

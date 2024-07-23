@@ -42,12 +42,12 @@ const DateItem: React.FC<{
       onClick={() => (isDisable ? undefined : onClick?.(date))}
     >
       {date ? (
-        <>
+        <span className="date-item-inner">
           <span className="text-xs text-gray-500 absolute bottom-0 right-1 luna-date z-20">{lunaDate}</span>
           <time dateTime={dayjs(date).format("yyyy-MM-dd")} className="relative z-20">
             {dayjs(date).format("D")}
           </time>
-        </>
+        </span>
       ) : null}
     </li>
   );

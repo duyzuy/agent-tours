@@ -162,20 +162,17 @@ const MobProductSummary = ({ className = "", sellableList, defaultSellable, name
             subtotal: moneyFormatVND(subtotal),
           }}
         >
-          <Form layout="vertical" component="div">
-            <FormItem label="Ngày khởi hành" className="relative z-10">
-              <CalendarSelector
-                value={dayjs(productItem?.startDate)}
-                disabledDate={(date) => {
-                  if (isInBookingDate(date) && date.isAfter(dayjs())) {
-                    return false;
-                  }
-                  return true;
-                }}
-                onChange={onChangeProduct}
-              />
-            </FormItem>
-          </Form>
+          <CalendarSelector
+            value={dayjs(productItem?.startDate)}
+            disabledDate={(date) => {
+              if (isInBookingDate(date) && date.isAfter(dayjs())) {
+                return false;
+              }
+              return true;
+            }}
+            onChange={onChangeProduct}
+          />
+          <div className="h-6"></div>
           <MobProductSummary.PassengerQuantity
             label={"Số lượng hành khách"}
             passenger={{

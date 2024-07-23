@@ -17,3 +17,19 @@ export const getProductList = async ({ requestObject, pageCurrent, pageSize }: F
   });
   return response?.result;
 };
+
+export const getProductListByCMSIdentity = async (templateCMSIdentity: string, pageSize: number) => {
+  unstable_noStore();
+  const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>("localfront/BookingOrder_Search", {
+    next: { tags: ["productListByTemplateCode"] },
+    cache: "no-store",
+    params: {
+      requestObject: {
+        byTemplateCmsIdentity: templateCMSIdentity,
+      },
+      pageCurrent: 1,
+      pageSize,
+    },
+  });
+  return response?.result;
+};
