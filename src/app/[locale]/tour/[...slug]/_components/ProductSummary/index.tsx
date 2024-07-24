@@ -240,41 +240,39 @@ ProductSummary.PassengerQuantity = function ProductSummaryPassengerQuantity({
     onChangePassenger?.(type, value, action);
   };
   return (
-    <>
-      <div className="passengers mb-4">
-        <div className="label mb-3">
-          <p>{label}</p>
-        </div>
-        <div className="select flex">
-          <QuantityInput
-            size="sm"
-            label={t("adult")}
-            value={passenger["adult"]}
-            className="w-1/3"
-            maximum={9}
-            minimum={1}
-            onChange={(action, value) => onChangeQuantityPax(PassengerType.ADULT, value, action)}
-          />
-          <QuantityInput
-            size="sm"
-            label={t("children")}
-            value={passenger["children"]}
-            maximum={9}
-            minimum={0}
-            className="w-1/3"
-            onChange={(action, value) => onChangeQuantityPax(PassengerType.CHILD, value, action)}
-          />
-          <QuantityInput
-            size="sm"
-            label={t("infant")}
-            value={passenger["infant"]}
-            maximum={9}
-            minimum={0}
-            className="w-1/3"
-            onChange={(action, value) => onChangeQuantityPax(PassengerType.INFANT, value, action)}
-          />
-        </div>
+    <div className="passengers mb-4">
+      <div className="label mb-3">
+        <p>{label}</p>
       </div>
-    </>
+      <div className="select flex">
+        <QuantityInput
+          size="sm"
+          label={t("adult")}
+          value={passenger["adult"]}
+          className="w-1/3"
+          maximum={9}
+          minimum={1}
+          onChange={(action, value) => onChangeQuantityPax(PassengerType.ADULT, value, action)}
+        />
+        <QuantityInput
+          size="sm"
+          label={t("children")}
+          value={passenger["children"]}
+          maximum={9}
+          minimum={0}
+          className="w-1/3"
+          onChange={(action, value) => onChangeQuantityPax(PassengerType.CHILD, value, action)}
+        />
+        <QuantityInput
+          size="sm"
+          label={t("infant")}
+          value={passenger["infant"]}
+          maximum={9}
+          minimum={0}
+          className="w-1/3"
+          onChange={(action, value) => onChangeQuantityPax(PassengerType.INFANT, value, action)}
+        />
+      </div>
+    </div>
   );
 };

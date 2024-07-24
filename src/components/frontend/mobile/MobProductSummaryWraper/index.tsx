@@ -65,6 +65,11 @@ const MobProductSummaryWraper = ({
     promotion?.onSelect?.(code);
     setShowPromotionDrawer(false);
   };
+  const handleClickBooknow = () => {
+    const body = document.getElementsByTagName("body")[0];
+    body.removeAttribute("style");
+    onBookNow?.();
+  };
   return (
     <>
       <div
@@ -171,7 +176,7 @@ const MobProductSummaryWraper = ({
                 type="primary"
                 block
                 className="bg-primary-default"
-                onClick={onBookNow}
+                onClick={handleClickBooknow}
                 size="large"
                 loading={isLoading}
               >
