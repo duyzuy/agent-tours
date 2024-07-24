@@ -1,15 +1,24 @@
 import { useCallback, useRef, useState } from "react";
-import FeCustomDatePicker, { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import dayjs from "dayjs";
+import FeCustomDatePicker, { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import { IconCalendar } from "@/assets/icons";
 import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
+import classNames from "classnames";
 interface CalendarSelectorProps {
+  label?: string;
   value?: dayjs.Dayjs;
   dateList?: dayjs.Dayjs;
   disabledDate?: FeCustomDatePickerProps["disabledDate"];
   onChange: (value: dayjs.Dayjs | null, dateString: string) => void;
+  className?: string;
 }
-const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate, onChange }) => {
+const CalendarSelector: React.FC<CalendarSelectorProps> = ({
+  value,
+  disabledDate,
+  onChange,
+  className = "",
+  label,
+}) => {
   const [open, setOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const openCalendar = useCallback(() => {
@@ -24,15 +33,22 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate
     setOpen(false);
   });
   return (
-    <div>
-      <div
-        className="control border border-gray-300 rounded-sm px-3 py-2 flex justify-between items-center cursor-pointer"
-        onClick={openCalendar}
-      >
-        <span className="text-base">{dayjs(value).format("DD/MM/YYYY")}</span>
-        <span>
-          <IconCalendar width={16} height={16} />
-        </span>
+    <div
+      className={classNames("calendar-selector relative z-10", {
+        [className]: className,
+      })}
+    >
+      <div className="calendar-control">
+        <div className="mb-2">{label}</div>
+        <div
+          className="flex items-center justify-between cursor-pointer px-3 py-2 rounded-sm border border-gray-300 "
+          onClick={openCalendar}
+        >
+          <span className="text-base">{dayjs(value).format("DD/MM/YYYY")}</span>
+          <span>
+            <IconCalendar width={16} height={16} />
+          </span>
+        </div>
       </div>
       {open ? (
         <div ref={modalRef} className="absolute">

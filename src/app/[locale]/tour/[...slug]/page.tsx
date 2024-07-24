@@ -87,8 +87,8 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
         />
       </div>
 
-      <div className="container mx-auto py-8 lg:px-8 md:px-6 px-4">
-        <div className="flex flex-wrap">
+      <div className="container mx-auto py-12 lg:px-8 md:px-6 px-4">
+        <div className="flex flex-wrap items-start">
           <div className="tour-contents w-full lg:w-7/12">
             <ProductHeader name={cmsTemplateContent?.name} tourCode={currentSellable?.template.code}>
               <h1 className="text-xl text-primary-default font-bold">{cmsTemplateContent?.name}</h1>
@@ -104,11 +104,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
             <div className="space h-8"></div>
             {productRelatedList?.length ? (
-              <TourRelateds
-                className="mb-8"
-                items={productRelatedList}
-                sellableTemplateCode={cmsTemplateContent.templateCodes}
-              />
+              <TourRelateds items={productRelatedList} sellableTemplateCode={cmsTemplateContent.templateCodes} />
             ) : null}
 
             {/* <TourReviews /> */}
@@ -124,7 +120,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
             <DynamicProductSummary
               defaultSellable={currentSellable}
               sellableList={productList}
-              className="w-full lg:w-5/12 lg:pl-8"
+              className="w-full lg:w-5/12 lg:pl-8 sticky top-4"
             />
           )}
           <ClientStoreData data={cmsTemplateContent?.languages} log={{ productList, cmsTemplateContent }} />

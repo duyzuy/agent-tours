@@ -1,31 +1,15 @@
 "use client";
 import { useState } from "react";
-import { IconChevronDown } from "@/assets/icons";
 import { useTranslations } from "next-intl";
-import { IconTicketPercent } from "@/assets/icons";
-import classNames from "classnames";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import CouponCard from "../CouponCard";
 import { Modal, Flex, Button } from "antd";
 import { PassengerType } from "@/models/common.interface";
-
+import classNames from "classnames";
 interface ProductSummaryWraperProps {
   label?: string;
   productPrice?: string;
   children?: React.ReactNode;
   openAmount?: number;
-  prefix?: () => React.ReactNode;
-  promotion: {
-    selectedCode?: string;
-    items?: {
-      name?: string;
-      code?: string;
-      price?: string;
-      validFrom?: string;
-      validTo?: string;
-    }[];
-    onSelect?: (value?: string) => void;
-  };
   onClosebreakDown?: () => {};
   breakDown?: {
     pricingConfigs: {
@@ -45,71 +29,45 @@ const ProductSummaryWraper = ({
   productPrice,
   openAmount,
   children,
-  prefix,
-  promotion,
   breakDown,
   onBookNow,
   isLoading = false,
 }: ProductSummaryWraperProps) => {
   const t = useTranslations("String");
   const [openBreakDown, setShowBreakDown] = useState(false);
-  const [showModalPromotion, setShowModalPromotion] = useState(false);
+
   const closeBreakDown = () => {
     setShowBreakDown(false);
   };
-  const closeModalPromotion = () => {
-    setShowModalPromotion(false);
-  };
-  const openModalPromotion = () => {
-    setShowModalPromotion(true);
-  };
-  const selectPromotion = (code?: string) => {
-    promotion?.onSelect?.(code);
-    setShowModalPromotion(false);
-  };
+
   return (
     <>
-      <div className="box-booking border lg:px-6 px-4 lg:py-4 py-3 mb-4 rounded-md bg-white drop-shadow-sm relative z-10">
+      <div className="box-booking border lg:px-6 px-4 pt-4 pb-6 mb-4 rounded-md bg-white shadow-sm relative z-10">
         <div className="header py-3 flex items-center justify-between">
-          <h3 className="font-semibold text-red-600 uppercase">{label}</h3>
-          <span>
-            <IconChevronDown />
-          </span>
+          <h3 className="font-semibold text-primary-default uppercase">{label}</h3>
         </div>
         {productPrice ? (
-          <div className="mb-3 py-2">
-            <div className="pricing mb-3">
-              <div className="price block">
-                <span className="text-xs block">{t("justFrom")}</span>
-                <span className="text-red-600 font-semibold text-2xl block">{productPrice}</span>
-              </div>
-              <div className="amount inline-block">
-                <span className="text-xs block">
-                  {t("productSummary.amountRemain", {
-                    amount: openAmount,
-                  })}
-                </span>
-              </div>
+          <div className="pricing mb-4">
+            <div className="price block">
+              <span className="text-xs block">{t("justFrom")}</span>
+              <span className="text-red-600 font-semibold text-2xl block">{productPrice}</span>
             </div>
-            {promotion?.items?.length ? (
-              <div className="card-promocode-label mb-2">
-                <span
-                  className="flex items-center text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md cursor-pointer"
-                  onClick={openModalPromotion}
-                >
-                  <IconTicketPercent className="w-4 h-4 mr-2" />
-                  <span>{t("promoCode")}</span>
-                </span>
-              </div>
-            ) : null}
+            <div className="amount-remainning">
+              <span className="text-xs block">
+                {t("productSummary.amountRemain", {
+                  amount: openAmount,
+                })}
+              </span>
+            </div>
           </div>
         ) : (
-          <p className="text-red-600 font-semibold text-2xl mb-6">{t("card.contact")}</p>
+          <div className="mb-6 no-price-note">
+            <p className="text-red-600 font-semibold text-2xl mb-4">{t("card.contact")}</p>
+            <p>{t("productSummary.emptyPrices")}</p>
+          </div>
         )}
         {children}
-        {!productPrice ? (
-          <p>{t("productSummary.emptyPrices")}</p>
-        ) : (
+        {!productPrice ? null : (
           <>
             <ProductSummaryWraper.Subtotal
               label={t("subtotal")}
@@ -131,25 +89,6 @@ const ProductSummaryWraper = ({
           </>
         )}
       </div>
-      <Modal open={showModalPromotion} centered onCancel={closeModalPromotion} width={420} footer={null}>
-        <div className="modal__breakdown-header mb-4">
-          <p className="text-center text-lg">{t("modalPromotion.title")}</p>
-        </div>
-        <div>
-          {promotion?.items?.map((promo, _index) => (
-            <CouponCard
-              key={_index}
-              className={_index !== 0 ? "mt-3" : ""}
-              isSelecting={promotion.selectedCode === promo.code}
-              code={promo.code}
-              price={promo.price}
-              validTo={promo.validTo}
-              validFrom={promo.validTo}
-              onClick={() => selectPromotion(promo.code)}
-            />
-          ))}
-        </div>
-      </Modal>
       <Modal open={openBreakDown} centered onCancel={closeBreakDown} width={420} footer={null}>
         <div className="modal__breakdown-header mb-4">
           <p className="text-center text-lg">{t("modalBreakdown.title")}</p>
@@ -167,7 +106,6 @@ const ProductSummaryWraper = ({
               <span className="price flex-1 text-right text-primary-default">{pricing}</span>
             </div>
           ))}
-
           <div className="beak-down-bottom border-t pt-3 mt-3">
             {breakDown?.couponPolicy ? (
               <div>
@@ -203,7 +141,7 @@ ProductSummaryWraper.Subtotal = function ProductSummarySubtotal({
   onClick,
 }: ProductSummarySubtotalProps) {
   return (
-    <div className="subtotal py-2">
+    <div className="subtotal py-3">
       <p className="flex items-center justify-between font-semibold">
         <span className="text-gray-600 cursor-pointer" onClick={onClick}>
           {label}

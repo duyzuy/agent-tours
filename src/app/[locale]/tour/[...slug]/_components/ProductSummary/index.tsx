@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useMemo, useTransition } from "react";
+import React, { useEffect, useMemo, useTransition, useState } from "react";
 import QuantityInput from "@/components/frontend/QuantityInput";
-import { Form, DatePickerProps, message } from "antd";
+import { DatePickerProps } from "antd";
 import classNames from "classnames";
 import { FeProductItem } from "@/models/fe/productItem.interface";
-import FeDatePicker from "@/components/frontend/FeDatePicker";
+
 import dayjs, { Dayjs } from "dayjs";
-import FormItem from "@/components/base/FormItem";
-import { useState } from "react";
+
 import { moneyFormatVND } from "@/utils/helper";
 import { useTranslations } from "next-intl";
 import useInitProductItemAndPassengersInformation from "@/app/[locale]/(booking)/modules/useInitProductItemAndPassengersInformation";
@@ -16,17 +15,11 @@ import { PassengerType } from "@/models/common.interface";
 import useSummaryPricingSelect from "@/app/[locale]/(booking)/modules/useSummaryPricingSelect";
 import HotlineBox from "@/components/frontend/HotlineBox";
 import ProductSummaryWraper from "@/components/frontend/ProductSummaryWraper";
-import { formatDate } from "@/utils/date";
 import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
 import useAuth from "@/app/[locale]/hooks/useAuth";
-import { useSession } from "next-auth/react";
 import useAuthModal from "@/app/[locale]/(auth)/hooks";
-import { getSession } from "next-auth/react";
-import DateRangPicker from "@/components/base/DateRangePicker";
-import SingleDatePiker from "@/components/base/SingleDatePiker";
-import FeCustomDatePicker from "@/components/base/FeCustomDatePicker";
-import { IconCalendar } from "@/assets/icons";
 import CalendarSelector from "./CalendarSelector";
+import PromotionSelector from "./PromotionSelector";
 
 interface Props {
   className?: string;
@@ -140,20 +133,6 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
         label={t("productSummary.title")}
         productPrice={productItem?.configs.length ? moneyFormatVND(getLowestPrice(productItem.configs)) : undefined}
         openAmount={lowestPriceConfigItem?.open}
-        promotion={{
-          selectedCode: bookingCounponPolicy?.code,
-          items: productItem?.promotions.map((item) => ({
-            name: item.name,
-            code: item.code,
-            price: moneyFormatVND(item.discountAmount),
-            validFrom: formatDate(item.validFrom, "dd/MM/yyyy"),
-            validTo: formatDate(item.validTo, "dd/MM/yyyy"),
-            type: item.type,
-          })),
-          onSelect: (code) => {
-            bookingCounponPolicy?.code === code ? removeCouponPolicy() : addCouponPolicy(code);
-          },
-        }}
         onBookNow={handleNextToPassengerInfo}
         isLoading={isPendingInitBookingDetails}
         breakDown={{
@@ -165,41 +144,27 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
           subtotal: moneyFormatVND(subtotal),
         }}
       >
-        <Form layout="vertical" component="div">
-          {/* <FormItem label="Ngày khởi hành">
-            <FeDatePicker
-              value={dayjs(productItem?.startDate)}
-              placeholder="Ngày khởi hành"
-              size="large"
-              inputReadOnly
-              allowClear={false}
-              onChange={onChangeProduct}
-              disabledDate={(date) => {
-                if (isInBookingDate(date) && date.isAfter(dayjs())) {
-                  return false;
-                }
-
-                return true;
-              }}
-              className="w-full bg-red-100"
-            />
-          </FormItem> */}
-          <FormItem label="Ngày khởi hành" className="relative z-10">
-            <CalendarSelector
-              value={dayjs(productItem?.startDate)}
-              disabledDate={(date) => {
-                if (isInBookingDate(date) && date.isAfter(dayjs())) {
-                  return false;
-                }
-
-                return true;
-              }}
-              onChange={onChangeProduct}
-            />
-          </FormItem>
-        </Form>
+        <PromotionSelector
+          value={bookingCounponPolicy?.code}
+          items={productItem?.promotions || []}
+          onSelect={(item) =>
+            bookingCounponPolicy?.code === item.code ? removeCouponPolicy() : addCouponPolicy(item.code)
+          }
+        />
+        <CalendarSelector
+          label={t("productSummary.departDate.title")}
+          value={dayjs(productItem?.startDate)}
+          disabledDate={(date) => {
+            if (isInBookingDate(date) && date.isAfter(dayjs())) {
+              return false;
+            }
+            return true;
+          }}
+          onChange={onChangeProduct}
+          className="mb-6"
+        />
         <ProductSummary.PassengerQuantity
-          label={"Số lượng hành khách"}
+          label={t("productSummary.passengerQuantity.title")}
           passenger={{
             adult: bookingPassenger.adult,
             children: bookingPassenger.child,
@@ -240,7 +205,7 @@ ProductSummary.PassengerQuantity = function ProductSummaryPassengerQuantity({
     onChangePassenger?.(type, value, action);
   };
   return (
-    <div className="passengers mb-4">
+    <div className="passengers mb-6">
       <div className="label mb-3">
         <p>{label}</p>
       </div>

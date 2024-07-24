@@ -1,27 +1,23 @@
 "use client";
-import React, { useEffect, useMemo, useTransition } from "react";
-import QuantityInput from "@/components/frontend/QuantityInput";
-import { Form, DatePickerProps, message } from "antd";
+import React, { useEffect, useMemo, useTransition, useState } from "react";
+import { DatePickerProps } from "antd";
 import classNames from "classnames";
-import { FeProductItem } from "@/models/fe/productItem.interface";
-import FeDatePicker from "@/components/frontend/FeDatePicker";
 import dayjs, { Dayjs } from "dayjs";
-import FormItem from "@/components/base/FormItem";
-import { useState } from "react";
-import { moneyFormatVND } from "@/utils/helper";
 import { useTranslations } from "next-intl";
+import { FeProductItem } from "@/models/fe/productItem.interface";
+import { moneyFormatVND } from "@/utils/helper";
+
 import useInitProductItemAndPassengersInformation from "@/app/[locale]/(booking)/modules/useInitProductItemAndPassengersInformation";
 import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import { PassengerType } from "@/models/common.interface";
 import useSummaryPricingSelect from "@/app/[locale]/(booking)/modules/useSummaryPricingSelect";
 import MobProductSummaryWraper from "@/components/frontend/mobile/MobProductSummaryWraper";
-import { formatDate } from "@/utils/date";
 import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
 import useAuth from "@/app/[locale]/hooks/useAuth";
 import useAuthModal from "@/app/[locale]/(auth)/hooks";
-
 import CalendarSelector from "./CalendarSelector";
 import Quantity from "@/components/base/Quantity";
+import PromotionSelector from "../../ProductSummary/PromotionSelector";
 
 interface Props {
   className?: string;
@@ -127,70 +123,61 @@ const MobProductSummary = ({ className = "", sellableList, defaultSellable, name
   }, [productItem]);
 
   return (
-    <>
-      <div
-        className={classNames("mb-summary-booking", {
-          [className]: className,
-        })}
+    <div
+      className={classNames("mb-summary-booking", {
+        [className]: className,
+      })}
+    >
+      <MobProductSummaryWraper
+        label={name}
+        productPrice={productItem?.configs.length ? moneyFormatVND(getLowestPrice(productItem.configs)) : undefined}
+        openAmount={lowestPriceConfigItem?.open}
+        onBookNow={handleNextToPassengerInfo}
+        isLoading={isPendingInitBookingDetails}
+        breakDown={{
+          pricingConfigs: breakDownItems,
+          couponPolicy: bookingCounponPolicy && {
+            code: bookingCounponPolicy.code,
+            discountAmount: moneyFormatVND(bookingCounponPolicy.discountAmount),
+          },
+          subtotal: moneyFormatVND(subtotal),
+        }}
       >
-        <MobProductSummaryWraper
-          label={name}
-          productPrice={productItem?.configs.length ? moneyFormatVND(getLowestPrice(productItem.configs)) : undefined}
-          openAmount={lowestPriceConfigItem?.open}
-          promotion={{
-            selectedCode: bookingCounponPolicy?.code,
-            items: productItem?.promotions.map((item) => ({
-              name: item.name,
-              code: item.code,
-              price: moneyFormatVND(item.discountAmount),
-              validFrom: formatDate(item.validFrom, "dd/MM/yyyy"),
-              validTo: formatDate(item.validTo, "dd/MM/yyyy"),
-              type: item.type,
-            })),
-            onSelect: (code) => {
-              bookingCounponPolicy?.code === code ? removeCouponPolicy() : addCouponPolicy(code);
-            },
-          }}
-          onBookNow={handleNextToPassengerInfo}
-          isLoading={isPendingInitBookingDetails}
-          breakDown={{
-            pricingConfigs: breakDownItems,
-            couponPolicy: bookingCounponPolicy && {
-              code: bookingCounponPolicy.code,
-              discountAmount: moneyFormatVND(bookingCounponPolicy.discountAmount),
-            },
-            subtotal: moneyFormatVND(subtotal),
-          }}
-        >
-          <CalendarSelector
-            value={dayjs(productItem?.startDate)}
-            disabledDate={(date) => {
-              if (isInBookingDate(date) && date.isAfter(dayjs())) {
-                return false;
-              }
-              return true;
-            }}
-            onChange={onChangeProduct}
-          />
-          <div className="h-6"></div>
-          <MobProductSummary.PassengerQuantity
-            label={"Số lượng hành khách"}
-            passenger={{
-              adult: bookingPassenger.adult,
-              children: bookingPassenger.child,
-              infant: bookingPassenger.infant,
-            }}
-            onChangePassenger={(type, quantity, action) =>
-              setQuantityPassenger({
-                type: type,
-                quantity: quantity,
-                action,
-              })
+        <PromotionSelector
+          value={bookingCounponPolicy?.code}
+          items={productItem?.promotions || []}
+          onSelect={(item) =>
+            bookingCounponPolicy?.code === item.code ? removeCouponPolicy() : addCouponPolicy(item.code)
+          }
+        />
+        <CalendarSelector
+          value={dayjs(productItem?.startDate)}
+          disabledDate={(date) => {
+            if (isInBookingDate(date) && date.isAfter(dayjs())) {
+              return false;
             }
-          />
-        </MobProductSummaryWraper>
-      </div>
-    </>
+            return true;
+          }}
+          onChange={onChangeProduct}
+        />
+        <div className="h-6"></div>
+        <MobProductSummary.PassengerQuantity
+          label={t("productSummary.passengerQuantity.title")}
+          passenger={{
+            adult: bookingPassenger.adult,
+            children: bookingPassenger.child,
+            infant: bookingPassenger.infant,
+          }}
+          onChangePassenger={(type, quantity, action) =>
+            setQuantityPassenger({
+              type: type,
+              quantity: quantity,
+              action,
+            })
+          }
+        />
+      </MobProductSummaryWraper>
+    </div>
   );
 };
 export default MobProductSummary;
@@ -216,8 +203,8 @@ MobProductSummary.PassengerQuantity = function ProductSummaryPassengerQuantity({
   };
   return (
     <>
-      <div className="passengers-selection mb-4 border rounded-lg p-4">
-        <div className="label mb-3">
+      <div className="passengers-selection mb-4 border rounded-lg p-4 bg-white">
+        <div className="label mb-6 border-b pb-3">
           <p>{label}</p>
         </div>
         <div className="flex flex-col gap-y-3">

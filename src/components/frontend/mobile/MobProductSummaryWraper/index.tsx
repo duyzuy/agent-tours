@@ -16,17 +16,6 @@ interface MobProductSummaryWraperProps {
   children?: React.ReactNode;
   openAmount?: number;
   prefix?: () => React.ReactNode;
-  promotion: {
-    selectedCode?: string;
-    items?: {
-      name?: string;
-      code?: string;
-      price?: string;
-      validFrom?: string;
-      validTo?: string;
-    }[];
-    onSelect?: (value?: string) => void;
-  };
   onClosebreakDown?: () => {};
   breakDown?: {
     pricingConfigs: {
@@ -47,7 +36,6 @@ const MobProductSummaryWraper = ({
   openAmount,
   children,
   prefix,
-  promotion,
   breakDown,
   onBookNow,
   isLoading = false,
@@ -61,10 +49,6 @@ const MobProductSummaryWraper = ({
   const [showDrawerBookingContainer, setShowDrawerBookingContainer] = useState(false);
   const [showPromotionDrawer, setShowPromotionDrawer] = useState(false);
 
-  const onSelectPromotion = (code?: string) => {
-    promotion?.onSelect?.(code);
-    setShowPromotionDrawer(false);
-  };
   const handleClickBooknow = () => {
     const body = document.getElementsByTagName("body")[0];
     body.removeAttribute("style");
@@ -122,38 +106,23 @@ const MobProductSummaryWraper = ({
       >
         <div className="mb-box-summary-booking__container pb-24">
           <div className="mb-box-summary-booking rounded-md bg-white drop-shadow-sm relative z-10">
-            <div className="header mb-3">
+            <div className="header mb-4">
               <h3 className="font-[500] text-lg">{label}</h3>
             </div>
             {productPrice ? (
-              <>
-                <div className="mb-3 py-2">
-                  <div className="pricing mb-3">
-                    <div className="price block">
-                      <span className="text-xs block">{t("justFrom")}</span>
-                      <span className="text-red-600 font-semibold text-xl block">{productPrice}</span>
-                    </div>
-                    <div className="amount inline-block">
-                      <span className="text-xs block">
-                        {t("productSummary.amountRemain", {
-                          amount: openAmount,
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                  {promotion?.items?.length ? (
-                    <div className="card-promocode-label mb-2">
-                      <span
-                        className="flex items-center text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md"
-                        onClick={() => setShowPromotionDrawer(true)}
-                      >
-                        <IconTicketPercent className="w-4 h-4 mr-2" />
-                        <span>{t("promoCode")}</span>
-                      </span>
-                    </div>
-                  ) : null}
+              <div className="pricing mb-6">
+                <div className="price block">
+                  <span className="text-xs block">{t("justFrom")}</span>
+                  <span className="text-red-600 font-semibold text-xl block">{productPrice}</span>
                 </div>
-              </>
+                <div className="amount inline-block">
+                  <span className="text-xs block">
+                    {t("productSummary.amountRemain", {
+                      amount: openAmount,
+                    })}
+                  </span>
+                </div>
+              </div>
             ) : (
               <div className="notice-empty-price mb-6">
                 <p className="text-red-600 font-semibold text-xl mb-6">{t("card.contact")}</p>
@@ -163,9 +132,8 @@ const MobProductSummaryWraper = ({
             {children}
           </div>
         </div>
-
         {productPrice ? (
-          <div className="absolute bottom-0 left-0 right-0 z-20 bg-white px-4 py-4 border-t">
+          <div className="absolute bottom-0 left-0 right-0 z-20 bg-white px-4 pt-2 pb-4 border-t">
             <MobProductSummaryWraper.Subtotal
               label={t("subtotal")}
               onClick={() => setShowBreakDown(true)}
@@ -186,29 +154,6 @@ const MobProductSummaryWraper = ({
           </div>
         ) : null}
       </DrawerMobileBookingSummary>
-      <DrawerMobilePromotion
-        open={showPromotionDrawer}
-        placement="bottom"
-        height={"calc(80vh - env(safe-area-inset-bottom))"}
-        onClose={() => setShowPromotionDrawer(false)}
-        title="Chọn mã giảm"
-        destroyOnClose={true}
-      >
-        <>
-          {promotion?.items?.map((promo, _index) => (
-            <CouponCard
-              key={_index}
-              className={_index !== 0 ? "mt-3" : ""}
-              isSelecting={promotion.selectedCode === promo.code}
-              code={promo.code}
-              price={promo.price}
-              validTo={promo.validTo}
-              validFrom={promo.validTo}
-              onClick={() => onSelectPromotion(promo?.code)}
-            />
-          ))}
-        </>
-      </DrawerMobilePromotion>
       <Modal open={openBreakDown} centered onCancel={closeBreakDown} width={420} footer={null}>
         <div className="modal__breakdown-header mb-4">
           <p className="text-center text-lg">{t("modalBreakdown.title")}</p>
@@ -262,7 +207,7 @@ MobProductSummaryWraper.Subtotal = function ProductSummarySubtotal({
   onClick,
 }: ProductSummarySubtotalProps) {
   return (
-    <div className="subtotal py-2">
+    <div className="subtotal py-3">
       <p className="flex items-center justify-between font-semibold">
         <span className="text-gray-600 cursor-pointer" onClick={onClick}>
           {label}

@@ -42,10 +42,9 @@ const TourRelateds: React.FC<Props> = ({ className = "", items, sellableTemplate
     return minPrice;
   };
 
-  console.log(items);
   return (
     <div
-      className={classNames("tour", {
+      className={classNames("related-tour", {
         [className]: className,
       })}
     >

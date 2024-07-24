@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import FeCustomDatePicker, { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
+import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
 import { IconCalendar } from "@/assets/icons";
 import { Drawer } from "antd";
@@ -11,6 +12,7 @@ interface CalendarSelectorProps {
   onChange: (value: dayjs.Dayjs | null, dateString: string) => void;
 }
 const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate, onChange }) => {
+  const t = useTranslations("String");
   const [open, setOpen] = useState(false);
 
   const openCalendar = useCallback(() => {
@@ -27,7 +29,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate
       <div className="control border border-gray-200 rounded-lg px-4 py-4 flex justify-between items-center">
         <div className="depart-date w-full">
           <div className="mb-4 border-b pb-4 flex justify-between">
-            <span className="block">Ngày khởi hành</span>
+            <span className="block">{t("productSummary.departDate.title")}</span>
             <span className="text-base inline-block rounded-lg  text-primary-default ">
               {dayjs(value).format("DD/MM/YYYY")}
             </span>
@@ -35,7 +37,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate
           <div className="block">
             <span className="flex items-center cursor-pointer" onClick={openCalendar}>
               <IconCalendar width={16} height={16} className="mr-2" />
-              Chọn ngày khác
+              {t("productSummary.button.otherDate")}
             </span>
           </div>
         </div>
