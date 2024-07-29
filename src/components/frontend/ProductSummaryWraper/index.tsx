@@ -83,7 +83,7 @@ const ProductSummaryWraper = ({
                 size="large"
                 loading={isLoading}
               >
-                Đặt ngay
+                {t("button.bookNow")}
               </Button>
             </Flex>
           </>

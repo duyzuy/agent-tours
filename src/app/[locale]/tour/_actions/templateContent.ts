@@ -20,29 +20,13 @@ export const getTemplateContentDetail = async (payload: FeTemplateContentPayload
   return response?.result[0];
 };
 
-export const getSellableListByTemplateId = async (templateId: number) => {
-  const resoponse = await serverRequest.post<ProductListResponse, BaseResponse<null>>(
-    "localfront/BookingOrder_SearchByTemplateId",
-    {
-      next: { tags: ["sellableListByTemplateId"] },
-      cache: "no-store",
-      params: {
-        requestObject: {
-          byTemplateId: templateId,
-        },
-      },
-    },
-  );
-  return resoponse?.result;
-};
-
-export const getSellableListByTemplateCode = async (templateCode: string[]) => {
+export const getSellableListByTemplateIdNew = async (templateId: number) => {
   const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>("localfront/BookingOrder_Search", {
-    next: { tags: ["sellableListByTemplateCode"] },
+    next: { tags: ["sellableListByTemplateIdNew"] },
     cache: "no-store",
     params: {
       requestObject: {
-        byTemplateCmsIdentity: templateCode,
+        byTemplateId: templateId,
       },
     },
   });

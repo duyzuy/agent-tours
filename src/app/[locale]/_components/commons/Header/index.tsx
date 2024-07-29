@@ -1,5 +1,5 @@
 import Logo from "@/components/frontend/partials/Logo";
-import HamburgerButton from "@/components/frontend/HamburgerButton";
+
 import HeaderMainWraper from "./HeaderMainWraper";
 import HeaderNavitationTop from "@/components/frontend/HeaderNavigationTop";
 import { Suspense } from "react";
@@ -10,7 +10,6 @@ import MobileHeaderMainWraper from "./MobileHeaderMainWraper";
 import { getPrimaryMenu } from "@/app/[locale]/_actions/menu";
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { IMenuItem } from "@/models/management/cms/menu.interface";
 
 import { getMenuListFomatedTypes } from "@/utils/menu";
 
@@ -25,7 +24,7 @@ export default async function Header() {
   const menuItems = primaryItems ? getMenuListFomatedTypes(primaryItems) : [];
 
   return (
-    <header className="bg-white drop-shadow-sm relative z-20">
+    <header className="bg-white drop-shadow-sm relative z-10">
       <nav className="mx-auto flex items-center justify-between lg:py-4 py-3 container px-4 md:px-6 lg:px-8">
         <div className="flex lg:flex-1">
           <Logo alt="Logo An Thai" width={240} height={80} className="w-32 lg:w-52" />

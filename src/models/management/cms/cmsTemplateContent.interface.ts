@@ -46,6 +46,7 @@ export interface ICMSTemplateContent {
 }
 
 export interface CMSTemplateContentListRs extends BaseResponse<ICMSTemplateContent[]> {}
+export interface CMSTemplateContentItemRs extends BaseResponse<ICMSTemplateContent> {}
 export interface CMSTemplateContentMetaDataRs extends BaseResponse<ICMSTemplateContentMetaData> {}
 
 export interface CMSTemplateContentPayload {

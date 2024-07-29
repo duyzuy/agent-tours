@@ -18,14 +18,16 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 //   startOfDay,
 // } from "date-fns";
 import dayjs from "dayjs";
-import vi from "date-fns/locale/vi";
-import en from "date-fns/locale/en-US";
+// import vi from "date-fns/locale/vi";
+// import en from "date-fns/locale/en-US";
 import { NextCalendarButton, PrevCalendarButton, ButtonConfirm, ButtonReset } from "./ButtonActions";
 import DayNameOfWeek from "./DaysNameOfWeek";
 import styles from "./datepicker.module.scss";
 import DateItem from "./DateItem";
 import classNames from "classnames";
 import duration from "dayjs/plugin/duration";
+import vi from "dayjs/locale/vi";
+import en from "dayjs/locale/en";
 dayjs.extend(duration);
 
 const NUMBER_OF_WEEK = 7;
@@ -277,11 +279,11 @@ const FeCustomDatePicker: React.FC<FeCustomDatePickerProps> = ({
               <div className="calendar-month" key={`month-${monthIndx}`}>
                 <div className="date-range-top">
                   <span className="calendar-month-name">
-                    {dayjs(dateRangeItem.month).locale("vi").format("MMMM, YYYY")}
+                    {dayjs(dateRangeItem.month).locale(lang).format("MMMM, YYYY")}
                   </span>
                 </div>
                 <div className="calendar-body">
-                  <DayNameOfWeek locale={locale} />
+                  <DayNameOfWeek locale={lang} />
                   {dateRangeItem.weeks.map((week, weekInd) => (
                     <ul className="calendar-days" key={`week-${weekInd}`}>
                       {week.dates.map((date, dateInd) =>

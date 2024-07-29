@@ -35,6 +35,9 @@
     "notFound": {
       "content1": "Trang nội dung bạn tìm hiện không tồn tại hoặc đã thay đổi.",
       "content2": "Quay trở lại hoặc tìm kiếm sản phẩm khác."
+    },
+    "productRelated": {
+      "title": "Tour liên quan"
     }
   }
 }

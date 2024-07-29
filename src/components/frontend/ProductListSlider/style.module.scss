@@ -2,9 +2,11 @@
   :global {
     position: absolute;
     right: 0;
-    top: -30px;
+    left: 0;
+    bottom: -20px;
     display: flex;
     align-items: center;
+    justify-content: center;
     .swiper-pagination-bullet {
       border-radius: 10px;
       width: 8px;

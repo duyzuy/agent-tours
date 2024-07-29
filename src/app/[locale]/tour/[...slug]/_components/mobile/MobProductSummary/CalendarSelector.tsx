@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { IconCalendar } from "@/assets/icons";
 import { Drawer } from "antd";
 import styled from "styled-components";
+import { useLocale } from "next-intl";
 interface CalendarSelectorProps {
   value?: dayjs.Dayjs;
   dateList?: dayjs.Dayjs;
@@ -12,7 +13,9 @@ interface CalendarSelectorProps {
   onChange: (value: dayjs.Dayjs | null, dateString: string) => void;
 }
 const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate, onChange }) => {
+  const locale = useLocale();
   const t = useTranslations("String");
+
   const [open, setOpen] = useState(false);
 
   const openCalendar = useCallback(() => {
@@ -53,6 +56,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate
           numberOfMonth={12}
           layout="vertical"
           hideNextAndPrev={true}
+          lang={locale as "vi" | "en"}
           // minDate={dayjs().toDate()}
           // startDate={value}
           // maxDate={dayjs().add(1, "year")}

@@ -6,38 +6,35 @@ import { useRouter } from "next/navigation";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 
 const useUpdateStatusCMSTemplateContent = () => {
-    const { mutate: makeUpdateStatus } =
-        useUpdateStatusCMSTemplateContentMutation();
+  const { mutate: makeUpdateStatus } = useUpdateStatusCMSTemplateContentMutation();
 
-    const router = useRouter();
-    const queryClient = useQueryClient();
-    const message = useMessage();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const message = useMessage();
 
-    const onUpdateStatus = (
-        data: { id: number; status: PageContentStatus },
-        cb?: () => void,
-    ) => {
-        makeUpdateStatus(data, {
-            onSuccess: (data, variables) => {
-                message.success(
-                    variables.status === PageContentStatus.PUBLISH
-                        ? "Kích hoạt thành công."
-                        : "Huỷ kích hoạt thành công.",
-                );
-                queryClient.invalidateQueries({
-                    queryKey: [queryCMS.GET_CMS_TEMPLATE_LIST],
-                });
-                cb?.();
-            },
-            onError: (error, variables) => {
-                console.log({ error, variables });
-                message.error(error.message);
-            },
+  const onUpdateStatus = (data: { id: number; status: PageContentStatus }, cb?: () => void) => {
+    makeUpdateStatus(data, {
+      onSuccess: (data, variables) => {
+        message.success(
+          variables.status === PageContentStatus.PUBLISH ? "Kích hoạt thành công." : "Huỷ kích hoạt thành công.",
+        );
+        queryClient.invalidateQueries({
+          queryKey: [queryCMS.GET_CMS_TEMPLATE_LIST],
         });
-    };
+        queryClient.invalidateQueries({
+          queryKey: [queryCMS.GET_CMS_TEMPLATE_DETAIL],
+        });
+        cb?.();
+      },
+      onError: (error, variables) => {
+        console.log({ error, variables });
+        message.error(error.message);
+      },
+    });
+  };
 
-    return {
-        onUpdateStatus,
-    };
+  return {
+    onUpdateStatus,
+  };
 };
 export default useUpdateStatusCMSTemplateContent;

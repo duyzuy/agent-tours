@@ -1,0 +1,11 @@
+.datepicker-control {
+  anchor-name: --input-datepicker;
+}
+
+.datepicker-dropdown {
+  position-anchor: --input-datepicker;
+  inset-area: bottom center;
+
+  // position-try-fallbacks: flip-block, flip-inline;
+  position-try: flip-block, flip-inline;
+}

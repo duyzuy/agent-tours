@@ -1,23 +1,25 @@
+import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
-
+import { isUndefined } from "lodash";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { BreadCrumb } from "@/components/frontend/BreadCrumb";
-import { notFound } from "next/navigation";
+
 import ProductHeader from "./_components/ProductHeader";
 import Benefit from "./_components/Benefit";
 import ClientStoreData from "./_components/ClientStoreData";
 import ProductSummaryCard from "@/components/frontend/skeletons/ProductSummaryCard";
 import ProductGalleries from "@/components/frontend/skeletons/ProductGalleries";
-import { getTemplateContentDetail, getSellableListByTemplateId } from "../_actions/templateContent";
+
 import { isMobile } from "@/utils/detectMobile";
 
 // import { ProductTourTabsContentSkeleton } from "./_components/ProductContent";
 
 import ProductContent from "./_components/ProductContent";
-import { isUndefined } from "lodash";
-import TourRelateds from "../_components/TourRelateds";
-import { getProductListByCMSIdentity } from "../../_actions/searchProduct";
-import { FeProductItem } from "@/models/fe/productItem.interface";
+
+import { getTemplateContentDetail } from "../_actions/templateContent";
+import { getProductListByTemplateId } from "../../_actions/searchProduct";
+
+import { ProductRelated } from "../_components/ProductRelated";
 
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
   loading: () => <ProductGalleries className="w-full mb-6" />,
@@ -58,12 +60,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
     lang: locale,
   });
 
-  let productRelatedList: FeProductItem[] | undefined = [];
-  if (cmsTemplateContent) {
-    productRelatedList = await getProductListByCMSIdentity(cmsTemplateContent?.code, 10);
-  }
-
-  const productList = await getSellableListByTemplateId(Number(templateId));
+  const productList = await getProductListByTemplateId(Number(templateId));
   const currentSellable = productList?.find((item) => item.recId === Number(sellableId));
 
   if (
@@ -103,10 +100,8 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
             <ProductContent data={cmsTemplateContent} />
 
             <div className="space h-8"></div>
-            {productRelatedList?.length ? (
-              <TourRelateds items={productRelatedList} sellableTemplateCode={cmsTemplateContent.templateCodes} />
-            ) : null}
 
+            {/* <ProductRelated cmsIdentityCode={cmsTemplateContent.code} /> */}
             {/* <TourReviews /> */}
           </div>
           {isMobile() ? (

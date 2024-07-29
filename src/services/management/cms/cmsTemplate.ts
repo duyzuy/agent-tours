@@ -16,6 +16,7 @@ import {
   ICMSTemplateContent,
   CMSTemplateContentMetaDataPayload,
   ICMSTemplateContentMetaData,
+  CMSTemplateContentItemRs,
   CMSTemplateContentMetaDataRs,
   CMSTemplateContentMinimalListRs,
   CMSTemplateContentMinimalQueryParams,
@@ -119,7 +120,7 @@ export const cmsTemplateAPIs = {
     });
   },
   updateTemplateContent: async (payload?: CMSTemplateContentPayload) => {
-    return await client.post<CMSTemplateContentListRs>("local/cms_template_Edit", {
+    return await client.post<CMSTemplateContentItemRs>("local/cms_template_Edit", {
       headers: {
         Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
       },
@@ -132,7 +133,7 @@ export const cmsTemplateAPIs = {
   },
 
   updateStatusTemplateContent: async (payload?: { id: number; status: PageContentStatus }) => {
-    return await client.post<CMSTemplateContentListRs>("local/cms_template_UpdateStatus", {
+    return await client.post<CMSTemplateContentItemRs>("local/cms_template_UpdateStatus", {
       headers: {
         Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
       },

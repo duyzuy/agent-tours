@@ -25,7 +25,6 @@ import { ICMSTemplateContent } from "@/models/management/cms/cmsTemplateContent.
 import GallerySelector, { GallerySelectorProps } from "./GalleriesSelector";
 import TemplateMetaContentForm, { TemplateMetaContentFormProps } from "./TemplateMetaContentForm";
 import FileDownloadSelector, { FileDownloadSelectorProps } from "./FilesDownloadSelector";
-import { IThumbnail } from "@/models/thumbnail.interface";
 import { MediaTypes } from "@/models/management/media.interface";
 
 type RequirePageContentFormData = Required<CMSTemplateContentFormData>;
@@ -317,7 +316,6 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
     clearErrors();
   }, [lang, initData]);
 
-  console.log(initData, formData);
   return (
     <>
       <Form layout="vertical">

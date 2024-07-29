@@ -3,7 +3,10 @@ import dayjs from "dayjs";
 import FeCustomDatePicker, { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import { IconCalendar } from "@/assets/icons";
 import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
+import { useLocale } from "next-intl";
 import classNames from "classnames";
+import styles from "./style.module.scss";
+
 interface CalendarSelectorProps {
   label?: string;
   value?: dayjs.Dayjs;
@@ -20,6 +23,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
   label,
 }) => {
   const [open, setOpen] = useState(false);
+  const locale = useLocale();
   const modalRef = useRef<HTMLDivElement>(null);
   const openCalendar = useCallback(() => {
     setOpen(true);
@@ -32,6 +36,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
   useClickOutSide(modalRef, () => {
     setOpen(false);
   });
+
   return (
     <div
       className={classNames("calendar-selector relative z-10", {
@@ -41,7 +46,9 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
       <div className="calendar-control">
         <div className="mb-2">{label}</div>
         <div
-          className="flex items-center justify-between cursor-pointer px-3 py-2 rounded-sm border border-gray-300 "
+          className={classNames(
+            `flex items-center justify-between cursor-pointer px-3 py-2 rounded-sm border border-gray-300 ${styles["datepicker-control"]}`,
+          )}
           onClick={openCalendar}
         >
           <span className="text-base">{dayjs(value).format("DD/MM/YYYY")}</span>
@@ -51,12 +58,13 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
         </div>
       </div>
       {open ? (
-        <div ref={modalRef} className="absolute">
+        <div ref={modalRef} className={`fixed ${styles["datepicker-dropdown"]}`}>
           <FeCustomDatePicker
             value={value}
             numberOfMonth={1}
             layout="vertical"
             // minDate={dayjs().toDate()}
+            lang={locale as "vi" | "en"}
             startDate={value}
             maxDate={dayjs().add(1, "year")}
             disabledDate={disabledDate}

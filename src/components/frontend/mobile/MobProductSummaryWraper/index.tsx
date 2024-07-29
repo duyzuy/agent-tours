@@ -148,7 +148,7 @@ const MobProductSummaryWraper = ({
                 size="large"
                 loading={isLoading}
               >
-                Đặt ngay
+                {t("button.bookNow")}
               </Button>
             </Flex>
           </div>

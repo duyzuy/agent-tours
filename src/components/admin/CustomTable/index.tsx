@@ -5,7 +5,7 @@ import React from "react";
 type CustomTablePops<T> = TableProps<T> & {};
 
 function CustomTable<T extends {}>(props: CustomTablePops<T>) {
-    return <StyledTable {...props} />;
+  return <StyledTable {...props} />;
 }
 export default CustomTable;
 
@@ -28,7 +28,11 @@ const StyledTable = styled(Table)`
                 border-bottom-right-radius: 8px;
             }
         }
-        
+        &.travel-table-row-level-1 {
+            > td{
+             background-color: #f1f1f1
+             }
+        }
         
     }
     & .travel-table-thead {

@@ -51,7 +51,7 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
     onUpdateStatus({ id, status: status });
   };
   useEffect(() => {
-    if ((isUndefined(data) && !isLoading) || (!data && !isLoading)) {
+    if ((isUndefined(data) && !isLoading) || (!data && !isLoading) || (!data?.length && !isLoading)) {
       router.push("/portal/visa-template/list");
     }
   }, [isLoading, data]);

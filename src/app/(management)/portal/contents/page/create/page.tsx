@@ -4,12 +4,13 @@ import { useRouter } from "next/navigation";
 import PageContainer from "@/components/admin/PageContainer";
 import LocaleContainer from "@/components/admin/LocaleContainer";
 import { useLocale } from "@/hooks/useLocale";
-import ContentPageForm, { ContentPageFormProps } from "./_components/ContentPageForm";
+
+import ContentPageForm, { ContentPageFormProps, initPageContentFormData } from "./_components/ContentPageForm";
+
 import useCRUDPageContent from "../modules/useCRUDPageContent";
 import { localeDefault } from "@/constants/locale.constant";
 
 import { isEqual } from "lodash";
-import { initPageContentFormData } from "./_components/ContentPageForm";
 import { isEqualObject } from "@/utils/compare";
 
 const PageCreate = () => {
