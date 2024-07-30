@@ -4,6 +4,7 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import { getPageContentDetail } from "../../_actions/pageContent";
 import { mediaConfig } from "@/configs";
 import SinglePageContentWraper from "../_components/SinglePageContentWraper";
+import { unstable_setRequestLocale } from "next-intl/server";
 
 type PageParams = { slug: string; locale: LangCode };
 
@@ -37,6 +38,7 @@ export async function generateMetadata(
 }
 
 export default async function PageContentDetail({ params }: { params: PageParams }) {
+  unstable_setRequestLocale(params.locale);
   const pageContent = await getPageContentDetail({
     lang: params.locale,
     slug: params.slug,

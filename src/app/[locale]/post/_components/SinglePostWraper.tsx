@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 
 import { getTranslations } from "next-intl/server";
+import { isEmpty } from "lodash";
 interface SinglePostWraperProps {
   data?: IFePostItem;
   relatedItems?: IFePostItem[];
@@ -21,13 +22,13 @@ export default async function SinglePostWraper({ data, relatedItems }: SinglePos
       <div className="single-page__hero-image relative pt-[120px] lg:pt-[240px]">
         <Image
           src={
-            data?.heroBanner
+            data?.heroBanner && !isEmpty(data?.heroBanner.original)
               ? `${mediaConfig.rootApiPath}/${data?.heroBanner.original}`
               : "/assets/images/header/header-news-default.jpg"
           }
           alt="thumbnail"
           fill
-          className="object-cover object-bottom"
+          className="object-cover object-center"
         />
       </div>
       <BreadCrumb

@@ -5,7 +5,7 @@ export const customerAPIs = {
   updateProfile: async ({ payload, token = "" }: { payload?: CustomerProfilePayload; token?: string }) => {
     return await client.post<CustomerProfileResponse>("localfront/editProfile", {
       headers: {
-        Authorization: `Bearer ${encodeURIComponent(token)}`,
+        Authorization: "Bearer " + token,
       },
       params: {
         requestObject: {

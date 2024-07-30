@@ -1,0 +1,82 @@
+import { BaseResponse, PaymentStatus } from "../common.interface";
+import { IBookingTimeLitmit, IDepositTimelimit } from "../management/core/bookingTimeLimit.interface";
+import { IFormOfPayment } from "../management/core/formOfPayment.interface";
+import { EProductType } from "../management/core/productType.interface";
+
+export interface IFeOrder {
+  recId: number;
+  sellableId: number;
+  sellableTemplateId: number;
+  custUserId: number;
+  custName: string;
+  custPhoneNumber: string;
+  custEmail: string;
+  custAddress: string;
+  custInfoJson: string;
+  invoiceName: string;
+  invoiceCompanyName: string;
+  invoiceAddress: string;
+  invoiceTaxCode: string;
+  invoiceEmail: string;
+  paymentStatus: PaymentStatus;
+  totalFop: number;
+  totalPaid: number;
+  totalRefunded: number;
+  totalAmount: number;
+  tourPrice: number;
+  extraPrice: number;
+  charge: number;
+  referenceId: string;
+  referenceName: string;
+  rmk: string;
+  rmk1: string;
+  rmk2: string;
+  rmk3: string;
+  rmk4: string;
+  status: "OK" | "XX";
+  sysLocalUser: string;
+  sysFstUser: string;
+  sysFstUpdate: string;
+  sysLstUser: string;
+  sysLstUpdate: string;
+  sysBelongTo: string;
+  logStatus: string;
+  template: null;
+  template_minimal: {
+    recId: 25;
+    cmsIdentity: string;
+    type: EProductType;
+    code: string;
+    name: string;
+    inventoryTypeList: string;
+    cms: null;
+    sellables: null;
+  };
+  sellable: null;
+  sellable_minimal: {
+    recId: number;
+    sellableTemplateId: number;
+    type: EProductType;
+    code: string;
+    cap: string;
+    open: string;
+    used: string;
+    avaiable: string;
+    closeDate: string;
+    validFrom: string;
+    validTo: string;
+    startDate: string;
+    endDate: string;
+    configs: null;
+    sellableDetails: null;
+    promotions: null;
+  };
+  fops: IFormOfPayment[];
+  rulesAndPolicies: {
+    bookingTimelimits: IBookingTimeLitmit[];
+    depositTimelimits: IDepositTimelimit[];
+    penalties: any[];
+  };
+  comments: any[];
+}
+export interface IOrderListResponse extends BaseResponse<IFeOrder[]> {}

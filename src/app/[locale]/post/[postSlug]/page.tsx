@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getPostDetail } from "../../_actions/post";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { notFound } from "next/navigation";
@@ -10,6 +9,7 @@ import { getPostListByCategorySlug } from "../../_actions/post";
 import { IFePostItem, PostsQueryParamsData } from "@/models/fe/post";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import ClientDispatchContent from "../_components/ClientDispatchContent";
+import { unstable_setRequestLocale } from "next-intl/server";
 
 interface Props {
   params: { locale: LangCode; postSlug: string };
@@ -43,6 +43,7 @@ export async function generateMetadata(
 }
 
 export default async function SinglePostPage({ params }: Props) {
+  unstable_setRequestLocale(params.locale);
   const { locale, postSlug } = params;
 
   const postData = await getPostDetail(locale, postSlug);

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 
 export const useCustomerUpdateProfileMutation = () => {
   const session = useSession();
+  console.log(session);
   return useCustomMutation({
     mutationFn: (payload: CustomerProfilePayload) =>
       customerAPIs.updateProfile({ payload, token: session.data?.user.accessToken }),

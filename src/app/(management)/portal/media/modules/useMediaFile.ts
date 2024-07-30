@@ -21,7 +21,7 @@ const useMediaFile = () => {
       onSuccess: (data) => {
         message.success("Upload File thành công.");
         queryClient.invalidateQueries({
-          queryKey: [GET_MEDIA_FILES, folder.id],
+          queryKey: [GET_MEDIA_FILES],
         });
         cb?.();
       },

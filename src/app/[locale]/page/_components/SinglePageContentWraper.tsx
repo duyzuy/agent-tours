@@ -14,22 +14,28 @@ interface SinglePageContentWraperProps {
 const SinglePageContentWraper: React.FC<SinglePageContentWraperProps> = ({ data }) => {
   return (
     <div className="single-page">
+      <div className="single-page__hero-image relative pt-[120px] lg:pt-[240px]">
+        <Image
+          src={
+            data?.heroBanner && !isEmpty(data?.heroBanner)
+              ? `${mediaConfig.rootApiPath}/${data?.heroBanner}`
+              : "/assets/images/header/header-news-default.jpg"
+          }
+          alt="thumbnail"
+          fill
+          className="object-cover object-center"
+        />
+      </div>
       <BreadCrumb
         classname="container mx-auto max-w-[1040px] px-4 md:px-6 lg:px-8 py-4"
         items={[{ title: data?.name }]}
       />
       <div className="single-page__inner container mx-auto max-w-[1040px] px-4 md:px-6 lg:px-8">
         <div className="sing-page__head mb-6">
-          {data?.heroBanner ? (
-            <div className="single-page__hero-image mb-6">
-              <Image src={`${mediaConfig.rootApiPath}/${data?.heroBanner}`} alt="thumbnail" width={1000} height={400} />
-            </div>
-          ) : null}
           <h1 className="text-xl md:text-2xl lg:text-3xl">{data?.name}</h1>
         </div>
         <div className="single-page__body mb-16">
           <AreaContentHtml content={data?.descriptions} />
-
           {data?.children && data.children.length ? (
             <>
               <div className="line mb-6 mt-6 bg-gray-100 h-[1px]"></div>
@@ -38,7 +44,7 @@ const SinglePageContentWraper: React.FC<SinglePageContentWraperProps> = ({ data 
                   <div className="content-card" key={pContent.id}>
                     <div className="content-card__inner">
                       <div className="content-card__thumbnail relative w-full pt-[55.25%] overflow-hidden rounded-md">
-                        {pContent.thumbnail.small && !isEmpty(pContent.thumbnail.small) ? (
+                        {pContent?.thumbnail && !isEmpty(pContent.thumbnail.small) ? (
                           <Image
                             src={`${mediaConfig.rootApiPath}/${pContent.thumbnail.small}`}
                             alt={pContent.name}

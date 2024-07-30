@@ -2,7 +2,11 @@
 import FormItem from "@/components/base/FormItem";
 import { Button, Form, Input } from "antd";
 import { useTranslations } from "next-intl";
-interface RegisterVisaFormProps {}
+import Quantity from "@/components/base/Quantity";
+interface RegisterVisaFormProps {
+  title?: string;
+  price?: string;
+}
 const RegisterVisaForm: React.FC<RegisterVisaFormProps> = ({}) => {
   const t = useTranslations("String");
 
@@ -18,6 +22,26 @@ const RegisterVisaForm: React.FC<RegisterVisaFormProps> = ({}) => {
         <FormItem label="Số điện thoại" required>
           <Input placeholder="Số điện thoại" size="large" />
         </FormItem>
+        <div>
+          <div>
+            <div>
+              <span>Người lớn</span>
+            </div>
+            <Quantity value={1} size="sm" />
+          </div>
+          <div>
+            <div>
+              <span>Trẻ em</span>
+            </div>
+            <Quantity size="sm" />
+          </div>
+          <div>
+            <div>
+              <span>Em bé</span>
+            </div>
+            <Quantity size="sm" />
+          </div>
+        </div>
         <FormItem label="Email" required>
           <Input placeholder="Email" size="large" />
         </FormItem>

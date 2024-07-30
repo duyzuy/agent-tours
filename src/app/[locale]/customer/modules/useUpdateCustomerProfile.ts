@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import useMessage from "@/hooks/useMessage";
 import { queryFE } from "@/queries/var";
 import { revalidateTag } from "next/cache";
+import { useRouter } from "next/navigation";
 // const sesss = useSession();
 
 // console.log(sesss.data?.user.accessToken);
@@ -11,17 +12,19 @@ import { revalidateTag } from "next/cache";
 const useUpdateCustomerProfile = () => {
   const { mutate: makeUpdate, isPending, isIdle } = useCustomerUpdateProfileMutation();
 
-  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const message = useMessage();
   const updateProfile = (data: CustomerProfileFormData, cb?: () => void) => {
     makeUpdate(data, {
       onSuccess(data, variables, context) {
         message.success("Cập nhật thành công");
-        revalidateTag("customerProfile");
+        router.refresh();
         cb?.();
       },
       onError(error, variables, context) {
-        console.log("err");
+        message.error(error.message);
+        console.log(error);
       },
       onSettled(data, error, variables, context) {
         console.log("setted");

@@ -12,6 +12,12 @@
     "subPage": {
       "accountInformation": {
         "title": "Thông tin tài khoản"
+      },
+      "orders": {
+        "title": "Đơn hàng"
+      },
+      "changePassword": {
+        "title": "Đổi mật khẩu"
       }
     }
   },

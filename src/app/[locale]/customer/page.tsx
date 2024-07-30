@@ -1,8 +1,8 @@
-import { getCustomerProfile } from "./_actions/customer";
+import { getUserCustomerProfile } from "./_actions/customer";
 import ProfileInformationBox from "./_components/ProfileInformationBox";
 import { getTranslations } from "next-intl/server";
-const CustomerPage = async () => {
-  const userProfile = await getCustomerProfile();
+export default async function CustomerPage() {
+  const userProfile = await getUserCustomerProfile();
 
   const t = await getTranslations("String");
   const c = await getTranslations("Customer");
@@ -32,16 +32,7 @@ const CustomerPage = async () => {
         </div>
       </div>
 
-      <ProfileInformationBox
-        fullname={userProfile?.fullname}
-        dob={userProfile?.dob}
-        passportNumber={userProfile?.passportNumber}
-        country={userProfile?.country}
-        city={userProfile?.city}
-        district={userProfile?.district}
-        address={userProfile?.address}
-      />
+      <ProfileInformationBox data={userProfile} />
     </>
   );
-};
-export default CustomerPage;
+}

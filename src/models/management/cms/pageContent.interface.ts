@@ -13,7 +13,8 @@ export interface IPageContentItem {
   name: string;
   slug: string;
   excerpt: string;
-  thumbnail: IThumbnail;
+  thumbnail: IThumbnail | null;
+  status: PageContentStatus;
   languages: IPageContentItem[];
   children: IPageContentItem[];
 }
@@ -25,7 +26,7 @@ export interface IPageContentDetail {
   name: string;
   slug: string;
   excerpt: string;
-  thumbnail: IThumbnail;
+  thumbnail: IThumbnail | null;
   heroBanner: string;
   descriptions: string;
   parentId: number;

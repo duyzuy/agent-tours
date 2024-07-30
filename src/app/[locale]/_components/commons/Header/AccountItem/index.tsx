@@ -5,7 +5,7 @@ import CardDropdown from "./CardDropdown";
 import { IconAccount, IconUser } from "@/assets/icons";
 import { Link } from "@/utils/navigation";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
-
+import { getUserCustomerProfile } from "@/app/[locale]/customer/_actions/customer";
 interface AccountItemProps {
   isMobile?: boolean;
   className?: string;
@@ -14,6 +14,11 @@ export default async function AccountItem({ isMobile }: AccountItemProps) {
   const session = await getServerSession(authOptions);
 
   const isAuth = !!session;
+
+  if (session) {
+    const customerResponse = await getUserCustomerProfile();
+    console.log(customerResponse);
+  }
   return isMobile ? (
     <div className="block">
       <Link href={isAuth ? `/${CLIENT_LINKS.Customer}` : `/${CLIENT_LINKS.CustomerLogin}`}>

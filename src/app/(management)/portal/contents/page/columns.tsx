@@ -1,11 +1,10 @@
 import { ColumnsType } from "antd/es/table";
-import { IPageContentListRs } from "@/models/management/cms/pageContent.interface";
+import { IPageContentListRs, PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import { locales } from "@/constants/locale.constant";
 import { GlobalOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { mediaConfig } from "@/configs";
-import { isEmpty, isUndefined } from "lodash";
-import Table from "antd/es/table";
+import classNames from "classnames";
 
 export type PageContentDataType = Omit<IPageContentListRs["result"][0], "children"> & {
   children?: PageContentDataType[];
@@ -63,9 +62,19 @@ const pageColumns = () => {
         key: locale.key,
         dataIndex: locale.key,
         width: 50,
-        render(value, record, index) {
-          const item = record.languages.find((lang) => lang.lang === locale.key);
-          return item ? <GlobalOutlined /> : "-";
+        render(value, { languages }, index) {
+          const item = languages.find((lang) => lang.lang === locale.key);
+          return item ? (
+            <span
+              className={classNames({
+                "text-emerald-500": item.status === PageContentStatus.PUBLISH,
+              })}
+            >
+              <GlobalOutlined />
+            </span>
+          ) : (
+            "-"
+          );
         },
       },
     ]);

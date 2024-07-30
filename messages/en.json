@@ -12,6 +12,12 @@
     "subPage": {
       "accountInformation": {
         "title": "Account Information"
+      },
+      "orders": {
+        "title": "Orders"
+      },
+      "changePassword": {
+        "title": "Change password"
       }
     }
   },

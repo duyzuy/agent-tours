@@ -4,23 +4,23 @@ export interface ICustomerProfile {
   recId: number;
   userId: number;
   fullname: string;
-  dob: string | null;
+  dob: string;
   address: string;
   district: string;
   city: string;
   country: string;
   idNumber: string;
-  idDoi: null;
-  idDoe: null;
+  idDoi: string;
+  idDoe: string;
   passportNumber: string;
-  passportDoi: null;
-  passportDoe: null;
+  passportDoi: string;
+  passportDoe: string;
   status: Status;
   sysFstUser: string;
   sysFstUpdate: string;
   sysBelongTo: string;
   user: {
-    recId: 3;
+    recId: number;
     faceBookId: string;
     googleId: string;
     username: string;
@@ -40,11 +40,11 @@ export interface CustomerProfilePayload {
   city?: string;
   country?: string;
   idNumber?: string;
-  idDoi?: string | null;
-  idDoe?: string | null;
+  idDoi?: string;
+  idDoe?: string;
   passportNumber?: string;
-  passportDoi?: string | null;
-  passportDoe?: string | null;
+  passportDoi?: string;
+  passportDoe?: string;
 }
 
 export class CustomerProfileFormData implements CustomerProfilePayload {
@@ -55,11 +55,11 @@ export class CustomerProfileFormData implements CustomerProfilePayload {
   city?: string;
   country?: string;
   idNumber?: string;
-  idDoi?: string | null;
-  idDoe?: string | null;
+  idDoi?: string;
+  idDoe?: string;
   passportNumber?: string;
-  passportDoi?: string | null;
-  passportDoe?: string | null;
+  passportDoi?: string;
+  passportDoe?: string;
   constructor(
     fullname: string,
     dob: string,
@@ -68,11 +68,11 @@ export class CustomerProfileFormData implements CustomerProfilePayload {
     city: string,
     country: string,
     idNumber: string,
-    idDoi: string | null,
-    idDoe: string | null,
+    idDoi: string | undefined,
+    idDoe: string | undefined,
     passportNumber: string,
-    passportDoi: string | null,
-    passportDoe: string | null,
+    passportDoi: string | undefined,
+    passportDoe: string | undefined,
   ) {
     this.fullname = fullname;
     this.dob = dob;

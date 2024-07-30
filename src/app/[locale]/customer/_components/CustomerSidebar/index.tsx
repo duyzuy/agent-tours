@@ -18,19 +18,19 @@ export default async function CustomerSidebar({ username, className = "" }: Cust
       title: t("navItem.accountInformation"),
       key: "account",
       icon: IconAccount,
-      path: "/",
+      path: "/customer",
     },
     {
       title: t("navItem.order"),
       key: "orders",
       icon: IconRecieptText,
-      path: "/",
+      path: "/customer/orders",
     },
     {
       title: t("navItem.changePassword"),
       key: "changePassword",
       icon: IconKeyRound,
-      path: "/",
+      path: "/customer/change-password",
     },
     {
       title: t("navItem.signOut"),

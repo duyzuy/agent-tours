@@ -6,11 +6,12 @@ import { BaseResponse } from "@/models/common.interface";
 import { authOptions } from "@/auth";
 import { getServerSession } from "next-auth";
 import { CustomerProfileResponse } from "@/models/fe/profile.interface";
+import { IOrderListResponse } from "@/models/fe/order.interface";
 
-export const getCustomerProfile = async (): Promise<CustomerProfileResponse["result"] | undefined> => {
+export const getUserCustomerProfile = async (): Promise<CustomerProfileResponse["result"] | undefined> => {
   const session = await getServerSession(authOptions);
 
-  const data = await serverRequest.post<any, BaseResponse<null>>("localfront/getProfile", {
+  const data = await serverRequest.post<CustomerProfileResponse, BaseResponse<null>>("localfront/getProfile", {
     next: { tags: ["customerProfile"], revalidate: false },
     headers: {
       Authorization: `Bearer ${encodeURIComponent(session?.user.accessToken || "")}`,
@@ -20,12 +21,22 @@ export const getCustomerProfile = async (): Promise<CustomerProfileResponse["res
     },
   });
 
-  return data.result as CustomerProfileResponse["result"];
-  // if (!response) {
-  //     return {
-  //         errorCode: "invalidToken",
-  //         message: "Token không hợp lệ.",
-  //     };
-  // }
-  // return response;
+  return data?.result;
+};
+
+export const getOrderList = async () => {
+  const session = await getServerSession(authOptions);
+
+  const data = await serverRequest.post<IOrderListResponse, BaseResponse<null>>("localfront/BookingOrder_List", {
+    next: { tags: ["customerOrderList"] },
+    cache: "no-cache",
+    headers: {
+      Authorization: `Bearer ${encodeURIComponent(session?.user.accessToken || "")}`,
+    },
+    params: {
+      requestObject: {},
+    },
+  });
+
+  return data?.result;
 };

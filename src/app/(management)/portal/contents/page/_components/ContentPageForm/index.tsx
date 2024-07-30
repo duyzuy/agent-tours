@@ -236,7 +236,7 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
         originId: initData.originId,
         name: initData.name,
         slug: initData.slug,
-        thumbnail: initData.thumbnail,
+        thumbnail: initData.thumbnail ?? undefined,
         excerpt: initData.excerpt,
         heroBanner: initData.heroBanner,
         descriptions: initData.descriptions,

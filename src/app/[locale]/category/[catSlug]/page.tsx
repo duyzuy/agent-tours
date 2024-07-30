@@ -6,6 +6,7 @@ import { PostsQueryParamsData } from "@/models/fe/post";
 import CategoryPageWraper from "../_components/CategoryPageWraper";
 import { mediaConfig } from "@/configs";
 import ClientDispatchContent from "../_components/ClientDispatchContent";
+import { unstable_setRequestLocale } from "next-intl/server";
 
 interface Props {
   params: { locale: LangCode; catSlug: string };
@@ -40,6 +41,8 @@ export async function generateMetadata(
 }
 
 export default async function CategoryDetailPage({ params }: Props) {
+  unstable_setRequestLocale(params.locale);
+
   const { locale, catSlug } = params;
 
   const category = await getCategoryDetail({ lang: locale, slug: catSlug });

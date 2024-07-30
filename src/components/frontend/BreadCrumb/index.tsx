@@ -34,6 +34,7 @@ export const BreadCrumb: React.FC<BreadCrumbProps> = ({ items = [], classname = 
                   <span
                     className={classNames({
                       "text-gray-500": _index === lastItem,
+                      "text-gray-800": _index !== lastItem,
                     })}
                   >
                     {title}
