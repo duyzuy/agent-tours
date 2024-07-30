@@ -3,7 +3,17 @@ import { LangCode } from "./language.interface";
 
 export type MenuPositionType = "primary" | "secondary" | "footer" | "mobile" | "footer-info";
 export type MenuType = "custom" | "templateType" | "";
-export type MenuObjectType = "custom" | "page" | "tour" | "cmsTemplate" | "visaTemplate" | "destination" | "";
+export type MenuObjectType =
+  | "custom"
+  | "page"
+  | "tour"
+  | "cmsTemplate"
+  | "visaTemplate"
+  | "destination"
+  | "category"
+  | "tag"
+  | "post"
+  | "";
 
 export interface IMenuItem {
   cat: "cms_frontendMenu_item";

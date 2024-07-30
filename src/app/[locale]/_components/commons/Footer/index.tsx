@@ -2,8 +2,8 @@ import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getFooterMenu, getFooterMenuInformation } from "@/app/[locale]/_actions/menu";
 import FooterWraper from "@/components/frontend/FooterWraper";
-import { IMenuItem, MenuObjectType } from "@/models/management/cms/menu.interface";
-
+import { MenuObjectType } from "@/models/management/cms/menu.interface";
+import { getMenuListFomatedTypes, MenuItemType } from "@/utils/menu";
 export type MenuFooterItem = {
   id: number;
   title: string;
@@ -14,44 +14,19 @@ export type MenuFooterItem = {
 };
 export default async function Footer() {
   const locale = await getLocale();
-  const menuFooter = await getFooterMenu(locale as LangCode);
 
+  const menuFooter = await getFooterMenu(locale as LangCode);
   const menuFooterInfo = await getFooterMenuInformation(locale as LangCode);
 
-  // const menuItems = menuFooter?.menuItems.
+  const menuItemFormated = getMenuListFomatedTypes(menuFooter?.menuItems || []);
 
-  const getMenuListItem = (items: IMenuItem[], depth = 0) => {
+  const menuInfo = getMenuListFomatedTypes(menuFooterInfo?.menuItems || []);
+
+  const getFormatFooterMenuItems = (items: MenuItemType[], depth = 0) => {
     return items.reduce<MenuFooterItem[]>((acc, item) => {
       let childItems: MenuFooterItem[] = [];
       if (item.children && item.children.length) {
-        childItems = getMenuListItem(item.children, depth + 1);
-      }
-
-      let menuSlug = "";
-
-      if (item.menuType === "templateType") {
-        if (item.objectType === "cmsTemplate") {
-          menuSlug = ["template", item.objectSlug].join("/");
-        }
-        if (item.objectType === "destination") {
-          menuSlug = ["destination", item.objectSlug].join("/");
-        }
-
-        if (item.objectType === "page") {
-          menuSlug = ["page", item.objectSlug].join("/");
-        }
-
-        if (item.objectType === "tour") {
-          menuSlug = ["tour", item.objectSlug].join("/");
-        }
-        if (item.objectType === "visaTemplate") {
-          menuSlug = ["visa", item.objectSlug].join("/");
-        }
-      }
-      if (item.menuType === "custom") {
-        if (item.objectType === "custom") {
-          menuSlug = item.slug;
-        }
+        childItems = getFormatFooterMenuItems(item.children, depth + 1);
       }
 
       return [
@@ -60,7 +35,7 @@ export default async function Footer() {
           id: item.id,
           title: item.name,
           objectType: item.objectType,
-          slug: menuSlug,
+          slug: item.slug,
           depth: depth,
           children: childItems,
         },
@@ -70,8 +45,8 @@ export default async function Footer() {
 
   return (
     <FooterWraper
-      menuItems={menuFooter ? getMenuListItem(menuFooter.menuItems, 0) : []}
-      informationItems={menuFooterInfo ? getMenuListItem(menuFooterInfo.menuItems) : []}
+      menuItems={menuItemFormated ? getFormatFooterMenuItems(menuItemFormated, 0) : []}
+      informationItems={menuInfo ? getFormatFooterMenuItems(menuInfo, 0) : []}
     />
   );
 }

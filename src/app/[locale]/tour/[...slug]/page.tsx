@@ -101,7 +101,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
             <div className="space h-8"></div>
 
-            {/* <ProductRelated cmsIdentityCode={cmsTemplateContent.code} /> */}
+            <ProductRelated cmsIdentityCode={cmsTemplateContent.code} />
             {/* <TourReviews /> */}
           </div>
           {isMobile() ? (

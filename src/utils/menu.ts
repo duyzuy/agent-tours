@@ -53,6 +53,16 @@ export const getMenuListFomatedTypes = (items: IMenuItem[]) => {
       if (item.objectType === "visaTemplate") {
         menuSlug = ["visa", item.objectSlug].join("/");
       }
+      if (item.objectType === "category") {
+        menuSlug = ["category", item.objectSlug].join("/");
+      }
+
+      if (item.objectType === "tag") {
+        menuSlug = ["tag", item.objectSlug].join("/");
+      }
+      if (item.objectType === "post") {
+        menuSlug = ["post", item.objectSlug].join("/");
+      }
     }
     if (item.menuType === "custom") {
       if (item.objectType === "custom") {

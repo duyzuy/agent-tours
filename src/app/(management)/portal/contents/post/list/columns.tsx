@@ -44,10 +44,13 @@ const postColumns = () => {
       width: 320,
     },
     {
-      title: "slug",
-      key: "slug",
-      dataIndex: "slug",
-      width: 220,
+      title: "Danh mục",
+      key: "name",
+      dataIndex: "name",
+      width: 320,
+      render(value, { category }, index) {
+        return category.name;
+      },
     },
   ];
 

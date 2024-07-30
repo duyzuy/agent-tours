@@ -82,7 +82,19 @@ import IconImages from "./IconImages";
 import IconAlbum from "./IconAlbum";
 import IconEarth from "./IconEarth";
 import IconClipboardList from "./IconClipboardList";
+import IconTwitter from "./IconTwitter";
+import IconLink from "./IconLink";
+import IconFlameKining from "./IconFlameKining";
+import IconFacebook from "./IconFacebook";
+import IconFiles from "./IconFiles";
+import IconFile from "./IconFile";
 export {
+  IconFile,
+  IconFiles,
+  IconTwitter,
+  IconLink,
+  IconFlameKining,
+  IconFacebook,
   IconAccount,
   IconArrowLeftCircle,
   IconArrowRightCircle,

@@ -122,7 +122,8 @@ const DrawerMenuItem: React.FC<DrawerMenuItemProps> = ({ isOpen, onClose, initia
             placeholder="Mô tả ngắn"
             value={formData?.description}
             onChange={(e) => onChange("description", e.target.value)}
-            maxLength={30}
+            maxLength={80}
+            showCount
           />
         </FormItem>
       </Form>

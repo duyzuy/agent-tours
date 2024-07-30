@@ -112,4 +112,17 @@ export const pageContentAPIs = {
       },
     });
   },
+  delete: async (id: number) => {
+    return await client.post<IPageContentDetailPerLangRs>("local/Cms_Delete", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
+      },
+      params: {
+        requestObject: {
+          cat: "cms_page",
+          recId: id,
+        },
+      },
+    });
+  },
 };

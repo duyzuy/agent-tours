@@ -22,7 +22,7 @@ export const postContentSchema: ObjectSchema<PostContentFormData> = object({
     )
     .default([]),
   heroBanner: object({
-    id: number().required("Herobanner đang bỏ trống."),
+    id: number(),
   }),
   content: string(),
   category: object({

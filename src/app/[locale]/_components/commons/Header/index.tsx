@@ -24,7 +24,7 @@ export default async function Header() {
   const menuItems = primaryItems ? getMenuListFomatedTypes(primaryItems) : [];
 
   return (
-    <header className="bg-white drop-shadow-sm relative z-10">
+    <header className="bg-white drop-shadow-sm relative z-40">
       <nav className="mx-auto flex items-center justify-between lg:py-4 py-3 container px-4 md:px-6 lg:px-8">
         <div className="flex lg:flex-1">
           <Logo alt="Logo An Thai" width={240} height={80} className="w-32 lg:w-52" />

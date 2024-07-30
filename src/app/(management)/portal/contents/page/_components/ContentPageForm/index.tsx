@@ -5,9 +5,10 @@ import { stringToSlug } from "@/utils/stringToSlug";
 import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { mediaConfig } from "@/configs";
-import { pageContentSchema } from "../../../schema/pageContent.schema";
+
 import { IPageContentDetail } from "@/models/management/cms/pageContent.interface";
-import { PageContentFormData } from "../../../modules/pageContent.interface";
+import { PageContentFormData } from "../../modules/pageContent.interface";
+import { pageContentSchema } from "../../schema/pageContent.schema";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 
@@ -33,6 +34,7 @@ export interface ContentPageFormProps {
   onWatchFormChange?: (data: PageContentFormData) => void;
   action?: "create" | "update";
   onChangeStatus?: (id: number, type: "active" | "deactive") => void;
+  onDelete?: (id: number, cb?: () => void) => void;
 }
 export const initPageContentFormData = new PageContentFormData(
   undefined,
@@ -62,6 +64,7 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
   originId,
   action,
   onChangeStatus,
+  onDelete,
 }) => {
   const [formData, setFormData] = useState(initPageContentFormData);
 
@@ -365,12 +368,14 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
                 }
                 onApproval={() => onPublish?.(formData.id)}
                 onChangeStatus={onChangeStatusPage}
+                onDelete={() => formData.id && onDelete?.(formData.id)}
                 hideSaveForApproval={action === "update" ?? false}
                 hideApproval={formData.status !== PageContentStatus.PENDING || action === "create"}
                 action={action}
                 status={formData.status}
                 disableSubmit={isDisablePublishButton}
                 disableSaveForApproval={isDisablePublishButton}
+                hideDelete={action === "create"}
               />
               <ThumbnailImage
                 label="Hero banners"

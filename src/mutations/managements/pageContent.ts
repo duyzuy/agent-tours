@@ -25,3 +25,9 @@ export const useUnPublishPageContentMutation = () => {
     mutationFn: (id: number) => pageContentAPIs.unPublish(id),
   });
 };
+
+export const useDeletePageContentMutation = () => {
+  return useCustomMutation({
+    mutationFn: (id: number) => pageContentAPIs.delete(id),
+  });
+};

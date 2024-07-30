@@ -12,6 +12,8 @@ import MenuVisaTemplateSelector from "../MenuVisaTemplateSelector";
 import MenuTemplateContentSelector, { MenuTemplateContentSelectorProps } from "../MenuTemplateContentSelector";
 import { useCreateMenuItemMutation } from "@/mutations/managements/menu";
 import useCRUDMenu from "../../modules/useCRUDMenu";
+import MenuCategorySelector, { MenuCategorySelectorProps } from "../MenuCategorySelector";
+import MenuTagSelector, { MenuTagSelectorProps } from "../MenuTagSelector";
 
 interface MenuTypeContainerProps {
   locale: Locale;
@@ -128,6 +130,44 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
 
     onCreate({ data: payloadList, position: menuPosition, lang: locale.key }, cb);
   };
+
+  const handleAddMenuCategory: MenuCategorySelectorProps["onAdd"] = (values, options) => {
+    const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
+      return [
+        ...acc,
+        {
+          ...initItem,
+          name: opt.name,
+          thumb: opt.thumbnail?.original,
+          objectSlug: opt.slug,
+          objectId: opt.id,
+          menuType: "templateType",
+          objectType: "category",
+        },
+      ];
+    }, []);
+
+    onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
+  };
+
+  const handleAddMenuTag: MenuTagSelectorProps["onAdd"] = (values, options) => {
+    const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
+      return [
+        ...acc,
+        {
+          ...initItem,
+          name: opt.name,
+          objectSlug: opt.slug,
+          objectId: opt.id,
+          menuType: "templateType",
+          objectType: "tag",
+        },
+      ];
+    }, []);
+
+    onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
+  };
+
   const collapseItems: CollapseProps["items"] = [
     {
       key: "page",
@@ -147,6 +187,16 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
       children: (
         <MenuVisaTemplateSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuVisaTemplate} />
       ),
+    },
+    {
+      key: "category",
+      label: "Danh mục",
+      children: <MenuCategorySelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuCategory} />,
+    },
+    {
+      key: "tag",
+      label: "Thẻ bài viết",
+      children: <MenuTagSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuTag} />,
     },
     // {
     //   key: "cmsTemplate",

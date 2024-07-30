@@ -38,6 +38,11 @@
     },
     "productRelated": {
       "title": "Tour related"
+    },
+    "post": {
+      "related": {
+        "title": "Related posts"
+      }
     }
   }
 }

@@ -28,6 +28,7 @@ export default async function NavbarSecondary({ className = "" }: NavbarSecondar
               iconName={item.icon}
               items={item.children}
               isMega={item.isMega}
+              slug={item.slug}
               descriptions={item.description}
               className="px-3"
             />

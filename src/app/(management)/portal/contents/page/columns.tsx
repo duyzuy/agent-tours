@@ -27,15 +27,15 @@ const pageColumns = () => {
       render(value, record, index) {
         return (
           <div className="thumb w-14 h-14 relative bg-slate-100 flex items-center justify-center rounded-md overflow-hidden">
-            {isUndefined(record.thumbnail) || record.thumbnail.original === "" ? (
-              <div className="italic text-xs">no image</div>
-            ) : (
+            {record.thumbnail ? (
               <Image
                 src={`${mediaConfig.rootApiPath}/${record.thumbnail.original}`}
                 alt="thumbnail"
                 fill
                 style={{ objectFit: "contain" }}
               />
+            ) : (
+              <div className="italic text-xs">no image</div>
             )}
           </div>
         );

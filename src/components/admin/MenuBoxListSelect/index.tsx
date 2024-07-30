@@ -5,7 +5,7 @@ import { memo, useEffect, useRef, useState } from "react";
 
 type BaseOptionType = { id: string | number; [key: string]: any };
 
-export interface MenuBoxListSelectProps<ValueType, OptionType> {
+export interface MenuBoxListSelectProps<ValueType, OptionType extends BaseOptionType> {
   className?: string;
   items?: OptionType[];
   value?: ValueType[];
@@ -91,16 +91,19 @@ const MenuBoxListSelect = <ValueType extends number | string, OptionType extends
           </div>
         </Spin>
       ) : (
-        <div className="items h-56 overflow-y-auto mb-4">
-          {items?.map((item) => (
-            <div className={classNames("menu-item-picker page-content", {})} key={item.id}>
-              <p className="mb-3">
-                <Checkbox checked={isItemSelected(item)} onChange={(ev) => selectItem(item)}>
-                  {item.name ? item.name : item.title ? item.title : ""}
-                </Checkbox>
-              </p>
-            </div>
-          ))}
+        // <div className="items h-56 overflow-y-auto mb-4">
+        //   {items?.map((item) => (
+        //     <div className={classNames("menu-item-picker page-content", {})} key={item.id}>
+        //       <p className="mb-3">
+        //         <Checkbox checked={isItemSelected(item)} onChange={(ev) => selectItem(item)}>
+        //           {item.name ? item.name : item.title ? item.title : ""}
+        //         </Checkbox>
+        //       </p>
+        //     </div>
+        //   ))}
+        // </div>
+        <div className="h-56 overflow-y-auto mb-4">
+          <MenuBoxListSelect.Items items={items} isItemSelected={isItemSelected} onSelect={selectItem} depth={0} />
         </div>
       )}
       <div className="actions pt-4 -ml-4 -mr-4 px-4 border-t flex justify-between items-center">
@@ -123,3 +126,46 @@ const MenuBoxListSelect = <ValueType extends number | string, OptionType extends
   );
 };
 export default MenuBoxListSelect;
+
+interface MenuBoxSelectItemsProps<ValueType, OptionType extends BaseOptionType> {
+  items: MenuBoxListSelectProps<ValueType, OptionType>["items"];
+  isItemSelected: (item: OptionType) => boolean;
+  onSelect?: (item: OptionType) => void;
+  depth: number;
+}
+
+MenuBoxListSelect.Items = function MenuBoxSelectItems<ValueType, OptionType extends BaseOptionType>({
+  isItemSelected,
+  items,
+  depth,
+  onSelect,
+}: MenuBoxSelectItemsProps<ValueType, OptionType>) {
+  return (
+    <div
+      className={classNames("items mb-4", {
+        "pl-6": depth === 1,
+        "pl-12": depth === 2,
+      })}
+    >
+      {items?.map((item, _index) => (
+        <div className={classNames("menu-item-picker page-content")} key={`${depth}-${_index}`}>
+          <div className="mb-3">
+            <Checkbox checked={isItemSelected(item)} onChange={(ev) => onSelect?.(item)}>
+              {item.name ? item.name : item.title ? item.title : ""}
+            </Checkbox>
+          </div>
+          <>
+            {item?.children?.length ? (
+              <MenuBoxSelectItems
+                items={item.children}
+                isItemSelected={isItemSelected}
+                depth={depth + 1}
+                onSelect={onSelect}
+              />
+            ) : null}
+          </>
+        </div>
+      ))}
+    </div>
+  );
+};

@@ -1,6 +1,7 @@
 import { ICON_LIST } from "@/constants/icons.constant";
 import { MenuItemType } from "@/utils/menu";
 import NavLink from "@/components/frontend/base/NavItem/NavLink";
+import { Link } from "@/utils/navigation";
 import classNames from "classnames";
 interface SecondaryNavItemProps {
   name?: string;
@@ -9,6 +10,7 @@ interface SecondaryNavItemProps {
   items?: MenuItemType[];
   isMega?: boolean;
   className?: string;
+  slug?: string;
 }
 const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({
   name,
@@ -17,6 +19,7 @@ const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({
   isMega,
   className = "",
   descriptions,
+  slug,
 }) => {
   const icItem = ICON_LIST.find((ic) => ic.key === iconName);
   return (
@@ -26,14 +29,16 @@ const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({
       })}
     >
       <div className="menu-secondary-item__name hover:bg-white/10 cursor-pointer px-4 py-2 rounded-md">
-        <span className="flex items-center">
-          {icItem ? (
-            <span className="mr-2">
-              <icItem.icon stroke="white" />
-            </span>
-          ) : null}
-          <span className="nav-link-text text-white font-[500]">{name}</span>
-        </span>
+        <Link href={slug ?? "/"}>
+          <span className="flex items-center">
+            {icItem ? (
+              <span className="mr-2">
+                <icItem.icon stroke="white" />
+              </span>
+            ) : null}
+            <span className="nav-link-text text-white font-[500]">{name}</span>
+          </span>
+        </Link>
       </div>
       {isMega ? (
         <MegaMenuDropdown

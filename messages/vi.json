@@ -38,6 +38,11 @@
     },
     "productRelated": {
       "title": "Tour liên quan"
+    },
+    "post": {
+      "related": {
+        "title": "Bài viết liên quan"
+      }
     }
   }
 }

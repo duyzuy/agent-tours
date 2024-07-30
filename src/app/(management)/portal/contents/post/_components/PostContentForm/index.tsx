@@ -271,7 +271,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
                   help={errors?.content?.message}
                   validateStatus={errors?.content ? "error" : ""}
                 >
-                  <TextEditor onEditorChange={handleChangeContent} value={value} />
+                  <TextEditor onEditorChange={handleChangeContent} value={value} height={600} maxHeight={950} />
                 </FormItem>
               )}
             ></Controller>
