@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState, useTransition } from "react";
-import { Breadcrumb, Col, Divider, Row } from "antd";
+import { Breadcrumb, Col, Row } from "antd";
 import useBooking from "../hooks/useBooking";
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
@@ -15,15 +15,25 @@ import BookingSummary from "../_components/BookingSummary";
 import PaymentMethod from "./_components/PaymentMethod";
 import InvoiceForm from "./_components/InvoiceForm";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
+import useLocalUserProfile from "@/hooks/useLocalProfile";
 
 const PaymentPage = () => {
   const [bookingInformation, setBookingInfomation] = useBooking();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const { createBooking } = useCreateBooking();
-
+  const userProfile = useLocalUserProfile();
+  console.log(userProfile);
   const [customerInformation, setCustomerInformation] = useState<CustomerInformation>(
-    () => new CustomerInformation("", "", "", "", "", ""),
+    () =>
+      new CustomerInformation(
+        userProfile?.infoLegalRepresentative,
+        userProfile?.infoPhoneNumber,
+        userProfile?.infoEmail,
+        "",
+        "",
+        "",
+      ),
   );
   const [invoiceInformation, setInvoiceInformation] = useState(new InvoiceFormData("", "", "", "", ""));
   const { handlerSubmit, errors } = useFormSubmit<CustomerInformation>({

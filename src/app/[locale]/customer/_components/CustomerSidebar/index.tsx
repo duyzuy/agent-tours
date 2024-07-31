@@ -1,8 +1,10 @@
+"use server";
 import { Link } from "@/utils/navigation";
 import { IconAccount, IconChevronRight, IconLogout, IconRecieptText, IconKeyRound, IconUser } from "@/assets/icons";
 import classNames from "classnames";
 import CustomerAvatarInformation from "@/components/frontend/CustomerAvatarInformation";
 import { getTranslations } from "next-intl/server";
+import SignOutButton from "./SignOutButton";
 
 interface CustomerSidebarProps {
   username?: string;
@@ -32,13 +34,8 @@ export default async function CustomerSidebar({ username, className = "" }: Cust
       icon: IconKeyRound,
       path: "/customer/change-password",
     },
-    {
-      title: t("navItem.signOut"),
-      key: "logOut",
-      icon: IconLogout,
-      path: "/",
-    },
   ];
+
   return (
     <div
       className={classNames("customer-sidebar", {
@@ -57,6 +54,7 @@ export default async function CustomerSidebar({ username, className = "" }: Cust
             </Link>
           </div>
         ))}
+        <SignOutButton title={t("navItem.signOut")} />
       </div>
     </div>
   );

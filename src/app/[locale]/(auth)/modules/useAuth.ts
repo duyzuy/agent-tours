@@ -61,6 +61,7 @@ export const useSignUp = (options?: { redirect?: boolean; callbackUrl?: string }
         message.success("Tạo tài khoản thành công, vui lòng thực hiện đăng nhập");
         if (redirect) {
           router.push(`/${CLIENT_LINKS.CustomerLogin}`);
+          router.refresh();
         }
       },
       onError(error, variables, context) {
@@ -85,12 +86,11 @@ export const useSignUp = (options?: { redirect?: boolean; callbackUrl?: string }
  *
  */
 export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string }) => {
+  const { redirect = false, callbackUrl } = options || {};
   const [error, setError] = useState<string | null>();
   const [loading, setLoading] = useState<boolean>(false);
   const locale = useLocale() as LangCode;
 
-  const callbackUrl = options?.callbackUrl ? `/${locale}/${options.callbackUrl}` : `/${locale}`;
-  const redirect = options && isUndefined(options.redirect) ? options.redirect : true;
   const router = useRouter();
 
   const onSignIn = (formData: CustomerLoginFormData) => {
@@ -98,8 +98,8 @@ export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string }
     signIn("credentials", {
       username: formData.username,
       password: formData.password,
-      redirect: false,
-      callbackUrl: callbackUrl,
+      redirect: redirect,
+      callbackUrl: callbackUrl ? `/${locale}/${callbackUrl}` : `/${locale}`,
     })
       .then((data) => {
         console.log(data);

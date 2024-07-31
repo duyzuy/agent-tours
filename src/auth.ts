@@ -36,7 +36,6 @@ export const authOptions: NextAuthOptions = {
         });
         const data = (await response.json()) as CustomerLoginResponse;
 
-        console.log(data);
         if (data.status === Status.OK) {
           const dataParse = parseJWT<{
             result: string;
@@ -63,7 +62,7 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    // maxAge: 30 * 60 * 60,
+    maxAge: 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV !== "production" ? true : false,
@@ -84,16 +83,16 @@ export const authOptions: NextAuthOptions = {
     //     console.log({ user, account, profile, email, credentials });
     //     return true;
     // },
-    async jwt({ token, user, account }) {
+    async session({ session, token, user }) {
+      session.user.accessToken = token.accessToken;
+      return session;
+    },
+    async jwt({ token, user, trigger, session, account }) {
       // console.log({ token, user, account, profile });
       if (user) {
         token.accessToken = user.accessToken;
       }
       return token;
-    },
-    async session({ session, token, user }) {
-      session.user.accessToken = token.accessToken;
-      return session;
     },
   },
   pages: {

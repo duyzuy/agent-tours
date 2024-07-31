@@ -6,6 +6,7 @@ import { Link } from "@/utils/navigation";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import AuthLayoutWraper from "../_components/AuthLayoutWraper";
 import { useRouter } from "@/utils/navigation";
+
 const CustomerLogin = () => {
   const t = useTranslations("String");
   const router = useRouter();

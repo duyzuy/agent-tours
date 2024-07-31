@@ -14,4 +14,14 @@ export const customerAPIs = {
       },
     });
   },
+  getProfile: async (token?: string) => {
+    return await client.post<CustomerProfileResponse>("localfront/getProfile", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      params: {
+        requestObject: {},
+      },
+    });
+  },
 };

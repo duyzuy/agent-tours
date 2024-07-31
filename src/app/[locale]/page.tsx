@@ -50,6 +50,20 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
     ],
   });
 
+  const travelTour = new FeSearchTourQueryParams({
+    // byMonth: "Aug2024",
+    byProductType: [EProductType.TOUR],
+    // byDest: [
+    //   {
+    //     regionKey: "ASIA",
+    //     subRegionKey: "EASTERN_ASIA",
+    //     countryKey: "TW",
+    //     stateProvinceKey: "",
+    //     keyType: "COUNTRYLIST",
+    //   },
+    // ],
+  });
+
   return (
     <div className="page-home">
       <HeroHomeWraper
@@ -67,7 +81,17 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
         {/* <FlashSale /> */}
 
         <BannerSection />
-
+        <div className="lg:h-12 h-4"></div>
+        <Suspense
+          fallback={
+            <div className="container mx-auto px-4 md:px-6 lg:px-8">
+              <SkeletonLoadingCards length={4} />
+            </div>
+          }
+        >
+          <TourListContainer lang={locale} querySearch={travelTour} title="Tour du lịch" />
+        </Suspense>
+        {/*         
         <div className="lg:h-12 h-4"></div>
         <Suspense
           fallback={
@@ -87,7 +111,7 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
           }
         >
           <TourListContainer lang={locale} querySearch={traveltaiwanAug} title="Du lich Dailoan thang 8" />
-        </Suspense>
+        </Suspense> */}
 
         <div className="lg:h-12 h-4"></div>
         <VisaSection />

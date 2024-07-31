@@ -15,10 +15,6 @@ export default async function AccountItem({ isMobile }: AccountItemProps) {
 
   const isAuth = !!session;
 
-  if (session) {
-    const customerResponse = await getUserCustomerProfile();
-    console.log(customerResponse);
-  }
   return isMobile ? (
     <div className="block">
       <Link href={isAuth ? `/${CLIENT_LINKS.Customer}` : `/${CLIENT_LINKS.CustomerLogin}`}>

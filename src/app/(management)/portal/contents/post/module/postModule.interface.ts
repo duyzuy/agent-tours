@@ -14,6 +14,7 @@ export class PostContentFormData implements PostContentPayload {
   category?: Partial<Pick<ICategory, "id" | "name" | "slug">>;
   tags?: Partial<Pick<ITag, "id" | "name" | "slug">>[];
   name?: string;
+  excerpt?: string;
   content?: string;
   heroBanner?: Partial<IThumbnail>;
   thumbnail?: Partial<IThumbnail>;
@@ -31,6 +32,7 @@ export class PostContentFormData implements PostContentPayload {
     slug: string | undefined,
     name: string | undefined,
     content: string | undefined,
+    excerpt: string | undefined,
     heroBanner: Partial<IThumbnail> | undefined,
     thumbnail: Partial<IThumbnail> | undefined,
     images: Partial<IThumbnail>[] | undefined,
@@ -52,6 +54,7 @@ export class PostContentFormData implements PostContentPayload {
     this.tags = tags;
     this.name = name;
     this.content = content;
+    this.excerpt = excerpt;
     this.heroBanner = heroBanner;
     this.thumbnail = thumbnail;
     this.images = images;

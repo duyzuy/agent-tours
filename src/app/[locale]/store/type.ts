@@ -1,4 +1,23 @@
 import { LangCode } from "@/models/management/cms/language.interface";
+import { IModalManagers } from "./type/modal.type";
+import { ICustomerProfile } from "@/models/fe/profile.interface";
+import { FeBookingInformation } from "../(booking)/modules/booking.interface";
+
+export interface AppActions {
+  type: string;
+  payload?: any;
+}
+
+export type ActionMap<M extends { [index: string]: any }> = {
+  [Key in keyof M]: M[Key] extends undefined
+    ? {
+        type: Key;
+      }
+    : {
+        type: Key;
+        payload: M[Key];
+      };
+};
 
 interface ILanguageContentContainer {
   locale?: {
@@ -37,4 +56,15 @@ export class LanguageContentContainer implements ILanguageContentContainer {
     this.post = post;
     this.category = category;
   }
+}
+
+export interface AppContainer {
+  locale?: {
+    name: string;
+    code: LangCode;
+  };
+  languageContainer?: ILanguageContentContainer;
+  modalContainer?: IModalManagers;
+  user?: ICustomerProfile;
+  bookingContainer: FeBookingInformation;
 }

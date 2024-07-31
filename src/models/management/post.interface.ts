@@ -9,6 +9,7 @@ export interface IPostContent {
   cat: "cms_post";
   name: string;
   content: string;
+  excerpt: string;
   metaTitle: string;
   metaDescription: string;
   metaKeyword: string;
@@ -34,63 +35,6 @@ export interface IPostContent {
   }[];
   publishDate: string;
 }
-
-// "id": 726,
-// "originId": 726,
-// "tags": [
-//     {
-//         "originId": 0,
-//         "id": 704,
-//         "lang": "vi",
-//         "slug": "tag-1-update-2",
-//         "name": "tag 1 update 2",
-//         "status": "",
-//         "languages": []
-//     },
-//     {
-//         "originId": 0,
-//         "id": 715,
-//         "lang": "vi",
-//         "slug": "tag-2",
-//         "name": "Tag 2",
-//         "status": "",
-//         "languages": []
-//     }
-// ],
-// "category": {
-//     "parentId": 0,
-//     "originId": 0,
-//     "id": 701,
-//     "lang": "vi",
-//     "slug": "string-1",
-//     "name": "test string 1",
-//     "thumbnail": {
-//         "id": 0,
-//         "original": "",
-//         "small": ""
-//     },
-//     "status": "",
-//     "children": [],
-//     "languages": []
-// },
-// "name": "bai viet so 1",
-// "thumbnail": {
-//     "id": 196,
-//     "original": "header-banner-1711883565702.jpeg",
-//     "small": "thumb-header-banner-1711883565702.jpeg"
-// },
-// "slug": "bai-viet-so-1",
-// "lang": null,
-// "status": null,
-// "languages": [
-//     {
-//         "id": 726,
-//         "name": "bai viet so 1",
-//         "lang": null,
-//         "slug": "bai-viet-so-1",
-//         "status": "publish"
-//     }
-// ]
 
 export interface IPostMinimalContent {
   id: number;
@@ -124,6 +68,7 @@ export interface PostContentPayload {
   tags?: { id?: number }[];
   name?: string;
   content?: string;
+  excerpt?: string;
   heroBanner?: {
     id?: number;
   };

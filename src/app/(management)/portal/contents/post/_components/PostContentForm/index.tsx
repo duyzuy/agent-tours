@@ -31,6 +31,7 @@ export const initFormData = new PostContentFormData(
   "",
   "",
   "",
+  "",
   undefined,
   undefined,
   [],
@@ -185,6 +186,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
         "publishDate",
         "images",
         "postMeta",
+        "excerpt",
       ],
       getValues(),
       initData || initFormData,
@@ -203,6 +205,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
         slug: initData.slug,
         name: initData.name,
         content: initData.content,
+        excerpt: initData.excerpt,
         heroBanner: initData.heroBanner ?? undefined,
         thumbnail: initData.thumbnail ?? undefined,
         images: initData.images,
@@ -260,6 +263,19 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
                   help={errors?.slug?.message}
                   className="mb-6"
                 />
+              )}
+            ></Controller>
+            <Controller
+              name="excerpt"
+              control={control}
+              render={({ field, formState: { errors } }) => (
+                <FormItem
+                  label="Mô tả ngắn"
+                  help={errors?.content?.message}
+                  validateStatus={errors?.content ? "error" : ""}
+                >
+                  <Input.TextArea {...field} showCount maxLength={160} rows={4} cols={12} />
+                </FormItem>
               )}
             ></Controller>
             <Controller

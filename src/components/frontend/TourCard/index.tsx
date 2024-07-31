@@ -55,40 +55,42 @@ const TourCard = ({
             <span>no image</span>
           )}
         </div>
-        <div className="article-content px-2 pt-3 rounded-bl-xl rounded-br-xl bg-white">
-          <Link href={href} className="text-main-400 text-[15px]">
-            <h3 className="line-clamp-2 mb-2 text-md font-semibold text-main-400 text-sm lg:text-base">{name}</h3>
-          </Link>
-          <div className="price lg:flex lg:items-center">
-            {price ? (
-              <p className="text-red-600 text-md font-semibold">{price}</p>
-            ) : (
-              <p className="text-xs h-[22px]">{t("card.contact")}</p>
-            )}
+        <div className="article-content px-2 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">
+          <div className="article-content__top flex-1 mb-3 border-b border-[#f1f1f1] pb-3">
+            <Link href={href} className="text-main-400 text-[15px]">
+              <h3 className="line-clamp-2 mb-2 text-md font-semibold text-main-400 text-sm lg:text-base">{name}</h3>
+            </Link>
+            <div className="price lg:flex lg:items-center">
+              {price ? (
+                <p className="text-red-600 text-md font-semibold">{price}</p>
+              ) : (
+                <p className="text-xs h-[22px]">{t("card.contact")}</p>
+              )}
+            </div>
           </div>
-          <p className="line w-full h-[1px] my-3 bg-gray-100"></p>
-          <div className="flex justify-between text-[11px]">
-            <ul className="flex-1">
-              <li className="flex items-center mb-1">
-                <span className="text-gray-500 w-[65px] block">{t("card.tourCode")}</span>
-                <span>{tourCode}</span>
-              </li>
-              <li className="flex items-center mb-1">
-                <span className="text-gray-500 w-[65px] block">{t("card.departDate")}</span>
-                <span>{departDate}</span>
-              </li>
-              <li className="flex items-center mb-1">
-                <span className="text-gray-500 w-[65px] block">{t("card.amountRemaining")}</span>
-                <span className="text-red-600">{openAmount}</span>
-              </li>
-            </ul>
-            {/* <div className="slot text-center bg-gray-100 rounded-md px-2 py-2 border border-gray-300">
+          <div className="article-content__middle">
+            <div className="flex justify-between text-[11px]">
+              <ul className="flex-1">
+                <li className="flex items-center mb-1">
+                  <span className="text-gray-500 w-[65px] block">{t("card.tourCode")}</span>
+                  <span>{tourCode}</span>
+                </li>
+                <li className="flex items-center mb-1">
+                  <span className="text-gray-500 w-[65px] block">{t("card.departDate")}</span>
+                  <span>{departDate}</span>
+                </li>
+                <li className="flex items-center mb-1">
+                  <span className="text-gray-500 w-[65px] block">{t("card.amountRemaining")}</span>
+                  <span className="text-red-600">{openAmount}</span>
+                </li>
+              </ul>
+              {/* <div className="slot text-center bg-gray-100 rounded-md px-2 py-2 border border-gray-300">
               <p>{t("card.amountRemaining")}</p>
               <span className="text-red-600 text-sm">{openAmount}</span>
             </div> */}
+            </div>
           </div>
-          <p className="line w-full h-[1px] mt-2 mb-1 bg-gray-100"></p>
-          <TourCard.BottomCard />
+          {/* <TourCard.BottomCard /> */}
         </div>
       </div>
     </div>
@@ -98,7 +100,7 @@ export default TourCard;
 
 TourCard.BottomCard = function TourCardBottom() {
   return (
-    <div className="article-bottom py-2 text-[11px]">
+    <div className="article-bottom py-2 text-[11px] border-t mt-2">
       <div className="flex items-center justify-between">
         <div className="left flex items-center">
           <span>
