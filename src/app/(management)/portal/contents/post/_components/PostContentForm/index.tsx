@@ -161,14 +161,17 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
     const postId = getValues("id");
     postId && onDelete?.(postId);
   }, []);
+  const watchPublishDate = watch("publishDate");
   const publishDateTime = useMemo(() => {
     const publishDate = getValues("publishDate");
+    console.log(publishDate);
     return {
       publishTime: dayjs(publishDate, { format: TIME_FORMAT }),
-      publishDate: dayjs(publishDate, { format: DATE_FORMAT }),
+      publishDate: dayjs(publishDate, DATE_FORMAT),
     };
-  }, []);
+  }, [watchPublishDate]);
 
+  console.log(dayjs(getValues("publishDate"), DATE_FORMAT).format("MM/DD/YYYY"));
   const isDisablePublishButton = useMemo(() => {
     return isEqualObject(
       [

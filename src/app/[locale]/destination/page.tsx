@@ -57,10 +57,7 @@ export default async function DestinationPage({ params }: { params: PageProps })
     return (
       <div className="page-destination mb-12">
         <DestinationSearch />
-        <BreadCrumb
-          items={[{ title: "Điểm đến hấp dẫn" }]}
-          classname="container mx-auto py-4 lg:px-8 md:px-6 px-4 mb-8"
-        />
+        <BreadCrumb items={[{ title: "Điểm đến" }]} classname="container mx-auto py-4 lg:px-8 md:px-6 px-4 mb-8" />
         <div className="page-destination__head mb-6">
           <div className="container mx-auto lg:px-8 md:px-6 px-4">
             <Title>Điểm đến hấp dẫn</Title>

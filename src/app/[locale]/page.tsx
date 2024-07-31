@@ -1,7 +1,5 @@
 import { unstable_setRequestLocale } from "next-intl/server";
 import VisaSection from "./_components/VisaSection";
-import PostsSection from "./_components/PostsSection";
-import ExploreSection from "./_components/ExploreSection";
 
 import BannerSection from "./_components/BannerSection";
 
@@ -12,6 +10,8 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import HeroHomeWraper from "./_components/HeroHomeWraper";
+import DestinationsList from "./_components/DestinationsList";
+import PostListContainer from "./_components/PostListContainer";
 
 export default async function FeHomePage({ params }: { params: { locale: LangCode } }) {
   const { locale } = params;
@@ -116,9 +116,11 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
         <div className="lg:h-12 h-4"></div>
         <VisaSection />
         <div className="lg:h-12 h-4"></div>
-        <PostsSection />
+        <DestinationsList />
+        {/* <div className="lg:h-12 h-4"></div>
+        <PostsSection /> */}
         <div className="lg:h-12 h-4"></div>
-        <ExploreSection />
+        <PostListContainer />
       </div>
     </div>
   );

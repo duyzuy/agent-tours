@@ -12,6 +12,7 @@ export interface IFePostItem {
   category: ICategory;
   name: string;
   content: string;
+  excerpt: string;
   heroBanner: IThumbnail | null;
   thumbnail: IThumbnail | null;
   images: IThumbnail[];
