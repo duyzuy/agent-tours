@@ -13,3 +13,9 @@ export const useSearchTourMutation = () => {
     mutationFn: (payload?: FeSearchProductFormData) => searchTourAPIs.search(payload),
   });
 };
+
+export const useSearchTemplateTourMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload?: FeSearchProductFormData) => searchTourAPIs.searchTemplate(payload),
+  });
+};

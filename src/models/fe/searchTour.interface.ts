@@ -1,3 +1,4 @@
+import { EInventoryType } from "../management/core/inventoryType.interface";
 import { EProductType } from "../management/core/productType.interface";
 import { FeDestinationSearchConfig } from "./destination.interface";
 
@@ -10,7 +11,7 @@ export interface FeSearchTourPayload {
     regionKey: string;
     subRegionKey: string;
   }[];
-  byInventoryType?: [];
+  byInventoryType?: EInventoryType[];
   byMonth?: string;
   byProductType: EProductType[];
   byTemplateCode?: string;
@@ -37,7 +38,7 @@ export class FeSearchTourQueryParams {
 export class FeSearchProductFormData implements FeSearchTourPayload {
   byCode?: string;
   byDest?: FeDestinationSearchConfig[];
-  byInventoryType?: [];
+  byInventoryType?: EInventoryType[];
   byMonth?: string;
   byProductType: EProductType[];
   byTemplateCode?: string;
@@ -46,7 +47,7 @@ export class FeSearchProductFormData implements FeSearchTourPayload {
   constructor(
     byCode: string | undefined,
     byDest: FeDestinationSearchConfig[] | undefined,
-    byInventoryType: [] | undefined,
+    byInventoryType: EInventoryType[] | undefined,
     byMonth: string | undefined,
     byProductType: EProductType[],
     byTemplateCode: string | undefined,

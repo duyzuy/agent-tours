@@ -55,6 +55,7 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
               ) : null}
             </div>
             <div className="col-left w-5/12 px-3">
+              <RegisterVisaForm />
               <div className="mb-6">
                 <div className="box border rounded-lg px-4 py-4">
                   <div className="head py-3">
@@ -68,7 +69,6 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
                   </ul>
                 </div>
               </div>
-              <RegisterVisaForm />
             </div>
           </div>
         </div>

@@ -162,6 +162,7 @@ const SellTemplatePage = () => {
         onDelete={(record) => onDelete(record.recId)}
         onApproval={(record) => onApproval(record.recId)}
         hideApproval={(record) => record.status === Status.OK}
+        showActionsLess={false}
       />
       <DrawerTemplateSellable
         onSubmit={onSubmitTemplateSellable}

@@ -13,8 +13,9 @@ import { isEmpty } from "lodash";
 interface SinglePostWraperProps {
   data?: IFePostItem;
   relatedItems?: IFePostItem[];
+  isMobile?: boolean;
 }
-export default async function SinglePostWraper({ data, relatedItems }: SinglePostWraperProps) {
+export default async function SinglePostWraper({ data, relatedItems, isMobile }: SinglePostWraperProps) {
   const t = await getTranslations("String");
 
   return (
@@ -43,7 +44,7 @@ export default async function SinglePostWraper({ data, relatedItems }: SinglePos
             <span className="capitalize text-gray-500">
               {data?.publishDate ? dayjs(data?.publishDate).locale("vi").format("dddd, DD/MM/YYYY HH:mm") : null}
             </span>
-            <SocialsShare title={data?.name} url={`post/${data?.slug}`} hideLabel />
+            <SocialsShare title={data?.name} url={`post/${data?.slug}`} hideLabel isMobile={isMobile} />
           </div>
           {data?.tags?.length ? (
             <div className="tags flex items-center">
@@ -65,7 +66,7 @@ export default async function SinglePostWraper({ data, relatedItems }: SinglePos
             <>
               <div className="line mb-6 mt-6 bg-gray-100 h-[1px]"></div>
               <div className="py-2 mb-6">
-                <span className="block text-base lg:text-2xl font-[500]">{t("post.related.title")}</span>
+                <span className="block text-xl lg:text-2xl font-[500]">{t("post.related.title")}</span>
               </div>
               <div className="single-page__childs grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {relatedItems?.map((post) => (

@@ -1,7 +1,6 @@
 import { client } from "@/services/api";
-import { BaseResponse } from "@/models/common.interface";
 import { FeSearchProductFormData, FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
-import { ProductListResponse } from "@/models/fe/productItem.interface";
+import { ProductListResponse, TemplateProductListResponse } from "@/models/fe/productItem.interface";
 import { FeDestinationSearchConfigResponse } from "@/models/fe/destination.interface";
 
 export const searchTourAPIs = {
@@ -14,6 +13,15 @@ export const searchTourAPIs = {
   },
   search: async (payload?: FeSearchProductFormData) => {
     return await client.post<ProductListResponse>("localfront/BookingOrder_Search", {
+      params: {
+        requestObject: {
+          ...payload,
+        },
+      },
+    });
+  },
+  searchTemplate: async (payload?: FeSearchProductFormData) => {
+    return await client.post<TemplateProductListResponse>("localfront/SellableTemplate_Search", {
       params: {
         requestObject: {
           ...payload,

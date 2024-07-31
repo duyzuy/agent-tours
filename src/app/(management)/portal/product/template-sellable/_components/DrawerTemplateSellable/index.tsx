@@ -17,6 +17,7 @@ import { TemplateSellableFormData } from "../../modules/templateSellable.interfa
 import { templateSellableSchema } from "../../schema/templateSellable.schema";
 import CMSTemplateSelectorContainer from "./CMSTemplateSelectorContainer";
 import { Status } from "@/models/common.interface";
+import { isEmpty } from "lodash";
 export enum EActionType {
   CREATE = "CREATE",
   EDIT = "EDIT",
@@ -156,11 +157,6 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
       }}
     >
       <Form layout="vertical" colon={false} labelWrap className="max-w-4xl">
-        <CMSTemplateSelectorContainer
-          errors={errors?.cmsIdentity}
-          onChange={(value) => onChangeSellableFormData("cmsIdentity", value)}
-          value={templateSellableFormData.cmsIdentity}
-        />
         <FormItem
           label="Tên nhóm sản phẩm"
           required
@@ -226,6 +222,11 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
             options={destinationListOptions}
           />
         </FormItem>
+        <CMSTemplateSelectorContainer
+          errors={errors?.cmsIdentity}
+          onChange={(value) => onChangeSellableFormData("cmsIdentity", value)}
+          value={isEmpty(templateSellableFormData.cmsIdentity) ? undefined : templateSellableFormData.cmsIdentity}
+        />
         {actionType === EActionType.EDIT ? (
           <Space>
             <span>Trạng thái:</span>

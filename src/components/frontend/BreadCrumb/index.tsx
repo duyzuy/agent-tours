@@ -13,11 +13,11 @@ export const BreadCrumb: React.FC<BreadCrumbProps> = ({ items = [], classname = 
   const lastItem = items.length - 1;
   return (
     <div
-      className={classNames("breakcrumb", {
+      className={classNames("breakcrumb overflow-x-auto", {
         [classname]: classname,
       })}
     >
-      <ul className="flex items-center text-xs">
+      <ul className="flex items-center text-xs whitespace-nowrap">
         <li className="bread-item">
           <Link href="/">
             <span className="text-gray-800">{t("home")}</span>

@@ -10,7 +10,7 @@ import { IFePostItem, PostsQueryParamsData } from "@/models/fe/post";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import ClientDispatchContent from "../_components/ClientDispatchContent";
 import { unstable_setRequestLocale } from "next-intl/server";
-
+import { isMobile } from "@/utils/detectMobile";
 interface Props {
   params: { locale: LangCode; postSlug: string };
 }
@@ -65,7 +65,7 @@ export default async function SinglePostPage({ params }: Props) {
   }
   return (
     <>
-      <SinglePostWraper data={postData} relatedItems={relatedPosts} />;
+      <SinglePostWraper data={postData} relatedItems={relatedPosts} isMobile={isMobile()} />;
       <ClientDispatchContent
         languages={postData?.languages.map((item) => ({ lang: item.lang, slug: item.slug })) || []}
       />

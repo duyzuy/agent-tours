@@ -5,9 +5,9 @@ import dynamic from "next/dynamic";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { BoxSearchTourFeProps } from "../_components/BoxSearchTourFe";
 import BoxSearchSkeleton from "../_components/BoxSearchTourFe/BoxSearchSkeleton";
-import { useSearchTourMutation } from "@/mutations/fe/searchTour";
-import { Alert, Spin } from "antd";
-import { FeProductItem } from "@/models/fe/productItem.interface";
+import { useSearchTemplateTourMutation } from "@/mutations/fe/searchTour";
+import { Spin } from "antd";
+import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 import EmptySearch from "./_components/EmptySearch";
 import ProductListEntry from "./_components/ProductListEntry";
 
@@ -33,8 +33,9 @@ const contentStyle: React.CSSProperties = {
 export default function FeSearchPage({ params, searchParams }: PageProps) {
   // const { locale } = params;
 
-  const { mutate: onSearch, isPending, isIdle } = useSearchTourMutation();
-  const [productList, setProductList] = useState<FeProductItem[]>([]);
+  const { mutate: onSearch, isPending, isIdle } = useSearchTemplateTourMutation();
+
+  const [productList, setProductList] = useState<IFeTemplateProductItem[]>([]);
   const handleSubmitSearch: BoxSearchTourFeProps["onSubmit"] = (data) => {
     console.log("submit search");
     console.log(data);
@@ -48,7 +49,7 @@ export default function FeSearchPage({ params, searchParams }: PageProps) {
       },
     });
   };
-  console.log(isIdle, isPending);
+
   const content = <div style={contentStyle} />;
   return (
     <div className="page-search">

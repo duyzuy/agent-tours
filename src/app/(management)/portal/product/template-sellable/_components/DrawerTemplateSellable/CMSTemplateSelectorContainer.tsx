@@ -22,7 +22,7 @@ const CMSTemplateSelectorContainer: React.FC<CMSTemplateSelectorContainerProps> 
   const { data: templateData, isLoading } = useGetCMSTemplateListQuery(queryParams);
 
   return (
-    <FormItem label={label} required validateStatus={errors ? "error" : ""} help={errors || ""}>
+    <FormItem label={label} validateStatus={errors ? "error" : ""} help={errors || ""}>
       <Select
         placeholder="Bản mẫu nội dung"
         value={value}

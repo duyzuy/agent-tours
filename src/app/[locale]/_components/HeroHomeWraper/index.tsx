@@ -31,6 +31,7 @@ export default async function HeroHomeWraper({
         <Image
           src={imageUrl}
           fill
+          loading="lazy"
           alt={SITE_NAME}
           style={{
             objectFit: "cover",

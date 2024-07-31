@@ -17,9 +17,10 @@ import { isMobile } from "@/utils/detectMobile";
 import ProductContent from "./_components/ProductContent";
 
 import { getTemplateContentDetail } from "../_actions/templateContent";
-import { getProductListByTemplateId } from "../../_actions/searchProduct";
+import { getProductListByTemplateId, getTemplateProductList } from "../../_actions/searchProduct";
 
 import { ProductRelated } from "../_components/ProductRelated";
+import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
   loading: () => <ProductGalleries className="w-full mb-6" />,
@@ -60,7 +61,11 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
     lang: locale,
   });
 
+  /**
+   * get all sellable and price for calendar
+   */
   const productList = await getProductListByTemplateId(Number(templateId));
+
   const currentSellable = productList?.find((item) => item.recId === Number(sellableId));
 
   if (

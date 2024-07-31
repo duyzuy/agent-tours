@@ -16,7 +16,7 @@ const SocialsShare: React.FC<SocialsShareProps> = ({
   title,
   url = "/",
   hideLabel = false,
-  isMobile = true,
+  isMobile = false,
   className = "",
 }) => {
   const locale = useLocale();
@@ -30,7 +30,7 @@ const SocialsShare: React.FC<SocialsShareProps> = ({
   };
 
   const handleSharing = async () => {
-    const shareData: ShareData = { title: SITE_NAME, text: title, url: fullUrl };
+    const shareData: ShareData = { title: title, text: title, url: fullUrl };
     if (!navigator.canShare) {
       console.log("no support share.");
       setOpenModalShare(true);
