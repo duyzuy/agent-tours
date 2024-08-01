@@ -20,7 +20,6 @@ import { getTemplateContentDetail } from "../_actions/templateContent";
 import { getProductListByTemplateId, getTemplateProductList } from "../../_actions/searchProduct";
 
 import { ProductRelated } from "../_components/ProductRelated";
-import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 
 const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
   loading: () => <ProductGalleries className="w-full mb-6" />,

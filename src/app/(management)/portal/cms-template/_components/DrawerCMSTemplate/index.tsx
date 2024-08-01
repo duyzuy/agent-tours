@@ -155,7 +155,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
             onChange={(ev) => onChangeFormData("codeName", ev.target.value)}
           />
         </FormItem>
-        <FormItem label="Tên template">
+        <FormItem label="Visa template">
           <VisaTemplateSelector value={formData.visaTemplates[0]?.code} onChange={onChangeVisaTemplate} />
         </FormItem>
         <FormItem label="Code" required validateStatus={errors?.code ? "error" : ""} help={errors?.code || ""}>

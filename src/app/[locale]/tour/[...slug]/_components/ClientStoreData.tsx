@@ -11,7 +11,7 @@ interface ClientStoreDataProps {
 const ClientStoreData: React.FC<ClientStoreDataProps> = ({ data, log }) => {
   const [langInfo, dispatch] = useLanguage();
 
-  console.log(log);
+  // console.log(log);
   useEffect(() => {
     if (data) {
       dispatch({

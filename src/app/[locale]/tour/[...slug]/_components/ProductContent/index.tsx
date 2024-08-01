@@ -16,6 +16,9 @@ interface ProductContentProps {
 }
 export default async function ProductContent({ data, log }: ProductContentProps) {
   const t = await getTranslations("String");
+
+  const { visaTemplates } = data || {};
+
   const tourInformationsListContent = data?.includeAndNotes?.metaContent.reduce<
     { content: string; key: string; name: string }[]
   >((acc, item, _index) => {
@@ -58,18 +61,17 @@ export default async function ProductContent({ data, log }: ProductContentProps)
     },
   ];
 
-  const visaTemplates = data?.visaTemplates;
+  console.log({ visaTemplates });
   if (visaTemplates && visaTemplates.length) {
     const visaTemplateDetailResponse = await getVisaTemplateDetail({
       lang: visaTemplates[0].lang,
       slug: visaTemplates[0].slug,
     });
 
-    const visaDescriptions = visaTemplateDetailResponse?.result[0].visaContent?.content;
+    const { result } = visaTemplateDetailResponse || {};
+    const visaContent = result && result.length ? result[0].visaContent : undefined;
 
-    const blockVisaItems = visaTemplateDetailResponse?.result[0].visaContent?.metaContent.reduce<
-      BlockPanelsProps["items"]
-    >((acc, item, _index) => {
+    const blockVisaItems = visaContent?.metaContent.reduce<BlockPanelsProps["items"]>((acc, item, _index) => {
       return [...acc, { content: item.content, name: item.title, key: (_index + 1).toString() }];
     }, []);
 
@@ -79,7 +81,7 @@ export default async function ProductContent({ data, log }: ProductContentProps)
         label: "Thủ tục xin Visa",
         key: "visaService",
         icon: <IconClipboard />,
-        children: <BlockPanels descriptions={visaDescriptions} items={blockVisaItems ?? []} />,
+        children: <BlockPanels descriptions={visaContent?.content} items={blockVisaItems ?? []} />,
       },
     ];
   }

@@ -30,7 +30,7 @@ export default async function CustomerLayout({ children, params: { locale } }: P
   return (
     <div className="my-account py-6 lg:py-12 bg-gray-100">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="my-account-inner flex flex-wrap">
+        <div className="my-account-inner flex flex-wrap items-start">
           <CustomerSidebar
             username={session?.user?.name ?? ""}
             className="w-full md:w-4/12 lg:w-3/12 bg-white rounded-lg overflow-hidden md:mb-0 mb-6"

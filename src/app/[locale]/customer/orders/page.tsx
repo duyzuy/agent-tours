@@ -50,11 +50,11 @@ export default async function CustomerOrdersPage({ params }: { params: { locale:
                   </div>
                   <div className="w-16">
                     <span className="block text-xs text-gray-500">Mã tour</span>
-                    <span className="block">{order.template_minimal.code}</span>
+                    <span className="block">{order.templateMinimal.code}</span>
                   </div>
                   <div className="flex-1">
                     <span className="block text-xs text-gray-500">Tên tour</span>
-                    <span className="block">{order.template_minimal.name}</span>
+                    <span className="block">{order.templateMinimal.name}</span>
                   </div>
                   <div>
                     <span className="block text-xs text-gray-500">Ngày đặt</span>
@@ -65,11 +65,11 @@ export default async function CustomerOrdersPage({ params }: { params: { locale:
                   <div className="flex items-center gap-x-6">
                     <div>
                       <div>Khởi hành</div>
-                      <span>{dayjs(order.sellable_minimal.startDate).format("DD/MM/YYYY")}</span>
+                      <span>{dayjs(order.sellableMinimal.startDate).format("DD/MM/YYYY")}</span>
                     </div>
                     <div>
                       <div>Ngày về</div>
-                      <span>{dayjs(order.sellable_minimal.endDate).format("DD/MM/YYYY")}</span>
+                      <span>{dayjs(order.sellableMinimal.endDate).format("DD/MM/YYYY")}</span>
                     </div>
                   </div>
                   <Link href={"/"}>

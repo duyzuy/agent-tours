@@ -4,11 +4,12 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import { VisaDetailsByLangResponse } from "@/models/fe/visa.interface";
 import { BaseResponse } from "@/models/common.interface";
 
-export const getVisaTemplateDetail = async (payload?: { lang?: LangCode; slug?: string }) => {
+export const getVisaTemplateDetail = async (payload?: { lang?: LangCode; slug?: string; id?: number }) => {
   return await serverRequest.post<VisaDetailsByLangResponse, BaseResponse<null>>(
     "localfront/getCms_visatemplateDetails",
     {
-      next: { tags: ["visaContent"], revalidate: 1 },
+      next: { tags: ["visaContent"] },
+      cache: "no-store",
       params: {
         requestObject: {
           lang: payload?.lang,

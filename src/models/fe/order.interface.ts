@@ -42,7 +42,7 @@ export interface IFeOrder {
   sysBelongTo: string;
   logStatus: string;
   template: null;
-  template_minimal: {
+  templateMinimal: {
     recId: 25;
     cmsIdentity: string;
     type: EProductType;
@@ -53,7 +53,7 @@ export interface IFeOrder {
     sellables: null;
   };
   sellable: null;
-  sellable_minimal: {
+  sellableMinimal: {
     recId: number;
     sellableTemplateId: number;
     type: EProductType;
