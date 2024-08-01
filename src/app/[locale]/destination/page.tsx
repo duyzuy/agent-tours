@@ -64,33 +64,41 @@ export default async function DestinationPage({ params }: { params: PageProps })
           </div>
         </div>
         <div className="container mx-auto lg:px-8 md:px-6 px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {destinationContentList.map((dest) => (
-              <div className="destination-card rounded-lg overflow-hidden" key={dest.id}>
-                <div className="destination-card__inner relative">
-                  <div className="desctination-card__thumbnail relative w-full pt-[150%]">
-                    {dest.thumbnail ? (
-                      <Image
-                        src={`${mediaConfig.rootApiPath}/${dest.thumbnail?.original}`}
-                        alt={dest.title}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center absolute top-0 left-0 w-full h-full">
-                        no image
-                      </div>
-                    )}
-                  </div>
-                  <div className="desctination-card__content absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900/80 via-[60%] via-gray-900/40 to-transparent px-3 py-4">
-                    <Link href={`/destination/${dest.slug}`}>
-                      <h3 className="text-white text-base font-[500] line-clamp-2">{dest.title}</h3>
-                    </Link>
+          {!destinationContentList.length ? (
+            <div className="empty">
+              <div>
+                <p>Hiện chưa có tour nào cho điểm đến này</p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+              {destinationContentList.map((dest) => (
+                <div className="destination-card rounded-lg overflow-hidden" key={dest.id}>
+                  <div className="destination-card__inner relative">
+                    <div className="desctination-card__thumbnail relative w-full pt-[150%]">
+                      {dest.thumbnail ? (
+                        <Image
+                          src={`${mediaConfig.rootApiPath}/${dest.thumbnail?.original}`}
+                          alt={dest.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center absolute top-0 left-0 w-full h-full">
+                          no image
+                        </div>
+                      )}
+                    </div>
+                    <div className="desctination-card__content absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900/80 via-[60%] via-gray-900/40 to-transparent px-3 py-4">
+                      <Link href={`/destination/${dest.slug}`}>
+                        <h3 className="text-white text-base font-[500] line-clamp-2">{dest.title}</h3>
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );

@@ -12,6 +12,7 @@ const IconSend: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...rest 
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="m22 2-7 20-4-9-9-4Z" />

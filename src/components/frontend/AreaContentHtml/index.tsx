@@ -48,4 +48,7 @@ const AreaContentStyled = styled("div")`
       font-style: italic;
     }
   }
+  .center {
+    text-align: center;
+  }
 `;

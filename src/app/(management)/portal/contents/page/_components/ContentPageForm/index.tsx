@@ -139,10 +139,10 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
   }, []);
 
   const onChangeTemplate = useCallback<Required<PublishingProps>["onChangeTemplate"]>(
-    (value) =>
+    (template) =>
       setFormData((oldData) => ({
         ...oldData,
-        templateId: value,
+        templateId: template,
       })),
     [],
   );

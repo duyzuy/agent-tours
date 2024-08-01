@@ -31,7 +31,7 @@ const HeaderNavitationTop: React.FC<HeaderNavitationTopProps> = ({ children, nav
   const items = [
     {
       title: t("contact"),
-      href: "/",
+      href: "/page/lien-he",
       prefix: <IconMail className="w-5 h-5 mr-2 stroke-gray-600" />,
     },
     {

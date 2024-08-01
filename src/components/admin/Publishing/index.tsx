@@ -104,7 +104,7 @@ const Publishing: React.FC<PublishingProps> = ({
         {templateList ? (
           <FormItem label="Chọn template">
             <Select<string>
-              options={[templateDefault, ...(templateList || [])]}
+              options={templateList ?? [templateDefault]}
               value={templateValue ? templateValue : templateDefault.value}
               onChange={onChangeTemplate}
             />

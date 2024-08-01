@@ -5,6 +5,9 @@ import { getTemplateProductList } from "../../_actions/searchProduct";
 import TourCardTemplateItem from "../../_components/TourListContainer/TourCardTemplateItem";
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
+import IconEmptyBox from "@/assets/icons/IconEmptyBox";
+import { IconPlanet } from "@/assets/icons";
+import { Link } from "@/utils/navigation";
 interface ProductListContainerProps {
   destinations?: ILocalSeachDestination[];
 }
@@ -39,7 +42,15 @@ export default async function ProductListContainer({ destinations }: ProductList
 
   const productList = await getTemplateProductList(initQueryParams);
 
-  return (
+  return !productList || !productList.length ? (
+    <div className="empty py-6 flex items-center justify-center">
+      <div className="inner text-center">
+        <IconPlanet className="w-36 h-36 mx-auto" />
+        <p>Hiện chưa có tour nào cho điểm đến này</p>
+        <Link href={"/"}>Về trang chủ</Link>
+      </div>
+    </div>
+  ) : (
     <div className="product-list grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
       {productList?.map((prd) => (
         <TourCardTemplateItem key={prd.recId} data={prd} lang={locale as LangCode} />

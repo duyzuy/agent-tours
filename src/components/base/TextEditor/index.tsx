@@ -66,13 +66,26 @@ const TextEditor = ({
           language_load: false,
           toolbar_mode: "sliding",
           contextmenu: "link table",
+
+          fontSize: {
+            // supportAllValues: true,
+            options: ["tiny", "default", "big"],
+            // unit: "px",
+          },
           content_style:
-            "body { font-family: Helvetica,Arial,sans-serif; font-size:14px, img.center: {margin-left: auto; margin-right: auto} }",
+            "body { font-family: Helvetica,Arial,sans-serif;}" +
+            "img.center {margin-left: auto; margin-right: auto}" +
+            ".text-center {text-align: center}" +
+            ".center {text-align: center}" +
+            ".font-bold {font-weight: bold}" +
+            ".italic {font-style: italic}" +
+            ".underline {text-decoration-line: underline}",
           quickbars_selection_toolbar: "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
           noneditable_class: "mceNonEditable",
           // icons: "thin",
           height: height,
           min_height: minHeight,
+
           max_height: maxHeight,
           branding: false,
           promotion: false,
@@ -134,6 +147,7 @@ const TextEditor = ({
           importcss_append: false,
           // file_picker_callback: () => {},
           image_caption: true,
+
           formats: {
             alignleft: {
               selector: "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video",
@@ -151,7 +165,7 @@ const TextEditor = ({
               selector: "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video",
               classes: "full",
             },
-            bold: { inline: "span", classes: "bold" },
+            bold: { inline: "span", classes: "font-bold" },
             italic: { inline: "span", classes: "italic" },
             underline: {
               inline: "span",

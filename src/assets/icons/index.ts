@@ -88,6 +88,7 @@ import IconFlameKining from "./IconFlameKining";
 import IconFacebook from "./IconFacebook";
 import IconFiles from "./IconFiles";
 import IconFile from "./IconFile";
+import IconPlanet from "./IconPlanet";
 export {
   IconFile,
   IconFiles,
@@ -179,4 +180,5 @@ export {
   IconAlbum,
   IconEarth,
   IconClipboardList,
+  IconPlanet,
 };

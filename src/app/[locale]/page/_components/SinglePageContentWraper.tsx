@@ -5,6 +5,8 @@ import Image from "next/image";
 import { mediaConfig } from "@/configs";
 import { Link } from "@/utils/navigation";
 import AreaContentHtml from "@/components/frontend/AreaContentHtml";
+import GoogleMapFrame from "./GoogleMapFrame";
+import ContactForm from "./ContactForm";
 interface SinglePageContentWraperProps {
   children?: React.ReactNode;
   title?: string;
@@ -12,6 +14,7 @@ interface SinglePageContentWraperProps {
   data?: IPageContentDetail;
 }
 const SinglePageContentWraper: React.FC<SinglePageContentWraperProps> = ({ data }) => {
+  const { heroBanner, name, templateId } = data || {};
   return (
     <div className="single-page">
       <div className="single-page__hero-image relative pt-[120px] lg:pt-[240px]">
@@ -35,7 +38,21 @@ const SinglePageContentWraper: React.FC<SinglePageContentWraperProps> = ({ data 
           <h1 className="text-xl md:text-2xl lg:text-3xl">{data?.name}</h1>
         </div>
         <div className="single-page__body mb-16">
-          <AreaContentHtml content={data?.descriptions} />
+          {templateId === "TEMPLATE_CONTACT" ? <GoogleMapFrame className="mb-6 lg:mb-12" /> : null}
+
+          {templateId === "TEMPLATE_CONTACT" ? (
+            <div className="flex flex-wrap -mx-3">
+              <div className="w-full lg:w-1/2 px-3">
+                <AreaContentHtml content={data?.descriptions} />
+              </div>
+              <div className="w-full lg:w-1/2 px-3">
+                <ContactForm className="mb-6" />
+              </div>
+            </div>
+          ) : (
+            <AreaContentHtml content={data?.descriptions} />
+          )}
+
           {data?.children && data.children.length ? (
             <>
               <div className="line mb-6 mt-6 bg-gray-100 h-[1px]"></div>
