@@ -16,7 +16,7 @@ import Image from "next/image";
 import { mediaConfig } from "@/configs";
 import { IconChevronLeft, IconChevronRight } from "@/assets/icons";
 import { IThumbnail } from "@/models/thumbnail.interface";
-import classNames from "classnames";
+
 import styled from "styled-components";
 interface GalleriesProps {
   images: IThumbnail[] | null;

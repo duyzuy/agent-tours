@@ -95,12 +95,16 @@ export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string }
 
   const onSignIn = (formData: CustomerLoginFormData) => {
     setLoading(true);
-    signIn("credentials", {
-      username: formData.username,
-      password: formData.password,
-      redirect: redirect,
-      callbackUrl: callbackUrl ? `/${locale}/${callbackUrl}` : `/${locale}`,
-    })
+    signIn(
+      "credentials",
+      {
+        username: formData.username,
+        password: formData.password,
+        redirect: redirect,
+        callbackUrl: callbackUrl ? `/${locale}/${callbackUrl}` : `/${locale}`,
+      },
+      { prompt: "login" },
+    )
       .then((data) => {
         console.log(data);
         if (data?.status === 200) {
