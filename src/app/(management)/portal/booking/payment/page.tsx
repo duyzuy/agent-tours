@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useMemo, useState, useTransition } from "react";
-import { Breadcrumb, Col, Row } from "antd";
+import { Breadcrumb, Col, Row, Select } from "antd";
 import useBooking from "../hooks/useBooking";
 import { useRouter } from "next/navigation";
-import { isUndefined } from "lodash";
+import { isArray, isUndefined } from "lodash";
 import useCreateBooking from "../modules/useCreateBooking";
-import CustomerInformationForm from "./_components/CustomerInformationForm";
+import CustomerInformationForm, { CustomerInformationFormProps } from "./_components/CustomerInformationForm";
 import { Space, Button } from "antd";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
@@ -16,6 +16,8 @@ import PaymentMethod from "./_components/PaymentMethod";
 import InvoiceForm from "./_components/InvoiceForm";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
+import FormItem from "@/components/base/FormItem";
+import { ILocalUserMinimal } from "@/models/management/localUser.interface";
 
 const PaymentPage = () => {
   const [bookingInformation, setBookingInfomation] = useBooking();
@@ -36,13 +38,17 @@ const PaymentPage = () => {
       ),
   );
   const [invoiceInformation, setInvoiceInformation] = useState(new InvoiceFormData("", "", "", "", ""));
+
+  const [channel, setChannel] = useState("B2C");
+  const [agentInfo, setAgentInfo] = useState<ILocalUserMinimal>();
+
   const { handlerSubmit, errors } = useFormSubmit<CustomerInformation>({
     schema: customerInformationSchema,
   });
 
   const handleSubmitBooking: HandleSubmit<CustomerInformation> = (customerInfo) => {
     invoiceInformation;
-    createBooking({ customerInfo, invoiceInfo: invoiceInformation });
+    createBooking({ customerInfo, invoiceInfo: invoiceInformation, channel: channel, agentUserId: agentInfo?.recId });
   };
 
   const isDisableNextAction = useMemo(() => {
@@ -53,6 +59,24 @@ const PaymentPage = () => {
     startTransition(() => {
       router.push("/portal/booking/tour-services");
     });
+  };
+
+  const handleSelectAgent: CustomerInformationFormProps["onSelectAgent"] = (value, data) => {
+    const userInfo = isArray(data) ? data[0] : data;
+    setAgentInfo(userInfo);
+    setCustomerInformation((prev) => ({
+      ...prev,
+      custAddress: "",
+      custEmail: userInfo.email,
+      custName: userInfo.fullname,
+      custPhoneNumber: userInfo.phoneNumber,
+    }));
+  };
+  const handleSelectChannel: CustomerInformationFormProps["onSelectChannel"] = (newChannel, data) => {
+    setChannel(newChannel);
+    if (newChannel === "B2C") {
+      setAgentInfo(undefined);
+    }
   };
 
   useEffect(() => {
@@ -99,6 +123,10 @@ const PaymentPage = () => {
               <CustomerInformationForm
                 customerInformation={customerInformation}
                 setCustomerInformation={setCustomerInformation}
+                onSelectAgent={handleSelectAgent}
+                onSelectChannel={handleSelectChannel}
+                channel={channel}
+                userAgentId={agentInfo?.recId}
                 errors={errors}
                 className="bg-white rounded-md drop-shadow-sm mb-6"
               />

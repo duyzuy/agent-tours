@@ -7,7 +7,7 @@ import classNames from "classnames";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper/modules";
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -57,6 +57,10 @@ const PromotionSlider: React.FC<PromotionSliderProps> = ({ items, title }) => {
           <Swiper
             slidesPerView={2}
             spaceBetween={16}
+            autoplay={{
+              delay: 5500,
+              disableOnInteraction: false,
+            }}
             breakpoints={{
               640: {
                 slidesPerView: 3,
@@ -67,7 +71,7 @@ const PromotionSlider: React.FC<PromotionSliderProps> = ({ items, title }) => {
                 spaceBetween: 16,
               },
             }}
-            modules={[Navigation]}
+            modules={[Autoplay, Navigation]}
             onBeforeInit={(swiper) => {
               swiperRef.current = swiper;
             }}

@@ -5,68 +5,67 @@ import { ISellable } from "../core/sellable.interface";
 import { PriceConfig } from "../core/priceConfig.interface";
 import { IReservation } from "./reservation.interface";
 import { IFormOfPayment } from "../core/formOfPayment.interface";
-import {
-    IBookingTimeLitmit,
-    IDepositTimelimit,
-} from "../core/bookingTimeLimit.interface";
+import { IBookingTimeLitmit, IDepositTimelimit } from "../core/bookingTimeLimit.interface";
 
 export interface IOrderItem {
-    recId: number;
-    sellableId: number;
-    sellableTemplateId: number;
-    custName: string;
-    custPhoneNumber: string;
-    custEmail: string;
-    custAddress: string;
-    custInfoJson: string;
-    paymentStatus: PaymentStatus;
-    totalAmount: number;
-    totalFop: number;
-    totalPaid: number;
-    totalRefunded: number;
-    tourPrice: number;
-    extraPrice: number;
-    charge: number;
-    rmk: string;
-    rmk1: string;
-    rmk2: string;
-    rmk3: string;
-    rmk4: string;
-    status: Status;
-    sysFstUser: string;
-    sysFstUpdate: string;
-    sysLstUser: string;
-    sysLstUpdate: string;
-    sysBelongTo: string;
-    logStatus: string;
+  recId: number;
+  sellableId: number;
+  sellableTemplateId: number;
+  custName: string;
+  channel: string;
+  agentUserId: number;
+  custPhoneNumber: string;
+  custEmail: string;
+  custAddress: string;
+  custInfoJson: string;
+  paymentStatus: PaymentStatus;
+  totalAmount: number;
+  totalFop: number;
+  totalPaid: number;
+  totalRefunded: number;
+  tourPrice: number;
+  extraPrice: number;
+  charge: number;
+  rmk: string;
+  rmk1: string;
+  rmk2: string;
+  rmk3: string;
+  rmk4: string;
+  status: Status;
+  sysFstUser: string;
+  sysFstUpdate: string;
+  sysLstUser: string;
+  sysLstUpdate: string;
+  sysBelongTo: string;
+  logStatus: string;
+  template: ITemplateSellable;
+  sellable: ISellable & {
+    configs: PriceConfig[] | null;
     template: ITemplateSellable;
-    sellable: ISellable & {
-        configs: PriceConfig[] | null;
-        template: ITemplateSellable;
-    };
-    invoiceName: string;
-    invoiceCompanyName: string;
-    invoiceAddress: string;
-    invoiceTaxCode: string;
-    invoiceEmail: string;
-    fops: IFormOfPayment[];
-    rulesAndPolicies: {
-        bookingTimelimits: IBookingTimeLitmit[];
-        depositTimelimits: IDepositTimelimit[];
-        penalties: [];
-    };
-    referenceId: string;
-    referenceName: string;
+  };
+  invoiceName: string;
+  invoiceCompanyName: string;
+  invoiceAddress: string;
+  invoiceTaxCode: string;
+  invoiceEmail: string;
+  fops: IFormOfPayment[];
+  rulesAndPolicies: {
+    bookingTimelimits: IBookingTimeLitmit[];
+    depositTimelimits: IDepositTimelimit[];
+    penalties: [];
+  };
+  referenceId: string;
+  referenceName: string;
 }
 
 export interface IOrderListRs extends BaseResponse<IOrderItem[]> {}
 
 export interface IOrderDetail extends IReservation {
-    fops: IFormOfPayment[];
-    rulesAndPolicies: {
-        bookingTimelimits: IBookingTimeLitmit[];
-        depositTimelimits: IDepositTimelimit[];
-        penalties: [];
-    };
+  fops: IFormOfPayment[];
+  rulesAndPolicies: {
+    bookingTimelimits: IBookingTimeLitmit[];
+    depositTimelimits: IDepositTimelimit[];
+    penalties: [];
+  };
 }
 export interface IOrderDetailRs extends BaseResponse<IOrderDetail> {}

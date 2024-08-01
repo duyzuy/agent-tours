@@ -24,204 +24,162 @@ import { PaymentStatus } from "@/models/common.interface";
 
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { useSelectorManageBooking } from "./hooks/useManageBooking";
-import {
-    FOP_PAYMENT_TYPE,
-    FOP_TYPE,
-} from "@/models/management/core/formOfPayment.interface";
+import { FOP_PAYMENT_TYPE, FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
 
 interface ReservationDetailPageProps {
-    params: { orderId: number };
+  params: { orderId: number };
 }
 
-const BookingDetailDynamic = dynamic(
-    () => import("./_components/BookingDetail"),
-    {
-        ssr: false,
-        loading: () => (
-            <div className="py-3">
-                <p>Loading...</p>
-            </div>
-        ),
-    },
-);
+const BookingDetailDynamic = dynamic(() => import("./_components/BookingDetail"), {
+  ssr: false,
+  loading: () => (
+    <div className="py-3">
+      <p>Loading...</p>
+    </div>
+  ),
+});
 
-const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({
-    params,
-}) => {
-    const router = useRouter();
+const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params }) => {
+  const router = useRouter();
 
-    const orderInformation = useSelectorManageBooking((state) => state.order);
+  const orderInformation = useSelectorManageBooking((state) => state.order);
 
-    const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
-    const { onUpdateCustomerInfo, onUpdatePassengerInfo } =
-        useUpdateCustomerAndPassenger();
+  const { onUpdateCustomerInfo, onUpdatePassengerInfo } = useUpdateCustomerAndPassenger();
 
-    const { onUpdate: onUpdateInvoiceInfo } = useUpdateInvoiceInfo();
+  const { onUpdate: onUpdateInvoiceInfo } = useUpdateInvoiceInfo();
 
-    const bookingOrder = useMemo(
-        () => orderInformation?.bookingOrder,
-        [orderInformation],
-    );
+  const bookingOrder = useMemo(() => orderInformation?.bookingOrder, [orderInformation]);
 
-    const fopListCoupon = useMemo(() => {
-        return orderInformation?.bookingOrder.fops.filter(
-            (item) => item.type === FOP_TYPE.DISCOUNT_COUPON,
-        );
-    }, [orderInformation]);
+  const fopListCoupon = useMemo(() => {
+    return orderInformation?.bookingOrder.fops.filter((item) => item.type === FOP_TYPE.DISCOUNT_COUPON);
+  }, [orderInformation]);
 
-    const bookingSSRList = useMemo(() => {
-        return orderInformation?.ssr.reduce<
-            IOrderDetail["ssr"][0]["booking"][]
-        >((acc, item) => {
-            return (acc = [...acc, item.booking]);
-        }, []);
-    }, [orderInformation]);
+  const bookingSSRList = useMemo(() => {
+    return orderInformation?.ssr.reduce<IOrderDetail["ssr"][0]["booking"][]>((acc, item) => {
+      return (acc = [...acc, item.booking]);
+    }, []);
+  }, [orderInformation]);
 
-    const onClickBuyService = () => {
-        startTransition(() => {
-            router.push(
-                `/portal/manage-booking/${params.orderId}/addon-service`,
-            );
-        });
-    };
+  const onClickBuyService = () => {
+    startTransition(() => {
+      router.push(`/portal/manage-booking/${params.orderId}/addon-service`);
+    });
+  };
 
-    return (
-        <PageContainer
-            name="Chi tiết booking"
-            modelName="Chi tiết booking"
-            breadCrumItems={[
-                { title: "Quản lý booking", href: "/portal/manage-booking" },
-                { title: "Chi tiết booking" },
-            ]}
-            onBack={() => router.push("/portal/manage-booking/order-list")}
-            // className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
-            hideAddButton
-        >
-            <div className="booking__order__Detail relative">
-                <OrderInformation
-                    sysFstUpdate={
-                        bookingOrder?.sysFstUpdate &&
-                        formatDate(bookingOrder?.sysFstUpdate)
-                    }
-                    orderId={bookingOrder?.recId}
-                    paymentStatus={bookingOrder?.paymentStatus}
-                    referenceId={bookingOrder?.referenceId}
-                    className="mb-6"
-                />
-                <div className="bg-slate-50 p-6 rounded-md mb-6">
-                    <TourBookingInfo
-                        startDate={
-                            bookingOrder?.sellable.startDate &&
-                            formatDate(bookingOrder.sellable.startDate)
-                        }
-                        endDate={
-                            bookingOrder?.sellable.endDate &&
-                            formatDate(bookingOrder.sellable.endDate)
-                        }
-                        sysFstUpdate={
-                            bookingOrder?.sysFstUpdate &&
-                            formatDate(bookingOrder?.sysFstUpdate)
-                        }
-                        name={bookingOrder?.template.name}
-                        code={bookingOrder?.sellable.code}
-                        className="mb-6"
-                    />
-                    <Row gutter={[24, 24]}>
-                        <Col span={24} md={12}>
-                            <CustomerInformation
-                                orderId={bookingOrder?.recId}
-                                cusInfo={{
-                                    custName: bookingOrder?.custName,
-                                    custEmail: bookingOrder?.custEmail,
-                                    custPhoneNumber:
-                                        bookingOrder?.custPhoneNumber,
-                                    custAddress: bookingOrder?.custAddress,
-                                    rmk: bookingOrder?.rmk,
-                                }}
-                                onSave={onUpdateCustomerInfo}
-                                className="bg-white border border-slate-100 px-6 py-4 h-full rounded-md"
-                            />
-                        </Col>
-                        <Col span={24} md={12}>
-                            <InvoiceInformation
-                                orderId={bookingOrder?.recId}
-                                invoiceInfo={{
-                                    invoiceAddress:
-                                        bookingOrder?.invoiceAddress,
-                                    invoiceCompanyName:
-                                        bookingOrder?.invoiceCompanyName,
-                                    invoiceEmail: bookingOrder?.invoiceEmail,
-                                    invoiceName: bookingOrder?.invoiceName,
-                                    invoiceTaxCode:
-                                        bookingOrder?.invoiceTaxCode,
-                                }}
-                                onSave={onUpdateInvoiceInfo}
-                                className="bg-white border border-slate-100 px-6 py-4 h-full rounded-md"
-                            />
-                        </Col>
-                    </Row>
-                </div>
+  return (
+    <PageContainer
+      name="Chi tiết booking"
+      modelName="Chi tiết booking"
+      breadCrumItems={[{ title: "Quản lý booking", href: "/portal/manage-booking" }, { title: "Chi tiết booking" }]}
+      onBack={() => router.push("/portal/manage-booking/order-list")}
+      // className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
+      hideAddButton
+    >
+      <div className="booking__order__Detail relative">
+        <OrderInformation
+          sysFstUpdate={bookingOrder?.sysFstUpdate && formatDate(bookingOrder?.sysFstUpdate)}
+          orderId={bookingOrder?.recId}
+          paymentStatus={bookingOrder?.paymentStatus}
+          referenceId={bookingOrder?.referenceId}
+          agentId={bookingOrder?.agentUserId}
+          channel={bookingOrder?.channel}
+          className="mb-6"
+        />
+        <div className="bg-slate-50 p-6 rounded-md mb-6">
+          <TourBookingInfo
+            startDate={bookingOrder?.sellable.startDate && formatDate(bookingOrder.sellable.startDate)}
+            endDate={bookingOrder?.sellable.endDate && formatDate(bookingOrder.sellable.endDate)}
+            sysFstUpdate={bookingOrder?.sysFstUpdate && formatDate(bookingOrder?.sysFstUpdate)}
+            name={bookingOrder?.template.name}
+            code={bookingOrder?.sellable.code}
+            className="mb-6"
+          />
+          <Row gutter={[24, 24]}>
+            <Col span={24} md={12}>
+              <CustomerInformation
+                orderId={bookingOrder?.recId}
+                cusInfo={{
+                  custName: bookingOrder?.custName,
+                  custEmail: bookingOrder?.custEmail,
+                  custPhoneNumber: bookingOrder?.custPhoneNumber,
+                  custAddress: bookingOrder?.custAddress,
+                  rmk: bookingOrder?.rmk,
+                }}
+                onSave={onUpdateCustomerInfo}
+                className="bg-white border border-slate-100 px-6 py-4 h-full rounded-md"
+              />
+            </Col>
+            <Col span={24} md={12}>
+              <InvoiceInformation
+                orderId={bookingOrder?.recId}
+                invoiceInfo={{
+                  invoiceAddress: bookingOrder?.invoiceAddress,
+                  invoiceCompanyName: bookingOrder?.invoiceCompanyName,
+                  invoiceEmail: bookingOrder?.invoiceEmail,
+                  invoiceName: bookingOrder?.invoiceName,
+                  invoiceTaxCode: bookingOrder?.invoiceTaxCode,
+                }}
+                onSave={onUpdateInvoiceInfo}
+                className="bg-white border border-slate-100 px-6 py-4 h-full rounded-md"
+              />
+            </Col>
+          </Row>
+        </div>
 
-                {bookingOrder?.paymentStatus === PaymentStatus.NOTPAID ? (
-                    <BookingTimeLimitation
-                        orderId={params.orderId}
-                        items={
-                            orderInformation?.rulesAndPolicies
-                                ?.bookingTimelimits
-                        }
-                    />
-                ) : null}
-                <DepositTimeline
-                    depositTimelimits={
-                        orderInformation?.rulesAndPolicies?.depositTimelimits
-                    }
-                    paymentStatus={bookingOrder?.paymentStatus}
-                />
+        {bookingOrder?.paymentStatus === PaymentStatus.NOTPAID ? (
+          <BookingTimeLimitation
+            orderId={params.orderId}
+            items={orderInformation?.rulesAndPolicies?.bookingTimelimits}
+          />
+        ) : null}
+        <DepositTimeline
+          depositTimelimits={orderInformation?.rulesAndPolicies?.depositTimelimits}
+          paymentStatus={bookingOrder?.paymentStatus}
+        />
 
-                <BookingOrderActions
-                    orderId={bookingOrder?.recId}
-                    totalAmount={bookingOrder?.totalAmount}
-                    totalPaid={bookingOrder?.totalPaid}
-                    paymentStatus={bookingOrder?.paymentStatus}
-                />
-                <OrderSummary
-                    orderId={bookingOrder?.recId}
-                    data={{
-                        sysFstUpdate: bookingOrder?.sysFstUpdate,
-                        tourPrice: bookingOrder?.tourPrice,
-                        extraPrice: bookingOrder?.extraPrice,
-                        totalAmount: bookingOrder?.totalAmount,
-                        charge: bookingOrder?.charge,
-                        totalFop: bookingOrder?.totalFop,
-                        totalPaid: bookingOrder?.totalPaid,
-                        totalRefunded: bookingOrder?.totalRefunded,
-                        paymentStatus: bookingOrder?.paymentStatus,
-                    }}
-                    coupons={fopListCoupon}
-                    rulesAndPolicies={orderInformation?.rulesAndPolicies}
-                    // code={bookingOrder?.sellable.code}
-                    // name={bookingOrder?.template.name}
-                    // startDate={bookingOrder?.sellable.startDate}
-                    // endDate={bookingOrder?.sellable.endDate}
-                    className="mb-6"
-                />
+        <BookingOrderActions
+          orderId={bookingOrder?.recId}
+          totalAmount={bookingOrder?.totalAmount}
+          totalPaid={bookingOrder?.totalPaid}
+          paymentStatus={bookingOrder?.paymentStatus}
+        />
+        <OrderSummary
+          orderId={bookingOrder?.recId}
+          data={{
+            sysFstUpdate: bookingOrder?.sysFstUpdate,
+            tourPrice: bookingOrder?.tourPrice,
+            extraPrice: bookingOrder?.extraPrice,
+            totalAmount: bookingOrder?.totalAmount,
+            charge: bookingOrder?.charge,
+            totalFop: bookingOrder?.totalFop,
+            totalPaid: bookingOrder?.totalPaid,
+            totalRefunded: bookingOrder?.totalRefunded,
+            paymentStatus: bookingOrder?.paymentStatus,
+          }}
+          coupons={fopListCoupon}
+          rulesAndPolicies={orderInformation?.rulesAndPolicies}
+          // code={bookingOrder?.sellable.code}
+          // name={bookingOrder?.template.name}
+          // startDate={bookingOrder?.sellable.startDate}
+          // endDate={bookingOrder?.sellable.endDate}
+          className="mb-6"
+        />
 
-                <BookingDetailDynamic
-                    orderId={bookingOrder?.recId}
-                    bookingOrderDetailList={
-                        orderInformation?.bookingDetails || []
-                    }
-                    onSave={onUpdatePassengerInfo}
-                />
-                <ServiceDetail
-                    serviceList={bookingSSRList || []}
-                    isLoading={isPending}
-                    onBuyService={onClickBuyService}
-                    className="mb-6"
-                />
-            </div>
-        </PageContainer>
-    );
+        <BookingDetailDynamic
+          orderId={bookingOrder?.recId}
+          bookingOrderDetailList={orderInformation?.bookingDetails || []}
+          onSave={onUpdatePassengerInfo}
+        />
+        <ServiceDetail
+          serviceList={bookingSSRList || []}
+          isLoading={isPending}
+          onBuyService={onClickBuyService}
+          className="mb-6"
+        />
+      </div>
+    </PageContainer>
+  );
 };
 export default ReservationDetailPage;

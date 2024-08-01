@@ -255,6 +255,10 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
       label: "Cấu hình hệ thống",
       children: [
         {
+          key: "general",
+          label: "Cấu hình chung",
+        },
+        {
           key: "rule-policy",
           label: "Chính sách thanh toán",
         },

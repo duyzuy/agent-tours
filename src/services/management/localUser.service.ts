@@ -4,11 +4,20 @@ import {
   ILocalUserChangePasswordPayLoad,
   ILocalUserList,
   ILocalUserPayload,
+  UserAgentListResponse,
 } from "@/models/management/localUser.interface";
 export const localUserAPIs = {
   getUserList: async () => {
     const token = getAgToken() || "";
     return await client.post<ILocalUserList>("local/LocalUserList", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(token)}`,
+      },
+    });
+  },
+  getAgentList: async () => {
+    const token = getAgToken() || "";
+    return await client.post<UserAgentListResponse>("local/LocalUser_ListAgent", {
       headers: {
         Authorization: `Bearer ${encodeURIComponent(token)}`,
       },

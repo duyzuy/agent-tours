@@ -17,6 +17,8 @@ const BookingProvider = ({ children }: { children: React.ReactNode }) => {
         [],
         [],
         undefined,
+        undefined,
+        undefined,
       ),
   );
   return (
