@@ -1,7 +1,7 @@
 import { unstable_setRequestLocale } from "next-intl/server";
 import VisaSection from "./_components/VisaSection";
 
-import BannerSection from "./_components/BannerSection";
+import PromotionSlider from "./_components/PromotionSlider";
 
 import TourListContainer from "./_components/TourListContainer";
 import { Suspense } from "react";
@@ -72,7 +72,7 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
       />
 
       <div
-        className="page-bottom pt-12"
+        className="page-bottom pt-6 lg:pt-12"
         style={{
           background: "url(/assets/images/bg.jpg)",
           backgroundSize: "cover",
@@ -80,7 +80,7 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
       >
         {/* <FlashSale /> */}
 
-        <BannerSection />
+        <PromotionSlider items={[]} title="Ưu đãi dành cho bạn" />
         <div className="lg:h-12 h-4"></div>
         <Suspense
           fallback={

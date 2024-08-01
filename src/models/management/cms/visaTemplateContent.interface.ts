@@ -24,6 +24,7 @@ export interface IVisaTemplateContent {
   codeName: string;
   name: string;
   thumbnail: IThumbnail | null;
+  amount: number;
   downloads: { title: string; link: string }[];
   content: string;
   subContent: string;

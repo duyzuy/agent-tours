@@ -68,9 +68,30 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
   onChangeStatus,
   onDelete,
 }) => {
+  const initFormData = new PostContentFormData(
+    undefined,
+    undefined,
+    LangCode.VI,
+    "",
+    "",
+    "",
+    "",
+    undefined,
+    undefined,
+    [],
+    "",
+    undefined,
+    [],
+    "",
+    "",
+    "",
+    dayjs().format(DATE_TIME_FORMAT),
+    PageContentStatus.PUBLISH,
+  );
+
   const { handleSubmit, control, setValue, getValues, watch } = useForm<PostContentFormData>({
     resolver: yupResolver(postContentSchema),
-    defaultValues: { ...initFormData },
+    defaultValues: { ...initFormData, publishDate: dayjs().format(DATE_TIME_FORMAT) },
   });
 
   const [showDrawerMedia, setShowDrawerMedia] = useState<{
@@ -228,6 +249,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
     });
   }, [lang, initData]);
 
+  console.log(getValues());
   useEffect(() => {
     onWatchFormChange?.(getValues());
   }, [watch()]);

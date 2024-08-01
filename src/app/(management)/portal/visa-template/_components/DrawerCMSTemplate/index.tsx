@@ -38,7 +38,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
   initialValue,
   action = "create",
 }) => {
-  const initFormData = new VisaTemplateKeyFormData("", "", undefined, [
+  const initFormData = new VisaTemplateKeyFormData("", "", undefined, 0, [
     { name: "", lang: LangCode.VI, slug: "" },
     { name: "", lang: LangCode.EN, slug: "" },
   ]);
@@ -101,6 +101,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
             code: initialValue?.code,
             codeName: initialValue?.codeName,
             codeImage: initialValue?.codeImage ?? undefined,
+            amount: initialValue.amount,
             visaTemplates:
               initialValue?.visaTemplatesMinimal.reduce<VisaTemplateKeyFormData["visaTemplates"]>((acc, item) => {
                 return [
@@ -117,7 +118,6 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
     });
   }, [isOpen]);
 
-  console.log(formData);
   return (
     <Drawer
       open={isOpen}
@@ -150,17 +150,19 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
             disabled={action === "edit"}
           />
         </FormItem>
-        {/* <FormItem label="Mô tả">
-          <Input.TextArea
-            placeholder="Nhập mô tả"
-            className=" resize-none"
-            spellCheck={true}
-            rows={4}
-            cols={12}
-            value={formData.descriptions}
-            onChange={(ev) => onChangeFormData("descriptions", ev.target.value)}
-          ></Input.TextArea>
-        </FormItem> */}
+        <FormItem
+          label="Giá tiền (Mỗi khách)"
+          required
+          validateStatus={errors?.amount ? "error" : ""}
+          help={errors?.code || ""}
+        >
+          <Input
+            name="amount"
+            placeholder="Giá tiền"
+            value={formData.amount}
+            onChange={(ev) => onChangeFormData("amount", ev.target.value)}
+          />
+        </FormItem>
         <FormItem label="Ảnh đại diện" validateStatus={errors?.codeImage ? "error" : ""} help={errors?.codeImage || ""}>
           <div className="feature-image">
             <span className="no-image border border-dashed w-24 h-24 p-1 rounded-md flex items-center justify-center bg-gray-50 mb-2 overflow-hidden">

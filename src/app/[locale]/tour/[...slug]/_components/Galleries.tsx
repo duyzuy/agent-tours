@@ -23,6 +23,8 @@ interface GalleriesProps {
 }
 const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+
+  console.log(images);
   const swiperRef = useRef<SwiperType>();
   if (!images || !images.length) {
     return null;
@@ -62,6 +64,7 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="bg-slate-50 object-contain italic"
                 />
+                <span>{` ${mediaConfig.rootApiPath}/${original}`}</span>
               </div>
             </SwiperSlide>
           ))}
@@ -95,7 +98,7 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
             <SwiperSlide key={_index}>
               <div className="w-full pt-[55.25%] relative rounded-md overflow-hidden">
                 <Image
-                  src={`${mediaConfig.rootApiPath}/${original}`}
+                  src={`${mediaConfig.rootApiPath}/${small}`}
                   loading="lazy"
                   alt={`thumbnail-${_index}`}
                   fill

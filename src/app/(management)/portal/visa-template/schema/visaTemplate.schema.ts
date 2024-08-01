@@ -42,6 +42,7 @@ export const visaTemplateContentSchema: ObjectSchema<VisaTemplateContentFormData
 export const visaTemplateSchema: ObjectSchema<VisaTemplateKeyFormData> = object({
   code: string().required("Code không bỏ trống."),
   codeName: string().required("Tên không bỏ trống"),
+  amount: number(),
   descriptions: string(),
   codeImage: object({
     id: number().required("Thiếu ID ảnh."),

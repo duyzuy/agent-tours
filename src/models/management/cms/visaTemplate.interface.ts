@@ -18,6 +18,7 @@ export interface IVisaTemplateKeyMinimalItem {
   code: string;
   codeName: string;
   codeImage: IThumbnail | null;
+  amount: number;
   visaTemplates: any[];
   visaTemplatesMinimal: {
     code: string;

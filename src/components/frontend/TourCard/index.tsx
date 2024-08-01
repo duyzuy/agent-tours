@@ -7,6 +7,7 @@ import IconShare from "@/assets/icons/IconShare";
 import classNames from "classnames";
 import { useTranslations } from "next-intl";
 import { Link } from "@/utils/navigation";
+import { IconImage } from "@/assets/icons";
 
 interface Props {
   name?: string;
@@ -48,11 +49,16 @@ const TourCard = ({
           "shadow-lg": shadow === "lg",
         })}
       >
-        <div className="thumbnail w-full pt-[57.25%] relative italic">
+        <div className="thumbnail w-full pt-[57.25%] relative italic bg-slate-50">
           {thumbnail ? (
             <Image src={thumbnail} alt="article" fill className="rounded-tl-lg rounded-tr-lg object-cover" />
           ) : (
-            <span>no image</span>
+            <div className="w-full h-full absolute left-0 top-0 flex items-center justify-center">
+              <span className="text-center text-gray-500 block">
+                <IconImage className="mx-auto mb-1" />
+                <span className="block text-xs">no image</span>
+              </span>
+            </div>
           )}
         </div>
         <div className="article-content px-2 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">
@@ -69,18 +75,18 @@ const TourCard = ({
             </div>
           </div>
           <div className="article-content__middle">
-            <div className="flex justify-between text-[11px]">
+            <div className="flex justify-between text-[12px] lg:text-[13px]">
               <ul className="flex-1">
                 <li className="flex items-center mb-1">
-                  <span className="text-gray-500 w-[65px] block">{t("card.tourCode")}</span>
+                  <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.tourCode")}</span>
                   <span>{tourCode}</span>
                 </li>
                 <li className="flex items-center mb-1">
-                  <span className="text-gray-500 w-[65px] block">{t("card.departDate")}</span>
+                  <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.departDate")}</span>
                   <span>{departDate}</span>
                 </li>
                 <li className="flex items-center mb-1">
-                  <span className="text-gray-500 w-[65px] block">{t("card.amountRemaining")}</span>
+                  <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.amountRemaining")}</span>
                   <span className="text-red-600">{openAmount}</span>
                 </li>
               </ul>

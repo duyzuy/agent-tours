@@ -28,12 +28,16 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
   return (
     <div className="single__page">
       <div
-        className="py-8 mb-6 h:240px lg:h-[320px] flex items-end justify-center"
-        style={{ background: "url(/assets/images/bg-visa.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        className="search-wraper py-8 min-h-[180px] lg:min-h-[320px] flex items-end relative z-10"
+        style={{
+          background: "url(/assets/images/bg-visa.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
-        <DynamicSearchBox />
+        <DynamicSearchBox className="absolute -bottom-[125px] md:relative md:bottom-auto md:left-auto md:translate-x-0 left-[50%] -translate-x-[50%]" />
       </div>
-      <div className="single__page-inner visa container mx-auto pb-12 pt-4 px-4 lg:px-8 md:px-6">
+      <div className="single__page-inner visa container mx-auto pb-12 md:pt-6 px-4 lg:px-8 md:px-6 pt-[155px]">
         <BreadCrumb
           items={[
             {
@@ -46,7 +50,7 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
         </div>
         <div className="post__page-body">
           <div className="flex flex-wrap -mx-3">
-            <div className="col-left w-7/12 px-3">
+            <div className="col-left w-full lg:w-7/12 px-3 mb-6 lg:mb-0">
               {/* <AreaContentHtml content={data.subContent} /> */}
               {visaContent && panelItems ? (
                 <div className="content-block">
@@ -54,8 +58,8 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
                 </div>
               ) : null}
             </div>
-            <div className="col-left w-5/12 px-3">
-              <RegisterVisaForm />
+            <div className="col-left w-full lg:w-5/12 px-3">
+              <RegisterVisaForm title={data.name} amount={data.amount} className="mb-6" />
               <div className="mb-6">
                 <div className="box border rounded-lg px-4 py-4">
                   <div className="head py-3">

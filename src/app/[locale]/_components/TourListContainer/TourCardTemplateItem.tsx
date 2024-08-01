@@ -52,7 +52,11 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
     <TourCard
       key={data.recId}
       tourCode={data.code}
-      thumbnail={`${mediaConfig.rootApiPath}/${tourCMSContent?.thumbnail.original}`}
+      thumbnail={
+        tourCMSContent && tourCMSContent.thumbnail
+          ? `${mediaConfig.rootApiPath}/${tourCMSContent?.thumbnail.original}`
+          : undefined
+      }
       name={tourCMSContent?.name}
       price={
         sellableItem && getMinAdultPrice(sellableItem.configs)

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { IVisaTemplateKeyMinimalItem } from "@/models/management/cms/visaTemplate.interface";
 import classNames from "classnames";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
+import { moneyFormatVND } from "@/utils/helper";
 
 const getTemplateColumns = () => {
   let columns: ColumnsType<IVisaTemplateKeyMinimalItem> = [
@@ -57,6 +58,18 @@ const getTemplateColumns = () => {
       key: "code",
       dataIndex: "code",
       width: 320,
+    },
+    {
+      title: "Amount",
+      key: "amount",
+      dataIndex: "amount",
+      render(value, { amount }, index) {
+        return (
+          <div>
+            <span className="block">{moneyFormatVND(amount)}</span>
+          </div>
+        );
+      },
     },
   ];
 

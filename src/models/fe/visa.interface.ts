@@ -10,6 +10,7 @@ export interface FeVisaDetail {
   codeName: string;
   downloads: string[];
   name: string;
+  amount: number;
   thumb: string;
   content: string;
   subContent: string;

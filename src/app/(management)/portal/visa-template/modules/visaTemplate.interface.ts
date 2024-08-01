@@ -10,6 +10,7 @@ export class VisaTemplateKeyFormData {
   codeName?: string;
   code?: string;
   codeImage?: Partial<IThumbnail>;
+  amount?: number;
   visaTemplates: {
     name: string;
     slug: string;
@@ -20,6 +21,7 @@ export class VisaTemplateKeyFormData {
     codeName: string | undefined,
     code: string | undefined,
     codeImage: Partial<IThumbnail> | undefined,
+    amount: number | undefined,
     visaTemplates: {
       name: string;
       slug: string;
@@ -30,6 +32,7 @@ export class VisaTemplateKeyFormData {
     this.code = code;
     this.codeImage = codeImage;
     this.visaTemplates = visaTemplates;
+    this.amount = amount;
   }
 }
 

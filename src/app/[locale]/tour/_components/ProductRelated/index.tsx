@@ -10,6 +10,7 @@ import { mediaConfig } from "@/configs";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import dayjs from "dayjs";
+import { isEmpty } from "lodash";
 
 export async function ProductRelated({
   className = "",
@@ -29,20 +30,6 @@ export async function ProductRelated({
   );
 
   const productRelatedList = await getTemplateProductList(queryParams);
-
-  // const getLowestAdultPrice = (priceConfigs: FeProductItem["configs"]) => {
-  //   if (!priceConfigs.length) {
-  //     return;
-  //   }
-  //   let minPrice = priceConfigs[0].adult;
-  //   priceConfigs.forEach((item) => {
-  //     if (item.open > 0 && item.adult < minPrice) {
-  //       minPrice = item.adult;
-  //     }
-  //   });
-
-  //   return minPrice;
-  // };
 
   const getMinAdultPrice = (configPrices: IFeTemplateProductItem["sellables"][0]["configs"]) => {
     if (!configPrices.length) return;
@@ -85,7 +72,10 @@ export async function ProductRelated({
         ...acc,
         {
           name: cmsContent?.name,
-          thumbnail: `${mediaConfig.rootApiPath}/${cmsContent?.thumbnail.original}`,
+          thumbnail:
+            cmsContent && cmsContent.thumbnail && !isEmpty(cmsContent.thumbnail.original)
+              ? `${mediaConfig.rootApiPath}/${cmsContent?.thumbnail.original}`
+              : undefined,
           recId: recId,
           departDate: sellableItem ? formatDate(sellableItem.startDate, "dd/MM/yyyy") : undefined,
           price: lowestPrice ? moneyFormatVND(lowestPrice) : undefined,
@@ -98,29 +88,6 @@ export async function ProductRelated({
     },
     [],
   );
-  // const productListFormated = productRelatedList?.reduce<Required<ProductListSliderProps>["items"]>(
-  //   (acc, { template, configs, recId, sellableTemplateId, startDate, code, open }) => {
-  //     const cmsContent = template.cms.find((item) => item.lang === locale);
-
-  //     const lowestPrice = getLowestAdultPrice(configs);
-
-  //     acc = [
-  //       ...acc,
-  //       {
-  //         name: cmsContent?.name,
-  //         thumbnail: `${mediaConfig.rootApiPath}/${cmsContent?.thumbnail.original}`,
-  //         recId: recId,
-  //         departDate: formatDate(startDate, "dd/MM/yyyy"),
-  //         price: lowestPrice ? moneyFormatVND(lowestPrice) : undefined,
-  //         href: cmsContent ? `/tour/${sellableTemplateId}/${recId}/${cmsContent.slug}` : "/",
-  //         code: code,
-  //         openAmount: open,
-  //       },
-  //     ];
-  //     return acc;
-  //   },
-  //   [],
-  // );
 
   if (!productListFormated) {
     return null;
