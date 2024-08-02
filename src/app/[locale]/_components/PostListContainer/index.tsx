@@ -65,12 +65,12 @@ export default async function PostListContainer() {
           </div>
           <div className="text-center pt-6">
             <Link
-              className="btn rounded-full flex items-center border w-fit px-3 py-2 font-semibold text-[14px] mx-auto"
+              className="btn rounded-full flex items-center border w-fit px-3 py-1 font-semibold text-[14px] mx-auto"
               href="/category/tin-tuc-du-lich"
             >
               <span className="text-white">Xem thêm</span>
-              <span className="ml-2">
-                <IconChevronRight width={14} color="white" />
+              <span className="ml-1">
+                <IconChevronRight width={16} color="white" />
               </span>
             </Link>
           </div>

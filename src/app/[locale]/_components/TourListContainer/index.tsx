@@ -21,7 +21,7 @@ const TourListContainer: React.FC<TourListContainerProps> = async ({
         <div className="section__head pt-3 pb-3 lg:pb-6">
           <h3 className="text-xl lg:text-2xl font-[500]">{title}</h3>
         </div>
-        <div className="tour__list-items grid lg:grid-cols-4 grid-cols-2 gap-3 lg:gap-6">
+        <div className="tour__list-items grid lg:grid-cols-4 grid-cols-2 gap-3 lg:gap-4">
           {productList?.map((prd) => (
             <TourCardTemplateItem key={prd.recId} data={prd} lang={lang} />
           ))}

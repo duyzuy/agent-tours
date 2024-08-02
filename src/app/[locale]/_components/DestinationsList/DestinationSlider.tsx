@@ -26,15 +26,15 @@ const DestinationsSlider: React.FC<DestinationsSliderProps> = ({ items }) => {
     <div className="list-items slider relative">
       <Swiper
         slidesPerView={2}
-        spaceBetween={16}
+        spaceBetween={12}
         breakpoints={{
           640: {
             slidesPerView: 4,
-            spaceBetween: 16,
+            spaceBetween: 12,
           },
           1024: {
             slidesPerView: 5,
-            spaceBetween: 24,
+            spaceBetween: 16,
           },
         }}
         modules={[Navigation]}

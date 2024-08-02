@@ -25,11 +25,11 @@ const PostListSlider: React.FC<PostListSliderProps> = ({ items }) => {
     <div className="slider relative block w-full">
       <Swiper
         slidesPerView={2}
-        spaceBetween={16}
+        spaceBetween={12}
         breakpoints={{
           640: {
             slidesPerView: 3,
-            spaceBetween: 16,
+            spaceBetween: 12,
           },
           1024: {
             slidesPerView: 4,
@@ -44,7 +44,7 @@ const PostListSlider: React.FC<PostListSliderProps> = ({ items }) => {
         {items.map((_item) => (
           <SwiperSlide key={_item.id}>
             <div className="explore-item">
-              <div className="inner bg-white rounded-xl drop-shadow-lg p-3">
+              <div className="inner bg-white rounded-xl drop-shadow-lg p-2 lg:p-3">
                 <div className="thumbnail">
                   {_item.thumb ? (
                     <Image
@@ -64,7 +64,7 @@ const PostListSlider: React.FC<PostListSliderProps> = ({ items }) => {
                   </Link>
                   <div className="line bg-gray-200 h-[1px] my-2"></div>
                   <p className="date text-[12px] text-gray-400 py-2 capitalize">{_item.date}</p>
-                  <p className="desc line-clamp-3 text-sm text-gray-500 mb-2">{_item.description}</p>
+                  <p className="desc line-clamp-3 text-xs lg:text-sm text-gray-500 mb-2">{_item.description}</p>
                   <p className="text-right">
                     <Link href={`/post/${_item.slug}`}>
                       <IconArrowRightCircle className="stroke-red-600 inline-block" />

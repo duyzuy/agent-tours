@@ -37,7 +37,7 @@ const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", i
       <Swiper
         slidesPerView={"auto"}
         // slidesPerView={1}
-        spaceBetween={5}
+        spaceBetween={7}
         // breakpoints={{
         //     640: {
         //         slidesPerView: 2,
