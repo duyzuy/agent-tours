@@ -12,6 +12,7 @@ const IconCitrus: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...res
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="M21.66 17.67a1.08 1.08 0 0 1-.04 1.6A12 12 0 0 1 4.73 2.38a1.1 1.1 0 0 1 1.61-.04z" />

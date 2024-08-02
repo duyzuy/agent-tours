@@ -12,6 +12,7 @@ const IconCookie: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...res
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />

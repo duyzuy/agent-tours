@@ -88,7 +88,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
         />
       </div>
 
-      <div className="container mx-auto py-12 lg:px-8 md:px-6 px-4">
+      <div className="container mx-auto py-4 lg:py-12 lg:px-8 md:px-6 px-4">
         <div className="flex flex-wrap items-start">
           <div className="tour-contents w-full lg:w-7/12">
             <ProductHeader name={cmsTemplateContent?.name} tourCode={currentSellable?.template.code}>

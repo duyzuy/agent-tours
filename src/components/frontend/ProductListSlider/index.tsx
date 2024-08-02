@@ -28,10 +28,9 @@ export interface ProductListSliderProps {
 const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", items }) => {
   const swiperRef = useRef<SwiperType>();
 
-  console.log(items);
   return (
     <div
-      className={classNames("product-list relative", {
+      className={classNames("product-list relative mb-4", {
         [className]: className,
       })}
     >

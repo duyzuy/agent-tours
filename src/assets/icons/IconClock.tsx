@@ -12,6 +12,7 @@ const IconClock: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...rest
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <circle cx="12" cy="12" r="10" />

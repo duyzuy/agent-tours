@@ -15,7 +15,7 @@ export default async function NavbarSecondary({ className = "" }: NavbarSecondar
   const itemsList = menuItems ? getMenuListFomatedTypes(menuItems) : [];
   return (
     <div
-      className={classNames("container mx-auto menu-horizon relative z-10 px-4 md:px-6 lg:px-8", {
+      className={classNames("container mx-auto menu-horizon relative z-30 px-4 md:px-6 lg:px-8", {
         [className]: className,
       })}
     >

@@ -12,6 +12,7 @@ const IconCloudMoon: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="M10.188 8.5A6 6 0 0 1 16 4a1 1 0 0 0 6 6 6 6 0 0 1-3 5.197" />

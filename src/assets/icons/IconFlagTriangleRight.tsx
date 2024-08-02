@@ -12,6 +12,7 @@ const IconFlagTriangleRight: React.FC<React.SVGProps<SVGSVGElement>> = ({ classN
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="M7 22V2l10 5-10 5" />

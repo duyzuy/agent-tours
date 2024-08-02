@@ -78,10 +78,10 @@ const RuleAndPolicyPage = () => {
     <React.Fragment>
       <PageContainer
         name="Cấu hình chung"
-        modelName="Chính sách thanh toán"
+        modelName="Cấu hình chung"
         onClick={() => {}}
         hideAddButton
-        breadCrumItems={[{ title: "Chính sách thanh toán" }]}
+        breadCrumItems={[{ title: "Cấu hình chung" }]}
       >
         <Tabs defaultActiveKey="ruleAndPolicyList" items={tabItems} />
       </PageContainer>

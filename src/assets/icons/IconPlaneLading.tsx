@@ -12,6 +12,7 @@ const IconPlaneLading: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, .
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="M2 22h20" />

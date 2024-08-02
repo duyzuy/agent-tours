@@ -111,11 +111,11 @@ const DATA = [
 const VisaSection = () => {
   return (
     <section className="visa container mx-auto px-4 md:px-6 lg:px-8">
-      <div className="bg-white rounded-lg drop-shadow-md">
-        <div className="head-section pt-6 px-6 mb-6">
-          <h3 className="font-semibold text-xl">Danh mục Visa / Passport</h3>
+      <div className="bg-white rounded-lg shadow-md">
+        <div className="head-section pt-6 px-4 mb-6">
+          <h3 className="text-lg md:text-xl lg:text-2xl font-[500]">Danh mục Visa / Passport</h3>
         </div>
-        <div className="visa-list flex flex-wrap pb-6 px-6">
+        <div className="visa-list flex flex-wrap pb-6 px-4">
           {DATA.map((visa, _index) => (
             <div
               className={classNames("visa-group md:w-1/3 w-1/2 lg:mb-0 lg:w-1/5", {
@@ -134,8 +134,8 @@ const VisaSection = () => {
                     })}
                     key={_index}
                   >
-                    <Image src={item.thumbnail} alt={item.name} width={30} height={30} className="mr-2" />
-                    <span className="text-semibold text-main-400 font-semibold">{item.name}</span>
+                    <Image src={item.thumbnail} alt={item.name} width={30} height={30} className="w-6 h-6 mr-2" />
+                    <span className="font-[500]">{item.name}</span>
                   </li>
                 ))}
               </ul>

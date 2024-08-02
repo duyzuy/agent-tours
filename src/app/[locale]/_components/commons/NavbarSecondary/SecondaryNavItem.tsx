@@ -74,7 +74,7 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = ({ name, items, classN
         [className]: className,
       })}
     >
-      <div className="bg-white px-6 py-4 rounded-lg">
+      <div className="bg-white px-6 py-4 rounded-lg shadow-lg">
         <div className="menu-secondary-item__dropdown-head py-2 mb-3">
           <h4 className="text-lg font-[500]">{name}</h4>
         </div>
@@ -107,7 +107,7 @@ const MegaMenuDropdown: React.FC<MegaMenuDropdownProps> = ({ name, items, classN
         [className]: className,
       })}
     >
-      <div className="menu-secondary-item__dropdown-inner bg-white rounded-lg w-full py-3 px-6">
+      <div className="menu-secondary-item__dropdown-inner bg-white rounded-lg w-full py-3 px-6 shadow-lg">
         <div className="menu-secondary-item__dropdown-head py-2 mb-3">
           <h5 className="text-lg font-[500]">{name}</h5>
           {descriptions ? <div className="descriptions text-gray-500 text-xs">{descriptions}</div> : null}

@@ -4,7 +4,6 @@ import HamburgerButton from "@/components/frontend/HamburgerButton";
 import { Drawer } from "antd";
 import { MenuItemType } from "@/utils/menu";
 import { Link } from "@/utils/navigation";
-import NavLink from "@/components/frontend/base/NavItem/NavLink";
 import { IconChevronDown } from "@/assets/icons";
 import classNames from "classnames";
 import { ICON_LIST } from "@/constants/icons.constant";
@@ -94,11 +93,11 @@ const NavItem = ({ className = "", name, slug = "/", icon, items, isMega }: Part
         <div className="flex items-center justify-between py-3" onClick={() => setShowDropdown((prev) => !prev)}>
           <span className="flex items-center">
             {IconComp ? (
-              <span className="text-gray-600 mr-2">
+              <span className="text-gray-800 mr-2">
                 <IconComp.icon width={18} height={18} />
               </span>
             ) : null}
-            <span className="text-gray-600 font-[500]">{name}</span>
+            <span className="text-gray-800 font-[500]">{name}</span>
           </span>
           <span className="">
             <IconChevronDown width={16} height={16} />
@@ -107,11 +106,11 @@ const NavItem = ({ className = "", name, slug = "/", icon, items, isMega }: Part
       ) : (
         <Link href={slug} title={name} className="flex items-center py-3 hover:bg-slate-50">
           {IconComp ? (
-            <span className="text-gray-600 font-[500] mr-2">
-              <IconComp.icon />
+            <span className="text-gray-800 font-[500] mr-2">
+              <IconComp.icon width={18} height={18} />
             </span>
           ) : null}
-          <span className="text-gray-600 font-[500]">{name}</span>
+          <span className="text-gray-800 font-[500]">{name}</span>
         </Link>
       )}
       {showDropdown ? (
@@ -119,7 +118,7 @@ const NavItem = ({ className = "", name, slug = "/", icon, items, isMega }: Part
           {items?.map((_item) => (
             <div className="sub-item" key={_item.id}>
               <Link href={_item.slug} title={_item.name} className="flex items-center py-2 hover:bg-slate-50">
-                <span className="text-gray-600">{_item.name}</span>
+                <span className="text-gray-800">{_item.name}</span>
               </Link>
             </div>
           ))}

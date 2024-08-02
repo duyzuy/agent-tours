@@ -12,6 +12,7 @@ const IconTags: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...rest 
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" />

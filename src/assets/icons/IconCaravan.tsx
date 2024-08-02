@@ -12,6 +12,7 @@ const IconCaravan: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...re
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <rect width="4" height="4" x="2" y="9" />

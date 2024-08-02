@@ -155,9 +155,9 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
         </div>
       </div>
       <div className="footer-bottom">
-        <div className="container mx-auto lg:px-0 px-4 py-6">
-          <div className="inner flex flex-wrap items-center -mx-4 lg:-mx-8">
-            <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6 lg:mb-0">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
+          <div className="inner flex flex-wrap items-center -mx-4 lg:-mx-6">
+            <div className="w-full lg:w-1/2 px-4 md:px-6 lg:px-6 mb-6 lg:mb-0">
               <div className="cotnent text-xs">
                 <h6 className="text-base lg:text-xl font-semibold text-main-400 mb-4">
                   CÔNG TY CỔ PHẦN AN THÁI TRAVEL
@@ -184,7 +184,7 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                 </div>
               </div>
             </div>
-            <div className="w-full lg:w-1/2 px-4 lg:px-8">
+            <div className="w-full lg:w-1/2 px-4 md:px-6 lg:px-6">
               <div className="cotnent flex items-center -mx-3">
                 <div className="socials px-3 flex-1">
                   <div className="mb-3">

@@ -12,6 +12,7 @@ const IconCloudSun: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...r
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="M12 2v2" />

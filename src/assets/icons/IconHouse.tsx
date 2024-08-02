@@ -12,6 +12,7 @@ const IconHouse: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...rest
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...rest}
     >
       <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />

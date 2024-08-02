@@ -25,7 +25,7 @@ export default async function HeroHomeWraper({
   chilren,
 }: HeroHomeWraperProps) {
   return (
-    <div className="page-middle relative pt-8 pb-6 lg:pb-16 w-full flex flex-col justify-end lg:justify-between lg:h-[650px]">
+    <div className="page-middle relative pt-8 pb-6 lg:pb-16 w-full flex flex-col justify-end lg:justify-between lg:h-[520px]">
       <NavbarSecondary className="hidden lg:block" />
       <div className="trv-slider absolute top-0 bottom-0 left-0 right-0">
         <Image
