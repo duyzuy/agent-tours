@@ -28,7 +28,7 @@ const PaymentPage = () => {
   const sellChannel = useMemo(() => {
     return bookingInformation.channel;
   }, []);
-  console.log(sellChannel);
+
   const [customerInformation, setCustomerInformation] = useState<CustomerInformation>(
     () =>
       new CustomerInformation(

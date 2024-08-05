@@ -52,38 +52,22 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
       <Divider />
       <div className="customer__information-body px-6 pb-6">
         <Form layout="vertical">
-          <Row gutter={16}>
-            {/* <Col span={12}>
-              <FormItem label="Kênh bán">
-                <Select
-                  value={channel}
-                  placeholder="Chọn kênh bán"
-                  options={[
-                    { label: "B2B", value: "B2B" },
-                    { label: "B2C", value: "B2C" },
-                  ]}
-                  onChange={onSelectChannel}
-                />
-              </FormItem>
-            </Col> */}
-            <Col span={12}>
-              <FormItem label="Danh sách Agent">
-                <Select<number, UserAgentListResponse["result"][0]>
-                  value={userAgentId}
-                  fieldNames={{ label: "fullname", value: "recId" }}
-                  options={agentList}
-                  loading={isLoading}
-                  onChange={onSelectAgent}
-                  placeholder="Chọn Agent"
-                  disabled={sellChannel === ESellChannel.B2C}
-                  //   optionRender={(opt, info) => {
-                  //     console.log(info);
-                  //     return <div className="1">1</div>;
-                  //   }}
-                />
-              </FormItem>
-            </Col>
-          </Row>
+          {sellChannel === ESellChannel.B2B ? (
+            <FormItem label="Danh sách Agent" required>
+              <Select<number, UserAgentListResponse["result"][0]>
+                value={userAgentId}
+                fieldNames={{ label: "fullname", value: "recId" }}
+                options={agentList}
+                loading={isLoading}
+                onChange={onSelectAgent}
+                placeholder="Chọn Agent"
+                //   optionRender={(opt, info) => {
+                //     console.log(info);
+                //     return <div className="1">1</div>;
+                //   }}
+              />
+            </FormItem>
+          ) : null}
           <Row gutter={16}>
             <Col span={12}>
               <FormItem
