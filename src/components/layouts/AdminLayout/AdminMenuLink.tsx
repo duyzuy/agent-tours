@@ -15,6 +15,7 @@ import {
   TagOutlined,
   GlobalOutlined,
   FileTextOutlined,
+  SnippetsOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 import { pathPermissions } from "@/constants/permission.constant";
@@ -34,6 +35,11 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
       key: "dashboard",
       icon: React.createElement(DashboardOutlined),
       label: "Dashboard",
+    },
+    {
+      key: "guide",
+      icon: React.createElement(SnippetsOutlined),
+      label: "Hướng dẫn",
     },
     {
       key: "booking",

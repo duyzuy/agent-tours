@@ -52,8 +52,6 @@ const InventoryPage = () => {
       setEditRecord(drawler.record);
     }
 
-    if (drawler.type === EActionType.CREATE) {
-    }
     setOpenDrawler(true);
   }, []);
 
@@ -62,19 +60,22 @@ const InventoryPage = () => {
     setEditRecord(undefined);
   }, []);
 
-  const handleCreateInventory = useCallback<DrawerInventoryProps["onSubmit"]>((action, formData) => {
-    if (action === EActionType.CREATE) {
-      onCreateInventory(formData, () => {
-        setOpenDrawler(false);
-      });
-    }
-    if (action === EActionType.EDIT && editRecord) {
-      onUpdateInventory(editRecord.recId, formData, () => {
-        setOpenDrawler(false);
-        setEditRecord(undefined);
-      });
-    }
-  }, []);
+  const handleCreateInventory = useCallback<DrawerInventoryProps["onSubmit"]>(
+    (action, formData) => {
+      if (action === EActionType.CREATE) {
+        onCreateInventory(formData, () => {
+          setOpenDrawler(false);
+        });
+      }
+      if (action === EActionType.EDIT && editRecord) {
+        onUpdateInventory(editRecord.recId, formData, () => {
+          setOpenDrawler(false);
+          setEditRecord(undefined);
+        });
+      }
+    },
+    [editRecord],
+  );
   const onChangeInventoryTypeQueryParams: SelectProps<string[], { label: string; value: string }>["onChange"] = (
     types,
     options,
@@ -150,6 +151,7 @@ const InventoryPage = () => {
         }}
       />
       <DrawerInventory
+        recId={editRecord?.recId}
         isOpen={isOpenDrawler}
         initialValues={editRecord}
         onCancel={onCancelDrawler}

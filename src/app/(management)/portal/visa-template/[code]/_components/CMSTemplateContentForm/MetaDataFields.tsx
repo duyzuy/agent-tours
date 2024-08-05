@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Space, Input, Button, Row, Col, Select } from "antd";
+import { Input, Button, Row, Col } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { DeleteOutlined } from "@ant-design/icons";
-import { ICON_LIST } from "@/constants/icons.constant";
+import IconSelector from "@/components/base/IconSelector";
 type MetaDataItemType = { key?: string; value?: string; icon?: string };
 export interface MetaDataFieldsProps {
   index?: number;
@@ -10,28 +10,13 @@ export interface MetaDataFieldsProps {
   onChange?: (data: { [key: string]: string }, index?: number) => void;
   onRemove?: (index?: number) => void;
 }
-type OptionTypeIcon = (typeof ICON_LIST)[0];
 
 const MetaDataFields: React.FC<MetaDataFieldsProps> = ({ values, onChange, index, onRemove }) => {
   return (
     <Row gutter={16}>
       <Col span={6}>
         <FormItem>
-          <Select
-            fieldNames={{ label: "name", value: "key" }}
-            optionLabelProp="name"
-            options={[{ name: "--none--", key: "", icon: "" }, ...ICON_LIST]}
-            value={values?.icon}
-            // optionRender={(option) => {
-            //   return (
-            //     <div className="flex items-center">
-            //       <span className="w-4 h-4 mr-2">{<option.data.icon width={16} height={16} />}</span>
-            //       <span>{option.label}</span>
-            //     </div>
-            //   );
-            // }}
-            onChange={(value) => onChange?.({ icon: value }, index)}
-          />
+          <IconSelector value={values?.icon} onChange={(value) => onChange?.({ icon: value }, index)} />
         </FormItem>
       </Col>
       <Col span={6}>

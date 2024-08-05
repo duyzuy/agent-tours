@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useMemo } from "react";
 import BoxBooking from "./_components/BoxBooking";
-import { Button, Divider, Empty, Space } from "antd";
+import { Button, Divider, Empty, Segmented, Space } from "antd";
 import useBooking from "./hooks/useBooking";
 import TourBoxItem from "./_components/TourBoxItem";
 import { isUndefined } from "lodash";
@@ -12,12 +12,14 @@ import { moneyFormatVND } from "@/utils/helper";
 import PassengerTourClassItem from "./_components/PassengerTourClassItem";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import useMessage from "@/hooks/useMessage";
+import { ESellChannel, SELL_CHANNEL } from "@/constants/channel.constant";
 
 const BookingPage = () => {
   const [bookingInformation, setBookingInformation] = useBooking();
   const message = useMessage();
 
-  const { onNext, onSetPassengerConfig, onReset } = useSelectProductTour();
+  const { onNext, onSetPassengerConfig, onReselectProduct, onChangeSellChannel, onSetProductItem } =
+    useSelectProductTour();
 
   const productList = useMemo(() => bookingInformation?.productList, [bookingInformation]);
 
@@ -94,6 +96,23 @@ const BookingPage = () => {
     },
     [bookingInformation.passengerPriceConfigs],
   );
+
+  const filterPriceConfigbySellChannel = (priceConfigs: PriceConfig[]) => {
+    const sellChannel = bookingInformation.channel;
+
+    return priceConfigs.reduce<PriceConfig[]>((acc, item) => {
+      if (sellChannel === ESellChannel.B2C) {
+        if (item.channel === "CUSTOMER") {
+          acc = [...acc, item];
+        }
+      } else {
+        acc = [...acc, item];
+      }
+
+      return acc;
+    }, []);
+  };
+
   return (
     <div className="page">
       <div
@@ -117,22 +136,14 @@ const BookingPage = () => {
                   tour={item}
                   isSelected={item.recId === productSelectedItem?.recId}
                   hideBoxNotSelect={!isUndefined(productSelectedItem)}
-                  onSelect={() =>
-                    setBookingInformation((prev) => ({
-                      ...prev,
-                      bookingInfo: {
-                        ...prev.bookingInfo,
-                        product: item,
-                      },
-                    }))
-                  }
+                  onSelect={() => onSetProductItem(item)}
                 />
               ))) || <Empty description="Không có tour nào" />}
           </div>
         ) : null}
         {!isUndefined(productSelectedItem) ? (
           <div className="text-right mb-2">
-            <span className="inline-flex text-primary-default cursor-pointer" onClick={onReset}>
+            <span className="inline-flex text-primary-default cursor-pointer" onClick={onReselectProduct}>
               <UndoOutlined size={12} />
               <span className="ml-2 inline-block">Chọn lại</span>
             </span>
@@ -142,12 +153,22 @@ const BookingPage = () => {
           <>
             <div className="tour__item-classes">
               <Divider />
+              <div className="mb-6 section-sell-channel">
+                <p className="text-lg font-[500] mb-3">Chọn kênh bán</p>
+                <Segmented
+                  value={bookingInformation.channel}
+                  options={SELL_CHANNEL}
+                  onChange={(value) => {
+                    onChangeSellChannel(value as ESellChannel);
+                  }}
+                />
+              </div>
               <div className="tour__item-classes-head mb-3">
-                <span className="block text-lg font-[500]">Nhập số lượng khách</span>
+                <span className="block text-lg font-[500]">Chọn số lượng khách</span>
                 <p>* Giá lựa chọn sẽ dc áp dụng cho toàn bộ hành khách trong tour.</p>
               </div>
               <div className="tour__item-classes-body">
-                {productSelectedItem.configs.map((config) => (
+                {filterPriceConfigbySellChannel(productSelectedItem.configs).map((config) => (
                   <PassengerTourClassItem
                     key={config.recId}
                     channel={config.channel}
@@ -166,7 +187,13 @@ const BookingPage = () => {
             </div>
             <div className="sticky py-4 bottom-0 bg-white">
               <Space>
-                <Button type="primary" ghost className="w-32" onClick={onReset} icon={<UndoOutlined size={12} />}>
+                <Button
+                  type="primary"
+                  ghost
+                  className="w-32"
+                  onClick={onReselectProduct}
+                  icon={<UndoOutlined size={12} />}
+                >
                   Chọn lại
                 </Button>
                 <Button type="primary" className="w-32" onClick={onNext} disabled={isDisableNextButton}>

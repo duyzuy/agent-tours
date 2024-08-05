@@ -16,7 +16,7 @@ import PaymentMethod from "./_components/PaymentMethod";
 import InvoiceForm from "./_components/InvoiceForm";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
-import FormItem from "@/components/base/FormItem";
+
 import { ILocalUserMinimal } from "@/models/management/localUser.interface";
 
 const PaymentPage = () => {
@@ -25,7 +25,10 @@ const PaymentPage = () => {
   const router = useRouter();
   const { createBooking } = useCreateBooking();
   const userProfile = useLocalUserProfile();
-  console.log(userProfile);
+  const sellChannel = useMemo(() => {
+    return bookingInformation.channel;
+  }, []);
+  console.log(sellChannel);
   const [customerInformation, setCustomerInformation] = useState<CustomerInformation>(
     () =>
       new CustomerInformation(
@@ -39,7 +42,6 @@ const PaymentPage = () => {
   );
   const [invoiceInformation, setInvoiceInformation] = useState(new InvoiceFormData("", "", "", "", ""));
 
-  const [channel, setChannel] = useState("B2C");
   const [agentInfo, setAgentInfo] = useState<ILocalUserMinimal>();
 
   const { handlerSubmit, errors } = useFormSubmit<CustomerInformation>({
@@ -48,7 +50,7 @@ const PaymentPage = () => {
 
   const handleSubmitBooking: HandleSubmit<CustomerInformation> = (customerInfo) => {
     invoiceInformation;
-    createBooking({ customerInfo, invoiceInfo: invoiceInformation, channel: channel, agentUserId: agentInfo?.recId });
+    createBooking({ customerInfo, invoiceInfo: invoiceInformation, agentUserId: agentInfo?.recId });
   };
 
   const isDisableNextAction = useMemo(() => {
@@ -71,12 +73,6 @@ const PaymentPage = () => {
       custName: userInfo.fullname,
       custPhoneNumber: userInfo.phoneNumber,
     }));
-  };
-  const handleSelectChannel: CustomerInformationFormProps["onSelectChannel"] = (newChannel, data) => {
-    setChannel(newChannel);
-    if (newChannel === "B2C") {
-      setAgentInfo(undefined);
-    }
   };
 
   useEffect(() => {
@@ -124,8 +120,7 @@ const PaymentPage = () => {
                 customerInformation={customerInformation}
                 setCustomerInformation={setCustomerInformation}
                 onSelectAgent={handleSelectAgent}
-                onSelectChannel={handleSelectChannel}
-                channel={channel}
+                sellChannel={sellChannel}
                 userAgentId={agentInfo?.recId}
                 errors={errors}
                 className="bg-white rounded-md drop-shadow-sm mb-6"

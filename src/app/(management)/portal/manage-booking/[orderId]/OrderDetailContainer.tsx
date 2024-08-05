@@ -8,38 +8,33 @@ import { useEffect } from "react";
 import { initManageOrderDetail } from "./actions";
 
 interface OrderDetailContainerProps {
-    children: React.ReactNode;
-    orderId?: number;
+  children: React.ReactNode;
+  orderId?: number;
 }
-const OrderDetailContainer: React.FC<OrderDetailContainerProps> = ({
-    children,
-    orderId,
-}) => {
-    const dispatch = useDispatchManageBooking();
-    const { data: ruleAndPolicyList, isLoading: isLoadingRule } =
-        useLocalGetRuleAndPolicyQuery();
+const OrderDetailContainer: React.FC<OrderDetailContainerProps> = ({ children, orderId }) => {
+  const dispatch = useDispatchManageBooking();
+  const { data: ruleAndPolicyList, isLoading: isLoadingRule } = useLocalGetRuleAndPolicyQuery();
 
-    const { data: bookingOrderDetail, isLoading } =
-        useGetBookingDetailCoreQuery({
-            enabled: !isLoadingRule,
-            reservationId: orderId,
-            localRuleAndPolicies: ruleAndPolicyList,
-        });
+  const { data: bookingOrderDetail, isLoading } = useGetBookingDetailCoreQuery({
+    enabled: !isLoadingRule,
+    reservationId: orderId,
+    localRuleAndPolicies: ruleAndPolicyList,
+  });
 
-    useEffect(() => {
-        if (bookingOrderDetail && !isLoading) {
-            dispatch(initManageOrderDetail(bookingOrderDetail));
-        }
-    }, [isLoading, bookingOrderDetail]);
-
-    if (isLoading || isLoadingRule) {
-        return <Spin />;
+  useEffect(() => {
+    if (bookingOrderDetail && !isLoading) {
+      dispatch(initManageOrderDetail(bookingOrderDetail));
     }
+  }, [isLoading, bookingOrderDetail]);
 
-    if (isUndefined(bookingOrderDetail)) {
-        return null;
-    }
+  if (isLoading || isLoadingRule) {
+    return <Spin />;
+  }
 
-    return children;
+  if (isUndefined(bookingOrderDetail)) {
+    return null;
+  }
+
+  return children;
 };
 export default OrderDetailContainer;

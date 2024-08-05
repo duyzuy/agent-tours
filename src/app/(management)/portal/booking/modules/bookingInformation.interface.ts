@@ -6,6 +6,7 @@ import { IReservation } from "@/models/management/booking/reservation.interface"
 import { PassengerInformationFormData } from "./passenger.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { IInvoice } from "@/models/management/booking/invoice.interface";
+import { ESellChannel } from "@/constants/channel.constant";
 
 export interface IPricingBookingItem {
   sellableDetailsId: number;
@@ -60,7 +61,7 @@ export class BookingInformation {
   productList?: IProductItem[];
   serviceList?: PriceConfig[];
   reservation?: IReservation;
-  channel?: string;
+  channel: ESellChannel;
   agentUserId?: number;
 
   constructor(
@@ -83,7 +84,7 @@ export class BookingInformation {
     productList: IProductItem[],
     serviceList: PriceConfig[],
     reservation: IReservation | undefined,
-    channel: string | undefined,
+    channel: ESellChannel,
     agentUserId: number | undefined,
   ) {
     this.bookingInfo = bookingInfo;
@@ -114,7 +115,7 @@ export interface BookingTourItem {
 export interface IBookingTourPayload {
   sellableId?: number;
   bookingDetails: BookingTourItem[];
-  channel?: string;
+  channel?: ESellChannel;
   agentUserId?: number;
   custName?: string; //name + phone bắt buộc
   custPhoneNumber?: string; //name + phone bắt buộc

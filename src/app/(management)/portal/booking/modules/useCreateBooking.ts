@@ -17,12 +17,10 @@ const useCreateBooking = () => {
   const createBooking = ({
     customerInfo,
     invoiceInfo,
-    channel,
     agentUserId,
   }: {
     customerInfo: CustomerInformation;
     invoiceInfo: InvoiceFormData;
-    channel: string;
     agentUserId?: number;
   }) => {
     let bookingPayload: IBookingTourPayload = { bookingDetails: [] };
@@ -51,7 +49,6 @@ const useCreateBooking = () => {
       rmk: customerInfo.rmk,
       referenceId: customerInfo.referenceId,
       agentUserId: agentUserId,
-      channel: channel,
     };
     // console.table({ bookingInformation, bookingPayload });
     makeCreateBooking(bookingPayload, {

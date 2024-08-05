@@ -11,37 +11,23 @@ import { manageBookingReducer } from "./reducer";
 import { initManageBookingState } from "./state";
 import OrderDetailContainer from "./OrderDetailContainer";
 
-const ManageBookingDetailProvider = ({
-    children,
-}: {
-    children: React.ReactNode;
-}) => {
-    const [state, dispatch] = useReducer(
-        manageBookingReducer,
-        initManageBookingState,
-    );
+const ManageBookingDetailProvider = ({ children }: { children: React.ReactNode }) => {
+  const [state, dispatch] = useReducer(manageBookingReducer, initManageBookingState);
 
-    return (
-        <ManageBookingDetailContext.Provider value={[state, dispatch]}>
-            {children}
-        </ManageBookingDetailContext.Provider>
-    );
+  return (
+    <ManageBookingDetailContext.Provider value={[state, dispatch]}>{children}</ManageBookingDetailContext.Provider>
+  );
 };
 
 interface ManageBookingServiceAddonLayoutProps {
-    children: React.ReactNode;
-    params: { orderId: string };
+  children: React.ReactNode;
+  params: { orderId: string };
 }
-const ManageBookingServiceAddonLayout = ({
-    children,
-    params,
-}: ManageBookingServiceAddonLayoutProps) => {
-    return (
-        <ManageBookingDetailProvider>
-            <OrderDetailContainer orderId={Number(params.orderId)}>
-                {children}
-            </OrderDetailContainer>
-        </ManageBookingDetailProvider>
-    );
+const ManageBookingServiceAddonLayout = ({ children, params }: ManageBookingServiceAddonLayoutProps) => {
+  return (
+    <ManageBookingDetailProvider>
+      <OrderDetailContainer orderId={Number(params.orderId)}>{children}</OrderDetailContainer>
+    </ManageBookingDetailProvider>
+  );
 };
 export default ManageBookingServiceAddonLayout;

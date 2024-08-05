@@ -7,13 +7,13 @@ import classNames from "classnames";
 import Link from "next/link";
 import { useGetUserAgentList } from "@/queries/localUser";
 import { ILocalUserMinimal, UserAgentListResponse } from "@/models/management/localUser.interface";
+import { ESellChannel } from "@/constants/channel.constant";
 export interface CustomerInformationFormProps {
   className?: string;
   customerInformation: CustomerInformation;
   setCustomerInformation: React.Dispatch<React.SetStateAction<CustomerInformation>>;
   errors?: Partial<Record<keyof CustomerInformation, string>> | undefined;
-  channel?: string;
-  onSelectChannel?: SelectProps<string>["onChange"];
+  sellChannel?: ESellChannel;
   userAgentId?: number;
   onSelectAgent?: SelectProps<number, ILocalUserMinimal>["onChange"];
 }
@@ -22,8 +22,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
   customerInformation,
   setCustomerInformation,
   errors,
-  channel,
-  onSelectChannel,
+  sellChannel,
   userAgentId,
   onSelectAgent,
 }) => {
@@ -54,7 +53,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
       <div className="customer__information-body px-6 pb-6">
         <Form layout="vertical">
           <Row gutter={16}>
-            <Col span={12}>
+            {/* <Col span={12}>
               <FormItem label="Kênh bán">
                 <Select
                   value={channel}
@@ -66,7 +65,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                   onChange={onSelectChannel}
                 />
               </FormItem>
-            </Col>
+            </Col> */}
             <Col span={12}>
               <FormItem label="Danh sách Agent">
                 <Select<number, UserAgentListResponse["result"][0]>
@@ -76,7 +75,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
                   loading={isLoading}
                   onChange={onSelectAgent}
                   placeholder="Chọn Agent"
-                  disabled={channel === "B2C"}
+                  disabled={sellChannel === ESellChannel.B2C}
                   //   optionRender={(opt, info) => {
                   //     console.log(info);
                   //     return <div className="1">1</div>;

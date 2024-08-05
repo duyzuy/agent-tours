@@ -36,6 +36,7 @@ const useCRUDInventory = () => {
     });
   };
   const onUpdateInventory = (recId: number, formData: InventoryFormData, cb?: () => void) => {
+    console.log(recId, formData);
     makeUpdateInventory(
       { recId, name: formData.name },
       {

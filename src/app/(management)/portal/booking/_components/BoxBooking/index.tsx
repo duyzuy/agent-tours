@@ -107,7 +107,7 @@ const BoxBooking: React.FC<BoxBookingProps> = ({ className = "searchbox px-4 py-
             <Radio.Group value={formData.byProductType ? formData.byProductType[0] : undefined} onChange={onChangeTabs}>
               {productType?.map((type) => (
                 <React.Fragment key={type}>
-                  <Radio value={type}>
+                  <Radio value={type} disabled={type === EProductType.EXTRA}>
                     <span className="font-[500] mr-3">{getProductTypeName(type)}</span>
                   </Radio>
                 </React.Fragment>
@@ -162,6 +162,9 @@ const BoxBooking: React.FC<BoxBookingProps> = ({ className = "searchbox px-4 py-
                     picker="month"
                     className="w-full"
                     bordered={false}
+                    disabledDate={(date) => {
+                      return dayjs().isAfter(date, "month");
+                    }}
                     style={{ padding: 0 }}
                     onChange={handleSelectDate}
                   />

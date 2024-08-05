@@ -12,7 +12,6 @@ import { LangCode } from "@/models/management/cms/language.interface";
 
 import ThumbnailImage from "@/components/admin/ThumbnailImage";
 import Publishing, { PublishingProps } from "@/components/admin/Publishing";
-import TextEditor from "@/components/base/TextEditor";
 import FormItem from "@/components/base/FormItem";
 import Slug, { SlugProps } from "@/components/admin/Slug";
 import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";

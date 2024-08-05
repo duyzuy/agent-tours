@@ -97,9 +97,9 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
   const onChangeValidDateRange: RangePickerProps["onChange"] = (date, dateStr) => {
     setSellableFormData((prev) => ({
       ...prev,
-      valid: date ? date[0]?.locale("en").format(DATE_TIME_FORMAT) : undefined,
-      validTo: date ? date[1]?.locale("en").format(DATE_TIME_FORMAT) : undefined,
-      closeDate: date ? date[1]?.locale("en").format(DATE_TIME_FORMAT) : undefined, // default when create closeDate equal ValidTo date
+      valid: date ? date[0]?.toISOString() : undefined,
+      validTo: date ? date[1]?.toISOString() : undefined,
+      closeDate: date ? date[1]?.toISOString() : undefined, // default when create closeDate equal ValidTo date
       fromValidTo: undefined,
     }));
   };
@@ -110,14 +110,14 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
       return;
     }
 
-    if (date && date[1] && date[1].isBefore(dayjs(sellableFormData.validTo, { format: DATE_TIME_FORMAT }))) {
+    if (date && date[1] && date[1].isBefore(dayjs(sellableFormData.validTo))) {
       message.error("Ngày kết thúc sử dụng phải sau ngày kết thúc mở bán.");
       return;
     }
     setSellableFormData((prev) => ({
       ...prev,
-      start: date ? date[0]?.locale("en").format(DATE_TIME_FORMAT) : undefined,
-      end: date ? date[1]?.locale("en").format(DATE_TIME_FORMAT) : undefined,
+      start: date ? date[0]?.toISOString() : undefined,
+      end: date ? date[1]?.toISOString() : undefined,
     }));
   };
   const onChangeValidFromTo: DatePickerProps["onChange"] = (date, dateStr) => {
@@ -128,7 +128,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
 
     setSellableFormData((prev) => ({
       ...prev,
-      fromValidTo: date?.locale("en").format(DATE_TIME_FORMAT),
+      fromValidTo: date?.toISOString(),
     }));
   };
 
@@ -296,16 +296,8 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
           placeholder={["Từ ngày", "Đến ngày"]}
           format={"DD/MM/YYYY - HH:mm"}
           value={[
-            sellableFormData.valid
-              ? dayjs(sellableFormData.valid, {
-                  format: DATE_TIME_FORMAT,
-                })
-              : null,
-            sellableFormData.validTo
-              ? dayjs(sellableFormData.validTo, {
-                  format: DATE_TIME_FORMAT,
-                })
-              : null,
+            sellableFormData.valid ? dayjs(sellableFormData.valid) : null,
+            sellableFormData.validTo ? dayjs(sellableFormData.validTo) : null,
           ]}
           disabledDate={(date) => {
             return dayjs().isAfter(date);
@@ -330,23 +322,11 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
           placeholder={["Từ ngày", "Đến ngày"]}
           format={"DD/MM/YYYY - HH:mm"}
           value={[
-            sellableFormData.start
-              ? dayjs(sellableFormData.start, {
-                  format: DATE_TIME_FORMAT,
-                })
-              : null,
-            sellableFormData.end
-              ? dayjs(sellableFormData.end, {
-                  format: DATE_TIME_FORMAT,
-                })
-              : null,
+            sellableFormData.start ? dayjs(sellableFormData.start) : null,
+            sellableFormData.end ? dayjs(sellableFormData.end) : null,
           ]}
           disabledDate={(date) => {
-            return sellableFormData.validTo
-              ? dayjs(sellableFormData.validTo, {
-                  format: DATE_TIME_FORMAT,
-                }).isAfter(date)
-              : dayjs().isAfter(date);
+            return sellableFormData.validTo ? dayjs(sellableFormData.validTo).isAfter(date) : dayjs().isAfter(date);
           }}
           onChange={onChangeUsedDateRange}
           className="w-full max-w-[380px]"
@@ -399,11 +379,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                       : null
                   }
                   disabledDate={(date) => {
-                    return sellableFormData.valid
-                      ? dayjs(sellableFormData.valid, {
-                          format: DATE_TIME_FORMAT,
-                        }).isAfter(date)
-                      : dayjs().isAfter(date);
+                    return sellableFormData.valid ? dayjs(sellableFormData.valid).isAfter(date) : dayjs().isAfter(date);
                   }}
                   format={"DD/MM/YYYY - HH:mm"}
                   onChange={onChangeValidFromTo}
@@ -464,38 +440,16 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                     }}
                     placeholder={["Từ ngày", "Đến ngày"]}
                     format={"DD/MM/YYYY - HH:mm"}
-                    value={[
-                      exclDate.from
-                        ? dayjs(exclDate.from, {
-                            format: DATE_TIME_FORMAT,
-                          })
-                        : null,
-                      exclDate.to
-                        ? dayjs(exclDate.to, {
-                            format: DATE_TIME_FORMAT,
-                          })
-                        : null,
-                    ]}
+                    value={[exclDate.from ? dayjs(exclDate.from) : null, exclDate.to ? dayjs(exclDate.to) : null]}
                     disabledDate={(date) => {
                       return (
-                        dayjs(sellableFormData.valid, {
-                          format: DATE_TIME_FORMAT,
-                        }).isAfter(date) ||
-                        dayjs(sellableFormData.fromValidTo, {
-                          format: DATE_TIME_FORMAT,
-                        }).isBefore(date) ||
+                        dayjs(sellableFormData.valid).isAfter(date) ||
+                        dayjs(sellableFormData.fromValidTo).isBefore(date) ||
                         getDisableExclusiveDate(date)
                       );
                     }}
                     onChange={(date, dateStr) =>
-                      onChangeExclusiveDates(
-                        indx,
-                        (date && [
-                          date[0]?.locale("en").format(DATE_TIME_FORMAT),
-                          date[1]?.locale("en").format(DATE_TIME_FORMAT),
-                        ]) ||
-                          [],
-                      )
+                      onChangeExclusiveDates(indx, (date && [date[0]?.toISOString(), date[1]?.toISOString()]) || [])
                     }
                     className="w-full"
                   />

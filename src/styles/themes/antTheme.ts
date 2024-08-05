@@ -34,11 +34,11 @@ export const antdTheme: ThemeConfig = {
       // paddingLG: 14,
       // fontSize: 16,
       fontSizeSM: 12,
-      paddingInlineSM: 8,
-      paddingBlockSM: 2,
+      paddingInlineSM: 11,
+      paddingBlockSM: 4,
       fontSizeLG: 16,
       paddingInlineLG: 16,
-      borderRadiusSM: 3,
+      borderRadiusSM: 4,
       borderRadius: 4,
       borderRadiusLG: 6,
     },
@@ -79,6 +79,7 @@ export const antdTheme: ThemeConfig = {
     Select: {
       // selectorBg: "red",
       // colorBgTextActive: "blue",
+      paddingSM: 8,
       optionSelectedBg: "#e7f3ff",
     },
     Form: {

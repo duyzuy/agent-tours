@@ -1,10 +1,10 @@
 import {
-    useCreateVendorMutation,
-    useDeleteVendorMutation,
-    useApprovalVendorMutation,
-    useUpdateVendorMutation,
-    useDeactiveVendorMutation,
-    useActiveVendorMutation,
+  useCreateVendorMutation,
+  useDeleteVendorMutation,
+  useApprovalVendorMutation,
+  useUpdateVendorMutation,
+  useDeactiveVendorMutation,
+  useActiveVendorMutation,
 } from "@/mutations/managements/vendor";
 import { queryCore } from "@/queries/var";
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,146 +14,148 @@ import { Status } from "@/models/common.interface";
 import { IVendor } from "@/models/management/vendor.interface";
 
 export interface UseManageVendor {
-    onCreate: (formData: VendorFormData, cb?: () => void) => void;
-    onUpdate: (formData: VendorFormData, cb?: () => void) => void;
-    onDelete: (recId: number, cb?: () => void) => void;
-    onApproval: (recId: number, cb?: (data: IVendor) => void) => void;
-    onDeactive: (recId: number, cb?: (data: IVendor) => void) => void;
-    onActive: (recId: number, cb?: (data: IVendor) => void) => void;
+  onCreate: (formData: VendorFormData, cb?: () => void) => void;
+  onUpdate: (formData: VendorFormData, cb?: () => void) => void;
+  onDelete: (recId: number, cb?: () => void) => void;
+  onApproval: (recId: number, cb?: (data: IVendor) => void) => void;
+  onDeactive: (recId: number, cb?: (data: IVendor) => void) => void;
+  onActive: (recId: number, cb?: (data: IVendor) => void) => void;
 }
 const useManageVendor = (): UseManageVendor => {
-    const queryClient = useQueryClient();
-    const { mutate: doCreateVendor } = useCreateVendorMutation();
-    const { mutate: doDelete } = useDeleteVendorMutation();
-    const { mutate: doApproval } = useApprovalVendorMutation();
-    const { mutate: doUpdate } = useUpdateVendorMutation();
-    const { mutate: doDeactive } = useDeactiveVendorMutation();
-    const { mutate: doActive } = useActiveVendorMutation();
+  const queryClient = useQueryClient();
+  const { mutate: doCreateVendor } = useCreateVendorMutation();
+  const { mutate: doDelete } = useDeleteVendorMutation();
+  const { mutate: doApproval } = useApprovalVendorMutation();
+  const { mutate: doUpdate } = useUpdateVendorMutation();
+  const { mutate: doDeactive } = useDeactiveVendorMutation();
+  const { mutate: doActive } = useActiveVendorMutation();
 
-    const message = useMessage();
+  const message = useMessage();
 
-    const onCreate = (formData: VendorFormData, cb?: () => void) => {
-        const { typeList, status, ...restData } = formData;
+  const onCreate = (formData: VendorFormData, cb?: () => void) => {
+    const { typeList, status, ...restData } = formData;
 
-        if (status !== Status.OK && status !== Status.QQ) {
-            throw new Error("Status of vendor invalid");
-        }
-        const typeListToString = typeList.reduce(
-            (acc, item, _index) =>
-                acc.concat(item, _index !== typeList.length - 1 ? "||" : ""),
-            "",
-        );
+    if (status !== Status.OK && status !== Status.QQ) {
+      throw new Error("Status of vendor invalid");
+    }
+    const typeListToString = typeList.reduce(
+      (acc, item, _index) => acc.concat(item, _index !== typeList.length - 1 ? "||" : ""),
+      "",
+    );
 
-        const venvorPayload = {
-            typeList: typeListToString,
-            status: status,
-            ...restData,
-        };
-
-        doCreateVendor(venvorPayload, {
-            onSuccess: (data, variables) => {
-                message.success(`Tạo Vendor thành công`);
-                queryClient.invalidateQueries({
-                    queryKey: [queryCore.GET_VENDOR_LIST],
-                });
-                cb?.();
-            },
-            onError: (error) => {
-                message.error(error.message);
-            },
-        });
-    };
-    const onUpdate = (formData: VendorFormData, cb?: () => void) => {
-        const { typeList, status, ...restData } = formData;
-
-        if (status !== Status.OK && status !== Status.QQ) {
-            throw new Error("Status of vendor invalid");
-        }
-        const typeListToString = typeList.reduce(
-            (acc, item, _index) =>
-                acc.concat(item, _index !== typeList.length - 1 ? "||" : ""),
-            "",
-        );
-
-        const venvorPayload = {
-            typeList: typeListToString,
-            status: status,
-            ...restData,
-        };
-
-        doUpdate(venvorPayload, {
-            onSuccess: (data, variables) => {
-                message.success(
-                    `Cập nhật Vendor #${variables.recId} thành công`,
-                );
-                queryClient.invalidateQueries({
-                    queryKey: [queryCore.GET_VENDOR_LIST],
-                });
-                cb?.();
-            },
-            onError: (error) => {
-                message.error(error.message);
-            },
-        });
-    };
-    const onDelete = (recId: number, cb?: () => void) => {
-        doDelete(recId, {
-            onSuccess: (data, variables) => {
-                message.success(`Xoá Vendor #${recId} thành công`);
-                queryClient.invalidateQueries({
-                    queryKey: [queryCore.GET_VENDOR_LIST],
-                });
-                cb?.();
-            },
-            onError: (error) => {
-                message.error(error.message);
-            },
-        });
+    const venvorPayload = {
+      typeList: typeListToString,
+      status: status,
+      ...restData,
     };
 
-    const onApproval = (recId: number, cb?: (data: IVendor) => void) => {
-        doApproval(recId, {
-            onSuccess: (data, variables) => {
-                message.success(`Duyệt Vendor #${recId} thành công`);
-                queryClient.invalidateQueries({
-                    queryKey: [queryCore.GET_VENDOR_LIST],
-                });
-                cb?.(data.result);
-            },
-            onError: (error) => {
-                message.error(error.message);
-            },
+    doCreateVendor(venvorPayload, {
+      onSuccess: (data, variables) => {
+        message.success(`Tạo Vendor thành công`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_LIST],
         });
-    };
-    const onDeactive = (recId: number, cb?: (data: IVendor) => void) => {
-        doDeactive(recId, {
-            onSuccess: (data, variables) => {
-                message.success(`Huỷ kích hoạt Vendor #${recId} thành công`);
-                queryClient.invalidateQueries({
-                    queryKey: [queryCore.GET_VENDOR_LIST],
-                });
-                cb?.(data.result);
-            },
-            onError: (error) => {
-                message.error(error.message);
-            },
-        });
-    };
-    const onActive = (recId: number, cb?: (data: IVendor) => void) => {
-        doActive(recId, {
-            onSuccess: (data, variables) => {
-                message.success(`Kích hoạt Vendor #${recId} thành công`);
-                queryClient.invalidateQueries({
-                    queryKey: [queryCore.GET_VENDOR_LIST],
-                });
-                cb?.(data.result);
-            },
-            onError: (error) => {
-                message.error(error.message);
-            },
-        });
+        cb?.();
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    });
+  };
+  const onUpdate = (formData: VendorFormData, cb?: () => void) => {
+    const { typeList, status, ...restData } = formData;
+
+    if (status !== Status.OK && status !== Status.QQ) {
+      throw new Error("Status of vendor invalid");
+    }
+    const typeListToString = typeList.reduce(
+      (acc, item, _index) => acc.concat(item, _index !== typeList.length - 1 ? "||" : ""),
+      "",
+    );
+
+    const venvorPayload = {
+      typeList: typeListToString,
+      status: status,
+      ...restData,
     };
 
-    return { onCreate, onDelete, onApproval, onUpdate, onDeactive, onActive };
+    doUpdate(venvorPayload, {
+      onSuccess: (data, variables) => {
+        message.success(`Cập nhật Vendor #${variables.recId} thành công`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_LIST],
+        });
+        cb?.();
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    });
+  };
+  const onDelete = (recId: number, cb?: () => void) => {
+    doDelete(recId, {
+      onSuccess: (data, variables) => {
+        message.success(`Xoá Vendor #${recId} thành công`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_LIST],
+        });
+        cb?.();
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    });
+  };
+
+  const onApproval = (recId: number, cb?: (data: IVendor) => void) => {
+    doApproval(recId, {
+      onSuccess: (data, variables) => {
+        message.success(`Duyệt Vendor #${recId} thành công`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_LIST],
+        });
+        cb?.(data.result);
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    });
+  };
+  const onDeactive = (recId: number, cb?: (data: IVendor) => void) => {
+    doDeactive(recId, {
+      onSuccess: (data, variables) => {
+        message.success(`Huỷ kích hoạt Vendor #${recId} thành công`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_DETAIL],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_LIST],
+        });
+        cb?.(data.result);
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    });
+  };
+  const onActive = (recId: number, cb?: (data: IVendor) => void) => {
+    doActive(recId, {
+      onSuccess: (data, variables) => {
+        message.success(`Kích hoạt Vendor #${recId} thành công`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_DETAIL],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_LIST],
+        });
+        cb?.(data.result);
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    });
+  };
+
+  return { onCreate, onDelete, onApproval, onUpdate, onDeactive, onActive };
 };
 export default useManageVendor;

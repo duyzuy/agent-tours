@@ -120,8 +120,8 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
   const onChangeValidDateRange: RangePickerProps["onChange"] = (date) => {
     setStockFormData((prev) => ({
       ...prev,
-      valid: date && date[0] ? date[0]?.locale("en").format(DATE_TIME_FORMAT) : undefined,
-      validTo: date && date[1] ? date[1]?.locale("en").format(DATE_TIME_FORMAT) : undefined,
+      valid: date ? date[0]?.toISOString() : undefined,
+      validTo: date ? date[1]?.toISOString() : undefined,
       fromValidTo: undefined,
     }));
   };
@@ -138,8 +138,8 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
 
     setStockFormData((prev) => ({
       ...prev,
-      start: date && date[0] ? date[0]?.locale("en").format(DATE_TIME_FORMAT) : undefined,
-      end: date && date[1] ? date[1]?.locale("en").format(DATE_TIME_FORMAT) : undefined,
+      start: date ? date[0]?.toISOString() : undefined,
+      end: date ? date[1]?.toISOString() : undefined,
     }));
   };
   const onChangeValidFromTo: DatePickerProps["onChange"] = (date) => {
@@ -149,7 +149,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     }
     setStockFormData((prev) => ({
       ...prev,
-      fromValidTo: date?.locale("en").format(DATE_TIME_FORMAT),
+      fromValidTo: date?.toISOString(),
     }));
   };
 
@@ -253,7 +253,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
       className="max-w-4xl"
     >
       <FormItem
-        label="Nhóm kho"
+        label="Loại dịch vụ"
         required
         validateStatus={errors?.inventoryId ? "error" : ""}
         help={errors?.inventoryId || ""}
@@ -263,7 +263,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
           onChange={onChangeInventory}
           value={inventory?.recId}
           options={curInventory ? [curInventory] : inventoryList}
-          placeholder="Chọn nhóm kho"
+          placeholder="Chọn loại dịch vụ"
           disabled={!isUndefined(curInventory)}
         />
       </FormItem>
@@ -322,16 +322,8 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
           placeholder={["Từ ngày", "Đến ngày"]}
           format={"DD/MM/YYYY - HH:mm"}
           value={[
-            stockFormData.valid
-              ? dayjs(stockFormData.valid, {
-                  format: DATE_TIME_FORMAT,
-                })
-              : null,
-            stockFormData.validTo
-              ? dayjs(stockFormData.validTo, {
-                  format: DATE_TIME_FORMAT,
-                })
-              : null,
+            stockFormData.valid ? dayjs(stockFormData.valid) : null,
+            stockFormData.validTo ? dayjs(stockFormData.validTo) : null,
           ]}
           disabledDate={(date) => {
             return dayjs().isAfter(date);
@@ -355,24 +347,11 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
           placeholder={["Từ ngày", "Đến ngày"]}
           format={"DD/MM/YYYY - HH:mm"}
           value={[
-            stockFormData.start
-              ? dayjs(stockFormData.start, {
-                  format: DATE_TIME_FORMAT,
-                })
-              : null,
-            stockFormData.end
-              ? dayjs(stockFormData.end, {
-                  format: DATE_TIME_FORMAT,
-                })
-              : null,
+            stockFormData.start ? dayjs(stockFormData.start) : null,
+            stockFormData.end ? dayjs(stockFormData.end) : null,
           ]}
           disabledDate={(date) => {
-            return (
-              dayjs().isAfter(date) ||
-              dayjs(stockFormData.validTo, {
-                format: DATE_TIME_FORMAT,
-              }).isAfter(date)
-            );
+            return dayjs().isAfter(date) || dayjs(stockFormData.validTo).isAfter(date);
           }}
           onChange={onChangeUsedDateRange}
           className="w-full max-w-[380px]"
@@ -403,13 +382,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                   }}
                   placeholder="Từ ngày"
                   disabled
-                  value={
-                    stockFormData.valid
-                      ? dayjs(stockFormData.valid, {
-                          format: DATE_TIME_FORMAT,
-                        })
-                      : null
-                  }
+                  value={stockFormData.valid ? dayjs(stockFormData.valid) : null}
                   format={"DD/MM/YYYY - HH:mm"}
                   className="w-full"
                 />
@@ -424,13 +397,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                   disabledDate={(date) => {
                     return stockFormData.valid ? dayjs(stockFormData.valid).isAfter(date) : dayjs().isAfter(date);
                   }}
-                  value={
-                    stockFormData.fromValidTo
-                      ? dayjs(stockFormData.fromValidTo, {
-                          format: DATE_TIME_FORMAT,
-                        })
-                      : null
-                  }
+                  value={stockFormData.fromValidTo ? dayjs(stockFormData.fromValidTo) : null}
                   format={"DD/MM/YYYY - HH:mm"}
                   onChange={onChangeValidFromTo}
                   className="w-full"
@@ -489,38 +456,16 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
                     }}
                     placeholder={["Từ ngày", "Đến ngày"]}
                     format={"DD/MM/YYYY - HH:mm"}
-                    value={[
-                      exclDate.from
-                        ? dayjs(exclDate.from, {
-                            format: DATE_TIME_FORMAT,
-                          })
-                        : null,
-                      exclDate.to
-                        ? dayjs(exclDate.to, {
-                            format: DATE_TIME_FORMAT,
-                          })
-                        : null,
-                    ]}
+                    value={[exclDate.from ? dayjs(exclDate.from) : null, exclDate.to ? dayjs(exclDate.to) : null]}
                     disabledDate={(date) => {
                       return (
-                        dayjs(stockFormData.valid, {
-                          format: DATE_TIME_FORMAT,
-                        }).isAfter(date) ||
-                        dayjs(stockFormData.fromValidTo, {
-                          format: DATE_TIME_FORMAT,
-                        }).isBefore(date) ||
+                        dayjs(stockFormData.valid).isAfter(date) ||
+                        dayjs(stockFormData.fromValidTo).isBefore(date) ||
                         getDisableExclusiveDate(date)
                       );
                     }}
                     onChange={(date, dateStr) =>
-                      onChangeExclusiveDates(
-                        indx,
-                        (date && [
-                          date[0]?.locale("en").format(DATE_TIME_FORMAT),
-                          date[1]?.locale("en").format(DATE_TIME_FORMAT),
-                        ]) ||
-                          [],
-                      )
+                      onChangeExclusiveDates(indx, (date && [date[0]?.toISOString(), date[1]?.toISOString()]) || [])
                     }
                     className="w-full max-w-[380px]"
                   />

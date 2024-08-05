@@ -1,6 +1,7 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
 import { IBookingTourPayload } from "../modules/bookingInformation.interface";
 import { PassengerType } from "@/models/common.interface";
+import { ESellChannel } from "@/constants/channel.constant";
 
 export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> = object({
   sellableId: number().required("Thiếu ID sản phẩm"),
@@ -32,7 +33,7 @@ export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> = objec
   custAddress: string().default(""),
   rmk: string().default(""),
   referenceId: string(),
-  channel: string(),
+  channel: string().oneOf([ESellChannel.B2B, ESellChannel.B2C]),
   agentUserId: number(),
   invoiceName: string().default(""),
   invoiceCompanyName: string().default(""),

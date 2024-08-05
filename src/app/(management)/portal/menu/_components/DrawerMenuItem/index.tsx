@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { Drawer, Space, Button, Form, Input, Checkbox, Select, CheckboxProps } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { IRolesPermissionsRs } from "@/models/management/role.interface";
 import { IMenuItem, MenuItemFormData, MenuPositionType } from "@/models/management/cms/menu.interface";
-import { ICON_LIST } from "@/constants/icons.constant";
 import { updateMenuItemSchema } from "../../schema/menu.schema";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import useCRUDMenu from "../../modules/useCRUDMenu";
 import { LangCode } from "@/models/management/cms/language.interface";
+import IconSelector from "@/components/base/IconSelector";
 
 interface DrawerMenuItemProps {
   isOpen?: boolean;
@@ -95,7 +94,8 @@ const DrawerMenuItem: React.FC<DrawerMenuItemProps> = ({ isOpen, onClose, initia
           </FormItem>
         )}
         <FormItem label="Icon">
-          <Select
+          <IconSelector value={formData?.icon} onChange={(value) => onChange("icon", value)} />
+          {/* <Select
             fieldNames={{ label: "name", value: "key" }}
             optionLabelProp="name"
             options={[
@@ -105,7 +105,7 @@ const DrawerMenuItem: React.FC<DrawerMenuItemProps> = ({ isOpen, onClose, initia
             value={formData?.icon}
             onChange={(value) => onChange("icon", value)}
             className="w-full"
-          />
+          /> */}
         </FormItem>
         <FormItem>
           <Checkbox checked={formData?.isMega} onChange={handleChangeMegamenu}>

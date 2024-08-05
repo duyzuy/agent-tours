@@ -165,11 +165,18 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
     if (!date) {
       return;
     }
+    // console.log(date[0]?.toDate().t);
     setSellableConfirmFormData((prev) => ({
       ...prev,
-      valid: date[0]?.locale("en").format(DATE_TIME_FORMAT),
-      validTo: date[1]?.locale("en").format(DATE_TIME_FORMAT),
+      valid: date[0]?.toString(),
+      validTo: date[1]?.toString(),
     }));
+
+    // setSellableConfirmFormData((prev) => ({
+    //   ...prev,
+    //   valid: date[0]?.locale("en").format(DATE_TIME_FORMAT),
+    //   validTo: date[1]?.locale("en").format(DATE_TIME_FORMAT),
+    // }));
   };
 
   const onChangeCloseDate: DatePickerProps["onChange"] = (closeDate, closeDateStr) => {
@@ -510,7 +517,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
   //             otherSellables: [...newOtherSellables],
   //         }));
   //     };
-
+  console.log(sellableConfirmFormData);
+  console.log(dayjs("11Aug2024 23:59", "DDmmmyyyy HH:mm"));
   const onSubmitForm: HandleSubmit<SellableConfirmFormData> = (data) => {
     actionType && onSubmit?.(actionType, data);
   };
@@ -519,11 +527,11 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
     if (initialValues) {
       setSellableConfirmFormData((prev) => ({
         ...prev,
-        start: dayjs(initialValues.startDate).locale("en").format(DATE_TIME_FORMAT),
-        end: dayjs(initialValues.endDate).locale("en").format(DATE_TIME_FORMAT),
-        valid: dayjs(initialValues.validFrom).locale("en").format(DATE_TIME_FORMAT),
-        validTo: dayjs(initialValues.validTo).locale("en").format(DATE_TIME_FORMAT),
-        closeDate: dayjs(initialValues.closeDate).locale("en").format(DATE_TIME_FORMAT),
+        start: initialValues.startDate,
+        end: initialValues.endDate,
+        valid: initialValues.validFrom,
+        validTo: initialValues.validTo,
+        closeDate: initialValues.closeDate,
         recId: initialValues.recId,
         cap: initialValues.cap,
       }));
@@ -572,12 +580,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                   placeholder={["Từ ngày", "Đến ngày"]}
                   format={"DD/MM/YYYY - HH:mm"}
                   value={[
-                    sellableConfirmFormData.valid
-                      ? dayjs(sellableConfirmFormData.valid, { format: DATE_TIME_FORMAT })
-                      : null,
-                    sellableConfirmFormData.validTo
-                      ? dayjs(sellableConfirmFormData.validTo, { format: DATE_TIME_FORMAT })
-                      : null,
+                    sellableConfirmFormData.valid ? dayjs(sellableConfirmFormData.valid) : null,
+                    sellableConfirmFormData.validTo ? dayjs(sellableConfirmFormData.validTo) : null,
                   ]}
                   disabledDate={(date) => {
                     return dayjs().isAfter(date) && !dayjs().isSame(date, "date");
@@ -604,12 +608,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                   format={"DD/MM/YYYY - HH:mm"}
                   disabled={false}
                   value={[
-                    sellableConfirmFormData.start
-                      ? dayjs(sellableConfirmFormData.start, { format: DATE_TIME_FORMAT })
-                      : null,
-                    sellableConfirmFormData.end
-                      ? dayjs(sellableConfirmFormData.end, { format: DATE_TIME_FORMAT })
-                      : null,
+                    sellableConfirmFormData.start ? dayjs(sellableConfirmFormData.start) : null,
+                    sellableConfirmFormData.end ? dayjs(sellableConfirmFormData.end) : null,
                   ]}
                   disabledDate={(date) => {
                     return sellableConfirmFormData.valid
@@ -639,16 +639,12 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
                   placeholder="Ngày kết thúc mở bán"
                   format={"DD/MM/YYYY - HH:mm"}
                   disabled={false}
-                  value={
-                    sellableConfirmFormData.closeDate
-                      ? dayjs(sellableConfirmFormData.closeDate, { format: DATE_TIME_FORMAT })
-                      : null
-                  }
+                  value={sellableConfirmFormData.closeDate ? dayjs(sellableConfirmFormData.closeDate) : null}
                   disabledDate={(date) => {
                     return (
                       dayjs().isAfter(date) ||
-                      dayjs(sellableConfirmFormData.valid, { format: DATE_TIME_FORMAT }).isAfter(date) ||
-                      dayjs(sellableConfirmFormData.validTo, { format: DATE_TIME_FORMAT }).isBefore(date)
+                      dayjs(sellableConfirmFormData.valid).isAfter(date) ||
+                      dayjs(sellableConfirmFormData.validTo).isBefore(date)
                     );
                   }}
                   onChange={onChangeCloseDate}

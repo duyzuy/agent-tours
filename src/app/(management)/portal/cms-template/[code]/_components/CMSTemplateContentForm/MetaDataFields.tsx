@@ -1,7 +1,7 @@
 import { Input, Button, Select, Row, Col } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { DeleteOutlined } from "@ant-design/icons";
-import { ICON_LIST } from "@/constants/icons.constant";
+import IconSelector from "@/components/base/IconSelector";
 type MetaDataItemType = { key?: string; value?: string; icon?: string };
 export interface MetaDataFieldsProps {
   index?: number;
@@ -14,13 +14,7 @@ const MetaDataFields: React.FC<MetaDataFieldsProps> = ({ values, onChange, index
     <Row gutter={16}>
       <Col span={6}>
         <FormItem>
-          <Select
-            fieldNames={{ label: "name", value: "key" }}
-            optionLabelProp="name"
-            options={[{ name: "--None--", key: "", icon: "" }, ...ICON_LIST]}
-            value={values?.icon}
-            onChange={(value) => onChange?.({ icon: value }, index)}
-          />
+          <IconSelector value={values?.icon} onChange={(value) => onChange?.({ icon: value }, index)} />
         </FormItem>
       </Col>
       <Col span={6}>

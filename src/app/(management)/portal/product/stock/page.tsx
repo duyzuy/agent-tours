@@ -1,22 +1,22 @@
 "use client";
-import PageContainer from "@/components/admin/PageContainer";
+import { useMemo, useState } from "react";
+import { isUndefined } from "lodash";
 import { Tabs, TabsProps, Form, Row, Col, Select } from "antd";
+import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
+import { RangePickerProps } from "antd/es/date-picker";
+import dayjs from "dayjs";
+
 import FormItem from "@/components/base/FormItem";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
-import { useMemo, useState } from "react";
 import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory";
 import useCRUDStockInventory from "./modules/useCRUDStockInventory";
 import StockFormContainer from "./_components/StockFormContainer";
 import StockListContainer, { StockListContainerProps } from "./_components/StockListContainer";
-import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
-import { isUndefined } from "lodash";
 import { StockQueryParams } from "@/models/management/core/stock.interface";
-import { DATE_TIME_FORMAT } from "@/constants/common";
-import dayjs from "dayjs";
 import { Status } from "@/models/common.interface";
-import { RangePickerProps } from "antd/es/date-picker";
 import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
+import PageContainer from "@/components/admin/PageContainer";
 
 type StockTabKeys = "stockList" | "createStock";
 const StockPage = () => {
@@ -48,8 +48,8 @@ const StockPage = () => {
       ...prev,
       requestObject: {
         ...prev.requestObject,
-        valid: dates && dates[0] ? dates[0].locale("en").format(DATE_TIME_FORMAT) : undefined,
-        validTo: dates && dates[1] ? dates[1].locale("en").format(DATE_TIME_FORMAT) : undefined,
+        valid: dates ? dates[0]?.toISOString() : undefined,
+        validTo: dates ? dates[1]?.toISOString() : undefined,
       },
     }));
   };
@@ -58,8 +58,8 @@ const StockPage = () => {
       ...prev,
       requestObject: {
         ...prev.requestObject,
-        start: dates && dates[0] ? dates[0].locale("en").format(DATE_TIME_FORMAT) : undefined,
-        end: dates && dates[1] ? dates[1].locale("en").format(DATE_TIME_FORMAT) : undefined,
+        start: dates && dates[0] ? dates[0]?.toISOString() : undefined,
+        end: dates && dates[1] ? dates[1]?.toISOString() : undefined,
       },
     }));
   };
@@ -142,16 +142,8 @@ const StockPage = () => {
                   placeholder={["Mở bán từ", "Mở bán đến"]}
                   format={"DD/MM/YYYY"}
                   value={[
-                    stockQueryParams?.requestObject?.valid
-                      ? dayjs(stockQueryParams.requestObject.valid, {
-                          format: DATE_TIME_FORMAT,
-                        })
-                      : null,
-                    stockQueryParams?.requestObject?.validTo
-                      ? dayjs(stockQueryParams.requestObject.validTo, {
-                          format: DATE_TIME_FORMAT,
-                        })
-                      : null,
+                    stockQueryParams?.requestObject?.valid ? dayjs(stockQueryParams.requestObject.valid) : null,
+                    stockQueryParams?.requestObject?.validTo ? dayjs(stockQueryParams.requestObject.validTo) : null,
                   ]}
                   onChange={onChangeValidDate}
                   className="w-full"
@@ -164,16 +156,8 @@ const StockPage = () => {
                   placeholder={["Sử dụng từ", "Sử dụng đến"]}
                   format={"DD/MM/YYYY"}
                   value={[
-                    stockQueryParams?.requestObject?.start
-                      ? dayjs(stockQueryParams.requestObject.start, {
-                          format: DATE_TIME_FORMAT,
-                        })
-                      : null,
-                    stockQueryParams?.requestObject?.end
-                      ? dayjs(stockQueryParams.requestObject.end, {
-                          format: DATE_TIME_FORMAT,
-                        })
-                      : null,
+                    stockQueryParams?.requestObject?.start ? dayjs(stockQueryParams.requestObject.start) : null,
+                    stockQueryParams?.requestObject?.end ? dayjs(stockQueryParams.requestObject.end) : null,
                   ]}
                   onChange={onChangeUsedDate}
                   className="w-full"
