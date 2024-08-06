@@ -16,14 +16,14 @@ export class TagFormData implements TagPayload {
   constructor(
     id: number | undefined,
     originId: number | undefined,
-    name: string,
-    slug: string,
-    descriptions: string,
-    metaTitle: string,
-    metaDescription: string,
-    metaKeyword: string,
-    lang: LangCode,
-    status: PageContentStatus,
+    name: string | undefined,
+    slug: string | undefined,
+    descriptions: string | undefined,
+    metaTitle: string | undefined,
+    metaDescription: string | undefined,
+    metaKeyword: string | undefined,
+    lang: LangCode | undefined,
+    status: PageContentStatus | undefined,
   ) {
     this.id = id;
     this.originId = originId;

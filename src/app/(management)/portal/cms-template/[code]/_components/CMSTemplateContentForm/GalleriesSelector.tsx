@@ -6,6 +6,7 @@ import { mediaConfig } from "@/configs";
 import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
 import { isUndefined } from "lodash";
 import { IThumbnail } from "@/models/thumbnail.interface";
+import { MediaTypes } from "@/models/management/media.interface";
 
 type ImageItem = { id: number; original: string };
 
@@ -93,7 +94,13 @@ const GallerySelector: React.FC<GallerySelectorProps> = ({ images, onSave, error
         </div>
         {error ? <p className=" text-red-500 text-xs">{error}</p> : null}
       </div>
-      <MediaUploadDrawler isOpen={openMedia} onClose={onCloseMediaUpload} mode="multiple" onConfirm={onConfirmSelect} />
+      <MediaUploadDrawler
+        isOpen={openMedia}
+        onClose={onCloseMediaUpload}
+        mediaTypes={[MediaTypes.IMAGE]}
+        mode="multiple"
+        onConfirm={onConfirmSelect}
+      />
     </>
   );
 };

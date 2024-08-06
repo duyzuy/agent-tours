@@ -8,6 +8,7 @@ import { queryCMS } from "@/queries/var";
 import { VisaTemplateContentMetaDataForm } from "./visaTemplate.interface";
 
 import { useRouter } from "next/navigation";
+import { VisaTemplateContentMetaBlockPayload } from "@/models/management/cms/visaTemplateContent.interface";
 
 const useCRUDVisaTemplateContentBlock = () => {
   const { mutate: makeCreateBlockContent } = useCreateVisaTemplateContentBlockMutation();

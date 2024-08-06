@@ -22,6 +22,8 @@ const DrawerPaymentForm: React.FC<DrawerPaymentFormProps> = ({ isOpen, onClose, 
       title={
         (formOfPaymentType === FOP_TYPE.PAYMENT && "Thanh toán") ||
         (formOfPaymentType === FOP_TYPE.REFUND && "Hoàn tiền") ||
+        (formOfPaymentType === FOP_TYPE.DISCOUNT && "Giảm giá") ||
+        (formOfPaymentType === FOP_TYPE.CHARGE && "Thêm phí") ||
         "--"
       }
       width={750}

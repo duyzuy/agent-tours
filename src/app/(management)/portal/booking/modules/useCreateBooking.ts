@@ -49,6 +49,7 @@ const useCreateBooking = () => {
       rmk: customerInfo.rmk,
       referenceId: customerInfo.referenceId,
       agentUserId: agentUserId,
+      channel: bookingInformation.channel,
     };
     // console.table({ bookingInformation, bookingPayload });
     makeCreateBooking(bookingPayload, {

@@ -50,7 +50,6 @@ const DrawerPaymentList: React.FC<DrawerPaymentListProps> = ({
         return;
       }
     }
-
     onApproval(recId);
   };
 
@@ -59,6 +58,8 @@ const DrawerPaymentList: React.FC<DrawerPaymentListProps> = ({
       title={
         (formOfPaymentType === FOP_TYPE.PAYMENT && "Lịch sử thanh toán") ||
         (formOfPaymentType === FOP_TYPE.REFUND && "Lịch sử hoàn tiền") ||
+        (formOfPaymentType === FOP_TYPE.CHARGE && "Danh sách phí") ||
+        (formOfPaymentType === FOP_TYPE.DISCOUNT && "Danh sách giảm giá") ||
         "--"
       }
       width={750}

@@ -108,12 +108,15 @@ const DATA = [
     ],
   },
 ];
-const VisaSection = () => {
+interface VisaSectionProps {
+  label?: string;
+}
+const VisaSection = ({ label }: VisaSectionProps) => {
   return (
     <section className="visa container mx-auto px-4 md:px-6 lg:px-8">
       <div className="bg-white rounded-lg shadow-md">
         <div className="head-section pt-6 px-4 mb-6">
-          <h3 className="text-lg md:text-xl lg:text-2xl font-[500]">Danh mục Visa / Passport</h3>
+          <h3 className="text-lg md:text-xl lg:text-2xl font-[500]">{label}</h3>
         </div>
         <div className="visa-list flex flex-wrap pb-6 px-4">
           {DATA.map((visa, _index) => (

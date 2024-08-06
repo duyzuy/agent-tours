@@ -159,28 +159,31 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
           <div className="inner flex flex-wrap items-center -mx-4 lg:-mx-6">
             <div className="w-full lg:w-1/2 px-4 md:px-6 lg:px-6 mb-6 lg:mb-0">
               <div className="cotnent text-xs">
-                <h6 className="text-base lg:text-xl font-semibold text-main-400 mb-4">
-                  CÔNG TY CỔ PHẦN AN THÁI TRAVEL
+                <h6 className="text-base lg:text-lg font-semibold text-main-400 mb-4">
+                  CÔNG TY DU LỊCH AN THÁI - MAKE OUR WORLD JOYFUL !
                 </h6>
                 <div className="flex mb-2">
                   <span className="w-12 mr-2">Địa chỉ:</span>
                   <span className="flex-1">
-                    302/3 Phố Kim Mã, Phường Ngọc Khánh, Quận Ba Đình, TP. Hà Nội, Việt Nam.
+                    📍 384-1C Nam Kỳ Khởi Nghĩa, Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí Minh (Tòa nhà TOJI, đối diện chùa
+                    Vĩnh Nghiêm)
                   </span>
                 </div>
                 <div className="flex mb-2">
                   <span className="w-12 mr-2">Hotline:</span>
                   <ul className="flex flex-1 gap-1 items-center flex-wrap">
-                    <li>PKD: +084 988 308 520</li>
+                    <li>📞 0944 810 811</li>
                     <li className="w-[1px] h-[6px] bg-slate-300 mx-2"></li>
-                    <li>Sale: +084 988 308 520</li>
-                    <li className="w-[1px] h-[6px] bg-slate-300 mx-2"></li>
-                    <li>CSKH: +084 988 308 520</li>
+                    <li>☎️ (028) 3526 5226</li>
                   </ul>
                 </div>
                 <div className="flex mb-2">
                   <span className="w-12 mr-2">Email:</span>
-                  <span className="flex-1">support@domain.com.vn</span>
+                  <ul className="flex flex-1 gap-1 items-center flex-wrap">
+                    <li>📩 info@anthaitravel.com.vn</li>
+                    <li className="w-[1px] h-[6px] bg-slate-300 mx-2"></li>
+                    <li>🌐 www.anthaitravel.com.vn</li>
+                  </ul>
                 </div>
               </div>
             </div>

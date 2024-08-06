@@ -61,11 +61,23 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
           <Button type="primary" size="small" onClick={() => onShowDrawerForm(FOP_TYPE.REFUND)}>
             Hoàn tiền
           </Button>
+          <Button type="primary" size="small" onClick={() => onShowDrawerForm(FOP_TYPE.DISCOUNT)}>
+            Giảm giá
+          </Button>
+          <Button type="primary" size="small" onClick={() => onShowDrawerForm(FOP_TYPE.CHARGE)}>
+            Thêm phí
+          </Button>
           <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.PAYMENT)}>
             Lịch sử thanh toán
           </Button>
           <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.REFUND)}>
             Lịch sử hoàn tiền
+          </Button>
+          <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.DISCOUNT)}>
+            Lịch sử giảm giá
+          </Button>
+          <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.CHARGE)}>
+            Lịch sử phí
           </Button>
         </Space>
       </div>

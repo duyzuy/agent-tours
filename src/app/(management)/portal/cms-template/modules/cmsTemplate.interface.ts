@@ -23,6 +23,12 @@ export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
   publishDate?: string;
   status?: PageContentStatus;
   slug?: string;
+  promotionReferencePrice?: number;
+  promotionLabel?: string;
+  promotionLabelType?: "text" | "image";
+  promotionValidFrom?: string;
+  promotionValidTo?: string;
+  promotionImage?: string;
   lang?: LangCode;
 
   constructor(
@@ -36,14 +42,20 @@ export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
     content: string | undefined,
     subContent: string | undefined,
     metaData: {
-      key: string | undefined;
-      value: string | undefined;
-      icon: string | undefined;
+      key?: string;
+      value?: string;
+      icon?: string;
     }[],
     metaTitle: string | undefined,
     metaDescription: string | undefined,
     metaKeyword: string | undefined,
     publishDate: string | undefined,
+    promotionReferencePrice: number | undefined,
+    promotionLabel: string | undefined,
+    promotionImage: string | undefined,
+    promotionLabelType: "text" | "image",
+    promotionValidFrom: string | undefined,
+    promotionValidTo: string | undefined,
     status: PageContentStatus | undefined,
     lang: LangCode | undefined,
   ) {
@@ -63,6 +75,12 @@ export class CMSTemplateContentFormData implements CMSTemplateContentPayload {
     this.status = status;
     this.slug = slug;
     this.lang = lang;
+    this.promotionLabel = promotionLabel;
+    this.promotionReferencePrice = promotionReferencePrice;
+    this.promotionLabelType = promotionLabelType;
+    this.promotionValidFrom = promotionValidFrom;
+    this.promotionValidTo = promotionValidTo;
+    this.promotionImage = promotionImage;
   }
 }
 

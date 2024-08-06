@@ -2,20 +2,17 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Form, Input, SwitchProps, Typography } from "antd";
 import dayjs from "dayjs";
 import { stringToSlug } from "@/utils/stringToSlug";
-import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
+import { DATE_TIME_FORMAT } from "@/constants/common";
 import { mediaConfig } from "@/configs";
 import { PostContentFormData } from "../../module/postModule.interface";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
-
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
-import ThumbnailImage from "@/components/admin/ThumbnailImage";
+import ThumbnailImage, { ThumbnailImageProps } from "@/components/admin/ThumbnailImage";
 import Publishing, { PublishingProps } from "@/components/admin/Publishing";
 import TextEditor, { TextEditorProps } from "@/components/base/TextEditor";
 import FormItem from "@/components/base/FormItem";
 import Slug, { SlugProps } from "@/components/admin/Slug";
 import { isEqualObject } from "@/utils/compare";
-import { MediaTypes } from "@/models/management/media.interface";
 import { postContentSchema } from "../../schema/post.schema";
 import { IPostContent } from "@/models/management/post.interface";
 import CategorySelector, { CategorySelectorProps } from "./CategorySelector";
@@ -23,6 +20,8 @@ import TagsSelector, { TagsSelectorProps } from "./TagsSelector";
 import { isArray } from "lodash";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import MetaSeoBox, { MetaSeoBoxProps } from "@/components/admin/MetaSeoBox";
+import { stringToDate } from "@/utils/date";
 
 export const initFormData = new PostContentFormData(
   undefined,
@@ -41,7 +40,7 @@ export const initFormData = new PostContentFormData(
   "",
   "",
   "",
-  dayjs().format(DATE_TIME_FORMAT),
+  dayjs().locale("en").format(DATE_TIME_FORMAT),
   PageContentStatus.PUBLISH,
 );
 
@@ -85,25 +84,16 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
     "",
     "",
     "",
-    dayjs().format(DATE_TIME_FORMAT),
+    dayjs().locale("en").format(DATE_TIME_FORMAT),
     PageContentStatus.PUBLISH,
   );
 
   const { handleSubmit, control, setValue, getValues, watch } = useForm<PostContentFormData>({
     resolver: yupResolver(postContentSchema),
-    defaultValues: { ...initFormData, publishDate: dayjs().format(DATE_TIME_FORMAT) },
+    defaultValues: { ...initFormData },
   });
 
-  const [showDrawerMedia, setShowDrawerMedia] = useState<{
-    isShow: boolean;
-    type?: "heroBanner" | "thumbnail";
-  }>(() => ({ isShow: false, type: undefined }));
-
-  const handleChangeName = (name: string) => {
-    setValue("slug", stringToSlug(name));
-    setValue("name", name);
-  };
-  const handleChangeSlug: SlugProps["onSave"] = (slug) => {
+  const handleSaveSlug: SlugProps["onSave"] = (slug) => {
     setValue("slug", slug);
   };
   const handleChangeContent: TextEditorProps["onEditorChange"] = (data, editor) => {
@@ -122,78 +112,72 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
     setValue("tags", tags);
   };
 
-  const onConfirmSelectMediaImage = useCallback<Required<MediaUploadProps>["onConfirm"]>(
-    (files) => {
-      const type = showDrawerMedia.type;
-      type && setValue(type, { id: files[0].id, original: files[0].fullPath, small: files[0].thumb });
-    },
-    [showDrawerMedia],
-  );
+  const handleAddThumb: ThumbnailImageProps["onAdd"] = (thumbnail) => {
+    setValue("thumbnail", { id: thumbnail.id, original: thumbnail.fullPath, small: thumbnail.thumb });
+  };
+
+  const handleAddHerobanner: ThumbnailImageProps["onAdd"] = (thumbnail) => {
+    setValue("heroBanner", { id: thumbnail.id, original: thumbnail.fullPath, small: thumbnail.thumb });
+  };
+
   const onRemoveThumbnail = useCallback(() => {
     setValue("thumbnail", undefined);
   }, []);
   const onRemoveHeroBanners = useCallback(() => {
     setValue("heroBanner", undefined);
   }, []);
-  const onOpenMediaToSelectThumbail = useCallback(
-    () =>
-      setShowDrawerMedia({
-        isShow: true,
-        type: "thumbnail",
-      }),
-    [],
-  );
-  const onOpenMediaToSelectHeroBanner = useCallback(
-    () =>
-      setShowDrawerMedia({
-        isShow: true,
-        type: "heroBanner",
-      }),
-    [],
-  );
-  const onCloseMediaUpload = useCallback(() => setShowDrawerMedia({ isShow: false, type: undefined }), []);
 
   const onChangePublishDate = useCallback<Required<PublishingProps>["onChangeDate"]>((date) => {
     if (date) {
-      const oldPublishDate = getValues("publishDate");
-      const [_, time] = oldPublishDate?.split(" ") || [];
-      const newPublishDate = [date.format(DATE_FORMAT), time].join(" ");
-      setValue("publishDate", newPublishDate);
+      setValue("publishDate", date.toISOString());
     }
   }, []);
   const onChangePublishTime = useCallback<Required<PublishingProps>["onChangeTime"]>((time) => {
     if (time) {
-      const oldPublishDate = getValues("publishDate");
-      const [oldDate, _] = oldPublishDate?.split(" ") || [];
-      const newPublishDate = [oldDate, time.format(TIME_FORMAT)].join(" ");
-      setValue("publishDate", newPublishDate);
+      setValue("publishDate", time.toISOString());
     }
   }, []);
 
-  const handleChangeStatus = useCallback<Required<SwitchProps>["onChange"]>((checked) => {
-    const postId = getValues("id");
-    postId &&
-      onChangeStatus?.({
-        id: postId,
-        status: checked ? PageContentStatus.PUBLISH : PageContentStatus.UNPUBLISH,
-      });
-  }, []);
+  const handleChangeStatus = useCallback<Required<SwitchProps>["onChange"]>(
+    (checked) => {
+      initData &&
+        initData.id &&
+        onChangeStatus?.({
+          id: initData.id,
+          status: checked ? PageContentStatus.PUBLISH : PageContentStatus.UNPUBLISH,
+        });
+    },
+    [initData],
+  );
   const handleDelete = useCallback(() => {
-    const postId = getValues("id");
-    postId && onDelete?.(postId);
-  }, []);
-  const watchPublishDate = watch("publishDate");
-  const publishDateTime = useMemo(() => {
-    const publishDate = getValues("publishDate");
-    console.log(publishDate);
-    return {
-      publishTime: dayjs(publishDate, { format: TIME_FORMAT }),
-      publishDate: dayjs(publishDate, DATE_FORMAT),
-    };
-  }, [watchPublishDate]);
+    initData && initData.id && onDelete?.(initData.id);
+  }, [initData]);
+  const onChangeMetaSeoBox: MetaSeoBoxProps["onChange"] = ({ key, value, data }) => {
+    if (key === "metaTitle") {
+      setValue("metaTitle", value);
+    }
+    if (key === "metaDescription") {
+      setValue("metaDescription", value);
+    }
+    if (key === "metaKeyword") {
+      setValue("metaKeyword", value);
+    }
+  };
 
-  console.log(dayjs(getValues("publishDate"), DATE_FORMAT).format("MM/DD/YYYY"));
   const isDisablePublishButton = useMemo(() => {
+    const initValues = initData
+      ? {
+          ...initData,
+          heroBanner: initData.heroBanner ?? undefined,
+          thumbnail: initData.thumbnail ?? undefined,
+          category: { id: initData.category.id, name: initData.category.name, slug: initData.category.slug },
+          tags: initData.tags.map((tag) => {
+            return { id: tag.id, name: tag.name, slug: tag.slug };
+          }),
+          publishDate: stringToDate(initData.publishDate).toISOString(),
+        }
+      : initFormData;
+
     return isEqualObject(
       [
         "id",
@@ -209,47 +193,51 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
         "metaKeyword",
         "publishDate",
         "images",
-        "postMeta",
+        "postFormat",
         "excerpt",
       ],
       getValues(),
-      initData || initFormData,
+      initValues,
     );
   }, [initData, watch()]);
 
   useEffect(() => {
-    let updateInitFormData = { ...initFormData, lang: lang, originId: originId };
-
-    if (initData) {
-      updateInitFormData = {
-        ...updateInitFormData,
-        id: initData.id,
-        originId: initData.originId,
-        lang: initData.lang,
-        slug: initData.slug,
-        name: initData.name,
-        content: initData.content,
-        excerpt: initData.excerpt,
-        heroBanner: initData.heroBanner ?? undefined,
-        thumbnail: initData.thumbnail ?? undefined,
-        images: initData.images,
-        postMeta: initData.postMeta,
-        category: initData.category,
-        tags: initData.tags,
-        metaTitle: initData.metaTitle,
-        metaDescription: initData.metaDescription,
-        metaKeyword: initData.metaKeyword,
-        publishDate: initData.publishDate,
-        status: initData.status,
-      };
+    if (action === "create") {
+      const postName = getValues("name");
+      setValue("slug", stringToSlug(postName ?? ""));
     }
+  }, [watch("name")]);
+  useEffect(() => {
+    const initValues = initData
+      ? new PostContentFormData(
+          initData.id,
+          initData.originId,
+          initData.lang,
+          initData.slug,
+          initData.name,
+          initData.content,
+          initData.excerpt,
+          initData.heroBanner ?? undefined,
+          initData.thumbnail ?? undefined,
+          initData.images,
+          initData.postFormat,
+          { id: initData.category.id, name: initData.category.name, slug: initData.category.slug },
+          initData.tags.map((tag) => {
+            return { id: tag.id, name: tag.name, slug: tag.slug };
+          }),
+          initData.metaTitle,
+          initData.metaDescription,
+          initData.metaKeyword,
+          stringToDate(initData.publishDate).toISOString(),
+          initData.status,
+        )
+      : { ...initFormData, lang, originId };
 
-    Object.keys(updateInitFormData).forEach((key) => {
-      setValue(key as keyof typeof updateInitFormData, updateInitFormData[key as keyof typeof updateInitFormData]);
+    Object.keys(initValues).forEach((key) => {
+      setValue(key as keyof PostContentFormData, initValues[key as keyof PostContentFormData]);
     });
   }, [lang, initData]);
 
-  console.log(getValues());
   useEffect(() => {
     onWatchFormChange?.(getValues());
   }, [watch()]);
@@ -264,14 +252,14 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
             <Controller
               name="name"
               control={control}
-              render={({ field: { value }, formState: { errors } }) => (
+              render={({ field, formState: { errors } }) => (
                 <FormItem
                   label="Tiêu đề"
                   required
                   validateStatus={errors.name ? "error" : ""}
                   help={errors?.name?.message}
                 >
-                  <Input value={value} onChange={(ev) => handleChangeName(ev.target.value)} placeholder="Tiêu đề" />
+                  <Input {...field} placeholder="Tiêu đề" />
                 </FormItem>
               )}
             ></Controller>
@@ -283,7 +271,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
                   slugName={value}
                   lang={lang}
                   type="post"
-                  onSave={handleChangeSlug}
+                  onSave={handleSaveSlug}
                   validateStatus={errors?.slug ? "error" : ""}
                   help={errors?.slug?.message}
                   className="mb-6"
@@ -318,49 +306,14 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
             ></Controller>
 
             <Typography.Title level={4}>SEO Meta</Typography.Title>
-            <div className="box border rounded-[4px] px-4 py-6">
-              <Controller
-                name="metaTitle"
-                control={control}
-                render={({ field, formState: { errors } }) => (
-                  <FormItem
-                    label="Meta title"
-                    help={errors?.metaTitle?.message}
-                    validateStatus={errors?.metaTitle ? "error" : ""}
-                  >
-                    <Input placeholder="Meta title" {...field} />
-                  </FormItem>
-                )}
-              ></Controller>
-
-              <Controller
-                name="metaDescription"
-                control={control}
-                render={({ field, formState: { errors } }) => (
-                  <FormItem
-                    label="Meta description"
-                    help={errors?.metaDescription?.message}
-                    validateStatus={errors?.metaDescription ? "error" : ""}
-                  >
-                    <Input.TextArea rows={2} {...field}></Input.TextArea>
-                  </FormItem>
-                )}
-              ></Controller>
-
-              <Controller
-                name="metaKeyword"
-                control={control}
-                render={({ field, formState: { errors } }) => (
-                  <FormItem
-                    label="Meta keywords"
-                    help={errors?.metaKeyword?.message}
-                    validateStatus={errors?.metaKeyword ? "error" : ""}
-                  >
-                    <Input placeholder="Keywords" {...field} />
-                  </FormItem>
-                )}
-              ></Controller>
-            </div>
+            <MetaSeoBox
+              values={{
+                metaDescription: getValues("metaDescription"),
+                metaKeyword: getValues("metaKeyword"),
+                metaTitle: getValues("metaTitle"),
+              }}
+              onChange={onChangeMetaSeoBox}
+            />
           </div>
           <div className="post-right w-[320px] xl:w-[380px]">
             <div className="inner-right">
@@ -368,8 +321,8 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
                 // onChangeTemplate={onChangeTemplate}
                 onChangeTime={onChangePublishTime}
                 onChangeDate={onChangePublishDate}
-                timeValue={publishDateTime.publishTime}
-                dateValue={publishDateTime.publishDate}
+                timeValue={dayjs(getValues("publishDate"))}
+                dateValue={dayjs(getValues("publishDate"))}
                 onSaveAndPublish={
                   onSubmit && handleSubmit((data) => onSubmit({ ...data, status: PageContentStatus.PUBLISH }))
                 }
@@ -395,7 +348,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
                     label="Hero banners"
                     thumbnailUrl={value ? `${mediaConfig.rootPath}/${value.original}` : undefined}
                     onRemove={onRemoveHeroBanners}
-                    onAdd={onOpenMediaToSelectHeroBanner}
+                    onAdd={handleAddHerobanner}
                     error={errors?.heroBanner?.id?.message}
                   />
                 )}
@@ -408,7 +361,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
                   <ThumbnailImage
                     thumbnailUrl={value ? `${mediaConfig.rootPath}/${value.original}` : undefined}
                     onRemove={onRemoveThumbnail}
-                    onAdd={onOpenMediaToSelectThumbail}
+                    onAdd={handleAddThumb}
                     error={errors?.thumbnail?.id?.message}
                   />
                 )}
@@ -444,12 +397,6 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
           </div>
         </div>
       </Form>
-      <MediaUploadDrawler
-        isOpen={showDrawerMedia.isShow}
-        onClose={onCloseMediaUpload}
-        onConfirm={onConfirmSelectMediaImage}
-        mediaTypes={[MediaTypes.ICON, MediaTypes.IMAGE]}
-      />
     </>
   );
 };

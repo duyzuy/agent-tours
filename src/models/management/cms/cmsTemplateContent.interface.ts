@@ -25,6 +25,12 @@ export interface ICMSTemplateContent {
   downloads: { title: string; link: string }[];
   images: IThumbnail[] | null;
   content: string;
+  promotionReferencePrice: number;
+  promotionLabel: string;
+  promotionLabelType: "text" | "image" | "";
+  promotionValidFrom: string;
+  promotionValidTo: string;
+  promotionImage: string;
   subContent: string;
   metaData: { key?: string; value?: string; icon?: string }[];
   metaTitle: string;
@@ -63,6 +69,12 @@ export interface CMSTemplateContentPayload {
     value?: string;
     icon?: string;
   }[];
+  promotionReferencePrice?: number;
+  promotionLabel?: string;
+  promotionImage?: string;
+  promotionLabelType?: "text" | "image";
+  promotionValidFrom?: string;
+  promotionValidTo?: string;
   metaTitle?: string;
   metaDescription?: string;
   metaKeyword?: string;

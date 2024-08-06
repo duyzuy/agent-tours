@@ -12,82 +12,79 @@ import { FormOfPaymmentQueryParams } from "@/models/management/core/formOfPaymen
 import { isUndefined } from "lodash";
 
 export interface DrawerFormOfPaymentProps {
-    orderId?: number;
-    totalAmount?: number;
-    totalPaid?: number;
-    isOpen?: boolean;
-    onClose?: () => void;
-    formOfPaymentType: FOPFormData["type"];
+  orderId?: number;
+  totalAmount?: number;
+  totalPaid?: number;
+  isOpen?: boolean;
+  onClose?: () => void;
+  formOfPaymentType: FOPFormData["type"];
 }
 
 const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
-    isOpen,
-    totalAmount,
-    totalPaid,
-    onClose,
-    orderId,
-    formOfPaymentType,
+  isOpen,
+  totalAmount,
+  totalPaid,
+  onClose,
+  orderId,
+  formOfPaymentType,
 }) => {
-    const queryParams = new FormOfPaymmentQueryParams(
-        { orderId: orderId, type: formOfPaymentType },
-        undefined,
-        undefined,
-    );
-    const { data: fopList, isLoading } =
-        useGetFormOfPaymentListByOrderIdCoreQuery({
-            queryParams: queryParams,
-            enabled: !isUndefined(orderId) && !isUndefined(formOfPaymentType),
-        });
+  const queryParams = new FormOfPaymmentQueryParams(
+    { orderId: orderId, type: formOfPaymentType },
+    undefined,
+    undefined,
+  );
+  const { data: fopList, isLoading } = useGetFormOfPaymentListByOrderIdCoreQuery({
+    queryParams: queryParams,
+    enabled: !isUndefined(orderId) && !isUndefined(formOfPaymentType),
+  });
 
-    const { onCreateFormOfPayment, onApproval, onDelete } = useFormOfPayment();
+  const { onCreateFormOfPayment, onApproval, onDelete } = useFormOfPayment();
 
-    const items: TabsProps["items"] = [
-        {
-            key: "fopList",
-            label: "Danh sách",
-            children: (
-                <FOPList
-                    items={fopList || []}
-                    onApproval={onApproval}
-                    onDelete={onDelete}
-                    totalPaid={totalPaid}
-                    totalAmount={totalAmount}
-                />
-            ),
+  const items: TabsProps["items"] = [
+    {
+      key: "fopList",
+      label: "Danh sách",
+      children: (
+        <FOPList
+          items={fopList || []}
+          onApproval={onApproval}
+          onDelete={onDelete}
+          totalPaid={totalPaid}
+          totalAmount={totalAmount}
+        />
+      ),
+    },
+    {
+      key: "fopCreate",
+      label: "Thêm mới",
+      children: (
+        <FOPForm orderId={orderId} formOfPaymentType={formOfPaymentType} onSubmitForm={onCreateFormOfPayment} />
+      ),
+      icon: <PlusOutlined />,
+    },
+  ];
+
+  return (
+    <Drawer
+      title={
+        (formOfPaymentType === FOP_TYPE.PAYMENT && "Thanh toán") ||
+        (formOfPaymentType === FOP_TYPE.REFUND && "Hoàn tiền") ||
+        (formOfPaymentType === FOP_TYPE.DISCOUNT && "Giảm giá") ||
+        (formOfPaymentType === FOP_TYPE.REFUND && "Thêm phí") ||
+        "--"
+      }
+      width={750}
+      onClose={onClose}
+      destroyOnClose={true}
+      open={isOpen}
+      styles={{
+        body: {
+          paddingBottom: 80,
         },
-        {
-            key: "fopCreate",
-            label: "Thêm mới",
-            children: (
-                <FOPForm
-                    orderId={orderId}
-                    formOfPaymentType={formOfPaymentType}
-                    onSubmitForm={onCreateFormOfPayment}
-                />
-            ),
-            icon: <PlusOutlined />,
-        },
-    ];
-
-    return (
-        <Drawer
-            title={
-                (formOfPaymentType === FOP_TYPE.PAYMENT && "Thanh toán") ||
-                (formOfPaymentType === FOP_TYPE.REFUND && "Hoàn tiền") ||
-                "--"
-            }
-            width={750}
-            onClose={onClose}
-            destroyOnClose={true}
-            open={isOpen}
-            styles={{
-                body: {
-                    paddingBottom: 80,
-                },
-            }}
-        >
-            <Tabs defaultActiveKey="fopList" items={items} />
-        </Drawer>
-    );
+      }}
+    >
+      <Tabs defaultActiveKey="fopList" items={items} />
+    </Drawer>
+  );
 };
 export default DrawerFormOfPayment;

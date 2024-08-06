@@ -19,7 +19,7 @@ export class PostContentFormData implements PostContentPayload {
   heroBanner?: Partial<IThumbnail>;
   thumbnail?: Partial<IThumbnail>;
   images?: Partial<IThumbnail>[];
-  postMeta?: string;
+  postFormat?: string;
   metaTitle?: string;
   metaDescription?: string;
   metaKeyword?: string;
@@ -36,7 +36,7 @@ export class PostContentFormData implements PostContentPayload {
     heroBanner: Partial<IThumbnail> | undefined,
     thumbnail: Partial<IThumbnail> | undefined,
     images: Partial<IThumbnail>[] | undefined,
-    postMeta: string | undefined,
+    postFormat: string | undefined,
     category: Partial<Pick<ICategory, "id" | "name" | "slug">> | undefined,
     tags: Partial<Pick<ITag, "id" | "name" | "slug">>[] | undefined,
     metaTitle: string | undefined,
@@ -58,7 +58,7 @@ export class PostContentFormData implements PostContentPayload {
     this.heroBanner = heroBanner;
     this.thumbnail = thumbnail;
     this.images = images;
-    this.postMeta = postMeta;
+    this.postFormat = postFormat;
     this.metaTitle = metaTitle;
     this.metaDescription = metaDescription;
     this.metaKeyword = metaKeyword;

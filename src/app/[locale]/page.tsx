@@ -80,7 +80,7 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
       >
         {/* <FlashSale /> */}
 
-        <PromotionSlider items={[]} title="Ưu đãi dành cho bạn" />
+        <PromotionSlider items={[]} title="Tour khuyến mại" />
         <div className="lg:h-12 h-4"></div>
         <Suspense
           fallback={
@@ -89,7 +89,7 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
             </div>
           }
         >
-          <TourListContainer lang={locale} querySearch={travelTour} title="Tour du lịch" />
+          <TourListContainer lang={locale} querySearch={travelTour} title="Chương trình du lịch hấp dẫn" />
         </Suspense>
         {/*         
         <div className="lg:h-12 h-4"></div>
@@ -114,9 +114,9 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
         </Suspense> */}
 
         <div className="lg:h-12 h-4"></div>
-        <VisaSection />
+        <VisaSection label="Dịch vụ thị thực nhập cảnh (Visa)" />
         <div className="lg:h-12 h-4"></div>
-        <DestinationsList />
+        <DestinationsList label="Vòng quanh thế giới" />
         {/* <div className="lg:h-12 h-4"></div>
         <PostsSection /> */}
         <div className="lg:h-12 h-4"></div>

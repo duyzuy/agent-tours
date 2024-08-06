@@ -1,17 +1,15 @@
-import { useEffect, useState } from "react";
-import { Input, Button, Row, Col } from "antd";
+import { Input, Button, Select, Row, Col } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { DeleteOutlined } from "@ant-design/icons";
 import IconSelector from "@/components/base/IconSelector";
 type MetaDataItemType = { key?: string; value?: string; icon?: string };
 export interface MetaDataFieldsProps {
-  index?: number;
-  values?: MetaDataItemType;
+  index: number;
+  values: MetaDataItemType;
   onChange?: (data: { [key: string]: string }, index?: number) => void;
-  onRemove?: (index?: number) => void;
+  onRemove?: (index: number) => void;
 }
-
-const MetaDataFields: React.FC<MetaDataFieldsProps> = ({ values, onChange, index, onRemove }) => {
+const MetaDataFields: React.FC<MetaDataFieldsProps> = ({ values, onChange, index = 0, onRemove }) => {
   return (
     <Row gutter={16}>
       <Col span={6}>
@@ -29,7 +27,7 @@ const MetaDataFields: React.FC<MetaDataFieldsProps> = ({ values, onChange, index
           />
         </FormItem>
       </Col>
-      <Col span={8}>
+      <Col span={10}>
         <FormItem>
           <Input
             placeholder="Nội dung"
@@ -40,7 +38,7 @@ const MetaDataFields: React.FC<MetaDataFieldsProps> = ({ values, onChange, index
         </FormItem>
       </Col>
       <FormItem>
-        <Button shape="circle" type="text" danger icon={<DeleteOutlined />} onClick={() => onRemove?.(index)}></Button>
+        <Button type="text" shape="circle" danger icon={<DeleteOutlined />} onClick={() => onRemove?.(index)}></Button>
       </FormItem>
     </Row>
   );

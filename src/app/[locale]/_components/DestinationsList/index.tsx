@@ -5,7 +5,10 @@ import { getLocale } from "next-intl/server";
 import Title from "@/components/frontend/Title";
 import DestinationsSlider from "./DestinationSlider";
 
-export default async function DestinationsList() {
+export interface DestinationsListProps {
+  label?: string;
+}
+export default async function DestinationsList({ label }: DestinationsListProps) {
   const locale = await getLocale();
   const initQueryParams = new FeDestinationContentQueryParams(undefined, 1, 10, {
     sortColumn: "id",
@@ -39,7 +42,7 @@ export default async function DestinationsList() {
     <div className="page-destination mb-12">
       <div className="container mx-auto lg:px-8 md:px-6 px-4">
         <div className="section__head pt-3 pb-3 lg:pb-6">
-          <Title as="h3">Điểm đến hấp dẫn</Title>
+          <Title as="h3">{label}</Title>
         </div>
         <div className="section__body">
           <DestinationsSlider items={itemList || []} />

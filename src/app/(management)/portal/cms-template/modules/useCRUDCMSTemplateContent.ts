@@ -13,10 +13,12 @@ import { PageContentStatus } from "@/models/management/cms/pageContent.interface
 
 import { useRouter } from "next/navigation";
 import {
-  CMSTemplateContentItemRs,
   CMSTemplateContentListRs,
+  CMSTemplateContentPayload,
 } from "@/models/management/cms/cmsTemplateContent.interface";
 import { isUndefined } from "lodash";
+import dayjs from "dayjs";
+import { DATE_TIME_FORMAT } from "@/constants/common";
 
 const useCRUDCMSTemplateContent = () => {
   const { mutate: makeUpdateTemplateContent } = useUpdateCMSTemplateContentMutation();
@@ -31,7 +33,13 @@ const useCRUDCMSTemplateContent = () => {
   const message = useMessage();
 
   const onUpdateTemplateContent = (formData: CMSTemplateContentFormData, cb?: () => void) => {
-    makeUpdateTemplateContent(formData, {
+    const payload: CMSTemplateContentPayload = {
+      ...formData,
+      publishDate: dayjs(formData.publishDate).locale("en").format(DATE_TIME_FORMAT),
+      promotionValidFrom: dayjs(formData.promotionValidFrom).locale("en").format(DATE_TIME_FORMAT),
+      promotionValidTo: dayjs(formData.promotionValidTo).locale("en").format(DATE_TIME_FORMAT),
+    };
+    makeUpdateTemplateContent(payload, {
       onSuccess: (data, variables) => {
         message.success(`Cập nhật thành công`);
         queryClient.invalidateQueries({

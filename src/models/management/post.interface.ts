@@ -18,7 +18,7 @@ export interface IPostContent {
   heroBanner: IThumbnail | null;
   images: IThumbnail[];
   category: ICategory;
-  postMeta: string;
+  postFormat: string;
   tags: ITag[];
   id: number;
   originId: number;
@@ -78,7 +78,7 @@ export interface PostContentPayload {
   images?: {
     id?: number;
   }[];
-  postMeta?: string;
+  postFormat?: string;
   metaTitle?: string;
   metaDescription?: string;
   metaKeyword?: string;

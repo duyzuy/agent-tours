@@ -3,10 +3,10 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 export default function ManageContentsPage() {
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-        router.push("./portal/contents/page");
-    }, []);
-    return null;
+  useEffect(() => {
+    router.push("./portal/contents/page");
+  }, []);
+  return null;
 }

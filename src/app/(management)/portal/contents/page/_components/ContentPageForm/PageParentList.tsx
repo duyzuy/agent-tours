@@ -34,6 +34,9 @@ const PageParentList: React.FC<PageParentListProps> = ({ lang, value, className 
     }
   }, [pageParentData, isLoading]);
 
+  useEffect(() => {
+    setQueryParams((oldParams) => ({ ...oldParams, requestObject: { ...oldParams.requestObject, lang: lang } }));
+  }, [lang]);
   return (
     <div
       className={classNames("box border rounded-[4px]", {

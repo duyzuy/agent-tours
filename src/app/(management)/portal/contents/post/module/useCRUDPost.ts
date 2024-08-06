@@ -13,7 +13,9 @@ import { PostContentFormData } from "./postModule.interface";
 
 import { useRouter } from "next/navigation";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
-import { PostListResponse } from "@/models/management/post.interface";
+import { PostContentPayload, PostListResponse } from "@/models/management/post.interface";
+import dayjs from "dayjs";
+import { DATE_TIME_FORMAT } from "@/constants/common";
 
 const useCRUDPost = () => {
   const { mutate: makeCreate, isPending: isPendingCreate } = useCreatePostMutation();
@@ -26,48 +28,51 @@ const useCRUDPost = () => {
   const message = useMessage();
 
   const onCreate = (formData: PostContentFormData, cb?: () => void) => {
-    makeCreate(
-      { ...formData },
-      {
-        onSuccess: (data, variables) => {
-          message.success(`Tạo bài viết thành công`);
-          queryClient.invalidateQueries({
-            queryKey: [queryCMS.GET_POST_CONTENT_LIST],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [queryCMS.GET_POST_CONTENT_DETAIL],
-          });
-          router.push(`/portal/contents/post/${data.result.originId}`);
-          cb?.();
-        },
-        onError: (error, variables) => {
-          console.log({ error, variables });
-          message.error(error.message);
-        },
+    const payload: PostContentPayload = {
+      ...formData,
+      publishDate: dayjs(formData.publishDate).locale("en").format(DATE_TIME_FORMAT),
+    };
+
+    makeCreate(payload, {
+      onSuccess: (data, variables) => {
+        message.success(`Tạo bài viết thành công`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCMS.GET_POST_CONTENT_LIST],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [queryCMS.GET_POST_CONTENT_DETAIL],
+        });
+        router.push(`/portal/contents/post/${data.result.originId}`);
+        cb?.();
       },
-    );
+      onError: (error, variables) => {
+        console.log({ error, variables });
+        message.error(error.message);
+      },
+    });
   };
 
   const onUpdate = (formData: PostContentFormData, cb?: () => void) => {
-    makeUpdate(
-      { ...formData },
-      {
-        onSuccess: (data, variables) => {
-          message.success(`Cập nhật thành công`);
-          queryClient.invalidateQueries({
-            queryKey: [queryCMS.GET_POST_CONTENT_LIST],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [queryCMS.GET_POST_CONTENT_DETAIL],
-          });
-          cb?.();
-        },
-        onError: (error, variables) => {
-          console.log({ error, variables });
-          message.error(error.message);
-        },
+    const payload: PostContentPayload = {
+      ...formData,
+      publishDate: dayjs(formData.publishDate).locale("en").format(DATE_TIME_FORMAT),
+    };
+    makeUpdate(payload, {
+      onSuccess: (data, variables) => {
+        message.success(`Cập nhật thành công`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCMS.GET_POST_CONTENT_LIST],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [queryCMS.GET_POST_CONTENT_DETAIL],
+        });
+        cb?.();
       },
-    );
+      onError: (error, variables) => {
+        console.log({ error, variables });
+        message.error(error.message);
+      },
+    });
   };
 
   const onUpdateStatus = (payload: { id: number; status: PageContentStatus }, cb?: () => void) => {

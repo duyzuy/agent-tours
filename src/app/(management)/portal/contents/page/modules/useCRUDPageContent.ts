@@ -13,7 +13,9 @@ import { queryCMS } from "@/queries/var";
 import { PageContentFormData } from "./pageContent.interface";
 
 import { useRouter } from "next/navigation";
-import { IPageContentDetailRs } from "@/models/management/cms/pageContent.interface";
+import { IPageContentDetailRs, IPageContentPayload } from "@/models/management/cms/pageContent.interface";
+import dayjs from "dayjs";
+import { DATE_TIME_FORMAT } from "@/constants/common";
 
 const useCRUDPageContent = () => {
   const { mutate: makeCreate } = useCreatePageContentMutation();
@@ -27,8 +29,12 @@ const useCRUDPageContent = () => {
   const message = useMessage();
 
   const onCreate = (formData: PageContentFormData, cb?: () => void) => {
+    let payload: IPageContentPayload = {
+      ...formData,
+      publishDate: dayjs(formData.publishDate).locale("en").format(DATE_TIME_FORMAT),
+    };
     makeCreate(
-      { ...formData },
+      { ...payload },
       {
         onSuccess: (data, variables) => {
           message.success(`Tạo trang thành công`);
@@ -50,8 +56,13 @@ const useCRUDPageContent = () => {
   };
 
   const onUpdate = (formData: PageContentFormData, cb?: () => void) => {
+    let payload: IPageContentPayload = {
+      ...formData,
+      publishDate: dayjs(formData.publishDate).locale("en").format(DATE_TIME_FORMAT),
+    };
+
     makeUpdate(
-      { ...formData },
+      { ...payload },
       {
         onSuccess: (data, variables) => {
           message.success(`Cập nhật thành công`);
@@ -132,7 +143,6 @@ const useCRUDPageContent = () => {
         cb?.();
       },
       onError: (error, variables) => {
-        console.log({ error, variables });
         message.error(error.message);
       },
     });

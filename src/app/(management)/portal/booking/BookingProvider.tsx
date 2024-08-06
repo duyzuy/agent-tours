@@ -2,12 +2,12 @@
 import React, { useState } from "react";
 import { BookingContext } from "@/context/bookingContext";
 import { initBookingInfo } from "./modules/useSearchBookingInformation";
-import { BookingInformation } from "./modules/bookingInformation.interface";
+import { AppBookingManager } from "./modules/bookingInformation.interface";
 import { SearchBookingFormData } from "./modules/searchBooking.interface";
 import { ESellChannel } from "@/constants/channel.constant";
 
 const initSearchFormData = new SearchBookingFormData(undefined, undefined, [], [], []);
-export const initBookingData = new BookingInformation(
+export const initBookingData = new AppBookingManager(
   initBookingInfo,
   { adult: [], child: [], infant: [] },
   initSearchFormData,

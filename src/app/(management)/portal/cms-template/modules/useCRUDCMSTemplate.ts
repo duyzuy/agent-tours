@@ -21,7 +21,7 @@ const useCRUDCMSTemplate = () => {
         queryClient.invalidateQueries({
           queryKey: [queryCMS.GET_CMS_TEMPLATE_SHORT_LIST],
         });
-        router.push(`./portal/cms-template/${variables.code}`);
+        router.push(`/portal/cms-template/${variables.code}`);
         cb?.();
       },
       onError: (error, variables) => {

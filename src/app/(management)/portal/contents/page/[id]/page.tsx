@@ -11,6 +11,7 @@ import { isUndefined } from "lodash";
 import useCRUDPageContent from "../modules/useCRUDPageContent";
 import { localeDefault } from "@/constants/locale.constant";
 import { LangCode } from "@/models/management/cms/language.interface";
+import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 interface PageContentDetailProps {
   params: { id: number };
 }
@@ -42,9 +43,8 @@ const PageContentDetail: React.FC<PageContentDetailProps> = ({ params }) => {
     }
   };
 
-  const onChangeStatus: ContentPageFormProps["onChangeStatus"] = (id, type) => {
-    console.log(id, type);
-    type === "active" ? onPublish(id) : onUnPublish(id);
+  const onChangeStatus: ContentPageFormProps["onChangeStatus"] = ({ id, type }, cb?: () => void) => {
+    type === PageContentStatus.PUBLISH ? onPublish(id, cb) : onUnPublish(id, cb);
   };
   useEffect(() => {
     if ((isUndefined(data) && !isLoading) || (!data?.length && !isLoading)) {

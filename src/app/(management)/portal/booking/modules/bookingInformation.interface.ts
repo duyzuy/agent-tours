@@ -41,7 +41,7 @@ export class BookingInfo {
   }
 }
 
-export class BookingInformation {
+export class AppBookingManager {
   bookingInfo?: BookingInfo;
   passengerPriceConfigs: {
     [PassengerType.ADULT]: {

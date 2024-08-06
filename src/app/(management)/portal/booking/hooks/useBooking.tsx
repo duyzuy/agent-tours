@@ -1,31 +1,29 @@
 import { useContext } from "react";
 
 import { BookingContext } from "@/context/bookingContext";
-import { BookingInformation } from "../modules/bookingInformation.interface";
+import { AppBookingManager } from "../modules/bookingInformation.interface";
 
 const useBooking = () => {
-    const context = useContext(BookingContext);
+  const context = useContext(BookingContext);
 
-    if (!context) {
-        throw new Error("useBooking must be used inside the BookingProvider");
-    }
-    return context;
+  if (!context) {
+    throw new Error("useBooking must be used inside the BookingProvider");
+  }
+  return context;
 };
 export default useBooking;
 
-export const useBookingSelector = (
-    selector?: (state: BookingInformation) => BookingInformation,
-) => {
-    const context = useContext(BookingContext);
+export const useBookingSelector = (selector?: (state: AppBookingManager) => AppBookingManager) => {
+  const context = useContext(BookingContext);
 
-    if (!context) {
-        throw new Error("useBooking must be used inside the BookingProvider");
-    }
-    const [booingInfo, _] = context;
-    if (selector) {
-        return selector(booingInfo);
-    }
-    return booingInfo;
+  if (!context) {
+    throw new Error("useBooking must be used inside the BookingProvider");
+  }
+  const [booingInfo, _] = context;
+  if (selector) {
+    return selector(booingInfo);
+  }
+  return booingInfo;
 };
 
 // type UseBoookingSelectorDefault  = () => BookingInformation

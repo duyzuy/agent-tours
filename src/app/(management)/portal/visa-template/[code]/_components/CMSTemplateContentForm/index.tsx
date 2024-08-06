@@ -2,8 +2,6 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Form, Input, SwitchProps, Typography } from "antd";
 import dayjs from "dayjs";
 import { stringToSlug } from "@/utils/stringToSlug";
-import { DATE_FORMAT, TIME_FORMAT } from "@/constants/common";
-import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { mediaConfig } from "@/configs";
 import { visaTemplateContentSchema } from "../../../schema/visaTemplate.schema";
 
@@ -11,8 +9,7 @@ import { VisaTemplateContentFormData } from "../../../modules/visaTemplate.inter
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
-import ThumbnailImage from "@/components/admin/ThumbnailImage";
+import ThumbnailImage, { ThumbnailImageProps } from "@/components/admin/ThumbnailImage";
 import Publishing, { PublishingProps } from "@/components/admin/Publishing";
 import FormItem from "@/components/base/FormItem";
 import Slug, { SlugProps } from "@/components/admin/Slug";
@@ -20,13 +17,15 @@ import { isEqualObject } from "@/utils/compare";
 import { PlusOutlined } from "@ant-design/icons";
 import MetaDataFields, { MetaDataFieldsProps } from "./MetaDataFields";
 import { isEmpty, isUndefined } from "lodash";
-import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
+
 import TemplateMetaContentForm, { TemplateMetaContentFormProps } from "./TemplateMetaContentForm";
 import FileDownloadSelector, { FileDownloadSelectorProps } from "./FilesDownloadSelector";
 import { IVisaTemplateContent } from "@/models/management/cms/visaTemplateContent.interface";
-import { MediaTypes } from "@/models/management/media.interface";
 
-type RequirePageContentFormData = Required<VisaTemplateContentFormData>;
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import MetaSeoBox, { MetaSeoBoxProps } from "@/components/admin/MetaSeoBox";
+import { stringToDate } from "@/utils/date";
 
 export interface CMSTemplateContentFormProps {
   lang?: LangCode;
@@ -70,241 +69,143 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
   onSubmitMetaContent,
   onDelete,
 }) => {
-  const [formData, setFormData] = useState(initCmsTemplate);
-
-  const [showMedia, setShowMedia] = useState<{
-    isShow: boolean;
-    type?: "thumb" | "images";
-  }>(() => ({ isShow: false, type: undefined }));
-
-  const { errors, handlerSubmit, clearErrors } = useFormSubmit({
-    schema: visaTemplateContentSchema,
+  const { getValues, watch, setValue, control, handleSubmit, clearErrors } = useForm<VisaTemplateContentFormData>({
+    resolver: yupResolver(visaTemplateContentSchema),
+    defaultValues: initCmsTemplate,
   });
 
-  const onChangeForm = (
-    key: keyof RequirePageContentFormData,
-    value: RequirePageContentFormData[keyof RequirePageContentFormData],
-  ) => {
-    if (key === "code" && typeof value === "string") {
-      value = vietnameseTonesToUnderscoreKeyname(value).toUpperCase();
-    }
-    setFormData((oldData) => {
-      let newData = { ...oldData };
-      if (key === "name" && typeof value === "string") {
-        newData = {
-          ...newData,
-          slug: stringToSlug(value),
-        };
-      }
-
-      newData = {
-        ...newData,
-        [key]: value,
-      };
-
-      return newData;
-    });
-  };
-
-  const onSaveSlug = useCallback<Required<SlugProps>["onSave"]>((value) => {
-    setFormData((oldData) => ({
-      ...oldData,
-      slug: stringToSlug(value),
-    }));
-  }, []);
+  const onSaveSlug = useCallback<Required<SlugProps>["onSave"]>(
+    (value) => {
+      setValue("slug", stringToSlug(value));
+    },
+    [watch("slug")],
+  );
 
   const onChangePublishDate = useCallback<Required<PublishingProps>["onChangeDate"]>((date) => {
     if (date) {
-      setFormData((oldData) => {
-        const { publishDate } = oldData;
-        const [_, time] = (publishDate || "").split(" ");
-        const newPublishDate = [date.locale("en").format(DATE_FORMAT), time].join(" ");
-
-        return { ...oldData, publishDate: newPublishDate };
-      });
+      const newPublishDate = date.toISOString();
+      setValue("publishDate", newPublishDate);
     }
   }, []);
   const onChangePublishTime = useCallback<Required<PublishingProps>["onChangeTime"]>((time) => {
     if (time) {
-      setFormData((oldData) => {
-        const { publishDate } = oldData;
-        const [oldDate, _] = (publishDate || "").split(" ");
-        const newPublishDate = [oldDate, time.format(TIME_FORMAT)].join(" ");
-        return { ...oldData, publishDate: newPublishDate };
-      });
+      const newPublishDate = time.toISOString();
+      setValue("publishDate", newPublishDate);
     }
   }, []);
 
   const onChangeStatusPage = useCallback<Required<SwitchProps>["onChange"]>(
     (checked) => {
-      formData.id && onChangeStatus?.(formData.id, checked ? PageContentStatus.PUBLISH : PageContentStatus.UNPUBLISH);
+      initData?.id && onChangeStatus?.(initData.id, checked ? PageContentStatus.PUBLISH : PageContentStatus.UNPUBLISH);
     },
-    [formData.id],
-  );
-  const publishDateTime = useMemo(() => {
-    return formData.publishDate
-      ? {
-          publishTime: dayjs(formData.publishDate, TIME_FORMAT),
-          publishDate: dayjs(formData.publishDate, DATE_FORMAT),
-        }
-      : undefined;
-  }, [formData.publishDate]);
-
-  const onConfirmSelectMediaImage = useCallback<Required<MediaUploadProps>["onConfirm"]>(
-    (files) => {
-      if (showMedia.type === "thumb") {
-        setFormData((oldData) => ({
-          ...oldData,
-          thumbnail: { id: files[0].id, original: files[0].fullPath },
-        }));
-      }
-
-      if (showMedia.type === "images") {
-        setFormData((oldData) => ({
-          ...oldData,
-          images: {
-            listImage: files.reduce<string[]>((acc, item) => {
-              return [...acc, item.fullPath];
-            }, []),
-          },
-        }));
-      }
-    },
-    [showMedia],
-  );
-  const onRemoveThumbnail = useCallback(() => {
-    setFormData((oldData) => ({
-      ...oldData,
-      thumbnail: undefined,
-    }));
-  }, []);
-  const removeMetaDataItem = (index?: number) => {
-    setFormData((oldData) => {
-      const { metaData } = oldData;
-      let newMetaData = [...(metaData || [])];
-      if (!isUndefined(index)) {
-        newMetaData.splice(index, 1);
-      }
-      return {
-        ...oldData,
-        metaData: newMetaData,
-      };
-    });
-  };
-
-  const onOpenMediaToSelectThumbail = useCallback(
-    () =>
-      setShowMedia({
-        isShow: true,
-        type: "thumb",
-      }),
-    [],
-  );
-
-  const onCloseMediaUpload = useCallback(() => setShowMedia({ isShow: false, type: undefined }), []);
-
-  const isDisablePublishButton = useMemo(
-    () =>
-      isEqualObject(
-        [
-          "slug",
-          "metaTitle",
-          "metaDescription",
-          "metaKeyword",
-          "publishDate",
-          "name",
-          "content",
-          "subContent",
-          "status",
-          "publishDate",
-          "downloads",
-          "thumbnail",
-          "metaData",
-        ],
-        formData,
-        initData || initCmsTemplate,
-      ),
-    [initData, formData],
+    [initData],
   );
 
   const addMetaDataFields = () => {
-    setFormData((oldData) => {
-      const { metaData } = oldData;
-      const newMetaDataFields = [...(metaData || []), { value: "", icon: "", key: "" }];
-      return {
-        ...oldData,
-        metaData: newMetaDataFields,
-      };
-    });
+    const oldMetaData = getValues("metaData");
+    const newMetaDataFields = [...(oldMetaData || []), { value: "", icon: "", key: "" }];
+    setValue("metaData", newMetaDataFields);
   };
 
   const onChangeMetaDataForm: MetaDataFieldsProps["onChange"] = (data, index) => {
     if (isUndefined(index)) return;
 
-    setFormData((oldData) => {
-      const { metaData } = oldData;
+    const oldMetaData = getValues("metaData");
 
-      let newMetadata = [...(metaData || [])];
+    if (oldMetaData) {
+      let newMetaData = [...oldMetaData];
 
-      const item = newMetadata[index];
-      if (item) {
-        newMetadata.splice(index, 1, {
-          ...newMetadata[index],
-          ...data,
-        });
-      }
+      newMetaData.splice(index, 1, {
+        ...newMetaData[index],
+        ...data,
+      });
 
-      return {
-        ...oldData,
-        metaData: newMetadata,
-      };
-    });
+      setValue("metaData", newMetaData);
+    }
   };
-  const onSaveGallery = (images: string[]) => {
-    setFormData((oldData) => ({
-      ...oldData,
-      images: {
-        listImage: images,
-      },
-    }));
+
+  const removeMetaDataItem = (index: number) => {
+    const oldMetaData = getValues("metaData");
+
+    let newMetaData = [...(oldMetaData || [])];
+    newMetaData.splice(index, 1);
+    setValue("metaData", newMetaData);
   };
 
   const onSaveFilesDownload: FileDownloadSelectorProps["setFiles"] = (files) => {
-    setFormData((oldData) => ({
-      ...oldData,
-      downloads: [...(files || [])],
-    }));
+    setValue("downloads", files);
+  };
+  const onChangeMetaSeoBox: MetaSeoBoxProps["onChange"] = ({ key, value, data }) => {
+    if (key === "metaTitle") {
+      setValue("metaTitle", value);
+    }
+    if (key === "metaDescription") {
+      setValue("metaDescription", value);
+    }
+    if (key === "metaKeyword") {
+      setValue("metaKeyword", value);
+    }
   };
 
+  const onRemoveThumbnail = useCallback(() => {
+    setValue("thumbnail", undefined);
+  }, []);
+
+  const handleAddThumb: ThumbnailImageProps["onAdd"] = (thumbnail) => {
+    setValue("thumbnail", { id: thumbnail.id, original: thumbnail.fullPath, small: thumbnail.thumb });
+  };
+
+  const isDisablePublishButton = useMemo(() => {
+    let newInitData = initData || initCmsTemplate;
+
+    if (initData?.publishDate) {
+      newInitData = { ...newInitData, publishDate: stringToDate(initData.publishDate).toISOString() };
+    }
+
+    return isEqualObject(
+      [
+        "slug",
+        "metaTitle",
+        "metaDescription",
+        "metaKeyword",
+        "publishDate",
+        "name",
+        "content",
+        "subContent",
+        "status",
+        "publishDate",
+        "downloads",
+        "thumbnail",
+        "metaData",
+      ],
+      getValues(),
+      newInitData,
+    );
+  }, [initData, watch()]);
+
   useEffect(() => {
-    onWatchFormChange?.(formData);
-  }, [formData]);
-  useEffect(() => {
-    setFormData((prev) => {
-      return initData
-        ? {
-            ...prev,
-            id: initData.id,
-            code: initData.code,
-            name: initData.name,
-            slug: initData.slug,
-            thumbnail: initData.thumbnail ?? undefined,
-            content: initData.content,
-            subContent: initData.subContent,
-            downloads: initData.downloads,
-            metaData: initData.metaData,
-            metaTitle: initData.metaTitle,
-            metaDescription: initData.metaDescription,
-            metaKeyword: initData.metaKeyword,
-            publishDate: initData.publishDate,
-            lang: initData.lang,
-            status: isEmpty(initData.status) ? PageContentStatus.PUBLISH : initData.status,
-          }
-        : {
-            ...initCmsTemplate,
-            lang: lang,
-            code: code,
-          };
+    const initValues = initData
+      ? new VisaTemplateContentFormData(
+          initData.id,
+          initData.code,
+          initData.name,
+          initData.slug,
+          initData.thumbnail ?? undefined,
+          initData.downloads,
+          initData.content,
+          initData.subContent,
+          initData.metaData,
+          initData.metaTitle,
+          initData.metaDescription,
+          initData.metaKeyword,
+          stringToDate(initData.publishDate).toISOString(),
+          initData.status,
+          initData.lang,
+        )
+      : initCmsTemplate;
+
+    Object.entries(initValues).map(([key, value], _index) => {
+      setValue(key as keyof VisaTemplateContentFormData, value);
     });
     clearErrors();
   }, [lang, initData]);
@@ -315,47 +216,61 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
       <Form layout="vertical">
         <div className="flex w-full">
           <div className="post-left flex-1 mr-8" style={{ width: "calc(100% - 380px)" }}>
-            <FormItem
-              label="Tiêu đề template"
-              required
-              validateStatus={errors?.name ? "error" : ""}
-              help={errors?.name || ""}
-            >
-              <Input
-                placeholder="Tiêu đề template"
-                value={formData.name}
-                onChange={(ev) => onChangeForm("name", ev.target.value)}
-              />
-            </FormItem>
-            <Slug
-              slugName={formData.slug}
-              lang={lang}
-              type="visa"
-              onSave={onSaveSlug}
-              validateStatus={errors?.slug ? "error" : ""}
-              help={errors?.slug || ""}
-              className="mb-6"
+            <Controller
+              control={control}
+              name="name"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Tiêu đề template" required validateStatus={error ? "error" : ""} help={error?.message}>
+                  <Input placeholder="Tiêu đề template" {...field} />
+                </FormItem>
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="name"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Tiêu đề template" required validateStatus={error ? "error" : ""} help={error?.message}>
+                  <Slug
+                    slugName={field.value}
+                    lang={lang}
+                    type="visa"
+                    onSave={onSaveSlug}
+                    validateStatus={error ? "error" : ""}
+                    help={error?.message}
+                    className="mb-6"
+                  />
+                </FormItem>
+              )}
             />
 
             <Typography.Title level={4}>Meta data</Typography.Title>
             <div className="border p-6 rounded-md mb-6">
               <div className="meta-list">
-                {formData.metaData?.map((metaItem, _index) => (
-                  <MetaDataFields
-                    key={_index}
-                    index={_index}
-                    values={metaItem}
-                    onChange={onChangeMetaDataForm}
-                    onRemove={removeMetaDataItem}
-                  />
-                ))}
+                <Controller
+                  control={control}
+                  name="metaData"
+                  render={({ field, fieldState: { error } }) => (
+                    <>
+                      {field.value?.map((metaItem, _index) => (
+                        <MetaDataFields
+                          key={_index}
+                          index={_index}
+                          values={metaItem}
+                          onChange={onChangeMetaDataForm}
+                          onRemove={removeMetaDataItem}
+                        />
+                      ))}
+                    </>
+                  )}
+                />
               </div>
               <div>
                 <Button
                   icon={<PlusOutlined />}
                   type="primary"
                   ghost
-                  disabled={formData.metaData?.length === 6}
+                  disabled={getValues("metaData")?.length === 6}
                   onClick={addMetaDataFields}
                   size="small"
                 >
@@ -363,20 +278,24 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                 </Button>
               </div>
             </div>
+            <Controller
+              control={control}
+              name="downloads"
+              render={({ field, fieldState: { error } }) => (
+                <FileDownloadSelector files={field.value} setFiles={onSaveFilesDownload} />
+              )}
+            />
 
-            <FileDownloadSelector files={formData.downloads} setFiles={onSaveFilesDownload} />
-            <FormItem
-              label="Mô tả ngắn"
-              help={errors?.subContent || ""}
-              validateStatus={errors?.subContent ? "error" : ""}
-            >
-              <Input.TextArea
-                className="resize-none"
-                rows={3}
-                value={formData.subContent}
-                onChange={(ev) => onChangeForm("subContent", ev.target.value)}
-              ></Input.TextArea>
-            </FormItem>
+            <Controller
+              control={control}
+              name="subContent"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Mô tả ngắn" help={error?.message} validateStatus={error ? "error" : ""}>
+                  <Input.TextArea className="resize-none" rows={3} {...field}></Input.TextArea>
+                </FormItem>
+              )}
+            />
+
             {/*<FormItem
                             label="Chi tiết"
                             help={errors?.content || ""}
@@ -390,44 +309,17 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                             />
                         </FormItem> */}
             <Typography.Title level={4}>SEO Meta</Typography.Title>
-            <div className="box border rounded-md px-4 pt-6 mb-6">
-              <FormItem
-                label="Meta title"
-                help={errors?.metaTitle || ""}
-                validateStatus={errors?.metaTitle ? "error" : ""}
-              >
-                <Input
-                  placeholder="Meta title"
-                  value={formData.metaTitle}
-                  onChange={(ev) => onChangeForm("metaTitle", ev.target.value)}
-                />
-              </FormItem>
-              <FormItem
-                label="Meta description"
-                help={errors?.metaDescription || ""}
-                validateStatus={errors?.metaDescription ? "error" : ""}
-              >
-                <Input.TextArea
-                  rows={2}
-                  value={formData.metaDescription}
-                  onChange={(ev) => onChangeForm("metaDescription", ev.target.value)}
-                ></Input.TextArea>
-              </FormItem>
-              <FormItem
-                label="Meta keywords"
-                help={errors?.metaKeyword || ""}
-                validateStatus={errors?.metaKeyword ? "error" : ""}
-              >
-                <Input
-                  placeholder="Keywords"
-                  value={formData.metaKeyword}
-                  onChange={(ev) => onChangeForm("metaKeyword", ev.target.value)}
-                />
-              </FormItem>
-            </div>
+            <MetaSeoBox
+              values={{
+                metaDescription: getValues("metaDescription"),
+                metaKeyword: getValues("metaKeyword"),
+                metaTitle: getValues("metaTitle"),
+              }}
+              onChange={onChangeMetaSeoBox}
+            />
             <TemplateMetaContentForm
               contentlabel="Thông tin Visa"
-              referenceId={formData.id}
+              referenceId={initData?.id}
               lang={lang}
               initialData={initData?.visaContent ?? undefined}
               className="mb-6"
@@ -442,49 +334,48 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                 // onChangeTemplate={onChangeTemplate}
                 onChangeTime={onChangePublishTime}
                 onChangeDate={onChangePublishDate}
-                timeValue={publishDateTime?.publishTime}
-                dateValue={publishDateTime?.publishDate}
-                onSaveAndPublish={() =>
-                  handlerSubmit(formData, (data) =>
-                    onSubmit?.({
-                      ...data,
-                      status: PageContentStatus.PUBLISH,
-                    }),
-                  )
-                }
-                onDelete={() => onDelete?.(formData.id)}
-                onApproval={() => onPublish?.(formData.id)}
+                timeValue={dayjs(getValues("publishDate"))}
+                dateValue={dayjs(getValues("publishDate"))}
+                onSaveAndPublish={handleSubmit((data) =>
+                  onSubmit?.({
+                    ...data,
+                    status: PageContentStatus.PUBLISH,
+                  }),
+                )}
+                onDelete={() => onDelete?.(initData?.id)}
+                onApproval={() => onPublish?.(initData?.id)}
                 onChangeStatus={onChangeStatusPage}
                 hideSaveForApproval={action === "update" ?? false}
-                hideApproval={formData.status !== PageContentStatus.PENDING || action === "create"}
+                hideApproval={getValues("status") !== PageContentStatus.PENDING || action === "create"}
                 hideDelete={action === "create"}
                 action={action}
-                status={formData.status}
+                status={getValues("status")}
                 disableSubmit={isDisablePublishButton}
                 disableSaveForApproval={isDisablePublishButton}
-                errors={{
-                  publishDate: errors?.publishDate,
-                }}
+                // errors={{
+                //   publishDate: errors?.publishDate,
+                // }}
               />
-              <ThumbnailImage
-                thumbnailUrl={
-                  formData.thumbnail?.original ? `${mediaConfig.rootPath}/${formData.thumbnail.original}` : undefined
-                }
-                onRemove={onRemoveThumbnail}
-                onAdd={onOpenMediaToSelectThumbail}
-                error={errors?.thumbnail}
+              <Controller
+                control={control}
+                name="thumbnail"
+                render={({ field, fieldState: { error } }) => (
+                  <ThumbnailImage
+                    thumbnailUrl={
+                      field.value && field.value.id !== 0
+                        ? `${mediaConfig.rootPath}/${field.value.original}`
+                        : undefined
+                    }
+                    onRemove={onRemoveThumbnail}
+                    onAdd={handleAddThumb}
+                    error={error?.message}
+                  />
+                )}
               />
             </div>
           </div>
         </div>
       </Form>
-      <MediaUploadDrawler
-        isOpen={showMedia.isShow}
-        onClose={onCloseMediaUpload}
-        onConfirm={onConfirmSelectMediaImage}
-        mediaTypes={[MediaTypes.IMAGE, MediaTypes.ICON]}
-        mode={showMedia.type === "images" ? "multiple" : "single"}
-      />
     </>
   );
 };

@@ -12,6 +12,9 @@ import { VisaTemplateContentFormData } from "./visaTemplate.interface";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 
 import { useRouter } from "next/navigation";
+import { VisaTemplateContentPayload } from "@/models/management/cms/visaTemplateContent.interface";
+import dayjs from "dayjs";
+import { DATE_TIME_FORMAT } from "@/constants/common";
 
 const useCRUDCMSTemplateContent = () => {
   const { mutate: makeUpdateTemplateContent } = useUpdateVisaTemplateContentMutation();
@@ -23,7 +26,11 @@ const useCRUDCMSTemplateContent = () => {
   const message = useMessage();
 
   const onUpdateTemplateContent = (formData: VisaTemplateContentFormData, cb?: () => void) => {
-    makeUpdateTemplateContent(formData, {
+    let payload: VisaTemplateContentPayload = {
+      ...formData,
+      publishDate: dayjs(formData.publishDate).locale("en").format(DATE_TIME_FORMAT),
+    };
+    makeUpdateTemplateContent(payload, {
       onSuccess: (data, variables) => {
         message.success(`Cập nhật thành công`);
         queryClient.invalidateQueries({

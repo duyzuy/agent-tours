@@ -35,7 +35,7 @@ export const postContentSchema: ObjectSchema<PostContentFormData> = object({
       }),
     )
     .default([]),
-  postMeta: string(),
+  postFormat: string(),
   lang: string().oneOf<LangCode>([LangCode.VI, LangCode.EN]).required("Chưa chọn ngôn ngữ"),
   metaTitle: string().default(""),
   metaDescription: string().default(""),

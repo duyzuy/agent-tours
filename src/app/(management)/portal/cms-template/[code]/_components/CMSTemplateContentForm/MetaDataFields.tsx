@@ -4,12 +4,12 @@ import { DeleteOutlined } from "@ant-design/icons";
 import IconSelector from "@/components/base/IconSelector";
 type MetaDataItemType = { key?: string; value?: string; icon?: string };
 export interface MetaDataFieldsProps {
-  index?: number;
-  values?: MetaDataItemType;
+  index: number;
+  values: MetaDataItemType;
   onChange?: (data: { [key: string]: string }, index?: number) => void;
-  onRemove?: (index?: number) => void;
+  onRemove?: (index: number) => void;
 }
-const MetaDataFields: React.FC<MetaDataFieldsProps> = ({ values, onChange, index, onRemove }) => {
+const MetaDataFields: React.FC<MetaDataFieldsProps> = ({ values, onChange, index = 0, onRemove }) => {
   return (
     <Row gutter={16}>
       <Col span={6}>

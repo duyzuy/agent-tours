@@ -53,7 +53,9 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
   const bookingOrder = useMemo(() => orderInformation?.bookingOrder, [orderInformation]);
 
   const fopListCoupon = useMemo(() => {
-    return orderInformation?.bookingOrder.fops.filter((item) => item.type === FOP_TYPE.DISCOUNT_COUPON);
+    return orderInformation?.bookingOrder.fops.filter(
+      (item) => item.type === FOP_TYPE.DISCOUNT_COUPON || item.type === FOP_TYPE.DISCOUNT_POLICY,
+    );
   }, [orderInformation]);
 
   const bookingSSRList = useMemo(() => {
@@ -93,7 +95,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
             endDate={bookingOrder?.sellable.endDate && formatDate(bookingOrder.sellable.endDate)}
             sysFstUpdate={bookingOrder?.sysFstUpdate && formatDate(bookingOrder?.sysFstUpdate)}
             name={bookingOrder?.template.name}
-            code={bookingOrder?.sellable.code}
+            code={bookingOrder?.template.code}
             className="mb-6"
           />
           <Row gutter={[24, 24]}>

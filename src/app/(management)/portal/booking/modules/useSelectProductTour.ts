@@ -2,7 +2,7 @@ import useMessage from "@/hooks/useMessage";
 import useBooking from "../hooks/useBooking";
 import { PassengerType } from "@/models/common.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
-import { BookingInformation, IBookingItem } from "./bookingInformation.interface";
+import { AppBookingManager, IBookingItem } from "./bookingInformation.interface";
 import { useRouter } from "next/navigation";
 import { ESellChannel } from "@/constants/channel.constant";
 import { initBookingData } from "../BookingProvider";
@@ -77,7 +77,7 @@ const useSelectProductTour = () => {
       },
     }));
   };
-  const onSetQuantityPassenger = (passengers: BookingInformation["searchBooking"]["passengers"]) => {
+  const onSetQuantityPassenger = (passengers: AppBookingManager["searchBooking"]["passengers"]) => {
     setBookingInformation((prev) => ({
       ...prev,
       searchBooking: {

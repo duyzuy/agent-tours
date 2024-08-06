@@ -13,6 +13,7 @@ export const cmsTemplateContentSchema: ObjectSchema<CMSTemplateContentFormData> 
     id: number().required("Ảnh bài viết không bỏ trống."),
     original: string().default(""),
   }).required("Ảnh bài viết không bỏ trống."),
+
   images: array()
     .of(
       object({
@@ -39,6 +40,12 @@ export const cmsTemplateContentSchema: ObjectSchema<CMSTemplateContentFormData> 
   metaTitle: string().default(""),
   metaDescription: string().default(""),
   metaKeyword: string().default(""),
+  promotionReferencePrice: number(),
+  promotionLabel: string(),
+  promotionLabelType: string().oneOf<"text" | "image">(["text", "image"]),
+  promotionValidFrom: string(),
+  promotionValidTo: string(),
+  promotionImage: string(),
   publishDate: string().required("Ngày đăng bài không bỏ trống."),
   lang: string().oneOf<LangCode>([LangCode.VI, LangCode.EN]).required("Chưa chọn ngôn ngữ"),
   status: string().oneOf<PageContentStatus>([

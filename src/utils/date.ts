@@ -5,6 +5,7 @@ export const formatDate = (d: Date | string, strFm = "dd/MM/yyyy - HH:mm") => {
 };
 
 import { eachDayOfInterval, endOfWeek, startOfWeek, startOfToday } from "date-fns";
+import dayjs from "dayjs";
 
 export const getDayNameOfWeek = ({
   locale,
@@ -26,4 +27,17 @@ export const getDayNameOfWeek = ({
     daysName.push(format(day, dateFm, { locale: locale }));
   });
   return daysName;
+};
+
+export const stringToDate = (dateTimeStr: string) => {
+  const [dateStr, timeStr] = dateTimeStr.split(" ");
+
+  const dStr = dateStr.slice(0, 2);
+  const mStr = dateStr.slice(2, 5);
+  const yStr = dateStr.slice(5);
+  let newDateTimeStr = `${mStr}${dStr}${yStr}`;
+
+  newDateTimeStr = newDateTimeStr.concat(" ", timeStr ?? "00:00");
+
+  return dayjs(newDateTimeStr, "MMMDDYYYY HH:mm");
 };
