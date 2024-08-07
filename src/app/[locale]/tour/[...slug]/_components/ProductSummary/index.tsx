@@ -58,15 +58,20 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
     });
   };
 
-  const getLowestPrice = (configs: FeProductItem["configs"]) => {
-    let minPrice = 99999999999999;
+  const lowestPrice = useMemo(() => {
+    const { configs } = productItem || {};
+    if (!configs || !configs.length) return;
+    let minPrice: number | undefined;
     configs.forEach((item) => {
-      if (item.open > 0 && item.adult < minPrice) {
+      if (!minPrice && item.open > 0) {
+        minPrice = item.adult;
+      }
+      if (minPrice && item.open > 0 && item.adult < minPrice) {
         minPrice = item.adult;
       }
     });
     return minPrice;
-  };
+  }, [productItem]);
   const lowestPriceConfigItem = useMemo(() => {
     let minConfig: FeProductItem["configs"][0] | undefined;
     productItem?.configs.forEach((item) => {
@@ -83,7 +88,6 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
   }, [productItem]);
 
   const onChangeProduct: DatePickerProps["onChange"] = (date) => {
-    console.log({ sellableList, date });
     const newProduct = sellableList?.find((prd) => {
       return stringToDate(prd.startDate).isSame(date, "date");
     });
@@ -133,7 +137,7 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
     >
       <ProductSummaryWraper
         label={t("productSummary.title")}
-        productPrice={productItem?.configs.length ? moneyFormatVND(getLowestPrice(productItem.configs)) : undefined}
+        productPrice={lowestPrice ? moneyFormatVND(lowestPrice) : undefined}
         openAmount={lowestPriceConfigItem?.open}
         onBookNow={handleNextToPassengerInfo}
         isLoading={isPendingInitBookingDetails}
@@ -242,4 +246,17 @@ ProductSummary.PassengerQuantity = function ProductSummaryPassengerQuantity({
       </div>
     </div>
   );
+};
+const getLowestPrice = (configs: FeProductItem["configs"]) => {
+  if (!configs.length) return;
+  let minPrice: number | undefined;
+  configs.forEach((item) => {
+    if (!minPrice && item.open > 0) {
+      minPrice = item.adult;
+    }
+    if (minPrice && item.open > 0 && item.adult < minPrice) {
+      minPrice = item.adult;
+    }
+  });
+  return minPrice;
 };

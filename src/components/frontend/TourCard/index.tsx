@@ -77,44 +77,42 @@ const TourCard = ({
                 <p className="text-xs h-[22px]">{t("card.contact")}</p>
               )}
             </div>
+            {durationDays ? <span className="text-gray-500 text-xs">{durationDays}</span> : null}
           </div>
-          <div className="article-content__middle">
-            <div className="flex justify-between text-[12px] lg:text-[13px]">
-              <ul className="flex-1">
+          <div className="article-content__middle text-[12px] lg:text-[13px]">
+            <ul className="flex-1">
+              <li className="flex items-center mb-1">
+                <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.tourCode")}</span>
+                <span>{tourCode}</span>
+              </li>
+              <li className="flex items-center mb-1">
+                <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.departDate")}</span>
+                <span>{departDate}</span>
+              </li>
+              <li className="flex items-center mb-1">
+                <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.amountRemaining")}</span>
+                <span className="text-red-600">{openAmount}</span>
+              </li>
+              {otherDepartDate ? (
                 <li className="flex items-center mb-1">
-                  <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.tourCode")}</span>
-                  <span>{tourCode}</span>
-                </li>
-                <li className="flex items-center mb-1">
-                  <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.departDate")}</span>
-                  <span>{departDate}</span>
-                </li>
-                <li className="flex items-center mb-1">
-                  <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.amountRemaining")}</span>
-                  <span className="text-red-600">{openAmount}</span>
-                </li>
-                {otherDepartDate ? (
-                  <li className="flex items-center mb-1">
-                    <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.otherDepart")}</span>
-                    {otherDepartDate.length ? (
-                      <span className="flex-1 flex flex-wrap gap-1">
+                  <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.otherDepart")}</span>
+                  {otherDepartDate.length ? (
+                    <div className="flex-1 w-full">
+                      <span className="flex flex-wrap gap-1">
                         {otherDepartDate.map((departStr, _index) => (
-                          <span className="depart" key={_index}>
+                          <span className="depart text-xs" key={_index}>
+                            {_index !== 0 ? <span className="text-[8px] mx-1">|</span> : null}
                             {departStr}
                           </span>
                         ))}
                       </span>
-                    ) : (
-                      <span>Không có</span>
-                    )}
-                  </li>
-                ) : null}
-              </ul>
-              {/* <div className="slot text-center bg-gray-100 rounded-md px-2 py-2 border border-gray-300">
-              <p>{t("card.amountRemaining")}</p>
-              <span className="text-red-600 text-sm">{openAmount}</span>
-            </div> */}
-            </div>
+                    </div>
+                  ) : (
+                    <span>Không có</span>
+                  )}
+                </li>
+              ) : null}
+            </ul>
           </div>
           {/* <TourCard.BottomCard /> */}
         </div>

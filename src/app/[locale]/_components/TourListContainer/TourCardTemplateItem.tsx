@@ -4,9 +4,13 @@ import { moneyFormatVND } from "@/utils/helper";
 import { mediaConfig } from "@/configs";
 import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
+import duration from "dayjs/plugin/duration";
 import dayjs from "dayjs";
 import { formatDate, stringToDate } from "@/utils/date";
 import { useMemo } from "react";
+
+dayjs.extend(duration);
+dayjs.duration(100);
 
 interface TourCardTemplateItemProps {
   data: IFeTemplateProductItem;
@@ -51,8 +55,15 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
   const otherDeparts = useMemo(() => {
     return sellables.map((item) => stringToDate(item.startDate).format("DD/MM/YYYY")).splice(1);
   }, [sellables]);
+  const durationDays = useMemo(() => {
+    if (!sellableItem) return;
 
-  console.log(otherDeparts);
+    const day = stringToDate(sellableItem.endDate).diff(stringToDate(sellableItem.startDate), "day");
+    const night = day - 1;
+    return `${day} ngày ${night} đêm`;
+  }, [sellableItem]);
+
+  console.log(durationDays);
   return (
     <TourCard
       key={data.recId}
@@ -72,6 +83,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
       openAmount={sellableItem?.open}
       href={sellableItem?.recId ? `/tour/${data.recId}/${sellableItem.recId}/${tourCMSContent?.slug}` : "/"}
       otherDepartDate={otherDeparts}
+      durationDays={durationDays}
     />
   );
 };
