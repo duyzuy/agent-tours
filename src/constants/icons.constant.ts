@@ -43,6 +43,13 @@ import {
   IconAlbum,
   IconEarth,
   IconClipboardList,
+  IconHotDealOne,
+  IconHotDealTwo,
+  IconHotSale,
+  IconHotSaleTwo,
+  IconBestDeal,
+  IconBigDeal,
+  IconDiscount,
 } from "@/assets/icons";
 export const ICON_LIST = [
   {
@@ -271,3 +278,49 @@ export const ICON_LIST = [
     icon: IconMapPinned,
   },
 ];
+
+export const ICON_LABEL_HOTDEAL_LIST = [
+  {
+    name: "Hot deal 1",
+    key: "IconHotDealOne",
+    icon: IconHotDealOne,
+  },
+  {
+    name: "Hot deal 2",
+    key: "IconHotDealTwo",
+    icon: IconHotDealTwo,
+  },
+  {
+    name: "Hot sale",
+    key: "IconHotSale",
+    icon: IconHotSale,
+  },
+  {
+    name: "Hot sale 2",
+    key: "IconHotSaleTwo",
+    icon: IconHotSaleTwo,
+  },
+  {
+    name: "Best deal",
+    key: "IconBestDeal",
+    icon: IconBestDeal,
+  },
+  {
+    name: "Big deal",
+    key: "IconBigDeal",
+    icon: IconBigDeal,
+  },
+  {
+    name: "Discount",
+    key: "IconDiscount",
+    icon: IconDiscount,
+  },
+];
+
+export const getLabelHotDealIcon = (key: string) => {
+  return ICON_LABEL_HOTDEAL_LIST.find((item) => item.key === key);
+};
+
+export const getIcon = (key: string) => {
+  return ICON_LIST.find((item) => item.key === key);
+};

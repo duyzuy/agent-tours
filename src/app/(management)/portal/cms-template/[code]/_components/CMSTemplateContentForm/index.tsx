@@ -178,6 +178,9 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
     if (key === "promotionLabel" && typeof value === "string") {
       setValue("promotionLabel", value);
     }
+    if (key === "promotionImage" && typeof value === "string") {
+      setValue("promotionImage", value);
+    }
   };
 
   const isDisablePublishButton = useMemo(() => {
@@ -433,6 +436,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                   promotionReferencePrice: getValues("promotionReferencePrice"),
                   promotionValidFrom: dayjs(getValues("promotionValidFrom")),
                   promotionValidTo: dayjs(getValues("promotionValidTo")),
+                  promotionImage: getValues("promotionImage"),
                 }}
                 onChange={handleChangeHighLightBox}
               />

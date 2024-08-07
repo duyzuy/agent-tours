@@ -3,6 +3,8 @@ import CustomRangePicker from "@/components/admin/CustomRangePicker";
 import CustomTimePicker from "@/components/admin/CustomTimePicker";
 import DateRangPicker from "@/components/base/DateRangePicker";
 import FormItem from "@/components/base/FormItem";
+import LabelSelector from "@/components/base/LabelSelector";
+import { stringToDate } from "@/utils/date";
 import { DatePickerProps, Input, InputNumber, Segmented, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -63,7 +65,11 @@ const HighLightBox: React.FC<HighLightBoxProps> = ({ values, onChange }) => {
                 picker="date"
                 className="flex-1"
                 disabledDate={(date) => {
-                  return date.isBefore(values?.promotionValidTo);
+                  if (!promotionValidTo) {
+                    return false;
+                  } else {
+                    return date.isAfter(promotionValidTo);
+                  }
                 }}
               />
               <CustomTimePicker
@@ -80,6 +86,18 @@ const HighLightBox: React.FC<HighLightBoxProps> = ({ values, onChange }) => {
               <CustomDatePicker
                 onChange={onChangeValidToDate}
                 value={dayjs(promotionValidTo)}
+                disabledDate={(date) => {
+                  const now = dayjs();
+                  if (!promotionValidTo) {
+                    return date.isBefore(now);
+                  } else {
+                    if (promotionValidTo.isBefore(now)) {
+                      return date.isBefore(now);
+                    } else {
+                      return date.isBefore(promotionValidTo);
+                    }
+                  }
+                }}
                 format={"DD/MM/YYYY"}
                 placeholder="Chọn ngày"
                 picker="date"
@@ -127,10 +145,9 @@ const HighLightBox: React.FC<HighLightBoxProps> = ({ values, onChange }) => {
             </FormItem>
           ) : (
             <FormItem label="Label icon">
-              <Select
+              <LabelSelector
                 placeholder="Chọn label Icon"
                 value={promotionImage}
-                options={[{ label: "Hot deal", value: "Hotdeal" }]}
                 onChange={(value) => onChange?.({ key: "promotionImage", value: value, data: values })}
               />
             </FormItem>

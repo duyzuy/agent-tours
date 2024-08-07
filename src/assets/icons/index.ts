@@ -89,7 +89,21 @@ import IconFacebook from "./IconFacebook";
 import IconFiles from "./IconFiles";
 import IconFile from "./IconFile";
 import IconPlanet from "./IconPlanet";
+import IconHotDealOne from "./label/IconHotDealOne";
+import IconHotDealTwo from "./label/IconHotDealTwo";
+import IconHotSale from "./label/IconHotSale";
+import IconHotSaleTwo from "./label/IconHotSaleTwo";
+import IconBestDeal from "./label/IconBestDeal";
+import IconBigDeal from "./label/IconBigDeal";
+import IconDiscount from "./label/IconDiscount";
 export {
+  IconHotDealOne,
+  IconHotDealTwo,
+  IconHotSale,
+  IconHotSaleTwo,
+  IconBestDeal,
+  IconBigDeal,
+  IconDiscount,
   IconFile,
   IconFiles,
   IconTwitter,

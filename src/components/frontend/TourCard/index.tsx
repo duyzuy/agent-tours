@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import IconStar from "@/assets/icons/IconStar";
 import IconHeart from "@/assets/icons/IconHeart";
@@ -8,7 +8,9 @@ import classNames from "classnames";
 import { useTranslations } from "next-intl";
 import { Link } from "@/utils/navigation";
 import { IconImage } from "@/assets/icons";
-
+import IconHotSaleTwo from "@/assets/icons/label/IconHotSaleTwo";
+import { moneyFormatVND } from "@/utils/helper";
+import { getLabelHotDealIcon } from "@/constants/icons.constant";
 interface Props {
   name?: string;
   thumbnail?: string;
@@ -17,17 +19,26 @@ interface Props {
   durationDays?: string;
   departDate?: string;
   openAmount?: number;
-  salePrice?: string;
-  price?: string;
+
+  price?: number;
   className?: string;
   shadow?: "none" | "sm" | "md" | "lg";
   otherDepartDate?: string[];
+  showPromotion?: boolean;
+  promotion?: {
+    promotionImage?: string;
+    promotionLabel?: string;
+    promotionLabelType?: "text" | "image" | "";
+    promotionReferencePrice?: number;
+    promotionValidFrom?: string;
+    promotionValidTo?: string;
+  };
 }
 const TourCard = ({
   thumbnail,
   name,
   price,
-  salePrice,
+
   tourCode,
   durationDays,
   href = "/",
@@ -36,8 +47,21 @@ const TourCard = ({
   className = "",
   shadow = "md",
   otherDepartDate,
+  promotion,
+  showPromotion,
 }: Props) => {
   const t = useTranslations("String");
+
+  const {
+    promotionImage,
+    promotionLabel,
+    promotionLabelType,
+    promotionReferencePrice,
+    promotionValidFrom,
+    promotionValidTo,
+  } = promotion || {};
+
+  const iconItem = getLabelHotDealIcon(promotionImage ?? "");
   return (
     <div
       className={classNames("article", {
@@ -51,7 +75,7 @@ const TourCard = ({
           "shadow-lg": shadow === "lg",
         })}
       >
-        <div className="thumbnail w-full pt-[57.25%] relative italic bg-slate-50">
+        <div className="thumbnail w-full pt-[66.67%] relative italic bg-slate-50">
           {thumbnail ? (
             <Image src={thumbnail} alt="article" fill className="rounded-tl-lg rounded-tr-lg object-cover" />
           ) : (
@@ -62,17 +86,24 @@ const TourCard = ({
               </span>
             </div>
           )}
+          {showPromotion ? (
+            <TourCard.Label
+              icon={iconItem ? <iconItem.icon /> : undefined}
+              promotionLabel={promotionLabel}
+              promotionLabelType={promotionLabelType}
+            />
+          ) : null}
         </div>
         <div className="article-content px-2 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">
           <div className="article-content__top flex-1 mb-3 border-b border-[#f1f1f1] pb-3">
             <Link href={href} className="text-main-400 text-[15px]">
-              <h3 className="line-clamp-2 mb-2 h-12 text-md font-semibold text-main-400 text-sm lg:text-base">
+              <h3 className="line-clamp-2 mb-2 h-10 lg:h-12 leading-5 lg:leading-6 font-[500] text-main-400 text-sm lg:text-[16px]">
                 {name}
               </h3>
             </Link>
             <div className="price lg:flex lg:items-center">
               {price ? (
-                <p className="text-red-600 text-md font-semibold">{price}</p>
+                <TourCard.Price price={price} referencePrice={promotionReferencePrice} showPromotion={showPromotion} />
               ) : (
                 <p className="text-xs h-[22px]">{t("card.contact")}</p>
               )}
@@ -94,7 +125,7 @@ const TourCard = ({
                 <span className="text-red-600">{openAmount}</span>
               </li>
               {otherDepartDate ? (
-                <li className="flex items-center mb-1">
+                <li className="flex mb-1">
                   <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.otherDepart")}</span>
                   {otherDepartDate.length ? (
                     <div className="flex-1 w-full">
@@ -148,4 +179,56 @@ TourCard.BottomCard = function TourCardBottom() {
       </div>
     </div>
   );
+};
+
+TourCard.Price = function TourCardPrice({
+  price,
+  referencePrice,
+  showPromotion = false,
+}: {
+  price: number;
+  referencePrice?: number;
+  showPromotion?: boolean;
+}) {
+  if (!referencePrice || referencePrice < price || !showPromotion) {
+    return <p className="text-red-600 text-[16px] lg:text-lg font-[500]">{moneyFormatVND(price)}</p>;
+  } else {
+    return (
+      <div>
+        <span className="text-red-600 text-sm lg:text-[16px] font-[500] mr-2 inline-block">
+          {moneyFormatVND(price)}
+        </span>
+        <span className="font-[500] line-through text-[12px] lg:text-[14px] opacity-40 inline-block">
+          {moneyFormatVND(referencePrice)}
+        </span>
+      </div>
+    );
+  }
+};
+
+TourCard.Label = function TourCardLabel({
+  icon,
+  promotionLabel,
+  promotionLabelType,
+}: {
+  icon?: React.ReactNode;
+  promotionLabel?: string;
+  promotionLabelType?: "" | "text" | "image";
+}) {
+  const Iconn = icon;
+
+  if (promotionLabelType === "text") {
+    return (
+      <span className="absolute z-10 w-24 h-24 -top-12 -right-6 bg-rose-600 rounded-full">
+        <span className="w-12 h-12 absolute left-4 bottom-0 flex items-center bg-rose-600 text-[13px] leading-[16px] rounded-full text-white text-center overflow-hidden">
+          {promotionLabel}
+        </span>
+      </span>
+    );
+  }
+  if (promotionLabelType === "image") {
+    return icon ? <span className="absolute z-10 top-1 right-1">{icon}</span> : null;
+  }
+
+  return null;
 };

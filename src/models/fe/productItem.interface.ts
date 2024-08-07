@@ -38,7 +38,7 @@ export interface IFeTemplateProductItem {
     promotionReferencePrice: number;
     promotionLabel: string;
     promotionImage: string;
-    promotionLabelType: string;
+    promotionLabelType: "text" | "image" | "";
     promotionValidFrom: string;
     promotionValidTo: string;
     slug: string;
