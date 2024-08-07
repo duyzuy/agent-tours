@@ -20,9 +20,16 @@ export interface ProductListSliderProps {
     code?: string;
     href?: string;
     thumbnail?: string;
-    price?: string;
+    price?: number;
     departDate?: string;
     openAmount?: number;
+    showPromotion?: boolean;
+    promotion?: {
+      promotionImage?: string;
+      promotionLabel?: string;
+      promotionLabelType?: "image" | "text" | "";
+      promotionReferencePrice?: number;
+    };
   }[];
 }
 const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", items }) => {
@@ -74,6 +81,13 @@ const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", i
               tourCode={item.code}
               openAmount={item.openAmount}
               href={item.href}
+              showPromotion={item?.showPromotion}
+              promotion={{
+                promotionImage: item?.promotion?.promotionImage,
+                promotionLabel: item?.promotion?.promotionLabel,
+                promotionLabelType: item?.promotion?.promotionLabelType,
+                promotionReferencePrice: item?.promotion?.promotionReferencePrice,
+              }}
             />
           </SwiperSlide>
         ))}

@@ -10,6 +10,7 @@ import { mediaConfig } from "@/configs";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { isEmpty } from "lodash";
+import dayjs from "dayjs";
 
 export async function ProductRelated({
   className = "",
@@ -59,6 +60,22 @@ export async function ProductRelated({
     return sellableItem;
   };
 
+  const hasShowPromotion = ({
+    promotionValidFrom,
+    promotionValidTo,
+  }: {
+    promotionValidFrom?: string;
+    promotionValidTo?: string;
+  }) => {
+    const now = dayjs();
+    if (!promotionValidTo || !promotionValidFrom) return false;
+
+    if (now.isBefore(stringToDate(promotionValidFrom)) || now.isAfter(stringToDate(promotionValidTo))) {
+      return false;
+    }
+    return true;
+  };
+
   const productListFormated = productRelatedList?.reduce<Required<ProductListSliderProps>["items"]>(
     (acc, { cms, code, sellables, recId }) => {
       const cmsContent = cms.find((item) => item.lang === locale);
@@ -76,10 +93,20 @@ export async function ProductRelated({
               : undefined,
           recId: recId,
           departDate: sellableItem ? formatDate(sellableItem.startDate, "DD/MM/YYYY") : undefined,
-          price: lowestPrice ? moneyFormatVND(lowestPrice) : undefined,
+          price: lowestPrice,
           href: cmsContent && sellableItem ? `/tour/${recId}/${sellableItem.recId}/${cmsContent.slug}` : "/",
           code: code,
           openAmount: sellableItem?.open,
+          showPromotion: hasShowPromotion({
+            promotionValidFrom: cmsContent?.promotionValidFrom,
+            promotionValidTo: cmsContent?.promotionValidTo,
+          }),
+          promotion: {
+            promotionImage: cmsContent?.promotionImage,
+            promotionLabel: cmsContent?.promotionLabel,
+            promotionLabelType: cmsContent?.promotionLabelType,
+            promotionReferencePrice: cmsContent?.promotionReferencePrice,
+          },
         },
       ];
       return acc;

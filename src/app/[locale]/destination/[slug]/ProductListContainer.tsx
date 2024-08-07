@@ -5,7 +5,6 @@ import { getTemplateProductList } from "../../_actions/searchProduct";
 import TourCardTemplateItem from "../../_components/TourListContainer/TourCardTemplateItem";
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
-import IconEmptyBox from "@/assets/icons/IconEmptyBox";
 import { IconPlanet } from "@/assets/icons";
 import { Link } from "@/utils/navigation";
 interface ProductListContainerProps {
