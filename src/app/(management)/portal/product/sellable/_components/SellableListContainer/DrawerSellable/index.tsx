@@ -22,6 +22,7 @@ import { TIME_FORMAT, DATE_TIME_FORMAT } from "@/constants/common";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import { EProductType } from "@/models/management/core/productType.interface";
+import { stringToDate } from "@/utils/date";
 const MAX_NUMBER_INPUT = 999;
 
 export enum EActionType {
@@ -168,8 +169,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
     // console.log(date[0]?.toDate().t);
     setSellableConfirmFormData((prev) => ({
       ...prev,
-      valid: date[0]?.toString(),
-      validTo: date[1]?.toString(),
+      valid: date[0]?.toDate().toString(),
+      validTo: date[1]?.toDate().toString(),
     }));
 
     // setSellableConfirmFormData((prev) => ({
@@ -189,7 +190,7 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
     } else {
       setSellableConfirmFormData((prev) => ({
         ...prev,
-        closeDate: closeDate.locale("en").format(DATE_TIME_FORMAT),
+        closeDate: closeDate.toDate().toString(),
       }));
     }
   };
@@ -202,8 +203,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
     }
     setSellableConfirmFormData((prev) => ({
       ...prev,
-      start: date[0]?.locale("en").format(DATE_TIME_FORMAT),
-      end: date[1]?.locale("en").format(DATE_TIME_FORMAT),
+      start: date[0]?.toDate().toString(),
+      end: date[1]?.toDate().toString(),
     }));
   };
 
@@ -517,8 +518,8 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
   //             otherSellables: [...newOtherSellables],
   //         }));
   //     };
-  console.log(sellableConfirmFormData);
-  console.log(dayjs("11Aug2024 23:59", "DDmmmyyyy HH:mm"));
+  console.log(initialValues);
+  console.log(dayjs("12Aug2024 11:59", "DDMMMYYYY HH:mm"));
   const onSubmitForm: HandleSubmit<SellableConfirmFormData> = (data) => {
     actionType && onSubmit?.(actionType, data);
   };
@@ -527,11 +528,11 @@ const DrawerSellable: React.FC<DrawerSellableProps> = ({
     if (initialValues) {
       setSellableConfirmFormData((prev) => ({
         ...prev,
-        start: initialValues.startDate,
-        end: initialValues.endDate,
-        valid: initialValues.validFrom,
-        validTo: initialValues.validTo,
-        closeDate: initialValues.closeDate,
+        start: stringToDate(initialValues.startDate).toDate().toString(),
+        end: stringToDate(initialValues.endDate).toDate().toString(),
+        valid: stringToDate(initialValues.validFrom).toDate().toString(),
+        validTo: stringToDate(initialValues.validTo).toDate().toString(),
+        closeDate: stringToDate(initialValues.closeDate).toDate().toString(),
         recId: initialValues.recId,
         cap: initialValues.cap,
       }));

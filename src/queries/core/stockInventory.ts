@@ -42,19 +42,6 @@ export const useGetStockInventoryListCoreQuery = ({
     },
   };
 
-  // if (!isUndefined(requestObject)) {
-
-  //   requestObject = Object.keys(requestObject)
-  //     .sort()
-  //     .reduce<StockQueryParams["requestObject"]>((acc, key) => {
-
-  //       return {
-  //         ...acc,
-  //         [key]: requestObject ? requestObject[key as keyof StockQueryParams["requestObject"]] : undefined,
-  //       };
-  //     }, requestObject);
-  //}
-
   return useQuery({
     queryKey: [
       queryCore.GET_STOCK_LIST_INVENTORY,

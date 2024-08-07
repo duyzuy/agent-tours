@@ -28,7 +28,7 @@ const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({
         [className]: className,
       })}
     >
-      <div className="menu-secondary-item__name hover:bg-white/10 cursor-pointer px-4 py-2 rounded-md">
+      <div className="menu-secondary-item__name group-hover/item:bg-white/10 cursor-pointer px-4 py-2 rounded-md">
         <Link href={slug ?? "/"}>
           <span className="flex items-center">
             {icItem ? (
@@ -75,7 +75,7 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = ({ name, items, classN
       })}
     >
       <div className="bg-white px-6 py-4 rounded-lg shadow-lg">
-        <div className="menu-secondary-item__dropdown-head py-2 mb-3">
+        <div className="menu-secondary-item__dropdown-head py-2 mb-3 hidden">
           <h4 className="text-lg font-[500]">{name}</h4>
         </div>
         <div className="menu-secondary-item__dropdown-body">
@@ -107,8 +107,8 @@ const MegaMenuDropdown: React.FC<MegaMenuDropdownProps> = ({ name, items, classN
         [className]: className,
       })}
     >
-      <div className="menu-secondary-item__dropdown-inner bg-white rounded-lg w-full py-3 px-6 shadow-lg">
-        <div className="menu-secondary-item__dropdown-head py-2 mb-3">
+      <div className="menu-secondary-item__dropdown-inner bg-white rounded-lg w-full py-6 px-6 shadow-lg">
+        <div className="menu-secondary-item__dropdown-head py-2 mb-3 hidden">
           <h5 className="text-lg font-[500]">{name}</h5>
           {descriptions ? <div className="descriptions text-gray-500 text-xs">{descriptions}</div> : null}
         </div>
@@ -132,7 +132,7 @@ interface MegaMenuColumnProps {
 
 const MegaMenuColumn: React.FC<MegaMenuColumnProps> = ({ name, items }) => {
   return (
-    <div className="menu-secondary-column w-1/4 px-3">
+    <div className="menu-secondary-column w-1/5 px-3">
       <div className="sub-item-name mb-3">
         <span className="text-red-600 font-[500] text-base">{name}</span>
       </div>

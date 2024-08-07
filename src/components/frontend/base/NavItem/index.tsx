@@ -30,7 +30,10 @@ const NavItem = ({ className = "", name, slug, icon, items, objectType, navType 
         [className]: className,
       })}
     >
-      <span className="flex items-center gap-x-1 font-[500] leading-6 cursor-pointer px-3 py-2" aria-expanded="false">
+      <span
+        className="flex items-center gap-x-1 font-[500] relative leading-6 cursor-pointer px-3 py-2"
+        aria-expanded="false"
+      >
         {slug ? (
           <NavLink prefix={IconComp?.icon ? <IconComp.icon /> : undefined} href={slug} title={name} />
         ) : (
@@ -43,7 +46,7 @@ const NavItem = ({ className = "", name, slug, icon, items, objectType, navType 
         ) : null}
       </span>
       {items && items.length ? (
-        <NavItem.Dropdown className="invisible group-hover/item:visible -left-[100%]" items={items} navType={navType} />
+        <NavItem.Dropdown className="invisible group-hover/item:visible right-0" items={items} navType={navType} />
       ) : null}
     </div>
   );
@@ -63,11 +66,11 @@ NavItem.Dropdown = function NavItemDropdown({ className = "", items }: NavItemDr
 
   return (
     <div
-      className={classNames("rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 w-80 absolute z-100", {
+      className={classNames("rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 w-64 absolute z-100", {
         [className]: className,
       })}
     >
-      <div className="p-4">
+      <div className="p-3">
         {items?.map((item, _index) => (
           <div
             key={_index}
@@ -82,7 +85,7 @@ NavItem.Dropdown = function NavItemDropdown({ className = "", items }: NavItemDr
               >
                 <span className="text-gray-800 font-[500]">{item.name}</span>
               </NavLink>
-              {item.description ? <p className="mt-1 text-gray-600">{item.description}</p> : null}
+              {item.description ? <p className="mt-1 text-gray-600 text-xs">{item.description}</p> : null}
             </div>
           </div>
         ))}
@@ -96,8 +99,8 @@ const IconComp = ({ icon }: { icon?: React.FC<React.SVGProps<SVGSVGElement>> }) 
   return (
     <>
       {Icon ? (
-        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-          <Icon />
+        <div className="flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+          <Icon width={20} height={20} />
         </div>
       ) : null}
     </>

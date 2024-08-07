@@ -14,7 +14,6 @@ import useMessage from "@/hooks/useMessage";
 import StockFormContainer from "../../stock/_components/StockFormContainer";
 import StockListContainer from "../../stock/_components/StockListContainer";
 import { StockQueryParams } from "@/models/management/core/stock.interface";
-import { DATE_TIME_FORMAT } from "@/constants/common";
 import dayjs from "dayjs";
 import { Status } from "@/models/common.interface";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
@@ -62,8 +61,8 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
       requestObject: {
         ...prev.requestObject,
 
-        valid: (dates && dates[0]?.locale("en").format(DATE_TIME_FORMAT)) || undefined,
-        validTo: (dates && dates[1]?.locale("en").format(DATE_TIME_FORMAT)) || undefined,
+        valid: (dates && dates[0]?.toISOString()) || undefined,
+        validTo: (dates && dates[1]?.toISOString()) || undefined,
       },
     }));
   };
@@ -72,8 +71,8 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
       ...prev,
       requestObject: {
         ...prev.requestObject,
-        start: (dates && dates[0]?.locale("en").format(DATE_TIME_FORMAT)) || undefined,
-        end: (dates && dates[1]?.locale("en").format(DATE_TIME_FORMAT)) || undefined,
+        start: (dates && dates[0]?.toISOString()) || undefined,
+        end: (dates && dates[1]?.toISOString()) || undefined,
       },
     }));
   };
@@ -136,14 +135,10 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
                           format={"DD/MM/YYYY"}
                           value={[
                             stockQueryParams?.requestObject?.valid
-                              ? dayjs(stockQueryParams?.requestObject?.valid, {
-                                  format: DATE_TIME_FORMAT,
-                                })
+                              ? dayjs(stockQueryParams?.requestObject?.valid)
                               : null,
                             stockQueryParams?.requestObject?.validTo
-                              ? dayjs(stockQueryParams?.requestObject?.validTo, {
-                                  format: DATE_TIME_FORMAT,
-                                })
+                              ? dayjs(stockQueryParams?.requestObject?.validTo)
                               : null,
                           ]}
                           onChange={onChangeValidDate}
@@ -158,15 +153,9 @@ const StockPage = ({ params }: { params: { inventoryId: number } }) => {
                           format={"DD/MM/YYYY"}
                           value={[
                             stockQueryParams?.requestObject?.start
-                              ? dayjs(stockQueryParams?.requestObject?.start, {
-                                  format: DATE_TIME_FORMAT,
-                                })
+                              ? dayjs(stockQueryParams?.requestObject?.start)
                               : null,
-                            stockQueryParams?.requestObject?.end
-                              ? dayjs(stockQueryParams?.requestObject?.end, {
-                                  format: DATE_TIME_FORMAT,
-                                })
-                              : null,
+                            stockQueryParams?.requestObject?.end ? dayjs(stockQueryParams?.requestObject?.end) : null,
                           ]}
                           onChange={onChangeUsedDate}
                           className="w-full"
