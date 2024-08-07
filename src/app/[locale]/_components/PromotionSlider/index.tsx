@@ -50,49 +50,51 @@ const PromotionSlider: React.FC<PromotionSliderProps> = ({ items, title }) => {
   return (
     <section className="promotion-section">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="section__head pt-3 pb-3 lg:pb-6">
-          <h3 className="text-xl lg:text-2xl font-[500]">{title}</h3>
-        </div>
-        <div className="section__body slider relative block w-full">
-          <Swiper
-            slidesPerView={2}
-            spaceBetween={16}
-            autoplay={{
-              delay: 5500,
-              disableOnInteraction: false,
-            }}
-            breakpoints={{
-              640: {
-                slidesPerView: 3,
-                spaceBetween: 16,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 16,
-              },
-            }}
-            modules={[Autoplay, Navigation]}
-            onBeforeInit={(swiper) => {
-              swiperRef.current = swiper;
-            }}
-          >
-            {ITEMS.map((_item) => (
-              <SwiperSlide key={_item.id}>
-                <div className="banner overflow-hidden">
-                  <Link href={_item.slug}>
-                    <Image src={_item.thumb} alt={_item.name} width={900} height={600} className="rounded-md" />
-                  </Link>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <div className="swiper-navigation hidden lg:block">
-            <ButtonNavigation className="-left-5 top-[50%]" onClick={() => swiperRef.current?.slidePrev()}>
-              <IconChevronLeft width={16} />
-            </ButtonNavigation>
-            <ButtonNavigation className="-right-5 top-[50%]" onClick={() => swiperRef.current?.slideNext()}>
-              <IconChevronRight width={16} />
-            </ButtonNavigation>
+        <div className="inner bg-white rounded-md p-4 shadow-sm">
+          <div className="section__head pt-3 pb-3 lg:pb-6">
+            <h3 className="text-xl lg:text-2xl font-[500] uppercase">{title}</h3>
+          </div>
+          <div className="section__body slider relative block w-full">
+            <Swiper
+              slidesPerView={2}
+              spaceBetween={16}
+              autoplay={{
+                delay: 5500,
+                disableOnInteraction: false,
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 3,
+                  spaceBetween: 16,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 16,
+                },
+              }}
+              modules={[Autoplay, Navigation]}
+              onBeforeInit={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+            >
+              {ITEMS.map((_item) => (
+                <SwiperSlide key={_item.id}>
+                  <div className="banner overflow-hidden">
+                    <Link href={_item.slug}>
+                      <Image src={_item.thumb} alt={_item.name} width={900} height={600} className="rounded-md" />
+                    </Link>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <div className="swiper-navigation hidden lg:block">
+              <ButtonNavigation className="-left-5 top-[50%]" onClick={() => swiperRef.current?.slidePrev()}>
+                <IconChevronLeft width={16} />
+              </ButtonNavigation>
+              <ButtonNavigation className="-right-5 top-[50%]" onClick={() => swiperRef.current?.slideNext()}>
+                <IconChevronRight width={16} />
+              </ButtonNavigation>
+            </div>
           </div>
         </div>
       </div>

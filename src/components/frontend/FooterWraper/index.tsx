@@ -101,7 +101,7 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                       {childColumnItems.children?.map(({ title, slug, id }) => (
                         <li className="py-[6px]" key={id}>
                           <Link href={`/${slug}`} className="flex">
-                            <IconChevronRight width={14} height={14} className="stroke-white mr-2 lg:mt-[2px]" />
+                            <IconChevronRight width={14} height={14} className="stroke-white mr-1 lg:mt-[2px]" />
                             <span className="text-white text-xs lg:text-sm flex-1">{title}</span>
                           </Link>
                         </li>
@@ -120,14 +120,12 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
               <div className="w-full h-[1px] bg-gray-400 mb-3 opacity-50"></div>
               <div className="ft-contents flex -mx-2 lg:-mx-3 flex-wrap">
                 {informationItems?.map((item, _index) => (
-                  <ul className="list w-1/3 px-2 lg:px-3" key={_index}>
-                    <li className="py-[6px]" key={item.id}>
-                      <Link href={item.slug} className="flex">
-                        <IconChevronRight width={14} height={14} className="stroke-white mr-2 lg:mt-[2px]" />
-                        <span className="text-white flex-1 text-xs lg:text-sm ">{item.title}</span>
-                      </Link>
-                    </li>
-                  </ul>
+                  <div className="item w-1/3 px-2 lg:px-3" key={_index}>
+                    <Link href={item.slug} className="flex py-[6px]" title={item.title}>
+                      <IconChevronRight width={14} height={14} className="stroke-white mr-1 lg:mt-[2px]" />
+                      <span className="text-white flex-1 text-xs lg:text-sm">{item.title}</span>
+                    </Link>
+                  </div>
                 ))}
               </div>
             </div>

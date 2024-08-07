@@ -56,7 +56,7 @@ export default async function PostListContainer() {
       <div className="container mx-auto relative z-10 px-4 md:px-6 lg:px-8">
         <div className="section-title w-full flex items-center justify-between mb-6 lg:mb-12">
           <div className="text-2xl lg:text-4xl drop-shadow-lg text-white relative">
-            <span className="">Trải nghiệm, khám phá</span>
+            <span className="uppercase">Trải nghiệm, khám phá</span>
           </div>
         </div>
         <div className="w-full">

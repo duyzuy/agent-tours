@@ -20,6 +20,7 @@ import useAuth from "@/app/[locale]/hooks/useAuth";
 import useAuthModal from "@/app/[locale]/(auth)/hooks";
 import CalendarSelector from "./CalendarSelector";
 import PromotionSelector from "./PromotionSelector";
+import { stringToDate } from "@/utils/date";
 
 interface Props {
   className?: string;
@@ -53,7 +54,7 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
 
   const isInBookingDate = (d: Dayjs) => {
     return departureDates?.some((item) => {
-      return d.isSame(dayjs(item.departDate), "date");
+      return d.isSame(stringToDate(item.departDate), "date");
     });
   };
 
@@ -82,8 +83,9 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
   }, [productItem]);
 
   const onChangeProduct: DatePickerProps["onChange"] = (date) => {
+    console.log({ sellableList, date });
     const newProduct = sellableList?.find((prd) => {
-      return dayjs(prd.startDate).isSame(date);
+      return stringToDate(prd.startDate).isSame(date, "date");
     });
 
     newProduct && setProductItem(newProduct);
@@ -153,7 +155,7 @@ const ProductSummary = ({ className = "", sellableList, defaultSellable }: Props
         />
         <CalendarSelector
           label={t("productSummary.departDate.title")}
-          value={dayjs(productItem?.startDate)}
+          value={productItem?.startDate ? stringToDate(productItem.startDate) : undefined}
           disabledDate={(date) => {
             if (isInBookingDate(date) && date.isAfter(dayjs())) {
               return false;

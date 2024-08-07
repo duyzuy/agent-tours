@@ -1,15 +1,14 @@
 import classNames from "classnames";
 import { getTranslations } from "next-intl/server";
-import { FeProductItem, IFeTemplateProductItem } from "@/models/fe/productItem.interface";
+import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 import { getTemplateProductList } from "@/app/[locale]/_actions/searchProduct";
 import ProductListSlider, { ProductListSliderProps } from "@/components/frontend/ProductListSlider";
 import { getLocale } from "next-intl/server";
-import { formatDate } from "@/utils/date";
+import { formatDate, stringToDate } from "@/utils/date";
 import { moneyFormatVND } from "@/utils/helper";
 import { mediaConfig } from "@/configs";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import dayjs from "dayjs";
 import { isEmpty } from "lodash";
 
 export async function ProductRelated({
@@ -21,7 +20,6 @@ export async function ProductRelated({
 }) {
   const t = await getTranslations("String");
   const locale = await getLocale();
-  // const productRelatedList = await getProductListByTemplateCMSIdentity(cmsIdentityCode, 20);
 
   const queryParams = new FeSearchTourQueryParams(
     { byTemplateCmsIdentity: cmsIdentityCode, byProductType: [EProductType.TOUR] },
@@ -49,11 +47,11 @@ export async function ProductRelated({
     let sellableItem = sellables[0];
 
     sellables.forEach((item) => {
-      if (dayjs(item.startDate).isBefore(sellableItem.startDate)) {
+      if (stringToDate(item.startDate).isBefore(stringToDate(sellableItem.startDate))) {
         sellableItem = item;
       }
-      if (dayjs(item.startDate).isSame(sellableItem.startDate)) {
-        if (dayjs(item.validFrom).isBefore(sellableItem.validFrom)) {
+      if (stringToDate(item.startDate).isSame(stringToDate(sellableItem.startDate))) {
+        if (stringToDate(item.validFrom).isBefore(stringToDate(sellableItem.validFrom))) {
           sellableItem = item;
         }
       }
@@ -77,7 +75,7 @@ export async function ProductRelated({
               ? `${mediaConfig.rootApiPath}/${cmsContent?.thumbnail.original}`
               : undefined,
           recId: recId,
-          departDate: sellableItem ? formatDate(sellableItem.startDate, "dd/MM/yyyy") : undefined,
+          departDate: sellableItem ? formatDate(sellableItem.startDate, "DD/MM/YYYY") : undefined,
           price: lowestPrice ? moneyFormatVND(lowestPrice) : undefined,
           href: cmsContent && sellableItem ? `/tour/${recId}/${sellableItem.recId}/${cmsContent.slug}` : "/",
           code: code,
@@ -89,7 +87,7 @@ export async function ProductRelated({
     [],
   );
 
-  if (!productListFormated) {
+  if (!productListFormated || !productListFormated.length) {
     return null;
   }
   return (

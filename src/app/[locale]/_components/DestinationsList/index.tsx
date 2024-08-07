@@ -42,7 +42,9 @@ export default async function DestinationsList({ label }: DestinationsListProps)
     <div className="page-destination mb-12">
       <div className="container mx-auto lg:px-8 md:px-6 px-4">
         <div className="section__head pt-3 pb-3 lg:pb-6">
-          <Title as="h3">{label}</Title>
+          <Title as="h3" className="uppercase">
+            {label}
+          </Title>
         </div>
         <div className="section__body">
           <DestinationsSlider items={itemList || []} />

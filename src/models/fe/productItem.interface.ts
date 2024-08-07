@@ -6,6 +6,7 @@ import { ISellable } from "../management/core/sellable.interface";
 import { BaseResponse } from "../common.interface";
 import { IThumbnail } from "../thumbnail.interface";
 import { EProductType } from "../management/core/productType.interface";
+import { IInventoryDetailItem } from "../management/core/inventory.interface";
 
 export interface FeProductItem extends ISellable {
   configs: PriceConfig[];
@@ -34,6 +35,12 @@ export interface IFeTemplateProductItem {
     name: string;
     code: string;
     thumbnail: IThumbnail;
+    promotionReferencePrice: number;
+    promotionLabel: string;
+    promotionImage: string;
+    promotionLabelType: string;
+    promotionValidFrom: string;
+    promotionValidTo: string;
     slug: string;
     lang: LangCode;
     metaData: {
@@ -59,7 +66,7 @@ export interface IFeTemplateProductItem {
     promotions: IPromotion[];
     configs: PriceConfig[];
     sellableDetails: {
-      inventories: [];
+      inventories: IInventoryDetailItem[];
       stocks: [];
       extras: [];
       extraStocks: [];

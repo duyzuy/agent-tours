@@ -21,6 +21,7 @@ interface Props {
   price?: string;
   className?: string;
   shadow?: "none" | "sm" | "md" | "lg";
+  otherDepartDate?: string[];
 }
 const TourCard = ({
   thumbnail,
@@ -34,6 +35,7 @@ const TourCard = ({
   openAmount,
   className = "",
   shadow = "md",
+  otherDepartDate,
 }: Props) => {
   const t = useTranslations("String");
   return (
@@ -64,7 +66,9 @@ const TourCard = ({
         <div className="article-content px-2 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">
           <div className="article-content__top flex-1 mb-3 border-b border-[#f1f1f1] pb-3">
             <Link href={href} className="text-main-400 text-[15px]">
-              <h3 className="line-clamp-2 mb-2 text-md font-semibold text-main-400 text-sm lg:text-base">{name}</h3>
+              <h3 className="line-clamp-2 mb-2 h-12 text-md font-semibold text-main-400 text-sm lg:text-base">
+                {name}
+              </h3>
             </Link>
             <div className="price lg:flex lg:items-center">
               {price ? (
@@ -89,6 +93,22 @@ const TourCard = ({
                   <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.amountRemaining")}</span>
                   <span className="text-red-600">{openAmount}</span>
                 </li>
+                {otherDepartDate ? (
+                  <li className="flex items-center mb-1">
+                    <span className="text-gray-500 w-[65px] lg:w-[80px] block">{t("card.otherDepart")}</span>
+                    {otherDepartDate.length ? (
+                      <span className="flex-1 flex flex-wrap gap-1">
+                        {otherDepartDate.map((departStr, _index) => (
+                          <span className="depart" key={_index}>
+                            {departStr}
+                          </span>
+                        ))}
+                      </span>
+                    ) : (
+                      <span>Không có</span>
+                    )}
+                  </li>
+                ) : null}
               </ul>
               {/* <div className="slot text-center bg-gray-100 rounded-md px-2 py-2 border border-gray-300">
               <p>{t("card.amountRemaining")}</p>

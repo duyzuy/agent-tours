@@ -5,7 +5,7 @@ import { mediaConfig } from "@/configs";
 import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 import dayjs from "dayjs";
-import { formatDate } from "@/utils/date";
+import { formatDate, stringToDate } from "@/utils/date";
 import { useMemo } from "react";
 
 interface TourCardTemplateItemProps {
@@ -13,6 +13,7 @@ interface TourCardTemplateItemProps {
   lang?: LangCode;
 }
 const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang }) => {
+  const { sellables } = data;
   const tourCMSContent = useMemo(() => {
     return data.cms.find((cmsItem) => cmsItem.lang === lang);
   }, [data]);
@@ -30,24 +31,28 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
   };
 
   const sellableItem = useMemo(() => {
-    const { sellables } = data;
     if (!sellables.length) return;
 
     let sellableItem = sellables[0];
 
     sellables.forEach((item) => {
-      if (dayjs(item.startDate).isBefore(sellableItem.startDate)) {
+      if (stringToDate(item.startDate).isBefore(stringToDate(sellableItem.startDate))) {
         sellableItem = item;
       }
-      if (dayjs(item.startDate).isSame(sellableItem.startDate)) {
-        if (dayjs(item.validFrom).isBefore(sellableItem.validFrom)) {
+      if (stringToDate(item.startDate).isSame(stringToDate(sellableItem.startDate))) {
+        if (stringToDate(item.validFrom).isBefore(stringToDate(sellableItem.validFrom))) {
           sellableItem = item;
         }
       }
     });
     return sellableItem;
-  }, [data]);
+  }, [sellables]);
 
+  const otherDeparts = useMemo(() => {
+    return sellables.map((item) => stringToDate(item.startDate).format("DD/MM/YYYY")).splice(1);
+  }, [sellables]);
+
+  console.log(otherDeparts);
   return (
     <TourCard
       key={data.recId}
@@ -63,9 +68,10 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
           ? moneyFormatVND(getMinAdultPrice(sellableItem.configs))
           : undefined
       }
-      departDate={sellableItem ? formatDate(sellableItem.startDate, "dd/MM/yyyy") : undefined}
+      departDate={sellableItem ? formatDate(sellableItem.startDate, "DD/MM/YYYY") : undefined}
       openAmount={sellableItem?.open}
       href={sellableItem?.recId ? `/tour/${data.recId}/${sellableItem.recId}/${tourCMSContent?.slug}` : "/"}
+      otherDepartDate={otherDeparts}
     />
   );
 };
