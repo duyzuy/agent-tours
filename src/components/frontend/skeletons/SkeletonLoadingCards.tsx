@@ -19,7 +19,7 @@ const SkeletonLoadingCards: React.FC<Props> = ({ length = 2, className = "", col
         <div key={_index}>
           <div className=" rounded-lg bg-white overflow-hidden">
             <div className="animate-pulse">
-              <div className="bg-slate-100 rounded-sm w-full h-32"></div>
+              <div className="bg-slate-100 rounded-sm w-full h-32 lg:h-48"></div>
               <div className="w-full pt-6 px-3 pb-3">
                 <div className="h-2 bg-slate-100 rounded w-8 mb-6"></div>
                 <div className="space-y-3 mb-8">

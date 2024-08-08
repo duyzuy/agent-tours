@@ -124,6 +124,10 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
           key: "destination/search-group",
           label: "Nhóm search",
         },
+        {
+          key: "destination/notice-information",
+          label: "Thông tin lưu ý",
+        },
       ],
     },
     {

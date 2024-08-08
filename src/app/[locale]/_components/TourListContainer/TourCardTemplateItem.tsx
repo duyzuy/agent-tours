@@ -1,6 +1,5 @@
 "use client";
 import TourCard from "@/components/frontend/TourCard";
-import { moneyFormatVND } from "@/utils/helper";
 import { mediaConfig } from "@/configs";
 import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
@@ -63,7 +62,6 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
     return `${day} ngày ${night} đêm`;
   }, [sellableItem]);
 
-  console.log(tourCMSContent);
   const isShowPromotion = useMemo(() => {
     const now = dayjs();
     if (!tourCMSContent || !tourCMSContent?.promotionValidTo || !tourCMSContent?.promotionValidFrom) return false;
@@ -76,7 +74,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
     }
     return true;
   }, [tourCMSContent]);
-  console.log(isShowPromotion);
+
   return (
     <TourCard
       key={data.recId}

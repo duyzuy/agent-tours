@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import classNames from "classnames";
+
 const DATA = [
   {
     key: "asia",
@@ -118,6 +119,7 @@ const VisaSection = ({ label }: VisaSectionProps) => {
         <div className="head-section pt-6 px-4 mb-6">
           <h3 className="text-lg md:text-xl lg:text-2xl font-[500] uppercase">{label}</h3>
         </div>
+
         <div className="visa-list flex flex-wrap pb-6 px-4">
           {DATA.map((visa, _index) => (
             <div

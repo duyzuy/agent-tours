@@ -21,6 +21,7 @@ export interface FeVisaDetail {
   publishDate: string;
   status: PageContentStatus;
   languages: {
+    id: number;
     name: string;
     thumb: string;
     metaData: { key: string; value: string; icon: string }[];

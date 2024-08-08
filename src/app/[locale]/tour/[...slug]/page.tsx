@@ -101,7 +101,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
             <div className="line w-full h-[1px] bg-gray-100"></div>
 
-            <ProductContent data={cmsTemplateContent} />
+            <ProductContent data={cmsTemplateContent} locale={locale} />
 
             <div className="space h-8"></div>
 

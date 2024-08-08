@@ -30,18 +30,20 @@ export interface FeTemplateContentResponse
       codeImage: IThumbnail | null;
       codeName: string;
       languages: {
+        id: number;
         lang: LangCode;
         name: string;
         slug: string;
         thumb: string;
       }[];
       visaTemplates: {
+        id: number;
         code: string;
         name: string;
         lang: LangCode;
         slug: string;
         status: string;
-        thumb: string;
+        thumbnail: IThumbnail;
         metaData: {
           key: string;
           value: string;

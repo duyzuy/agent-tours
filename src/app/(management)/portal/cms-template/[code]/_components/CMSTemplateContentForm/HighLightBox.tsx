@@ -141,6 +141,8 @@ const HighLightBox: React.FC<HighLightBoxProps> = ({ values, onChange }) => {
                 placeholder="Nhập tên label hiển thị"
                 value={promotionLabel}
                 onChange={(ev) => onChange?.({ key: "promotionLabel", value: ev.target.value, data: values })}
+                maxLength={12}
+                showCount
               />
             </FormItem>
           ) : (

@@ -5,7 +5,6 @@ import { getTemplateProductList } from "@/app/[locale]/_actions/searchProduct";
 import ProductListSlider, { ProductListSliderProps } from "@/components/frontend/ProductListSlider";
 import { getLocale } from "next-intl/server";
 import { formatDate, stringToDate } from "@/utils/date";
-import { moneyFormatVND } from "@/utils/helper";
 import { mediaConfig } from "@/configs";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";

@@ -1,9 +1,12 @@
 import dynamic from "next/dynamic";
 import { IconScrollText, IconCalendarCheck, IconCalendarPlus, IconClipboard } from "@/assets/icons";
 import BlockPanels, { BlockPanelsProps } from "@/components/frontend/TabsBlockContentPanel/BlockPanels";
+import AreaContentHtml from "@/components/frontend/AreaContentHtml";
 import { FeTemplateContentResponse } from "@/models/fe/templateContent.interface";
 import { getVisaTemplateDetail } from "@/app/[locale]/visa/_actions/getVisaTemplateDetail";
 import { getTranslations } from "next-intl/server";
+import { getPageContentDetail } from "@/app/[locale]/_actions/pageContent";
+import { LangCode } from "@/models/management/cms/language.interface";
 
 const CustomTabsDynamic = dynamic(() => import("@/components/frontend/CustomTabs"), {
   loading: () => <ProductTourTabsContentSkeleton />,
@@ -12,9 +15,10 @@ const CustomTabsDynamic = dynamic(() => import("@/components/frontend/CustomTabs
 
 interface ProductContentProps {
   data?: FeTemplateContentResponse["result"][0];
+  locale?: LangCode;
   log?: any;
 }
-export default async function ProductContent({ data, log }: ProductContentProps) {
+export default async function ProductContent({ data, log, locale }: ProductContentProps) {
   const t = await getTranslations("String");
 
   const { visaTemplates } = data || {};
@@ -61,17 +65,21 @@ export default async function ProductContent({ data, log }: ProductContentProps)
     },
   ];
 
-  console.log({ visaTemplates });
+  /**
+   * GET visa
+   */
   if (visaTemplates && visaTemplates.length) {
     const visaTemplateDetailResponse = await getVisaTemplateDetail({
+      // lang: visaTemplates[0].lang,
+      // slug: visaTemplates[0].slug,
       lang: visaTemplates[0].lang,
-      slug: visaTemplates[0].slug,
+      id: visaTemplates[0].id,
     });
 
     const { result } = visaTemplateDetailResponse || {};
     const visaContent = result && result.length ? result[0].visaContent : undefined;
 
-    const blockVisaItems = visaContent?.metaContent.reduce<BlockPanelsProps["items"]>((acc, item, _index) => {
+    const blockVisaItems = visaContent?.metaContent.reduce<Required<BlockPanelsProps>["items"]>((acc, item, _index) => {
       return [...acc, { content: item.content, name: item.title, key: (_index + 1).toString() }];
     }, []);
 
@@ -82,6 +90,30 @@ export default async function ProductContent({ data, log }: ProductContentProps)
         key: "visaService",
         icon: <IconClipboard />,
         children: <BlockPanels descriptions={visaContent?.content} items={blockVisaItems ?? []} />,
+      },
+    ];
+  }
+
+  /**
+   * GET page detail rule
+   * page id in vn 1124 - en 1125
+   *
+   */
+
+  const pageContentDetailRule = await getPageContentDetail({ id: locale === LangCode.VI ? 1124 : 1125 });
+
+  if (pageContentDetailRule) {
+    // const blockVisaItems = visaContent?.metaContent.reduce<BlockPanelsProps["items"]>((acc, item, _index) => {
+    //   return [...acc, { content: item.content, name: item.title, key: (_index + 1).toString() }];
+    // }, []);
+
+    tabPanels = [
+      ...tabPanels,
+      {
+        label: "Điều kiện hoàn huỷ",
+        key: "pageContentRule",
+        icon: <IconClipboard />,
+        children: <BlockPanels descriptions={pageContentDetailRule.descriptions} items={[]} />,
       },
     ];
   }

@@ -1,12 +1,16 @@
 "use client";
+import classNames from "classnames";
 import styled from "styled-components";
 interface AreaContentHtmlProps {
   content?: string;
+  className?: string;
 }
-const AreaContentHtml: React.FC<AreaContentHtmlProps> = ({ content = "" }) => {
+const AreaContentHtml: React.FC<AreaContentHtmlProps> = ({ content = "", className = "" }) => {
   return (
     <AreaContentStyled
-      className="area-content"
+      className={classNames("area-content", {
+        [className]: className,
+      })}
       dangerouslySetInnerHTML={{
         __html: content,
       }}
