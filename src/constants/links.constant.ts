@@ -5,6 +5,8 @@ export const LINKS = {
   DashBoard: "/portal/dashboard",
   MyAccount: "/portal/my-account",
   DestinationList: "/portal/destination",
+  NoticeCreate: "/portal/destination/notice-information/create",
+  NoticeList: "/portal/destination/notice-information",
   ProductInventoryList: "/portal/product/inventory",
   ProductStockList: "/portal/product/inventory/{inventoryId}",
   ProductStockDetail: "/portal/product/stock/{stockInventoryId}",

@@ -1,48 +1,48 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
-import { columnsDestinationList } from "./columns";
-
-import { useGetRegionList } from "@/queries/core/region";
-
-import { useGetDestinationsQuery } from "@/queries/cms/destination";
-import { IDestinationListRs, IDestinationPayload } from "@/models/management/region.interface";
-import { Status } from "@/models/common.interface";
 import { useRouter } from "next/navigation";
+import { LINKS } from "@/constants/links.constant";
+import { columns } from "./columns";
+import { TravelInformationNoticeQueryParams } from "@/models/management/cms/cmsStateProvinceNotice";
+import { useGetTravelInformationNoticeListQuery } from "@/queries/cms/cmsTravelInfo";
+import { ITravelInformationNotice } from "@/models/management/cms/cmsStateProvinceNotice";
+const PageManagement = () => {
+  const router = useRouter();
 
-const GroupDestinationPage = () => {
-  const [editRecord, setEditRecord] = useState<IDestinationListRs["result"][0]>();
-
-  const { data: regionList, isLoading } = useGetRegionList();
-  const { data: destinationList, isLoading: isLoadingDestinationList } = useGetDestinationsQuery();
+  const [queryParams, setQueryParams] = useState(() => new TravelInformationNoticeQueryParams({}, 1, 10));
+  const { data, isLoading } = useGetTravelInformationNoticeListQuery(queryParams);
 
   return (
-    <React.Fragment>
-      <PageContainer
-        name="Thông tin lưu ý"
-        modelName="Thông tin lưu ý"
-        onClick={() => {}}
-        breadCrumItems={[{ title: "Thông tin lưu ý" }]}
-      >
-        {/* <TableListPage<IDestinationListRs["result"][0]>
-          scroll={{ x: 1000 }}
-          rowKey={"id"}
-          modelName="nhóm điểm đến"
-          showActionsLess={false}
-          dataSource={destinationList || []}
-          columns={columnsDestinationList}
-          onEdit={(record) =>
-            onHandleDrawlerDestination({
-              action: EActionType.EDIT,
-              record,
-            })
-          }
-          onDelete={(record) => onDelete(record)}
-          isLoading={isLoadingDestinationList}
-        /> */}
-      </PageContainer>
-    </React.Fragment>
+    <PageContainer
+      name="Danh sách lưu ý"
+      modelName="Danh sách lưu ý"
+      onClick={() => router.push(LINKS.NoticeCreate)}
+      breadCrumItems={[{ title: "Danh sách lưu ý" }]}
+    >
+      <TableListPage<ITravelInformationNotice>
+        scroll={{ x: 1000 }}
+        modelName="lưu ý"
+        dataSource={data?.list || []}
+        rowKey={"id"}
+        size="small"
+        columns={columns}
+        isLoading={isLoading}
+        onEdit={(record) => router.push(`/portal/destination/notice-information/${record.originId}`)}
+        pagination={{
+          total: data?.totalItems,
+          pageSize: data?.pageSize,
+          current: data?.pageCurrent,
+          onChange: (page) =>
+            setQueryParams((params) => ({
+              ...params,
+              pageCurrent: page,
+            })),
+        }}
+        showActionsLess={false}
+      />
+    </PageContainer>
   );
 };
-export default GroupDestinationPage;
+export default PageManagement;

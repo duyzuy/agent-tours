@@ -1,59 +1,86 @@
 import { ColumnsType } from "antd/es/table";
 import Link from "next/link";
-import { Space, Tag } from "antd";
-import { IDestinationListRs } from "@/models/management/region.interface";
-import { Status } from "@/models/common.interface";
-import { formatDate } from "@/utils/date";
-export const columnsDestinationList: ColumnsType<
-    IDestinationListRs["result"][0]
-> = [
-    {
-        title: "#ID",
-        key: "id",
-        dataIndex: "id",
-        width: 80,
-    },
-    {
-        title: "Tên nhóm",
-        key: "codeName",
-        dataIndex: "codeName",
-        width: 150,
-        render: (_, { id, codeName }) => {
-            return (
-                <>
-                    <div>
-                        <span>{codeName}</span>
-                    </div>
-                    <Link
-                        href={`/portal/destination/${id}`}
-                        className="text-xs"
-                    >
-                        Tạo nội dung
-                    </Link>
-                </>
-            );
-        },
-    },
-    {
-        title: "Mã nhóm",
-        key: "codeKey",
-        dataIndex: "codeKey",
-        width: 150,
-    },
+import { ITravelInformationNotice } from "@/models/management/cms/cmsStateProvinceNotice";
+import { locales } from "@/constants/locale.constant";
+import { GlobalOutlined } from "@ant-design/icons";
+import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
+import classNames from "classnames";
+import { Tag } from "antd";
 
+const createColumns = () => {
+  let columns: ColumnsType<ITravelInformationNotice> = [
     {
-        title: "Trạng thái",
-        key: "status",
-        dataIndex: "status",
-        width: 150,
-        render: (_, record) => {
-            return (
-                <Tag color={record.status === Status.OK ? "green" : "red"}>
-                    {(record.status === Status.OK && "Đang kích hoạt") ||
-                        (record.status === Status.OX && "Chờ kích hoạt") ||
-                        "Đã xoá"}
-                </Tag>
-            );
-        },
+      title: "#ID",
+      key: "id",
+      dataIndex: "id",
+      width: 120,
     },
-];
+    {
+      title: "Tiêu đề",
+      key: "name",
+      dataIndex: "name",
+      width: 320,
+      render: (_, { originId, name }) => {
+        return (
+          <>
+            <div>
+              <span>{name}</span>
+            </div>
+            <Link href={`/portal/destination/notice-information/${originId}`} className="text-xs">
+              Tạo nội dung
+            </Link>
+          </>
+        );
+      },
+    },
+    {
+      title: "Điểm đến",
+      key: "country",
+      dataIndex: "country",
+      width: 120,
+      render: (_, { country }) => {
+        return (
+          <>
+            {country.keyType === "STATEPROVINCELIST" ? (
+              <Tag color="orange">{country.stateProvinceKey}</Tag>
+            ) : country.keyType === "COUNTRYLIST" ? (
+              <Tag color="volcano">{country.countryKey}</Tag>
+            ) : country.keyType === "SUBREGIONLIST" ? (
+              <Tag color="red">{country.subRegionKey}</Tag>
+            ) : country.keyType === "REGIONLIST" ? (
+              <Tag color="magenta">{country.regionKey}</Tag>
+            ) : null}
+          </>
+        );
+      },
+    },
+  ];
+
+  return locales.reduce((acc, locale) => {
+    return (acc = [
+      ...acc,
+      {
+        title: locale.key,
+        key: locale.key,
+        dataIndex: locale.key,
+        width: 50,
+        render(value, { languages }, index) {
+          const item = languages.find((lang) => lang.lang === locale.key);
+          return item ? (
+            <span
+              className={classNames({
+                "text-emerald-500": item.status === PageContentStatus.PUBLISH,
+              })}
+            >
+              <GlobalOutlined />
+            </span>
+          ) : (
+            "-"
+          );
+        },
+      },
+    ]);
+  }, columns);
+};
+
+export const columns = createColumns();

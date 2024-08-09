@@ -9,14 +9,19 @@ type TStateProvinceGrouping = IStateProvince & {
 };
 
 interface ProvinceStateSelectionProps {
-  items: IStateProvince[];
-  value: IStateProvince[];
+  items?: IStateProvince[];
+  value?: IStateProvince[];
   onChange?: (value: IStateProvince[]) => void;
   editAble?: boolean;
 }
 
-const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, value, onChange, editAble = true }) => {
-  const [provinceList, setProvinceList] = useState<IStateProvince[]>([]);
+const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({
+  items = [],
+  value,
+  onChange,
+  editAble = true,
+}) => {
+  const [provinceList, setProvinceList] = useState<IStateProvince[]>();
 
   const provincesGrouping = useMemo(() => {
     const itemMap = items.reduce<{
@@ -89,9 +94,9 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
   };
 
   const changeRegion = (ev: CheckboxChangeEvent, region: TStateProvinceGrouping) => {
-    let newList = [...provinceList];
+    let newList = [...(provinceList || [])];
 
-    const allChildIdOfRegion = provinceList.reduce<number[]>((acc, item) => {
+    const allChildIdOfRegion = provinceList?.reduce<number[]>((acc, item) => {
       if (item.regionKey === region.regionKey) {
         acc = [...acc, item.recId];
       }
@@ -108,7 +113,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
       });
     } else {
       const excerptRestChildsOfRegion = childItemsOfRegion.filter(
-        (item) => item.regionKey === region.regionKey && !allChildIdOfRegion.includes(item.recId),
+        (item) => item.regionKey === region.regionKey && !allChildIdOfRegion?.includes(item.recId),
       );
 
       newList = [...newList, ...excerptRestChildsOfRegion];
@@ -120,12 +125,12 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
   };
 
   const changeSubRegion = (ev: CheckboxChangeEvent, subRegion: TStateProvinceGrouping) => {
-    let newList = [...provinceList];
+    let newList = [...(provinceList || [])];
     const childItemsOfSubRegion = items.filter(
       (item) => item.regionKey === subRegion.regionKey && item.subRegionKey === subRegion.subRegionKey,
     );
 
-    const currentChildItemsOfSubRegion = provinceList.reduce<number[]>((acc, item) => {
+    const currentChildItemsOfSubRegion = provinceList?.reduce<number[]>((acc, item) => {
       if (item.regionKey === subRegion.regionKey && item.subRegionKey === subRegion.subRegionKey) {
         acc = [...acc, item.recId];
       }
@@ -152,12 +157,11 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
       const rootSubRegionLengthOfRegion = items.filter((item) => item.regionKey === subRegion.regionKey).length;
 
       const excerptChildOfRegion = childItemsOfSubRegion.filter(
-        (item) => !currentChildItemsOfSubRegion.includes(item.recId),
+        (item) => !currentChildItemsOfSubRegion?.includes(item.recId),
       );
 
-      const currentSubRegionLenghOfRegion = provinceList.filter(
-        (item) => item.regionKey === subRegion.regionKey,
-      ).length;
+      const currentSubRegionLenghOfRegion =
+        provinceList?.filter((item) => item.regionKey === subRegion.regionKey).length ?? 0;
 
       if (
         rootSubRegionLengthOfRegion === currentSubRegionLenghOfRegion + excerptChildOfRegion.length + 1 &&
@@ -173,7 +177,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
   };
 
   const changeCountry = (ev: CheckboxChangeEvent, country: TStateProvinceGrouping) => {
-    let newList = [...provinceList];
+    let newList = [...(provinceList || [])];
     const childItemsOfCountry = items.filter(
       (item) =>
         item.regionKey === country.regionKey &&
@@ -181,7 +185,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
         item.countryKey === country.countryKey,
     );
 
-    const currentChildItemsOfCountry = provinceList.reduce<number[]>((acc, item) => {
+    const currentChildItemsOfCountry = provinceList?.reduce<number[]>((acc, item) => {
       if (
         item.regionKey === country.regionKey &&
         item.subRegionKey === country.subRegionKey &&
@@ -223,20 +227,22 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
           item.regionKey === country.regionKey &&
           item.subRegionKey === country.subRegionKey &&
           item.countryKey === country.countryKey &&
-          !currentChildItemsOfCountry.includes(item.recId),
+          !currentChildItemsOfCountry?.includes(item.recId),
       );
 
       const rootRegionLengthOfCountry = items.filter((item) => item.regionKey === country.regionKey).length;
-      const currentRegionLenghOfCountry =
-        provinceList.filter((item) => item.regionKey === country.regionKey).length + excerptChildOfCountry.length;
+      const currentRegionLenghOfCountry = provinceList
+        ? provinceList.filter((item) => item.regionKey === country.regionKey).length + excerptChildOfCountry.length
+        : excerptChildOfCountry.length;
 
       const rootSubRegionLength = items.filter(
         (item) => item.regionKey === country.regionKey && item.subRegionKey === country.subRegionKey,
       ).length;
-      const currentSubRegionLengh =
-        provinceList.filter(
-          (item) => item.regionKey === country.regionKey && item.subRegionKey === country.subRegionKey,
-        ).length + excerptChildOfCountry.length;
+      const currentSubRegionLengh = provinceList
+        ? provinceList.filter(
+            (item) => item.regionKey === country.regionKey && item.subRegionKey === country.subRegionKey,
+          ).length + excerptChildOfCountry.length
+        : excerptChildOfCountry.length;
 
       if (
         rootRegionLengthOfCountry === currentRegionLenghOfCountry + 2 &&
@@ -261,7 +267,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
   };
 
   const changeProvinceState = (ev: CheckboxChangeEvent, state: TStateProvinceGrouping) => {
-    let newList = [...provinceList];
+    let newList = [...(provinceList || [])];
     const regionOfState = items.find((item) => item.regionKey === state.regionKey && item.cat === "REGIONLIST");
     const subRegionOfState = items.find(
       (item) => item.subRegionKey === state.subRegionKey && item.cat === "SUBREGIONLIST",
@@ -270,7 +276,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
     const countryOfState = items.find((item) => item.countryKey === state.countryKey && item.cat === "COUNTRYLIST");
 
     if (!ev.target.checked) {
-      const indexItem = getIndex(state, provinceList);
+      const indexItem = getIndex(state, provinceList ?? []);
 
       if (indexItem !== -1) {
         newList.splice(indexItem, 1);
@@ -300,14 +306,14 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
       const { children, ...restOfStates } = state;
 
       const rootRegionLengthOfState = items.filter((item) => item.regionKey === state.regionKey).length;
-      const currentRegionLenghOfState = provinceList.filter((item) => item.regionKey === state.regionKey).length;
+      const currentRegionLenghOfState = provinceList?.filter((item) => item.regionKey === state.regionKey).length ?? 0;
 
       const rootSubRegionLength = items.filter(
         (item) => item.regionKey === state.regionKey && item.subRegionKey === state.subRegionKey,
       ).length;
-      const currentSubRegionLengh = provinceList.filter(
-        (item) => item.regionKey === state.regionKey && item.subRegionKey === state.subRegionKey,
-      ).length;
+      const currentSubRegionLengh =
+        provinceList?.filter((item) => item.regionKey === state.regionKey && item.subRegionKey === state.subRegionKey)
+          .length ?? 0;
 
       const rootCountryLengthOfState = items.filter(
         (item) =>
@@ -315,12 +321,13 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
           item.subRegionKey === state.subRegionKey &&
           item.countryKey === state.countryKey,
       ).length;
-      const currentCountryLenghOfState = provinceList.filter(
-        (item) =>
-          item.regionKey === state.regionKey &&
-          item.subRegionKey === state.subRegionKey &&
-          item.countryKey === state.countryKey,
-      ).length;
+      const currentCountryLenghOfState =
+        provinceList?.filter(
+          (item) =>
+            item.regionKey === state.regionKey &&
+            item.subRegionKey === state.subRegionKey &&
+            item.countryKey === state.countryKey,
+        ).length ?? 0;
 
       if (
         rootRegionLengthOfState === currentRegionLenghOfState + 4 &&
@@ -357,7 +364,7 @@ const ProvinceStateSelection: React.FC<ProvinceStateSelectionProps> = ({ items, 
     cat: "REGIONLIST" | "SUBREGIONLIST" | "COUNTRYLIST" | "STATEPROVINCELIST",
   ) => {
     return Boolean(
-      provinceList.some(
+      provinceList?.some(
         (item) =>
           item.regionKey === state.regionKey &&
           item.subRegionKey === state.subRegionKey &&
