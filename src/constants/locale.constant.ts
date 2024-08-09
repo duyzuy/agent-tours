@@ -19,6 +19,6 @@ export const locales: Locale[] = [
     shortName: "EN",
     icon: IconFlagEN,
   },
-] as const;
+];
 
 export const localeDefault: Locale = locales[0];
