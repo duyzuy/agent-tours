@@ -11,13 +11,9 @@ import ProductSummaryCard from "@/components/frontend/skeletons/ProductSummaryCa
 import ProductGalleries from "@/components/frontend/skeletons/ProductGalleries";
 
 import { isMobile } from "@/utils/detectMobile";
-
-// import { ProductTourTabsContentSkeleton } from "./_components/ProductContent";
-
 import ProductContent from "./_components/ProductContent";
-
 import { getTemplateContentDetail } from "../_actions/templateContent";
-import { getProductListByTemplateId, getTemplateProductList } from "../../_actions/searchProduct";
+import { getProductListByTemplateId } from "../../_actions/searchProduct";
 
 import { ProductRelated } from "../_components/ProductRelated";
 
@@ -26,19 +22,10 @@ const DynamicGalleries = dynamic(() => import("./_components/Galleries"), {
   ssr: false,
 });
 
-// const DynamicProductContent = dynamic(() => import("./_components/ProductContent"), {
-//   loading: () => <ProductTourTabsContentSkeleton />,
-//   ssr: true,
-// });
-
 const DynamicProductSummary = dynamic(() => import("./_components/ProductSummary"), {
   loading: () => <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />,
   ssr: false,
 });
-// const DynamicMobProductSummary = dynamic(() => import("./_components/mobile/MobProductSummary"), {
-//   loading: () => <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />,
-//   ssr: false,
-// });
 
 type PageProps = {
   params: {
@@ -116,22 +103,6 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
             isMobile={isMobile()}
             className="w-full lg:w-5/12 lg:pl-8 sticky top-4"
           />
-          {/* {isMobile() ? (
-            <DynamicMobProductSummary
-              defaultProductItem={productItem}
-              name={cmsTemplateContent?.name}
-              sellableList={productList}
-              className="w-full"
-            />
-          ) : (
-            <>
-              <DynamicProductSummary
-                defaultProductItem={productItem}
-                sellableList={productList}
-                className="w-full lg:w-5/12 lg:pl-8 sticky top-4"
-              />
-            </>
-          )} */}
           <ClientStoreData data={cmsTemplateContent?.languages} log={{ productList, cmsTemplateContent }} />
         </div>
       </div>

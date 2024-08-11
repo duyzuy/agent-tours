@@ -12,12 +12,9 @@ import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import { PassengerType } from "@/models/common.interface";
 import useSummaryPricingSelect from "@/app/[locale]/(booking)/modules/useSummaryPricingSelect";
 import HotlineBox from "@/components/frontend/HotlineBox";
-
 import useAuth from "@/app/[locale]/hooks/useAuth";
 import useAuthModal from "@/app/[locale]/(auth)/hooks";
-
 import { stringToDate } from "@/utils/date";
-
 import DesktopBoxSummary from "./DesktopBoxSummary";
 import MobileBoxSummary from "./MobileBoxSummary";
 
@@ -137,27 +134,8 @@ const ProductSummary = ({ className = "", productList, defaultProductItem, isMob
   }, [defaultProductItem]);
 
   return (
-    <div
-      className={classNames("col-booking", {
-        [className]: className,
-      })}
-    >
-      {!isMobile ? (
-        <DesktopBoxSummary
-          lowestPrice={lowestPrice}
-          subtotal={subtotal}
-          lowestPriceConfigItem={lowestPriceConfigItem}
-          durationDay={durationDay}
-          breakDownItems={breakDownItems}
-          sellableDetails={productItem?.sellableDetails}
-          promotions={productItem?.promotions}
-          startDate={startDate}
-          onNext={handleNextToPassengerInfo}
-          onChangeProduct={onChangeProduct}
-          isInBookingDate={isInBookingDate}
-          isLoading={isPendingInitBookingDetails}
-        />
-      ) : (
+    <>
+      {isMobile ? (
         <MobileBoxSummary
           label={tourName}
           lowestPrice={lowestPrice}
@@ -173,9 +151,30 @@ const ProductSummary = ({ className = "", productList, defaultProductItem, isMob
           isInBookingDate={isInBookingDate}
           isLoading={isPendingInitBookingDetails}
         />
+      ) : (
+        <div
+          className={classNames("col-booking", {
+            [className]: className,
+          })}
+        >
+          <DesktopBoxSummary
+            lowestPrice={lowestPrice}
+            subtotal={subtotal}
+            lowestPriceConfigItem={lowestPriceConfigItem}
+            durationDay={durationDay}
+            breakDownItems={breakDownItems}
+            sellableDetails={productItem?.sellableDetails}
+            promotions={productItem?.promotions}
+            startDate={startDate}
+            onNext={handleNextToPassengerInfo}
+            onChangeProduct={onChangeProduct}
+            isInBookingDate={isInBookingDate}
+            isLoading={isPendingInitBookingDetails}
+          />
+          <HotlineBox label="Hotline" phoneNumber={"0982.013.089"} />
+        </div>
       )}
-      <HotlineBox label="Hotline" phoneNumber={"0982.013.089"} />
-    </div>
+    </>
   );
 };
 export default ProductSummary;
