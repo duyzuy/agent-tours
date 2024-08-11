@@ -111,7 +111,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
       value = vietnameseTonesToUnderscoreKeyname(value).toUpperCase();
     }
 
-    const data = setTemplateSellableFormData((prev) => ({
+    setTemplateSellableFormData((prev) => ({
       ...prev,
       [key]: value,
     }));
@@ -123,6 +123,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
   const isWaitingApproval = useMemo(() => {
     return initialValues?.status === Status.QQ;
   }, [initialValues]);
+
   useEffect(() => {
     if (initialValues && actionType === EActionType.EDIT) {
       const inventoryTypeList = initialValues.inventoryTypeList.split("||") as EInventoryType[];
@@ -193,13 +194,13 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
           />
         </FormItem>
         <FormItem
-          label="Loại nhóm kho"
+          label="Loại dịch vụ"
           required
           validateStatus={errors?.inventoryTypeList ? "error" : ""}
           help={errors?.inventoryTypeList || ""}
         >
           <Select
-            placeholder="Chọn loại kho"
+            placeholder="Loại dịch vụ"
             mode="multiple"
             disabled={isWaitingApproval}
             value={templateSellableFormData.inventoryTypeList}

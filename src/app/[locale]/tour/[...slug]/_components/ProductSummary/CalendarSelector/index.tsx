@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import dayjs from "dayjs";
 import FeCustomDatePicker, { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import { IconCalendar } from "@/assets/icons";
@@ -12,7 +12,7 @@ interface CalendarSelectorProps {
   value?: dayjs.Dayjs;
   dateList?: dayjs.Dayjs;
   disabledDate?: FeCustomDatePickerProps["disabledDate"];
-  onChange: (value: dayjs.Dayjs | null, dateString: string) => void;
+  onChange?: (value: dayjs.Dayjs | null, dateString: string) => void;
   className?: string;
 }
 const CalendarSelector: React.FC<CalendarSelectorProps> = ({
@@ -30,7 +30,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
   }, []);
 
   const handleChangeDate: FeCustomDatePickerProps["onChange"] = (value, dateStr) => {
-    onChange(value, dateStr);
+    onChange?.(value, dateStr);
     setOpen(false);
   };
   useClickOutSide(modalRef, () => {
@@ -75,4 +75,4 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
     </div>
   );
 };
-export default CalendarSelector;
+export default memo(CalendarSelector);

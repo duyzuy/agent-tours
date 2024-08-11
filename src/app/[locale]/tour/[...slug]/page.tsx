@@ -35,10 +35,10 @@ const DynamicProductSummary = dynamic(() => import("./_components/ProductSummary
   loading: () => <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />,
   ssr: false,
 });
-const DynamicMobProductSummary = dynamic(() => import("./_components/mobile/MobProductSummary"), {
-  loading: () => <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />,
-  ssr: false,
-});
+// const DynamicMobProductSummary = dynamic(() => import("./_components/mobile/MobProductSummary"), {
+//   loading: () => <ProductSummaryCard className="w-full lg:w-5/12 lg:pl-8 " />,
+//   ssr: false,
+// });
 
 type PageProps = {
   params: {
@@ -65,7 +65,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
    */
   const productList = await getProductListByTemplateId(Number(templateId));
 
-  const currentSellable = productList?.find((item) => item.recId === Number(sellableId));
+  const productItem = productList?.find((item) => item.recId === Number(sellableId));
 
   if (
     isUndefined(cmsTemplateContent) ||
@@ -74,7 +74,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
     isUndefined(templateContentSlug) ||
     isUndefined(productList) ||
     !productList.length ||
-    !currentSellable
+    !productItem
   ) {
     notFound();
   }
@@ -83,7 +83,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
     <div className="page-detail">
       <div className="bg-gray-100">
         <BreadCrumb
-          items={[{ title: cmsTemplateContent?.name }]}
+          items={[{ title: "Tour" }, { title: cmsTemplateContent?.name }]}
           classname="container mx-auto py-4 lg:px-8 md:px-6 px-4"
         />
       </div>
@@ -91,7 +91,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
       <div className="container mx-auto py-4 lg:py-12 lg:px-8 md:px-6 px-4">
         <div className="flex flex-wrap items-start">
           <div className="tour-contents w-full lg:w-7/12">
-            <ProductHeader name={cmsTemplateContent?.name} tourCode={currentSellable?.template.code}>
+            <ProductHeader name={cmsTemplateContent?.name} tourCode={productItem?.template.code}>
               <h1 className="text-xl text-primary-default font-bold">{cmsTemplateContent?.name}</h1>
             </ProductHeader>
 
@@ -108,20 +108,30 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
             <ProductRelated cmsIdentityCode={cmsTemplateContent.code} />
             {/* <TourReviews /> */}
           </div>
-          {isMobile() ? (
+
+          <DynamicProductSummary
+            tourName={cmsTemplateContent?.name}
+            defaultProductItem={productItem}
+            productList={productList}
+            isMobile={isMobile()}
+            className="w-full lg:w-5/12 lg:pl-8 sticky top-4"
+          />
+          {/* {isMobile() ? (
             <DynamicMobProductSummary
-              defaultSellable={currentSellable}
+              defaultProductItem={productItem}
               name={cmsTemplateContent?.name}
               sellableList={productList}
               className="w-full"
             />
           ) : (
-            <DynamicProductSummary
-              defaultSellable={currentSellable}
-              sellableList={productList}
-              className="w-full lg:w-5/12 lg:pl-8 sticky top-4"
-            />
-          )}
+            <>
+              <DynamicProductSummary
+                defaultProductItem={productItem}
+                sellableList={productList}
+                className="w-full lg:w-5/12 lg:pl-8 sticky top-4"
+              />
+            </>
+          )} */}
           <ClientStoreData data={cmsTemplateContent?.languages} log={{ productList, cmsTemplateContent }} />
         </div>
       </div>

@@ -10,7 +10,7 @@ interface CalendarSelectorProps {
   value?: dayjs.Dayjs;
   dateList?: dayjs.Dayjs;
   disabledDate?: FeCustomDatePickerProps["disabledDate"];
-  onChange: (value: dayjs.Dayjs | null, dateString: string) => void;
+  onChange?: (value: dayjs.Dayjs | null, dateString: string) => void;
 }
 const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate, onChange }) => {
   const locale = useLocale();
@@ -23,7 +23,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({ value, disabledDate
   }, []);
 
   const handleChangeDate: FeCustomDatePickerProps["onChange"] = (value, dateStr) => {
-    onChange(value, dateStr);
+    onChange?.(value, dateStr);
     setOpen(false);
   };
 

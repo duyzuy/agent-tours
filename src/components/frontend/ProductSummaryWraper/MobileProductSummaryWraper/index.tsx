@@ -1,18 +1,15 @@
 "use client";
 import { useRef, useState } from "react";
-import { IconChevronDown } from "@/assets/icons";
 import { useTranslations } from "next-intl";
-import { IconTicketPercent } from "@/assets/icons";
-import classNames from "classnames";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import CouponCard from "../../CouponCard";
-import { Modal, Flex, Button, Space, Drawer } from "antd";
+import { Modal, Flex, Button, Drawer } from "antd";
 import { PassengerType } from "@/models/common.interface";
+import { moneyFormatVND } from "@/utils/helper";
 import styled from "styled-components";
 
-interface MobProductSummaryWraperProps {
+interface MobileProductSummaryWraperProps {
   label?: string;
-  productPrice?: string;
+  productPrice?: number;
   children?: React.ReactNode;
   openAmount?: number;
   prefix?: () => React.ReactNode;
@@ -21,16 +18,16 @@ interface MobProductSummaryWraperProps {
     pricingConfigs: {
       type: PassengerType;
       configClass: string;
-      pricing: string;
+      pricing: number;
       id: number;
     }[];
-    couponPolicy?: { code: string; discountAmount: string };
+    couponPolicy?: { code: string; discountAmount: number };
     subtotal: string;
   };
   onBookNow?: () => void;
   isLoading?: boolean;
 }
-const MobProductSummaryWraper = ({
+const MobileProductSummaryWraper = ({
   label,
   productPrice,
   openAmount,
@@ -39,7 +36,7 @@ const MobProductSummaryWraper = ({
   breakDown,
   onBookNow,
   isLoading = false,
-}: MobProductSummaryWraperProps) => {
+}: MobileProductSummaryWraperProps) => {
   const t = useTranslations("String");
   const [openBreakDown, setShowBreakDown] = useState(false);
   const positionRef = useRef(0);
@@ -47,7 +44,6 @@ const MobProductSummaryWraper = ({
     setShowBreakDown(false);
   };
   const [showDrawerBookingContainer, setShowDrawerBookingContainer] = useState(false);
-  const [showPromotionDrawer, setShowPromotionDrawer] = useState(false);
 
   const handleClickBooknow = () => {
     const body = document.getElementsByTagName("body")[0];
@@ -63,7 +59,7 @@ const MobProductSummaryWraper = ({
         <div className="flex items-center px-4 py-3">
           <div className="price block w-1/2">
             <span className="text-xs block">{t("justFrom")}</span>
-            <span className="text-red-600 font-semibold text-lg block">{productPrice}</span>
+            <span className="text-red-600 font-semibold text-lg block">{moneyFormatVND(productPrice)}</span>
           </div>
           <div className="buttons w-1/2">
             <Button
@@ -113,7 +109,7 @@ const MobProductSummaryWraper = ({
               <div className="pricing mb-6">
                 <div className="price block">
                   <span className="text-xs block">{t("justFrom")}</span>
-                  <span className="text-red-600 font-semibold text-xl block">{productPrice}</span>
+                  <span className="text-red-600 font-semibold text-xl block">{moneyFormatVND(productPrice)}</span>
                 </div>
                 <div className="amount inline-block">
                   <span className="text-xs block">
@@ -134,7 +130,7 @@ const MobProductSummaryWraper = ({
         </div>
         {productPrice ? (
           <div className="absolute bottom-0 left-0 right-0 z-20 bg-white px-4 pt-2 pb-4 border-t">
-            <MobProductSummaryWraper.Subtotal
+            <MobileProductSummaryWraper.Subtotal
               label={t("subtotal")}
               onClick={() => setShowBreakDown(true)}
               subtotal={breakDown?.subtotal}
@@ -194,14 +190,14 @@ const MobProductSummaryWraper = ({
     </>
   );
 };
-export default MobProductSummaryWraper;
+export default MobileProductSummaryWraper;
 
 interface ProductSummarySubtotalProps {
   label?: string;
   subtotal?: string;
   onClick?: () => void;
 }
-MobProductSummaryWraper.Subtotal = function ProductSummarySubtotal({
+MobileProductSummaryWraper.Subtotal = function ProductSummarySubtotal({
   label,
   subtotal,
   onClick,
@@ -222,14 +218,6 @@ MobProductSummaryWraper.Subtotal = function ProductSummarySubtotal({
 };
 
 const DrawerMobileBookingSummary = styled(Drawer)`
-  &.travel-drawer-content {
-    border-radius: 10px 10px 0 0;
-    .travel-drawer-body {
-      padding: 16px;
-    }
-  }
-`;
-const DrawerMobilePromotion = styled(Drawer)`
   &.travel-drawer-content {
     border-radius: 10px 10px 0 0;
     .travel-drawer-body {

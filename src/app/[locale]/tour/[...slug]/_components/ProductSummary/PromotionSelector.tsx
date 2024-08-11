@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { IconTicketPercent } from "@/assets/icons";
 import { IPromotion } from "@/models/management/core/promotion.interface";
@@ -7,14 +7,15 @@ import CouponCard from "@/components/frontend/CouponCard";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import classNames from "classnames";
+import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
 interface PromotionSelectorProps {
-  onSelect?: (item: IPromotion) => void;
-  value?: string;
   items: IPromotion[];
   className?: string;
 }
-const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, value, onSelect, className = "" }) => {
+const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className = "" }) => {
   const t = useTranslations("String");
+
+  const { couponPolicy, addCouponPolicy, removeCouponPolicy } = useCoupon();
   const [openModal, setShowModal] = useState(false);
   const showModal = () => {
     setShowModal(true);
@@ -23,16 +24,16 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, value, onS
     setShowModal(false);
   };
   const handleSelect = (item: IPromotion) => {
-    onSelect?.(item);
+    couponPolicy?.code === item.code ? removeCouponPolicy() : addCouponPolicy(item.code);
     setShowModal(false);
   };
   return (
-    <>
-      <div
-        className={classNames("card-promocode-label mb-6", {
-          [className]: className,
-        })}
-      >
+    <div
+      className={classNames("card-promotion-selector", {
+        [className]: className,
+      })}
+    >
+      <div className="card-promotion-head">
         <span
           className="flex items-center text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-sm cursor-pointer"
           onClick={showModal}
@@ -50,7 +51,7 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, value, onS
             <CouponCard
               key={_index}
               className={_index !== 0 ? "mt-3" : ""}
-              isSelecting={value === promo.code}
+              isSelecting={couponPolicy?.code === promo.code}
               code={promo.code}
               price={moneyFormatVND(promo.discountAmount)}
               validFrom={formatDate(promo.validFrom, "dd/MM/yyyy")}
@@ -60,7 +61,7 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, value, onS
           ))}
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
-export default PromotionSelector;
+export default memo(PromotionSelector);

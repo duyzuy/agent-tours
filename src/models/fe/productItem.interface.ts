@@ -20,6 +20,12 @@ export interface FeProductItem extends ISellable {
     }[];
   };
   promotions: IPromotion[];
+  sellableDetails: {
+    inventories: IInventoryDetailItem[];
+    stocks: [];
+    extras: [];
+    extraStocks: [];
+  };
 }
 
 export interface ProductListResponse extends BaseResponse<FeProductItem[]> {}
