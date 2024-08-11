@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useCallback, forwardRef, useEffect } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/utils/navigation";
 

@@ -1,12 +1,11 @@
 import Logo from "@/components/frontend/partials/Logo";
-
-import HeaderMainWraper from "./HeaderMainWraper";
 import HeaderNavitationTop from "@/components/frontend/HeaderNavigationTop";
 import { Suspense } from "react";
 import AccountItem from "./AccountItem";
 import LanguageSwitcher from "../../LanguageSwitcher";
 import { isMobile } from "@/utils/detectMobile";
 import MobileHeaderMainWraper from "./MobileHeaderMainWraper";
+import HeaderMainWraper from "./HeaderMainWraper";
 import { getPrimaryMenu } from "@/app/[locale]/_actions/menu";
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
@@ -14,7 +13,6 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import { getMenuListFomatedTypes } from "@/utils/menu";
 
 export default async function Header() {
-  const isMobileDevice = isMobile();
   const locale = await getLocale();
 
   const primaryMenuResult = await getPrimaryMenu(locale as LangCode);
@@ -30,7 +28,7 @@ export default async function Header() {
           <Logo alt="Logo An Thai" width={240} height={80} className="w-32 lg:w-52" />
         </div>
         <div className="flex items-center justify-center lg:hidden">
-          <MobileHeaderMainWraper isMobile={isMobileDevice} />
+          <MobileHeaderMainWraper isMobile={isMobile()} />
         </div>
         <div className="hidden lg:block lg:gap-x-12">
           <HeaderNavitationTop>

@@ -16,9 +16,6 @@ export default async function MobileHeaderMainWraper({ isMobile }: MobileHeaderM
 
   const mobileMenuItems = menuItems ? getMenuListFomatedTypes(menuItems) : [];
 
-  if (!isMobile) {
-    return null;
-  }
   return (
     <>
       <AccountItem isMobile={true} />

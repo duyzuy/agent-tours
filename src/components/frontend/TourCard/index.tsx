@@ -47,8 +47,7 @@ const useTourCardContext = () => {
   return context;
 };
 
-const TourCard = ({ className = "", shadow, children, data }: TourCardProps) => {
-  console.log(data);
+const TourCard = ({ className = "", shadow = "md", children, data }: TourCardProps) => {
   return (
     <TourCardContext.Provider value={data}>
       <div
