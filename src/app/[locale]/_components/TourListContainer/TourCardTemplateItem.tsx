@@ -57,9 +57,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
 
   const durationDays = useMemo(() => {
     if (!sellableItem) return;
-    const day = stringToDate(sellableItem.endDate).diff(stringToDate(sellableItem.startDate), "day");
-    const night = day - 1;
-    return `${day} ngày ${night} đêm`;
+    return stringToDate(sellableItem.endDate).diff(stringToDate(sellableItem.startDate), "day");
   }, [sellableItem]);
 
   const isShowPromotion = useMemo(() => {
@@ -75,30 +73,42 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
     return true;
   }, [tourCMSContent]);
 
+  const cardDataProps = {
+    tourCode: data.code,
+    thumbnail:
+      tourCMSContent && tourCMSContent.thumbnail
+        ? `${mediaConfig.rootApiPath}/${tourCMSContent?.thumbnail.original}`
+        : undefined,
+    name: tourCMSContent?.name,
+    price: getMinAdultPrice(sellableItem?.configs),
+    departDate: sellableItem ? formatDate(sellableItem.startDate, "DD/MM/YYYY") : undefined,
+    openAmount: sellableItem?.open,
+    href: sellableItem?.recId ? `/tour/${data.recId}/${sellableItem.recId}/${tourCMSContent?.slug}` : "/",
+    otherDepartDate: otherDeparts,
+    durationDays: durationDays,
+    showPromotion: isShowPromotion,
+    promotion: {
+      promotionImage: tourCMSContent?.promotionImage,
+      promotionLabel: tourCMSContent?.promotionLabel,
+      promotionLabelType: tourCMSContent?.promotionLabelType,
+      promotionReferencePrice: tourCMSContent?.promotionReferencePrice,
+    },
+  };
+
   return (
-    <TourCard
-      key={data.recId}
-      tourCode={data.code}
-      thumbnail={
-        tourCMSContent && tourCMSContent.thumbnail
-          ? `${mediaConfig.rootApiPath}/${tourCMSContent?.thumbnail.original}`
-          : undefined
-      }
-      name={tourCMSContent?.name}
-      price={getMinAdultPrice(sellableItem?.configs)}
-      departDate={sellableItem ? formatDate(sellableItem.startDate, "DD/MM/YYYY") : undefined}
-      openAmount={sellableItem?.open}
-      href={sellableItem?.recId ? `/tour/${data.recId}/${sellableItem.recId}/${tourCMSContent?.slug}` : "/"}
-      otherDepartDate={otherDeparts}
-      durationDays={durationDays}
-      showPromotion={isShowPromotion}
-      promotion={{
-        promotionImage: tourCMSContent?.promotionImage,
-        promotionLabel: tourCMSContent?.promotionLabel,
-        promotionLabelType: tourCMSContent?.promotionLabelType,
-        promotionReferencePrice: tourCMSContent?.promotionReferencePrice,
-      }}
-    />
+    <TourCard data={cardDataProps}>
+      <TourCard.Head>
+        <TourCard.Thumbnail />
+        <TourCard.Badget />
+      </TourCard.Head>
+      <TourCard.Body>
+        <TourCard.Title />
+        <TourCard.Price />
+        <TourCard.Days />
+        <div className="flex-1 mb-3 border-b border-[#f1f1f1] pb-3"></div>
+        <TourCard.InfoList />
+      </TourCard.Body>
+    </TourCard>
   );
 };
 export default TourCardTemplateItem;

@@ -75,7 +75,7 @@ const SliderTourItems: React.FC<SliderProducts> = () => {
       >
         {TOUR_ITEMS.map((item) => (
           <SwiperSlide key={item.id} style={{ width: "40%" }}>
-            <TourCard thumbnail={item.thumbnail} name={item.title} className="w-full" shadow="none" />
+            no item
           </SwiperSlide>
         ))}
       </Swiper>

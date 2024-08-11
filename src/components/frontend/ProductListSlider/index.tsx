@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef } from "react";
 import classNames from "classnames";
-import TourCard from "@/components/frontend/TourCard";
+import TourCard, { TourCardProps } from "@/components/frontend/TourCard";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper as SwiperType } from "swiper/types";
@@ -14,23 +14,7 @@ import styles from "./style.module.scss";
 
 export interface ProductListSliderProps {
   className?: string;
-  items?: {
-    recId?: number;
-    name?: string;
-    code?: string;
-    href?: string;
-    thumbnail?: string;
-    price?: number;
-    departDate?: string;
-    openAmount?: number;
-    showPromotion?: boolean;
-    promotion?: {
-      promotionImage?: string;
-      promotionLabel?: string;
-      promotionLabelType?: "image" | "text" | "";
-      promotionReferencePrice?: number;
-    };
-  }[];
+  items?: TourCardProps["data"][];
 }
 const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", items }) => {
   const swiperRef = useRef<SwiperType>();
@@ -69,26 +53,22 @@ const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", i
       >
         {items?.map((item) => (
           <SwiperSlide
-            key={item.recId}
+            key={item?.recId}
             style={{ width: "40%", paddingLeft: "5px", paddingRight: "5px", paddingBottom: "10px" }}
           >
-            <TourCard
-              key={item.recId}
-              thumbnail={item.thumbnail}
-              name={item.name}
-              price={item.price}
-              departDate={item.departDate}
-              tourCode={item.code}
-              openAmount={item.openAmount}
-              href={item.href}
-              showPromotion={item?.showPromotion}
-              promotion={{
-                promotionImage: item?.promotion?.promotionImage,
-                promotionLabel: item?.promotion?.promotionLabel,
-                promotionLabelType: item?.promotion?.promotionLabelType,
-                promotionReferencePrice: item?.promotion?.promotionReferencePrice,
-              }}
-            />
+            <TourCard data={item}>
+              <TourCard.Head>
+                <TourCard.Thumbnail />
+                <TourCard.Badget />
+              </TourCard.Head>
+              <TourCard.Body>
+                <TourCard.Title />
+                <TourCard.Price />
+                <TourCard.Days />
+                <div className="flex-1 mb-3 border-b border-[#f1f1f1] pb-3"></div>
+                <TourCard.InfoList />
+              </TourCard.Body>
+            </TourCard>
           </SwiperSlide>
         ))}
       </Swiper>

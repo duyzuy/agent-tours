@@ -82,6 +82,11 @@ export async function ProductRelated({
       const sellableItem = getSellableItem(sellables);
 
       const lowestPrice = sellableItem ? getMinAdultPrice(sellableItem.configs) : undefined;
+
+      const durationDays = sellableItem
+        ? stringToDate(sellableItem.endDate).diff(stringToDate(sellableItem.startDate), "day")
+        : undefined;
+
       acc = [
         ...acc,
         {
@@ -94,8 +99,9 @@ export async function ProductRelated({
           departDate: sellableItem ? formatDate(sellableItem.startDate, "DD/MM/YYYY") : undefined,
           price: lowestPrice,
           href: cmsContent && sellableItem ? `/tour/${recId}/${sellableItem.recId}/${cmsContent.slug}` : "/",
-          code: code,
+          tourCode: code,
           openAmount: sellableItem?.open,
+          durationDays: durationDays,
           showPromotion: hasShowPromotion({
             promotionValidFrom: cmsContent?.promotionValidFrom,
             promotionValidTo: cmsContent?.promotionValidTo,

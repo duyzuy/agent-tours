@@ -4,15 +4,19 @@ import { LangCode } from "@/models/management/cms/language.interface";
 import { ITranslationListRs, ITranslationRs } from "@/models/management/cms/translations.interface";
 import { ITranslationPayload } from "@/models/management/cms/translations.interface";
 export const translationAPIs = {
-  getList: async () => {
+  getList: async (queryString: string) => {
     return await client.post<ITranslationListRs>("local/getCms_translation_frontend", {
       headers: {
         Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
       },
       params: {
-        requestObject: {},
-        // pageCurrent: 1,
-        // pageSize: 20,
+        requestObject: {
+          name: queryString,
+        },
+        orderBy: {
+          sortColumn: "id",
+          direction: "desc",
+        },
       },
     });
   },
