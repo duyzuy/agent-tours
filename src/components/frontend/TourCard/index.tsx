@@ -121,7 +121,6 @@ TourCard.Days = function TourCardDays() {
 TourCard.Price = function TourCardPrice() {
   const t = useTranslations("String");
   const { promotion, price, showPromotion } = useTourCardContext();
-  console.log(promotion, price, showPromotion);
 
   if (!price) {
     return <p className="text-xs h-[22px]">{t("card.contact")}</p>;
