@@ -24,7 +24,7 @@ export async function ProductRelated({
   const queryParams = new FeSearchTourQueryParams(
     { byTemplateCmsIdentity: cmsIdentityCode, byProductType: [EProductType.TOUR] },
     1,
-    6,
+    8,
   );
 
   const productRelatedList = await getTemplateProductList(queryParams);

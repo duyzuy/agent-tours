@@ -3,12 +3,12 @@ import { PassengerType } from "@/models/common.interface";
 import { useCallback } from "react";
 import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
+
 const useSummaryPricingSelect = () => {
-  const bookingInformations = useBookingSelector((state) => state);
   const {
     bookingPassenger,
     bookingInfo: { product, couponPolicy },
-  } = bookingInformations;
+  } = useBookingSelector((state) => state);
 
   const getProductFlatPricings = useCallback(() => {
     let items: FeProductItem["configs"] = [];
@@ -24,21 +24,22 @@ const useSummaryPricingSelect = () => {
     let pricingListPicker = getProductFlatPricings();
 
     let bookingDetailItemBookedList: {
-      [key: string]: PriceConfig[];
+      [key in PassengerType]: PriceConfig[];
     } = { adult: [], child: [], infant: [] };
 
     Object.entries(bookingPassenger).forEach(([type, amount]) => {
       for (let i = 0; i < amount; i++) {
         const priceConfigItem = pricingListPicker.shift();
 
-        bookingDetailItemBookedList[type] = priceConfigItem
-          ? [...bookingDetailItemBookedList[type], priceConfigItem]
-          : [...bookingDetailItemBookedList[type]];
+        bookingDetailItemBookedList[type as PassengerType] = priceConfigItem
+          ? [...bookingDetailItemBookedList[type as PassengerType], priceConfigItem]
+          : [...bookingDetailItemBookedList[type as PassengerType]];
       }
     });
 
     return bookingDetailItemBookedList;
   };
+
   const getSubtotal = () => {
     const breakDown = getBreakDownProductPrice();
 

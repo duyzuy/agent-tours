@@ -1,18 +1,17 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Space, Button, Tag } from "antd";
 import { useBookingSelector } from "../../hooks/useBookingInformation";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { useRouter } from "@/utils/navigation";
-import { isUndefined } from "lodash";
+
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import { useLocale } from "next-intl";
-import { revalidateTag } from "next/cache";
 
 const ReservationPage = () => {
   const reservation = useBookingSelector((state) => state.reservation);
-  const product = useBookingSelector((state) => state.bookingInfo.product);
+  const cmsTemplate = useBookingSelector((state) => state.bookingInfo.cmsTemplate);
   const locale = useLocale();
   const { bookingOrder } = reservation || {};
   console.log(reservation, locale);
@@ -52,8 +51,8 @@ const ReservationPage = () => {
             </div>
             <div className="customer__information-body px-6 pt-6 pb-3">
               <DetailItem title="Mã đơn hàng" value={`#${bookingOrder?.recId}`} />
-              <DetailItem title="Tên tour" value={product?.template.name} />
-              <DetailItem title="Mã Tour" value={sellableProduct?.code} />
+              <DetailItem title="Tên tour" value={cmsTemplate?.name} />
+              <DetailItem title="Mã Tour" value={cmsTemplate?.code} />
               <DetailItem
                 title="Ngày đi"
                 value={sellableProduct?.startDate ? formatDate(sellableProduct?.startDate) : undefined}

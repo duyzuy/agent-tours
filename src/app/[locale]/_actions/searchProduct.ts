@@ -23,8 +23,8 @@ export const getTemplateProductList = async ({ requestObject, pageCurrent, pageS
 };
 
 export const getProductListByTemplateId = async (templateId: number) => {
-  const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>("localfront/BookingOrder_Search", {
-    next: { tags: ["productListByTemplateId"] },
+  const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>("localfront/Sellable_List", {
+    next: { tags: ["sellableListByTemplateId", templateId.toString()] },
     cache: "no-store",
     params: {
       requestObject: {

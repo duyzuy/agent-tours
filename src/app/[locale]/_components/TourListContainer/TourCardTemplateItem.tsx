@@ -73,6 +73,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
     return true;
   }, [tourCMSContent]);
 
+  console.log(isShowPromotion, tourCMSContent?.code);
   const cardDataProps = {
     tourCode: data.code,
     thumbnail:

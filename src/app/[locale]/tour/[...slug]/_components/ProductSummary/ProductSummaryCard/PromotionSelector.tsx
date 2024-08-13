@@ -7,15 +7,16 @@ import CouponCard from "@/components/frontend/CouponCard";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import classNames from "classnames";
-import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
+
 interface PromotionSelectorProps {
-  items: IPromotion[];
+  items?: IPromotion[];
+  value?: string;
   className?: string;
+  onChange?: (value: string, data: IPromotion) => void;
 }
-const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className = "" }) => {
+const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className = "", value, onChange }) => {
   const t = useTranslations("String");
 
-  const { couponPolicy, addCouponPolicy, removeCouponPolicy } = useCoupon();
   const [openModal, setShowModal] = useState(false);
   const showModal = () => {
     setShowModal(true);
@@ -24,7 +25,7 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className 
     setShowModal(false);
   };
   const handleSelect = (item: IPromotion) => {
-    couponPolicy?.code === item.code ? removeCouponPolicy() : addCouponPolicy(item.code);
+    onChange?.(item.code, item);
     setShowModal(false);
   };
   return (
@@ -51,11 +52,11 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className 
             <CouponCard
               key={_index}
               className={_index !== 0 ? "mt-3" : ""}
-              isSelecting={couponPolicy?.code === promo.code}
+              isSelecting={value === promo.code}
               code={promo.code}
               price={moneyFormatVND(promo.discountAmount)}
-              validFrom={formatDate(promo.validFrom, "dd/MM/yyyy")}
-              validTo={formatDate(promo.validTo, "dd/MM/yyyy")}
+              validFrom={formatDate(promo.validFrom, "DD/MM/YYYY")}
+              validTo={formatDate(promo.validTo, "DD/MM/YYYY")}
               onClick={() => handleSelect(promo)}
             />
           ))}

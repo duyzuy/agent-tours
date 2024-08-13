@@ -78,7 +78,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
       <div className="container mx-auto py-4 lg:py-12 lg:px-8 md:px-6 px-4">
         <div className="flex flex-wrap items-start">
           <div className="tour-contents w-full lg:w-7/12">
-            <ProductHeader name={cmsTemplateContent?.name} tourCode={productItem?.template.code}>
+            <ProductHeader name={cmsTemplateContent?.name} tourCode={productItem?.sellableTemplateCode}>
               <h1 className="text-xl text-primary-default font-bold">{cmsTemplateContent?.name}</h1>
             </ProductHeader>
 
@@ -88,7 +88,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
             <div className="line w-full h-[1px] bg-gray-100"></div>
 
-            <ProductContent data={cmsTemplateContent} locale={locale} />
+            <ProductContent data={cmsTemplateContent} locale={locale} templateId={Number(templateId)} />
 
             <div className="space h-8"></div>
 
@@ -98,6 +98,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
           <DynamicProductSummary
             tourName={cmsTemplateContent?.name}
+            cmsTemplate={cmsTemplateContent}
             defaultProductItem={productItem}
             productList={productList}
             isMobile={isMobile()}

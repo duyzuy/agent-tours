@@ -143,10 +143,11 @@ TourCard.Price = function TourCardPrice() {
 };
 
 TourCard.Badget = function TourCardBadget() {
-  const { promotion } = useTourCardContext();
+  const { promotion, showPromotion } = useTourCardContext();
   const { promotionLabelType, promotionLabel, promotionImage } = promotion || {};
   const IconEl = getLabelHotDealIcon(promotionImage ?? "");
 
+  if (!showPromotion) return null;
   if (promotionLabelType === "text") {
     return (
       <span className="absolute z-10 w-24 h-24 -top-12 -right-6 bg-rose-600 rounded-full">

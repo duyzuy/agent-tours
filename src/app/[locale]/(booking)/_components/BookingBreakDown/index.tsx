@@ -18,12 +18,8 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({ className = "" }) =
   const { productBreakdown, subTotal, subTotalProduct, lastTotalPayment, servicesBreakdown, discountBreakdown } =
     useBookingSummary();
   const product = useBookingSelector((state) => state.bookingInfo.product);
-  const locale = useLocale();
+  const cmsTemplate = useBookingSelector((state) => state.bookingInfo.cmsTemplate);
   const t = useTranslations("String");
-
-  const productCmsContent = useMemo(() => {
-    return product?.template?.cms.find((item) => item.lang === locale);
-  }, [product]);
 
   const subtotalServices = useMemo(() => {
     return servicesBreakdown
@@ -42,11 +38,11 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({ className = "" }) =
         <div className="box product-detail px-6 py-4 bg-white rounded-lg mb-6">
           <div className="box-inner flex">
             <div className="thumbail w-24 h-24 rounded-md relative mr-4 overflow-hidden">
-              {productCmsContent?.thumbnail ? (
+              {cmsTemplate?.thumbnail ? (
                 <Image
-                  src={`${mediaConfig.rootApiPath}/${productCmsContent?.thumbnail.small}`}
+                  src={`${mediaConfig.rootApiPath}/${cmsTemplate?.thumbnail.small}`}
                   fill
-                  alt={productCmsContent?.name}
+                  alt={cmsTemplate?.name}
                   style={{ objectFit: "cover" }}
                 />
               ) : (
@@ -54,15 +50,15 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({ className = "" }) =
               )}
             </div>
             <div className="content flex-1">
-              <p className="text-lg font-[500] mb-3">{productCmsContent?.name}</p>
-              <Tag color="blue">{`#${product?.template.code}`}</Tag>
+              <p className="text-lg font-[500] mb-3">{cmsTemplate?.name}</p>
+              <Tag color="blue">{`#${product?.code}`}</Tag>
             </div>
           </div>
           <div className="border-t mt-4 pt-4">
             <div className="flex items-center justify-between mb-3">
               <span className="text-gray-500">{t("departDate")}</span>
               <span className="text-lg text-primary-default">
-                {product?.startDate ? formatDate(product?.startDate, "dd/MM/yyyy") : null}
+                {product?.startDate ? formatDate(product?.startDate, "DD/MM/YYYY") : null}
               </span>
             </div>
             <div className="breakdown__products">

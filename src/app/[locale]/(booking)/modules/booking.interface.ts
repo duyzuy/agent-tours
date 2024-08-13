@@ -7,6 +7,7 @@ import { FePassengerInformationFormData } from "../passenger/modules/passegner.i
 import { IPromotion } from "@/models/management/core/promotion.interface";
 import { FePriceConfig } from "@/models/fe/serviceItem.interface";
 import { FeReservation } from "@/models/fe/reservation.interface";
+import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 
 export interface IFeSSRItem {
   priceConfig: PriceConfig;
@@ -31,6 +32,7 @@ export interface IFeBookingDetailItem {
 }
 export interface FeBookingInformation {
   bookingInfo: {
+    cmsTemplate: FeCMSTemplateContent | undefined;
     product: FeProductItem | undefined;
     couponPolicy: IPromotion | undefined;
     coupons: IPromotion[] | undefined;
@@ -56,6 +58,7 @@ export interface FeBookingInformation {
 
 export class FeBookingFormData implements FeBookingInformation {
   bookingInfo: {
+    cmsTemplate: FeCMSTemplateContent | undefined;
     product: FeProductItem | undefined;
     couponPolicy: IPromotion | undefined;
     coupons: IPromotion[] | undefined;
@@ -80,6 +83,7 @@ export class FeBookingFormData implements FeBookingInformation {
   reservation?: FeReservation;
   constructor(
     bookingInfo: {
+      cmsTemplate: FeCMSTemplateContent | undefined;
       product: FeProductItem | undefined;
       couponPolicy: IPromotion | undefined;
       coupons: IPromotion[] | undefined;

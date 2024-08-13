@@ -1,115 +1,54 @@
 "use client";
 import React, { useEffect, useMemo, useTransition, useState, useCallback } from "react";
-import { Button, DatePickerProps } from "antd";
+import { DatePickerProps } from "antd";
 import classNames from "classnames";
 import { FeProductItem } from "@/models/fe/productItem.interface";
-
-import dayjs, { Dayjs } from "dayjs";
-
 import { useTranslations } from "next-intl";
-import useSetProductItemAndPaxQuantity from "@/app/[locale]/(booking)/modules/useSetProductItemAndPaxQuantity";
+import useSelectPassengerQuantity from "@/app/[locale]/(booking)/modules/useSelectPassengerQuantity";
 import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
-import { PassengerType } from "@/models/common.interface";
-import useSummaryPricingSelect from "@/app/[locale]/(booking)/modules/useSummaryPricingSelect";
 import HotlineBox from "@/components/frontend/HotlineBox";
 import useAuth from "@/app/[locale]/hooks/useAuth";
 import useAuthModal from "@/app/[locale]/(auth)/hooks";
 import { stringToDate } from "@/utils/date";
-import DesktopBoxSummary from "./DesktopBoxSummary";
-import MobileBoxSummary from "./MobileBoxSummary";
 
-interface Props {
+import ProductSummaryCard, { ProductSummaryCardProps } from "./ProductSummaryCard";
+import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
+import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
+import useSelectProduct from "@/app/[locale]/(booking)/modules/useSelectProduct";
+
+interface ProductSummaryProps {
+  cmsTemplate: FeCMSTemplateContent;
+  defaultProductItem: FeProductItem;
   className?: string;
   tourName?: string;
   productList?: FeProductItem[];
-  defaultProductItem: FeProductItem;
   isMobile: boolean;
 }
-const ProductSummary = ({ className = "", productList, defaultProductItem, isMobile, tourName }: Props) => {
+const ProductSummary: React.FC<ProductSummaryProps> = ({
+  className = "",
+  productList,
+  defaultProductItem,
+  isMobile,
+  tourName,
+  cmsTemplate,
+}) => {
   const productItem = useBookingSelector((state) => state.bookingInfo.product);
+  const passengers = useBookingSelector((state) => state.bookingPassenger);
+
+  const { addCouponPolicy, removeCouponPolicy, couponPolicy } = useCoupon();
+
+  const { initTemplateAndProduct, setProductItem } = useSelectProduct();
   const { session } = useAuth();
   const { showAuthModal } = useAuthModal();
 
-  const { setProductItem, initPassengerInfoThenGoToPassenger } = useSetProductItemAndPaxQuantity();
+  const { initPassengerFormDataThenGoToNext, setQuantityPassenger } = useSelectPassengerQuantity();
 
-  const { productBreakdown, subtotal } = useSummaryPricingSelect();
   const t = useTranslations("String");
-
-  const { startDate, endDate } = productItem || {};
-
   const [isPendingInitBookingDetails, startTransitionInitBookingDetailItems] = useTransition();
 
-  const departureDates = productList?.reduce<{ departDate: string }[]>((acc, item) => {
-    return [...acc, { departDate: item.startDate }];
-  }, []);
-
-  const lowestPrice = useMemo(() => {
-    if (!productItem) return;
-    const { configs } = productItem;
-    if (!configs || !configs.length) return;
-    let minPrice: number | undefined;
-    configs.forEach((item) => {
-      if (!minPrice && item.open > 0) {
-        minPrice = item.adult;
-      }
-      if (minPrice && item.open > 0 && item.adult < minPrice) {
-        minPrice = item.adult;
-      }
-    });
-    return minPrice;
-  }, [productItem]);
-
-  const lowestPriceConfigItem = useMemo(() => {
-    let minConfig: FeProductItem["configs"][0] | undefined;
-    productItem?.configs.forEach((item) => {
-      if (!minConfig) {
-        minConfig = item;
-      } else {
-        if (item.open > 0 && item.adult < minConfig.adult) {
-          minConfig = item;
-        }
-      }
-    });
-
-    return minConfig;
-  }, [productItem]);
-
-  const durationDay = useMemo(() => {
-    if (!endDate || !startDate) return;
-    const dayNum = stringToDate(endDate).diff(stringToDate(startDate), "days");
-    return dayNum;
-  }, [startDate, endDate]);
-
-  const isInBookingDate = useCallback(
-    (d: Dayjs) => {
-      return (
-        departureDates?.some((item) => {
-          return d.isSame(stringToDate(item.departDate), "date");
-        }) || false
-      );
-    },
-    [departureDates],
-  );
-
-  const breakDownItems = useMemo(() => {
-    type BreakDownItem = {
-      type: PassengerType;
-      pricing: number;
-      id: number;
-      configClass: string;
-    };
-    return Object.entries(productBreakdown).reduce<BreakDownItem[]>((acc, [type, configList]) => {
-      const items = configList.map((configItem, _index) => ({
-        type: type as PassengerType,
-        pricing: configItem[type as PassengerType],
-        id: configItem.recId,
-        configClass: configItem.class,
-      }));
-      acc = [...acc, ...items];
-      return acc;
-    }, []);
-  }, [productBreakdown]);
-
+  const handleChangeCoupon: ProductSummaryCardProps["onChangeCoupon"] = (value, coupon) => {
+    couponPolicy?.code === value ? removeCouponPolicy() : addCouponPolicy(coupon);
+  };
   const onChangeProduct = useCallback<Required<DatePickerProps>["onChange"]>((date) => {
     const newProduct = productList?.find((prd) => {
       return stringToDate(prd.startDate).isSame(date, "date");
@@ -125,52 +64,77 @@ const ProductSummary = ({ className = "", productList, defaultProductItem, isMob
       return;
     }
     startTransitionInitBookingDetailItems(() => {
-      initPassengerInfoThenGoToPassenger();
+      initPassengerFormDataThenGoToNext();
     });
   };
 
+  const handleChangePassenger: ProductSummaryCardProps["onChangePassenger"] = (type, quantity, action) =>
+    setQuantityPassenger({ type, quantity, action });
+
   useEffect(() => {
-    setProductItem(defaultProductItem);
+    initTemplateAndProduct(defaultProductItem, cmsTemplate);
   }, [defaultProductItem]);
+
+  const productCardProps: ProductSummaryCardProps = {
+    passenger: passengers,
+    productItem: productItem,
+    productList: productList,
+    coupon: couponPolicy,
+    onChangeDepartDate: onChangeProduct,
+    onChangePassenger: handleChangePassenger,
+    onNext: handleNextToPassengerInfo,
+    onChangeCoupon: handleChangeCoupon,
+    isLoading: isPendingInitBookingDetails,
+    promotion: {
+      promotionImage: cmsTemplate.promotionImage,
+      promotionLabel: cmsTemplate.promotionLabel,
+      promotionLabelType: cmsTemplate.promotionLabelType,
+      promotionReferencePrice: cmsTemplate.promotionReferencePrice,
+      promotionValidFrom: cmsTemplate.promotionValidFrom,
+      promotionValidTo: cmsTemplate.promotionValidTo,
+    },
+  };
 
   return (
     <>
       {isMobile ? (
-        <MobileBoxSummary
-          label={tourName}
-          lowestPrice={lowestPrice}
-          subtotal={subtotal}
-          lowestPriceConfigItem={lowestPriceConfigItem}
-          durationDay={durationDay}
-          breakDownItems={breakDownItems}
-          sellableDetails={productItem?.sellableDetails}
-          promotions={productItem?.promotions}
-          startDate={startDate}
-          onNext={handleNextToPassengerInfo}
-          onChangeProduct={onChangeProduct}
-          isInBookingDate={isInBookingDate}
-          isLoading={isPendingInitBookingDetails}
-        />
+        <ProductSummaryCard {...productCardProps}>
+          <ProductSummaryCard.Drawer>
+            <ProductSummaryCard.Title className="mb-4" text={tourName} />
+            <ProductSummaryCard.Promotion className="mb-6" />
+            <ProductSummaryCard.CalendarSelector className="mb-6" isMobile={true} />
+            <ProductSummaryCard.Durations />
+            <ProductSummaryCard.Inventories />
+            <ProductSummaryCard.Price className="mb-4" />
+            <ProductSummaryCard.PassengerSelector className="mb-6" layout="vertical" size="md" />
+            <ProductSummaryCard.Subtotal className="py-6" />
+            <ProductSummaryCard.SubmitButton />
+          </ProductSummaryCard.Drawer>
+        </ProductSummaryCard>
       ) : (
         <div
           className={classNames("col-booking", {
             [className]: className,
           })}
         >
-          <DesktopBoxSummary
-            lowestPrice={lowestPrice}
-            subtotal={subtotal}
-            lowestPriceConfigItem={lowestPriceConfigItem}
-            durationDay={durationDay}
-            breakDownItems={breakDownItems}
-            sellableDetails={productItem?.sellableDetails}
-            promotions={productItem?.promotions}
-            startDate={startDate}
-            onNext={handleNextToPassengerInfo}
-            onChangeProduct={onChangeProduct}
-            isInBookingDate={isInBookingDate}
-            isLoading={isPendingInitBookingDetails}
-          />
+          <ProductSummaryCard {...productCardProps}>
+            <div className="box-booking border lg:px-6 px-4 pt-4 pb-6 mb-4 rounded-md bg-white shadow-sm relative z-10 overflow-hidden">
+              <div className="header py-3 flex items-center justify-between">
+                <h3 className="font-semibold text-primary-default uppercase">{t("productSummary.title")}</h3>
+              </div>
+              <ProductSummaryCard.Promotion className="mb-4" />
+              <ProductSummaryCard.Badget />
+              <ProductSummaryCard.CalendarSelector className="mb-6" />
+              <ProductSummaryCard.Durations />
+              <ProductSummaryCard.Inventories />
+              <ProductSummaryCard.CanBooking>
+                <ProductSummaryCard.Price className="mb-4" />
+                <ProductSummaryCard.PassengerSelector className="mb-6" />
+                <ProductSummaryCard.Subtotal className="py-6" />
+                <ProductSummaryCard.SubmitButton />
+              </ProductSummaryCard.CanBooking>
+            </div>
+          </ProductSummaryCard>
           <HotlineBox label="Hotline" phoneNumber={"0982.013.089"} />
         </div>
       )}

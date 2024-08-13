@@ -3,6 +3,7 @@ import { useBookingInformation } from "../../hooks/useBookingInformation";
 import { EBookingActions } from "../../store/actions/bookingActions";
 import { useCheckCouponMutation } from "@/mutations/fe/booking";
 import useMessage from "@/hooks/useMessage";
+import { IPromotion } from "@/models/management/core/promotion.interface";
 
 const useCoupon = () => {
   const [bookingInformation, dispatch] = useBookingInformation();
@@ -12,13 +13,9 @@ const useCoupon = () => {
   } = bookingInformation;
 
   const message = useMessage();
-  const addCouponPolicy = (code?: string) => {
-    const coupon = product?.promotions.find((item) => item.code === code);
-    if (couponPolicy && couponPolicy.code === coupon?.code) return;
 
-    if (!coupon) return;
-
-    dispatch({ type: EBookingActions.ADD_COUPON_POLICY, payload: coupon });
+  const addCouponPolicy = (coupon?: IPromotion) => {
+    coupon && dispatch({ type: EBookingActions.ADD_COUPON_POLICY, payload: coupon });
   };
 
   const removeCouponPolicy = () => {

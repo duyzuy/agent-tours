@@ -7,6 +7,7 @@ import { getVisaTemplateDetail } from "@/app/[locale]/visa/_actions/getVisaTempl
 import { getTranslations } from "next-intl/server";
 import { getPageContentDetail } from "@/app/[locale]/_actions/pageContent";
 import { LangCode } from "@/models/management/cms/language.interface";
+import { getTravelInformationNotice } from "../../../_actions/templateContent";
 
 const CustomTabsDynamic = dynamic(() => import("@/components/frontend/CustomTabs"), {
   loading: () => <ProductTourTabsContentSkeleton />,
@@ -15,10 +16,11 @@ const CustomTabsDynamic = dynamic(() => import("@/components/frontend/CustomTabs
 
 interface ProductContentProps {
   data?: FeTemplateContentResponse["result"][0];
-  locale?: LangCode;
+  locale: LangCode;
+  templateId: number;
   log?: any;
 }
-export default async function ProductContent({ data, log, locale }: ProductContentProps) {
+export default async function ProductContent({ data, log, locale, templateId }: ProductContentProps) {
   const t = await getTranslations("String");
 
   const { visaTemplates } = data || {};
@@ -70,8 +72,6 @@ export default async function ProductContent({ data, log, locale }: ProductConte
    */
   if (visaTemplates && visaTemplates.length) {
     const visaTemplateDetailResponse = await getVisaTemplateDetail({
-      // lang: visaTemplates[0].lang,
-      // slug: visaTemplates[0].slug,
       lang: visaTemplates[0].lang,
       id: visaTemplates[0].id,
     });
@@ -114,6 +114,20 @@ export default async function ProductContent({ data, log, locale }: ProductConte
         key: "pageContentRule",
         icon: <IconClipboard />,
         children: <BlockPanels descriptions={pageContentDetailRule.descriptions} items={[]} />,
+      },
+    ];
+  }
+
+  const travelInformation = await getTravelInformationNotice(templateId, locale);
+
+  if (travelInformation) {
+    tabPanels = [
+      ...tabPanels,
+      {
+        label: "Lưu ý",
+        key: "travelInformationNotice",
+        icon: <IconClipboard />,
+        children: <BlockPanels descriptions={travelInformation.cmsMustKnow?.descriptions} items={[]} />,
       },
     ];
   }

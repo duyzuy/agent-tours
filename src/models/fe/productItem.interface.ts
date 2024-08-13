@@ -9,16 +9,8 @@ import { EProductType } from "../management/core/productType.interface";
 import { IInventoryDetailItem } from "../management/core/inventory.interface";
 
 export interface FeProductItem extends ISellable {
+  sellableTemplateCode: string;
   configs: PriceConfig[];
-  template: ITemplateSellable & {
-    cms: {
-      name: string;
-      thumbnail: IThumbnail;
-      slug: string;
-      metaData: [];
-      lang: LangCode;
-    }[];
-  };
   promotions: IPromotion[];
   sellableDetails: {
     inventories: IInventoryDetailItem[];
