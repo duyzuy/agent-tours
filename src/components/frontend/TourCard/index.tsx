@@ -11,33 +11,49 @@ import { IconImage } from "@/assets/icons";
 import { moneyFormatVND } from "@/utils/helper";
 import { getLabelHotDealIcon } from "@/constants/icons.constant";
 
-export type TourCardProps = PropsWithChildren & {
-  data?: {
-    recId?: number;
-    name?: string;
-    thumbnail?: string;
-    href?: string;
-    tourCode?: string;
-    durationDays?: number;
-    departDate?: string;
-    openAmount?: number;
-    price?: number;
-    otherDepartDate?: string[];
-    showPromotion?: boolean;
-    promotion?: {
-      promotionImage?: string;
-      promotionLabel?: string;
-      promotionLabelType?: "text" | "image" | "";
-      promotionReferencePrice?: number;
-      promotionValidFrom?: string;
-      promotionValidTo?: string;
-    };
+type TourCardBaseType = {
+  children?: React.ReactNode;
+  className?: string;
+};
+interface TourCardCompound {
+  Head: React.FC<TourCardBaseType>;
+  Body: React.FC<TourCardBaseType>;
+  Footer: React.FC<TourCardBaseType>;
+  Price: React.FC<TourCardBaseType>;
+  Title: React.FC<TourCardBaseType>;
+  Badget: React.FC<TourCardBaseType>;
+  Thumbnail: React.FC<TourCardBaseType>;
+  Information: React.FC<TourCardBaseType>;
+  Days: React.FC<TourCardBaseType>;
+}
+interface TourCardContextType {
+  recId?: number;
+  name?: string;
+  thumbnail?: string;
+  href?: string;
+  tourCode?: string;
+  durationDays?: number;
+  departDate?: string;
+  openAmount?: number;
+  price?: number;
+  otherDepartDate?: string[];
+  showPromotion?: boolean;
+  promotion?: {
+    promotionImage?: string;
+    promotionLabel?: string;
+    promotionLabelType?: "text" | "image" | "";
+    promotionReferencePrice?: number;
+    promotionValidFrom?: string;
+    promotionValidTo?: string;
   };
+}
+export type TourCardProps = PropsWithChildren & {
+  data: TourCardContextType;
   className?: string;
   shadow?: "none" | "sm" | "md" | "lg";
 };
 
-const TourCardContext = createContext<TourCardProps["data"] | undefined>(undefined);
+const TourCardContext = createContext<TourCardContextType | undefined>(undefined);
 
 const useTourCardContext = () => {
   const context = useContext(TourCardContext);
@@ -49,9 +65,9 @@ const useTourCardContext = () => {
 
 const TourCard = ({ className = "", shadow = "md", children, data }: TourCardProps) => {
   return (
-    <TourCardContext.Provider value={data}>
+    <TourCardContext.Provider value={{ ...data }}>
       <div
-        className={classNames("article", {
+        className={classNames("tour-card", {
           [className]: className,
         })}
       >
@@ -70,14 +86,14 @@ const TourCard = ({ className = "", shadow = "md", children, data }: TourCardPro
 };
 export default TourCard;
 
-TourCard.Head = function TourCardHead({ children }: { children?: React.ReactNode }) {
+const CardHead: TourCardCompound["Head"] = ({ children }) => {
   return <div className="tour-card__head relative">{children}</div>;
 };
-TourCard.Body = function TourCardBody({ children }: { children?: React.ReactNode }) {
+const CardBody: TourCardCompound["Body"] = ({ children }) => {
   return <div className="tour-card__body px-2 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">{children}</div>;
 };
 
-TourCard.Footer = function TourCardFooter() {
+const CardFooter: TourCardCompound["Footer"] = () => {
   return (
     <div className="article-bottom py-2 text-[11px] border-t mt-2">
       <div className="flex items-center justify-between">
@@ -105,7 +121,7 @@ TourCard.Footer = function TourCardFooter() {
   );
 };
 
-TourCard.Days = function TourCardDays() {
+const CardDurationDays: TourCardCompound["Days"] = () => {
   const { durationDays } = useTourCardContext();
   const t = useTranslations("String");
   return (
@@ -118,7 +134,7 @@ TourCard.Days = function TourCardDays() {
     </>
   );
 };
-TourCard.Price = function TourCardPrice() {
+const CardPrice: TourCardCompound["Price"] = () => {
   const t = useTranslations("String");
   const { promotion, price, showPromotion } = useTourCardContext();
 
@@ -142,7 +158,7 @@ TourCard.Price = function TourCardPrice() {
   );
 };
 
-TourCard.Badget = function TourCardBadget() {
+const CardBadget: TourCardCompound["Badget"] = () => {
   const { promotion, showPromotion } = useTourCardContext();
   const { promotionLabelType, promotionLabel, promotionImage } = promotion || {};
   const IconEl = getLabelHotDealIcon(promotionImage ?? "");
@@ -166,7 +182,7 @@ TourCard.Badget = function TourCardBadget() {
   return null;
 };
 
-TourCard.Thumbnail = function TourCardImage() {
+const CardThumbnail: TourCardCompound["Thumbnail"] = () => {
   const { thumbnail, name } = useTourCardContext();
   return (
     <div className="thumbnail w-full pt-[66.67%] relative italic bg-slate-50">
@@ -184,7 +200,7 @@ TourCard.Thumbnail = function TourCardImage() {
   );
 };
 
-TourCard.Title = function TourCardTitle() {
+const CardTitle: TourCardCompound["Title"] = () => {
   const { href, name } = useTourCardContext();
   return (
     <Link href={href ?? "/"} className="text-main-400 text-[15px]">
@@ -195,7 +211,7 @@ TourCard.Title = function TourCardTitle() {
   );
 };
 
-TourCard.InfoList = function TourCardInfoList({ children }: { children?: React.ReactNode }) {
+const TourCardInfo: TourCardCompound["Information"] = ({ children }) => {
   const { tourCode, departDate, openAmount, otherDepartDate } = useTourCardContext();
   const t = useTranslations("String");
   return (
@@ -243,3 +259,13 @@ TourCard.InfoItem = function TourCardInfoItem({ label, value }: TourCardInfoItem
     </div>
   );
 };
+
+TourCard.Head = CardHead;
+TourCard.Body = CardBody;
+TourCard.Price = CardPrice;
+TourCard.Badget = CardBadget;
+TourCard.Thumbnail = CardThumbnail;
+TourCard.Title = CardTitle;
+TourCard.Information = TourCardInfo;
+TourCard.Footer = CardFooter;
+TourCard.Days = CardDurationDays;

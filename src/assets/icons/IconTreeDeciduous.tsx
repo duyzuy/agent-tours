@@ -1,6 +1,6 @@
 import React from "react";
 
-const IconClipboard: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...rest }) => {
+const IconTreeDeciduous: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...rest }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,9 +15,9 @@ const IconClipboard: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...
       className={className}
       {...rest}
     >
-      <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+      <path d="M8 19a4 4 0 0 1-2.24-7.32A3.5 3.5 0 0 1 9 6.03V6a3 3 0 1 1 6 0v.04a3.5 3.5 0 0 1 3.24 5.65A4 4 0 0 1 16 19Z" />
+      <path d="M12 19v3" />
     </svg>
   );
 };
-export default IconClipboard;
+export default IconTreeDeciduous;

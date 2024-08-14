@@ -1,3 +1,6 @@
+import { Button, Drawer } from "antd";
+import classNames from "classnames";
+import styled from "styled-components";
 import Quantity from "@/components/base/Quantity";
 import { PassengerType } from "@/models/common.interface";
 import { FeProductItem } from "@/models/fe/productItem.interface";
@@ -9,11 +12,8 @@ import ProductSummarySubtotal, { ProductSummarySubtotalProps } from "./ProductSu
 import { ProductSummaryCardNoPrice, ProductSummaryCardWithPrice } from "./ProductSummaryPrice";
 import CalendarSelector from "../CalendarSelector";
 import { stringToDate } from "@/utils/date";
-import { Button, Drawer } from "antd";
-import classNames from "classnames";
 import { IconCalendarDays } from "@/assets/icons";
 import { moneyFormatVND } from "@/utils/helper";
-import styled from "styled-components";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 import { getLabelHotDealIcon } from "@/constants/icons.constant";
 
@@ -523,7 +523,7 @@ const Badget: ProductSummaryCardCompound["Badget"] = ({ className }) => {
   if (isOnPromotion && promotionLabelType === "text") {
     return (
       <span className="absolute z-10 w-24 h-24 -top-12 -right-6 bg-rose-600 rounded-full">
-        <span className="w-12 h-12 absolute left-4 bottom-0 flex items-center bg-rose-600 text-[13px] leading-[16px] rounded-full text-white text-center">
+        <span className="w-12 h-12 absolute left-4 bottom-0 flex items-center text-[13px] leading-[16px] text-white text-center">
           {promotionLabel}
         </span>
       </span>

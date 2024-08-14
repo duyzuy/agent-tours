@@ -8,10 +8,19 @@ const CustomTabs: React.FC<TabsProps> = (props) => {
 export default CustomTabs;
 
 const StyledTabs = styled(Tabs)`
+  &&&.travel-tabs {
+    .travel-tabs-nav {
+      padding-left: 10px;
+      padding-right: 10px;
+      border-radius: 8px;
+      background-color: #e8f1ff;
+      overflow: hidden;
+    }
+  }
   .travel-tabs-tab-icon svg {
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   &&&.travel-tabs .travel-tabs-tab-btn .travel-tabs-tab-icon:not(:last-child) {
     margin-inline-end: 0;

@@ -9,6 +9,7 @@ import { mediaConfig } from "@/configs";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { isEmpty } from "lodash";
+import { getLowestPriceAvailable } from "@/utils/product";
 import dayjs from "dayjs";
 
 export async function ProductRelated({
@@ -27,61 +28,15 @@ export async function ProductRelated({
     8,
   );
 
-  const productRelatedList = await getTemplateProductList(queryParams);
+  const productList = await getTemplateProductList(queryParams);
 
-  const getMinAdultPrice = (configPrices: IFeTemplateProductItem["sellables"][0]["configs"]) => {
-    if (!configPrices.length) return;
-    let minPrice = configPrices[0].adult;
-    configPrices.forEach((item) => {
-      if (item.open > 0 && item.adult < minPrice) {
-        minPrice = item.adult;
-      }
-    });
-
-    return minPrice;
-  };
-
-  const getSellableItem = (sellables: IFeTemplateProductItem["sellables"]) => {
-    if (!sellables.length) return;
-
-    let sellableItem = sellables[0];
-
-    sellables.forEach((item) => {
-      if (stringToDate(item.startDate).isBefore(stringToDate(sellableItem.startDate))) {
-        sellableItem = item;
-      }
-      if (stringToDate(item.startDate).isSame(stringToDate(sellableItem.startDate))) {
-        if (stringToDate(item.validFrom).isBefore(stringToDate(sellableItem.validFrom))) {
-          sellableItem = item;
-        }
-      }
-    });
-    return sellableItem;
-  };
-
-  const hasShowPromotion = ({
-    promotionValidFrom,
-    promotionValidTo,
-  }: {
-    promotionValidFrom?: string;
-    promotionValidTo?: string;
-  }) => {
-    const now = dayjs();
-    if (!promotionValidTo || !promotionValidFrom) return false;
-
-    if (now.isBefore(stringToDate(promotionValidFrom)) || now.isAfter(stringToDate(promotionValidTo))) {
-      return false;
-    }
-    return true;
-  };
-
-  const productListFormated = productRelatedList?.reduce<Required<ProductListSliderProps>["items"]>(
+  const productListCard = productList?.reduce<Required<ProductListSliderProps>["items"]>(
     (acc, { cms, code, sellables, recId }) => {
       const cmsContent = cms.find((item) => item.lang === locale);
 
-      const sellableItem = getSellableItem(sellables);
+      const sellableItem = sellables[0];
 
-      const lowestPrice = sellableItem ? getMinAdultPrice(sellableItem.configs) : undefined;
+      const lowestPrice = sellableItem ? getLowestPriceAvailable(sellableItem.configs) : undefined;
 
       const durationDays = sellableItem
         ? stringToDate(sellableItem.endDate).diff(stringToDate(sellableItem.startDate), "day")
@@ -97,7 +52,7 @@ export async function ProductRelated({
               : undefined,
           recId: recId,
           departDate: sellableItem ? formatDate(sellableItem.startDate, "DD/MM/YYYY") : undefined,
-          price: lowestPrice,
+          price: lowestPrice ? lowestPrice.adult : undefined,
           href: cmsContent && sellableItem ? `/tour/${recId}/${sellableItem.recId}/${cmsContent.slug}` : "/",
           tourCode: code,
           openAmount: sellableItem?.open,
@@ -111,6 +66,8 @@ export async function ProductRelated({
             promotionLabel: cmsContent?.promotionLabel,
             promotionLabelType: cmsContent?.promotionLabelType,
             promotionReferencePrice: cmsContent?.promotionReferencePrice,
+            promotionValidFrom: cmsContent?.promotionValidFrom,
+            promotionValidTo: cmsContent?.promotionValidTo,
           },
         },
       ];
@@ -119,7 +76,7 @@ export async function ProductRelated({
     [],
   );
 
-  if (!productListFormated || !productListFormated.length) {
+  if (!productList || !productList.length) {
     return null;
   }
   return (
@@ -131,7 +88,23 @@ export async function ProductRelated({
       <div className="header py-3 mb-3">
         <h4 className="text-2xl font-semibold text-primary-default">{t("productRelated.title")}</h4>
       </div>
-      <ProductListSlider items={productListFormated} />
+      <ProductListSlider items={productListCard} />
     </div>
   );
 }
+
+const hasShowPromotion = ({
+  promotionValidFrom,
+  promotionValidTo,
+}: {
+  promotionValidFrom?: string;
+  promotionValidTo?: string;
+}) => {
+  const now = dayjs();
+  if (!promotionValidTo || !promotionValidFrom) return false;
+
+  if (now.isBefore(stringToDate(promotionValidFrom)) || now.isAfter(stringToDate(promotionValidTo))) {
+    return false;
+  }
+  return true;
+};

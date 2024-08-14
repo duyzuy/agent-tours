@@ -66,7 +66,7 @@ const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", i
                 <TourCard.Price />
                 <TourCard.Days />
                 <div className="flex-1 mb-3 border-b border-[#f1f1f1] pb-3"></div>
-                <TourCard.InfoList />
+                <TourCard.Information />
               </TourCard.Body>
             </TourCard>
           </SwiperSlide>

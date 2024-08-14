@@ -86,8 +86,6 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
             <Benefit items={cmsTemplateContent?.metaData} />
 
-            <div className="line w-full h-[1px] bg-gray-100"></div>
-
             <ProductContent data={cmsTemplateContent} locale={locale} templateId={Number(templateId)} />
 
             <div className="space h-8"></div>

@@ -1,17 +1,15 @@
 import { unstable_setRequestLocale } from "next-intl/server";
-import VisaSection from "./_components/VisaSection";
-
-import PromotionSlider from "./_components/PromotionSlider";
-
-import TourListContainer from "./_components/TourListContainer";
 import { Suspense } from "react";
-import SkeletonLoadingCards from "@/components/frontend/skeletons/SkeletonLoadingCards";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import HeroHomeWraper from "./_components/HeroHomeWraper";
 import DestinationsList from "./_components/DestinationsList";
 import PostListContainer from "./_components/PostListContainer";
+import VisaSection from "./_components/VisaSection";
+import PromotionSlider from "./_components/PromotionSlider";
+import TourListContainer from "./_components/TourListContainer";
+import SkeletonLoadingCards from "@/components/frontend/skeletons/SkeletonLoadingCards";
 
 export default async function FeHomePage({ params }: { params: { locale: LangCode } }) {
   const { locale } = params;

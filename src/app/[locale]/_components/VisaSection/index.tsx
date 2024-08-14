@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import classNames from "classnames";
@@ -139,7 +140,7 @@ const VisaSection = ({ label }: VisaSectionProps) => {
                     })}
                     key={_index}
                   >
-                    <Image src={item.thumbnail} alt={item.name} width={30} height={30} className="w-6 h-6 mr-2" />
+                    <Image src={item.thumbnail} alt={item.name} width={30} height={30} className="w-6 h-6 mr-2 roun" />
                     <span className="font-[500]">{item.name}</span>
                   </li>
                 ))}

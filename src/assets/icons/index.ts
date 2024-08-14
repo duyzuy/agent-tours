@@ -96,7 +96,19 @@ import IconHotSaleTwo from "./label/IconHotSaleTwo";
 import IconBestDeal from "./label/IconBestDeal";
 import IconBigDeal from "./label/IconBigDeal";
 import IconDiscount from "./label/IconDiscount";
+import IconTrees from "./IconTrees";
+import IconTreeDeciduous from "./IconTreeDeciduous";
+import IconTreePalm from "./IconTreePalm";
+import IconFileText from "./IconFileText";
+import IconDock from "./IconDock";
+import IconRocket from "./IconRocket";
 export {
+  IconRocket,
+  IconTrees,
+  IconTreeDeciduous,
+  IconTreePalm,
+  IconFileText,
+  IconDock,
   IconHotDealOne,
   IconHotDealTwo,
   IconHotSale,

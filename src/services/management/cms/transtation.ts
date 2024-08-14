@@ -13,6 +13,7 @@ export const translationAPIs = {
         requestObject: {
           name: queryString,
         },
+        pageSize: 20,
         orderBy: {
           sortColumn: "id",
           direction: "desc",

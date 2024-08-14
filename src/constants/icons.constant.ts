@@ -50,6 +50,11 @@ import {
   IconBestDeal,
   IconBigDeal,
   IconDiscount,
+  IconTreePalm,
+  IconTreeDeciduous,
+  IconTrees,
+  IconFileText,
+  IconRocket,
 } from "@/assets/icons";
 export const ICON_LIST = [
   {
@@ -206,6 +211,11 @@ export const ICON_LIST = [
     icon: IconFlagTriangleRight,
   },
   {
+    name: "File text",
+    key: "IconFileText",
+    icon: IconFileText,
+  },
+  {
     name: "House",
     key: "IconHouse",
     icon: IconHouse,
@@ -255,7 +265,11 @@ export const ICON_LIST = [
     key: "IconPackageCheck",
     icon: IconPackageCheck,
   },
-
+  {
+    name: "Rocket",
+    key: "IconRocket",
+    icon: IconRocket,
+  },
   {
     name: "User check",
     key: "IconUserCheck",
@@ -276,6 +290,21 @@ export const ICON_LIST = [
     name: "Map pinned",
     key: "IconMapPinned",
     icon: IconMapPinned,
+  },
+  {
+    name: "Tree palm",
+    key: "IconTreePalm",
+    icon: IconTreePalm,
+  },
+  {
+    name: "Tree deciduous",
+    key: "IconTreeDeciduous",
+    icon: IconTreeDeciduous,
+  },
+  {
+    name: "Trees",
+    key: "IconTrees",
+    icon: IconTrees,
   },
 ];
 

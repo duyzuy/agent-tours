@@ -1,13 +1,13 @@
 import dynamic from "next/dynamic";
-import { IconScrollText, IconCalendarCheck, IconCalendarPlus, IconClipboard } from "@/assets/icons";
+import { IconScrollText, IconCalendarCheck, IconBookMark, IconFileText } from "@/assets/icons";
 import BlockPanels, { BlockPanelsProps } from "@/components/frontend/TabsBlockContentPanel/BlockPanels";
-import AreaContentHtml from "@/components/frontend/AreaContentHtml";
 import { FeTemplateContentResponse } from "@/models/fe/templateContent.interface";
 import { getVisaTemplateDetail } from "@/app/[locale]/visa/_actions/getVisaTemplateDetail";
 import { getTranslations } from "next-intl/server";
 import { getPageContentDetail } from "@/app/[locale]/_actions/pageContent";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getTravelInformationNotice } from "../../../_actions/templateContent";
+import IconDock from "@/assets/icons/IconDock";
 
 const CustomTabsDynamic = dynamic(() => import("@/components/frontend/CustomTabs"), {
   loading: () => <ProductTourTabsContentSkeleton />,
@@ -88,7 +88,7 @@ export default async function ProductContent({ data, log, locale, templateId }: 
       {
         label: "Thủ tục xin Visa",
         key: "visaService",
-        icon: <IconClipboard />,
+        icon: <IconDock />,
         children: <BlockPanels descriptions={visaContent?.content} items={blockVisaItems ?? []} />,
       },
     ];
@@ -112,7 +112,7 @@ export default async function ProductContent({ data, log, locale, templateId }: 
       {
         label: "Điều kiện hoàn huỷ",
         key: "pageContentRule",
-        icon: <IconClipboard />,
+        icon: <IconFileText />,
         children: <BlockPanels descriptions={pageContentDetailRule.descriptions} items={[]} />,
       },
     ];
@@ -120,14 +120,22 @@ export default async function ProductContent({ data, log, locale, templateId }: 
 
   const travelInformation = await getTravelInformationNotice(templateId, locale);
 
-  if (travelInformation) {
+  if (travelInformation && travelInformation.length) {
     tabPanels = [
       ...tabPanels,
       {
         label: "Lưu ý",
         key: "travelInformationNotice",
-        icon: <IconClipboard />,
-        children: <BlockPanels descriptions={travelInformation.cmsMustKnow?.descriptions} items={[]} />,
+        icon: <IconBookMark />,
+        children: (
+          <BlockPanels
+            items={travelInformation.map((item, _index) => ({
+              key: (_index + 1).toString(),
+              name: item.name,
+              content: item.descriptions,
+            }))}
+          />
+        ),
       },
     ];
   }

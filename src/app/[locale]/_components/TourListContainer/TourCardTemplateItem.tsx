@@ -1,5 +1,5 @@
 "use client";
-import TourCard from "@/components/frontend/TourCard";
+import TourCard, { TourCardProps } from "@/components/frontend/TourCard";
 import { mediaConfig } from "@/configs";
 import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
@@ -7,6 +7,7 @@ import { formatDate, stringToDate } from "@/utils/date";
 import { useMemo } from "react";
 import duration from "dayjs/plugin/duration";
 import dayjs from "dayjs";
+import { getLowestPriceAvailable } from "@/utils/product";
 dayjs.extend(duration);
 dayjs.duration(100);
 
@@ -18,37 +19,11 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
   const { sellables, cms } = data;
 
   const tourCMSContent = useMemo(() => {
-    return data.cms.find((cmsItem) => cmsItem.lang === lang);
-  }, [data]);
-
-  const getMinAdultPrice = (configPrices?: IFeTemplateProductItem["sellables"][0]["configs"]) => {
-    if (!configPrices || !configPrices.length) return;
-    let minPrice = configPrices[0].adult;
-    configPrices.forEach((item) => {
-      if (item.open > 0 && item.adult < minPrice) {
-        minPrice = item.adult;
-      }
-    });
-
-    return minPrice;
-  };
+    return cms.find((cmsItem) => cmsItem.lang === lang);
+  }, [cms]);
 
   const sellableItem = useMemo(() => {
-    if (!sellables.length) return;
-
-    let sellableItem = sellables[0];
-
-    sellables.forEach((item) => {
-      if (stringToDate(item.startDate).isBefore(stringToDate(sellableItem.startDate))) {
-        sellableItem = item;
-      }
-      if (stringToDate(item.startDate).isSame(stringToDate(sellableItem.startDate))) {
-        if (stringToDate(item.validFrom).isBefore(stringToDate(sellableItem.validFrom))) {
-          sellableItem = item;
-        }
-      }
-    });
-    return sellableItem;
+    return sellables[0];
   }, [sellables]);
 
   const otherDeparts = useMemo(() => {
@@ -73,15 +48,14 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
     return true;
   }, [tourCMSContent]);
 
-  console.log(isShowPromotion, tourCMSContent?.code);
-  const cardDataProps = {
+  const cardDataProps: TourCardProps["data"] = {
     tourCode: data.code,
     thumbnail:
       tourCMSContent && tourCMSContent.thumbnail
         ? `${mediaConfig.rootApiPath}/${tourCMSContent?.thumbnail.original}`
         : undefined,
     name: tourCMSContent?.name,
-    price: getMinAdultPrice(sellableItem?.configs),
+    price: sellableItem?.configs ? getLowestPriceAvailable(sellableItem.configs)?.adult : undefined,
     departDate: sellableItem ? formatDate(sellableItem.startDate, "DD/MM/YYYY") : undefined,
     openAmount: sellableItem?.open,
     href: sellableItem?.recId ? `/tour/${data.recId}/${sellableItem.recId}/${tourCMSContent?.slug}` : "/",
@@ -93,6 +67,8 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
       promotionLabel: tourCMSContent?.promotionLabel,
       promotionLabelType: tourCMSContent?.promotionLabelType,
       promotionReferencePrice: tourCMSContent?.promotionReferencePrice,
+      promotionValidTo: tourCMSContent?.promotionValidTo,
+      promotionValidFrom: tourCMSContent?.promotionValidFrom,
     },
   };
 
@@ -107,7 +83,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
         <TourCard.Price />
         <TourCard.Days />
         <div className="flex-1 mb-3 border-b border-[#f1f1f1] pb-3"></div>
-        <TourCard.InfoList />
+        <TourCard.Information />
       </TourCard.Body>
     </TourCard>
   );
