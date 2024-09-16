@@ -24,7 +24,7 @@ const CMSTemplatePageList = () => {
   };
 
   const { data: templateData, isLoading } = useGetCMSTemplateListMinimalQuery(queryParams);
-  console.log(templateData);
+
   const { onCreateTemplate, onUpdateTemplate } = useCreateCMSTemplate();
 
   const closeDrawer = () => {

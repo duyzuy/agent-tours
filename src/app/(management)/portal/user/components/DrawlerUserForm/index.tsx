@@ -69,6 +69,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
 
   const optionsUserType = [
     { value: ELocalUserType.ADMIN, label: "Admin" },
+    { value: ELocalUserType.STAFF, label: "Staff" },
     { value: ELocalUserType.AGENT, label: "Agent" },
     { value: ELocalUserType.AGENT_STAFF, label: "Agent staff" },
   ];

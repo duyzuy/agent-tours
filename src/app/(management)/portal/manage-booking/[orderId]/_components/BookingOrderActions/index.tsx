@@ -9,12 +9,14 @@ import DrawerPaymentForm from "./formOfPayment/DrawerPaymentForm";
 
 interface BookingOrderActionsProps {
   orderId?: number;
+  sellableId?: number;
   totalAmount?: number;
   totalPaid?: number;
   paymentStatus?: PaymentStatus;
 }
 const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
   orderId,
+  sellableId,
   totalAmount,
   totalPaid,
   paymentStatus,
@@ -78,6 +80,14 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
           </Button>
           <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.CHARGE)}>
             Lịch sử phí
+          </Button>
+          <Button
+            type="primary"
+            ghost
+            size="small"
+            onClick={() => router.push(`/portal/manage-booking/130/rooming/${sellableId}`)}
+          >
+            Xếp phòng
           </Button>
         </Space>
       </div>

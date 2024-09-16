@@ -16,6 +16,7 @@ import { IFormOfPaymentPayload } from "@/models/management/core/formOfPayment.in
 import { IEditOrderSSRPayload } from "@/app/(management)/portal/manage-booking/[orderId]/modules/manageBooking.interface";
 import { IOrderDetailRs } from "@/models/management/booking/order.interface";
 import { useCustomMutation } from "../useCustomMutation";
+import { RoomingPayload } from "@/models/management/booking/rooming.interface";
 //create folder in public/uploads folder.
 
 export const useSearchBookingMutation = () => {
@@ -100,5 +101,11 @@ export const useUpdateSSRByPassengerMutation = () => {
 export const useExtendBookingTimeLimitMutation = () => {
   return useCustomMutation<IOrderDetailRs, { orderId: number; postponeHours: number }>({
     mutationFn: (payload) => manageBookingAPIs.extendBookingTimeLimit(payload),
+  });
+};
+
+export const useUpdateRoomingMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: RoomingPayload) => manageBookingAPIs.updateRoomingList(payload),
   });
 };

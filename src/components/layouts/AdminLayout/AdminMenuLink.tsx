@@ -249,6 +249,17 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
         },
       ],
     },
+    {
+      key: "leading",
+      icon: React.createElement(TeamOutlined),
+      label: "Leading",
+      children: [
+        {
+          key: "leading/list",
+          label: "Leading list",
+        },
+      ],
+    },
     // {
     //     key: "member",
     //     icon: React.createElement(TeamOutlined),

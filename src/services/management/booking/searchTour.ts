@@ -11,7 +11,6 @@ export const bookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
   getServices: async (sellableId?: number) => {
@@ -19,7 +18,6 @@ export const bookingAPIs = {
       requestObject: {
         sellableId: sellableId,
       },
-      localUsername: "99",
     });
   },
   create: async (payload?: IBookingTourPayload) => {
@@ -27,7 +25,6 @@ export const bookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
 };

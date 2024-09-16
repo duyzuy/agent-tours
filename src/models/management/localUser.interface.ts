@@ -2,6 +2,7 @@ import { BaseResponse } from "../common.interface";
 
 export enum ELocalUserType {
   ADMIN = "ADMIN",
+  STAFF = "STAFF",
   AGENT = "AGENT",
   AGENT_STAFF = "AGENT_STAFF",
 }

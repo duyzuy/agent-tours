@@ -13,6 +13,7 @@ import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
 import { FormOfPaymmentQueryParams, IFormOfPaymentListRs } from "@/models/management/core/formOfPayment.interface";
 // import { IBookingSSRPayload } from "@/app/portal/manage-booking/[orderId]/addon-service/modules/bookingSSR.interface";
 import { IEditOrderSSRPayload } from "@/app/(management)/portal/manage-booking/[orderId]/modules/manageBooking.interface";
+import { RoomingPayload, RoomingListResponse } from "@/models/management/booking/rooming.interface";
 
 export const manageBookingAPIs = {
   getOrderList: async (queryParams: BookingOrderListQueryParams, localRuleAndPolicies?: IRuleAndPolicy[]) => {
@@ -23,7 +24,6 @@ export const manageBookingAPIs = {
       },
       pageCurrent: queryParams.pageCurrent,
       pageSize: queryParams.pageSize,
-      localUsername: "99",
     });
   },
   getOrderDetail: async (reservationId?: number, localRuleAndPolicies?: IRuleAndPolicy[]) => {
@@ -32,7 +32,6 @@ export const manageBookingAPIs = {
         recId: reservationId,
         localRuleAndPolicies,
       },
-      localUsername: "99",
     });
   },
   updateCustomer: async (payload?: IBookingOrderCustomerPayload) => {
@@ -40,7 +39,6 @@ export const manageBookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
   updateInvoiceInfo: async (payload?: IBookingOrderInvoiceInfoPayload) => {
@@ -48,7 +46,6 @@ export const manageBookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
 
@@ -57,7 +54,6 @@ export const manageBookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
   splitBooking: async (payload?: ISplitBookingPayload) => {
@@ -65,7 +61,6 @@ export const manageBookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
   splitBookingAndCancel: async (payload?: ISplitBookingPayload) => {
@@ -73,7 +68,6 @@ export const manageBookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
   cancelBookingOrder: async (payload?: IBookingOrderCancelPayload) => {
@@ -81,7 +75,6 @@ export const manageBookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
   getFOPListByOrderId: async (queryParams?: FormOfPaymmentQueryParams) => {
@@ -91,7 +84,6 @@ export const manageBookingAPIs = {
       },
       pageSize: queryParams?.pageSize,
       pageCurrent: queryParams?.pageCurrent,
-      localUsername: "99",
     });
   },
   updateSSRByPassenger: async (payload?: IEditOrderSSRPayload) => {
@@ -99,7 +91,6 @@ export const manageBookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
     });
   },
   extendBookingTimeLimit: async (payload?: { orderId: number; postponeHours: number }) => {
@@ -107,7 +98,20 @@ export const manageBookingAPIs = {
       requestObject: {
         ...payload,
       },
-      localUsername: "99",
+    });
+  },
+  getRoomingList: async (sellableId: number) => {
+    return await coreApi.post<RoomingListResponse>("core/Operation_RoomingList_List", {
+      requestObject: {
+        sellableId,
+      },
+    });
+  },
+  updateRoomingList: async (payload: RoomingPayload) => {
+    return await coreApi.post<RoomingListResponse>("core/Operation_RoomingList_Assign", {
+      requestObject: {
+        roomingList: payload.roomingList,
+      },
     });
   },
 };
