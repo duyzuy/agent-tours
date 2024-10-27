@@ -13,33 +13,54 @@ export const vendorColumns: ColumnsType<ISupplier> = [
     width: 80,
   },
   {
-    title: "Tên Vendor",
+    title: "Vendor",
     dataIndex: "vendor",
     key: "vendor",
     width: 200,
     render(value, record, index) {
       return (
         <span>
-          <span className="block">{record.vendor.fullName}</span>
           <span className="block text-xs text-primary-default">{record.vendor.shortName}</span>
+          <span className="block">{record.vendor.fullName}</span>
         </span>
       );
     },
   },
   {
-    title: "Tên supplier",
-    dataIndex: "fullName",
-    key: "fullName",
+    title: "Supplier",
+    dataIndex: "supplier",
+    key: "supplier",
     width: 200,
     render(value, record, index) {
       return (
         <span>
-          <span className="block">{record.fullName}</span>
           <span className="block text-xs text-primary-default">{record.shortName}</span>
+          <span className="block">{record.fullName}</span>
         </span>
       );
     },
   },
+  {
+    title: "Dịch vụ cung ứng",
+    dataIndex: "supplier",
+    key: "supplier",
+    width: 200,
+    render(value, record, index) {
+      return (
+        <Space wrap={true}>
+          {record.typeList.split("||").map((sv, _index) => {
+            console.log(sv);
+            return (
+              <Tag className="item" color="blue" key={sv} bordered={false}>
+                {sv}
+              </Tag>
+            );
+          })}
+        </Space>
+      );
+    },
+  },
+
   {
     title: "Ngày tạo",
     key: "sysFstUpdate",
@@ -49,7 +70,7 @@ export const vendorColumns: ColumnsType<ISupplier> = [
     },
   },
   {
-    title: "User",
+    title: "Người tạo",
     dataIndex: "sysFstUser",
     key: "sysFstUser",
     width: 100,

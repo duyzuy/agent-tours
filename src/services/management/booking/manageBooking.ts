@@ -100,18 +100,4 @@ export const manageBookingAPIs = {
       },
     });
   },
-  getRoomingList: async (sellableId: number) => {
-    return await coreApi.post<RoomingListResponse>("core/Operation_RoomingList_List", {
-      requestObject: {
-        sellableId,
-      },
-    });
-  },
-  updateRoomingList: async (payload: RoomingPayload) => {
-    return await coreApi.post<RoomingListResponse>("core/Operation_RoomingList_Assign", {
-      requestObject: {
-        roomingList: payload.roomingList,
-      },
-    });
-  },
 };

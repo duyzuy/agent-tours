@@ -105,7 +105,7 @@ const DrawerImportLead: React.FC<DrawerImportLeadProps> = ({ action, onClose, op
       width: 80,
     },
     {
-      title: "status",
+      title: "Trạng thái",
       key: "status",
       dataIndex: "status",
       width: 80,

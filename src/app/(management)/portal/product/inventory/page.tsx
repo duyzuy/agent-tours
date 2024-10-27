@@ -125,7 +125,7 @@ const InventoryPage = () => {
       </div>
 
       <TableListPage<IInventoryListRs["result"][0]>
-        scroll={{ x: 1400 }}
+        scroll={{ x: 1000 }}
         modelName="Nhóm kho sản phẩm"
         columns={inventoryColumns}
         rowKey={"recId"}

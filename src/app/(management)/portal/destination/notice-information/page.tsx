@@ -8,16 +8,25 @@ import { columns } from "./columns";
 import { TravelInformationNoticeQueryParams } from "@/models/management/cms/cmsStateProvinceNotice";
 import { useGetTravelInformationNoticeListQuery } from "@/queries/cms/cmsTravelInfo";
 import { ITravelInformationNotice } from "@/models/management/cms/cmsStateProvinceNotice";
+import { useTransition } from "react";
+import { Spin } from "antd";
 const PageManagement = () => {
   const router = useRouter();
 
   const [queryParams, setQueryParams] = useState(() => new TravelInformationNoticeQueryParams({}, 1, 10));
   const { data, isLoading } = useGetTravelInformationNoticeListQuery(queryParams);
 
+  const [isPending, startTransition] = useTransition();
+
+  const goToEdit = (record: ITravelInformationNotice) => {
+    startTransition(() => {
+      router.push(`/portal/destination/notice-information/${record.originId}`);
+    });
+  };
   return (
     <PageContainer
       name="Danh sách lưu ý"
-      modelName="Danh sách lưu ý"
+      modelName="lưu ý"
       onClick={() => router.push(LINKS.NoticeCreate)}
       breadCrumItems={[{ title: "Danh sách lưu ý" }]}
     >
@@ -29,7 +38,8 @@ const PageManagement = () => {
         size="small"
         columns={columns}
         isLoading={isLoading}
-        onEdit={(record) => router.push(`/portal/destination/notice-information/${record.originId}`)}
+        onEdit={goToEdit}
+        loading={isPending}
         pagination={{
           total: data?.totalItems,
           pageSize: data?.pageSize,

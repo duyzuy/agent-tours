@@ -16,6 +16,7 @@ import {
   GlobalOutlined,
   FileTextOutlined,
   SnippetsOutlined,
+  ControlOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 import { pathPermissions } from "@/constants/permission.constant";
@@ -172,6 +173,17 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
         {
           key: "visa-template/list",
           label: "Danh sách Visa",
+        },
+      ],
+    },
+    {
+      key: "operation",
+      icon: React.createElement(ControlOutlined),
+      label: "Điều hành",
+      children: [
+        {
+          key: "operation/list",
+          label: "Mã điều hành",
         },
       ],
     },

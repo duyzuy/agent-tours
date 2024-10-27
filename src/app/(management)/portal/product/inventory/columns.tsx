@@ -3,6 +3,7 @@ import { Tag } from "antd";
 import { formatDate } from "@/utils/date";
 import { IInventoryListRs } from "@/models/management/core/inventory.interface";
 import { Status } from "@/models/common.interface";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
   {
     title: "#ID",
@@ -18,17 +19,12 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     render(value, record, index) {
       return (
         <div>
+          <span className="text-primary-default text-xs">{record.code}</span>
           <span className="block mb-2">{record.name}</span>
-          <Tag color="blue">{`# ${record.code}`}</Tag>
+          <span className="block">{record.productType}</span>
         </div>
       );
     },
-  },
-  {
-    title: "Loại sản phẩm",
-    dataIndex: "productType",
-    key: 4,
-    width: 150,
   },
   {
     title: "Loại dịch vụ",
@@ -40,16 +36,18 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     title: "QL Kho",
     dataIndex: "isStock",
     key: 7,
-    width: 120,
+    width: 80,
     render: (_, record) => {
       return (
         <>
           {record.isStock ? (
-            <Tag color="green" icon>
-              Có
-            </Tag>
+            <span className="text-green-600">
+              <CheckCircleOutlined />
+            </span>
           ) : (
-            <Tag color="red">Không</Tag>
+            <span className="text-red-600">
+              <CloseCircleOutlined />
+            </span>
           )}
         </>
       );

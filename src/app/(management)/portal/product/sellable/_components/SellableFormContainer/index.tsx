@@ -235,7 +235,6 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
     });
   };
 
-  console.log(sellableFormData);
   // console.log(template);
   return (
     <Form

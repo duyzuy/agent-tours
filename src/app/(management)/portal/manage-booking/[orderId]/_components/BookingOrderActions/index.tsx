@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useCallback } from "react";
 import { Button, Space } from "antd";
 import { useRouter } from "next/navigation";
@@ -85,7 +86,7 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
             type="primary"
             ghost
             size="small"
-            onClick={() => router.push(`/portal/manage-booking/130/rooming/${sellableId}`)}
+            onClick={() => router.push(`/portal/manage-booking/${orderId}/rooming/${sellableId}`)}
           >
             Xếp phòng
           </Button>

@@ -15,19 +15,23 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     width: 80,
   },
   {
-    title: "Tên nhóm sản phẩm",
+    title: "Nhóm sản phẩm",
     dataIndex: "name",
     key: "name",
     width: 220,
     render: (_, record) => {
       return (
         <div>
-          <p className="font-bold mb-1">{record.name}</p>
-          <p className="text-xs text-gray-500 mb-2">{record.code}</p>
+          <div className="mb-2">
+            <p className="text-xs text-gray-600">{record.code}</p>
+            <p className="font-[500] mb-2">{record.name}</p>
+            <span className="block">{record.type}</span>
+          </div>
+
           {(record.status === Status.OK && (
             <p>
               <Link href={`/portal/product/template-sellable/${record.recId}`} className="text-xs">
-                <span> Chi tiết</span>
+                <span>Chi tiết</span>
                 <span className="text-[10px] ml-1">
                   <RightOutlined />
                 </span>
@@ -40,13 +44,7 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     },
   },
   {
-    title: "Loại sản phẩm",
-    dataIndex: "type",
-    key: "type",
-    width: 120,
-  },
-  {
-    title: "Loại nhóm kho",
+    title: "Loại dịch vụ",
     dataIndex: "inventoryTypeList",
     key: "inventoryTypeList",
     width: 200,
@@ -117,7 +115,7 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     },
   },
   {
-    title: "User",
+    title: "Người tạo",
     dataIndex: "sysFstUser",
     key: "sysFstUser",
     width: 100,

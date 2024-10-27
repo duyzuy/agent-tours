@@ -20,6 +20,10 @@ export interface Leading {
   remark: string;
   source: LeadingSource;
   status: LeadingStatus;
+  fstUser: string;
+  fstUpdate: string;
+  lstUser: string;
+  lstUpdate: string;
 }
 
 export interface LeadingPayload {

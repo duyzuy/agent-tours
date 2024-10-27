@@ -5,7 +5,7 @@ import { StockQueryParams } from "@/models/management/core/stock.interface";
 import dayjs from "dayjs";
 import { DATE_TIME_FORMAT } from "@/constants/common";
 
-export const useGetStockInventoryTypeCoreQuery = (type: string) => {
+export const useGetStockInventoryTypeCoreQuery = (type?: string) => {
   return useQuery({
     queryKey: [queryCore.GET_STOCK_INVENTORY_TYPE, type],
     queryFn: () => stockInventoryAPIs.getStockType(type),

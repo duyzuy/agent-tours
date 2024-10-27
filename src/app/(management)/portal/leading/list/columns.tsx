@@ -1,6 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 import { Leading } from "@/models/management/leading.interface";
 import { Tag } from "antd";
+import { formatDate } from "@/utils/date";
 export const columns: ColumnsType<Leading> = [
   {
     title: "Họ và tên",
@@ -21,7 +22,7 @@ export const columns: ColumnsType<Leading> = [
     width: 250,
   },
   {
-    title: "status",
+    title: "Trạng thái",
     key: "status",
     dataIndex: "status",
     render: (_, { status }) => {
@@ -42,5 +43,14 @@ export const columns: ColumnsType<Leading> = [
       return <Tag color={color}>{status}</Tag>;
     },
     width: 150,
+  },
+  {
+    title: "Ngày tạo",
+    key: "fstUpdate",
+    dataIndex: "fstUpdate",
+    width: 150,
+    render(value, { fstUpdate }, index) {
+      return formatDate(fstUpdate);
+    },
   },
 ];

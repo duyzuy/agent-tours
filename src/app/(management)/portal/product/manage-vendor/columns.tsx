@@ -14,29 +14,29 @@ export const vendorColumns: ColumnsType<VendorListRs["result"][0]> = [
     width: 80,
   },
   {
-    title: "Tên vendor",
+    title: "Vendor",
     dataIndex: "fullName",
     key: "fullName",
     width: 200,
     render(value, record, index) {
       return (
         <span>
-          <span className="block">{record.fullName}</span>
           <span className="block text-xs text-primary-default">{record.shortName}</span>
+          <span className="block">{record.fullName}</span>
         </span>
       );
     },
   },
   {
-    title: "Loại dịch vụ cung ứng",
+    title: "Dịch vụ cung ứng",
     dataIndex: "typeList",
     key: "typeList",
-    width: 200,
+    width: 250,
     render(value, record, index) {
       return (
         <Space wrap={true}>
           {record.typeList.split("||").map((sv, _index) => (
-            <Tag className="item" color="blue" key={sv}>
+            <Tag className="item" color="blue" key={sv} bordered={false}>
               {sv}
             </Tag>
           ))}
@@ -53,7 +53,7 @@ export const vendorColumns: ColumnsType<VendorListRs["result"][0]> = [
     },
   },
   {
-    title: "User",
+    title: "Người tạo",
     dataIndex: "sysFstUser",
     key: "sysFstUser",
     width: 100,

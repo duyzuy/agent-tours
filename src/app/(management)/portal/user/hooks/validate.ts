@@ -26,7 +26,7 @@ export const localUserSchema: ObjectSchema<TLocalUserObjectSchema> = object({
   userType: string()
     .required("Loại tài khoản không bỏ trống.")
     .oneOf<ELocalUserType>(
-      [ELocalUserType.ADMIN, ELocalUserType.AGENT, ELocalUserType.AGENT_STAFF],
+      [ELocalUserType.ADMIN, ELocalUserType.AGENT, ELocalUserType.AGENT_STAFF, ELocalUserType.STAFF],
       "Loại tài khoản không đúng.",
     ),
   phoneNumber: string()
@@ -54,9 +54,11 @@ export const localUserSchema: ObjectSchema<TLocalUserObjectSchema> = object({
   mainRoleName: string().default(""),
   descriptions: string().default(""),
   infoPhoneNumber: string()
+    .nullable()
+    .transform((v, o) => (o === "" ? null : v))
     .min(10, "Số điện thoại tối thiểu 10 số.")
-    .max(11, "Số điện thoại không quá 11 số.")
-    .optional(),
+    .max(11, "Số điện thoại không quá 11 số."),
+
   infoCompanyName: string().default(""),
   infoAddress: string().default(""),
   infoBanking: string().default(""),

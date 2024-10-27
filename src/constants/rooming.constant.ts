@@ -17,7 +17,7 @@ export const ROOM_TYPES: { label: string; value: RoomingType }[] = [
     value: "TRIPLE",
   },
   {
-    label: "khác",
+    label: "Khác",
     value: "OTHER",
   },
 ];

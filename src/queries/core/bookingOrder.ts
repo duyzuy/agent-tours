@@ -88,12 +88,3 @@ export const useGetFormOfPaymentListByOrderIdCoreQuery = ({
     enabled: enabled,
   });
 };
-
-export const useGetRoomingList = ({ enabled = true, sellableId }: { enabled?: boolean; sellableId: number }) => {
-  return useQuery({
-    queryKey: [queryCore.GET_ROOMING_LIST],
-    queryFn: () => manageBookingAPIs.getRoomingList(sellableId),
-    select: (data) => data.result,
-    enabled: enabled,
-  });
-};

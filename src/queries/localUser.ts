@@ -3,7 +3,7 @@ import { GET_LOCAL_USER_PROFILE, GET_LOCAL_USER_ROLES, GET_LOCAL_USER_LIST, GET_
 import { localAuthAPIs } from "@/services/management/localAuth.service";
 import { localUserAPIs } from "@/services/management/localUser.service";
 import { IRolesPermissionsRs } from "@/models/management/role.interface";
-import { ILocalUserList } from "@/models/management/localUser.interface";
+import { ELocalUserType, ILocalUserList } from "@/models/management/localUser.interface";
 import { getAgToken } from "@/utils/common";
 
 export const useLocalUserGetProfileQuery = () => {
@@ -32,10 +32,10 @@ export const useLocalUserGetRolesQuery = () => {
  * get list users on local
  */
 
-export const useGetLocalUserList = () => {
+export const useGetLocalUserList = (options?: { userTypeList?: ELocalUserType[] }) => {
   return useQuery<ILocalUserList, Error>({
     queryKey: [GET_LOCAL_USER_LIST],
-    queryFn: () => localUserAPIs.getUserList(),
+    queryFn: () => localUserAPIs.getUserList(options?.userTypeList),
   });
 };
 

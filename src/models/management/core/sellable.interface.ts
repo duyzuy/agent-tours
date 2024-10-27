@@ -214,3 +214,17 @@ export class SellableQueryParams {
     this.pageSize = pageSize;
   }
 }
+
+/**
+ *
+ * operation
+ */
+
+export interface SellableCodeItem {
+  recId: number;
+  code: string;
+  isOperationCodeCreated: boolean;
+  status: Status;
+}
+
+export interface SellableCodeListResponse extends BaseResponse<SellableCodeItem[]> {}

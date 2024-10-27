@@ -103,9 +103,3 @@ export const useExtendBookingTimeLimitMutation = () => {
     mutationFn: (payload) => manageBookingAPIs.extendBookingTimeLimit(payload),
   });
 };
-
-export const useUpdateRoomingMutation = () => {
-  return useCustomMutation({
-    mutationFn: (payload: RoomingPayload) => manageBookingAPIs.updateRoomingList(payload),
-  });
-};

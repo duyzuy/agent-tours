@@ -18,6 +18,7 @@ import { getTranslationFe } from "./_actions/feTranslations";
 import { SITE_NAME } from "@/configs/site";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { RQClientProvider } from "@/providers/RQClientProvider";
+import Script from "next/script";
 
 interface Props {
   children: React.ReactNode;

@@ -10,7 +10,8 @@ dayjs.extend(localeData);
 dayjs.locale("en");
 dayjs.locale("vi");
 
-const CustomRangePicker: React.FC<RangePickerProps> = (props) => {
-    return <DatePicker.RangePicker locale={locale} {...props} />;
+export type CustomRangePickerProps = RangePickerProps & {};
+const CustomRangePicker: React.FC<CustomRangePickerProps> = (props) => {
+  return <DatePicker.RangePicker locale={locale} {...props} />;
 };
 export default CustomRangePicker;
