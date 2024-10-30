@@ -56,7 +56,7 @@ export const operationCreateDeadlineSchema: ObjectSchema<OperationDeadlineFormDa
       "Type không hợp lệ",
     )
     .required("Không bỏ trống"),
-  preDeadline: string().required("preDateline không bỏ trống"),
+  preDeadline: string().required("PreDateline không bỏ trống"),
   deadline: string().required("Deadline không bỏ trống"),
   remark: string(),
 });

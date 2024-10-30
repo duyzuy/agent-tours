@@ -28,6 +28,10 @@ import {
   RoomingPayload,
   RoomingHandOverPayload,
 } from "@/models/management/booking/rooming.interface";
+import {
+  OperationThingTodoListResponse,
+  OperationThingTodoParams,
+} from "@/models/management/core/operationThingTodo.interface";
 export const operationAPIs = {
   create: async (payload: OperationPayload) => {
     return await coreApi.post<OperationResponse, BaseResponse<null>>("core/OperationCode_Addnew", {
@@ -159,6 +163,16 @@ export const operationRoomingAPIs = {
     return await coreApi.post<RoomingListResponse>("core/Operation_RoomingList_UpdateStatus", {
       requestObject: {
         ...payload,
+      },
+    });
+  },
+};
+
+export const operationThingTodoAPIs = {
+  getList: async (params: OperationThingTodoParams) => {
+    return await coreApi.post<OperationThingTodoListResponse>("core/OperationThingToDo_List", {
+      requestObject: {
+        ...params,
       },
     });
   },

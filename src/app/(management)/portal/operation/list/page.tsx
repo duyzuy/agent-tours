@@ -1,14 +1,13 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Dropdown, MenuProps, Space, Table, TableProps } from "antd";
 import PageContainer from "@/components/admin/PageContainer";
-import TableListPage from "@/components/admin/TableListPage";
 import DrawerOperation, { DrawerOperationProps } from "../_components/DrawerOperation";
 import useOperation from "../modules/useOperation";
 import { useGetOperationListQuery } from "@/queries/core/operation";
 import { columns } from "./columns";
 import { IOperation } from "@/models/management/core/operation.interface";
-import { useRouter } from "next/navigation";
 import { ColumnsType } from "antd/es/table";
 import { EditOutlined, EllipsisOutlined, EyeOutlined } from "@ant-design/icons";
 const CodeListPage = () => {
@@ -62,24 +61,6 @@ const CodeListPage = () => {
       });
   };
 
-  const onHandOver = (id: number) => {
-    onUpdateStatus({ id, status: "HANDOVERED" });
-  };
-  const onAccept = (id: number) => {
-    onUpdateStatus({ id, status: "ACCEPTED" });
-  };
-  const onLock = (id: number) => {
-    onUpdateStatus({ id, status: "LOCKED" });
-  };
-  const onPendingCancel = (id: number) => {
-    onUpdateStatus({ id, status: "PENDINGCANCELED" });
-  };
-  const onCancel = (id: number) => {
-    onUpdateStatus({ id, status: "CANCELED" });
-  };
-  const onFinish = (id: number) => {
-    onUpdateStatus({ id, status: "DONE" });
-  };
   const mergedColumns: ColumnsType<IOperation> = [
     ...columns,
     {
@@ -96,32 +77,32 @@ const CodeListPage = () => {
           {
             key: "accept",
             label: <span className="text-emerald-600">Duyệt</span>,
-            onClick: () => onAccept(id),
+            onClick: () => onUpdateStatus({ id, status: "ACCEPTED" }),
           },
           {
             key: "handOver",
             label: <span className="text-amber-600">Bàn giao</span>,
-            onClick: () => onHandOver(id),
+            onClick: () => onUpdateStatus({ id, status: "HANDOVERED" }),
           },
           {
             key: "lock",
             label: <span>Khoá</span>,
-            onClick: () => onLock(id),
+            onClick: () => onUpdateStatus({ id, status: "LOCKED" }),
           },
           {
             key: "pendingCancel",
             label: <span className="text-pink-600">Chờ huỷ</span>,
-            onClick: () => onPendingCancel(id),
+            onClick: () => onUpdateStatus({ id, status: "PENDINGCANCELED" }),
           },
           {
             key: "cancel",
             label: <span className="text-red-600">Huỷ</span>,
-            onClick: () => onCancel(id),
+            onClick: () => onUpdateStatus({ id, status: "CANCELED" }),
           },
           {
             key: "done",
             label: <span className="text-emerald-600">Hoàn thành</span>,
-            onClick: () => onFinish(id),
+            onClick: () => onUpdateStatus({ id, status: "DONE" }),
           },
         ];
 

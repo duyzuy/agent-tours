@@ -18,8 +18,8 @@ import { getTranslationFe } from "./_actions/feTranslations";
 import { SITE_NAME } from "@/configs/site";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { RQClientProvider } from "@/providers/RQClientProvider";
-import Script from "next/script";
 
+const timeZone = "Asia/Bangkok";
 interface Props {
   children: React.ReactNode;
   params: { locale: LangCode };
@@ -62,7 +62,7 @@ export default async function RootClientLayout({ children, params: { locale } }:
       <body suppressHydrationWarning={true}>
         <ThemeProvider>
           <RQClientProvider>
-            <NextIntlClientProvider locale={locale} messages={messages}>
+            <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
               <NextAuthProvider session={session}>
                 <LanguageProvider>
                   <FeBookingProvider>

@@ -1,4 +1,4 @@
-import { Drawer, DrawerProps, Form, Input, Row, Col, Space, Button, Select, SelectProps } from "antd";
+import { Drawer, DrawerProps, Form, Input, Row, Col, Space, Button, Select, SelectProps, Checkbox, Radio } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -62,9 +62,6 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
     setValue("deadline", value?.locale("en").format(DATE_TIME_FORMAT));
   };
 
-  const handleSelectInventoryType: SelectProps<EInventoryType>["onChange"] = (value) => {
-    setValue("type", value);
-  };
   useEffect(() => {
     const initData = initialValue
       ? new OperationDeadlineFormData(
@@ -99,14 +96,15 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
         <Controller
           control={control}
           name="type"
-          render={({ field, fieldState: { error } }) => (
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
             <FormItem label="Loại dịch vụ" required validateStatus={error ? "error" : ""} help={error?.message}>
-              <Select
-                options={INVENTORY_TYPE_LIST.map((opt) => ({ label: opt, value: opt }))}
-                placeholder="Chọn loại dịch vụ"
-                value={field.value}
-                onChange={handleSelectInventoryType}
-              />
+              <Space wrap>
+                {INVENTORY_TYPE_LIST.map((item) => (
+                  <Radio key={item} value={item} checked={item === value} onChange={onChange}>
+                    {item}
+                  </Radio>
+                ))}
+              </Space>
             </FormItem>
           )}
         />
@@ -114,10 +112,10 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
           control={control}
           name="preDeadline"
           render={({ field, fieldState: { error } }) => (
-            <FormItem label="preDeadline" required validateStatus={error ? "error" : ""} help={error?.message}>
+            <FormItem label="Pre deadline" required validateStatus={error ? "error" : ""} help={error?.message}>
               <CustomDatePicker
                 format={"DD/MM/YYYY - HH:mm"}
-                placeholder="preDeadline"
+                placeholder="Pre deadline"
                 showTime={{
                   format: TIME_FORMAT,
                   hideDisabledOptions: true,
@@ -137,7 +135,7 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
           control={control}
           name="deadline"
           render={({ field, fieldState: { error } }) => (
-            <FormItem label="deadline" required validateStatus={error ? "error" : ""} help={error?.message}>
+            <FormItem label="Deadline" required validateStatus={error ? "error" : ""} help={error?.message}>
               <CustomDatePicker
                 placeholder="Deadline"
                 showTime={{

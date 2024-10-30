@@ -9,9 +9,14 @@ import CostingContainer from "./_components/CostingContainer";
 import RoomingContainer from "./_components/RoomingContainer";
 import classNames from "classnames";
 import useOperation from "../modules/useOperation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";
+import { useGetOperationThingTodoList } from "@/queries/core/operation";
+import {
+  IOperationThingTodo,
+  OperationThingTodoQueryParams,
+} from "@/models/management/core/operationThingTodo.interface";
 
 interface OperationContainerProps {
   operationId: number;
@@ -23,6 +28,13 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
   const { data: operationStatus, isLoading } = useGetOperationStatusQuery({
     queryParams: { operationId: operationId },
     enabled: !!operationId,
+  });
+
+  const thingsQueryParams = new OperationThingTodoQueryParams(undefined, operationId, "NEW", 20);
+  const [queryParams, setQueryParams] = useState(thingsQueryParams);
+  const { data: todoList, isLoading: loadingTodoList } = useGetOperationThingTodoList({
+    queryParams: queryParams,
+    enabled: true,
   });
 
   const { onUpdateStatus } = useOperation();
@@ -45,6 +57,8 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
     //PENDINGCANCELED - đã huỷ, vẫn có thể thanh toán => HANDOVERED, CANCELED
     //CANCELED - xong, chỉ xem
     //DONE - xong, chỉ xem
+
+    if (status === "DONE" || status === "CANCELED") return;
 
     let actions: { key: string; label: React.ReactNode; className?: string; onClick?: () => void }[] = [
       {
@@ -108,7 +122,7 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
     return status === "ACCEPTED";
   }, [status]);
   const isEditCosting = useMemo(() => {
-    return status === "HANDOVERED";
+    return status === "HANDOVERED" || status === "ACCEPTED";
   }, [status]);
 
   const isEditRooming = useMemo(() => {
@@ -166,15 +180,18 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
         templateName={data?.templateMinimal.name}
       />
 
-      <OperationPersonInfo
-        fullName={data?.pic?.fullname}
-        email={data?.pic?.email}
-        phoneNumber={data?.pic?.phoneNumber}
-      />
+      <div className="flex flex-wrap gap-6">
+        <OperationPersonInfo
+          fullName={data?.pic?.fullname}
+          email={data?.pic?.email}
+          phoneNumber={data?.pic?.phoneNumber}
+        />
+        <OperationTodoList items={todoList} />
+      </div>
       <div className="h-[1px] bg-gray-100 mt-6 mb-6"></div>
       <div>
         <Space>
-          {operationActions.map((act) => (
+          {operationActions?.map((act) => (
             <Button key={act.key} onClick={act.onClick} className={act.className}>
               {act.label}
             </Button>
@@ -287,6 +304,52 @@ const OperationPersonInfo: React.FC<{
           <span className="w-28 inline-block">Điện thoại</span>
           <span>{phoneNumber}</span>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const OperationTodoList: React.FC<{
+  items?: IOperationThingTodo[];
+  isLoading?: boolean;
+  className?: string;
+}> = ({ className = "", items, isLoading }) => {
+  return (
+    <div
+      className={classNames("info w-[380px] border rounded-md p-4", {
+        [className]: className,
+      })}
+    >
+      <div className="box-head mb-3 pb-3 border-b">
+        <h3 className="font-semibold">Công việc cần làm</h3>
+      </div>
+      <div className="box-content max-h-[240px] overflow-y-auto pr-2 -mr-2">
+        {items?.map(({ operationId, status, type, preDeadline, deadline, remark, deadlineId }) => (
+          <div className="todo-item border-b mb-2 pb-2" key={deadlineId}>
+            <div className="p-1 hover:bg-gray-100 rounded-md">
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">{type}</span>
+                <Tag color={status === "NEW" ? "blue" : "green"} bordered={false} className="!mr-0">
+                  {status === "NEW" ? "Mới" : status === "DONE" ? "Hoàn thành" : "Không xác định"}
+                </Tag>
+              </div>
+              <div className="text-xs">
+                <div className="flex justify-between gap-2">
+                  <span className="w-20">Pre deadline</span>
+                  <span className="flex-1">{formatDate(preDeadline)}</span>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <span className="w-20">Deadline</span>
+                  <span className="flex-1">{formatDate(deadline)}</span>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <span className="w-20">Ghi chú</span>
+                  <span className="flex-1">{remark}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -6,9 +6,11 @@ import {
   operationCostingDetailAPIs,
   operationDeadlineAPIs,
   operationRoomingAPIs,
+  operationThingTodoAPIs,
 } from "@/services/management/cores/operation";
 import { OperationCostingParams } from "@/models/management/core/operationCosting.interface";
 import { OperationStatusPayload } from "@/models/management/core/operation.interface";
+import { OperationThingTodoQueryParams } from "@/models/management/core/operationThingTodo.interface";
 
 export const useGetOperationListQuery = () => {
   return useQuery({
@@ -121,6 +123,21 @@ export const useGetRoomingList = ({
   return useQuery({
     queryKey: [queryCore.GET_ROOMING_LIST, { ...queryParams }],
     queryFn: () => operationRoomingAPIs.getRoomingList(queryParams),
+    select: (data) => data.result,
+    enabled: enabled,
+  });
+};
+
+export const useGetOperationThingTodoList = ({
+  enabled = true,
+  queryParams,
+}: {
+  enabled?: boolean;
+  queryParams: OperationThingTodoQueryParams;
+}) => {
+  return useQuery({
+    queryKey: [queryCore.GET_OPERATION_THING_TODO_LIST, { ...queryParams }],
+    queryFn: () => operationThingTodoAPIs.getList(queryParams),
     select: (data) => data.result,
     enabled: enabled,
   });

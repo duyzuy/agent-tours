@@ -41,15 +41,10 @@ const BookingDetailDynamic = dynamic(() => import("./_components/BookingDetail")
 
 const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params }) => {
   const router = useRouter();
-
   const orderInformation = useSelectorManageBooking((state) => state.order);
-
   const [isPending, startTransition] = useTransition();
-
   const { onUpdateCustomerInfo, onUpdatePassengerInfo } = useUpdateCustomerAndPassenger();
-
   const { onUpdate: onUpdateInvoiceInfo } = useUpdateInvoiceInfo();
-
   const bookingOrder = useMemo(() => orderInformation?.bookingOrder, [orderInformation]);
 
   const fopListCoupon = useMemo(() => {

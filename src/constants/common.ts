@@ -52,7 +52,7 @@ export const getPassengerGender = (gender: EPassengerGender) => {
   if (gender === EPassengerGender.OTHER) {
     return "Khác";
   }
-  return "--";
+  return "unknown";
 };
 
 export const getPassengerTitle = (title: EPassengerTitle) => {
@@ -65,7 +65,7 @@ export const getPassengerTitle = (title: EPassengerTitle) => {
   if (title === EPassengerTitle.MRS) {
     return "Cô";
   }
-  return "--";
+  return "unknown";
 };
 export const PASSENGER_TITLES = [
   { label: "Ông", value: EPassengerTitle.MR },

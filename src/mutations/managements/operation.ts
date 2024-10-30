@@ -43,9 +43,7 @@ export const useUpdateOperationDeadlineMutation = () => {
 };
 
 /**
- *
- * costing
- *
+ * Costing
  */
 export const useCreateOperationCostingMutation = () => {
   return useCustomMutation({
@@ -58,6 +56,10 @@ export const useDeleteOperationCostingMutation = () => {
     mutationFn: (costingId?: number) => operationCostingAPIs.delete(costingId),
   });
 };
+
+/**
+ * Costing detail
+ */
 
 export const useCreateOperationCostingDetailMutation = () => {
   return useCustomMutation({

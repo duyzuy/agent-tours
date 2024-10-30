@@ -5,6 +5,7 @@ import { EInventoryType } from "./inventoryType.interface";
 import { EPassengerGender, EPassengerTitle } from "@/constants/common";
 import { RoomingStatusType, RoomingType } from "../booking/rooming.interface";
 import { EConfigChannel, ESellChannel } from "@/constants/channel.constant";
+import { IDocument } from "./document.interface";
 
 export interface IPic {
   recId: number;
@@ -71,17 +72,7 @@ export interface OperationStatusOperationIdPayload {
 export interface OperationStatusSellableIdPayload {
   sellableId?: number;
 }
-interface IDocument {
-  documentCheckListId: number;
-  cat: "DOCUMENT";
-  bookingOrderId: number;
-  bookingPaxId: number;
-  sellableId: number;
-  documentName: string;
-  documentDescription: string;
-  remark: string;
-  status: string;
-}
+
 export type OperationStatusPayload = OperationStatusOperationIdPayload | OperationStatusSellableIdPayload;
 export interface OperationListResponse extends BaseResponse<IOperation[]> {}
 export interface OperationResponse extends BaseResponse<IOperation> {}

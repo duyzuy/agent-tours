@@ -1,5 +1,6 @@
 import { BaseResponse, PassengerType, Status, PaymentStatus } from "../../common.interface";
 import { IBookingTimeLitmit } from "../core/bookingTimeLimit.interface";
+import { IDocument } from "../core/document.interface";
 import { IFormOfPayment } from "../core/formOfPayment.interface";
 import { PriceConfig } from "../core/priceConfig.interface";
 import { ISellable } from "../core/sellable.interface";

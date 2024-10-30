@@ -13,11 +13,12 @@ const useOperationDeadline = () => {
 
   const queryClient = useQueryClient();
   const message = useMessage();
-  const onCreateOperation = (data: OperationDeadlineFormData, cb?: () => void) => {
+  const onCreate = (data: OperationDeadlineFormData, cb?: () => void) => {
     createOperation(data, {
       onSuccess(data, variables, context) {
         cb?.();
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_DEADLINE_LIST] });
+        queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_THING_TODO_LIST] });
         message.success("Tạo thành công");
       },
       onError(error, variables, context) {
@@ -26,11 +27,12 @@ const useOperationDeadline = () => {
       },
     });
   };
-  const onUpdateOperation = (data: OperationDeadlineFormData, cb?: () => void) => {
+  const onUpdate = (data: OperationDeadlineFormData, cb?: () => void) => {
     updateOperation(data, {
       onSuccess(data, variables, context) {
         cb?.();
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_DEADLINE_LIST] });
+        queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_THING_TODO_LIST] });
         message.success("Cập nhật thành công");
       },
       onError(error, variables, context) {
@@ -40,8 +42,8 @@ const useOperationDeadline = () => {
     });
   };
   return {
-    onCreate: onCreateOperation,
-    onUpdate: onUpdateOperation,
+    onCreate,
+    onUpdate,
   };
 };
 export default useOperationDeadline;

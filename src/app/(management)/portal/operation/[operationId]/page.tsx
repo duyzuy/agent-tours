@@ -6,6 +6,7 @@ import PageContainer from "@/components/admin/PageContainer";
 import { useGetOperationDetailQuery } from "@/queries/core/operation";
 import OperationContainer from "./OperationContainer";
 import { IOperationStatus } from "@/models/management/core/operation.interface";
+import { useGetOperationThingTodoList } from "@/queries/core/operation";
 
 interface OperationDetailPage {
   params: { operationId: string };

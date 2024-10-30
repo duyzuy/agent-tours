@@ -11,36 +11,28 @@ export interface SellableCodeListSelectorProps {
 }
 const SellableCodeListSelector: React.FC<SellableCodeListSelectorProps> = ({ onChange, value, disabled }) => {
   const [code, setCode] = useState("");
-  const deferredQueryCode = useDeferredValue(code);
   const { data, isLoading } = useGetSellableCodeListQuery({
-    code: deferredQueryCode,
-    enabled: deferredQueryCode.length >= 3,
+    code: code,
+    enabled: code.length >= 3,
   });
 
   const handleChangeSelect: SelectProps<string, SellableCodeItem>["onChange"] = (value, option) => {
     onChange?.(value, isArray(option) ? option[0] : option);
   };
 
-  const handleSearch = (value: string) => {
-    setCode(value);
-  };
-
-  console.log(data);
   return (
     <>
-      <Suspense fallback={<>SEARCHING....</>}>
-        <Select<string, SellableCodeItem>
-          showSearch
-          value={value}
-          fieldNames={{ label: "code", value: "code" }}
-          options={data ?? []}
-          placeholder="Nhập từ 3 ký tự."
-          onChange={handleChangeSelect}
-          onSearch={handleSearch}
-          loading={isLoading}
-          disabled={disabled}
-        />
-      </Suspense>
+      <Select<string, SellableCodeItem>
+        showSearch
+        value={value}
+        fieldNames={{ label: "code", value: "code" }}
+        options={data ?? []}
+        placeholder="Nhập từ 3 ký tự."
+        onChange={handleChangeSelect}
+        onSearch={setCode}
+        loading={isLoading}
+        disabled={disabled}
+      />
     </>
   );
 };

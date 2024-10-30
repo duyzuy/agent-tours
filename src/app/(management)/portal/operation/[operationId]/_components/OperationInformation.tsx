@@ -5,6 +5,7 @@ import { RoomingType } from "@/models/management/booking/rooming.interface";
 import { OperationStatusResponse } from "@/models/management/core/operation.interface";
 import { getPassengerType } from "@/utils/common";
 import { moneyFormatVND } from "@/utils/helper";
+import { CheckOutlined } from "@ant-design/icons";
 import { Table, Tag, TagProps } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useMemo } from "react";
@@ -149,11 +150,24 @@ const OperationInformation: React.FC<OperationInformationProps> = ({
                         <div className="text-xs text-gray-500">Giới tính</div>
                         {getPassengerGender(pax.paxGender)}
                       </div>
-                      <div className="w-[160px]">
-                        <div className="text-xs text-gray-500">Document</div>
+                      <div className="flex-1">
+                        <div className="text-xs text-gray-500">Hồ sơ giấy tờ</div>
                         <div>
-                          {pax.documents?.map((doc, _index) => (
-                            <div key={_index}>{doc.documentName}</div>
+                          {pax.documents?.map(({ documentName, status }, _index) => (
+                            <div key={_index} className="flex items-center gap-x-3">
+                              <div>{documentName}</div>-
+                              <span className="text-xs">
+                                {status === "FINISHED"
+                                  ? "Đã nộp"
+                                  : status === "HANDOVERED"
+                                  ? "Đã bàn giao"
+                                  : status === "NEW"
+                                  ? "Mới"
+                                  : status === "NOT_FINISHED"
+                                  ? "Chưa nộp"
+                                  : "Unknown"}
+                              </span>
+                            </div>
                           ))}
                         </div>
                       </div>

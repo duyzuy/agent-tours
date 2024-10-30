@@ -7,8 +7,9 @@ import { operationSchema } from "../schema/operation.schema";
 import SellableCodeListSelector, { SellableCodeListSelectorProps } from "./SellableCodeListSelector";
 import PicListSelector, { PicListSelectorProps } from "./PicListSelector";
 import { IOperation } from "@/models/management/core/operation.interface";
-import { useEffect, useMemo } from "react";
+import { memo, Suspense, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { isEqualObject } from "@/utils/compare";
+import SellableCodeListSelector2 from "./SellableCodeListSelector2";
 
 export type DrawerOperationProps = DrawerProps & {
   action?: "create" | "edit";
@@ -25,8 +26,11 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
   initialValue,
   isSubmiting,
 }) => {
+  const [querySearch, setQuerySearch] = useState("");
+  const deferedQuerySearch = useDeferredValue(querySearch);
   const initFormData = new OperationFormData(undefined, undefined, undefined, undefined);
 
+  console.log(deferedQuerySearch);
   const { setValue, getValues, handleSubmit, control, watch } = useForm<OperationFormData>({
     resolver: yupResolver(operationSchema),
     defaultValues: { ...initFormData },
@@ -72,7 +76,7 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
 
   return (
     <Drawer
-      title={action === "create" ? "Thêm mới" : "Chỉnh sửa"}
+      title={action === "create" ? "Tạo điều hành" : `Sửa #${initialValue?.id}`}
       destroyOnClose
       width={550}
       onClose={onClose}
@@ -93,7 +97,7 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
             </FormItem>
           )}
         />
-        <Controller
+        {/* <Controller
           control={control}
           name="sellableCode"
           render={({ field, fieldState: { error } }) => (
@@ -101,7 +105,39 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
               <SellableCodeListSelector value={field?.value} onChange={handleChangeCode} disabled={action === "edit"} />
             </FormItem>
           )}
+        /> */}
+        <Controller
+          control={control}
+          name="sellableCode"
+          render={({ field, fieldState: { error } }) => (
+            <>
+              {action === "edit" ? (
+                <div>
+                  <div>Sản phẩm</div>
+                  <div>{field.value}</div>
+                </div>
+              ) : (
+                <FormItem label="Chọn sản phẩm" required validateStatus={error ? "error" : ""} help={error?.message}>
+                  <Input
+                    value={querySearch}
+                    onChange={(evt) => setQuerySearch(evt.target.value)}
+                    placeholder="Nhập mã sản phẩm..."
+                  />
+                  <div className="mb-3"></div>
+                  <Suspense fallback="loading...">
+                    <SellableCodeListSelector2
+                      value={field?.value}
+                      onChange={handleChangeCode}
+                      query={deferedQuerySearch}
+                    />
+                  </Suspense>
+                </FormItem>
+              )}
+            </>
+          )}
         />
+      </Form>
+      <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
         <Space>
           <Button disabled={isSubmiting} onClick={onClose}>
             Huỷ
@@ -115,8 +151,8 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
             Lưu
           </Button>
         </Space>
-      </Form>
+      </div>
     </Drawer>
   );
 };
-export default DrawerOperation;
+export default memo(DrawerOperation);
