@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { Form, Input, Select, Space, Button, SelectProps, Drawer, Tag } from "antd";
+import { Form, Input, Select, Space, Button, Drawer, Tag, Checkbox } from "antd";
 import FormItem from "@/components/base/FormItem";
-
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
-import { CMS_TEMPLATES } from "@/constants/cmsTemplate.constant";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { IDestination } from "@/models/management/region.interface";
@@ -17,7 +15,9 @@ import { TemplateSellableFormData } from "../../modules/templateSellable.interfa
 import { templateSellableSchema } from "../../schema/templateSellable.schema";
 import CMSTemplateSelectorContainer from "./CMSTemplateSelectorContainer";
 import { Status } from "@/models/common.interface";
-import { isEmpty } from "lodash";
+import { isEmpty, isUndefined } from "lodash";
+import CheckListForm, { CheckListFormProps } from "./CheckListForm";
+
 export enum EActionType {
   CREATE = "CREATE",
   EDIT = "EDIT",
@@ -44,9 +44,10 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
   initialValues,
   onApproval,
 }) => {
-  const initSellableFormdata = new TemplateSellableFormData(undefined, undefined, "", "", [], [], Status.QQ);
-  const [templateSellableFormData, setTemplateSellableFormData] = useState(initSellableFormdata);
+  const initFormData = new TemplateSellableFormData(undefined, undefined, "", "", [], [], [], Status.QQ);
 
+  const [templateSellableFormData, setTemplateSellableFormData] = useState(initFormData);
+  console.log(templateSellableFormData);
   const { data: destinationList } = useGetDestinationsQuery();
 
   const { data: inventoryTypeList } = useGetInventoryTypeListCoreQuery({
@@ -60,25 +61,8 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
   const { handlerSubmit, errors } = useFormSubmit<TemplateSellableFormData>({
     schema: templateSellableSchema,
   });
-  const inventoryTypeOptions: SelectProps["options"] = useMemo(() => {
-    let options: SelectProps["options"] = [];
-    if (inventoryTypeList) {
-      inventoryTypeList.forEach((item) => {
-        options = [...(options || []), { value: item, label: item }];
-      });
-    }
-    return options;
-  }, [inventoryTypeList]);
 
-  const productTypeOptions = useMemo(() => {
-    return (
-      productTypeList?.reduce<{ label: string; value: string }[]>((acc, type) => {
-        acc = [...acc, { label: type, value: type }];
-        return acc;
-      }, []) || []
-    );
-  }, [productTypeList]);
-
+  console.log(errors);
   const destinationListOptions = useMemo(() => {
     return destinationList?.reduce<{ value: string; label: string; destination: IDestination }[]>(
       (acc, destination) => {
@@ -104,7 +88,7 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
     }));
   };
   const onChangeSellableFormData = (
-    key: keyof TemplateSellableFormData,
+    key: keyof Required<TemplateSellableFormData>,
     value: string | number | EInventoryType[] | EProductType | IDestination[],
   ) => {
     if (key === "code" && typeof value === "string") {
@@ -115,6 +99,60 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
       ...prev,
       [key]: value,
     }));
+  };
+
+  const onChangeInventory = (inventoryItem: EInventoryType) => {
+    setTemplateSellableFormData((oldData) => {
+      const { inventoryTypeList } = oldData;
+      let newItems = [...inventoryTypeList];
+      const indexIv = inventoryTypeList.indexOf(inventoryItem);
+
+      if (indexIv !== -1) {
+        newItems.splice(indexIv, 1);
+      } else {
+        newItems = [...newItems, inventoryItem];
+      }
+      return {
+        ...oldData,
+        inventoryTypeList: [...newItems],
+      };
+    });
+  };
+  const onChangeProductType = (type: EProductType) => {
+    setTemplateSellableFormData((oldData) => {
+      return {
+        ...oldData,
+        type: type,
+      };
+    });
+  };
+
+  const handleAddDocumentItem: CheckListFormProps["onAdd"] = (item, _index) => {
+    setTemplateSellableFormData((oldData) => {
+      const { checkListJson } = oldData;
+      let newCheckList = [...(checkListJson || [])];
+      if (isUndefined(_index)) {
+        newCheckList = [...newCheckList, item];
+      } else {
+        newCheckList.splice(_index, 1, item);
+      }
+      return {
+        ...oldData,
+        checkListJson: [...newCheckList],
+      };
+    });
+  };
+
+  const handleRemoveDocumentItem: CheckListFormProps["onRemove"] = (_index) => {
+    setTemplateSellableFormData((oldData) => {
+      const { checkListJson } = oldData;
+      let newCheckList = [...(checkListJson || [])];
+      newCheckList.splice(_index, 1);
+      return {
+        ...oldData,
+        checkListJson: [...newCheckList],
+      };
+    });
   };
 
   const handleSubmitForm: HandleSubmit<TemplateSellableFormData> = (data) => {
@@ -130,6 +168,15 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
 
       const destinationList = JSON.parse(initialValues.destListJson) as IDestination[];
 
+      console.log(destinationList);
+      const checkList = initialValues.checkListJson
+        ? (JSON.parse(initialValues.checkListJson) as {
+            name: string;
+            descriptions: string;
+            link: string;
+          }[])
+        : undefined;
+
       setTemplateSellableFormData((prev) => ({
         ...prev,
         inventoryTypeList: inventoryTypeList,
@@ -138,19 +185,22 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
         code: initialValues.code,
         cmsIdentity: initialValues.cmsIdentity,
         destListJson: destinationList,
+        checkListJson: checkList,
       }));
     } else {
-      setTemplateSellableFormData(initSellableFormdata);
+      setTemplateSellableFormData(initFormData);
     }
   }, [initialValues, actionType, isOpen]);
 
   return (
     <Drawer
       title={actionType === EActionType.CREATE ? "Thêm mới" : "Chỉnh sửa"}
+      push={false}
       destroyOnClose
       width={550}
       onClose={onCancel}
       open={isOpen}
+      className="drawer-template-sellable"
       styles={{
         body: {
           paddingBottom: 80,
@@ -185,13 +235,18 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
           />
         </FormItem>
         <FormItem label="Loại sản phẩm" required validateStatus={errors?.type ? "error" : ""} help={errors?.type || ""}>
-          <Select
-            placeholder="Chọn sản phẩm"
-            value={templateSellableFormData.type}
-            disabled={isWaitingApproval}
-            onChange={(value) => onChangeSellableFormData("type", value)}
-            options={productTypeOptions}
-          />
+          <Space wrap>
+            {productTypeList?.map((item) => (
+              <Checkbox
+                key={item}
+                value={item}
+                checked={templateSellableFormData.type?.includes(item)}
+                onChange={() => onChangeProductType(item)}
+              >
+                {item}
+              </Checkbox>
+            ))}
+          </Space>
         </FormItem>
         <FormItem
           label="Loại dịch vụ"
@@ -199,14 +254,18 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
           validateStatus={errors?.inventoryTypeList ? "error" : ""}
           help={errors?.inventoryTypeList || ""}
         >
-          <Select
-            placeholder="Loại dịch vụ"
-            mode="multiple"
-            disabled={isWaitingApproval}
-            value={templateSellableFormData.inventoryTypeList}
-            onChange={(value) => onChangeSellableFormData("inventoryTypeList", value)}
-            options={inventoryTypeOptions}
-          />
+          <Space wrap>
+            {inventoryTypeList?.map((item) => (
+              <Checkbox
+                key={item}
+                value={item}
+                checked={templateSellableFormData.inventoryTypeList.includes(item)}
+                onChange={() => onChangeInventory(item)}
+              >
+                {item}
+              </Checkbox>
+            ))}
+          </Space>
         </FormItem>
         <FormItem
           label="Nhóm điểm đến"
@@ -223,6 +282,12 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
             options={destinationListOptions}
           />
         </FormItem>
+        <CheckListForm
+          items={templateSellableFormData.checkListJson || []}
+          onAdd={handleAddDocumentItem}
+          onRemove={handleRemoveDocumentItem}
+        />
+
         <CMSTemplateSelectorContainer
           errors={errors?.cmsIdentity}
           onChange={(value) => onChangeSellableFormData("cmsIdentity", value)}
@@ -240,14 +305,20 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
 
       <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
         <Space>
-          <Button onClick={onCancel}>Huỷ bỏ</Button>
-          {actionType === EActionType.EDIT && initialValues?.status === Status.QQ ? (
-            <Button type="primary" onClick={() => onApproval?.(initialValues.recId)}>
+          <Button onClick={onCancel} className="min-w-[120px]">
+            Huỷ bỏ
+          </Button>
+          {initialValues?.status === Status.QQ ? (
+            <Button type="primary" onClick={() => onApproval?.(initialValues.recId)} className="min-w-[120px]">
               Duyệt
             </Button>
           ) : (
-            <Button type="primary" onClick={() => handlerSubmit(templateSellableFormData, handleSubmitForm)}>
-              {actionType === EActionType.CREATE ? "Thêm mới" : "Cập nhật"}
+            <Button
+              type="primary"
+              className="min-w-[120px]"
+              onClick={() => handlerSubmit(templateSellableFormData, handleSubmitForm)}
+            >
+              Lưu
             </Button>
           )}
         </Space>
@@ -257,6 +328,6 @@ const DrawerTemplateSellable: React.FC<DrawerTemplateSellableProps> = ({
 };
 export default DrawerTemplateSellable;
 
-const getSelectedDestination = (destinations: IDestination[]) => {
+const getSelectedDestination = (destinations: Partial<IDestination>[]) => {
   return destinations.map((des) => des.codeKey);
 };

@@ -67,9 +67,12 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
 
   return (
     <PageContainer
-      name="Chi tiết booking"
+      name={`Chi tiết đặt chỗ #${params.orderId}`}
       modelName="Chi tiết booking"
-      breadCrumItems={[{ title: "Quản lý booking", href: "/portal/manage-booking" }, { title: "Chi tiết booking" }]}
+      breadCrumItems={[
+        { title: "Danh sách đặt chỗ", href: "/portal/manage-booking" },
+        { title: `Chi tiết đặt chỗ #${params.orderId}` },
+      ]}
       onBack={() => router.push("/portal/manage-booking/order-list")}
       // className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
       hideAddButton
@@ -82,6 +85,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
           referenceId={bookingOrder?.referenceId}
           agentId={bookingOrder?.agentUserId}
           channel={bookingOrder?.channel}
+          sellableCode={bookingOrder?.sellable.code}
           className="mb-6"
         />
         <div className="bg-slate-50 p-6 rounded-md mb-6">

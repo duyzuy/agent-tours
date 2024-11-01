@@ -15,9 +15,9 @@ export const templateSellableSchema: ObjectSchema<TemplateSellableFormData> = ob
     .of(
       object<IDestination>().shape({
         cat: string().oneOf<IDestination["cat"]>(["DESTLIST"]).required("Cat không bỏ trống"),
-        id: number().required(),
-        codeKey: string().required(),
-        codeName: string().required(),
+        id: number().required("Không bỏ trống id."),
+        codeKey: string().required("Không bỏ trống codeKey"),
+        codeName: string().required("Không bỏ trống codeName"),
         status: string()
           .oneOf<Status>([Status.OK, Status.QQ, Status.XX, Status.OX])
           .required("Trạng thái không bỏ trống."),
@@ -26,6 +26,8 @@ export const templateSellableSchema: ObjectSchema<TemplateSellableFormData> = ob
     )
     .min(1, "Nhóm điểm đến không bỏ trống")
     .default([]),
+  checkListJson: array().of(object({})).default([]),
   inventoryTypeList: array<EInventoryType[]>().required("Loại inventory không bỏ trống.").default([]),
   status: string().oneOf<Status>([Status.OK, Status.QQ, Status.XX, Status.OX]).required("Trạng thái không bỏ trống."),
 });
+// checkListJson?: { name: string; descriptions: string; link: string }[];

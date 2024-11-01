@@ -7,93 +7,92 @@ import { IFormOfPaymentListRs } from "@/models/management/core/formOfPayment.int
 import Link from "next/link";
 
 export const columnsFOPs: ColumnsType<IFormOfPaymentListRs["result"][0]> = [
-    {
-        title: "#ID",
-        dataIndex: "recId",
-        key: "recId",
-        width: 80,
+  {
+    title: "#ID",
+    dataIndex: "recId",
+    key: "recId",
+    width: 80,
+  },
+  {
+    title: "#ID đặt chỗ",
+    dataIndex: "orderId",
+    key: "orderId",
+    width: 80,
+  },
+  {
+    title: "Loại",
+    dataIndex: "type",
+    key: "type",
+    width: 140,
+    render(value, { type, fopType, orderId }, index) {
+      return (
+        <div>
+          <span className="block mb-1">{type}</span>
+          <span className="block text-xs mb-2">{fopType}</span>
+          <Link href={`/portal/manage-booking/${orderId}`} className="block text-xs">
+            <span>Xem đặt chỗ</span>
+          </Link>
+        </div>
+      );
     },
-    {
-        title: "Loại",
-        dataIndex: "type",
-        key: "type",
-        width: 140,
-        render(value, record, index) {
-            return (
-                <div>
-                    <span className="block mb-1">{record.type}</span>
-                    <span className="block text-xs mb-2">{record.fopType}</span>
-                    <Link
-                        href={`/portal/manage-booking/${record.orderId}`}
-                        className="block text-xs"
-                    >
-                        <span>Chi tiết đặt chỗ</span>
-                    </Link>
-                </div>
-            );
-        },
+  },
+  {
+    title: "Người thanh toán",
+    dataIndex: "fopDocument",
+    key: "fopDocument",
+    width: 160,
+    render(value, record, index) {
+      return (
+        <div>
+          <span className="block">{record.payer}</span>
+        </div>
+      );
     },
-    {
-        title: "Người thanh toán",
-        dataIndex: "fopDocument",
-        key: "fopDocument",
-        width: 160,
-        render(value, record, index) {
-            return (
-                <div>
-                    <span className="block">{record.payer}</span>
-                </div>
-            );
-        },
-    },
+  },
 
-    {
-        title: "Số tiền thanh toán",
-        dataIndex: "amount",
-        key: "amount",
-        width: 180,
-        render: (_, record) => {
-            return <>{moneyFormatVND(record.amount)}</>;
-        },
+  {
+    title: "Số tiền thanh toán",
+    dataIndex: "amount",
+    key: "amount",
+    width: 180,
+    render: (_, record) => {
+      return <>{moneyFormatVND(record.amount)}</>;
     },
-    {
-        title: "Ghi chú",
-        dataIndex: "rmk",
-        key: "rmk",
-        width: 100,
-        render(value, record, index) {
-            return (
-                <div>
-                    <span className="block">{record.rmk}</span>
-                </div>
-            );
-        },
+  },
+  {
+    title: "Ghi chú",
+    dataIndex: "rmk",
+    key: "rmk",
+    width: 100,
+    render(value, record, index) {
+      return (
+        <div>
+          <span className="block">{record.rmk}</span>
+        </div>
+      );
     },
-    {
-        title: "Trạng thái",
-        dataIndex: "paymentStatus",
-        key: "paymentStatus",
-        width: 120,
-        render(value, record, index) {
-            return (
-                <>
-                    {(record.status === Status.OK && (
-                        <Tag color="green">Đã duyệt</Tag>
-                    )) ||
-                        (record.status === Status.QQ && (
-                            <Tag color="orange">Chờ duyệt</Tag>
-                        )) || <Tag color="red">Đã huỷ</Tag>}
-                </>
-            );
-        },
+  },
+  {
+    title: "Trạng thái",
+    dataIndex: "paymentStatus",
+    key: "paymentStatus",
+    width: 120,
+    render(value, record, index) {
+      return (
+        <>
+          {(record.status === Status.OK && <Tag color="green">Đã duyệt</Tag>) ||
+            (record.status === Status.QQ && <Tag color="orange">Chờ duyệt</Tag>) || <Tag color="red">Đã huỷ</Tag>}
+        </>
+      );
     },
-    {
-        title: "Ngày tạo",
-        dataIndex: "sysFstUpdate",
-        key: "sysFstUpdate",
-        width: 160,
-        render: (sysFstUpdate, record) => {
-            return <>{formatDate(sysFstUpdate)}</>;
-        },
+  },
+  {
+    title: "Ngày tạo",
+    dataIndex: "sysFstUpdate",
+    key: "sysFstUpdate",
+    width: 160,
+    render: (sysFstUpdate, record) => {
+      return <>{formatDate(sysFstUpdate)}</>;
     },
+  },
 ];

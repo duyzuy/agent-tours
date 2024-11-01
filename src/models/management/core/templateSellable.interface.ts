@@ -10,6 +10,7 @@ export interface ITemplateSellable {
   name: string;
   inventoryTypeList: string; //1.1 inventoryType: chuỗi split bởi ||, ví dụ: AIR||HOTEL||GUIDE
   destListJson: string; //json cửa mảng [DestList], có thể có nhiều Destlist
+  checkListJson: string; // json {name, descriptions, link}
   tourItinerary: string;
   airItinerary: string;
   counter: string;
@@ -49,6 +50,11 @@ export interface ITemplateSellablePayload {
   name: string;
   inventoryTypeList: string; //1.1 inventoryType: chuỗi split bởi ||, ví dụ: AIR||HOTEL||GUIDE
   destListJson: IDestination[]; //json cửa mảng [DestList], có thể có nhiều Destlist
+  checkListJson: {
+    name: string;
+    descriptions: string;
+    link: string;
+  }[];
   status: Status;
 }
 export interface ITemplateSellableUpdatePayload

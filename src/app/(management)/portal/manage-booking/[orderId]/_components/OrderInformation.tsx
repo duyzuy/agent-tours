@@ -18,6 +18,7 @@ interface OrderInformationProps {
   referenceId?: string;
   channel?: string;
   agentId?: number;
+  sellableCode?: string;
 }
 const OrderInformation: React.FC<OrderInformationProps> = ({
   className = "",
@@ -29,6 +30,7 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
   referenceId,
   channel,
   agentId,
+  sellableCode,
 }) => {
   const [isShowModalConfirm, setShowModalConfirm] = useState(false);
   const { onCancelBookingOrder } = useCancelBookingOrder();

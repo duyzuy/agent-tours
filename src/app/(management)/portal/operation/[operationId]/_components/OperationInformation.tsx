@@ -107,7 +107,7 @@ const OperationInformation: React.FC<OperationInformationProps> = ({
     },
   ];
   return (
-    <div>
+    <div className="pt-6">
       <div className="order-list-container mb-6">
         <div className="section-head mb-6">
           <h3 className="text-lg font-semibold">Danh sách đơn hàng</h3>

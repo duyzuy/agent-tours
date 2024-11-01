@@ -19,18 +19,18 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     dataIndex: "name",
     key: "name",
     width: 220,
-    render: (_, record) => {
+    render: (_, { status, recId, code, name, type }) => {
       return (
         <div>
           <div className="mb-2">
-            <p className="text-xs text-gray-600">{record.code}</p>
-            <p className="font-[500] mb-2">{record.name}</p>
-            <span className="block">{record.type}</span>
+            <p className="text-xs text-gray-600">{code}</p>
+            <p className="font-[500] mb-2">{name}</p>
+            <span className="block">{type}</span>
           </div>
 
-          {(record.status === Status.OK && (
+          {(status === Status.OK && (
             <p>
-              <Link href={`/portal/product/template-sellable/${record.recId}`} className="text-xs">
+              <Link href={`/portal/product/template-sellable/${recId}`} className="text-xs">
                 <span>Chi tiết</span>
                 <span className="text-[10px] ml-1">
                   <RightOutlined />
@@ -97,9 +97,9 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
       const destinations: IDestination[] = JSON.parse(record.destListJson);
       return (
         <Space wrap>
-          {destinations.map((item) => (
-            <Tag color="blue" key={item.id}>
-              {item.codeName}
+          {destinations.map(({ id, codeName }, _index) => (
+            <Tag color="blue" key={_index}>
+              {codeName}
             </Tag>
           ))}
         </Space>
@@ -125,12 +125,12 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     dataIndex: "status",
     key: "status",
     width: 150,
-    render: (_, record) => {
+    render: (_, { status }) => {
       return (
-        <Tag color={(record.status === Status.OK && "green") || (record.status === Status.QQ && "orange") || "red"}>
-          {(record.status === Status.OK && "Đang kích hoạt") ||
-            (record.status === Status.XX && "Đã xoá") ||
-            (record.status === Status.QQ && "Chờ duyệt") ||
+        <Tag color={(status === Status.OK && "green") || (status === Status.QQ && "orange") || "red"} bordered={false}>
+          {(status === Status.OK && "Đang kích hoạt") ||
+            (status === Status.XX && "Đã xoá") ||
+            (status === Status.QQ && "Chờ duyệt") ||
             "Chờ kích hoạt"}
         </Tag>
       );

@@ -123,27 +123,7 @@ OrderSummary.Pricings = function OrderSummaryPricings({
             <span className="block">Thuế phí</span>
             <span className="block text-[16px] font-semibold text-primary-default">{charge}</span>
           </div>
-          <div className="w-40 border-r mr-6">
-            <span className="block">Tổng tiền</span>
-            <span className="block text-[16px] font-semibold text-primary-default">{totalAmount}</span>
-          </div>
-        </div>
-      </div>
-      <div className="order__detail--payment-detail mb-6 border-b pb-6">
-        <div className="flex items-center">
-          <div className="w-40 border-r mr-6">
-            <span className="block">Đã thanh toán</span>
-            <span className="block text-[16px] font-semibold text-green-600">{totalPaid}</span>
-          </div>
-          <div className="w-40 border-r mr-6">
-            <span className="block">Đã hoàn</span>
-            <span className="block text-[16px] font-semibold text-red-600">{totalRefunded}</span>
-          </div>
-          <div className="w-40 border-r mr-6">
-            <span className="block">Tổng thanh toán</span>
-            <span className="block text-[16px] font-semibold text-green-600">{totalFop}</span>
-          </div>
-          <div className="w-60 mr-6">
+          <div className="w-60 mr-6 border-r">
             <span className="block">Mã giảm giá</span>
             <span className="block">
               {coupons && coupons.length
@@ -157,6 +137,26 @@ OrderSummary.Pricings = function OrderSummaryPricings({
                   ))
                 : "--"}
             </span>
+          </div>
+          <div className="w-40 mr-6">
+            <span className="block">Tổng tiền</span>
+            <span className="block text-[16px] font-semibold text-primary-default">{totalAmount}</span>
+          </div>
+        </div>
+      </div>
+      <div className="order__detail--payment-detail mb-6 border-b pb-6">
+        <div className="flex items-center">
+          <div className="w-40 border-r mr-6">
+            <span className="block">Đã thanh toán</span>
+            <span className="block text-[16px] font-semibold text-green-600">{totalPaid}</span>
+          </div>
+          <div className="w-40 border-r mr-6">
+            <span className="block">Đã hoàn</span>
+            <span className="block text-[16px] font-semibold text-amber-400">{totalRefunded}</span>
+          </div>
+          <div className="w-40 border-r mr-6">
+            <span className="block">Tổng thanh toán</span>
+            <span className="block text-[16px] font-semibold text-red-600">{totalFop}</span>
           </div>
         </div>
       </div>
