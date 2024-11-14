@@ -2,11 +2,6 @@
 import React, { useReducer } from "react";
 import { ManageBookingDetailContext } from "@/context";
 
-import { useGetBookingDetailCoreQuery } from "@/queries/core/bookingOrder";
-import { useLocalGetRuleAndPolicyQuery } from "@/queries/ruleAndPolicy";
-import { Spin } from "antd";
-import { isUndefined } from "lodash";
-
 import { manageBookingReducer } from "./reducer";
 import { initManageBookingState } from "./state";
 import OrderDetailContainer from "./OrderDetailContainer";

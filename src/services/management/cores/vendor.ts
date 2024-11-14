@@ -1,12 +1,6 @@
 import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
-import {
-  VendorListRs,
-  VendorRs,
-  VendorQueryParams,
-  IVendor,
-  VendorUpdatePayload,
-} from "@/models/management/vendor.interface";
+import { VendorListRs, VendorRs, VendorQueryParams, VendorUpdatePayload } from "@/models/management/vendor.interface";
 import { VendorPayload } from "@/models/management/vendor.interface";
 
 export const vendorAPIs = {

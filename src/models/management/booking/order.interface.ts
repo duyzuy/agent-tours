@@ -1,6 +1,6 @@
 import { BaseResponse, PaymentStatus } from "../../common.interface";
 import { Status } from "../../common.interface";
-import { ITemplateSellable } from "../core/templateSellable.interface";
+import { ITemplateSellableDetail } from "../core/templateSellable.interface";
 import { ISellable } from "../core/sellable.interface";
 import { PriceConfig } from "../core/priceConfig.interface";
 import { IReservation } from "./reservation.interface";
@@ -38,10 +38,10 @@ export interface IOrderItem {
   sysLstUpdate: string;
   sysBelongTo: string;
   logStatus: string;
-  template: ITemplateSellable;
+  template: ITemplateSellableDetail;
   sellable: ISellable & {
     configs: PriceConfig[] | null;
-    template: ITemplateSellable;
+    template: ITemplateSellableDetail;
   };
   invoiceName: string;
   invoiceCompanyName: string;

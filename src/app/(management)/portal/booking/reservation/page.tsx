@@ -9,7 +9,7 @@ import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 
 const ReservationPage = () => {
-  const bookingInformation = useBookingSelector();
+  const bookingInformation = useBookingSelector((state) => state);
   const router = useRouter();
   const bookingOrder = useMemo(() => {
     return bookingInformation.reservation?.bookingOrder;

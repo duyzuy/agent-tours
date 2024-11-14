@@ -12,7 +12,7 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
     width: 80,
   },
   {
-    title: "Mã sản phẩm",
+    title: "Sản phẩm",
     dataIndex: "code",
     key: "code",
     width: 200,
@@ -27,8 +27,8 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
   },
   {
     title: "Khả dụng",
-    dataIndex: "avaiable",
-    key: "avaiable",
+    dataIndex: "available",
+    key: "available",
     width: 100,
   },
   {

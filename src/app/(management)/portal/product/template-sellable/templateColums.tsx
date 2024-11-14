@@ -1,11 +1,11 @@
+import Link from "next/link";
 import { ColumnsType } from "antd/es/table";
-import { Space, Tag, Table, Button } from "antd";
+import { Space, Tag, Table } from "antd";
+import { RightOutlined } from "@ant-design/icons";
 import { formatDate } from "@/utils/date";
 import { Status } from "@/models/common.interface";
 import { ITemplateSaleableListRs } from "@/models/management/core/templateSellable.interface";
-import { IDestination } from "@/models/management/region.interface";
-import Link from "next/link";
-import { RightOutlined } from "@ant-design/icons";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 
 export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> = [
   {
@@ -15,7 +15,7 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     width: 80,
   },
   {
-    title: "Nhóm sản phẩm",
+    title: "Mẫu sản phẩm",
     dataIndex: "name",
     key: "name",
     width: 220,
@@ -27,18 +27,12 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
             <p className="font-[500] mb-2">{name}</p>
             <span className="block">{type}</span>
           </div>
-
-          {(status === Status.OK && (
-            <p>
-              <Link href={`/portal/product/template-sellable/${recId}`} className="text-xs">
-                <span>Chi tiết</span>
-                <span className="text-[10px] ml-1">
-                  <RightOutlined />
-                </span>
-              </Link>
-            </p>
-          )) ||
-            null}
+          <Link href={`/portal/product/template-sellable/${recId}`} className="text-xs">
+            <span>Chi tiết</span>
+            <span className="text-[10px] ml-1">
+              <RightOutlined />
+            </span>
+          </Link>
         </div>
       );
     },
@@ -73,14 +67,18 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
         text: "GUIDE",
         value: "GUIDE",
       },
+      {
+        text: "LANDPACKAGE",
+        value: "LANDPACKAGE",
+      },
     ],
-    onFilter: (value, record) => record.inventoryTypeList.indexOf(value as string) === 0,
-    render(value, record) {
-      const inventoryTypes: string[] = record.inventoryTypeList.split("||");
-
+    onFilter: (value, { inventoryTypeList }) => {
+      return inventoryTypeList.indexOf(value as EInventoryType) === 0;
+    },
+    render(value, { inventoryTypeList }) {
       return (
         <Space wrap>
-          {inventoryTypes.map((item) => (
+          {inventoryTypeList.map((item) => (
             <Tag key={item}>{item}</Tag>
           ))}
         </Space>
@@ -93,11 +91,10 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     dataIndex: "destListJson",
     key: "destListJson",
     width: 200,
-    render(value, record) {
-      const destinations: IDestination[] = JSON.parse(record.destListJson);
+    render(value, { destListJson }) {
       return (
         <Space wrap>
-          {destinations.map(({ id, codeName }, _index) => (
+          {destListJson.map(({ id, codeName }, _index) => (
             <Tag color="blue" key={_index}>
               {codeName}
             </Tag>

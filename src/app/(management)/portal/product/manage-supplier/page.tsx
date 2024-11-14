@@ -1,28 +1,21 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-
-import DrawerSupplier, { DrawerSupplierProps, EActionType } from "./_components/DrawerSupplier";
+import DrawerSupplierForm, { DrawerSupplierFormProps } from "./_components/DrawerSupplierForm";
 import TableListPage from "@/components/admin/TableListPage";
-import { vendorColumns } from "./columns";
+import { supplierColumn } from "./columns";
 import { ISupplier, SupplierQueryParams } from "@/models/management/supplier.interface";
 import useManageSupplier from "./modules/useManageSupplier";
 import { useGetSupplierListCoreQuery } from "@/queries/core/supplier";
-import ModalRecordDetail from "./_components/ModalRecordDetail";
 import FilterFormData from "./_components/FilterFormData";
-import { SupplierFormData } from "./modules/manageSupplier.interface";
+import { useRouter } from "next/navigation";
 
 const ManageSupplierPage = () => {
-  const [actionType, setActionType] = useState<DrawerSupplierProps["actionType"]>();
   const [showDrawer, setShowDrawer] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [viewRecord, setViewRecord] = useState<ISupplier>();
-  const [editRecord, setEditRecord] = useState<ISupplier>();
-
-  const { onCreate, onDelete, onApproval, onUpdate, onDeactive, onActive } = useManageSupplier();
-
+  const router = useRouter();
+  const { onCreate, onUpdate } = useManageSupplier();
   const initQueryParams = new SupplierQueryParams(
-    { status: undefined, shortName: "", fullName: "", vendorId: undefined },
+    { status: undefined, shortName: "", fullName: "", vendorId: undefined, includeVendor: true },
     1,
     10,
   );
@@ -34,31 +27,16 @@ const ManageSupplierPage = () => {
 
   const onCreateSupplier = () => {
     setShowDrawer(true);
-    setActionType(EActionType.CREATE);
   };
   const hideDrawer = () => {
     setShowDrawer(false);
-    setActionType(undefined);
   };
-  const setEditVendor = (record: ISupplier) => {
-    setEditRecord(record);
-    setActionType(EActionType.EDIT);
-    setShowDrawer(true);
-  };
-  const onCloseModal = useCallback(() => {
-    setShowModal(false);
-  }, []);
-  const onViewDetail = useCallback((record: ISupplier) => {
-    setShowModal(true);
-    setViewRecord(record);
-  }, []);
 
-  const handleSubmitForm: DrawerSupplierProps["onSubmit"] = (action, formData) => {
-    console.log(action, formData);
-    if (action === EActionType.CREATE) {
+  const handleSubmitForm: DrawerSupplierFormProps["onSubmit"] = (action, formData) => {
+    if (action === "CREATE") {
       onCreate(formData, hideDrawer);
     }
-    if (action === EActionType.EDIT) {
+    if (action === "EDIT") {
       onUpdate(formData, hideDrawer);
     }
   };
@@ -77,15 +55,10 @@ const ManageSupplierPage = () => {
         scroll={{ x: 1040 }}
         rowKey={"recId"}
         isLoading={isLoading}
-        columns={vendorColumns}
+        columns={supplierColumn}
         fixedActionsColumn={false}
         showActionsLess={false}
-        onEdit={setEditVendor}
-        onDelete={(record) => onDelete(record.recId, hideDrawer)}
-        // onApproval={(record) => onApproval(record.recId, hideDrawer)}
-        // hideApproval={(record) => record.status === Status.OK}
-        // hideEdit={(record) => record.status === Status.OK}
-        onView={onViewDetail}
+        onView={({ recId }) => router.push(`/portal/product/manage-supplier/${recId}`)}
         pagination={{
           current: supplierData?.pageCurrent,
           pageSize: supplierData?.pageSize,
@@ -97,18 +70,7 @@ const ManageSupplierPage = () => {
             })),
         }}
       />
-      <DrawerSupplier
-        recId={editRecord?.recId}
-        isOpen={showDrawer}
-        actionType={actionType}
-        initialValues={editRecord}
-        onCancel={hideDrawer}
-        onSubmit={handleSubmitForm}
-        onApproval={(recId) => onApproval(recId, hideDrawer)}
-        onDeactive={onDeactive}
-        onActive={onActive}
-      />
-      <ModalRecordDetail open={showModal} onClose={onCloseModal} data={viewRecord} />
+      <DrawerSupplierForm isOpen={showDrawer} actionType={"CREATE"} onCancel={hideDrawer} onSubmit={handleSubmitForm} />
     </PageContainer>
   );
 };

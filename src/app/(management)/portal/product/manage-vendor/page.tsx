@@ -1,23 +1,28 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-
-import DrawerVendor, { DrawerVendorProps, EActionType } from "./_components/DrawerVendor";
+import DrawerVendorForm, { DrawerVendorFormProps } from "./_components/DrawerVendorForm";
 import TableListPage from "@/components/admin/TableListPage";
 import { vendorColumns } from "./columns";
 import { IVendor, VendorQueryParams } from "@/models/management/vendor.interface";
 import useManageVendor from "./modules/useManageVendor";
-import { useGetVendorListCoreQuery } from "@/queries/core/vendor";
-import ModalVendorDetail from "./_components/ModalVendorDetail";
+import { useGetVendorDetailCoreQuery, useGetVendorListCoreQuery } from "@/queries/core/vendor";
 import FilterVendor from "./_components/FilterVendor";
-const ManageVendorPage = () => {
-  const [actionType, setActionType] = useState<DrawerVendorProps["actionType"]>();
-  const [showDrawer, setShowDrawer] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [viewRecord, setViewRecord] = useState<IVendor>();
-  const [editRecord, setEditRecord] = useState<IVendor>();
+import { useRouter } from "next/navigation";
+import { isUndefined } from "lodash";
 
-  const { onCreate, onDelete, onApproval, onUpdate, onDeactive, onActive } = useManageVendor();
+const ManageVendorPage = () => {
+  const [actionType, setActionType] = useState<DrawerVendorFormProps["actionType"]>();
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [vendorId, setVendorId] = useState<number>();
+  const { onCreate, onApproval, onDeactive, onActive, onUpdate } = useManageVendor();
+
+  const { data: vendorDetail, isLoading: loadingVendorDetail } = useGetVendorDetailCoreQuery({
+    recId: vendorId,
+    enabled: !isUndefined(vendorId),
+  });
+
+  const router = useRouter();
 
   const initQueryParams = new VendorQueryParams({ status: undefined, shortName: "", fullName: "" }, 1, 10);
   const [queryParams, setQueryParams] = useState(initQueryParams);
@@ -28,31 +33,24 @@ const ManageVendorPage = () => {
 
   const createVendor = () => {
     setShowDrawer(true);
-    setActionType(EActionType.CREATE);
+    setActionType("CREATE");
   };
   const hideDrawer = () => {
     setShowDrawer(false);
     setActionType(undefined);
+    setVendorId(undefined);
   };
-  const setEditVendor = (record: IVendor) => {
-    setEditRecord(record);
-    setActionType(EActionType.EDIT);
+  const setEditVendor = (recId: number) => {
+    setVendorId(recId);
     setShowDrawer(true);
+    setActionType("EDIT");
   };
 
-  const onCloseModal = useCallback(() => {
-    setShowModal(false);
-  }, []);
-  const onViewDetail = useCallback((record: IVendor) => {
-    setShowModal(true);
-    setViewRecord(record);
-  }, []);
-
-  const handleSubmitVendorForm: DrawerVendorProps["onSubmit"] = (action, formData) => {
-    if (action === EActionType.CREATE) {
+  const handleSubmitVendorForm: DrawerVendorFormProps["onSubmit"] = (action, formData) => {
+    if (action === "CREATE") {
       onCreate(formData, hideDrawer);
     }
-    if (action === EActionType.EDIT) {
+    if (action === "EDIT") {
       onUpdate(formData, hideDrawer);
     }
   };
@@ -73,12 +71,8 @@ const ManageVendorPage = () => {
         columns={vendorColumns}
         fixedActionsColumn={false}
         showActionsLess={false}
-        onEdit={setEditVendor}
-        onDelete={(record) => onDelete(record.recId, hideDrawer)}
-        // onApproval={(record) => onApproval(record.recId, hideDrawer)}
-        // hideApproval={(record) => record.status === Status.OK}
-        // hideEdit={(record) => record.status !== Status.OK}
-        onView={onViewDetail}
+        // onEdit={({ recId }) => setEditVendor(recId)}
+        onView={({ recId }) => router.push(`/portal/product/manage-vendor/${recId}`)}
         pagination={{
           current: vendorData?.pageCurrent,
           pageSize: vendorData?.pageSize,
@@ -90,18 +84,16 @@ const ManageVendorPage = () => {
             })),
         }}
       />
-      <DrawerVendor
-        recId={editRecord?.recId}
+      <DrawerVendorForm
         isOpen={showDrawer}
         actionType={actionType}
-        initialValues={editRecord}
         onCancel={hideDrawer}
+        initialValues={vendorDetail}
         onSubmit={handleSubmitVendorForm}
-        onApproval={(recId) => onApproval(recId)}
-        onDeactive={onDeactive}
-        onActive={onActive}
+        // onApproval={(recId) => onApproval(recId)}
+        // onDeactive={onDeactive}
+        // onActive={onActive}
       />
-      <ModalVendorDetail open={showModal} onClose={onCloseModal} data={viewRecord} />
     </PageContainer>
   );
 };

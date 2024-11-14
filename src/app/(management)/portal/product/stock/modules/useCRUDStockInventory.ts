@@ -82,7 +82,7 @@ const useCRUDStockInventory = () => {
       },
     });
   };
-  const onAdjustStockQuantity = (formData: StockAdjustFormData, cb?: () => void) => {
+  const onAdjustQuantity = (formData: StockAdjustFormData, cb?: () => void) => {
     makeAdjustStockQuantity(formData, {
       onSuccess: (data, variables) => {
         message.success(`Thêm số lượng stock thành công`);
@@ -92,7 +92,6 @@ const useCRUDStockInventory = () => {
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_STOCK_DETAIL_INVENTORY, formData.inventoryStockId],
         });
-
         cb?.();
       },
       onError: (error, variables) => {
@@ -106,7 +105,7 @@ const useCRUDStockInventory = () => {
   return {
     onCreate: onCreateStock,
     onConfirm: onConfirmStock,
-    onAdjustQuantity: onAdjustStockQuantity,
+    onAdjustQuantity,
     loading: isPendingCreate,
   };
 };

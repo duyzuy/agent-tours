@@ -8,8 +8,8 @@ import {
 import { useCustomMutation } from "../useCustomMutation";
 
 export const useCreateTemplateSellableMutation = () => {
-  return useCustomMutation<ITemplateSaleableListRs, ITemplateSellablePayload>({
-    mutationFn: (payload) => templateSellableAPIs.create(payload),
+  return useCustomMutation({
+    mutationFn: (payload: ITemplateSellablePayload) => templateSellableAPIs.create(payload),
   });
 };
 

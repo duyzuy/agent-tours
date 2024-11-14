@@ -1,6 +1,6 @@
 import { BaseResponse, PassengerType, PaymentStatus } from "@/models/common.interface";
 import { ISellable } from "./sellable.interface";
-import { ITemplateSellable } from "./templateSellable.interface";
+import { ITemplateSellable, ITemplateSellableDetail } from "./templateSellable.interface";
 import { EInventoryType } from "./inventoryType.interface";
 import { EPassengerGender, EPassengerTitle } from "@/constants/common";
 import { RoomingStatusType, RoomingType } from "../booking/rooming.interface";
@@ -24,7 +24,7 @@ export interface IOperation {
   totalSale: number;
   pic: IPic | null;
   status: IOperationStatus;
-  sellableMinimal: Pick<
+  sellable: Pick<
     ISellable,
     | "recId"
     | "sellableTemplateId"
@@ -33,7 +33,7 @@ export interface IOperation {
     | "cap"
     | "open"
     | "used"
-    | "avaiable"
+    | "available"
     | "closeDate"
     | "endDate"
     | "validFrom"
@@ -45,7 +45,7 @@ export interface IOperation {
     promotions: null;
     sellableTemplateCode: null;
   };
-  templateMinimal: Pick<ITemplateSellable, "recId" | "cmsIdentity" | "type" | "code" | "name" | "inventoryTypeList"> & {
+  template: Pick<ITemplateSellableDetail, "recId" | "cmsIdentity" | "type" | "code" | "name" | "inventoryTypeList"> & {
     cms: null;
     sellables: null;
     cmsMustKnow: null;

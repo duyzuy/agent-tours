@@ -1,6 +1,5 @@
 import { ObjectSchema, object, string, array, number, mixed } from "yup";
 
-import { EPassengerGender } from "@/constants/common";
 import {
   AirCostingDetailFormData,
   OperationCostingDetailFormData,

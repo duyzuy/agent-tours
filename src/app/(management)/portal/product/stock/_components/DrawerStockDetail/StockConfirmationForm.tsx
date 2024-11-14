@@ -14,10 +14,14 @@ import { StockConfirmFormData } from "../../modules/stock.interface";
 
 interface StockConfirmationFormProps {
   initialValues?: IStockListOfInventoryRs["result"][0];
-  hasApproval: boolean;
+  isDisabled?: boolean;
   onSubmit?: (formData: StockConfirmFormData) => void;
 }
-const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({ initialValues, hasApproval, onSubmit }) => {
+const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
+  initialValues,
+  isDisabled = false,
+  onSubmit,
+}) => {
   const initStockConfirmFormdata = new StockConfirmFormData(0, "", 0, undefined, undefined, undefined, undefined);
 
   const { handlerSubmit, errors } = useFormSubmit({
@@ -78,13 +82,13 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({ initialVa
       <Form layout="vertical">
         <Row gutter={16}>
           <Col span={12}>
-            <FormItem label="Loại nhóm kho">
-              <Input placeholder="Loại nhóm kho" disabled value={initialValues?.inventoryType} />
+            <FormItem label="Loại dịch vụ">
+              <Input placeholder="Loại dịch vụ" disabled value={initialValues?.inventoryType} />
             </FormItem>
           </Col>
           <Col span={12}>
             <FormItem label="Loại kho">
-              <Input placeholder="Loại nhóm kho" disabled value={initialValues?.type} />
+              <Input placeholder="Loại kho" disabled value={initialValues?.type} />
             </FormItem>
           </Col>
         </Row>
@@ -101,7 +105,7 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({ initialVa
             }}
             placeholder={["Từ ngày", "Đến ngày"]}
             format={"DD/MM/YYYY - HH:mm"}
-            disabled={hasApproval}
+            disabled={isDisabled}
             value={[
               stockConfirmFormData.valid ? dayjs(stockConfirmFormData.valid) : null,
               stockConfirmFormData.validTo ? dayjs(stockConfirmFormData.validTo) : null,
@@ -126,7 +130,7 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({ initialVa
             }}
             placeholder={["Từ ngày", "Đến ngày"]}
             format={"DD/MM/YYYY - HH:mm"}
-            disabled={hasApproval}
+            disabled={isDisabled}
             value={[
               stockConfirmFormData.start ? dayjs(stockConfirmFormData.start) : null,
               stockConfirmFormData.end ? dayjs(stockConfirmFormData.end) : null,
@@ -152,14 +156,14 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({ initialVa
               <Input
                 placeholder="Số lượng"
                 value={stockConfirmFormData?.cap}
-                disabled={hasApproval}
+                disabled={isDisabled}
                 onChange={(ev) => onChangeFormData("cap", ev.target.value)}
               />
             </FormItem>
           </Col>
           <Col span={8}>
             <FormItem label="Khả dụng">
-              <Input placeholder="Số lượng" disabled value={initialValues?.avaiable} />
+              <Input placeholder="Số lượng" disabled value={initialValues?.available} />
             </FormItem>
           </Col>
           <Col span={8}>
@@ -177,20 +181,18 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({ initialVa
           <Input.TextArea
             placeholder="Mô tả"
             value={stockConfirmFormData?.description}
-            disabled={hasApproval}
+            disabled={isDisabled}
             onChange={(ev) => onChangeFormData("description", ev.target.value)}
           />
         </FormItem>
       </Form>
 
-      {!hasApproval ? (
-        <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-          <Space>
-            <Button type="primary" onClick={() => handlerSubmit(stockConfirmFormData, onSubmitForm)} disabled={false}>
-              Duyệt stock
-            </Button>
-          </Space>
-        </div>
+      {!isDisabled ? (
+        <Space>
+          <Button type="primary" onClick={() => handlerSubmit(stockConfirmFormData, onSubmitForm)} disabled={false}>
+            Duyệt
+          </Button>
+        </Space>
       ) : null}
     </>
   );

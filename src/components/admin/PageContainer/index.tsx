@@ -9,6 +9,7 @@ interface Props {
   modelName?: string;
   render?: React.ReactNode;
   onClick?: () => void;
+  onEdit?: () => void;
   onCanel?: () => void;
   onBack?: () => void;
   hideAddButton?: boolean;
@@ -21,6 +22,7 @@ const PageContainer: React.FC<Props> = ({
   name,
   render,
   onClick,
+  onEdit,
   onCanel,
   onBack,
   children,
@@ -56,6 +58,7 @@ const PageContainer: React.FC<Props> = ({
           onClickAdd={onClick}
           onCanel={onCanel}
           onBack={onBack}
+          onEdit={onEdit}
           className="mb-3"
           modelName={modelName}
           hideAddButton={hideAddButton}

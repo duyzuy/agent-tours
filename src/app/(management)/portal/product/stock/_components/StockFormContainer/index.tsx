@@ -1,38 +1,24 @@
 "use client";
-import React, { useState, useMemo } from "react";
-import {
-  Form,
-  Input,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Space,
-  Button,
-  Radio,
-  SelectProps,
-  DatePickerProps,
-  CheckboxProps,
-  message,
-} from "antd";
-import FormItem from "@/components/base/FormItem";
-import { useGetStockInventoryTypeCoreQuery } from "@/queries/core/stockInventory";
-import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
+import React, { useState, useMemo, useEffect } from "react";
+import { Form, Input, Row, Col, Checkbox, Space, Button, Radio, DatePickerProps, CheckboxProps, message } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import { CheckboxGroupProps } from "antd/es/checkbox";
-import { isArray, isEmpty, isUndefined } from "lodash";
+import { useGetStockInventoryTypeCoreQuery } from "@/queries/core/stockInventory";
+import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
+import { isEmpty, isUndefined } from "lodash";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
-import { StockFormData } from "../../modules/stock.interface";
 import { stockSchema } from "../../schema/stock.schema";
 import { DATE_TIME_FORMAT, TIME_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
-import { IInventoryListRs } from "@/models/management/core/inventory.interface";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
-import dayjs from "dayjs";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
-
+import InventorySelector, { InventorySelectorProps } from "./InventorySelector";
+import FormItem from "@/components/base/FormItem";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
+import { StockFormData } from "../../modules/stock.interface";
+import dayjs from "dayjs";
 interface StockFormContainerProps {
-  curInventory?: IInventoryListRs["result"][0]; // Handle when in single of inventory page.
-  inventoryList?: IInventoryListRs["result"];
+  inventoryId?: number;
+  inventoryType?: EInventoryType;
   onSubmit?: ({ data }: { data: StockFormData }, cb?: () => void) => void;
   onCancel: () => void;
   loading?: boolean;
@@ -40,14 +26,14 @@ interface StockFormContainerProps {
 type TRepeatType = "day" | "week";
 
 const StockFormContainer: React.FC<StockFormContainerProps> = ({
-  curInventory,
-  inventoryList,
+  inventoryType,
+  inventoryId,
   onSubmit,
   onCancel,
   loading,
 }) => {
   const initStockFormData = new StockFormData(
-    curInventory?.recId,
+    inventoryId,
     undefined,
     "",
     "",
@@ -61,9 +47,9 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     0,
     [],
   );
-  const [inventory, setInventory] = useState<IInventoryListRs["result"][0] | undefined>(curInventory);
 
   const [stockFormData, setStockFormData] = useState(initStockFormData);
+  const [currInventoryType, setCurrInventoryType] = useState<EInventoryType>();
   const [repeatType, setRepeatType] = useState<TRepeatType>("week");
   const [showCreateSeries, setCreateSeries] = useState(false);
 
@@ -72,18 +58,8 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
   });
   const [stockFieldErrors, setStockFieldErrors] = useState<Partial<Record<keyof StockFormData, string>>>();
 
-  const { data: stockInventoryType, isLoading: isLoadingStockType } = useGetStockInventoryTypeCoreQuery(
-    inventory?.type || "",
-  );
-
-  const stockInventoryTypeOptions = useMemo(() => {
-    return (
-      stockInventoryType?.reduce<{ label: string; value: string }[]>((acc, type) => {
-        return [...acc, { label: type, value: type }];
-      }, []) || []
-    );
-  }, [stockInventoryType, curInventory]);
-
+  const { data: stockInventoryType, isLoading: isLoadingStockType } =
+    useGetStockInventoryTypeCoreQuery(currInventoryType);
   /**
    *
    * @param key
@@ -108,8 +84,8 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     }));
   };
 
-  const onChangeInventory: SelectProps<number, IInventoryListRs["result"][0]>["onChange"] = (value, options) => {
-    setInventory(() => (isArray(options) ? options[0] : options));
+  const onChangeInventory: InventorySelectorProps["onChange"] = (value, option) => {
+    setCurrInventoryType(option?.type);
     setStockFormData((prev) => ({
       ...prev,
       inventoryId: value,
@@ -237,12 +213,21 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
 
   const onSubmitFormData: HandleSubmit<StockFormData> = (data) => {
     onSubmit?.({ data }, () => {
-      setStockFormData(initStockFormData);
-      setInventory(undefined);
+      setStockFormData({ ...initStockFormData, inventoryId });
+      setCurrInventoryType(inventoryType);
       setStockFieldErrors(undefined);
       setCreateSeries(false);
     });
   };
+  useEffect(() => {
+    if (inventoryId) {
+      setStockFormData((oldData) => ({ ...oldData, inventoryId }));
+    }
+    if (inventoryType) {
+      setCurrInventoryType(inventoryType);
+    }
+  }, [inventoryId, inventoryType]);
+
   return (
     <Form
       layout="horizontal"
@@ -258,24 +243,21 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
         validateStatus={errors?.inventoryId ? "error" : ""}
         help={errors?.inventoryId || ""}
       >
-        <Select<number, IInventoryListRs["result"][0]>
-          fieldNames={{ value: "recId", label: "name" }}
-          onChange={onChangeInventory}
-          value={inventory?.recId}
-          options={curInventory ? [curInventory] : inventoryList}
-          placeholder="Chọn loại dịch vụ"
-          disabled={!isUndefined(curInventory)}
-        />
+        <InventorySelector disabled={!!inventoryId} value={stockFormData?.inventoryId} onChange={onChangeInventory} />
       </FormItem>
       <FormItem label="Loại" required validateStatus={errors?.type ? "error" : ""} help={errors?.type || ""}>
-        <Select
-          loading={isLoadingStockType}
-          defaultValue={stockFormData.type}
-          onChange={(value) => onChangeStockFormData("type", value)}
-          value={stockFormData.type}
-          options={stockInventoryTypeOptions}
-          placeholder="Chọn loại kho"
-        />
+        <Space>
+          {stockInventoryType?.map((item) => (
+            <Checkbox
+              key={item}
+              value={item}
+              checked={item === stockFormData.type}
+              onChange={() => onChangeStockFormData("type", item)}
+            >
+              {item}
+            </Checkbox>
+          ))}
+        </Space>
       </FormItem>
       <FormItem label="Mã kho" required validateStatus={errors?.code ? "error" : ""} help={errors?.code || ""}>
         <Input
@@ -284,12 +266,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
           onChange={(ev) => onChangeStockFormData("code", ev.target.value)}
         />
       </FormItem>
-      <FormItem
-        label="Mô tả"
-        required
-        validateStatus={errors?.description ? "error" : ""}
-        help={errors?.description || ""}
-      >
+      <FormItem label="Mô tả" validateStatus={errors?.description ? "error" : ""} help={errors?.description || ""}>
         <Input.TextArea
           rows={4}
           value={stockFormData.description}
@@ -485,7 +462,9 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
             }}
           >
             <Space>
-              <Button onClick={onCloneExclusiveDate}>Thêm</Button>
+              <Button onClick={onCloneExclusiveDate} size="small">
+                Thêm
+              </Button>
             </Space>
           </FormItem>
         </>

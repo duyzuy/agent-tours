@@ -1,7 +1,7 @@
 import { bookingAPIs } from "@/services/management/booking/searchTour";
 import { IBookingTourPayload } from "@/app/(management)/portal/booking/modules/bookingInformation.interface";
-import { ISearchBookingPayload } from "@/app/(management)/portal/booking/modules/searchBooking.interface";
-import { IProductListRs } from "@/models/management/booking/productItem.interface";
+import { SearchBookingPayload } from "@/app/(management)/portal/booking/modules/searchBooking.interface";
+import { ProductTouListResponse } from "@/models/management/booking/product.interface";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { formOfPaymentAPIs } from "@/services/management/cores/formOfPayment";
@@ -20,7 +20,7 @@ import { RoomingPayload } from "@/models/management/booking/rooming.interface";
 //create folder in public/uploads folder.
 
 export const useSearchBookingMutation = () => {
-  return useCustomMutation<IProductListRs, ISearchBookingPayload>({
+  return useCustomMutation<ProductTouListResponse, SearchBookingPayload>({
     mutationFn: (payload) => bookingAPIs.search(payload),
   });
 };

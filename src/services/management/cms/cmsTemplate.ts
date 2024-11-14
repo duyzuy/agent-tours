@@ -15,7 +15,6 @@ import {
   CMSTemplateContentListRs,
   ICMSTemplateContent,
   CMSTemplateContentMetaDataPayload,
-  ICMSTemplateContentMetaData,
   CMSTemplateContentItemRs,
   CMSTemplateContentMetaDataRs,
   CMSTemplateContentMinimalListRs,

@@ -89,7 +89,7 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
         },
         {
           key: "product/template-sellable",
-          label: "Nhóm sản phẩm",
+          label: "Mẫu sản phẩm",
         },
         {
           key: "product/sellable",
@@ -155,28 +155,6 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
       ],
     },
     {
-      key: "cms-template",
-      icon: React.createElement(FileTextOutlined),
-      label: "Cms template",
-      children: [
-        {
-          key: "cms-template/list",
-          label: "Danh sách template",
-        },
-      ],
-    },
-    {
-      key: "visa-template",
-      icon: React.createElement(FileTextOutlined),
-      label: "Visa template",
-      children: [
-        {
-          key: "visa-template/list",
-          label: "Danh sách Visa",
-        },
-      ],
-    },
-    {
       key: "operation",
       icon: React.createElement(ControlOutlined),
       label: "Điều hành",
@@ -211,6 +189,29 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
         {
           key: "menu/mobile",
           label: "Mobile menu",
+        },
+      ],
+    },
+    {
+      key: "contents-product",
+      icon: React.createElement(FileTextOutlined),
+      label: "Quản lý mẫu nội dung",
+      children: [
+        {
+          key: "content-template/sellable/list",
+          label: "Nội dung sản phẩm",
+        },
+        {
+          key: "content-template/misc-document/list",
+          label: "Danh sách document",
+        },
+        {
+          key: "content-template/misc-depart/list",
+          label: "Điểm khởi hành",
+        },
+        {
+          key: "content-template/visa/list",
+          label: "Nội dung visa",
         },
       ],
     },

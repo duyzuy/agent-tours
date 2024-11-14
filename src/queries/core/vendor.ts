@@ -41,7 +41,7 @@ export const useGetVendorListCoreQuery = ({
   });
 };
 
-export const useGetVendorDetailCoreQuery = ({ recId, enabled = false }: { recId?: number; enabled: boolean }) => {
+export const useGetVendorDetailCoreQuery = ({ recId, enabled = true }: { recId?: number; enabled?: boolean }) => {
   return useQuery({
     queryKey: [queryCore.GET_VENDOR_DETAIL, recId],
     queryFn: () => vendorAPIs.getDetail(recId),

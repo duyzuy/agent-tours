@@ -61,7 +61,7 @@ const useManageSupplier = (): UseManageSupplier => {
     const { status, ...restData } = formData;
 
     if (status !== Status.OK && status !== Status.QQ) {
-      throw new Error("Status of vendor invalid");
+      throw new Error("Status of supplier invalid");
     }
 
     const supplierPayload = {
@@ -71,7 +71,7 @@ const useManageSupplier = (): UseManageSupplier => {
 
     doUpdate(supplierPayload, {
       onSuccess: (data, variables) => {
-        message.success(`Cập nhật Vendor ${variables.recId} thành công`);
+        message.success(`Cập nhật variables #${variables.recId} thành công`);
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_SUPPLIER_LIST],
         });
@@ -88,7 +88,7 @@ const useManageSupplier = (): UseManageSupplier => {
   const onDelete: UseManageSupplier["onDelete"] = (recId, cb) => {
     doDelete(recId, {
       onSuccess: (data, variables) => {
-        message.success(`Xoá Supplier ${recId} thành công`);
+        message.success(`Xoá Supplier #${recId} thành công`);
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_SUPPLIER_LIST],
         });
@@ -103,7 +103,7 @@ const useManageSupplier = (): UseManageSupplier => {
   const onApproval: UseManageSupplier["onApproval"] = (recId, cb) => {
     doApproval(recId, {
       onSuccess: (data, variables) => {
-        message.success(`Duyệt Supplier ${recId} thành công`);
+        message.success(`Duyệt Supplier #${recId} thành công`);
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_SUPPLIER_LIST],
         });
@@ -120,7 +120,7 @@ const useManageSupplier = (): UseManageSupplier => {
   const onDeactive: UseManageSupplier["onDeactive"] = (recId, cb) => {
     doDeactive(recId, {
       onSuccess: (data, variables) => {
-        message.success(`Huỷ Supplier ${recId} thành công`);
+        message.success(`Huỷ kích hoạt Supplier #${recId} thành công`);
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_SUPPLIER_LIST],
         });

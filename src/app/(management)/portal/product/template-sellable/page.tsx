@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { Divider, Space, Tag, Form, Radio, TablePaginationConfig } from "antd";
+
 import PageContainer from "@/components/admin/PageContainer";
 import {
   ITemplateSaleableListRs,
@@ -7,22 +9,21 @@ import {
 } from "@/models/management/core/templateSellable.interface";
 import useCRUDTemplateSellable from "./modules/useCRUDTemplateSellable";
 import TableListPage from "@/components/admin/TableListPage";
-import DrawerTemplateSellable, { DrawerTemplateSellableProps, EActionType } from "./_components/DrawerTemplateSellable";
+import DrawerTemplateSellableForm, { DrawerTemplateSellableFormProps } from "./_components/DrawerTemplateSellableForm";
 import { templateColums } from "./templateColums";
 import { useGetTemplateSellableListCoreQuery } from "@/queries/core/templateSellable";
-import { IDestination } from "@/models/management/region.interface";
-import { Divider, Space, Tag, Form, Radio, TablePaginationConfig } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { FilterValue } from "antd/es/table/interface";
 import { Status } from "@/models/common.interface";
+import { EProductType } from "@/models/management/core/productType.interface";
+import { useRouter } from "next/navigation";
 
 const SellTemplatePage = () => {
   const [isOpen, setOpenDrawer] = useState(false);
   const { onCreate, onApproval, onDelete, onUpdate } = useCRUDTemplateSellable();
-  const [actionType, setActionType] = useState<EActionType>();
-  const [editRecord, setEditRecord] = useState<ITemplateSaleableListRs["result"][0]>();
 
+  const router = useRouter();
   const [queryFilter, setQueryFilter] = useState(
     () =>
       new TemplateSellableQueryParams(
@@ -45,18 +46,11 @@ const SellTemplatePage = () => {
   const { list: templateList, pageCurrent, pageSize, totalItems } = templateResponse || {};
   const { data: productTypeList, isLoading: isLoadingProductType } = useGetProductTypeListCoreQuery({ enabled: true });
 
-  const handleOpenDrawer = ({ type, record }: { type: EActionType; record?: ITemplateSaleableListRs["result"][0] }) => {
-    console.log(type);
-
-    if (type === EActionType.EDIT) {
-      setEditRecord(record);
-    }
-    setActionType(() => type);
-    setOpenDrawer(true);
-  };
-  const onCloseDrawerAndResetFormInit = () => {
+  const closeDrawerAndResetFormInit = () => {
     setOpenDrawer(false);
-    setEditRecord(undefined);
+  };
+  const setCreateTemplateproduct = () => {
+    setOpenDrawer(true);
   };
 
   const onFilterProductType = (type: string) => {
@@ -82,25 +76,19 @@ const SellTemplatePage = () => {
     }
   };
 
-  const onSubmitTemplateSellable: DrawerTemplateSellableProps["onSubmit"] = (actionType, payload) => {
-    if (actionType === EActionType.CREATE) {
+  const onSubmitTemplateSellable: DrawerTemplateSellableFormProps["onSubmit"] = (actionType, payload) => {
+    if (actionType === "CREATE") {
       onCreate(payload, () => {
-        onCloseDrawerAndResetFormInit();
-      });
-    }
-
-    if (actionType === EActionType.EDIT && editRecord) {
-      onUpdate(editRecord.recId, payload, () => {
-        onCloseDrawerAndResetFormInit();
+        closeDrawerAndResetFormInit();
       });
     }
   };
   return (
     <PageContainer
-      name="Nhóm sản phẩm"
-      modelName="Nhóm sản phẩm"
-      breadCrumItems={[{ title: "Nhóm sản phẩm" }]}
-      onClick={() => handleOpenDrawer({ type: EActionType.CREATE })}
+      name="Mẫu sản phẩm"
+      modelName="mẫu sản phẩm"
+      breadCrumItems={[{ title: "Mẫu sản phẩm" }]}
+      onClick={setCreateTemplateproduct}
     >
       <div className="search-bar">
         <Form>
@@ -113,7 +101,11 @@ const SellTemplatePage = () => {
                   checked={queryFilter?.requestObject?.andType === type}
                   onChange={() => onFilterProductType(type)}
                 >
-                  {type}
+                  {type === EProductType.TOUR
+                    ? "Sản phẩm, dịch vụ tour."
+                    : type === EProductType.EXTRA
+                    ? "Sản phẩm, dịch vụ."
+                    : type}
                 </Radio>
               ))}
             </FormItem>
@@ -135,46 +127,44 @@ const SellTemplatePage = () => {
           pageSize: pageSize,
           total: totalItems,
         }}
-        expandable={{
-          expandedRowRender: ({ destListJson }) => {
-            const destinationList: IDestination[] = JSON.parse(destListJson);
-
-            return destinationList.map((destination) => (
-              <div className="mb-4" key={destination.id}>
-                <div className="py-2">
-                  <p className="font-bold">{destination.codeName}</p>
-                </div>
-                <Space wrap>
-                  {destination.listStateProvince.map((state) => (
-                    <React.Fragment key={state.recId}>
-                      {(state.stateProvinceKey && <Tag>{state.stateProvinceKey}</Tag>) ||
-                        (state.countryKey && <Tag color="volcano">{state.countryKey}</Tag>) ||
-                        (state.subRegionKey && <Tag color="cyan">{state.subRegionKey}</Tag>) ||
-                        (state.regionKey && <Tag color="gold">{state.regionKey}</Tag>)}
-                    </React.Fragment>
-                  ))}
-                </Space>
-              </div>
-            ));
-          },
-        }}
-        onEdit={(record) => handleOpenDrawer({ type: EActionType.EDIT, record })}
-        onDelete={(record) => onDelete(record.recId)}
+        // expandable={{
+        //   expandedRowRender: ({ destListJson }) => {
+        //     return destListJson.map((destination) => (
+        //       <div className="mb-4" key={destination.id}>
+        //         <div className="py-2">
+        //           <p className="font-bold">{destination.codeName}</p>
+        //         </div>
+        //         <Space wrap>
+        //           {destination.listStateProvince.map((state) => (
+        //             <React.Fragment key={state.recId}>
+        //               {(state.stateProvinceKey && <Tag>{state.stateProvinceKey}</Tag>) ||
+        //                 (state.countryKey && <Tag color="volcano">{state.countryKey}</Tag>) ||
+        //                 (state.subRegionKey && <Tag color="cyan">{state.subRegionKey}</Tag>) ||
+        //                 (state.regionKey && <Tag color="gold">{state.regionKey}</Tag>)}
+        //             </React.Fragment>
+        //           ))}
+        //         </Space>
+        //       </div>
+        //     ));
+        //   },
+        // }}
+        //onEdit={(record) => handleOpenDrawer({ type: EActionType.EDIT, record })}
+        onView={({ recId }) => router.push(`/portal/product/template-sellable/${recId}`)}
+        // onDelete={(record) => onDelete(record.recId)}
         onApproval={(record) => onApproval(record.recId)}
         hideApproval={(record) => record.status === Status.OK}
         showActionsLess={false}
       />
-      <DrawerTemplateSellable
+      <DrawerTemplateSellableForm
         onSubmit={onSubmitTemplateSellable}
-        initialValues={editRecord}
         isOpen={isOpen}
-        onCancel={onCloseDrawerAndResetFormInit}
-        actionType={actionType}
-        onApproval={(recId) =>
-          onApproval(recId, () => {
-            onCloseDrawerAndResetFormInit();
-          })
-        }
+        onCancel={closeDrawerAndResetFormInit}
+        actionType={"CREATE"}
+        // onApproval={(recId) =>
+        //   onApproval(recId, () => {
+        //     closeDrawerAndResetFormInit();
+        //   })
+        // }
       />
     </PageContainer>
   );

@@ -1,8 +1,9 @@
+import { EStockType } from "@/models/management/core/inventoryType.interface";
 import { IStockPayload, IStockConfirmPayload, IStockAdjustPayload } from "@/models/management/core/stock.interface";
 
 export class StockFormData implements IStockPayload {
   inventoryId?: number;
-  type?: string;
+  type?: EStockType;
   code?: string;
   description?: string;
   cap?: number;
@@ -19,7 +20,7 @@ export class StockFormData implements IStockPayload {
   }[];
   constructor(
     inventoryId: number | undefined,
-    type: string | undefined,
+    type: EStockType | undefined,
     code: string | undefined,
     description: string | undefined,
     cap: number | undefined,

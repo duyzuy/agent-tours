@@ -19,7 +19,7 @@ export default async function NavbarSecondary({ className = "" }: NavbarSecondar
         [className]: className,
       })}
     >
-      <div className="menu-secondary-wraper bg-main-400 rounded-lg relative">
+      <div className="menu-secondary-wraper bg-main-500/80 backdrop-blur-sm rounded-lg relative">
         <div className="menu-secondary-list flex flex-wrap items-center py-2 px-3 -mx-3">
           {itemsList?.map((item) => (
             <SecondaryNavItem

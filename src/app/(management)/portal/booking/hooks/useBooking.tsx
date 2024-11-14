@@ -13,16 +13,16 @@ const useBooking = () => {
 };
 export default useBooking;
 
-export const useBookingSelector = (selector?: (state: AppBookingManager) => AppBookingManager) => {
+export const useBookingSelector = <T,>(selector?: (state: AppBookingManager) => T) => {
   const context = useContext(BookingContext);
 
   if (!context) {
     throw new Error("useBooking must be used inside the BookingProvider");
   }
   const [booingInfo, _] = context;
-  if (selector) {
-    return selector(booingInfo);
-  }
+
+  return selector?.(booingInfo) || booingInfo;
+
   return booingInfo;
 };
 

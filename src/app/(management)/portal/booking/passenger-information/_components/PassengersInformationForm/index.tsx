@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import classNames from "classnames";
-import { IBookingItem } from "../../../modules/bookingInformation.interface";
+import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
 import PassengerForm, { PassengerFormProps } from "./PassengerForm";
 import { PassengerType } from "@/models/common.interface";
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";
@@ -24,10 +24,16 @@ export interface PassengersInformationFormProps {
   startDate?: string;
   passengerList: {
     bookingIndex: number;
-    passengerInfo: IBookingItem["passengerInformation"];
+    passengerInfo: IProductTourBookingItem["passengerInformation"];
     type: PassengerType;
   }[];
-  onSetPassengerInfo?: ({ index, data }: { index: number; data: IBookingItem["passengerInformation"] }) => void;
+  onSetPassengerInfo?: ({
+    index,
+    data,
+  }: {
+    index: number;
+    data: IProductTourBookingItem["passengerInformation"];
+  }) => void;
   onSetPassengerInformationBooking?: (data: PassengerListFormData) => void;
 }
 

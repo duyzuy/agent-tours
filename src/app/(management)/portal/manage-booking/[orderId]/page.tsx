@@ -95,6 +95,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
             sysFstUpdate={bookingOrder?.sysFstUpdate && formatDate(bookingOrder?.sysFstUpdate)}
             name={bookingOrder?.template.name}
             code={bookingOrder?.template.code}
+            sellableCode={bookingOrder?.sellable.code}
             className="mb-6"
           />
           <Row gutter={[24, 24]}>
@@ -174,12 +175,12 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
           bookingOrderDetailList={orderInformation?.bookingDetails || []}
           onSave={onUpdatePassengerInfo}
         />
-        <ServiceDetail
+        {/* <ServiceDetail
           serviceList={bookingSSRList || []}
           isLoading={isPending}
           onBuyService={onClickBuyService}
           className="mb-6"
-        />
+        /> */}
       </div>
     </PageContainer>
   );

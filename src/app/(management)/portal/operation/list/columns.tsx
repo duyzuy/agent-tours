@@ -18,12 +18,12 @@ export const columns: ColumnsType<IOperation> = [
     key: "sellableCode",
     dataIndex: "sellableCode",
     width: 300,
-    render(value, { sellableMinimal, templateMinimal }, index) {
+    render(value, { sellable, template }, index) {
       return (
         <>
           <div className="mb-2">
-            <span className="block">{templateMinimal.name}</span>
-            <span className="block text-xs">{sellableMinimal.code}</span>
+            <span className="block">{template.name}</span>
+            <span className="block text-xs">{sellable.code}</span>
           </div>
         </>
       );
@@ -35,11 +35,11 @@ export const columns: ColumnsType<IOperation> = [
     key: "sellableCode",
     dataIndex: "sellableCode",
     width: 200,
-    render(value, { sellableMinimal, templateMinimal }, index) {
+    render(value, { sellable }, index) {
       return (
         <div>
-          <span className="block">Đi: {formatDate(sellableMinimal.startDate, "DD/MM/YYYY")}</span>
-          <span className="block">Về: {formatDate(sellableMinimal.endDate, "DD/MM/YYYY")}</span>
+          <span className="block">Đi: {formatDate(sellable.startDate, "DD/MM/YYYY")}</span>
+          <span className="block">Về: {formatDate(sellable.endDate, "DD/MM/YYYY")}</span>
         </div>
       );
     },

@@ -5,6 +5,7 @@ import { EProductType } from "@/models/management/core/productType.interface";
 import { Status } from "@/models/common.interface";
 import { TemplateSellableFormData } from "../modules/templateSellable.interface";
 import { IDestination } from "@/models/management/region.interface";
+import { IDepartLocation } from "@/models/management/cms/miscDepartLocation.interface";
 
 export const templateSellableSchema: ObjectSchema<TemplateSellableFormData> = object({
   cmsIdentity: string(),
@@ -18,14 +19,13 @@ export const templateSellableSchema: ObjectSchema<TemplateSellableFormData> = ob
         id: number().required("Không bỏ trống id."),
         codeKey: string().required("Không bỏ trống codeKey"),
         codeName: string().required("Không bỏ trống codeName"),
-        status: string()
-          .oneOf<Status>([Status.OK, Status.QQ, Status.XX, Status.OX])
-          .required("Trạng thái không bỏ trống."),
+        status: string().oneOf<Status>([Status.OK, Status.QQ, Status.XX, Status.OX]),
         listStateProvince: array().required().default([]),
       }),
     )
     .min(1, "Nhóm điểm đến không bỏ trống")
     .default([]),
+  depart: object<IDepartLocation>(),
   checkListJson: array().of(object({})).default([]),
   inventoryTypeList: array<EInventoryType[]>().required("Loại inventory không bỏ trống.").default([]),
   status: string().oneOf<Status>([Status.OK, Status.QQ, Status.XX, Status.OX]).required("Trạng thái không bỏ trống."),

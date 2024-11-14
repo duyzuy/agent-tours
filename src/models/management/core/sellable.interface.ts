@@ -1,13 +1,14 @@
 import { BaseResponse, Status } from "../../common.interface";
 import { IInventory } from "./inventory.interface";
 import { IStock } from "./stock.interface";
+import { ITemplateSellableDetail } from "./templateSellable.interface";
 
 export interface ISellable {
   recId: number;
   sellableTemplateId: number;
   type: string;
   code: string;
-  avaiable: number;
+  available: number;
   cap: number;
   open: number;
   closeDate: string;
@@ -25,7 +26,15 @@ export interface ISellable {
   used: number;
   validFrom: string;
   validTo: string;
+  // sellableTemplateCode: string | null;
+  template:
+    | (Pick<ITemplateSellableDetail, "type" | "inventoryTypeList" | "code" | "name"> & { templateId: number })
+    | null;
+  // configs: null;
+  // sellableDetails: null;
+  // promotions: null;
 }
+
 export interface ISellablePayload {
   sellableTemplateId?: number;
   type?: string; //1.2 productType = SellableTemplate
@@ -124,10 +133,10 @@ export interface SellableConfirmPayload {
     qty?: number;
   }[];
 
-  otherSellables: {
-    recId?: number;
-    qty?: number;
-  }[];
+  // otherSellables: {
+  //   recId?: number;
+  //   qty?: number;
+  // }[];
 }
 
 export class SellableConfirmFormData {
@@ -142,7 +151,7 @@ export class SellableConfirmFormData {
   stocks: { stock: Partial<IStock>; qty: number }[];
   extraInventories: { inventory: Partial<IInventory>; qty: number }[];
   extraStocks: { stock: Partial<IStock>; qty: number }[];
-  otherSellables: { sellable: Partial<ISellable>; qty: number }[];
+  // otherSellables: { sellable: Partial<ISellable>; qty: number }[];
 
   constructor(
     recId: number,
@@ -156,7 +165,7 @@ export class SellableConfirmFormData {
     stocks: { stock: Partial<IStock>; qty: number }[],
     extraInventories: { inventory: Partial<IInventory>; qty: number }[],
     extraStocks: { stock: Partial<IStock>; qty: number }[],
-    otherSellables: { sellable: Partial<ISellable>; qty: number }[],
+    // otherSellables: { sellable: Partial<ISellable>; qty: number }[],
   ) {
     this.recId = recId;
     this.cap = cap;
@@ -169,7 +178,7 @@ export class SellableConfirmFormData {
     this.stocks = stocks;
     this.extraInventories = extraInventories;
     this.extraStocks = extraStocks;
-    this.otherSellables = otherSellables;
+    // this.otherSellables = otherSellables;
   }
 }
 

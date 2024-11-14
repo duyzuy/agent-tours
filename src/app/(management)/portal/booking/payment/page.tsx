@@ -48,8 +48,8 @@ const PaymentPage = () => {
     schema: customerInformationSchema,
   });
 
+  console.log(errors);
   const handleSubmitBooking: HandleSubmit<CustomerInformation> = (customerInfo) => {
-    invoiceInformation;
     createBooking({ customerInfo, invoiceInfo: invoiceInformation, agentUserId: agentInfo?.recId });
   };
 

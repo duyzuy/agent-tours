@@ -1,9 +1,9 @@
-import { Select, SelectProps } from "antd";
+import { Checkbox, Space } from "antd";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 export interface InventoryTypeSelectorProps {
   value?: EInventoryType[];
-  onChange: SelectProps<EInventoryType[], { label: string; value: EInventoryType }>["onChange"];
+  onChange: (value: EInventoryType[]) => void;
   disabled?: boolean;
 }
 const InventoryTypeSelector: React.FC<InventoryTypeSelectorProps> = ({ value, onChange, disabled }) => {
@@ -11,18 +11,34 @@ const InventoryTypeSelector: React.FC<InventoryTypeSelectorProps> = ({ value, on
     enabled: true,
   });
 
+  const handleChangeInventory = (item: EInventoryType) => {
+    let newValues = [...(value || [])];
+    const indexItem = newValues.indexOf(item);
+    if (indexItem !== -1) {
+      newValues.splice(indexItem, 1);
+    } else {
+      newValues = [...newValues, item];
+    }
+
+    onChange?.(newValues);
+  };
+
   return (
-    <Select<EInventoryType[], { label: string; value: EInventoryType }>
-      mode="multiple"
-      placeholder="Loại dịch vụ cung ứng"
-      loading={isLoading}
-      value={value}
-      options={listInventoriesType?.reduce<{ label: string; value: EInventoryType }[]>((opts, item) => {
-        return [...opts, { label: item, value: item }];
-      }, [])}
-      onChange={onChange}
-      disabled={disabled}
-    />
+    <>
+      <Space wrap>
+        {listInventoriesType?.map((item) => (
+          <Checkbox
+            value={item}
+            key={item}
+            checked={value?.includes(item)}
+            disabled={disabled}
+            onChange={() => handleChangeInventory(item)}
+          >
+            {item}
+          </Checkbox>
+        ))}
+      </Space>
+    </>
   );
 };
 export default InventoryTypeSelector;

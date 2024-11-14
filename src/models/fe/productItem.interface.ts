@@ -6,14 +6,14 @@ import { ISellable } from "../management/core/sellable.interface";
 import { BaseResponse } from "../common.interface";
 import { IThumbnail } from "../thumbnail.interface";
 import { EProductType } from "../management/core/productType.interface";
-import { IInventoryDetailItem } from "../management/core/inventory.interface";
+import { IInventoryDetail } from "../management/core/inventory.interface";
 
 export interface FeProductItem extends ISellable {
   sellableTemplateCode: string;
   configs: PriceConfig[];
   promotions: IPromotion[];
   sellableDetails: {
-    inventories: IInventoryDetailItem[];
+    inventories: IInventoryDetail[];
     stocks: [];
     extras: [];
     extraStocks: [];
@@ -64,7 +64,7 @@ export interface IFeTemplateProductItem {
     promotions: IPromotion[];
     configs: PriceConfig[];
     sellableDetails: {
-      inventories: IInventoryDetailItem[];
+      inventories: IInventoryDetail[];
       stocks: [];
       extras: [];
       extraStocks: [];

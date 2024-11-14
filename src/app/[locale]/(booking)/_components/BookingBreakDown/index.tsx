@@ -1,7 +1,6 @@
 "use client";
 import classNames from "classnames";
 import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
-import { useLocale } from "next-intl";
 import { useMemo } from "react";
 import { mediaConfig } from "@/configs";
 import Image from "next/image";

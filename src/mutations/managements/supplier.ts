@@ -1,5 +1,4 @@
 import { supplierAPIs } from "@/services/management/cores/supplier";
-
 import { SupplierPayload } from "@/models/management/supplier.interface";
 import { useCustomMutation } from "../useCustomMutation";
 

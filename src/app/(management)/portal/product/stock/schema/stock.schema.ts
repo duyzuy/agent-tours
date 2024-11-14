@@ -1,12 +1,27 @@
 import { object, string, ObjectSchema, boolean, number, array } from "yup";
 import { StockAdjustFormData, StockConfirmFormData, StockFormData } from "../modules/stock.interface";
+import { EStockType } from "@/models/management/core/inventoryType.interface";
 
 export const stockSchema: ObjectSchema<StockFormData> = object({
   inventoryId: number().required("inventoryId Bị thiếu."),
   isCreateSeries: boolean().default(false),
-  type: string().required("Type không bỏ trống."),
+  type: string()
+    .oneOf<EStockType>([
+      EStockType.AIRTICKET,
+      EStockType.CRUISE,
+      EStockType.GUIDE,
+      EStockType.INSURANCE,
+      EStockType.OTHER,
+      EStockType.PACKAGE,
+      EStockType.ROOM,
+      EStockType.TABLE,
+      EStockType.TOURPACKAGE,
+      EStockType.VEHICLE,
+      EStockType.VISASERVICES,
+    ])
+    .required("Type không bỏ trống."),
   code: string().required("Code không bỏ trống."),
-  description: string().required("Mô tả không bỏ trống."),
+  description: string(),
   cap: number().required("Số lượng không bỏ trống.").min(1, "Tối thiểu lớn hơn 1."),
   valid: string().required("Không bỏ trống"),
   validTo: string().required("Không bỏ trống"),

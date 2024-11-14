@@ -23,17 +23,19 @@ import { RangePickerProps } from "antd/es/date-picker";
 import { CheckboxGroupProps } from "antd/es/checkbox";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { SellableFormData } from "@/models/management/core/sellable.interface";
-import { sellableSchema } from "../../schema/sellable.interface";
+import { sellableSchema } from "../../schema/sellable.schema";
 import { DATE_TIME_FORMAT, TIME_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
-import { ITemplateSaleableListRs, ITemplateSellable } from "@/models/management/core/templateSellable.interface";
+import { ITemplateSaleableListRs } from "@/models/management/core/templateSellable.interface";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
+import { isEqualObject } from "@/utils/compare";
 
 interface SellableFormContainerProps {
   template?: ITemplateSaleableListRs["result"][0];
   templateList?: ITemplateSaleableListRs["result"];
   onSubmit?: (data: SellableFormData, cb?: () => void) => void;
   onCancel: () => void;
+  onWatch?: ({ isChanged }: { isChanged: boolean }) => void;
 }
 type TRepeatType = "day" | "week";
 
@@ -42,6 +44,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
   templateList,
   onSubmit,
   onCancel,
+  onWatch,
 }) => {
   const initSellableFormData = useMemo(() => {
     return new SellableFormData(
@@ -235,7 +238,16 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
     });
   };
 
-  // console.log(template);
+  useEffect(() => {
+    onWatch?.({
+      isChanged: isEqualObject(
+        ["validTo", "valid", "sellableTemplateId", "cap"],
+        initSellableFormData,
+        sellableFormData,
+      ),
+    });
+  }, [sellableFormData]);
+
   return (
     <Form
       layout="horizontal"
@@ -481,7 +493,9 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
         }}
       >
         <Space>
-          <Button onClick={onCancel}>Huỷ bỏ</Button>
+          <Button onClick={onCancel} className="w-[120px]">
+            Huỷ bỏ
+          </Button>
           <Button
             type="primary"
             onClick={() =>
@@ -493,8 +507,9 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                 onSubmitFormData,
               )
             }
+            className="w-[120px]"
           >
-            Tạo mới
+            Lưu
           </Button>
         </Space>
       </FormItem>

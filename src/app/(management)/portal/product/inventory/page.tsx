@@ -1,34 +1,46 @@
 "use client";
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Form, Select, SelectProps, Row, Col } from "antd";
+import { Select, SelectProps, Row, Col, Radio, Space, Divider } from "antd";
 import FormItem from "@/components/base/FormItem";
 import PageContainer from "@/components/admin/PageContainer";
 import { IInventoryListRs, InventoryQueryParams } from "@/models/management/core/inventory.interface";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
-
 import TableListPage from "@/components/admin/TableListPage";
 import { inventoryColumns } from "./columns";
-import DrawerInventory, { DrawerInventoryProps, EActionType, TDrawlerAction } from "./_components/DrawerInventory";
+import DrawerInventoryForm, { DrawerInventoryFormProps } from "./_components/DrawerInventoryForm";
 import useCRUDInventory from "./modules/useCRUDInventory";
-import { Status } from "@/models/common.interface";
 import { isUndefined } from "lodash";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
+import { EProductType } from "@/models/management/core/productType.interface";
+import ModalProductTypeSelector from "./_components/ModalProductTypeSelector";
+
+const initQueryParams = new InventoryQueryParams(
+  {
+    type: [
+      EInventoryType.AIR,
+      EInventoryType.HOTEL,
+      EInventoryType.VISA,
+      EInventoryType.TRANSPORT,
+      EInventoryType.INSURANCE,
+      EInventoryType.LANDPACKAGE,
+      EInventoryType.RESTAURANT,
+      EInventoryType.GUIDE,
+    ],
+    productType: [EProductType.TOUR],
+  },
+  1,
+  10,
+);
 
 const InventoryPage = () => {
   const router = useRouter();
 
-  const [queryParams, setQueryParams] = useState(
-    () =>
-      new InventoryQueryParams(
-        {
-          type: `${EInventoryType.AIR}||${EInventoryType.HOTEL}||${EInventoryType.VISA}||${EInventoryType.TRANSPORT}||${EInventoryType.INSURANCE}||${EInventoryType.LANDPACKAGE}||${EInventoryType.RESTAURANT}`,
-        },
-        1,
-        10,
-      ),
-  );
+  const [isOpenDrawler, setOpenDrawler] = useState(false);
+  const [productType, setProductType] = useState<EProductType>();
+  const [queryParams, setQueryParams] = useState(initQueryParams);
+  const [openModalProductType, setOpenModalProductType] = useState(false);
   const { data: inventoryResponse, isLoading } = useGetInventoryListCoreQuery({
     queryParams: queryParams,
     enabled: !isUndefined(queryParams.requestObject?.type),
@@ -42,104 +54,105 @@ const InventoryPage = () => {
       return [...acc, { label: type, value: type }];
     }, []);
   }, [inventoryTypeList]);
-  const [isOpenDrawler, setOpenDrawler] = useState(false);
-  const [editRecord, setEditRecord] = useState<IInventoryListRs["result"][0]>();
 
-  const { onCreateInventory, onUpdateInventory, onApprovalInventory, onDeleteInventory } = useCRUDInventory();
+  const { onCreateInventory } = useCRUDInventory();
 
-  const handleDrawlerInventory = useCallback((drawler: TDrawlerAction) => {
-    if (drawler.type === EActionType.EDIT) {
-      setEditRecord(drawler.record);
-    }
-
+  const setCreateInventory = (productType: EProductType) => {
     setOpenDrawler(true);
-  }, []);
-
+    setProductType(productType);
+    setOpenModalProductType(false);
+  };
   const onCancelDrawler = useCallback(() => {
     setOpenDrawler(false);
-    setEditRecord(undefined);
   }, []);
 
-  const handleCreateInventory = useCallback<DrawerInventoryProps["onSubmit"]>(
-    (action, formData) => {
-      if (action === EActionType.CREATE) {
-        onCreateInventory(formData, () => {
-          setOpenDrawler(false);
-        });
-      }
-      if (action === EActionType.EDIT && editRecord) {
-        onUpdateInventory(editRecord.recId, formData, () => {
-          setOpenDrawler(false);
-          setEditRecord(undefined);
-        });
-      }
-    },
-    [editRecord],
-  );
+  const handleCreateInventory = useCallback<Required<DrawerInventoryFormProps>["onSubmit"]>((action, formData) => {
+    if (action === "CREATE") {
+      onCreateInventory(formData, () => {
+        setOpenDrawler(false);
+      });
+    }
+  }, []);
   const onChangeInventoryTypeQueryParams: SelectProps<string[], { label: string; value: string }>["onChange"] = (
     types,
-    options,
   ) => {
     if (types.length === 0) {
       return;
     }
 
-    let sortedTypes = types.sort();
-    const inventoryTypeQueryString = sortedTypes.reduce((acc, type, _index) => {
-      return acc.concat(_index === 0 ? "" : "||", type);
-    }, "");
+    let sortedTypes = types.sort() as EInventoryType[];
+
     setQueryParams((prev) => ({
       ...prev,
       requestObject: {
-        type: inventoryTypeQueryString,
+        ...prev.requestObject,
+        type: sortedTypes,
       },
     }));
   };
 
+  const onFilterProductType = (productType: EProductType) => {
+    console.log(productType);
+    setQueryParams((prev) => ({
+      ...prev,
+      requestObject: {
+        ...prev.requestObject,
+        productType: [productType],
+      },
+    }));
+  };
   return (
     <PageContainer
       name="Quản lý dịch vụ"
       modelName="dịch vụ"
-      breadCrumItems={[{ title: "Quản lý loại dịch vụ" }]}
-      onClick={() => handleDrawlerInventory({ type: EActionType.CREATE })}
+      breadCrumItems={[{ title: "Quản lý dịch vụ" }]}
+      onClick={() => setOpenModalProductType(true)}
     >
-      <div className="search-bar">
-        <Form>
-          <Row gutter={16}>
-            <Col span={8}>
-              <FormItem>
-                <Select
-                  value={queryParams?.requestObject?.type?.split("||")}
-                  mode="tags"
-                  style={{ width: "100%" }}
-                  placeholder="Loại kho"
-                  onChange={onChangeInventoryTypeQueryParams}
-                  options={inventoryTypeOptions}
-                  loading={isLoadingInventoryType}
-                  maxTagCount="responsive"
-                />
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
+      <div className="mb-6">
+        <Space>
+          <Radio
+            value={EProductType.TOUR}
+            checked={queryParams.requestObject?.productType?.includes(EProductType.TOUR)}
+            onChange={() => onFilterProductType(EProductType.TOUR)}
+          >
+            Dịch vụ trong tour
+          </Radio>
+          <Radio
+            value={EProductType.EXTRA}
+            checked={queryParams.requestObject?.productType?.includes(EProductType.EXTRA)}
+            onChange={() => onFilterProductType(EProductType.EXTRA)}
+          >
+            Dịch vụ trong và ngoài tour
+          </Radio>
+        </Space>
+      </div>
+      <div className="mb-3 max-w-[420px]">
+        <Select
+          value={queryParams?.requestObject?.type}
+          mode="tags"
+          style={{ width: "100%" }}
+          placeholder="Loại kho"
+          onChange={onChangeInventoryTypeQueryParams}
+          options={inventoryTypeOptions}
+          loading={isLoadingInventoryType}
+          maxTagCount="responsive"
+        />
       </div>
 
+      <Divider />
       <TableListPage<IInventoryListRs["result"][0]>
         scroll={{ x: 1000 }}
-        modelName="Nhóm kho sản phẩm"
+        modelName="Loại dịch vụ"
         columns={inventoryColumns}
         rowKey={"recId"}
         dataSource={inventoryList || []}
         fixedActionsColumn={false}
         showActionsLess={false}
         isLoading={isLoading}
-        onEdit={(record) => handleDrawlerInventory({ type: EActionType.EDIT, record })}
-        onDelete={(record) => onDeleteInventory(record.recId)}
-        onApproval={(record) => record.status === Status.QQ && onApprovalInventory(record.recId)}
-        hideApproval={(record) => record.status === Status.OK}
         onView={(record) => router.push(`/portal/product/inventory/${record.recId}`)}
-        hideView={(record) => !record.isStock || record.status !== Status.OK}
         pagination={{
+          hideOnSinglePage: true,
+          size: "small",
           total: totalItems,
           pageSize: pageSize,
           current: pageCurrent,
@@ -150,12 +163,12 @@ const InventoryPage = () => {
             })),
         }}
       />
-      <DrawerInventory
-        recId={editRecord?.recId}
+      <ModalProductTypeSelector open={openModalProductType} onSelect={setCreateInventory} />
+      <DrawerInventoryForm
         isOpen={isOpenDrawler}
-        initialValues={editRecord}
+        productType={productType}
         onCancel={onCancelDrawler}
-        actionType={editRecord ? EActionType.EDIT : EActionType.CREATE}
+        actionType={"CREATE"}
         onSubmit={handleCreateInventory}
       />
     </PageContainer>

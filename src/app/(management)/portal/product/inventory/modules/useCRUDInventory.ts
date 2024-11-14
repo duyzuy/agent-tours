@@ -36,7 +36,6 @@ const useCRUDInventory = () => {
     });
   };
   const onUpdateInventory = (recId: number, formData: InventoryFormData, cb?: () => void) => {
-    console.log(recId, formData);
     makeUpdateInventory(
       { recId, name: formData.name },
       {
@@ -45,6 +44,9 @@ const useCRUDInventory = () => {
 
           queryClient.invalidateQueries({
             queryKey: [queryCore.GET_INVENTORY_LIST],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [queryCore.GET_INVENTORY_DETAIL],
           });
           cb?.();
         },
@@ -63,6 +65,9 @@ const useCRUDInventory = () => {
           message.success(`Duyệt thành công`);
           queryClient.invalidateQueries({
             queryKey: [queryCore.GET_INVENTORY_LIST],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [queryCore.GET_INVENTORY_DETAIL],
           });
           cb?.();
         },

@@ -1,13 +1,15 @@
 import { BaseResponse, Status } from "../common.interface";
+import { EInventoryType } from "./core/inventoryType.interface";
 export enum EVendorPaymentType {
   CASH = "CASH",
   PREPAID = "PREPAID",
   POSTPAID = "POSTPAID",
 }
-export interface IVendor {
+
+export interface IVendorDetail {
   recId: number;
   shortName: string;
-  typeList: string;
+  typeList: EInventoryType[];
   fullName: string;
   address: string;
   contact: string;
@@ -29,9 +31,24 @@ export interface IVendor {
   logStatus: string;
 }
 
+export type IVendor = Pick<
+  IVendorDetail,
+  | "recId"
+  | "shortName"
+  | "fullName"
+  | "typeList"
+  | "email"
+  | "contact"
+  | "address"
+  | "taxCode"
+  | "status"
+  | "sysFstUser"
+  | "sysFstUpdate"
+>;
+
 export interface VendorPayload {
   shortName?: string; //MANDATORY - viết hoa ko dấu, UNIQUE
-  typeList?: string; //giống typeList của sellableTemplate: vd TRANSPORT||AIR||LANDPACKAGE||HOTEL||GUIDE
+  typeList?: EInventoryType[];
   fullName?: string; //optional
   contact?: string; //optional
   address?: string; //optional
@@ -47,23 +64,9 @@ export interface VendorPayload {
   bankSwiftcode?: string;
   paymentTerm?: string;
 }
-export interface VendorUpdatePayload {
+export type VendorUpdatePayload = VendorPayload & {
   recId?: number;
-  shortName?: string;
-  typeList?: string;
-  fullName?: string;
-  contact?: string;
-  address?: string;
-  email?: string;
-  taxCode?: string;
-  rmk?: string;
-  bankName?: string;
-  bankAccountNumber?: string;
-  bankAddress?: string;
-  paymentType: EVendorPaymentType;
-  bankSwiftcode?: string;
-  paymentTerm?: string;
-}
+};
 
 export class VendorQueryParams {
   requestObject?: {
@@ -91,4 +94,4 @@ export class VendorQueryParams {
 }
 
 export interface VendorListRs extends BaseResponse<IVendor[]> {}
-export interface VendorRs extends BaseResponse<IVendor> {}
+export interface VendorRs extends BaseResponse<IVendorDetail> {}

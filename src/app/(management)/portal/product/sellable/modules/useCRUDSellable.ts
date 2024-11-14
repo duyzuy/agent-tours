@@ -28,6 +28,7 @@ const useCRUDSellable = () => {
       end: formData.end ? convertFormatDate(formData.end) : undefined,
       valid: formData.valid ? convertFormatDate(formData.valid) : undefined,
       validTo: formData.validTo ? convertFormatDate(formData.validTo) : undefined,
+      closeDate: formData.closeDate ? convertFormatDate(formData.closeDate) : undefined,
     };
     const exclusiveDateFormated = formData.exclusives.reduce<{ from?: string; to?: string }[]>((acc, item) => {
       acc = [
@@ -68,6 +69,9 @@ const useCRUDSellable = () => {
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_SELLABLE_LIST],
         });
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_SELLABLE_DETAIL],
+        });
         cb?.();
       },
       onError: (error, variables) => {
@@ -79,7 +83,7 @@ const useCRUDSellable = () => {
   const corectSellablePayload = (formData: SellableConfirmFormData): SellableConfirmPayload => {
     const {
       extraInventories,
-      otherSellables,
+
       extraStocks,
       stocks,
       inventories,
@@ -106,9 +110,9 @@ const useCRUDSellable = () => {
     const stocksPayload = stocks.reduce<SellableConfirmPayload["stocks"]>((acc, inv) => {
       return [...acc, { qty: inv.qty, recId: inv.stock.recId }];
     }, []);
-    const otherSellablesPayload = otherSellables.reduce<SellableConfirmPayload["otherSellables"]>((acc, inv) => {
-      return [...acc, { qty: inv.qty, recId: inv.sellable.recId }];
-    }, []);
+    // const otherSellablesPayload = otherSellables.reduce<SellableConfirmPayload["otherSellables"]>((acc, inv) => {
+    //   return [...acc, { qty: inv.qty, recId: inv.sellable.recId }];
+    // }, []);
 
     return {
       recId,
@@ -122,7 +126,6 @@ const useCRUDSellable = () => {
       inventories: inventoriesPayload,
       extraStocks: extraStocksPayload,
       stocks: stocksPayload,
-      otherSellables: otherSellablesPayload,
     };
   };
   const convertFormatDate = (dateStr: string) => {

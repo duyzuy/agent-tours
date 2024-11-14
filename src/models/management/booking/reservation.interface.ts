@@ -4,7 +4,7 @@ import { IDocument } from "../core/document.interface";
 import { IFormOfPayment } from "../core/formOfPayment.interface";
 import { PriceConfig } from "../core/priceConfig.interface";
 import { ISellable } from "../core/sellable.interface";
-import { ITemplateSellable } from "../core/templateSellable.interface";
+import { ITemplateSellableDetail } from "../core/templateSellable.interface";
 import { IPassengerInformation } from "./passengerInformation.interface";
 
 interface IBookingDetailItem {
@@ -80,7 +80,7 @@ export interface IReservation {
     sysLstUpdate: string;
     sysBelongTo: string;
     logStatus: string;
-    template: ITemplateSellable;
+    template: ITemplateSellableDetail;
     sellable: ISellable & {
       configs: PriceConfig[] | null;
     };

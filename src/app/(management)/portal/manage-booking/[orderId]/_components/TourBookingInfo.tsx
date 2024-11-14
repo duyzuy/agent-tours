@@ -11,6 +11,7 @@ interface TourBookingInfoProps {
   className?: string;
   orderId?: number;
   paymentStatus?: PaymentStatus;
+  sellableCode?: string;
   sysFstUpdate?: string;
 }
 const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
@@ -22,6 +23,7 @@ const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
   orderId,
   sysFstUpdate,
   paymentStatus,
+  sellableCode,
 }) => {
   return (
     <div
@@ -39,6 +41,10 @@ const TourBookingInfo: React.FC<TourBookingInfoProps> = ({
       <div className="border-r mr-6 pr-6 w-fit">
         <span className="block">Mã Tour</span>
         <span className="block text-[15px] font-[500] ">{code}</span>
+      </div>
+      <div className="border-r mr-6 pr-6 w-fit">
+        <span className="block">Mã sản phẩm</span>
+        <span className="block text-[15px] font-[500] ">{sellableCode}</span>
       </div>
       <div className="mr-6">
         <span className="block">Ngày đi</span>

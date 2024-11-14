@@ -1,30 +1,16 @@
 import { ColumnsType } from "antd/es/table";
-import { Space, Tag, Table, Button } from "antd";
-import { formatDate, stringToDate } from "@/utils/date";
+import { Space, Tag } from "antd";
+import { stringToDate } from "@/utils/date";
 import { Status } from "@/models/common.interface";
 import React from "react";
 import { ISupplier } from "@/models/management/supplier.interface";
 
-export const vendorColumns: ColumnsType<ISupplier> = [
+export const supplierColumn: ColumnsType<ISupplier> = [
   {
     title: "#ID",
     dataIndex: "recId",
     key: "recId",
     width: 80,
-  },
-  {
-    title: "Vendor",
-    dataIndex: "vendor",
-    key: "vendor",
-    width: 200,
-    render(value, record, index) {
-      return (
-        <span>
-          <span className="block text-xs text-primary-default">{record.vendor.shortName}</span>
-          <span className="block">{record.vendor.fullName}</span>
-        </span>
-      );
-    },
   },
   {
     title: "Supplier",
@@ -45,17 +31,14 @@ export const vendorColumns: ColumnsType<ISupplier> = [
     dataIndex: "supplier",
     key: "supplier",
     width: 200,
-    render(value, record, index) {
+    render(value, { typeList }, index) {
       return (
         <Space wrap={true}>
-          {record.typeList.split("||").map((sv, _index) => {
-            console.log(sv);
-            return (
-              <Tag className="item" color="blue" key={sv} bordered={false}>
-                {sv}
-              </Tag>
-            );
-          })}
+          {typeList.map((sv, _index) => (
+            <Tag className="item" color="blue" key={sv} bordered={false}>
+              {sv}
+            </Tag>
+          ))}
         </Space>
       );
     },

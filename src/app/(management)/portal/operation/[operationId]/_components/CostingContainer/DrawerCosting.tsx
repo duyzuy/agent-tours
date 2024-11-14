@@ -80,7 +80,7 @@ const DrawerCosting: React.FC<DrawerCostingProps> = ({ operationId, onClose, ope
           render={({ field, fieldState: { error } }) => (
             <FormItem label="Loại dịch vụ" required validateStatus={error ? "error" : ""} help={error?.message}>
               {supplier?.typeList ? (
-                supplier?.typeList.split("||").map((typeItem) => (
+                supplier?.typeList.map((typeItem) => (
                   <div key={typeItem} className="mb-3">
                     <Checkbox
                       checked={field?.value === typeItem}

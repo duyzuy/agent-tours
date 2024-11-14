@@ -330,7 +330,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
                   onSubmit && handleSubmit((data) => onSubmit({ ...data, status: PageContentStatus.PENDING }))
                 }
                 onChangeStatus={handleChangeStatus}
-                hideSaveForApproval={action === "update" ?? false}
+                hideSaveForApproval={action === "update"}
                 hideApproval={getValues("status") !== PageContentStatus.PENDING || action === "create"}
                 action={action}
                 status={getValues("status")}

@@ -15,7 +15,7 @@ import useMessage from "@/hooks/useMessage";
 import { ESellChannel, SELL_CHANNEL } from "@/constants/channel.constant";
 
 const BookingPage = () => {
-  const [bookingInformation, setBookingInformation] = useBooking();
+  const [bookingInformation, _] = useBooking();
   const message = useMessage();
 
   const { onNext, onSetPassengerConfig, onReselectProduct, onChangeSellChannel, onSetProductItem } =
@@ -132,10 +132,19 @@ const BookingPage = () => {
             {(productList?.length &&
               productList.map((item) => (
                 <TourBoxItem
-                  key={item.recId}
-                  tour={item}
-                  isSelected={item.recId === productSelectedItem?.recId}
-                  hideBoxNotSelect={!isUndefined(productSelectedItem)}
+                  key={item.sellableId}
+                  // tour={item}
+                  tourName={item.template.name}
+                  tourCode={item.template.code}
+                  startDate={item.startDate}
+                  endDate={item.endDate}
+                  productCode={item.code}
+                  openAmount={item.open}
+                  pricingList={item.configs}
+                  promotions={item.promotions}
+                  sellableDetails={item.sellableDetails}
+                  isSelected={item.sellableId === productSelectedItem?.sellableId}
+                  isHidden={!isUndefined(productSelectedItem)}
                   onSelect={() => onSetProductItem(item)}
                 />
               ))) || <Empty description="Không có tour nào" />}

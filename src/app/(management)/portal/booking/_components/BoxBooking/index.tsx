@@ -42,7 +42,7 @@ const BoxBooking: React.FC<BoxBookingProps> = ({ className = "searchbox px-4 py-
   const { handlerSubmit, errors } = useFormSubmit({
     schema: searchBookingSchema,
   });
-  const bookingInfo = useBookingSelector();
+  const bookingInfo = useBookingSelector((state) => state);
 
   const searchInfo = useMemo(() => {
     return bookingInfo?.searchBooking;

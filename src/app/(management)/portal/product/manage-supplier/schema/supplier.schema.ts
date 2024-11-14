@@ -1,7 +1,8 @@
-import { object, string, ObjectSchema, number } from "yup";
+import { object, string, ObjectSchema, number, array } from "yup";
 import { Status } from "@/models/common.interface";
 import { SupplierFormData } from "../modules/manageSupplier.interface";
 import { EVendorPaymentType } from "@/models/management/vendor.interface";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 
 export const supplierSchema: ObjectSchema<SupplierFormData> = object({
   actionType: string().oneOf<"CREATE" | "EDIT">(["CREATE", "EDIT"]).default("CREATE"),
@@ -27,7 +28,9 @@ export const supplierSchema: ObjectSchema<SupplierFormData> = object({
     EVendorPaymentType.POSTPAID,
     EVendorPaymentType.PREPAID,
   ]),
-  typeList: string(),
+  typeList: array<EInventoryType[]>()
+    .min(1, "Chọn ít nhất 1 loại hình dịch vụ.")
+    .required("Loại hình dịch vụ không bỏ trống."),
   bankAddress: string().optional(),
   status: string().oneOf<Status.OK | Status.QQ>([Status.OK, Status.QQ]).required("Trạng thái không bỏ trống."),
 });

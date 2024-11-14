@@ -4,7 +4,7 @@ import { Col, Form, Input, Row, Select, DatePickerProps } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";
 import { DATE_FORMAT, PASSENGER_AGES, PASSENGER_GENDER, PASSENGER_TITLES } from "@/constants/common";
-import { IBookingItem } from "../../../modules/bookingInformation.interface";
+import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
 import { getPassengerType } from "@/utils/common";
 import classNames from "classnames";
 import dayjs from "dayjs";
@@ -15,9 +15,9 @@ type RequiredPaxFormData = Required<PassengerInformationFormData>;
 export interface PassengerFormProps {
   index: number;
   type: PassengerType;
-  initialValues?: IBookingItem["passengerInformation"];
+  initialValues?: IProductTourBookingItem["passengerInformation"];
   errors?: Partial<Record<keyof RequiredPaxFormData, string>>;
-  onChangeForm: ({ index, data }: { index: number; data: IBookingItem["passengerInformation"] }) => void;
+  onChangeForm: ({ index, data }: { index: number; data: IProductTourBookingItem["passengerInformation"] }) => void;
   startDate?: string;
   className?: string;
 }

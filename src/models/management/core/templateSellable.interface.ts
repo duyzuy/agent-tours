@@ -1,20 +1,25 @@
 import { BaseResponse, Status } from "../../common.interface";
+import { IDepartLocation } from "../cms/miscDepartLocation.interface";
+import { IMiscDocument } from "../cms/miscDocument.interface";
 import { IDestination } from "../region.interface";
+import { IDocument } from "./document.interface";
+import { EInventoryType } from "./inventoryType.interface";
+import { EProductType } from "./productType.interface";
 
-export interface ITemplateSellable {
+export interface ITemplateSellableDetail {
   recId: number;
   cmsIdentity: string;
   sellableTemplateId: number;
-  type: string; //1.2 producttype
+  type: EProductType;
   code: string;
   name: string;
-  inventoryTypeList: string; //1.1 inventoryType: chuỗi split bởi ||, ví dụ: AIR||HOTEL||GUIDE
-  destListJson: string; //json cửa mảng [DestList], có thể có nhiều Destlist
-  checkListJson: string; // json {name, descriptions, link}
+  inventoryTypeList: EInventoryType[]; //1.1 inventoryType
+  destListJson: IDestination[];
+  checkListJson: IMiscDocument[] | null;
   tourItinerary: string;
   airItinerary: string;
   counter: string;
-  depart: string;
+  depart: IDepartLocation | null;
   sysFstUser: string;
   sysFstUpdate: string;
   sysLstUser: string;
@@ -23,6 +28,8 @@ export interface ITemplateSellable {
   logStatus: string;
   status: Status;
 }
+
+export type ITemplateSellable = ITemplateSellableDetail;
 
 interface RequestObject {
   recId?: number;
@@ -44,21 +51,18 @@ export class TemplateSellableQueryParams {
   }
 }
 export interface ITemplateSellablePayload {
-  cmsIdentity: string;
-  type: string; //1.2 producttype
-  code: string;
-  name: string;
-  inventoryTypeList: string; //1.1 inventoryType: chuỗi split bởi ||, ví dụ: AIR||HOTEL||GUIDE
-  destListJson: IDestination[]; //json cửa mảng [DestList], có thể có nhiều Destlist
-  checkListJson: {
-    name: string;
-    descriptions: string;
-    link: string;
-  }[];
-  status: Status;
+  cmsIdentity?: string;
+  type?: string; //1.2 producttype
+  code?: string;
+  name?: string;
+  inventoryTypeList?: EInventoryType[];
+  destListJson?: Partial<IDestination>[];
+  checkListJson?: Partial<IMiscDocument>[];
+  depart?: Partial<IDepartLocation>;
+  status?: Status;
 }
 export interface ITemplateSellableUpdatePayload
   extends Pick<ITemplateSellablePayload, "cmsIdentity" | "name" | "inventoryTypeList" | "destListJson"> {}
 
 export interface ITemplateSaleableListRs extends BaseResponse<ITemplateSellable[]> {}
-export interface ITemplateSaleableDetailRs extends BaseResponse<ITemplateSellable> {}
+export interface ITemplateSaleableDetailRs extends BaseResponse<ITemplateSellableDetail> {}

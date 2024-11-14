@@ -1,11 +1,11 @@
-import { ISearchBookingPayload, SearchBookingFormData } from "./searchBooking.interface";
+import { SearchBookingPayload, SearchBookingFormData } from "./searchBooking.interface";
 import { useSearchBookingMutation } from "@/mutations/managements/booking";
 import useBooking from "../hooks/useBooking";
 import { useState } from "react";
 import useMessage from "@/hooks/useMessage";
 import { BookingInfo } from "./bookingInformation.interface";
 
-export const initBookingInfo = new BookingInfo(undefined, [], undefined, undefined);
+export const initBookingInfo = new BookingInfo(undefined, [], undefined, undefined, undefined, undefined);
 const useSearchBookingInformation = () => {
   const { mutate: makeSearchBooking } = useSearchBookingMutation();
   const [_, setBookingInformation] = useBooking();
@@ -13,12 +13,12 @@ const useSearchBookingInformation = () => {
   const message = useMessage();
 
   const onSearchBooking = (formData: SearchBookingFormData) => {
-    const searchPayload: ISearchBookingPayload = {
+    const searchPayload: SearchBookingPayload = {
       byMonth: formData.byMonth,
       byCode: formData.byCode,
       byInventoryType: formData.byInventoryType,
       byProductType: formData.byProductType,
-      byDest: formData.byDest?.reduce<ISearchBookingPayload["byDest"]>(
+      byDest: formData.byDest?.reduce<SearchBookingPayload["byDest"]>(
         (acc, item) => [
           ...(acc || []),
           {

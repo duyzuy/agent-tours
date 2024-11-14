@@ -1,11 +1,15 @@
 import { useBookingSelector } from "../hooks/useBooking";
 import { PassengerType } from "@/models/common.interface";
-import { IBookingItem } from "./bookingInformation.interface";
+import { IProductServiceBookingItem, IProductTourBookingItem } from "./bookingInformation.interface";
 import { useCallback } from "react";
 const useBreakDownSummary = () => {
-  const { bookingInfo } = useBookingSelector();
+  const { bookingInfo } = useBookingSelector((state) => state);
 
   const bookingItemList = bookingInfo?.bookingItems || [];
+
+  const bookingSsrWithPax = bookingInfo?.bookingSsrWithPax || [];
+
+  const bookingSsr = bookingInfo?.bookingSsr || [];
 
   const getTourBookingPriceByPassengerType = useCallback((paxType: PassengerType) => {
     const passengerList = bookingItemList?.filter((pItem) => pItem.type === paxType) || [];
@@ -21,22 +25,22 @@ const useBreakDownSummary = () => {
         }
       | undefined
     >((acc, item) => {
-      if (acc && acc[item.item.class]) {
-        const newQty = acc[item.item.class].qty + 1;
-        acc[item.item.class] = {
-          ...acc[item.item.class],
+      if (acc && acc[item.configItem.class]) {
+        const newQty = acc[item.configItem.class].qty + 1;
+        acc[item.configItem.class] = {
+          ...acc[item.configItem.class],
           qty: newQty,
-          subTotal: item.item[paxType] * newQty,
+          subTotal: item.configItem[paxType] * newQty,
         };
       } else {
         acc = {
           ...acc,
-          [item.item.class]: {
+          [item.configItem.class]: {
             qty: 1,
             type: paxType,
-            class: item.item.class,
-            subTotal: item.item[paxType],
-            price: item.item[paxType],
+            class: item.configItem.class,
+            subTotal: item.configItem[paxType],
+            price: item.configItem[paxType],
           },
         };
       }
@@ -44,33 +48,38 @@ const useBreakDownSummary = () => {
     }, undefined);
   }, []);
 
-  const serviceSummaries = useCallback(() => {
-    return bookingItemList.reduce<{
+  const getSummaryServicesByPax = () => {
+    const bookingSSRhasStock = bookingSsrWithPax.filter((item) => item.serviceItem.stock);
+    const ssrStockGroupByService = bookingSSRhasStock.reduce<{
       [key: string]: {
-        sellableDetailId: number;
-        details: string;
+        serviceItem: IProductServiceBookingItem["serviceItem"];
         subTotal: number;
         totalQty: number;
         items: {
-          bookingItem: IBookingItem;
-          item: IBookingItem["ssr"][0];
+          bookingIndex: number;
+          qty: IProductServiceBookingItem["qty"];
+          type: IProductServiceBookingItem["type"];
+          item: IProductServiceBookingItem["configItem"];
         }[];
       };
     }>((acc, bkItem) => {
-      bkItem.ssr.forEach((ssrItem) => {
-        if (acc[ssrItem.sellableDetailsId]) {
+      if (bkItem.serviceItem.stock) {
+        const keyService = `${bkItem.serviceItem.inventory.recId}-${bkItem.serviceItem.stock.recId}`;
+        if (acc[keyService]) {
           acc = {
             ...acc,
-            [ssrItem.sellableDetailsId]: {
-              ...acc[ssrItem.sellableDetailsId],
-              subTotal: acc[ssrItem.sellableDetailsId].subTotal + ssrItem.qty * ssrItem.item[ssrItem.type],
-              totalQty: acc[ssrItem.sellableDetailsId].totalQty + ssrItem.qty,
+            [keyService]: {
+              ...acc[keyService],
+              subTotal: acc[keyService].subTotal + bkItem.configItem[bkItem.type] * bkItem.qty,
+              totalQty: acc[keyService].totalQty + bkItem.qty,
               items: [
-                ...acc[ssrItem.sellableDetailsId].items,
+                ...acc[keyService].items,
 
                 {
-                  bookingItem: bkItem,
-                  item: ssrItem,
+                  bookingIndex: bkItem.bookingIndex,
+                  qty: bkItem.qty,
+                  type: bkItem.type,
+                  item: bkItem.configItem,
                 },
               ],
             },
@@ -78,46 +87,218 @@ const useBreakDownSummary = () => {
         } else {
           acc = {
             ...acc,
-            [ssrItem.sellableDetailsId]: {
-              sellableDetailId: ssrItem.sellableDetailsId,
-              details: ssrItem.item.details,
-              subTotal: ssrItem.qty * ssrItem.item[ssrItem.type],
-              totalQty: ssrItem.qty,
+            [keyService]: {
+              serviceItem: bkItem.serviceItem,
+              subTotal: bkItem.qty * bkItem.configItem[bkItem.type],
+              totalQty: bkItem.qty,
               items: [
                 {
-                  bookingItem: bkItem,
-                  item: ssrItem,
+                  bookingIndex: bkItem.bookingIndex,
+                  qty: bkItem.qty,
+                  type: bkItem.type,
+                  item: bkItem.configItem,
                 },
               ],
             },
           };
         }
-      });
-
+      }
       return acc;
     }, {});
-  }, []);
 
-  const getTotal = useCallback(() => {
+    const bookingSSRNoStock = bookingSsrWithPax.filter((item) => !item.serviceItem.stock);
+    const ssrNoStockGroupByService = bookingSSRNoStock.reduce<{
+      [key: string]: {
+        serviceItem: IProductServiceBookingItem["serviceItem"];
+        subTotal: number;
+        totalQty: number;
+        items: {
+          bookingIndex: number;
+          qty: IProductServiceBookingItem["qty"];
+          type: IProductServiceBookingItem["type"];
+          item: IProductServiceBookingItem["configItem"];
+        }[];
+      };
+    }>((acc, bkItem) => {
+      if (acc[bkItem.serviceItem.inventory.recId]) {
+        acc = {
+          ...acc,
+          [bkItem.serviceItem.inventory.recId]: {
+            ...acc[bkItem.serviceItem.inventory.recId],
+            subTotal: acc[bkItem.serviceItem.inventory.recId].subTotal + bkItem.configItem[bkItem.type] * bkItem.qty,
+            totalQty: acc[bkItem.serviceItem.inventory.recId].totalQty + bkItem.qty,
+            items: [
+              ...acc[bkItem.serviceItem.inventory.recId].items,
+
+              {
+                bookingIndex: bkItem.bookingIndex,
+                qty: bkItem.qty,
+                type: bkItem.type,
+                item: bkItem.configItem,
+              },
+            ],
+          },
+        };
+      } else {
+        acc = {
+          ...acc,
+          [bkItem.serviceItem.inventory.recId]: {
+            serviceItem: bkItem.serviceItem,
+            subTotal: bkItem.qty * bkItem.configItem[bkItem.type],
+            totalQty: bkItem.qty,
+            items: [
+              {
+                bookingIndex: bkItem.bookingIndex,
+                qty: bkItem.qty,
+                type: bkItem.type,
+                item: bkItem.configItem,
+              },
+            ],
+          },
+        };
+      }
+      return acc;
+    }, {});
+
+    return {
+      ssrStock: ssrStockGroupByService,
+      ssrNoStock: ssrNoStockGroupByService,
+    };
+  };
+
+  const getSummaryServicesNoPax = () => {
+    const bookingSSRhasStock = bookingSsr.filter((item) => item.serviceItem.stock);
+    const ssrStockGroupByService = bookingSSRhasStock.reduce<{
+      [key: string]: {
+        serviceItem: IProductServiceBookingItem["serviceItem"];
+        subTotal: number;
+        totalQty: number;
+        items: {
+          qty: IProductServiceBookingItem["qty"];
+          type: IProductServiceBookingItem["type"];
+          item: IProductServiceBookingItem["configItem"];
+        }[];
+      };
+    }>((acc, bkItem) => {
+      if (bkItem.serviceItem.stock) {
+        const keyService = `${bkItem.serviceItem.inventory.recId}-${bkItem.serviceItem.stock.recId}`;
+        if (acc[keyService]) {
+          acc = {
+            ...acc,
+            [keyService]: {
+              ...acc[keyService],
+              subTotal: acc[keyService].subTotal + bkItem.configItem[bkItem.type] * bkItem.qty,
+              totalQty: acc[keyService].totalQty + bkItem.qty,
+              items: [
+                ...acc[keyService].items,
+
+                {
+                  qty: bkItem.qty,
+                  type: bkItem.type,
+                  item: bkItem.configItem,
+                },
+              ],
+            },
+          };
+        } else {
+          acc = {
+            ...acc,
+            [keyService]: {
+              serviceItem: bkItem.serviceItem,
+              subTotal: bkItem.qty * bkItem.configItem[bkItem.type],
+              totalQty: bkItem.qty,
+              items: [
+                {
+                  qty: bkItem.qty,
+                  type: bkItem.type,
+                  item: bkItem.configItem,
+                },
+              ],
+            },
+          };
+        }
+      }
+      return acc;
+    }, {});
+
+    const bookingSSRNoStock = bookingSsr.filter((item) => !item.serviceItem.stock);
+    const ssrNoStockGroupByService = bookingSSRNoStock.reduce<{
+      [key: string]: {
+        serviceItem: IProductServiceBookingItem["serviceItem"];
+        subTotal: number;
+        totalQty: number;
+        items: {
+          qty: IProductServiceBookingItem["qty"];
+          type: IProductServiceBookingItem["type"];
+          item: IProductServiceBookingItem["configItem"];
+        }[];
+      };
+    }>((acc, bkItem) => {
+      if (acc[bkItem.serviceItem.inventory.recId]) {
+        acc = {
+          ...acc,
+          [bkItem.serviceItem.inventory.recId]: {
+            ...acc[bkItem.serviceItem.inventory.recId],
+            subTotal: acc[bkItem.serviceItem.inventory.recId].subTotal + bkItem.configItem[bkItem.type] * bkItem.qty,
+            totalQty: acc[bkItem.serviceItem.inventory.recId].totalQty + bkItem.qty,
+            items: [
+              ...acc[bkItem.serviceItem.inventory.recId].items,
+
+              {
+                qty: bkItem.qty,
+                type: bkItem.type,
+                item: bkItem.configItem,
+              },
+            ],
+          },
+        };
+      } else {
+        acc = {
+          ...acc,
+          [bkItem.serviceItem.inventory.recId]: {
+            serviceItem: bkItem.serviceItem,
+            subTotal: bkItem.qty * bkItem.configItem[bkItem.type],
+            totalQty: bkItem.qty,
+            items: [
+              {
+                qty: bkItem.qty,
+                type: bkItem.type,
+                item: bkItem.configItem,
+              },
+            ],
+          },
+        };
+      }
+      return acc;
+    }, {});
+
+    return {
+      ssrStock: ssrStockGroupByService,
+      ssrNoStock: ssrNoStockGroupByService,
+    };
+  };
+
+  const getTotal = () => {
     const tourPrices = bookingItemList.reduce((acc, bkItem) => {
-      acc += bkItem.item[bkItem.type];
-
-      const ssrItemPrice = bkItem.ssr.reduce((totalSsr, ssrItem) => {
-        totalSsr += ssrItem.qty * ssrItem.item[bkItem.type];
-        return totalSsr;
-      }, 0);
-      return acc + ssrItemPrice;
+      acc += bkItem.configItem[bkItem.type];
+      return acc;
     }, 0);
 
-    return tourPrices;
-  }, []);
+    const ssrSubTotal = bookingSsrWithPax.reduce((acc, bkItem) => {
+      acc += bkItem.configItem[bkItem.type] * bkItem.qty;
+      return acc;
+    }, 0);
+
+    return tourPrices + ssrSubTotal;
+  };
   return {
     tourPrices: {
       adult: getTourBookingPriceByPassengerType(PassengerType.ADULT),
       child: getTourBookingPriceByPassengerType(PassengerType.CHILD),
       infant: getTourBookingPriceByPassengerType(PassengerType.INFANT),
     },
-    services: serviceSummaries(),
+    servicesByPax: getSummaryServicesByPax(),
+    servicesNoPax: getSummaryServicesNoPax(),
     total: getTotal(),
   };
 };

@@ -1,4 +1,5 @@
 import { Status } from "@/models/common.interface";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EVendorPaymentType, IVendor } from "@/models/management/vendor.interface";
 
 export class SupplierFormData {
@@ -10,7 +11,7 @@ export class SupplierFormData {
   address?: string;
   email?: string;
   taxCode?: string;
-  typeList?: string;
+  typeList?: EInventoryType[];
   rmk?: string;
   bankName?: string;
   bankAccountNumber?: string;
@@ -23,7 +24,7 @@ export class SupplierFormData {
   constructor(
     recId: number | undefined,
     vendorId: number | undefined,
-    typeList: string | undefined,
+    typeList: EInventoryType[] | undefined,
     shortName: string | undefined,
     fullName: string | undefined,
     contact: string | undefined,

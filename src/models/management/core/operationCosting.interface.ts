@@ -2,7 +2,7 @@ import { BaseResponse } from "@/models/common.interface";
 import { RoomingType } from "../booking/rooming.interface";
 import { EInventoryType } from "./inventoryType.interface";
 import { ISellable } from "./sellable.interface";
-import { ITemplateSellable } from "./templateSellable.interface";
+import { ITemplateSellableDetail } from "./templateSellable.interface";
 
 export interface OperationCostingPayload {
   type?: EInventoryType; //INVENTORYTYPE: AIR VISA HOTEL GUIDE TRANSPORT RESTAURANT LANDPACKAGE INSURANCE
@@ -40,7 +40,7 @@ export interface IOperationCosting {
     | "cap"
     | "open"
     | "used"
-    | "avaiable"
+    | "available"
     | "closeDate"
     | "validFrom"
     | "validTo"
@@ -52,7 +52,10 @@ export interface IOperationCosting {
     sellableDetails: null;
     promotions: null;
   };
-  templateMinimal: Pick<ITemplateSellable, "recId" | "cmsIdentity" | "type" | "code" | "name" | "inventoryTypeList"> & {
+  templateMinimal: Pick<
+    ITemplateSellableDetail,
+    "recId" | "cmsIdentity" | "type" | "code" | "name" | "inventoryTypeList"
+  > & {
     cms: null;
     sellables: null;
     cmsMustKnow: null;

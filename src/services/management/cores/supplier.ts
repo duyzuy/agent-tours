@@ -21,6 +21,7 @@ export const supplierAPIs = {
     return await coreApi.post<SupplierRs, BaseResponse<null>>("core/SourceSupplier_Details", {
       requestObject: {
         recId,
+        includeVendor: true,
       },
     });
   },

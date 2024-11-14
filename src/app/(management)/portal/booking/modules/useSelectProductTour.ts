@@ -2,11 +2,10 @@ import useMessage from "@/hooks/useMessage";
 import useBooking from "../hooks/useBooking";
 import { PassengerType } from "@/models/common.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
-import { AppBookingManager, IBookingItem } from "./bookingInformation.interface";
+import { AppBookingManager, IProductTourBookingItem } from "./bookingInformation.interface";
 import { useRouter } from "next/navigation";
 import { ESellChannel } from "@/constants/channel.constant";
-import { initBookingData } from "../BookingProvider";
-import { IProductItem } from "@/models/management/booking/productItem.interface";
+import { IProductTour } from "@/models/management/booking/product.interface";
 const useSelectProductTour = () => {
   const message = useMessage();
   const [bookingInformation, setBookingInformation] = useBooking();
@@ -44,15 +43,14 @@ const useSelectProductTour = () => {
       return totalConfigItems;
     }, []);
 
-    const bookingItems = allBookingItems.reduce<IBookingItem[]>((acc, paxItem, _index) => {
+    const bookingItems = allBookingItems.reduce<IProductTourBookingItem[]>((acc, paxItem, _index) => {
       acc = [
         ...acc,
         {
           index: _index,
-          item: paxItem.item,
+          configItem: paxItem.item,
           type: paxItem.type,
           passengerInformation: {},
-          ssr: [],
         },
       ];
 
@@ -66,9 +64,9 @@ const useSelectProductTour = () => {
         bookingItems: [...bookingItems],
       },
     }));
-    router.push("/portal/booking/payment");
+    router.push("/portal/booking/tour-services");
   };
-  const onSetProductItem = (productItem: IProductItem) => {
+  const onSetProductItem = (productItem: IProductTour) => {
     setBookingInformation((prev) => ({
       ...prev,
       bookingInfo: {
@@ -82,7 +80,6 @@ const useSelectProductTour = () => {
       ...prev,
       searchBooking: {
         ...prev.searchBooking,
-
         passengers: {
           ...passengers,
         },

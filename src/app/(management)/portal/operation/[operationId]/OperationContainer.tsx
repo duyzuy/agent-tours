@@ -65,13 +65,13 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
         key: "accept",
         label: <span className="text-emerald-600">Duyệt</span>,
         onClick: () => onUpdateStatusThenRevalidateQuery("ACCEPTED"),
-        className: "!border-emerald-600",
+        className: "!text-emerald-600 !bg-emerald-50",
       },
       {
         key: "handOver",
         label: <span className="text-amber-500">Bàn giao</span>,
         onClick: () => onUpdateStatusThenRevalidateQuery("HANDOVERED"),
-        className: "!border-amber-500",
+        className: "!bg-amber-100 !text-amber-500",
       },
       {
         key: "lock",
@@ -82,19 +82,19 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
         key: "pendingCancel",
         label: <span className="text-pink-600">Chờ huỷ</span>,
         onClick: () => onUpdateStatusThenRevalidateQuery("PENDINGCANCELED"),
-        className: "!border-pink-600",
+        className: "!text-pink-600 !bg-pink-100",
       },
       {
         key: "cancel",
         label: <span className="text-red-600">Huỷ</span>,
         onClick: () => onUpdateStatusThenRevalidateQuery("CANCELED"),
-        className: "!border-red-600",
+        className: "!bg-red-600 !text-red-600",
       },
       {
         key: "done",
         label: <span className="text-emerald-600">Hoàn thành</span>,
         onClick: () => onUpdateStatusThenRevalidateQuery("DONE"),
-        className: "!border-emerald-600",
+        className: "!bg-emerald-50 !text-emerald-600",
       },
     ];
 
@@ -174,11 +174,7 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
 
   return (
     <>
-      <ProductBoxInfo
-        data={data?.sellableMinimal}
-        templateCode={data?.templateMinimal.code}
-        templateName={data?.templateMinimal.name}
-      />
+      <ProductBoxInfo data={data?.sellable} templateCode={data?.template.code} templateName={data?.template.name} />
 
       <div className="flex flex-wrap gap-6">
         <OperationPersonInfo
@@ -192,7 +188,7 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
       <div>
         <Space>
           {operationActions?.map((act) => (
-            <Button key={act.key} onClick={act.onClick} className={act.className}>
+            <Button key={act.key} onClick={act.onClick} className={act.className} type="text">
               {act.label}
             </Button>
           ))}
@@ -206,7 +202,7 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
 export default OperationContainer;
 
 interface ProductBoxInfoProps {
-  data?: IOperation["sellableMinimal"];
+  data?: IOperation["sellable"];
   templateCode?: string;
   templateName?: string;
 }
@@ -255,7 +251,7 @@ const ProductBoxInfo: React.FC<ProductBoxInfoProps> = ({ data, templateCode, tem
           <div>
             <span className="mb-1 block text-xs text-gray-500">Khả dụng</span>
             <div>
-              <span className="text-main-500">{data?.avaiable}</span>
+              <span className="text-main-500">{data?.available}</span>
             </div>
           </div>
           <div>

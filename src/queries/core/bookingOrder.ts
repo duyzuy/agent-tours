@@ -63,13 +63,13 @@ export const useGetBookingTourServicesCoreQuery = ({
 }) => {
   return useQuery({
     queryKey: [
-      queryCore.GET_BOOKING_BOOKING_TOUR_SERVIES,
+      queryCore.GET_PRODUCT_SERVICES_LIST,
       {
         sellableId: Number(sellableId),
       },
     ],
     queryFn: () => bookingAPIs.getServices(sellableId),
-    select: (data) => data.result,
+    select: (data) => data.result.extraConfigs,
     enabled: enabled,
   });
 };

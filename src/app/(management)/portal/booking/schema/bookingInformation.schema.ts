@@ -28,6 +28,14 @@ export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> = objec
     }),
   ).default([]),
   custName: string().required("cusName không bỏ trống."),
+  bookingSsr: array(
+    object({
+      sellableConfigId: number().required("Thiếu ID dịch vụ."),
+      qty: number().required("Thiếu số lượng dịch vụ."),
+      amount: number().required("Thiếu giá tiền dịch vụ."),
+      type: string().oneOf<PassengerType.ADULT>([PassengerType.ADULT]).required("Loại hành khách không bỏ trống"),
+    }),
+  ).default([]),
   custPhoneNumber: string().required("phone number không bỏ trống."),
   custEmail: string().required("Email không bỏ trống."),
   custAddress: string().default(""),

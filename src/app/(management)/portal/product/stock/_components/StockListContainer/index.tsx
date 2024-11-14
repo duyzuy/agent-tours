@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { IStock, IStockConfirmPayload, IStockListOfInventoryRs } from "@/models/management/core/stock.interface";
 import { StockAdjustFormData, StockConfirmFormData } from "../../modules/stock.interface";
-import { useRouter } from "next/navigation";
 import TableListPage from "@/components/admin/TableListPage";
 import { stockColumns } from "./stockColumns";
 import DrawerStockDetail, { DrawerStockDetailProps, EActionType } from "../DrawerStockDetail";
@@ -37,7 +36,6 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
   const [showDrawler, setShowDrawler] = useState(false);
   const [actionType, setActionType] = useState<EActionType>();
   const [stockRecord, setStockRecord] = useState<IStockListOfInventoryRs["result"][0]>();
-  const router = useRouter();
 
   const handleDrawler = (action: EActionType, record: IStockListOfInventoryRs["result"][0]) => {
     setShowDrawler(true);
@@ -57,6 +55,11 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
     });
   };
 
+  const onAddjust: DrawerStockDetailProps["onAdjust"] = (formData) => {
+    onAdjustQuantity(formData, () => {
+      setShowDrawler(false);
+    });
+  };
   return (
     <React.Fragment>
       {render?.()}
@@ -67,7 +70,7 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
         rowKey={"recId"}
         isLoading={isLoading}
         columns={stockColumns}
-        fixedActionsColumn={false}
+        // fixedActionsColumn={false}
         showActionsLess={false}
         onEdit={(record) => handleDrawler(EActionType.EDIT, record)}
         hideEdit={(record) => record.status !== Status.OK}
@@ -86,7 +89,7 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
         initialValues={stockRecord}
         onApproval={onApproval}
         actionType={actionType}
-        onAdjust={onAdjustQuantity}
+        onAdjust={onAddjust}
       />
     </React.Fragment>
   );

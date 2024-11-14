@@ -21,7 +21,7 @@ export interface HeroHomeWraperProps {
 export default async function HeroHomeWraper({
   title,
   subTitle,
-  imageUrl = "/assets/images/slide-banner.jpg",
+  imageUrl = "/assets/images/master-banner.jpeg",
   chilren,
 }: HeroHomeWraperProps) {
   return (
@@ -41,8 +41,10 @@ export default async function HeroHomeWraper({
       </div>
       <div className="container mx-auto relative z-10 px-4 md:px-6 lg:px-8">
         <div className="box-content text-white text-center py-6">
-          <h5 className="text-white drop-shadow-lg text-xl md:text-3xl lg:text-5xl font-bold mb-4">{title}</h5>
-          <p className="font-bold text-base lg:text-xl drop-shadow-md">{subTitle}</p>
+          <h5 className="text-white drop-shadow-lg text-3xl md:text-3xl lg:text-5xl font-bold mb-4 uppercase">
+            {title}
+          </h5>
+          <p className="text-base lg:text-xl drop-shadow-md">{subTitle}</p>
         </div>
         {chilren}
         <DynamicSearchBox />

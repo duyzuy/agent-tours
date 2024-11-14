@@ -1,10 +1,9 @@
 import { ColumnsType } from "antd/es/table";
 import { Space, Tag } from "antd";
-import { formatDate, stringToDate } from "@/utils/date";
+import { stringToDate } from "@/utils/date";
 import { Status } from "@/models/common.interface";
 import { VendorListRs } from "@/models/management/vendor.interface";
 import React from "react";
-import dayjs from "dayjs";
 
 export const vendorColumns: ColumnsType<VendorListRs["result"][0]> = [
   {
@@ -32,10 +31,10 @@ export const vendorColumns: ColumnsType<VendorListRs["result"][0]> = [
     dataIndex: "typeList",
     key: "typeList",
     width: 250,
-    render(value, record, index) {
+    render(value, { typeList }, index) {
       return (
         <Space wrap={true}>
-          {record.typeList.split("||").map((sv, _index) => (
+          {typeList.map((sv, _index) => (
             <Tag className="item" color="blue" key={sv} bordered={false}>
               {sv}
             </Tag>

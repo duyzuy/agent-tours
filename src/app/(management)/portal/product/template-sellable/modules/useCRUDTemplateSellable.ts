@@ -25,9 +25,7 @@ const useCRUDTemplateSellable = () => {
   const queryClient = useQueryClient();
 
   const onCreateTemplateSellable = (formdata: TemplateSellableFormData, cb?: () => void) => {
-    const payload = convertSellableFormdataToPayload(formdata);
-
-    makeCreateTemplateSellable(payload, {
+    makeCreateTemplateSellable(formdata, {
       onSuccess: (data, variables) => {
         message.success(`Tạo Template thành công`);
 
@@ -75,11 +73,9 @@ const useCRUDTemplateSellable = () => {
   };
 
   const onUpdateTemplateSellable = (recordId: number, formData: TemplateSellableFormData, cb?: () => void) => {
-    const formPayload = convertSellableFormdataToPayload(formData);
-
     makeUpdateTemplateSellable(
       {
-        ...formPayload,
+        ...formData,
         recordId: recordId,
       },
       {
@@ -96,16 +92,6 @@ const useCRUDTemplateSellable = () => {
         },
       },
     );
-  };
-
-  const convertSellableFormdataToPayload = (formdata: TemplateSellableFormData): ITemplateSellablePayload => {
-    const formatInventoryTypeList = formdata.inventoryTypeList.reduce((acc, invt) => {
-      return acc.concat(isEmpty(acc) ? "" : "||", invt);
-    }, "");
-    return {
-      ...formdata,
-      inventoryTypeList: formatInventoryTypeList,
-    } as ITemplateSellablePayload;
   };
 
   return {

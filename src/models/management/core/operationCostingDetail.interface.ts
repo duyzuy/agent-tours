@@ -249,7 +249,7 @@ export interface IOperationCostingDetail {
     | "cap"
     | "open"
     | "used"
-    | "avaiable"
+    | "available"
     | "closeDate"
     | "validFrom"
     | "validTo"

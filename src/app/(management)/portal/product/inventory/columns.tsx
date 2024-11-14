@@ -19,9 +19,14 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     render(value, record, index) {
       return (
         <div>
-          <span className="text-primary-default text-xs">{record.code}</span>
-          <span className="block mb-2">{record.name}</span>
-          <span className="block">{record.productType}</span>
+          <div className="mb-2">
+            <span className="block">{record.name}</span>
+            <span className="text-primary-default text-xs">{record.code}</span>
+          </div>
+          <div>
+            <span className="text-xs text-gray-500">Loại sản phẩm</span>
+            <span className="block">{record.productType}</span>
+          </div>
         </div>
       );
     },
@@ -53,14 +58,13 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
       );
     },
   },
-
   {
     title: "Ngày tạo",
     dataIndex: "sysFstUpdate",
     key: 8,
     width: 180,
-    render: (_, record) => {
-      return formatDate(record.sysFstUpdate);
+    render: (_, { sysFstUpdate }) => {
+      return formatDate(sysFstUpdate);
     },
   },
   {

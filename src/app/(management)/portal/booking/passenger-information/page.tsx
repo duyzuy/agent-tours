@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import BookingSummary from "../_components/BookingSummary";
 import PassengersInformationForm from "./_components/PassengersInformationForm";
 import usePassenger from "../modules/usePassenger";
-import { IBookingItem } from "../modules/bookingInformation.interface";
+import { IProductTourBookingItem } from "../modules/bookingInformation.interface";
 import { PassengerType } from "@/models/common.interface";
 import { isUndefined } from "lodash";
 
@@ -21,7 +21,7 @@ const CustomerInformationPage = () => {
       bookingInformation.bookingInfo?.bookingItems?.reduce<
         {
           bookingIndex: number;
-          passengerInfo: IBookingItem["passengerInformation"];
+          passengerInfo: IProductTourBookingItem["passengerInformation"];
           type: PassengerType;
         }[]
       >((acc, bkItem) => {

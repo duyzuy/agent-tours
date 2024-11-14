@@ -1,11 +1,9 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { isUndefined } from "lodash";
 import { Tabs, TabsProps, Form, Row, Col, Select } from "antd";
 import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
 import { RangePickerProps } from "antd/es/date-picker";
-import dayjs from "dayjs";
-
 import FormItem from "@/components/base/FormItem";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
 import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory";
@@ -17,6 +15,7 @@ import { Status } from "@/models/common.interface";
 import { InventoryQueryParams } from "@/models/management/core/inventory.interface";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
 import PageContainer from "@/components/admin/PageContainer";
+import dayjs from "dayjs";
 
 type StockTabKeys = "stockList" | "createStock";
 const StockPage = () => {
@@ -87,7 +86,7 @@ const StockPage = () => {
             <Col span={4}>
               <FormItem>
                 <Select
-                  placeholder="Chọn nhóm kho"
+                  placeholder="Chọn loại dịch vụ"
                   value={stockQueryParams?.requestObject?.inventoryId}
                   fieldNames={{
                     value: "recId",
@@ -190,9 +189,7 @@ const StockPage = () => {
     {
       key: "createStock",
       label: "Tạo kho dịch vụ",
-      children: (
-        <StockFormContainer inventoryList={inventoryList} onSubmit={onCreate} onCancel={onCancel} loading={loading} />
-      ),
+      children: <StockFormContainer onSubmit={onCreate} onCancel={onCancel} loading={loading} />,
       icon: <PlusOutlined />,
     },
   ];

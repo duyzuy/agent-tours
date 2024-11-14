@@ -12,17 +12,19 @@ export const useGetSupplierListCoreQuery = ({
 }) => {
   let { requestObject, pageCurrent, pageSize } = queryParams || {};
 
+  type RequestObjectType = Required<SupplierQueryParams>["requestObject"];
+  type ObjectKeysType = keyof Required<SupplierQueryParams>["requestObject"];
   if (requestObject) {
     requestObject = Object.keys(requestObject)
       .sort()
-      .reduce<SupplierQueryParams["requestObject"]>((acc, key) => {
+      .reduce<RequestObjectType>((acc, key) => {
         return {
           ...acc,
-          [key as keyof SupplierQueryParams["requestObject"]]: requestObject
-            ? requestObject[key as keyof SupplierQueryParams["requestObject"]]
+          [key as keyof RequestObjectType]: requestObject
+            ? (requestObject[key as ObjectKeysType] as (typeof requestObject)[keyof RequestObjectType])
             : undefined,
         };
-      }, requestObject);
+      }, {});
   }
 
   return useQuery({

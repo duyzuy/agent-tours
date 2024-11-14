@@ -38,13 +38,9 @@ const useManageVendor = (): UseManageVendor => {
     if (status !== Status.OK && status !== Status.QQ) {
       throw new Error("Status of vendor invalid");
     }
-    const typeListToString = typeList.reduce(
-      (acc, item, _index) => acc.concat(item, _index !== typeList.length - 1 ? "||" : ""),
-      "",
-    );
 
     const venvorPayload = {
-      typeList: typeListToString,
+      typeList: typeList,
       status: status,
       ...restData,
     };
@@ -68,13 +64,9 @@ const useManageVendor = (): UseManageVendor => {
     if (status !== Status.OK && status !== Status.QQ) {
       throw new Error("Status of vendor invalid");
     }
-    const typeListToString = typeList.reduce(
-      (acc, item, _index) => acc.concat(item, _index !== typeList.length - 1 ? "||" : ""),
-      "",
-    );
 
     const venvorPayload = {
-      typeList: typeListToString,
+      typeList: typeList,
       status: status,
       ...restData,
     };
@@ -84,6 +76,9 @@ const useManageVendor = (): UseManageVendor => {
         message.success(`Cập nhật Vendor #${variables.recId} thành công`);
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_VENDOR_LIST],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_DETAIL, variables.recId],
         });
         cb?.();
       },
@@ -114,6 +109,10 @@ const useManageVendor = (): UseManageVendor => {
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_VENDOR_LIST],
         });
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_VENDOR_DETAIL, recId],
+        });
+
         cb?.(data.result);
       },
       onError: (error) => {
@@ -129,7 +128,7 @@ const useManageVendor = (): UseManageVendor => {
           queryKey: [queryCore.GET_VENDOR_DETAIL],
         });
         queryClient.invalidateQueries({
-          queryKey: [queryCore.GET_VENDOR_LIST],
+          queryKey: [queryCore.GET_VENDOR_DETAIL, recId],
         });
         cb?.(data.result);
       },
@@ -146,7 +145,7 @@ const useManageVendor = (): UseManageVendor => {
           queryKey: [queryCore.GET_VENDOR_DETAIL],
         });
         queryClient.invalidateQueries({
-          queryKey: [queryCore.GET_VENDOR_LIST],
+          queryKey: [queryCore.GET_VENDOR_DETAIL, recId],
         });
         cb?.(data.result);
       },

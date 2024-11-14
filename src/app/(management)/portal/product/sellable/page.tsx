@@ -19,24 +19,24 @@ type TabKeys = "sellableList" | "sellableForm";
 
 const SellableListPage: React.FC = () => {
   const initTemplateQueryparams = new TemplateSellableQueryParams({ status: Status.OK }, 1, 100);
+  const [sellableQueryParams, setSellableQueryParams] = useState(new SellableQueryParams(undefined, 1, 20));
+  const [templateSellable, setTemplateSellable] = useState<ITemplateSellable>();
   const [tabKey, setTabKey] = useState<TabKeys>("sellableList");
+
   const { data: templateResponse, isLoading: isLoadingTemplate } = useGetTemplateSellableListCoreQuery({
     queryParams: initTemplateQueryparams,
     enabled: true,
   });
-  const { list: templateList } = templateResponse || {};
-
-  const [sellableQueryParams, setSellableQueryParams] = useState(new SellableQueryParams(undefined, 1, 20));
-  const [templateSellable, setTemplateSellable] = useState<ITemplateSellable>();
 
   const { data: sellableResponse, isLoading: isLoadingSellable } = useGetSellableListCoreQuery({
     queryParams: sellableQueryParams,
     enabled: !isUndefined(sellableQueryParams?.requestObject?.sellableTemplateId),
   });
 
-  const { list: sellableList, pageCurrent, pageSize, totalItems } = sellableResponse || {};
-
   const { data: productTypes, isLoading: isLoadingProductType } = useGetProductTypeListCoreQuery({ enabled: true });
+
+  const { list: templateList } = templateResponse || {};
+  const { list: sellableList, pageCurrent, pageSize, totalItems } = sellableResponse || {};
 
   const { onCreate, onApproval } = useCRUDSellable();
 
@@ -57,11 +57,6 @@ const SellableListPage: React.FC = () => {
 
     !isArray(template) && setTemplateSellable(template);
   };
-  const productTypeOption = useMemo(() => {
-    return productTypes?.reduce<{ label: string; value: string }[]>((acc, type) => {
-      return [...acc, { label: type, value: type }];
-    }, []);
-  }, [productTypes]);
 
   const onCancelCreate = () => {
     setTabKey("sellableList");
@@ -78,7 +73,7 @@ const SellableListPage: React.FC = () => {
           pageCurrent={pageCurrent}
           totalItems={totalItems}
           isLoading={isLoadingSellable}
-          onApproval={onApproval}
+          // onApproval={onApproval}
           onChangePageSellable={(page) =>
             setSellableQueryParams((prev) => ({
               ...prev,
@@ -123,7 +118,9 @@ const SellableListPage: React.FC = () => {
                         placeholder="Chọn loại sản phẩm"
                         loading={isLoadingProductType}
                         value={sellableQueryParams?.requestObject?.andType}
-                        options={productTypeOption}
+                        options={productTypes?.reduce<{ label: string; value: string }[]>((acc, type) => {
+                          return [...acc, { label: type, value: type }];
+                        }, [])}
                         onChange={(value) =>
                           setSellableQueryParams((prev) => ({
                             ...prev,

@@ -1,5 +1,6 @@
 import { BaseResponse, Status } from "../../common.interface";
-import { EStockType } from "./inventoryType.interface";
+import { EInventoryType, EStockType } from "./inventoryType.interface";
+import { EProductType } from "./productType.interface";
 
 export interface IStockTypeRs extends BaseResponse<EStockType[]> {}
 
@@ -10,13 +11,16 @@ export interface IStockQueryParams {
 }
 interface IRequestObject {
   inventoryId?: number;
-  type?: string;
+  inventoryType?: EInventoryType[];
+  productType?: EProductType[];
+  type?: EStockType;
   valid?: string;
   validTo?: string;
   start?: string;
   end?: string;
   status?: Status;
 }
+
 export class StockQueryParams {
   requestObject?: IRequestObject;
   pageCurrent?: number;
@@ -35,14 +39,14 @@ export class StockQueryParams {
 
 export interface IStock {
   recId: number;
-  type: string;
+  type: EStockType;
   code: string;
   inventoryId: number;
   inventoryType: string;
   cap: number;
   used: number;
   open: number;
-  avaiable: number;
+  available: number;
   description: string;
   validFrom: string;
   validTo: string;
@@ -76,13 +80,14 @@ export interface IStockAdjustment {
 export interface IStockListOfInventoryRs extends BaseResponse<IStock[]> {}
 export interface IStockPayload {
   inventoryId?: number;
-  type?: string; //api 1.3
+  type?: EStockType; //api 1.3
   code?: string;
   cap?: number;
   valid?: string; //ddMMMyy HH:mm (global/us locale)
   validTo?: string;
   start?: string;
   end?: string;
+  description?: string;
   fromValidTo?: string; //<<========= có truyền giá trị chỗ này trở xuống = add Serial
   everyDayofweek: string[]; //Sunday Monday Tuesday Wednesday Thursday Friday Saturday (global/us locale)
   repeatAfter?: number;

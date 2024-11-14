@@ -1,208 +1,178 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Spin, Tabs, TabsProps, Form, Row, Col, Select } from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
-import { FilterOutlined, PlusOutlined } from "@ant-design/icons";
-import { isUndefined } from "lodash";
+import { Spin, Divider, Space, Button, Popconfirm } from "antd";
+import { CheckCircleOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import PageContainer from "@/components/admin/PageContainer";
-import FormItem from "@/components/base/FormItem";
 import { useGetInventoryDetailCoreQuery } from "@/queries/core/inventory";
-import { useGetStockInventoryListCoreQuery } from "@/queries/core/stockInventory";
-import useCRUDStockInventory from "../../stock/modules/useCRUDStockInventory";
-import useMessage from "@/hooks/useMessage";
-import StockFormContainer from "../../stock/_components/StockFormContainer";
-import StockListContainer from "../../stock/_components/StockListContainer";
-import { StockQueryParams } from "@/models/management/core/stock.interface";
-import dayjs from "dayjs";
-import { Status } from "@/models/common.interface";
-import CustomRangePicker from "@/components/admin/CustomRangePicker";
+import useCRUDInventory from "../modules/useCRUDInventory";
 import { LINKS } from "@/constants/links.constant";
+import InventoryDetailContainer from "./_components/InventoryDetailContainer";
+import { formatDate } from "@/utils/date";
+import { EProductType } from "@/models/management/core/productType.interface";
+import { ContentDetailList } from "@/components/admin/ContentDetailList";
+import { Status } from "@/models/common.interface";
+import DrawerInventoryForm, { DrawerInventoryFormProps } from "../_components/DrawerInventoryForm";
+import { isUndefined } from "lodash";
+import Link from "next/link";
 
-const StockPage = ({ params }: { params: { inventoryId: number } }) => {
+const InventoryDetailPage = ({ params }: { params: { inventoryId: number } }) => {
+  const [showDrawer, setShowDrawer] = useState(false);
   const router = useRouter();
-  const message = useMessage();
+
   const { data: inventoryDetail, isLoading } = useGetInventoryDetailCoreQuery({
     recId: params.inventoryId,
     enabled: true,
   });
 
-  const [stockQueryParams, setStockFilterFormdata] = useState(new StockQueryParams(undefined, 1, 10));
+  const { onApprovalInventory, onUpdateInventory, onDeleteInventory } = useCRUDInventory();
 
-  const { data: stockResponse, isLoading: isLoadingStockList } = useGetStockInventoryListCoreQuery({
-    queryparams: {
-      ...stockQueryParams,
-      requestObject: {
-        ...stockQueryParams.requestObject,
-        inventoryId: params.inventoryId,
-      },
-    },
-    enabled: !isUndefined(inventoryDetail) && !isLoading && inventoryDetail.isStock,
-  });
-  const { list: stockList, pageSize, pageCurrent, totalItems } = stockResponse || {};
-  const { onCreate, onConfirm, onAdjustQuantity } = useCRUDStockInventory();
+  const setEditInventory = () => {
+    setShowDrawer(true);
+  };
 
-  const onChangeStatus = (value: string) => {
-    if (value === "All") {
-      setStockFilterFormdata((prev) => ({
-        ...prev,
-        status: undefined,
-      }));
-    } else {
-      setStockFilterFormdata((prev) => ({
-        ...prev,
-        status: value as Status,
-      }));
-    }
+  const handleUpdateInventory: DrawerInventoryFormProps["onSubmit"] = (action, formData) => {
+    const inventoryId = formData.recId;
+    if (isUndefined(inventoryId)) throw new Error("Missing ID Inventory.");
+    if (action === "EDIT")
+      onUpdateInventory(inventoryId, formData, () => {
+        setShowDrawer(false);
+      });
   };
-  const onChangeValidDate: RangePickerProps["onChange"] = (dates) => {
-    setStockFilterFormdata((prev) => ({
-      ...prev,
-      requestObject: {
-        ...prev.requestObject,
 
-        valid: (dates && dates[0]?.toISOString()) || undefined,
-        validTo: (dates && dates[1]?.toISOString()) || undefined,
-      },
-    }));
+  const handleDelete = (recId: number) => {
+    onDeleteInventory(recId, () => {
+      router.back();
+    });
   };
-  const onChangeUsedDate: RangePickerProps["onChange"] = (dates) => {
-    setStockFilterFormdata((prev) => ({
-      ...prev,
-      requestObject: {
-        ...prev.requestObject,
-        start: (dates && dates[0]?.toISOString()) || undefined,
-        end: (dates && dates[1]?.toISOString()) || undefined,
-      },
-    }));
-  };
-  const onCancel = useCallback(() => {}, []);
-  const tabItems: TabsProps["items"] = [
-    {
-      key: "stockList",
-      label: "Danh sách kho",
-      children: (
-        <StockListContainer
-          items={stockList || []}
-          pageSize={pageSize || 10}
-          pageCurrent={pageCurrent || 1}
-          totalItems={totalItems || 0}
-          isLoading={isLoadingStockList}
-          onConfirm={onConfirm}
-          onAdjustQuantity={onAdjustQuantity}
-          onChangeStockPage={(page) =>
-            setStockFilterFormdata((prev) => ({
-              ...prev,
-              pageCurrent: page,
-            }))
-          }
-          render={() => {
-            return (
-              <div className="stock-list-filter pt-3">
-                <Form layout="vertical">
-                  <Row gutter={12}>
-                    <Col>
-                      <FormItem>
-                        <FilterOutlined /> Lọc
-                      </FormItem>
-                    </Col>
-                    <Col span={4}>
-                      <FormItem>
-                        <Select
-                          value={stockQueryParams?.requestObject?.status ?? "All"}
-                          options={[
-                            {
-                              label: "Tất cả trạng thái",
-                              value: "All",
-                            },
-                            {
-                              label: "Đã duyệt",
-                              value: Status.OK,
-                            },
-                            {
-                              label: "Chờ duyệt",
-                              value: Status.QQ,
-                            },
-                          ]}
-                          onChange={(value) => onChangeStatus(value)}
-                        />
-                      </FormItem>
-                    </Col>
-                    <Col span={6}>
-                      <FormItem>
-                        <CustomRangePicker
-                          placeholder={["Ngày bán bắt đầu", "Ngày bán kết thúc"]}
-                          format={"DD/MM/YYYY"}
-                          value={[
-                            stockQueryParams?.requestObject?.valid
-                              ? dayjs(stockQueryParams?.requestObject?.valid)
-                              : null,
-                            stockQueryParams?.requestObject?.validTo
-                              ? dayjs(stockQueryParams?.requestObject?.validTo)
-                              : null,
-                          ]}
-                          onChange={onChangeValidDate}
-                          className="w-full"
-                        />
-                      </FormItem>
-                    </Col>
-                    <Col span={6}>
-                      <FormItem>
-                        <CustomRangePicker
-                          placeholder={["Bắt đầu ngày sử dụng", "Kết thúc ngày sử dụng"]}
-                          format={"DD/MM/YYYY"}
-                          value={[
-                            stockQueryParams?.requestObject?.start
-                              ? dayjs(stockQueryParams?.requestObject?.start)
-                              : null,
-                            stockQueryParams?.requestObject?.end ? dayjs(stockQueryParams?.requestObject?.end) : null,
-                          ]}
-                          onChange={onChangeUsedDate}
-                          className="w-full"
-                        />
-                      </FormItem>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            );
-          }}
-        />
-      ),
-    },
-    {
-      key: "createStock",
-      label: "Tạo số lượng kho",
-      children: <StockFormContainer curInventory={inventoryDetail} onSubmit={onCreate} onCancel={onCancel} />,
-      icon: <PlusOutlined />,
-    },
-  ];
 
   useEffect(() => {
-    if ((!inventoryDetail && !isLoading) || (inventoryDetail && !inventoryDetail.isStock)) {
+    if (!inventoryDetail && !isLoading) {
       router.push(LINKS.ProductInventoryList);
-    }
-    if (inventoryDetail && !inventoryDetail.isStock) {
-      message.warning(`Inventory "${inventoryDetail.name}" không quản lý Stock.`);
     }
   }, [inventoryDetail, isLoading]);
 
   if (isLoading) {
-    return <Spin size="large" />;
+    return <Spin />;
   }
-  if (!inventoryDetail || (inventoryDetail && !inventoryDetail.isStock)) {
+
+  if (!inventoryDetail) {
     return null;
   }
+
   return (
     <PageContainer
-      name={inventoryDetail.name}
-      onBack={() => router.push(LINKS.ProductInventoryList)}
+      name={`Dịch vụ - ${inventoryDetail.name}`}
+      onBack={router.back}
       modelName="Quản lý stock"
-      breadCrumItems={[{ title: "Nhóm kho", href: LINKS.ProductInventoryList }, { title: inventoryDetail.name }]}
+      breadCrumItems={[
+        { title: "Danh sách dịch vụ", href: LINKS.ProductInventoryList },
+        { title: inventoryDetail.name },
+      ]}
       hideAddButton
     >
-      <Tabs items={tabItems} />
+      <div className="flex py-2 mb-6">
+        <Space>
+          {inventoryDetail.status === Status.QQ ? (
+            <Button
+              className="!bg-emerald-100 !text-emerald-600"
+              type="text"
+              onClick={() => onApprovalInventory(inventoryDetail.recId)}
+            >
+              Duyệt
+            </Button>
+          ) : (
+            <Button
+              className="!bg-blue-100 !text-blue-600"
+              type="text"
+              icon={<EditOutlined />}
+              size="small"
+              onClick={setEditInventory}
+            >
+              Sửa
+            </Button>
+          )}
+
+          <Popconfirm
+            placement="topLeft"
+            title="Xoá"
+            description={`Bạn muốn xoá dịch vụ ${inventoryDetail.name}`}
+            okText="Xác nhận"
+            cancelText="Huỷ bỏ"
+            onConfirm={() => handleDelete(inventoryDetail.recId)}
+          >
+            <Button className="!bg-red-100 !text-red-600" type="text" icon={<DeleteOutlined />} size="small">
+              Xoá
+            </Button>
+          </Popconfirm>
+        </Space>
+      </div>
+      <ContentDetailList
+        className=""
+        items={[
+          { label: "#ID", value: inventoryDetail.recId.toString() },
+          { label: "Mã dịch vụ", value: inventoryDetail.code },
+          { label: "Tên dịch vụ", value: inventoryDetail.name },
+          { label: "Loại dịch vụ", value: inventoryDetail.type },
+          {
+            label: "Loại sản phẩm",
+            value:
+              inventoryDetail.productType === EProductType.TOUR
+                ? "Sản phẩm dịch vụ kèm tour"
+                : inventoryDetail.productType === EProductType.EXTRA
+                ? "Sản phẩm dịch vụ"
+                : inventoryDetail.productType,
+          },
+          {
+            label: "Stock",
+            value: inventoryDetail.isStock ? (
+              <CheckCircleOutlined className="!text-emerald-600" />
+            ) : (
+              <CloseCircleOutlined className="!text-red-600" />
+            ),
+          },
+          { label: "Ngày tạo", value: formatDate(inventoryDetail.sysFstUpdate) },
+          { label: "Ngày cập nhật", value: formatDate(inventoryDetail.sysLstUpdate) },
+          { label: "Người tạo", value: inventoryDetail.sysFstUser },
+          { label: "Người cập nhật", value: inventoryDetail.sysLstUser || "--" },
+          {
+            label: "Nhà cung cấp",
+            value: (
+              <>
+                <div>{inventoryDetail.supplier ? inventoryDetail.supplier.fullName : "--"}</div>
+                <Link href={`/portal/product/manage-supplier/${inventoryDetail.supplier.recId}`} className="text-xs">
+                  Chi tiết
+                </Link>
+              </>
+            ),
+          },
+        ]}
+      />
+      <Divider />
+
+      {inventoryDetail.isStock ? (
+        <div>
+          {inventoryDetail.status === Status.QQ ? (
+            "Vui lòng duyệt để tạo kho dịch vụ."
+          ) : (
+            <InventoryDetailContainer data={inventoryDetail} />
+          )}
+        </div>
+      ) : (
+        <div>Dịch vụ không có quản lý kho.</div>
+      )}
+      <DrawerInventoryForm
+        isOpen={showDrawer}
+        initialValues={inventoryDetail}
+        inventoriesType={inventoryDetail.supplier.typeList}
+        supplierId={inventoryDetail.supplier.recId}
+        productType={inventoryDetail.productType}
+        disableSupplierField={true}
+        actionType="EDIT"
+        onSubmit={handleUpdateInventory}
+        onCancel={() => setShowDrawer(false)}
+      />
     </PageContainer>
   );
 };
-export default StockPage;
+export default InventoryDetailPage;

@@ -1,11 +1,12 @@
 import { Button, Space } from "antd";
-import { LeftOutlined, PlusOutlined } from "@ant-design/icons";
+import { EditOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import classnames from "classnames";
 import styled from "styled-components";
 interface Props {
   modelName?: string;
   hideAddButton?: boolean;
-  onClickAdd?: () => any;
+  onClickAdd?: () => void;
+  onEdit?: () => void;
   title?: string;
   between?: boolean;
   className?: string;
@@ -17,6 +18,7 @@ const TitleRow: React.FC<Props> = ({
   modelName,
   hideAddButton,
   onClickAdd,
+  onEdit,
   between = false,
   className = "",
   onCanel,
@@ -36,6 +38,11 @@ const TitleRow: React.FC<Props> = ({
       {!hideAddButton && (
         <Button type="primary" size="small" ghost icon={<PlusOutlined />} onClick={onClickAdd}>
           {`Thêm ${modelName}`}
+        </Button>
+      )}
+      {onEdit && (
+        <Button type="primary" size="small" ghost icon={<EditOutlined />} onClick={onEdit}>
+          {`Sửa ${modelName}`}
         </Button>
       )}
     </Space>

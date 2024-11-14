@@ -7,8 +7,9 @@ import { StockAdjustFormData, StockConfirmFormData } from "../../modules/stock.i
 import { formatDate } from "@/utils/date";
 import { useGetStockDetailInventoryCoreQuery } from "@/queries/core/stockInventory";
 import StockConfirmationForm from "./StockConfirmationForm";
-
 import StockAdjustmentForm from "./StockAdjustmentForm";
+import classNames from "classnames";
+
 export enum EActionType {
   EDIT = "edit",
   APPROVAL = "approval",
@@ -24,7 +25,7 @@ export interface DrawerStockDetailProps {
   initialValues?: IStockListOfInventoryRs["result"][0];
   actionType?: EActionType;
   onApproval?: (formData: StockConfirmFormData) => void;
-  onAdjust?: (formData: StockAdjustFormData, cb?: () => void) => void;
+  onAdjust?: (formData: StockAdjustFormData) => void;
 }
 
 const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
@@ -58,29 +59,61 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
         },
       }}
     >
-      <div className="status py-2">
-        <span className="mr-3">Trạng thái</span>
-        <Tag
-          color={
-            (initialValues?.status === Status.QQ && "orange") ||
-            (initialValues?.status === Status.OK && "green") ||
-            "red"
-          }
-        >
-          {(initialValues?.status === Status.QQ && "Chờ duyệt") ||
-            (initialValues?.status === Status.OK && "Đã duyệt") ||
-            "Đã xoá"}
-        </Tag>
-      </div>
-
-      <StockConfirmationForm
-        initialValues={initialValues}
-        hasApproval={actionType !== EActionType.APPROVAL}
-        onSubmit={onApproval}
-      />
-
-      {actionType === EActionType.EDIT ? (
+      {initialValues?.status === Status.QQ && (
+        <StockConfirmationForm
+          initialValues={initialValues}
+          isDisabled={actionType !== EActionType.APPROVAL}
+          onSubmit={onApproval}
+        />
+      )}
+      {initialValues && initialValues?.status !== Status.QQ && (
         <>
+          <ContentDetailList
+            items={[
+              { label: "#ID", value: initialValues?.recId },
+              { label: "Loại dịch vụ", value: initialValues?.inventoryType },
+              { label: "Loại kho", value: initialValues?.type },
+              { label: "Cap", value: initialValues?.cap },
+              { label: "Khả dụng", value: initialValues?.available },
+              { label: "Đã bán", value: initialValues?.used },
+              { label: "Đang còn", value: initialValues?.open },
+              {
+                label: "Ngày mở bán",
+                value: (
+                  <span>
+                    <span className="block">{formatDate(initialValues.validFrom)}</span>
+                    <span className="block">{formatDate(initialValues.validTo)}</span>
+                  </span>
+                ),
+              },
+              {
+                label: "Ngày sử dụng",
+                value: (
+                  <span>
+                    <span className="block">{formatDate(initialValues.startDate)}</span>
+                    <span className="block">{formatDate(initialValues.endDate)}</span>
+                  </span>
+                ),
+              },
+              { label: "Mô tả", value: initialValues?.description },
+              {
+                label: "Trạng thái",
+                value: (
+                  <Tag
+                    color={
+                      (initialValues?.status === Status.XX && "orange") ||
+                      (initialValues?.status === Status.OK && "green") ||
+                      "red"
+                    }
+                  >
+                    {(initialValues?.status === Status.XX && "Đã xoá") ||
+                      (initialValues?.status === Status.OK && "Đã duyệt") ||
+                      "Đã xoá"}
+                  </Tag>
+                ),
+              },
+            ]}
+          />
           <Divider />
           <div className="stock-adjustment-wrapper">
             <StockAdjustmentForm
@@ -90,7 +123,7 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
               className="mb-6"
             />
             <div className="py-3 border-b">
-              <p className="font-semibold">Danh sách cập nhật</p>
+              <p className="font-semibold">Lịch sử điều chỉnh</p>
             </div>
             <List
               itemLayout="horizontal"
@@ -122,8 +155,41 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
             />
           </div>
         </>
-      ) : null}
+      )}
     </Drawer>
   );
 };
 export default DrawerStockDetail;
+
+const ContentDetailList: React.FC<{
+  items: { label?: string; value?: React.ReactNode | string }[];
+  className?: string;
+}> = ({ items, className = "" }) => {
+  return (
+    <div
+      className={classNames("grid lg:grid-cols-3 grid-cols-2 gap-4", {
+        [className]: className,
+      })}
+    >
+      {items.map((item, _index) => (
+        <ContentDetailItem key={_index} {...item} />
+      ))}
+    </div>
+  );
+};
+const ContentDetailItem: React.FC<{ label?: string; value?: React.ReactNode | string; className?: string }> = ({
+  label,
+  value,
+  className = "",
+}) => {
+  return (
+    <div
+      className={classNames({
+        [className]: className,
+      })}
+    >
+      <span className="block text-xs text-gray-500">{label}</span>
+      <span className="block break-words">{value}</span>
+    </div>
+  );
+};

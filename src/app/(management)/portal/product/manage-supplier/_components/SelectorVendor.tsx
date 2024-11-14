@@ -8,15 +8,16 @@ import { IVendor } from "@/models/management/vendor.interface";
 export type SelectorVendorProps = SelectProps<number, IVendor> & {
   onChange?: SelectProps<number, IVendor>["onChange"];
   value?: number;
+  enabled?: boolean;
 };
-const SelectorVendor: React.FC<SelectorVendorProps> = ({ onChange, value, ...restProps }) => {
+const SelectorVendor: React.FC<SelectorVendorProps> = ({ onChange, value, enabled = true, ...restProps }) => {
   const vendorQueryParams = new VendorQueryParams(
     { status: Status.OK, shortName: undefined, fullName: undefined },
     1,
     999,
   );
   const { data: vendorResponse, isLoading } = useGetVendorListCoreQuery({
-    enabled: true,
+    enabled: enabled,
     queryParams: vendorQueryParams,
   });
 
@@ -24,6 +25,7 @@ const SelectorVendor: React.FC<SelectorVendorProps> = ({ onChange, value, ...res
     <Select<number, IVendor>
       placeholder="Chọn vendor"
       loading={isLoading}
+      allowClear
       value={value}
       fieldNames={{ label: "fullName", value: "recId" }}
       options={vendorResponse?.list || []}
