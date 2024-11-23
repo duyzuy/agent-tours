@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAgAuth";
 import { LINKS } from "@/constants/links.constant";
@@ -9,35 +9,30 @@ import { useLocalUserGetProfileQuery } from "@/queries/localUser";
 import { LocalUserProfileContext } from "@/context/localUserProfileContext";
 
 interface Props {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 const AdminAuthorized: React.FC<Props> = ({ children }) => {
-    const router = useRouter();
+  const router = useRouter();
 
-    const { clearToken, setLocalUserName } = useAuth();
-    const [isAuthorized, setAuthorize] = useState(false);
+  const { clearToken, setLocalUserName } = useAuth();
 
-    const { data: userProfile, isLoading } = useLocalUserGetProfileQuery();
+  const { data: userProfile, isLoading } = useLocalUserGetProfileQuery();
 
-    useEffect(() => {
-        if (!userProfile && !isLoading) {
-            setAuthorize(() => false);
-            clearToken();
-            router.push(LINKS.PortalLogin);
-        } else {
-            setAuthorize(() => true);
-            setLocalUserName(userProfile?.username || "");
-        }
-    }, [userProfile, isLoading]);
+  console.log(userProfile);
+  useEffect(() => {
+    if (!userProfile && !isLoading) {
+      clearToken();
+      router.push(LINKS.PortalLogin);
+    } else {
+      setLocalUserName(userProfile?.username);
+    }
+  }, [userProfile, isLoading]);
 
-    return (
-        <React.Fragment>
-            {isAuthorized ? (
-                <LocalUserProfileContext.Provider value={userProfile}>
-                    <PermissionWrapper>{children}</PermissionWrapper>
-                </LocalUserProfileContext.Provider>
-            ) : null}
-        </React.Fragment>
-    );
+  if (!userProfile) return null;
+  return (
+    <LocalUserProfileContext.Provider value={userProfile}>
+      <PermissionWrapper>{children}</PermissionWrapper>
+    </LocalUserProfileContext.Provider>
+  );
 };
 export default AdminAuthorized;

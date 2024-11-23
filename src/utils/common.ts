@@ -72,5 +72,5 @@ export const getPassengerType = (type?: PassengerType) => {
   if (type === PassengerType.INFANT) {
     return "Em bé";
   }
-  return null;
+  return "Unknown";
 };

@@ -1,19 +1,20 @@
-import { BaseResponse } from "@/models/common.interface";
 import { coreApi } from "../coreApi";
-import { BookingOrderListQueryParams, ReservationRs } from "@/models/management/booking/reservation.interface";
+import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { IOrderListRs, IOrderDetailRs } from "@/models/management/booking/order.interface";
 import {
   IBookingOrderCustomerPayload,
-  IBookingOrderPassengersPayload,
+  IOrderPassengerEditPayload,
   IBookingOrderCancelPayload,
   IBookingOrderInvoiceInfoPayload,
 } from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/(management)/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { IRuleAndPolicy } from "@/models/ruleAndPolicy.interface";
-import { FormOfPaymmentQueryParams, IFormOfPaymentListRs } from "@/models/management/core/formOfPayment.interface";
-// import { IBookingSSRPayload } from "@/app/portal/manage-booking/[orderId]/addon-service/modules/bookingSSR.interface";
-import { IEditOrderSSRPayload } from "@/app/(management)/portal/manage-booking/[orderId]/modules/manageBooking.interface";
-import { RoomingPayload, RoomingListResponse } from "@/models/management/booking/rooming.interface";
+import {
+  AddNewSSRByPaxPayload,
+  AddNewSSRNoPaxPayload,
+  DeleteSSRPayload,
+} from "@/models/management/booking/order.interface";
+import { BookingOrderListQueryParams } from "@/models/management/booking/order.interface";
 
 export const manageBookingAPIs = {
   getOrderList: async (queryParams: BookingOrderListQueryParams, localRuleAndPolicies?: IRuleAndPolicy[]) => {
@@ -24,6 +25,7 @@ export const manageBookingAPIs = {
       },
       pageCurrent: queryParams.pageCurrent,
       pageSize: queryParams.pageSize,
+      orderBy: queryParams.orderBy,
     });
   },
   getOrderDetail: async (reservationId?: number, localRuleAndPolicies?: IRuleAndPolicy[]) => {
@@ -35,36 +37,36 @@ export const manageBookingAPIs = {
     });
   },
   updateCustomer: async (payload?: IBookingOrderCustomerPayload) => {
-    return await coreApi.post<any>("core/BookingOrder_EditContactInfo", {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_EditContactInfo", {
       requestObject: {
         ...payload,
       },
     });
   },
   updateInvoiceInfo: async (payload?: IBookingOrderInvoiceInfoPayload) => {
-    return await coreApi.post<any>("core/BookingOrder_EditInvoiceInfo", {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_EditInvoiceInfo", {
       requestObject: {
         ...payload,
       },
     });
   },
 
-  updatePassengers: async (payload?: IBookingOrderPassengersPayload) => {
-    return await coreApi.post<any>("core/BookingOrder_EditBookingPaxInfo", {
+  updatePassengers: async (payload?: IOrderPassengerEditPayload) => {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_EditBookingPaxInfo", {
       requestObject: {
         ...payload,
       },
     });
   },
   splitBooking: async (payload?: ISplitBookingPayload) => {
-    return await coreApi.post<ReservationRs>("core/BookingOrder_SplitInTwoOrder", {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_SplitInTwoOrder", {
       requestObject: {
         ...payload,
       },
     });
   },
   splitBookingAndCancel: async (payload?: ISplitBookingPayload) => {
-    return await coreApi.post<ReservationRs>("core/BookingOrder_SplitAndCancel", {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_SplitAndCancel", {
       requestObject: {
         ...payload,
       },
@@ -77,17 +79,29 @@ export const manageBookingAPIs = {
       },
     });
   },
-  getFOPListByOrderId: async (queryParams?: FormOfPaymmentQueryParams) => {
-    return await coreApi.post<IFormOfPaymentListRs>("core/BookingOrder_Fop_List", {
+  addComment: async (payload?: { orderId: number; comment: string }) => {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_AddComment", {
       requestObject: {
-        ...queryParams?.requestObject,
+        ...payload,
       },
-      pageSize: queryParams?.pageSize,
-      pageCurrent: queryParams?.pageCurrent,
     });
   },
-  updateSSRByPassenger: async (payload?: IEditOrderSSRPayload) => {
-    return await coreApi.post<ReservationRs>("core/BookingOrder_EditBookingDetailsSSR", {
+  addNewSSRNoPax: async (payload?: AddNewSSRNoPaxPayload) => {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_EditBooking_AddNewSSR", {
+      requestObject: {
+        ...payload,
+      },
+    });
+  },
+  addNewSSRByPax: async (payload?: AddNewSSRByPaxPayload) => {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_EditBooking_AddNewSSRWithPax", {
+      requestObject: {
+        ...payload,
+      },
+    });
+  },
+  deleteSSR: async (payload?: DeleteSSRPayload) => {
+    return await coreApi.post<IOrderDetailRs>("core/BookingOrder_DeleteSSR", {
       requestObject: {
         ...payload,
       },

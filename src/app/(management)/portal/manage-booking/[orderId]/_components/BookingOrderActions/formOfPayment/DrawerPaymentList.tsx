@@ -1,13 +1,12 @@
 import React from "react";
 import { Drawer } from "antd";
-
 import { useFormOfPayment } from "../../../modules/useFormOfPayment";
 import FOPList, { FOPListProps } from "../FOPList";
-import { FOP_TYPE, IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
-import { useGetFormOfPaymentListByOrderIdCoreQuery } from "@/queries/core/bookingOrder";
+import { EFopType } from "@/models/management/core/formOfPayment.interface";
+
+import { useGetFormOfPaymentListCoreQuery } from "@/queries/core/formOfPayment";
 import { FormOfPaymmentQueryParams } from "@/models/management/core/formOfPayment.interface";
 import { isUndefined } from "lodash";
-import { FOPFormData } from "../../../modules/formOfPayment.interface";
 import useMessage from "@/hooks/useMessage";
 
 export interface DrawerPaymentListProps {
@@ -16,7 +15,7 @@ export interface DrawerPaymentListProps {
   totalPaid?: number;
   isOpen?: boolean;
   onClose?: () => void;
-  formOfPaymentType: FOPFormData["type"];
+  formOfPaymentType?: EFopType[];
 }
 
 const DrawerPaymentList: React.FC<DrawerPaymentListProps> = ({
@@ -28,23 +27,24 @@ const DrawerPaymentList: React.FC<DrawerPaymentListProps> = ({
   formOfPaymentType,
 }) => {
   const queryParams = new FormOfPaymmentQueryParams(
-    { orderId: orderId, type: formOfPaymentType },
+    { orderId: orderId, types: formOfPaymentType },
     undefined,
     undefined,
   );
-  const { data: fopList, isLoading } = useGetFormOfPaymentListByOrderIdCoreQuery({
+  const { data: fopList, isLoading } = useGetFormOfPaymentListCoreQuery({
     queryParams: queryParams,
     enabled: !isUndefined(orderId) && !isUndefined(formOfPaymentType) && isOpen,
   });
+  // const { data: fopList, isLoading } = useGetFormOfPaymentListByOrderIdCoreQuery({
+  //   queryParams: queryParams,
+  //   enabled: !isUndefined(orderId) && !isUndefined(formOfPaymentType) && isOpen,
+  // });
   const message = useMessage();
   const { onApproval, onDelete } = useFormOfPayment();
 
   const handleApproval: FOPListProps["onApproval"] = (recId, record) => {
-    const { amount } = record;
-
-    console.log(record, totalPaid, totalAmount);
-
-    if (formOfPaymentType === FOP_TYPE.REFUND) {
+    const { amount, type } = record;
+    if (type === EFopType.REFUND) {
       if (amount > totalPaid) {
         message.error("Tổng tiền hoàn không vượt quá số tiền đã thanh toán.");
         return;
@@ -55,14 +55,8 @@ const DrawerPaymentList: React.FC<DrawerPaymentListProps> = ({
 
   return (
     <Drawer
-      title={
-        (formOfPaymentType === FOP_TYPE.PAYMENT && "Lịch sử thanh toán") ||
-        (formOfPaymentType === FOP_TYPE.REFUND && "Lịch sử hoàn tiền") ||
-        (formOfPaymentType === FOP_TYPE.CHARGE && "Danh sách phí") ||
-        (formOfPaymentType === FOP_TYPE.DISCOUNT && "Danh sách giảm giá") ||
-        "--"
-      }
-      width={750}
+      title="Lịch sử giao dịch"
+      width={850}
       onClose={onClose}
       destroyOnClose={true}
       open={isOpen}

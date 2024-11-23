@@ -15,16 +15,12 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
     title: "Mã kho",
     dataIndex: "code",
     key: "code",
-    width: 240,
+    width: 180,
     render: (_, { description, code, type }) => {
       return (
         <>
-          <div className="mb-2">
-            <p className="text-primary-default">{code}</p>
-            <p className="text-xs text-gray-500">{type}</p>
-          </div>
-          <p className="text-xs text-gray-500">Mô tả:</p>
-          <p>{description || "--"}</p>
+          <p className="text-primary-default">{code}</p>
+          <p className="text-xs text-gray-500">{type}</p>
         </>
       );
     },
@@ -39,15 +35,15 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
         <div className="flex flex-col">
           <div>
             <span className="inline-block w-20">Khả dụng</span>
-            <span className="text-red-600 text-[16px]">{available}</span>
-          </div>
-          <div>
-            <span className="inline-block w-20">Đã bán</span>
-            <span className="text-emerald-600 text-[16px]">{used}</span>
+            <span className="">{available}</span>
           </div>
           <div>
             <span className="inline-block w-20">Đang còn</span>
-            <span className="text-[16px]">{open}</span>
+            <span className=" text-emerald-600">{open}</span>
+          </div>
+          <div>
+            <span className="inline-block w-20">Đã bán</span>
+            <span className="text-red-600 ">{used}</span>
           </div>
         </div>
       );
@@ -60,10 +56,16 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
     width: 180,
     render: (_, record) => {
       return (
-        <span>
-          <span className="block">{formatDate(record.validFrom)}</span>
-          <span className="block">{formatDate(record.validTo)}</span>
-        </span>
+        <>
+          <div className="flex items-center">
+            <span className="w-8 inline-block text-red-500 text-xs">Từ</span>
+            {formatDate(record.validFrom)}
+          </div>
+          <div className="flex items-center">
+            <span className="w-8 inline-block text-amber-500 text-xs">Đến</span>
+            {formatDate(record.validTo)}
+          </div>
+        </>
       );
     },
   },
@@ -74,45 +76,27 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
     width: 180,
     render: (_, record) => {
       return (
-        <span>
-          <span className="block">{formatDate(record.startDate)}</span>
-          <span className="block">{formatDate(record.endDate)}</span>
-        </span>
+        <>
+          <div className="flex items-center">
+            <span className="w-8 inline-block text-red-500 text-xs">Từ</span>
+            {formatDate(record.startDate)}
+          </div>
+          <div className="flex items-center">
+            <span className="w-8 inline-block text-amber-500 text-xs">Đến</span>
+            {formatDate(record.endDate)}
+          </div>
+        </>
       );
     },
   },
 
   {
-    title: "Ngày tạo",
-    dataIndex: "sysFstUpdate",
-    key: "sysFstUpdate",
-    width: 150,
-    render: (_, record) => {
-      return formatDate(record.sysFstUpdate);
-    },
-  },
-  {
-    title: "Ngày cập nhật",
-    dataIndex: "sysFstUpdate",
-    key: "sysFstUpdate",
-    width: 150,
-    render: (_, { sysLstUpdate }) => {
-      return formatDate(sysLstUpdate);
-    },
-  },
-  {
-    title: "Người tạo",
-    dataIndex: "sysFstUser",
-    key: "user",
-    width: 150,
-  },
-  {
-    title: "Người cập nhật",
-    dataIndex: "sysLstUser",
-    key: "sysLstUser",
-    width: 150,
-    render: (_, { sysLstUser }) => {
-      return sysLstUser || "--";
+    title: "Mô tả",
+    dataIndex: "description",
+    key: "description",
+    width: 240,
+    render: (_, { description }) => {
+      return <p>{description || "--"}</p>;
     },
   },
   {
@@ -122,7 +106,10 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
     width: 120,
     render: (_, record) => {
       return (
-        <Tag color={(record.status === Status.OK && "green") || (record.status === Status.QQ && "orange") || "red"}>
+        <Tag
+          color={(record.status === Status.OK && "green") || (record.status === Status.QQ && "orange") || "red"}
+          bordered={false}
+        >
           {(record.status === Status.OK && "Đang kích hoạt") ||
             (record.status === Status.XX && "Đã xoá") ||
             (record.status === Status.QQ && "Chờ duyệt") ||
@@ -131,4 +118,37 @@ export const stockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]> = [
       );
     },
   },
+  {
+    title: "Ngày tạo",
+    dataIndex: "sysFstUpdate",
+    key: "sysFstUpdate",
+    width: 150,
+    render: (_, record) => {
+      return formatDate(record.sysFstUpdate);
+    },
+  },
+  // {
+  //   title: "Ngày cập nhật",
+  //   dataIndex: "sysFstUpdate",
+  //   key: "sysFstUpdate",
+  //   width: 150,
+  //   render: (_, { sysLstUpdate }) => {
+  //     return formatDate(sysLstUpdate);
+  //   },
+  // },
+  {
+    title: "Người tạo",
+    dataIndex: "sysFstUser",
+    key: "user",
+    width: 150,
+  },
+  // {
+  //   title: "Người cập nhật",
+  //   dataIndex: "sysLstUser",
+  //   key: "sysLstUser",
+  //   width: 150,
+  //   render: (_, { sysLstUser }) => {
+  //     return sysLstUser || "--";
+  //   },
+  // },
 ];

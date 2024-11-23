@@ -30,7 +30,6 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
   const deferedQuerySearch = useDeferredValue(querySearch);
   const initFormData = new OperationFormData(undefined, undefined, undefined, undefined);
 
-  console.log(deferedQuerySearch);
   const { setValue, getValues, handleSubmit, control, watch } = useForm<OperationFormData>({
     resolver: yupResolver(operationSchema),
     defaultValues: { ...initFormData },

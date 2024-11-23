@@ -1,11 +1,10 @@
 import React, { memo } from "react";
 import { IProductTour } from "@/models/management/booking/product.interface";
 import { formatDate } from "@/utils/date";
-import { EConfigChannel, EConfigClass, productTourClassChannels } from "@/constants/channel.constant";
 import { moneyFormatVND } from "@/utils/helper";
 import { CheckCircleOutlined, CheckOutlined, SwapOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import { Button, Space, Tag } from "antd";
+import { Button } from "antd";
 import classNames from "classnames";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { IPromotion } from "@/models/management/core/promotion.interface";
@@ -92,15 +91,14 @@ export const TourBoxItem = ({
             {inventories.map((item) => (
               <div className="detail-item flex mb-1 items-start" key={item.recId}>
                 <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
-                <div>{`${item.name} - ${item.code}`}</div>
+                <div>{item.name}</div>
               </div>
             ))}
             {stocks.map((item) => (
               <div className="detail-item flex mb-1 items-start" key={item.recId}>
                 <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
                 <div>
-                  <span>{`${item.invenroty.name} - ${item.invenroty.code}`}</span>
-                  <div>{item.code}</div>
+                  <span>{`${item.invenroty.name} - ${item.code}`}</span>
                 </div>
               </div>
             ))}

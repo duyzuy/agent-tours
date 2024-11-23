@@ -1,34 +1,32 @@
-import {
-  ILocalUserPayload,
-  ILocalUser,
-  ILocalUserChangePasswordPayLoad,
-} from "@/models/management/localUser.interface";
-import { localUserAPIs } from "@/services/management/localUser.service";
-import { localAuthAPIs } from "@/services/management/localAuth.service";
+import { LocalUserNewPasswordPayload } from "@/models/management/localUser.interface";
+import { ILocalUserPayload } from "@/models/management/localUser.interface";
+import { localUserAPIs } from "@/services/management/localUser";
+import { localAuthAPIs } from "@/services/management/localAuth";
 import { ILocalUserProfileRs, ILocalUserProfilePayload } from "@/models/management/localAuth.interface";
 import { useCustomMutation } from "../useCustomMutation";
 
 export const useCreateLocalUserMutation = () => {
-  return useCustomMutation<ILocalUser, ILocalUserPayload>({
-    mutationFn: (payload) => localUserAPIs.createLocalUser(payload),
+  return useCustomMutation({
+    mutationFn: (payload: ILocalUserPayload) => localUserAPIs.create(payload),
   });
 };
 
-export const useUpdateLocalUserMutation = (recordId: number) => {
-  return useCustomMutation<ILocalUser, ILocalUserPayload>({
-    mutationFn: (payload) => localUserAPIs.updateLocalUser(recordId, payload),
+export const useUpdateLocalUserMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: { recId: number } & ILocalUserPayload) => localUserAPIs.update(payload.recId, payload),
   });
 };
 
 export const useUpdateStatusLocalUserMutation = () => {
-  return useCustomMutation<ILocalUser, { recordId: number; status: ILocalUserPayload["status"] }>({
-    mutationFn: (payload) => localUserAPIs.updateStatusLocalUser(payload.recordId, payload.status),
+  return useCustomMutation({
+    mutationFn: (payload: { recordId: number; status: ILocalUserPayload["status"] }) =>
+      localUserAPIs.updateStatus(payload.recordId, payload.status),
   });
 };
 
 export const useLocalUserChangePasswordMutation = () => {
-  return useCustomMutation<ILocalUser, ILocalUserChangePasswordPayLoad>({
-    mutationFn: (payload) => localUserAPIs.changePassword(payload),
+  return useCustomMutation({
+    mutationFn: (payload: LocalUserNewPasswordPayload) => localUserAPIs.setNewPassword(payload),
   });
 };
 

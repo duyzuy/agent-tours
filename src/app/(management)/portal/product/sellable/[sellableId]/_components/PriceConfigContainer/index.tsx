@@ -250,19 +250,9 @@ const PriceConfigContainer: React.FC<PriceConfigContainerProps> = ({
 
   return (
     <Form form={form} component={false}>
-      <div className="mb-6">
-        <Space>
-          <Button onClick={onCancelEditingRow} disabled={isDisableSubmit} className="w-[120px]">
-            Huỷ bỏ
-          </Button>
-          <Button onClick={handleSubmitFormData} disabled={isDisableSubmit} type="primary" className="w-[120px]">
-            Lưu
-          </Button>
-        </Space>
-      </div>
       <Table
         size="small"
-        scroll={{ x: 1600 }}
+        scroll={{ x: 1600, y: 800 }}
         dataSource={data}
         columns={mergedColumns as PriceConfigColumnTypes}
         rowKey={(record) => record.index}
@@ -275,6 +265,20 @@ const PriceConfigContainer: React.FC<PriceConfigContainerProps> = ({
           pageSize: 30,
           hideOnSinglePage: true,
           current: 1,
+        }}
+        footer={() => {
+          return (
+            <div className="px-4 flex items-center justify-end">
+              <Space>
+                <Button onClick={onCancelEditingRow} disabled={isDisableSubmit} className="w-[120px]">
+                  Huỷ bỏ
+                </Button>
+                <Button onClick={handleSubmitFormData} disabled={isDisableSubmit} type="primary" className="w-[120px]">
+                  Lưu
+                </Button>
+              </Space>
+            </div>
+          );
         }}
       />
     </Form>

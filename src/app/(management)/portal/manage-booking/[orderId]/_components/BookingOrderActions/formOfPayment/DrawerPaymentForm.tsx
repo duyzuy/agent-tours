@@ -3,7 +3,7 @@ import { Drawer } from "antd";
 
 import { useFormOfPayment } from "../../../modules/useFormOfPayment";
 
-import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
+import { EFopType } from "@/models/management/core/formOfPayment.interface";
 
 import { FOPFormData } from "../../../modules/formOfPayment.interface";
 import FOPForm from "../FOPForm";
@@ -20,10 +20,10 @@ const DrawerPaymentForm: React.FC<DrawerPaymentFormProps> = ({ isOpen, onClose, 
   return (
     <Drawer
       title={
-        (formOfPaymentType === FOP_TYPE.PAYMENT && "Thanh toán") ||
-        (formOfPaymentType === FOP_TYPE.REFUND && "Hoàn tiền") ||
-        (formOfPaymentType === FOP_TYPE.DISCOUNT && "Giảm giá") ||
-        (formOfPaymentType === FOP_TYPE.CHARGE && "Thêm phí") ||
+        (formOfPaymentType === EFopType.PAYMENT && "Thanh toán") ||
+        (formOfPaymentType === EFopType.REFUND && "Hoàn tiền") ||
+        (formOfPaymentType === EFopType.DISCOUNT && "Giảm giá") ||
+        (formOfPaymentType === EFopType.CHARGE && "Thêm phí") ||
         "--"
       }
       width={750}

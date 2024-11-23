@@ -5,7 +5,7 @@ import { Status } from "@/models/common.interface";
 import { moneyFormatVND } from "@/utils/helper";
 import { CheckCircleOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Space, Tag, Modal, Col, Row } from "antd";
-import { ColumnsType } from "antd/es/table";
+import Table, { ColumnsType } from "antd/es/table";
 import { formatDate } from "@/utils/date";
 import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
 import useMessage from "@/hooks/useMessage";
@@ -33,7 +33,7 @@ const columns: ColumnsType<IFormOfPayment> = [
     title: "Số tiền",
     key: "amount",
     dataIndex: "amount",
-    render: (amount, record) => {
+    render: (_, { amount, type }) => {
       return moneyFormatVND(amount);
     },
     width: 150,
@@ -54,11 +54,16 @@ const columns: ColumnsType<IFormOfPayment> = [
         (status === Status.QQ && "orange") ||
         (status === Status.XX && "red") ||
         "default";
-      return <Tag color={tagColor}>{statusName}</Tag>;
+      return (
+        <Tag color={tagColor} bordered={false}>
+          {statusName}
+        </Tag>
+      );
     },
     width: 100,
   },
 ];
+
 export interface FOPListProps {
   items: IOrderDetail["fops"];
   onApproval: (recId: number, data: IFormOfPayment) => void;
@@ -102,11 +107,7 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval, onDelete, totalAmo
             <Button
               type="text"
               shape="circle"
-              icon={
-                <span className="text-blue-500">
-                  <EyeOutlined />
-                </span>
-              }
+              icon={<EyeOutlined className="!text-blue-600" />}
               onClick={() => onViewDetail(record)}
             />
             {record.status === Status.QQ && (
@@ -114,11 +115,7 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval, onDelete, totalAmo
                 type="text"
                 shape="circle"
                 onClick={() => onDelete(record.recId)}
-                icon={
-                  <span className="text-red-600">
-                    <DeleteOutlined />
-                  </span>
-                }
+                icon={<DeleteOutlined className="!text-red-600" />}
               />
             )}
             {record.status !== Status.OK && (
@@ -126,11 +123,7 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval, onDelete, totalAmo
                 type="text"
                 shape="circle"
                 onClick={() => onApproval(record.recId, record)}
-                icon={
-                  <span className="text-green-600">
-                    <CheckCircleOutlined />
-                  </span>
-                }
+                icon={<CheckCircleOutlined className="!text-green-600" />}
               />
             )}
           </Space>
@@ -141,7 +134,7 @@ const FOPList: React.FC<FOPListProps> = ({ items, onApproval, onDelete, totalAmo
 
   return (
     <>
-      <CustomTable dataSource={items} rowKey={"recId"} columns={mergeColumns} size="small" loading={loading} />
+      <Table dataSource={items} rowKey={"recId"} columns={mergeColumns} loading={loading} />
       <ModalDetailFOP
         isShowModal={detailRecord.isShow}
         data={detailRecord.data}

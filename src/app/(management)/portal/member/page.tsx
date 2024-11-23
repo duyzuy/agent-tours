@@ -2,23 +2,15 @@
 import React, { useMemo, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetLocalUserList } from "@/queries/localUser";
-import {
-    ILocalUserPayload,
-    ILocalUserList,
-} from "@/models/management/localUser.interface";
 
 import TableListPage from "@/components/admin/TableListPage";
 
 import { useGetRoles } from "@/queries/role";
 
 const MemberPage: React.FC = () => {
-    return (
-        <PageContainer
-            name="Danh sách thành viên đăng ký"
-            onClick={() => {}}
-            modelName="Thành viên"
-        >
-            {/* <TableListPage<ILocalUserList["result"][0]>
+  return (
+    <PageContainer name="Danh sách thành viên đăng ký" onClick={() => {}} modelName="Thành viên">
+      {/* <TableListPage<ILocalUserList["result"][0]>
                 scroll={{ x: 1200 }}
                 modelName="Tài khoản"
                 columns={userColumns}
@@ -29,7 +21,7 @@ const MemberPage: React.FC = () => {
                 }
                 onDelete={(record) => onDeleteUser(record.recId)}
             /> */}
-            {/* <DrawlerUserForm
+      {/* <DrawlerUserForm
                 isOpen={isOpenDrawler}
                 onCancel={onCancel}
                 actionType={actionType}
@@ -40,7 +32,7 @@ const MemberPage: React.FC = () => {
                     actionType === EActionType.CREATE ? errors : updateErrors
                 }
             /> */}
-        </PageContainer>
-    );
+    </PageContainer>
+  );
 };
 export default MemberPage;

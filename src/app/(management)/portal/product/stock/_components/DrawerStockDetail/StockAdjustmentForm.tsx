@@ -51,9 +51,7 @@ const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
         [className]: className,
       })}
     >
-      <div className="mb-3">
-        <p className="font-bold">Cập nhật số lượng kho sản phẩm</p>
-      </div>
+      <h3 className="font-semibold text-[16px] mb-6">Cập nhật số lượng kho sản phẩm</h3>
       <Form layout="vertical">
         <FormItem
           label="Số lượng cần thêm/giảm"

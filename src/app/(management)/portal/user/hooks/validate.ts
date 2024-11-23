@@ -1,12 +1,9 @@
 import { object, string, ObjectSchema, boolean, ref } from "yup";
 
-import {
-  ILocalUserPayload,
-  ELocalUserType,
-  ILocalUserChangePasswordFormData,
-} from "@/models/management/localUser.interface";
+import { ELocalUserType } from "@/models/management/localUser.interface";
+import { LocalUserFormData, LocalUserChangePasswordFormData } from "./localUser.interface";
 
-type TLocalUserObjectSchema = ILocalUserPayload & {
+type TLocalUserObjectSchema = LocalUserFormData & {
   isRequirePassword?: boolean;
   isCreate?: boolean;
 };
@@ -51,44 +48,27 @@ export const localUserSchema: ObjectSchema<TLocalUserObjectSchema> = object({
   }),
   infoEmail: string().email("Email không chính xác"),
   mainRole: string().required("Quyền của tài khoản không bỏ trống."),
-  mainRoleName: string().default(""),
-  descriptions: string().default(""),
+  mainRoleName: string(),
+  descriptions: string(),
   infoPhoneNumber: string()
-    .nullable()
     .transform((v, o) => (o === "" ? null : v))
     .min(10, "Số điện thoại tối thiểu 10 số.")
     .max(11, "Số điện thoại không quá 11 số."),
 
-  infoCompanyName: string().default(""),
-  infoAddress: string().default(""),
-  infoBanking: string().default(""),
-  infoTaxcode: string().default(""),
-  infoSpecialNote: string().default(""),
-  infoPosition: string().default(""),
-  infoLegalRepresentative: string().default(""),
+  infoCompanyName: string(),
+  infoAddress: string(),
+  infoBanking: string(),
+  infoTaxcode: string(),
+  infoSpecialNote: string(),
+  infoPosition: string(),
+  infoLegalRepresentative: string(),
   status: string().required().oneOf(["OK", "XX", "OX"]).default("OK"),
 });
 
-export const localUserChangePasswordSchema: ObjectSchema<ILocalUserChangePasswordFormData> = object({
+export const localUserChangePasswordSchema: ObjectSchema<LocalUserChangePasswordFormData> = object({
   username: string().required("Tên tài khoản không bỏ trống."),
   newPassword: string().required("Mật khẩu không để trống.").min(8, "Mật khẩu ít nhất 8 ký tự."),
   confirmPassword: string()
     .required("Vui lòng xác nhận lại mật khẩu.")
     .oneOf([ref("newPassword")], "Mật khẩu không khớp."),
 });
-
-// export const registerSchema = object({
-//     first_name: string()
-//         .required("Tên đệm và tên không được bỏ trống.")
-//         .min(2, "Tên đệm và tên tối thiểu 2 ký tự"),
-//     last_name: string().required("Họ không được bỏ trống"),
-//     email: string()
-//         .required("Email không được bỏ trống")
-//         .email("Email không chính xác"),
-//     password: string()
-//         .required("Mật khẩu không được bỏ trống.")
-//         .min(8, "Mật khẩu tối thiểu 8 ký tự."),
-//     passwordConfirm: string()
-//         .required("Vui lòng xác nhận lại mật khẩu.")
-//         .oneOf([ref("password")], "Mật khẩu không khớp."),
-// });

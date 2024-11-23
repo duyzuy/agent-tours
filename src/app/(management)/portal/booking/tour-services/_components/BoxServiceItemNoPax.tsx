@@ -49,7 +49,7 @@ const BoxServiceItemNoPax: React.FC<BoxServiceItemNoPaxProps> = ({
               </div>
               <div>
                 <span className="text-xs text-gray-500 block">Hạng</span>
-                <span className="block">{configItem.channel}</span>
+                <span className="block">{configItem.class}</span>
               </div>
               <div>
                 <span className="text-xs text-gray-500 block">Số lượng còn</span>

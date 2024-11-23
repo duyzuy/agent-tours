@@ -35,7 +35,7 @@ const SellableCodeListSelector2: React.FC<SellableCodeListSelectorProps> = ({
   return (
     <>
       <div className="list">
-        {data?.map(({ status, isOperationCodeCreated, code, recId }) => (
+        {data?.map(({ status, isOperationCodeCreated, type, code, recId }) => (
           <div className="sellable-code-item flex items-center justify-between border p-3 mb-2 rounded-md" key={recId}>
             <div>
               <span className="font-semibold">{code}</span>
@@ -52,7 +52,7 @@ const SellableCodeListSelector2: React.FC<SellableCodeListSelectorProps> = ({
                   // icon={value === code ? <MinusSquareOutlined /> : <PlusSquareOutlined />}
                   className="!text-emerald-600"
                   size="small"
-                  onClick={() => handleChangeSelect(code, { status, isOperationCodeCreated, code, recId })}
+                  onClick={() => handleChangeSelect(code, { status, type, isOperationCodeCreated, code, recId })}
                 >
                   {value === code ? "Đang chọn" : "Chọn"}
                 </Button>

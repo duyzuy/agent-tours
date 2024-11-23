@@ -2,6 +2,6 @@ import { useContext } from "react";
 import { LocalUserProfileContext } from "@/context/localUserProfileContext";
 
 const useLocalUserProfile = () => {
-    return useContext(LocalUserProfileContext);
+  return useContext(LocalUserProfileContext);
 };
 export default useLocalUserProfile;

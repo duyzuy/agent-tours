@@ -1,45 +1,38 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-    GET_LOCAL_ROLE_GROUPS,
-    GET_LOCAL_ROLE,
-    GET_LOCAL_ROLE_PERMISSION,
-    GET_LOCAL_PERMISSION,
-} from "./var";
-import { roleAndPermissionAPIs } from "@/services/management/roles.service";
-import { IRolesPermissionsRs } from "@/models/management/role.interface";
+import { GET_LOCAL_ROLE, GET_LOCAL_ROLE_PERMISSION, GET_LOCAL_PERMISSION } from "./var";
+import { roleAndPermissionAPIs } from "@/services/management/roles";
+
 import { getAgToken } from "@/utils/common";
+import { isUndefined } from "lodash";
 
-export const useGetPermissions = () => {
-    const token = getAgToken() || "";
-    return useQuery<IRolesPermissionsRs, any>({
-        queryKey: [GET_LOCAL_PERMISSION],
-        queryFn: () => roleAndPermissionAPIs.getPermissions(token),
-        enabled: Boolean(token),
-    });
+export const useGetPermissionsQuery = (options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: [GET_LOCAL_PERMISSION],
+    queryFn: () => roleAndPermissionAPIs.getPermissions(),
+    select: (data) => {
+      return data.result;
+    },
+    enabled: isUndefined(options) || isUndefined(options?.enabled) ? true : options.enabled,
+  });
 };
 
-export const useGetRoles = () => {
-    const token = getAgToken() || "";
-    return useQuery<IRolesPermissionsRs, any>({
-        queryKey: [GET_LOCAL_ROLE],
-        queryFn: () => roleAndPermissionAPIs.getRoles(token),
-        enabled: Boolean(token),
-    });
+export const useGetRoles = (options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: [GET_LOCAL_ROLE],
+    queryFn: () => roleAndPermissionAPIs.getRoles(),
+    select: (data) => {
+      return data.result;
+    },
+    enabled: isUndefined(options) || isUndefined(options?.enabled) ? true : options.enabled,
+  });
 };
-export const useGetRolePermission = () => {
-    const token = getAgToken() || "";
-    return useQuery<IRolesPermissionsRs, any>({
-        queryKey: [GET_LOCAL_ROLE_PERMISSION],
-        queryFn: () => roleAndPermissionAPIs.getRolePermission(token),
-        enabled: Boolean(token),
-    });
+export const useGetRolePermission = (options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: [GET_LOCAL_ROLE_PERMISSION],
+    queryFn: () => roleAndPermissionAPIs.getRolePermission(),
+    select: (data) => {
+      return data.result;
+    },
+    enabled: isUndefined(options) || isUndefined(options?.enabled) ? true : options.enabled,
+  });
 };
-
-// export const useGetAllRoleGroups = () => {
-//     const token = getAgToken() || "";
-//     return useQuery<IRolesPermissionsRs, any>({
-//         queryKey: [GET_LOCAL_ROLE_GROUPS],
-//         queryFn: () => roleAndPermissionAPIs.getRoleGroups(token),
-//         enabled: Boolean(token),
-//     });
-// };

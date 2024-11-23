@@ -31,7 +31,7 @@ const initQueryParams = new InventoryQueryParams(
     productType: [EProductType.TOUR],
   },
   1,
-  10,
+  20,
 );
 
 const InventoryPage = () => {

@@ -6,7 +6,7 @@ import { CustomerInformation } from "@/models/management/booking/customer.interf
 import classNames from "classnames";
 import Link from "next/link";
 import { useGetUserAgentList } from "@/queries/localUser";
-import { ILocalUserMinimal, UserAgentListResponse } from "@/models/management/localUser.interface";
+import { ILocalUserMinimal, LocalUserAgentListResponse } from "@/models/management/localUser.interface";
 import { ESellChannel } from "@/constants/channel.constant";
 export interface CustomerInformationFormProps {
   className?: string;
@@ -54,7 +54,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
         <Form layout="vertical">
           {sellChannel === ESellChannel.B2B ? (
             <FormItem label="Danh sách Agent" required>
-              <Select<number, UserAgentListResponse["result"][0]>
+              <Select<number, LocalUserAgentListResponse["result"][number]>
                 value={userAgentId}
                 fieldNames={{ label: "fullname", value: "recId" }}
                 options={agentList}

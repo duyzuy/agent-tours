@@ -1,6 +1,5 @@
 import { getAgToken } from "@/utils/common";
 import { client } from "@/services/api";
-import { BaseResponse } from "@/models/common.interface";
 import {
   VisaTemplateKeyListResponse,
   VisaTemplateKeyPayload,
@@ -9,7 +8,6 @@ import {
   VisaTemplateKeyShortListResponse,
 } from "@/models/management/cms/visaTemplate.interface";
 import {
-  VisaTemplateContentListResponse,
   VisaTemplateContentMetaBlockPayload,
   VisaTemplateContentMinimalQueryParams,
   VisaTemplateContentPayload,

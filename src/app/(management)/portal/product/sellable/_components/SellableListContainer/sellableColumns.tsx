@@ -15,7 +15,7 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
     title: "Sản phẩm",
     dataIndex: "code",
     key: "code",
-    width: 200,
+    width: 250,
     render: (_, record) => {
       return (
         <div>
@@ -30,18 +30,27 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
     dataIndex: "available",
     key: "available",
     width: 100,
+    render(value, { available }, index) {
+      return <span className="text-gray-900">{available}</span>;
+    },
   },
   {
     title: "Đang còn",
     dataIndex: "open",
     key: "open",
     width: 100,
+    render(value, { open }, index) {
+      return <span className="text-emerald-600">{open}</span>;
+    },
   },
   {
     title: "Đã dùng",
     dataIndex: "used",
     key: "used",
     width: 100,
+    render(value, { used }, index) {
+      return <span className="text-red-600">{used}</span>;
+    },
   },
   {
     title: "Ngày bán",
@@ -50,48 +59,44 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
     width: 180,
     render: (_, record) => {
       return (
-        <span>
-          <span className="block">{formatDate(record.validFrom)}</span>
-          <span className="block">{formatDate(record.validTo)}</span>
-        </span>
+        <>
+          <div className="flex items-center">
+            <span className="w-8 inline-block text-red-500 text-xs">Từ</span>
+            {formatDate(record.validFrom)}
+          </div>
+          <div className="flex items-center">
+            <span className="w-8 inline-block text-amber-500 text-xs">Đến</span>
+            {formatDate(record.validTo)}
+          </div>
+        </>
       );
     },
   },
   {
-    title: "Ngày sử dụng",
+    title: "Ngày khởi hành",
     dataIndex: "use-date",
     key: "use-date",
     width: 180,
     render: (_, record) => {
       return (
-        <span>
-          <span className="block">{formatDate(record.startDate)}</span>
-          <span className="block">{formatDate(record.endDate)}</span>
-        </span>
+        <>
+          <div className="flex items-center">
+            <span className="w-6 inline-block text-red-500 text-xs">Đi</span>
+            {formatDate(record.validFrom)}
+          </div>
+          <div className="flex items-center">
+            <span className="w-6 inline-block text-amber-500 text-xs">Về</span>
+            {formatDate(record.validTo)}
+          </div>
+        </>
       );
-    },
-  },
-
-  {
-    title: "Người tạo",
-    dataIndex: "sysFstUser",
-    key: 2,
-    width: 100,
-  },
-  {
-    title: "Ngày tạo",
-    dataIndex: "sysFstUpdate",
-    key: "sysFstUpdate",
-    width: 200,
-    render: (_, record) => {
-      return formatDate(record.sysFstUpdate);
     },
   },
   {
     title: "Trạng thái",
     dataIndex: "status",
     key: "status",
-    width: 100,
+    width: 150,
     render: (_, record) => {
       return (
         <Tag color={(record.status === Status.OK && "green") || (record.status === Status.QQ && "orange") || "red"}>
@@ -102,5 +107,20 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
         </Tag>
       );
     },
+  },
+  {
+    title: "Ngày tạo",
+    dataIndex: "sysFstUpdate",
+    key: "sysFstUpdate",
+    width: 150,
+    render: (_, record) => {
+      return formatDate(record.sysFstUpdate);
+    },
+  },
+  {
+    title: "Người tạo",
+    dataIndex: "sysFstUser",
+    key: 2,
+    width: 150,
   },
 ];

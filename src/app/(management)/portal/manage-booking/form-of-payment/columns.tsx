@@ -3,10 +3,10 @@ import { moneyFormatVND } from "@/utils/helper";
 import { Tag } from "antd";
 import { PaymentStatus, Status } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
-import { IFormOfPaymentListRs } from "@/models/management/core/formOfPayment.interface";
+import { FormOfPaymentListRs } from "@/models/management/core/formOfPayment.interface";
 import Link from "next/link";
 
-export const columnsFOPs: ColumnsType<IFormOfPaymentListRs["result"][0]> = [
+export const columnsFOPs: ColumnsType<FormOfPaymentListRs["result"][number]> = [
   {
     title: "#ID",
     dataIndex: "recId",

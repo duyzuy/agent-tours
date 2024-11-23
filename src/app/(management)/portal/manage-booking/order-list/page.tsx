@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
-import { BookingOrderListQueryParams } from "@/models/management/booking/reservation.interface";
+import { BookingOrderListQueryParams } from "@/models/management/booking/order.interface";
 import { useGetBookingOrderListCoreQuery } from "@/queries/core/bookingOrder";
 import { columnsOrderList } from "./columnsOrderList";
 import { useRouter } from "next/navigation";
@@ -124,8 +124,8 @@ export default function ManageBookingOrderListPage() {
         dataSource={reservationResponse?.list || []}
         columns={columnsOrderList}
         isLoading={isLoading || isLoadingRule}
-        fixedActionsColumn={false}
-        size="small"
+        // fixedActionsColumn={false}
+        // size="small"
         rowKey={"recId"}
         onView={(record) => router.push(`/portal/manage-booking/${record.recId}`)}
         pagination={{

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Space, Spin, Tag, Divider, Button, Popconfirm } from "antd";
+import { Space, Spin, Tag, Divider, Button, Popconfirm, Empty } from "antd";
 import { DeleteOutlined, EditOutlined, FileExcelOutlined } from "@ant-design/icons";
 import { LINKS } from "@/constants/links.constant";
 import { useRouter } from "next/navigation";
@@ -205,14 +205,20 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
         ))}
       />
       <Divider />
-      <TempalateSellableTabs templateId={templateDetail.recId} data={templateDetail} />
-      <DrawerTemplateSellableForm
-        initialValues={templateDetail}
-        isOpen={showTemplateDrawer}
-        actionType="EDIT"
-        onSubmit={handleUpdateTemplate}
-        onCancel={() => setShowTemplateDrawer(false)}
-      />
+      {templateDetail.status === Status.OK ? (
+        <>
+          <TempalateSellableTabs templateId={templateDetail.recId} data={templateDetail} />
+          <DrawerTemplateSellableForm
+            initialValues={templateDetail}
+            isOpen={showTemplateDrawer}
+            actionType="EDIT"
+            onSubmit={handleUpdateTemplate}
+            onCancel={() => setShowTemplateDrawer(false)}
+          />
+        </>
+      ) : (
+        <Empty description="Duyệt để tạo sản phẩm" />
+      )}
     </PageContainer>
   );
 };

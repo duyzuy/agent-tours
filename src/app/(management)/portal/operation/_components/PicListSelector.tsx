@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useGetSellableCodeListQuery } from "@/queries/core/Sellable";
+
 import { Select, SelectProps } from "antd";
-import { SellableCodeItem } from "@/models/management/core/sellable.interface";
 import { isArray } from "lodash";
 import { useGetLocalUserList } from "@/queries/localUser";
-import { ELocalUserType, ILocalUser, ILocalUserList } from "@/models/management/localUser.interface";
+import { ELocalUserType, ILocalUser } from "@/models/management/localUser.interface";
 export interface PicListSelectorProps {
   onChange?: (value: number, data: ILocalUser) => void;
   value?: number;
@@ -14,7 +13,7 @@ const PicListSelector: React.FC<PicListSelectorProps> = ({ onChange, value }) =>
 
   const { data, isLoading } = useGetLocalUserList({ userTypeList: [ELocalUserType.ADMIN, ELocalUserType.STAFF] });
 
-  const handleChangeSelect: SelectProps<number, ILocalUserList["result"][0]>["onChange"] = (value, option) => {
+  const handleChangeSelect: SelectProps<number, ILocalUser>["onChange"] = (value, option) => {
     onChange?.(value, isArray(option) ? option[0] : option);
   };
 
@@ -23,10 +22,10 @@ const PicListSelector: React.FC<PicListSelectorProps> = ({ onChange, value }) =>
   };
   return (
     <>
-      <Select<number, ILocalUserList["result"][0]>
+      <Select<number, ILocalUser>
         value={value}
         fieldNames={{ label: "fullname", value: "recId" }}
-        options={data?.result || []}
+        options={data}
         placeholder="Người phụ trách"
         onChange={handleChangeSelect}
         onSearch={handleSearch}

@@ -15,8 +15,8 @@ const InventorySelector: React.FC<InventorySelectorProps> = ({ value, onChange, 
       isStock: true,
       status: Status.OK,
     },
-    undefined,
-    undefined,
+    1,
+    999,
   );
   const { data: inventoryResponse } = useGetInventoryListCoreQuery({
     queryParams: initQueryParams,

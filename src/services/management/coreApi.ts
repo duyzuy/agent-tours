@@ -11,6 +11,7 @@ export const coreApi = {
       requestObject: { [key: string]: any };
       pageCurrent?: number;
       pageSize?: number;
+      orderBy?: { sortColumn?: string; direction?: "asc" | "desc" };
       localUsername?: string;
     },
   ) => {
@@ -21,7 +22,7 @@ export const coreApi = {
       .then(async (key) => {
         //Sort object
 
-        const sortedQueryParams = Object.keys(queryParams.requestObject)
+        const soredQueryObject = Object.keys(queryParams.requestObject)
           .sort()
           .reduce<{ [key: string]: any }>((acc, key) => {
             acc[key] = queryParams.requestObject[key];
@@ -29,18 +30,19 @@ export const coreApi = {
             return acc;
           }, {});
 
-        const hashData = createHash256(JSON.stringify(sortedQueryParams) + key + coreAccountConfig.privateKey);
+        const hashData = createHash256(JSON.stringify(soredQueryObject) + key + coreAccountConfig.privateKey);
         // console.log({
         //     key,
         //     queryParams,
         //     endpoint,
         //     hashData,
-        //     objstr: JSON.stringify(sortedQueryParams),
+        //     objstr: JSON.stringify(soredQueryObject),
         // });
 
         return await client.post<TSuccess>(endpoint, {
           params: {
-            requestObject: sortedQueryParams,
+            requestObject: soredQueryObject,
+            orderby: queryParams?.orderBy,
             pageCurrent: queryParams?.pageCurrent,
             pageSize: queryParams?.pageSize,
             userId: coreAccountConfig.userId,

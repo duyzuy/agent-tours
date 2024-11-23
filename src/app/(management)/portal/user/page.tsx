@@ -1,99 +1,77 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetLocalUserList } from "@/queries/localUser";
-
-import DrawlerUserForm from "./components/DrawlerUserForm";
+import DrawlerUserForm, { DrawlerUserFormProps } from "./components/DrawlerUserForm";
 import TableListPage from "@/components/admin/TableListPage";
 import { userColumns } from "./userColumns";
-
-import { useGetRoles } from "@/queries/role";
-import useCreateLocalUser from "./hooks/useCreateLocalUser";
-import useUpdateLocalUser from "./hooks/useUpdateLocalUser";
-import { EActionType, TDrawlerAction } from "./components/DrawlerUserForm";
-
-import { ILocalUserPayload, ILocalUserList } from "@/models/management/localUser.interface";
+import { TDrawlerAction } from "./components/DrawlerUserForm";
+import useCRUDLocalUser from "./hooks/useCRUDLocalUser";
+import { ILocalUser, LocalUserListResponse } from "@/models/management/localUser.interface";
 
 const UserPage: React.FC = () => {
-  const { data: localUsers, isLoading } = useGetLocalUserList();
-  const { data: roles } = useGetRoles();
+  const { data: localUsersList, isLoading } = useGetLocalUserList();
 
-  const [isOpenDrawler, setToggleDrawler] = useState(false);
-  const [actionType, setActionType] = useState<EActionType>(EActionType.CREATE);
-  const [editRecord, setEditRecord] = useState<ILocalUserList["result"][0]>();
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [actionType, setActionType] = useState<DrawlerUserFormProps["actionType"]>();
+  const [editRecord, setEditRecord] = useState<ILocalUser>();
 
-  const { onCreateUser, errors, onClearValidationCreateError } = useCreateLocalUser();
-
-  const {
-    onUpdateLocalUser,
-    errors: updateErrors,
-    onClearValidationUpdateError,
-    onUpdateLocalUserStatus,
-  } = useUpdateLocalUser(editRecord?.recId || 0);
-
-  const roleList = useMemo(() => {
-    return roles ? roles["result"]["roleList"] : [];
-  }, [roles]);
-
-  const userList = useMemo(() => {
-    return localUsers ? localUsers["result"] : [];
-  }, [localUsers]);
+  const { onUpdate, onCreate, onUpdateStatus } = useCRUDLocalUser();
 
   const onHandleDrawler = (drawler: TDrawlerAction) => {
-    setEditRecord(() => (drawler.type === EActionType.EDIT ? drawler.record : undefined));
+    setEditRecord(() => (drawler.type === "EDIT" ? drawler.record : undefined));
     setActionType(drawler.type);
-    setToggleDrawler(() => true);
+    setOpenDrawer(() => true);
   };
   const onCancel = () => {
-    setToggleDrawler(() => false);
-    setActionType(EActionType.CREATE);
+    setOpenDrawer(() => false);
+    setActionType("CREATE");
     setEditRecord(undefined);
-    onClearValidationUpdateError();
-    onClearValidationCreateError();
   };
   const onDeleteUser = (recordId: number) => {
-    onUpdateLocalUserStatus(recordId, "XX");
+    onUpdateStatus({ recordId: recordId, status: "XX" });
   };
 
-  const handleSubmitFormData = (action: EActionType, payload: ILocalUserPayload) => {
-    if (action === EActionType.CREATE) {
-      onCreateUser(payload, () => {
-        setToggleDrawler(false);
+  const handleSubmitFormData: DrawlerUserFormProps["onSubmit"] = (action, formData) => {
+    if (action === "CREATE") {
+      onCreate(formData, {
+        onSuccess(data, variables, context) {
+          setOpenDrawer(false);
+        },
       });
     }
 
-    if (action === EActionType.EDIT) {
-      onUpdateLocalUser(payload, () => {
-        setToggleDrawler(false);
-      });
+    if (action === "EDIT" && editRecord) {
+      onUpdate(
+        { ...formData, recId: editRecord.recId },
+        {
+          onSuccess(data, variables, context) {
+            setOpenDrawer(false);
+          },
+        },
+      );
     }
   };
 
   return (
-    <PageContainer
-      name="Danh sách Tài khoản"
-      onClick={() => onHandleDrawler({ type: EActionType.CREATE })}
-      modelName="Tài khoản"
-    >
-      <TableListPage<ILocalUserList["result"][0]>
+    <PageContainer name="Danh sách Tài khoản" onClick={() => onHandleDrawler({ type: "CREATE" })} modelName="Tài khoản">
+      <TableListPage<LocalUserListResponse["result"][0]>
         scroll={{ x: 1200 }}
         modelName="Tài khoản"
         columns={userColumns}
         rowKey={"recId"}
-        dataSource={userList}
+        dataSource={localUsersList || []}
         isLoading={isLoading}
-        onEdit={(record) => onHandleDrawler({ type: EActionType.EDIT, record })}
+        onEdit={(record) => onHandleDrawler({ type: "EDIT", record })}
         onDelete={(record) => onDeleteUser(record.recId)}
       />
       <DrawlerUserForm
-        isOpen={isOpenDrawler}
+        isOpen={openDrawer}
         onCancel={onCancel}
         actionType={actionType}
         initialValues={editRecord}
         onSubmit={handleSubmitFormData}
-        onChangeLocalUserStatus={(recordId, status) => onUpdateLocalUserStatus(recordId, status)}
-        roles={roleList}
-        errors={actionType === EActionType.CREATE ? errors : updateErrors}
+        onUpdateStatus={(recordId, status) => onUpdateStatus({ recordId, status })}
       />
     </PageContainer>
   );

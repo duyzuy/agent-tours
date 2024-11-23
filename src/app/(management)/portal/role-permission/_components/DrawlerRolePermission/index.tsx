@@ -1,395 +1,269 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-    Drawer,
-    Space,
-    Button,
-    Form,
-    Row,
-    Col,
-    Input,
-    Checkbox,
-    Switch,
-} from "antd";
-import { isEqual } from "lodash";
+import { useEffect, useMemo } from "react";
+import { Drawer, Space, Button, Form, Input, Checkbox, Switch, Spin, Divider } from "antd";
+import { isEmpty, isEqual } from "lodash";
 import FormItem from "@/components/base/FormItem";
-import type { CheckboxChangeEvent } from "antd/es/checkbox";
-import type { CheckboxValueType } from "antd/es/checkbox/Group";
-import { IRolesPermissionsRs } from "@/models/management/role.interface";
-import { TRolePermissionPayload } from "@/models/management/role.interface";
-import { TRolePersErrorsFields } from "../../modules/useCreateRolePermission";
-import styled from "styled-components";
 
-export enum EActionType {
-    CREATE = "create",
-    EDIT = "edit",
-}
+import type { CheckboxValueType } from "antd/es/checkbox/Group";
+
+import { useGetPermissionsQuery } from "@/queries/role";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { rolePermissionSchema } from "../../modules/validation";
+import { RolesPermissionListResponse } from "@/models/management/rolePermission.interface";
+import { RolePermissionFormData } from "../../modules/rolePer.interface";
+import { IPermission } from "@/models/management/permission.interface";
+
+export type DrawerAction = "CREATE" | "EDIT";
 export type TDrawlerCreateAction = {
-    action: EActionType.CREATE;
+  action: "CREATE";
 };
 export type TDrawlerEditAction = {
-    action: EActionType.EDIT;
-    record: IRolesPermissionsRs["result"]["rolePermissionList"][0];
+  action: "EDIT";
+  record: RolesPermissionListResponse["result"]["rolePermissionList"][0];
 };
 export type TDrawlerRolePermission = TDrawlerCreateAction | TDrawlerEditAction;
 
-interface DrawlerRolePermissionProps {
-    isOpen?: boolean;
-    onClose: () => void;
-    actionType?: EActionType;
-    initialValues?: IRolesPermissionsRs["result"]["rolePermissionList"][0];
-    onSubmit?: (actionType: EActionType, data: TRolePermissionPayload) => void;
-    permissionList?: IRolesPermissionsRs["result"]["permissionList"];
-    title?: string;
-    errors?: TRolePersErrorsFields;
+export interface DrawlerRolePermissionProps {
+  isOpen?: boolean;
+  onClose: () => void;
+  actionType?: DrawerAction;
+  initialValues?: RolesPermissionListResponse["result"]["rolePermissionList"][0];
+  onSubmit?: (action: DrawerAction, data: RolePermissionFormData) => void;
 }
 const DrawlerRolePermission: React.FC<DrawlerRolePermissionProps> = ({
-    isOpen,
-    onClose,
-    actionType = EActionType.CREATE,
-    onSubmit,
-    permissionList,
-    title,
-    initialValues,
-    errors,
+  isOpen,
+  onClose,
+  actionType = "CREATE",
+  onSubmit,
+  initialValues,
 }) => {
-    const initFormData: TRolePermissionPayload = {
-        localUser_PermissionList: [],
-        localUser_RolePermissionValue: "",
-        status: "OX",
-    };
+  const { data: permissions, isLoading } = useGetPermissionsQuery({ enabled: isOpen });
 
-    const [formData, setFormData] =
-        useState<TRolePermissionPayload>(initFormData);
+  const initFormData = new RolePermissionFormData("", undefined, [], "OX");
 
-    const [checkedList, setCheckedList] = useState<{
-        [key: string]: CheckboxValueType[];
-    }>({});
+  const { setValue, getValues, watch, control, handleSubmit, formState } = useForm<RolePermissionFormData>({
+    defaultValues: { ...initFormData },
+    resolver: yupResolver(rolePermissionSchema),
+  });
 
-    /**
-     * Grouped permissions list
-     */
-    const groupedPermissionsList = useMemo(() => {
-        if (!permissionList) return;
+  /**
+   * Grouped permissions list
+   */
+  const groupedPermissionsList = useMemo(() => {
+    return permissions?.permissionList.reduce<{
+      [key: string]: RolesPermissionListResponse["result"]["permissionList"];
+    }>((acc, per) => {
+      acc[per.groupKey] = acc[per.groupKey] ? [...acc[per.groupKey], per] : [per];
+      return acc;
+    }, {});
+  }, [permissions]);
 
-        let permissionGroup: {
-            [key: string]: IRolesPermissionsRs["result"]["permissionList"];
-        } = {};
+  const onChangeStatus = (checked: boolean) => {
+    setValue("status", checked ? "OK" : "OX");
+  };
 
-        permissionList.forEach((per) => {
-            if (permissionGroup[per.groupKey]) {
-                permissionGroup[per.groupKey] = [
-                    ...permissionGroup[per.groupKey],
-                    per,
-                ];
-            } else {
-                permissionGroup[per.groupKey] = [per];
-            }
-        });
+  const indeterminate = (
+    groupKey: string,
+    values: Exclude<RolePermissionFormData["localUser_PermissionList"], undefined>,
+  ) => {
+    const currentPermissions = getValues("localUser_PermissionList");
 
-        return permissionGroup;
-    }, [permissionList]);
+    const persByGroup = currentPermissions?.filter((item) => item.groupKey === groupKey);
 
-    const onChangeFormData = (
-        key: keyof TRolePermissionPayload,
-        value: string,
-    ) => {
-        setFormData((prev) => ({
-            ...prev,
-            [key]: value,
-        }));
-    };
-    const onChangeStatus = (checked: boolean) => {
-        setFormData((prev) => ({
-            ...prev,
-            status: checked ? "OK" : "OX",
-        }));
-    };
+    if (!persByGroup || !persByGroup.length) return false;
 
-    const indeterminate = (key: string) => {
-        if (!checkedList[key] || !groupedPermissionsList) return false;
+    return persByGroup.length > 0 && persByGroup.length < values.length;
+  };
 
-        return (
-            checkedList[key].length > 0 &&
-            checkedList[key].length < groupedPermissionsList[key].length
-        );
-    };
-    const checkedAllByGroup = (key: string) => {
-        if (!checkedList[key] || !groupedPermissionsList) return false;
-        return groupedPermissionsList[key].length === checkedList[key].length;
-    };
+  const isCheckedAllByGroup = (
+    groupKey: string,
+    values: Exclude<RolePermissionFormData["localUser_PermissionList"], undefined>,
+  ) => {
+    const currentPermissions = getValues("localUser_PermissionList");
 
-    const onCheckGroupPermissions = (e: CheckboxChangeEvent, key: string) => {
-        // setCheckedList(e.target.checked ? plainOptions : []);
+    const persByGroup = currentPermissions?.filter((item) => item.groupKey === groupKey);
 
-        if (!groupedPermissionsList) return;
-        setCheckedList((prev) => {
-            if (e.target.checked) {
-                return {
-                    ...prev,
-                    [key]: groupedPermissionsList[key].map(
-                        (rolePer) => rolePer.localUser_PermissionKey,
-                    ),
-                };
-            } else {
-                return {
-                    ...prev,
-                    [key]: [],
-                };
-            }
-        });
-    };
+    if (!persByGroup) return false;
 
-    const getOptions = (key: string) => {
-        if (!groupedPermissionsList) return [];
-        return groupedPermissionsList[key].map((item) => ({
-            label: item.localUser_PermissionValue,
-            value: item.localUser_PermissionKey,
-        }));
-    };
-    const onChangePermission = (group: string, values: CheckboxValueType[]) => {
-        setCheckedList((prev) => {
-            return {
-                ...prev,
-                [group]: [...values],
-            };
-        });
-    };
+    return persByGroup.length === values.length;
+  };
 
-    const isDisabledSubmitButton = useMemo(() => {
-        if (!initialValues || actionType === EActionType.CREATE) return false;
+  const getCheckedValues = (
+    gropKey: string,
+    values: Exclude<RolePermissionFormData["localUser_PermissionList"], undefined>,
+  ): Array<CheckboxValueType> => {
+    const persByGroup = values.filter((per) => per.groupKey === gropKey);
 
-        const formatPermissionsList =
-            initialValues.localUser_PermissionList.map((item) => ({
-                localUser_PermissionKey: item.localUser_PermissionKey,
-            }));
+    return persByGroup.reduce<Array<CheckboxValueType>>((acc, item) => {
+      if (item.localUser_PermissionKey) {
+        acc = [...acc, item.localUser_PermissionKey];
+      }
+      return acc;
+    }, []);
+  };
+  const onCheckGroupPermissions = (
+    checked: boolean,
+    groupKey: string,
+    values: Exclude<RolePermissionFormData["localUser_PermissionList"], undefined>,
+  ) => {
+    const currentPermissions = getValues("localUser_PermissionList");
 
-        const initialValuesFormat: TRolePermissionPayload = {
-            localUser_PermissionList: formatPermissionsList,
-            localUser_RolePermissionValue:
-                initialValues.localUser_RolePermissionValue,
-            status: initialValues.status,
-        };
-        if (isEqual(initialValuesFormat, formData)) {
-            return true;
-        }
-        return false;
-    }, [actionType, formData, initialValues]);
+    let newPers: Exclude<RolePermissionFormData["localUser_PermissionList"], undefined> =
+      currentPermissions?.filter((per) => per.groupKey !== groupKey) || [];
 
-    useEffect(() => {
-        if (!checkedList) return;
+    if (checked) {
+      newPers = [...newPers, ...values];
+    }
 
-        let permissionList: { localUser_PermissionKey: string }[] = [];
+    setValue("localUser_PermissionList", newPers);
+  };
 
-        Object.keys(checkedList).forEach((key) => {
-            checkedList[key].forEach((per) => {
-                permissionList = [
-                    ...permissionList,
-                    { localUser_PermissionKey: per as string },
-                ];
-            });
-        });
+  const onChangePermission = (group: string, per: IPermission) => {
+    const currentPermissions = getValues("localUser_PermissionList");
+    let newPers = [...(currentPermissions || [])];
+    const indexPer = newPers.findIndex((item) => item.localUser_PermissionKey === per.localUser_PermissionKey);
+    if (indexPer !== -1) {
+      newPers.splice(indexPer, 1);
+    } else {
+      newPers = [...newPers, per];
+    }
+    setValue("localUser_PermissionList", newPers);
+  };
 
-        setFormData((prevData) => ({
-            ...prevData,
-            localUser_PermissionList: [...permissionList],
-        }));
-    }, [checkedList]);
+  const isDisabledSubmitButton = useMemo(() => {
+    if (!initialValues && actionType === "CREATE") {
+      return isEmpty(getValues("localUser_RolePermissionValue")) && !getValues("localUser_PermissionList")?.length;
+    }
 
-    /**
-     * INITIAL FORM DATA IF EDITING
-     */
+    if (initialValues && actionType === "EDIT") {
+      return (
+        isEqual({ list: initialValues.localUser_PermissionList }, { list: getValues("localUser_PermissionList") }) &&
+        isEqual(initialValues.status, getValues("status")) &&
+        isEqual(initialValues.localUser_RolePermissionValue, getValues("localUser_RolePermissionValue"))
+      );
+    }
 
-    useEffect(() => {
-        if (initialValues) {
-            const permissisListFormData =
-                initialValues.localUser_PermissionList.map((item) => ({
-                    localUser_PermissionKey: item.localUser_PermissionKey,
-                }));
+    return false;
+  }, [actionType, initialValues, watch()]);
 
-            const initialFormdata = {
-                localUser_RolePermissionValue:
-                    initialValues.localUser_RolePermissionValue,
-                localUser_PermissionList: permissisListFormData,
-                status: initialValues.status,
-            };
-            setFormData(() => initialFormdata);
-        } else {
-            setFormData(() => initFormData);
-        }
-    }, [initialValues]);
+  /**
+   * INITIAL FORM DATA IF EDITING
+   */
 
-    useEffect(() => {
-        if (!groupedPermissionsList) return;
+  useEffect(() => {
+    const initialFormdata = initialValues
+      ? new RolePermissionFormData(
+          initialValues.localUser_RolePermissionValue,
+          initialValues.localUser_RolePermissionKey,
+          initialValues.localUser_PermissionList,
+          initialValues.status,
+        )
+      : initFormData;
+    Object.entries(initialFormdata).forEach(([key, value]) => {
+      setValue(key as keyof RolePermissionFormData, value);
+    });
+  }, [initialValues, isOpen]);
 
-        let itemsList: { [key: string]: string[] } = {};
+  return (
+    <Drawer
+      title={actionType === "CREATE" ? "Thêm nhóm chức năng" : `Sửa ${initialValues?.localUser_RolePermissionValue}`}
+      width={850}
+      onClose={onClose}
+      open={isOpen}
+      styles={{
+        body: {
+          paddingBottom: 80,
+        },
+      }}
+    >
+      <Form layout="vertical">
+        <Controller
+          control={control}
+          name="localUser_RolePermissionValue"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem
+              label="Tên nhóm chức năng"
+              required
+              validateStatus={error?.message ? "error" : ""}
+              help={error?.message}
+            >
+              <Input placeholder="Nhập tên nhóm chức năng" {...field} />
+            </FormItem>
+          )}
+        />
+        <Controller
+          control={control}
+          name="status"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem label="Trạng thái">
+              <div className="flex items-center">
+                <Switch checked={field.value === "OK"} onChange={onChangeStatus} />
+                <span className="ml-2">Kích hoạt</span>
+              </div>
+            </FormItem>
+          )}
+        />
 
-        if (initialValues) {
-            const pers = initialValues.localUser_PermissionList.map(
-                (item) => item.localUser_PermissionKey,
-            );
-
-            Object.keys(groupedPermissionsList).forEach((key) => {
-                groupedPermissionsList[key].forEach((per) => {
-                    if (pers.includes(per.localUser_PermissionKey)) {
-                        if (itemsList[key]) {
-                            itemsList[key] = [
-                                ...itemsList[key],
-                                per.localUser_PermissionKey,
-                            ];
-                        } else {
-                            itemsList[key] = [per.localUser_PermissionKey];
-                        }
-                        const indexPer = pers.indexOf(
-                            per.localUser_PermissionKey,
-                        );
-                        pers.splice(indexPer, 1);
-                    } else {
-                        itemsList[key] = [...(itemsList[key] || [])];
-                    }
-                });
-            });
-        }
-        setCheckedList(() => itemsList);
-    }, [groupedPermissionsList, initialValues]);
-
-    return (
-        <Drawer
-            title={
-                actionType === EActionType.CREATE
-                    ? "Thêm nhóm chức năng"
-                    : `Sửa nhóm chức năng ${formData.localUser_RolePermissionValue}`
-            }
-            width={850}
-            onClose={onClose}
-            open={isOpen}
-            styles={{
-                body: {
-                    paddingBottom: 80,
-                },
-            }}
-        >
-            <Form layout="vertical">
-                <Row gutter={16}>
-                    <Col span={24}>
-                        <FormItem
-                            label="Tên nhóm chức năng"
-                            required
-                            validateStatus={
-                                errors?.localUser_RolePermissionValue
-                                    ? "error"
-                                    : ""
-                            }
-                            help={errors?.localUser_RolePermissionValue || ""}
-                        >
-                            <Input
-                                placeholder="Nhập tên nhóm chức năng"
-                                onChange={(e) =>
-                                    onChangeFormData(
-                                        "localUser_RolePermissionValue",
-                                        e.target.value,
-                                    )
-                                }
-                                value={formData.localUser_RolePermissionValue}
-                            />
-                        </FormItem>
-                    </Col>
-                    <Col span={24}>
-                        <FormItem label="Trạng thái">
-                            <div className="flex items-center">
-                                <Switch
-                                    checked={formData.status === "OK"}
-                                    onChange={onChangeStatus}
-                                />
-                                <span className="ml-2">Kích hoạt</span>
-                            </div>
-                        </FormItem>
-                    </Col>
-                </Row>
-                <Row>
-                    <div className="mb-4">
-                        <p>Quyền chức năng</p>
-                    </div>
-                    <div className="flex flex-wrap -mx-3">
-                        {groupedPermissionsList &&
-                            Object.keys(groupedPermissionsList).map(
-                                (perControlKey) => (
-                                    <div
-                                        className="w-1/2 lg:w-1/3 px-3 mb-6"
-                                        key={perControlKey}
-                                    >
-                                        <div className="border p-4 h-full rounded-md drop-shadow-sm bg-white">
-                                            <div className="head">
-                                                <p className="font-bold mb-3 border-b pb-3">
-                                                    <Checkbox
-                                                        indeterminate={indeterminate(
-                                                            perControlKey,
-                                                        )}
-                                                        onChange={(e) =>
-                                                            onCheckGroupPermissions(
-                                                                e,
-                                                                perControlKey,
-                                                            )
-                                                        }
-                                                        checked={checkedAllByGroup(
-                                                            perControlKey,
-                                                        )}
-                                                    >
-                                                        {perControlKey}
-                                                    </Checkbox>
-                                                </p>
-                                            </div>
-
-                                            <div className="permissions">
-                                                <CheckboxGroup
-                                                    options={getOptions(
-                                                        perControlKey,
-                                                    )}
-                                                    value={
-                                                        checkedList[
-                                                            perControlKey
-                                                        ] || []
-                                                    }
-                                                    onChange={(value) =>
-                                                        onChangePermission(
-                                                            perControlKey,
-                                                            value,
-                                                        )
-                                                    }
-                                                    className="block"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ),
+        {isLoading && <Spin />}
+        <Controller
+          control={control}
+          name="localUser_PermissionList"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem
+              label="Quyền chức năng"
+              required
+              // validateStatus={error?.message ? "error" : ""}
+              // help={error?.message}
+            >
+              {error?.message ? <p className="text-red-500 mb-2">{error?.message}</p> : null}
+              <div className="grid grid-cols-3 gap-4">
+                {!isLoading &&
+                  groupedPermissionsList &&
+                  Object.entries(groupedPermissionsList).map(([groupKey, values]) => (
+                    <div className="border p-4 h-full rounded-md drop-shadow-sm bg-white" key={groupKey}>
+                      <Checkbox
+                        indeterminate={indeterminate(groupKey, values)}
+                        onChange={(evt) => onCheckGroupPermissions(evt.target.checked, groupKey, values)}
+                        checked={isCheckedAllByGroup(groupKey, values)}
+                      >
+                        {groupKey}
+                      </Checkbox>
+                      <Divider />
+                      {values.map((per) => (
+                        <div key={per.localUser_PermissionKey}>
+                          <Checkbox
+                            // value={checkedList[groupKey] || []}
+                            value={getCheckedValues(groupKey, field.value || [])}
+                            onChange={(value) => onChangePermission(groupKey, per)}
+                            checked={field.value?.some(
+                              (item) => item.localUser_PermissionKey === per.localUser_PermissionKey,
                             )}
+                            className="!align-top"
+                          >
+                            {per.localUser_PermissionValue}
+                          </Checkbox>
+                        </div>
+                      ))}
                     </div>
-                </Row>
-            </Form>
-            <div className="drawler-action absolute px-4 py-4 border-t left-0 right-0 bg-white bottom-0">
-                <Space>
-                    <Button onClick={onClose}>Huỷ</Button>
-                    <Button
-                        onClick={() => onSubmit?.(actionType, formData)}
-                        type="primary"
-                        disabled={isDisabledSubmitButton}
-                    >
-                        {actionType === EActionType.CREATE
-                            ? "Thêm mới"
-                            : "Cập nhật"}
-                    </Button>
-                </Space>
-            </div>
-        </Drawer>
-    );
+                  ))}
+              </div>
+            </FormItem>
+          )}
+        />
+      </Form>
+      <div className="drawler-action absolute px-4 py-4 border-t left-0 right-0 bg-white bottom-0">
+        <Space>
+          <Button onClick={onClose}>Huỷ</Button>
+          <Button
+            onClick={handleSubmit((data) => onSubmit && onSubmit(actionType, data))}
+            type="primary"
+            disabled={isDisabledSubmitButton}
+          >
+            {actionType === "CREATE" ? "Thêm mới" : "Cập nhật"}
+          </Button>
+        </Space>
+      </div>
+    </Drawer>
+  );
 };
 export default DrawlerRolePermission;
-
-const CheckboxGroup = styled(Checkbox.Group)`
-    &&& {
-        display: block;
-    }
-    .ant-checkbox-wrapper {
-        display: flex;
-        align-items: start;
-    }
-`;

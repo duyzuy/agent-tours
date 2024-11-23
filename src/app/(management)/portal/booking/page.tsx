@@ -13,11 +13,12 @@ import PassengerTourClassItem from "./_components/PassengerTourClassItem";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import useMessage from "@/hooks/useMessage";
 import { ESellChannel, SELL_CHANNEL } from "@/constants/channel.constant";
+import { useTransition } from "react";
 
 const BookingPage = () => {
+  const [isInitGotoNext, startGoToNext] = useTransition();
   const [bookingInformation, _] = useBooking();
   const message = useMessage();
-
   const { onNext, onSetPassengerConfig, onReselectProduct, onChangeSellChannel, onSetProductItem } =
     useSelectProductTour();
 
@@ -113,6 +114,9 @@ const BookingPage = () => {
     }, []);
   };
 
+  const handleGotonext = () => {
+    startGoToNext(onNext);
+  };
   return (
     <div className="page">
       <div
@@ -205,7 +209,13 @@ const BookingPage = () => {
                 >
                   Chọn lại
                 </Button>
-                <Button type="primary" className="w-32" onClick={onNext} disabled={isDisableNextButton}>
+                <Button
+                  type="primary"
+                  className="w-32"
+                  onClick={handleGotonext}
+                  loading={isInitGotoNext}
+                  disabled={isDisableNextButton}
+                >
                   Đi tiếp
                 </Button>
               </Space>

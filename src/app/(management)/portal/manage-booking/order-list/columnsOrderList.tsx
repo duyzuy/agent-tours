@@ -3,7 +3,7 @@ import { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
 import { Tag } from "antd";
 import { IOrderListRs } from "@/models/management/booking/order.interface";
-import { PaymentStatus, Status } from "@/models/common.interface";
+import { PaymentStatus } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
 import Link from "next/link";
 
@@ -15,9 +15,25 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     width: 80,
   },
   {
+    title: "Tên sản phẩm",
+    dataIndex: "templateName",
+    key: "templateName",
+    width: 260,
+    render(value, record, index) {
+      return (
+        <div>
+          <Link href={`/portal/manage-booking/${record.recId}`} className="block">
+            <div className="block text-gray-800 hover:text-blue-600">{record.template.name}</div>
+            <div className="text-xs text-gray-600">{record.sellable.code}</div>
+          </Link>
+        </div>
+      );
+    },
+  },
+  {
     title: "Loại dịch vụ",
-    dataIndex: "recId",
-    key: "recId",
+    dataIndex: "template",
+    key: "template",
     width: 120,
     render(value, record, index) {
       return (
@@ -28,27 +44,54 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     },
   },
   {
-    title: "Tên sản phẩm",
-    dataIndex: "templateName",
-    key: "templateName",
-    width: 260,
+    title: "Kênh bán",
+    dataIndex: "channel",
+    key: "channel",
+    width: 120,
     render(value, record, index) {
       return (
         <div>
-          <span className="block">{record.template.name}</span>
-          <span className="text-xs text-gray-600">{record.template.code}</span>
-          <Link href={`/portal/manage-booking/${record.recId}`} className="block text-xs">
-            <span>Chi tiết</span>
-          </Link>
+          <span className="block">{record.channel}</span>
         </div>
       );
     },
   },
   {
-    title: "Người đặt",
+    title: "Khách hàng",
     dataIndex: "custName",
     key: "custName",
     width: 150,
+  },
+  {
+    title: "Số tiền phải thanh toán",
+    dataIndex: "totalAmount",
+    key: "totalAmount",
+    width: 200,
+    render: (_, record) => {
+      return <span className="text-rose-600">{moneyFormatVND(record.totalAmount)}</span>;
+    },
+  },
+  {
+    title: "Trạng thái thanh toán",
+    dataIndex: "paymentStatus",
+    key: "paymentStatus",
+    width: 200,
+    render(value, { paymentStatus }, index) {
+      return (
+        <Tag
+          bordered={false}
+          color={
+            paymentStatus === PaymentStatus.PAID ? "green" : paymentStatus === PaymentStatus.DEPOSITED ? "blue" : "red"
+          }
+        >
+          {paymentStatus === PaymentStatus.PAID
+            ? "Đã thanh toán"
+            : paymentStatus === PaymentStatus.DEPOSITED
+            ? "Thanh toán 1 phần"
+            : " Chưa thanh toán"}
+        </Tag>
+      );
+    },
   },
   {
     title: "Ngày đặt",
@@ -57,45 +100,6 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     width: 160,
     render: (sysFstUpdate, record) => {
       return <>{formatDate(sysFstUpdate)}</>;
-    },
-  },
-  {
-    title: "Trạng thái",
-    dataIndex: "paymentStatus",
-    key: "paymentStatus",
-    width: 120,
-    render(value, record, index) {
-      return (
-        <>
-          {(record.status === Status.OK && <Tag color="green">Đã xác nhận</Tag>) ||
-            (record.status === Status.XX && <Tag color="red">Đã huỷ</Tag>) || <Tag color="orange">Chờ xác nhận</Tag>}
-        </>
-      );
-    },
-  },
-  {
-    title: "Tổng tiền",
-    dataIndex: "totalAmount",
-    key: "totalAmount",
-    width: 180,
-    render: (_, record) => {
-      return <>{moneyFormatVND(record.totalAmount)}</>;
-    },
-  },
-  {
-    title: "Trạng thái thanh toán",
-    dataIndex: "paymentStatus",
-    key: "paymentStatus",
-    width: 200,
-    render(value, record, index) {
-      return (
-        <>
-          {(record.paymentStatus === PaymentStatus.PAID && <Tag color="green">Đã thanh toán</Tag>) ||
-            (record.paymentStatus === PaymentStatus.DEPOSITED && <Tag color="blue">Thanh toán 1 phần</Tag>) || (
-              <Tag color="red">Chưa thanh toán</Tag>
-            )}
-        </>
-      );
     },
   },
 ];

@@ -30,22 +30,16 @@ export interface PriceConfig {
         >;
       })
     | null;
-  // oldSold: number;
-  // descriptions: string;
-  // supplier: ISupplier | null;
-  // sysFstUser: string;
-  // sysFstUpdate: string;
-  // sysLstUser: string;
-  // sysLstUpdate: string;
-  // sysBelongTo: string;
-  // logStatus: string;
   status: Status;
 }
 
 export interface SellablePriceConfigRs
   extends BaseResponse<{
     tourConfigs: PriceConfig[];
-    extraConfigs: PriceConfig[];
+    extraConfigs: (Omit<PriceConfig, "inventory" | "stock"> & {
+      inventory: Exclude<PriceConfig["inventory"], null>;
+      stock: PriceConfig["stock"];
+    })[];
   }> {}
 
 export interface SellablePriceConfigPayload {

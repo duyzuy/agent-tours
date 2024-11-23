@@ -1,12 +1,11 @@
 "use client";
 import React, { memo, useEffect, useState } from "react";
-import { Layout, Button, theme, Avatar, MenuProps, Dropdown } from "antd";
-import { UserOutlined, MoreOutlined, SwapRightOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Layout, Button, theme, Avatar, MenuProps, Dropdown, Space } from "antd";
+import { UserOutlined, SwapRightOutlined, LogoutOutlined, SwapLeftOutlined } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
-import classNames from "classnames";
-import { travelLogo, originalLogo } from "@/assets";
+
+import { originalLogo } from "@/assets";
 import Image from "next/image";
-import { removeAgToken } from "@/utils/common";
 import { LINKS } from "@/constants/links.constant";
 import AdminMenuLink from "./AdminMenuLink";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
@@ -20,9 +19,7 @@ const AdminLayout = ({ children }: Props) => {
 
   const router = useRouter();
   const pathname = usePathname();
-
   const userProfile = useLocalUserProfile();
-
   const [collapsed, setCollapsed] = useState(false);
   const logoutPortal = useLogoutPortal();
   const {
@@ -64,104 +61,76 @@ const AdminLayout = ({ children }: Props) => {
         collapsed={collapsed}
         width={240}
         theme="light"
-        className="border-r z-10"
-        style={{
-          position: "fixed",
-          left: 0,
-          top: 0,
-          bottom: 0,
-        }}
+        className="border-r z-10 !fixed left-0 top-0 bottom-0"
       >
-        <div className="logo h-16 flex items-center justify-center">
-          {!collapsed ? (
-            <span className="flex-1 px-6">
-              <Image src={originalLogo} alt="logo" width={260} priority />
-            </span>
-          ) : null}
-          <Button
-            type="text"
-            className={classNames({
-              "absolute right-0": !collapsed,
-            })}
-            icon={collapsed ? <SwapRightOutlined /> : <MoreOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 30,
-              height: 30,
-            }}
-          />
-        </div>
-        <div
-          className="menu overflow-y-auto"
-          style={{
-            height: "calc(100% - 64px)",
-          }}
-        >
-          <AdminMenuLink
-            onNavigation={(menuInfo) => onMenuNavigation(menuInfo)}
-            onOpenChange={onOpenChange}
-            openKeys={openKeys}
-            defaultSelectedKeys={["dashboard"]}
-            selectedKeys={activeKeys}
-          />
+        <div className="flex flex-col h-full">
+          <div className="logo p-4">
+            {!collapsed ? <Image src={originalLogo} alt="logo" priority className="w-40 mx-auto" /> : null}
+          </div>
+          <div className="overflow-y-auto flex-1">
+            <AdminMenuLink
+              onNavigation={(menuInfo) => onMenuNavigation(menuInfo)}
+              onOpenChange={onOpenChange}
+              openKeys={openKeys}
+              defaultSelectedKeys={["dashboard"]}
+              selectedKeys={activeKeys}
+            />
+          </div>
+          <div className="flex items-center justify-center bg-slate-50 py-2">
+            <Button
+              type="text"
+              shape="circle"
+              icon={collapsed ? <SwapRightOutlined /> : <SwapLeftOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              className="mx-auto"
+            />
+          </div>
         </div>
       </Sider>
       <Layout className="bg-white" style={{ marginLeft: collapsed ? 80 : 240 }}>
         <Header
           style={{
-            padding: "0 24px",
             background: colorBgContainer,
           }}
-          className="flex justify-between border-b sticky top-0 z-10  items-center"
+          className="flex justify-between border-b sticky top-0 z-10 items-center !px-6"
         >
-          <p className="font-semibold text-lg">Tour Management Platform</p>
-          <div className="avata ">
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    label: "Thông tin cá nhân",
-                    key: "1",
-                    icon: <UserOutlined />,
-                    onClick: () => onNavigation(LINKS.MyAccount),
-                  },
-                  {
-                    label: "Đăng xuất",
-                    key: "2",
-                    icon: <LogoutOutlined />,
-                    onClick: logoutPortal,
-                  },
-                ],
-              }}
-            >
-              <div className="flex items-center">
-                <p className="text-sm mr-2 leading-none">
-                  <span className="block text-xs">{userProfile?.fullname}</span>
-                  <span className="text-xs text-gray-400">{userProfile?.email}</span>
-                </p>
-                <Avatar shape="circle" size={28} icon={<UserOutlined />} style={{ backgroundColor: "#87d068" }} />
+          <span className="font-semibold text-xl">Tour Management Platform</span>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  label: "Thông tin cá nhân",
+                  key: "userInfo",
+                  icon: <UserOutlined />,
+                  onClick: () => onNavigation(LINKS.MyAccount),
+                },
+                {
+                  label: "Đăng xuất",
+                  key: "logout",
+                  icon: <LogoutOutlined />,
+                  onClick: logoutPortal,
+                },
+              ],
+            }}
+          >
+            <Space className="cursor-pointer">
+              <Avatar shape="circle" size={28} icon={<UserOutlined />} className="!bg-orange-500" />
+              <div className="text-sm leading-none">
+                <span className="block text-xs">{userProfile?.fullname}</span>
+                <span className="text-xs text-gray-400">{userProfile?.email}</span>
               </div>
-            </Dropdown>
-          </div>
+            </Space>
+          </Dropdown>
         </Header>
         <Content
           style={{
-            padding: "24px 24px 0",
-            minHeight: 280,
             background: colorBgContainer,
           }}
+          className="p-6 min-h-full"
         >
           {children}
         </Content>
-        <Footer
-          style={{
-            backgroundColor: "#fff",
-            paddingTop: "16px",
-            paddingBottom: "16px",
-          }}
-          className="border-t text-right"
-        >
+        <Footer className="border-t text-right !bg-white !py-3">
           <p className="text-sm">Tour Management ©2023 Created by DVU</p>
         </Footer>
       </Layout>

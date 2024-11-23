@@ -1,58 +1,72 @@
-import { useState } from "react";
 import useMessage from "@/hooks/useMessage";
-import { ValidationError } from "yup";
-import { useQueryClient } from "@tanstack/react-query";
+
+import { MutateOptions, useQueryClient } from "@tanstack/react-query";
 import { GET_LOCAL_ROLE_PERMISSION, GET_LOCAL_USER_ROLES } from "@/queries/var";
-import { TRolePermissionPayload } from "@/models/management/role.interface";
+
 import {
   useCreateRolePermissionsMutation,
   useDeleteRolePermissionsMutation,
+  useUpdateRolePermissionsMutation,
 } from "@/mutations/managements/rolePermission";
-import { createRolePermissionsSchema } from "./validation";
 
-type IRolePersFieldsErrors = Partial<Record<keyof TRolePermissionPayload, string>>;
+import { RolePermissionFormData } from "./rolePer.interface";
+import { RolePermissionPayload, RolesPermissionListResponse } from "@/models/management/rolePermission.interface";
+import { BaseResponse } from "@/models/common.interface";
+
+type UseRolePermission = {
+  onCreate: (
+    data: RolePermissionFormData,
+    options?: MutateOptions<RolesPermissionListResponse, BaseResponse<null>, RolePermissionPayload, unknown>,
+  ) => void;
+  onUpdate: (
+    data: RolePermissionFormData,
+    options?: MutateOptions<RolesPermissionListResponse, BaseResponse<null>, RolePermissionPayload, unknown>,
+  ) => void;
+  onDelete: (
+    key: string,
+    options?: MutateOptions<RolesPermissionListResponse, BaseResponse<null>, string, unknown>,
+  ) => void;
+};
 const useRolePermission = () => {
   const queryClient = useQueryClient();
-  const [errors, setErrors] = useState<IRolePersFieldsErrors>();
   const { mutate: onCreateRolePers } = useCreateRolePermissionsMutation();
   const { mutate: onDeleteRolePers } = useDeleteRolePermissionsMutation();
+  const { mutate: makeUpdateRolePermissions } = useUpdateRolePermissionsMutation();
 
   const message = useMessage();
-  const onCreateRolePermissions = (payload: TRolePermissionPayload, cb?: () => void) => {
-    createRolePermissionsSchema
-      .validate(payload, { abortEarly: false })
-      .then((data) => {
-        onCreateRolePers(data, {
-          onSuccess: (response, variable) => {
-            console.log({ response });
-            message.success(`Tạo nhóm chức năng ${variable.localUser_RolePermissionValue} thành công.`);
-            queryClient.invalidateQueries({
-              queryKey: [GET_LOCAL_ROLE_PERMISSION],
-            });
-            cb?.();
+  const onCreate: UseRolePermission["onCreate"] = (formData, options) => {
+    let payload: RolePermissionPayload = { cat: formData.cat, status: formData.status, rolePermissionList: [] };
+    const perList = getPermissionList(formData.localUser_PermissionList);
+    onCreateRolePers(
+      {
+        ...payload,
+        rolePermissionList: [
+          {
+            localUser_PermissionList: perList,
+            localUser_RolePermissionKey: formData.localUser_RolePermissionKey,
+            localUser_RolePermissionValue: formData.localUser_RolePermissionValue,
           },
-          onError: (error) => {
-            console.log({ error });
-            message.error("Tạo nhóm chức năng thất bại.");
-          },
-        });
-      })
-      .catch((error) => {
-        if (error instanceof ValidationError) {
-          let errors: IRolePersFieldsErrors = {};
-          error.inner.forEach((err) => {
-            if (err.path) {
-              errors[err.path as keyof IRolePersFieldsErrors] = err.message;
-            }
+        ],
+      },
+      {
+        onSuccess: (response, variables, context) => {
+          message.success(`Tạo thành công.`);
+          queryClient.invalidateQueries({
+            queryKey: [GET_LOCAL_ROLE_PERMISSION],
           });
-          setErrors(errors);
-        }
-      });
+          options?.onSuccess?.(response, variables, context);
+        },
+        onError: (error, variables, context) => {
+          message.error(error.message);
+          options?.onError?.(error, variables, context);
+        },
+      },
+    );
   };
 
-  const onDeleteRolePermission = (key: string, cb?: () => void) => {
+  const onDelete: UseRolePermission["onDelete"] = (key, options) => {
     onDeleteRolePers(key, {
-      onSuccess: (response) => {
+      onSuccess: (response, variables, context) => {
         message.success("Xoá nhóm chức năng thành công.");
         queryClient.invalidateQueries({
           queryKey: [GET_LOCAL_ROLE_PERMISSION],
@@ -60,18 +74,67 @@ const useRolePermission = () => {
         queryClient.invalidateQueries({
           queryKey: [GET_LOCAL_USER_ROLES],
         });
-        cb?.();
+        options?.onSuccess?.(response, variables, context);
       },
-      onError: (error) => {
-        console.log(error);
-        message.error("Xoá nhóm chức năng thất bại.");
+      onError: (error, variables, context) => {
+        message.error(error.message);
+        options?.onError?.(error, variables, context);
       },
     });
   };
+  const onUpdate: UseRolePermission["onUpdate"] = (formData, options) => {
+    let payload: RolePermissionPayload = { cat: formData.cat, status: formData.status, rolePermissionList: [] };
+
+    const perList = getPermissionList(formData.localUser_PermissionList);
+
+    makeUpdateRolePermissions(
+      {
+        ...payload,
+        rolePermissionList: [
+          {
+            localUser_PermissionList: perList,
+            localUser_RolePermissionKey: formData.localUser_RolePermissionKey,
+            localUser_RolePermissionValue: formData.localUser_RolePermissionValue,
+          },
+        ],
+      },
+      {
+        onSuccess: (response, variables, context) => {
+          message.success(`Cập nhật thành công.`);
+          queryClient.invalidateQueries({
+            queryKey: [GET_LOCAL_ROLE_PERMISSION],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [GET_LOCAL_USER_ROLES],
+          });
+          options?.onSuccess?.(response, variables, context);
+        },
+        onError: (error, variables, context) => {
+          console.log({ error });
+          message.error(error.message);
+          options?.onError?.(error, variables, context);
+        },
+      },
+    );
+  };
+
+  const getPermissionList = (permissionList: RolePermissionFormData["localUser_PermissionList"]) => {
+    return permissionList?.reduce<
+      Exclude<
+        Required<Required<RolePermissionPayload>["rolePermissionList"]>[number]["localUser_PermissionList"],
+        undefined
+      >
+    >((acc, per) => {
+      if (per.localUser_PermissionKey) {
+        acc = [...acc, { localUser_PermissionKey: per.localUser_PermissionKey }];
+      }
+      return acc;
+    }, []);
+  };
   return {
-    onCreateRolePermissions,
-    errors,
-    onDeleteRolePermission,
+    onCreate,
+    onDelete,
+    onUpdate,
   };
 };
 export default useRolePermission;

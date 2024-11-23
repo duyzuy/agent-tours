@@ -6,7 +6,7 @@ import { ITemplateSellableDetail } from "./templateSellable.interface";
 export interface ISellable {
   recId: number;
   sellableTemplateId: number;
-  type: string;
+  type: "TOUR" | "MICE" | "EXTRA";
   code: string;
   available: number;
   cap: number;
@@ -232,6 +232,7 @@ export class SellableQueryParams {
 export interface SellableCodeItem {
   recId: number;
   code: string;
+  type: "TOUR" | "MICE" | "EXTRA";
   isOperationCodeCreated: boolean;
   status: Status;
 }

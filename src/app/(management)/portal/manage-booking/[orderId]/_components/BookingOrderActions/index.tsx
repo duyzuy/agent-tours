@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { Button, Space } from "antd";
 import { useRouter } from "next/navigation";
 import { PaymentStatus } from "@/models/common.interface";
-import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
+import { EFopType } from "@/models/management/core/formOfPayment.interface";
 import { FOPFormData } from "../../modules/formOfPayment.interface";
 import DrawerPaymentList from "./formOfPayment/DrawerPaymentList";
 import DrawerPaymentForm from "./formOfPayment/DrawerPaymentForm";
@@ -24,12 +24,7 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
 }) => {
   const router = useRouter();
 
-  const [formOfPaymentType, setFormOfPaymentType] = useState<FOPFormData["type"]>();
-
-  const [drawerList, showDrawerList] = useState<{
-    show: boolean;
-    type?: FOPFormData["type"];
-  }>({ show: false, type: undefined });
+  const [openFOPList, setOpenFOPList] = useState(false);
 
   const [drawerForm, showDrawerForm] = useState<{
     show: boolean;
@@ -40,16 +35,8 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
     showDrawerForm({ show: true, type });
   }, []);
 
-  const onShowDrawerList = useCallback((type: FOPFormData["type"]) => {
-    showDrawerList({ show: true, type });
-  }, []);
-
   const onCloseDrawerForm = useCallback(() => {
     showDrawerForm({ show: false, type: undefined });
-  }, []);
-
-  const onCloseDrawerList = useCallback(() => {
-    showDrawerList({ show: false, type: undefined });
   }, []);
 
   return (
@@ -57,38 +44,41 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
       <div className="booking__order__Detail-actions pb-6 mb-6 border-b bg-white">
         <Space>
           {paymentStatus !== PaymentStatus.PAID ? (
-            <Button type="primary" size="small" onClick={() => onShowDrawerForm(FOP_TYPE.PAYMENT)}>
+            <Button
+              type="text"
+              className="!text-emerald-700 !bg-emerald-100 hover:!bg-emerald-200"
+              onClick={() => onShowDrawerForm(EFopType.PAYMENT)}
+            >
               Thanh toán
             </Button>
           ) : null}
-          <Button type="primary" size="small" onClick={() => onShowDrawerForm(FOP_TYPE.REFUND)}>
+          <Button
+            type="text"
+            className="!text-rose-700 !bg-rose-100 hover:!bg-rose-200"
+            onClick={() => onShowDrawerForm(EFopType.REFUND)}
+          >
             Hoàn tiền
           </Button>
-          <Button type="primary" size="small" onClick={() => onShowDrawerForm(FOP_TYPE.DISCOUNT)}>
+          <Button
+            type="text"
+            className="!text-cyan-600 !bg-cyan-100 hover:!bg-cyan-200"
+            onClick={() => onShowDrawerForm(EFopType.DISCOUNT)}
+          >
             Giảm giá
           </Button>
-          <Button type="primary" size="small" onClick={() => onShowDrawerForm(FOP_TYPE.CHARGE)}>
+          <Button
+            type="text"
+            className="!text-pink-600 !bg-pink-100 hover:!bg-pink-200"
+            onClick={() => onShowDrawerForm(EFopType.CHARGE)}
+          >
             Thêm phí
           </Button>
-          <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.PAYMENT)}>
-            Lịch sử thanh toán
-          </Button>
-          <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.REFUND)}>
-            Lịch sử hoàn tiền
-          </Button>
-          <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.DISCOUNT)}>
-            Lịch sử giảm giá
-          </Button>
-          <Button type="primary" ghost size="small" onClick={() => onShowDrawerList(FOP_TYPE.CHARGE)}>
-            Lịch sử phí
-          </Button>
           <Button
-            type="primary"
-            ghost
-            size="small"
-            onClick={() => router.push(`/portal/manage-booking/${orderId}/rooming/${sellableId}`)}
+            type="text"
+            className="!text-orange-700 !bg-orange-100 hover:!bg-orange-200"
+            onClick={() => setOpenFOPList(true)}
           >
-            Xếp phòng
+            Lịch sử giao dịch
           </Button>
         </Space>
       </div>
@@ -96,9 +86,9 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
         orderId={orderId}
         totalAmount={totalAmount}
         totalPaid={totalPaid}
-        isOpen={drawerList.show}
-        formOfPaymentType={drawerList.type}
-        onClose={onCloseDrawerList}
+        isOpen={openFOPList}
+        formOfPaymentType={[EFopType.CHARGE, EFopType.DISCOUNT, EFopType.PAYMENT, EFopType.REFUND]}
+        onClose={() => setOpenFOPList(false)}
       />
       <DrawerPaymentForm
         orderId={orderId}

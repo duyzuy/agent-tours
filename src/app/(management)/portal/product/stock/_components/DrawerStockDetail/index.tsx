@@ -8,7 +8,7 @@ import { formatDate } from "@/utils/date";
 import { useGetStockDetailInventoryCoreQuery } from "@/queries/core/stockInventory";
 import StockConfirmationForm from "./StockConfirmationForm";
 import StockAdjustmentForm from "./StockAdjustmentForm";
-import classNames from "classnames";
+import { ContentDetailList } from "@/components/admin/ContentDetailList";
 
 export enum EActionType {
   EDIT = "edit",
@@ -50,7 +50,7 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
     <Drawer
       title={initialValues?.code ?? null}
       destroyOnClose
-      width={550}
+      width={650}
       onClose={onCancel}
       open={isOpen}
       styles={{
@@ -68,52 +68,96 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
       )}
       {initialValues && initialValues?.status !== Status.QQ && (
         <>
-          <ContentDetailList
-            items={[
-              { label: "#ID", value: initialValues?.recId },
-              { label: "Loại dịch vụ", value: initialValues?.inventoryType },
-              { label: "Loại kho", value: initialValues?.type },
-              { label: "Cap", value: initialValues?.cap },
-              { label: "Khả dụng", value: initialValues?.available },
-              { label: "Đã bán", value: initialValues?.used },
-              { label: "Đang còn", value: initialValues?.open },
-              {
-                label: "Ngày mở bán",
-                value: (
-                  <span>
-                    <span className="block">{formatDate(initialValues.validFrom)}</span>
-                    <span className="block">{formatDate(initialValues.validTo)}</span>
-                  </span>
-                ),
-              },
-              {
-                label: "Ngày sử dụng",
-                value: (
-                  <span>
-                    <span className="block">{formatDate(initialValues.startDate)}</span>
-                    <span className="block">{formatDate(initialValues.endDate)}</span>
-                  </span>
-                ),
-              },
-              { label: "Mô tả", value: initialValues?.description },
-              {
-                label: "Trạng thái",
-                value: (
-                  <Tag
-                    color={
-                      (initialValues?.status === Status.XX && "orange") ||
-                      (initialValues?.status === Status.OK && "green") ||
-                      "red"
-                    }
-                  >
-                    {(initialValues?.status === Status.XX && "Đã xoá") ||
-                      (initialValues?.status === Status.OK && "Đã duyệt") ||
-                      "Đã xoá"}
-                  </Tag>
-                ),
-              },
-            ]}
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            <ContentDetailList.Item label="#ID" value={initialValues?.recId} />
+            <ContentDetailList.Item label="Loại dịch vụ" value={initialValues?.inventoryType} />
+            <ContentDetailList.Item label="Loại kho" value={initialValues?.type} />
+            <ContentDetailList.Item label="Khả dụng" value={initialValues?.available} />
+            <ContentDetailList.Item
+              label="Đang còn"
+              value={<span className="text-emerald-600">{initialValues?.open}</span>}
+            />
+            <ContentDetailList.Item
+              label="Đã bán"
+              value={<span className="text-red-600">{initialValues?.used}</span>}
+            />
+          </div>
+
+          <Divider />
+          <div className="grid grid-cols-2 gap-4">
+            <ContentDetailList.Item
+              label="Ngày mở bán"
+              value={
+                <div>
+                  <div className="flex items-center">
+                    <span className="w-8 text-red-600 inline-block text-xs">Từ</span>
+                    {formatDate(initialValues.validFrom)}
+                  </div>
+                  <div className="flex items-center">
+                    <span className="w-8 text-amber-600 inline-block text-xs">Đến</span>
+                    {formatDate(initialValues.validTo)}
+                  </div>
+                </div>
+              }
+            />
+            <ContentDetailList.Item
+              label="Ngày sử dụng"
+              value={
+                <div>
+                  <div className="flex items-center">
+                    <span className="w-8 text-red-600 inline-block text-xs">Từ</span>
+                    {formatDate(initialValues.startDate)}
+                  </div>
+                  <div className="flex items-center">
+                    <span className="w-8 text-amber-600 inline-block text-xs">Đến</span>
+                    {formatDate(initialValues.endDate)}
+                  </div>
+                </div>
+              }
+            />
+          </div>
+          <Divider />
+          <ContentDetailList.Item
+            direction="horizontal"
+            label="Mô tả"
+            value={<p>{initialValues?.description}</p>}
+            className="mb-3"
           />
+          <ContentDetailList.Item
+            direction="horizontal"
+            label="Log"
+            value={initialValues?.logStatus}
+            className="mb-3"
+          />
+          <ContentDetailList.Item
+            direction="horizontal"
+            label="Trạng thái"
+            value={
+              <Tag
+                color={
+                  (initialValues?.status === Status.XX && "orange") ||
+                  (initialValues?.status === Status.OK && "green") ||
+                  "red"
+                }
+                bordered={false}
+              >
+                {(initialValues?.status === Status.XX && "Đã xoá") ||
+                  (initialValues?.status === Status.OK && "Đã duyệt") ||
+                  "Đã xoá"}
+              </Tag>
+            }
+          />
+          <Divider />
+          <div className="grid grid-cols-2 gap-4">
+            <ContentDetailList.Item label="Ngày tạo" value={formatDate(initialValues?.sysFstUpdate)} />
+            <ContentDetailList.Item label="Người tạo" value={initialValues?.sysFstUser} />
+            <ContentDetailList.Item
+              label="Ngày cập nhật"
+              value={initialValues?.sysLstUpdate ? formatDate(initialValues?.sysLstUpdate) : "--"}
+            />
+            <ContentDetailList.Item label="Người cập nhật" value={initialValues?.sysLstUser || "--"} />
+          </div>
+
           <Divider />
           <div className="stock-adjustment-wrapper">
             <StockAdjustmentForm
@@ -160,36 +204,3 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
   );
 };
 export default DrawerStockDetail;
-
-const ContentDetailList: React.FC<{
-  items: { label?: string; value?: React.ReactNode | string }[];
-  className?: string;
-}> = ({ items, className = "" }) => {
-  return (
-    <div
-      className={classNames("grid lg:grid-cols-3 grid-cols-2 gap-4", {
-        [className]: className,
-      })}
-    >
-      {items.map((item, _index) => (
-        <ContentDetailItem key={_index} {...item} />
-      ))}
-    </div>
-  );
-};
-const ContentDetailItem: React.FC<{ label?: string; value?: React.ReactNode | string; className?: string }> = ({
-  label,
-  value,
-  className = "",
-}) => {
-  return (
-    <div
-      className={classNames({
-        [className]: className,
-      })}
-    >
-      <span className="block text-xs text-gray-500">{label}</span>
-      <span className="block break-words">{value}</span>
-    </div>
-  );
-};

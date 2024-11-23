@@ -5,6 +5,8 @@ import PriceConfigContainer, { PriceConfigContainerProps } from "./PriceConfigCo
 import { useGetSellablePriceConfigsCoreQuery } from "@/queries/core/Sellable";
 import useConfigPriceSellable from "../../modules/useConfigPriceSellable";
 import { extraConfigColumn, tourConfigColumn } from "./PriceConfigContainer/priceConfigColumns";
+import { useMemo } from "react";
+import { PriceConfig, SellablePriceConfigRs } from "@/models/management/core/priceConfig.interface";
 interface SellableContainerDetailProps {
   data: SellableDetail;
   disabled: boolean;
@@ -15,14 +17,105 @@ const SellableContainerDetail: React.FC<SellableContainerDetailProps> = ({ data,
   const { data: priceConfigs } = useGetSellablePriceConfigsCoreQuery(sellable.recId, {
     enabled: !disabled,
   });
+
+  const extraConfigListByService = useMemo(() => {
+    let extraListHasStock: SellablePriceConfigRs["result"]["extraConfigs"] = [];
+    let extraListNoStock: SellablePriceConfigRs["result"]["extraConfigs"] = [];
+
+    priceConfigs?.extraConfigs.forEach((item) => {
+      if (item.stock) {
+        extraListHasStock.push(item);
+      }
+
+      if (!item.stock) {
+        extraListNoStock.push(item);
+      }
+    });
+
+    const extraListNoStockGrouping = extraListNoStock?.reduce<{
+      [key: string]: {
+        items: SellablePriceConfigRs["result"]["extraConfigs"];
+        serviceName: string;
+      };
+    }>((acc, item) => {
+      if (acc[item.inventory.recId]) {
+        acc = {
+          ...acc,
+          [item.inventory.recId]: {
+            ...acc[item.inventory.recId],
+            items: [...acc[item.inventory.recId].items, item],
+          },
+        };
+      } else {
+        acc = {
+          ...acc,
+          [item.inventory.recId]: {
+            serviceName: item.inventory.name,
+            items: [item],
+          },
+        };
+      }
+      return acc;
+    }, {});
+
+    const extraListWithStockGrouping = extraListHasStock?.reduce<{
+      [key: string]: {
+        items: SellablePriceConfigRs["result"]["extraConfigs"];
+        serviceName: string;
+      };
+    }>((acc, item) => {
+      if (item.stock) {
+        if (acc[item.stock.recId]) {
+          acc = {
+            ...acc,
+            [item.stock.recId]: {
+              ...acc[item.stock.recId],
+              items: [...acc[item.stock.recId].items, item],
+            },
+          };
+        } else {
+          return {
+            ...acc,
+            [item.stock.recId]: {
+              serviceName: `${item.inventory.name} - ${item.stock.code}`,
+              items: [item],
+            },
+          };
+        }
+      }
+      return acc;
+    }, {});
+
+    return {
+      extraListNoStockGrouping,
+      extraListWithStockGrouping,
+    };
+  }, [priceConfigs]);
+
   const { onUpdate } = useConfigPriceSellable();
 
   const handleSaveTourPriceConfig: PriceConfigContainerProps["onSubmit"] = (data) => {
     onUpdate({ sellableRecId: sellable.recId, tourConfigs: data });
   };
 
-  const handleSaveExtraPriceConfig: PriceConfigContainerProps["onSubmit"] = (data) => {
-    onUpdate({ sellableRecId: sellable.recId, extraConfigs: data });
+  const handleSaveExtraPriceConfig: PriceConfigContainerProps["onSubmit"] = (updateConfigs) => {
+    const mergeConfigs = priceConfigs?.extraConfigs.reduce<SellablePriceConfigRs["result"]["extraConfigs"]>(
+      (acc, config) => {
+        const existsItem = updateConfigs.find((item) => item.recId === config.recId);
+
+        if (existsItem) {
+          acc = [...acc, existsItem as SellablePriceConfigRs["result"]["extraConfigs"][number]];
+        } else {
+          acc = [...acc, config];
+        }
+        return acc;
+      },
+      [],
+    );
+    onUpdate({
+      sellableRecId: sellable.recId,
+      extraConfigs: mergeConfigs,
+    });
   };
 
   const tabItems: TabsProps["items"] = [
@@ -228,14 +321,43 @@ const SellableContainerDetail: React.FC<SellableContainerDetailProps> = ({ data,
       key: "extraPricingConfig",
       children: (
         <div className="price-config pt-3">
-          <h3 className="text-lg font-semibold mb-3">Thiết lập giá dịch vụ</h3>
-          <PriceConfigContainer
+          <h3 className="text-lg font-semibold mb-6">Thiết lập giá dịch vụ</h3>
+          {extraConfigListByService.extraListNoStockGrouping
+            ? Object.entries(extraConfigListByService.extraListNoStockGrouping).map(([key, config], _index) => (
+                <div className="mb-6" key={key}>
+                  <h3 className="mb-3 font-semibold text-[16px]">{config.serviceName}</h3>
+                  <PriceConfigContainer
+                    tableColumn={extraConfigColumn}
+                    sellableId={sellable.recId}
+                    cap={sellable.cap}
+                    priceConfigs={config.items}
+                    onSubmit={handleSaveExtraPriceConfig}
+                  />
+                </div>
+              ))
+            : null}
+
+          {extraConfigListByService.extraListWithStockGrouping
+            ? Object.entries(extraConfigListByService.extraListWithStockGrouping).map(([key, config], _index) => (
+                <div className="mb-6" key={key}>
+                  <h3 className="mb-3 font-semibold text-[16px]">{config.serviceName}</h3>
+                  <PriceConfigContainer
+                    tableColumn={extraConfigColumn}
+                    sellableId={sellable.recId}
+                    cap={sellable.cap}
+                    priceConfigs={config.items}
+                    onSubmit={handleSaveExtraPriceConfig}
+                  />
+                </div>
+              ))
+            : null}
+          {/* <PriceConfigContainer
             tableColumn={extraConfigColumn}
             sellableId={sellable.recId}
             cap={sellable.cap}
             priceConfigs={priceConfigs?.extraConfigs || []}
             onSubmit={handleSaveExtraPriceConfig}
-          />
+          /> */}
         </div>
       ),
     },

@@ -7,7 +7,7 @@ import TextArea from "antd/es/input/TextArea";
 import { formOfPaymentSchema } from "../../schema/formOfPayment";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { isEmpty, isUndefined } from "lodash";
-import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
+import { EFopType } from "@/models/management/core/formOfPayment.interface";
 
 type TFormData = Required<FOPFormData>;
 interface FOPFormProps {
@@ -23,7 +23,7 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmitForm, formOfPaym
   const { handlerSubmit, errors } = useFormSubmit({
     schema: formOfPaymentSchema,
   });
-  console.log(errors);
+
   const onChange = (key: keyof FOPFormData, value: FOPFormData[keyof TFormData]) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -49,7 +49,7 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmitForm, formOfPaym
         <Row gutter={16}>
           <Col span={12}>
             <FormItem
-              label={`${formOfPaymentType === FOP_TYPE.PAYMENT ? "Người thanh toán" : "Người nhận"}`}
+              label={`${formOfPaymentType === EFopType.PAYMENT ? "Người thanh toán" : "Người nhận"}`}
               validateStatus={errors?.payer ? "error" : ""}
               help={errors?.payer || ""}
               required
@@ -180,9 +180,9 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmitForm, formOfPaym
       </Form>
       <Space>
         <Button
-          onClick={() => handlerSubmit(formData, onSubmit)}
+          onClick={() => handlerSubmit(formData, () => onSubmit(formData))}
           type="primary"
-          className="w-[140px]"
+          className="w-[120px]"
           loading={isLoading}
           disabled={isDisableButton}
         >

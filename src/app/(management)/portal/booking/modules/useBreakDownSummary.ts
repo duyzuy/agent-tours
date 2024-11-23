@@ -284,12 +284,17 @@ const useBreakDownSummary = () => {
       return acc;
     }, 0);
 
-    const ssrSubTotal = bookingSsrWithPax.reduce((acc, bkItem) => {
+    const ssrSubTotalBypax = bookingSsrWithPax.reduce((acc, bkItem) => {
       acc += bkItem.configItem[bkItem.type] * bkItem.qty;
       return acc;
     }, 0);
 
-    return tourPrices + ssrSubTotal;
+    const ssrSubTotalNoPax = bookingSsr.reduce((acc, bkItem) => {
+      acc += bkItem.configItem[bkItem.type] * bkItem.qty;
+      return acc;
+    }, 0);
+
+    return tourPrices + ssrSubTotalBypax + ssrSubTotalNoPax;
   };
   return {
     tourPrices: {

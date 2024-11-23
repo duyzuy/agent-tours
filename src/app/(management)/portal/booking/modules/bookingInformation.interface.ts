@@ -7,18 +7,18 @@ import { PassengerInformationFormData } from "./passenger.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { ESellChannel } from "@/constants/channel.constant";
-import { IProdutService } from "@/models/management/booking/service.interface";
+import { IProductService } from "@/models/management/booking/service.interface";
 
 export interface IProductServiceBookingItem {
   bookingIndex: number;
-  serviceItem: IProdutService;
-  configItem: IProdutService["configs"][number];
+  serviceItem: IProductService;
+  configItem: IProductService["configs"][number];
   qty: number;
   type: PassengerType;
 }
 export interface IProductServiceBookingItemWithoutPax {
-  serviceItem: IProdutService;
-  configItem: IProdutService["configs"][number];
+  serviceItem: IProductService;
+  configItem: IProductService["configs"][number];
   qty: number;
   type: PassengerType.ADULT;
 }
@@ -71,7 +71,7 @@ export class AppBookingManager {
   };
   searchBooking: SearchBookingFormData;
   productList?: IProductTour[];
-  serviceList?: IProdutService[];
+  serviceList?: IProductService[];
   reservation?: IReservation;
   channel: ESellChannel;
   agentUserId?: number;
@@ -94,7 +94,7 @@ export class AppBookingManager {
     },
     searchBooking: SearchBookingFormData,
     productList: IProductTour[],
-    serviceList: IProdutService[] | undefined,
+    serviceList: IProductService[] | undefined,
     reservation: IReservation | undefined,
     channel: ESellChannel,
     agentUserId: number | undefined,

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 
 import classNames from "classnames";
 import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
@@ -9,10 +9,10 @@ import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { Space, Button, Checkbox } from "antd";
 import { useRouter } from "next/navigation";
 import { passengerInformationSchema } from "../../schema/passengerInformation.schema";
-import { object } from "yup";
+
 import { isEqualObject } from "@/utils/compare";
 import ModalConfirmation from "./ModalConfirmation";
-import FormItem from "@/components/base/FormItem";
+
 import useLocalUserProfile from "@/hooks/useLocalProfile";
 export type PassengerListFormData = {
   index: number;
@@ -173,9 +173,7 @@ const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
       >
         <div className="passenger__information-head mb-6">
           <h3 className="font-[500] text-lg">Thông tin hành khách</h3>
-          <div>
-            <p>Thông tin hành khách được thay đổi trong quản lý booking.</p>
-          </div>
+          <p>Thông tin hành khách được thay đổi trong quản lý booking.</p>
         </div>
         <div className="passenger__information-body">
           {passengerListForm.map((pax) => (

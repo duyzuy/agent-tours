@@ -19,16 +19,19 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     render(value, record, index) {
       return (
         <div>
-          <div className="mb-2">
-            <span className="block">{record.name}</span>
-            <span className="text-primary-default text-xs">{record.code}</span>
-          </div>
-          <div>
-            <span className="text-xs text-gray-500">Loại sản phẩm</span>
-            <span className="block">{record.productType}</span>
-          </div>
+          <span className="block">{record.name}</span>
+          <span className="text-primary-default text-xs">{record.code}</span>
         </div>
       );
+    },
+  },
+  {
+    title: "Loại",
+    dataIndex: "productType",
+    key: 2,
+    width: 140,
+    render(value, record, index) {
+      return record.productType;
     },
   },
   {
@@ -80,7 +83,10 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     width: 120,
     render: (_, record) => {
       return (
-        <Tag color={(record.status === Status.OK && "green") || (record.status === Status.QQ && "orange") || "red"}>
+        <Tag
+          color={(record.status === Status.OK && "green") || (record.status === Status.QQ && "orange") || "red"}
+          bordered={false}
+        >
           {(record.status === Status.OK && "Đang kích hoạt") ||
             (record.status === Status.XX && "Đã xoá") ||
             (record.status === Status.QQ && "Chờ duyệt") ||

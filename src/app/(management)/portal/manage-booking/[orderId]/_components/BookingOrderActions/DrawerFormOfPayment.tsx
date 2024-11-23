@@ -4,9 +4,10 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useFormOfPayment } from "../../modules/useFormOfPayment";
 import FOPList from "./FOPList";
 import FOPForm from "./FOPForm";
-import { FOP_TYPE } from "@/models/management/core/formOfPayment.interface";
+import { EFopType } from "@/models/management/core/formOfPayment.interface";
 import { FOPFormData } from "../../modules/formOfPayment.interface";
-import { useGetFormOfPaymentListByOrderIdCoreQuery } from "@/queries/core/bookingOrder";
+
+import { useGetFormOfPaymentListCoreQuery } from "@/queries/core/formOfPayment";
 
 import { FormOfPaymmentQueryParams } from "@/models/management/core/formOfPayment.interface";
 import { isUndefined } from "lodash";
@@ -29,11 +30,11 @@ const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
   formOfPaymentType,
 }) => {
   const queryParams = new FormOfPaymmentQueryParams(
-    { orderId: orderId, type: formOfPaymentType },
+    { orderId: orderId, types: formOfPaymentType ? [formOfPaymentType] : [] },
     undefined,
     undefined,
   );
-  const { data: fopList, isLoading } = useGetFormOfPaymentListByOrderIdCoreQuery({
+  const { data: fopList, isLoading } = useGetFormOfPaymentListCoreQuery({
     queryParams: queryParams,
     enabled: !isUndefined(orderId) && !isUndefined(formOfPaymentType),
   });
@@ -67,10 +68,10 @@ const DrawerFormOfPayment: React.FC<DrawerFormOfPaymentProps> = ({
   return (
     <Drawer
       title={
-        (formOfPaymentType === FOP_TYPE.PAYMENT && "Thanh toán") ||
-        (formOfPaymentType === FOP_TYPE.REFUND && "Hoàn tiền") ||
-        (formOfPaymentType === FOP_TYPE.DISCOUNT && "Giảm giá") ||
-        (formOfPaymentType === FOP_TYPE.REFUND && "Thêm phí") ||
+        (formOfPaymentType === EFopType.PAYMENT && "Thanh toán") ||
+        (formOfPaymentType === EFopType.REFUND && "Hoàn tiền") ||
+        (formOfPaymentType === EFopType.DISCOUNT && "Giảm giá") ||
+        (formOfPaymentType === EFopType.REFUND && "Thêm phí") ||
         "--"
       }
       width={750}

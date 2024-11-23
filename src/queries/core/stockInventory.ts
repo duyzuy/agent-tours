@@ -48,7 +48,10 @@ export const useGetStockInventoryListCoreQuery = ({
       pageCurrent,
       pageSize,
       {
-        inventoryId: requestObject?.inventoryId,
+        inventoryId: Number(requestObject?.inventoryId),
+        type: requestObject?.type,
+        productType: requestObject?.productType,
+        inventoryType: requestObject?.inventoryType,
         start: startDate,
         end: endDate,
         valid: validDate,
@@ -78,7 +81,7 @@ export const useGetStockDetailInventoryCoreQuery = ({
   enabled: boolean;
 }) => {
   return useQuery({
-    queryKey: [queryCore.GET_STOCK_DETAIL_INVENTORY, inventoryStockId],
+    queryKey: [queryCore.GET_STOCK_DETAIL_INVENTORY, Number(inventoryStockId)],
     queryFn: () => stockInventoryAPIs.getStockDetail(inventoryStockId),
     select: (data) => data.result,
     enabled: enabled,

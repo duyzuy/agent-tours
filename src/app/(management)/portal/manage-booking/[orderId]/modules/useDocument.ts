@@ -1,4 +1,3 @@
-import { FOPFormData } from "./formOfPayment.interface";
 import useMessage from "@/hooks/useMessage";
 import { MutationOptions, useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";

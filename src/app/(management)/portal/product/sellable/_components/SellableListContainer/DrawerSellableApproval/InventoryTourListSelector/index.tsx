@@ -21,7 +21,7 @@ function InventoryTourListSelector({
   value,
 }: InventoryTourListSelectorProps) {
   const initQueryParams = new InventoryQueryParams(
-    { productType: [EProductType.TOUR], isStock: true, type: inventoryTypes },
+    { productType: [EProductType.TOUR], isStock: false, type: inventoryTypes },
     1,
     999,
   );

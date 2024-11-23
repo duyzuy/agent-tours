@@ -1,10 +1,10 @@
-import { BaseResponse, Status } from "../../common.interface";
+import { BaseQueryParams, BaseResponse, Status } from "../../common.interface";
 
 export interface IFormOfPayment {
   recId: number;
   orderId: number;
-  type: FOP_TYPE;
-  fopType: FOP_PAYMENT_TYPE;
+  type: EFopType;
+  fopType: EFopPaymentType;
   fopDocument: string;
   amount: number;
   payer: string;
@@ -24,7 +24,7 @@ export interface IFormOfPayment {
   infoNumber: string;
 }
 
-export enum FOP_TYPE {
+export enum EFopType {
   PAYMENT = "PAYMENT",
   REFUND = "REFUND",
   EXCHANGE = "EXCHANGE",
@@ -37,7 +37,7 @@ export enum FOP_TYPE {
   DISCOUNT_POLICY = "DISCOUNT_POLICY",
 }
 
-export enum FOP_PAYMENT_TYPE {
+export enum EFopPaymentType {
   CASH = "CASH",
   BANKTRANSFER = "BANKTRANSFER",
   CREDITCARD = "CREDITCARD",
@@ -45,10 +45,10 @@ export enum FOP_PAYMENT_TYPE {
   SYSTEM = "SYSTEM", // từ hệ thống sinh ra
 }
 
-export interface IFormOfPaymentPayload {
+export interface FormOfPaymentPayload {
   orderId?: number;
-  type?: FOP_TYPE; //"PAYMENT(IN)"; REFUND(OUT), CHARGE(IN-KOTRAKHACH), DISCOUNT(OUT-KOTRAKHACH)
-  fopType?: FOP_PAYMENT_TYPE; //"CASH"; BANKTRANSFER, CREDITCARD, COUPON
+  type?: EFopType; //"PAYMENT(IN)"; REFUND(OUT), CHARGE(IN-KOTRAKHACH), DISCOUNT(OUT-KOTRAKHACH)
+  fopType?: EFopPaymentType; //"CASH"; BANKTRANSFER, CREDITCARD, COUPON
   fopDocument?: string;
   amount?: number;
   payer?: string;
@@ -56,15 +56,23 @@ export interface IFormOfPaymentPayload {
   status?: Status; //OK không được xoá - chỉ QQ mới được xoá
 }
 
-export class FormOfPaymmentQueryParams {
-  requestObject?: {
-    orderId?: number;
-    type?: FOP_TYPE;
-  };
-  pageCurrent?: number;
-  pageSize?: number;
+export class FormOfPaymmentQueryParams
+  implements
+    BaseQueryParams<{
+      orderId?: number;
+      types?: EFopType[];
+      fopTypes?: EFopPaymentType[];
+      requestId?: number;
+      status?: Status;
+    }>
+{
+  requestObject;
+  pageCurrent;
+  pageSize;
   constructor(
-    requestObject: { orderId: number | undefined; type: FOP_TYPE | undefined } | undefined,
+    requestObject:
+      | { orderId?: number; types?: EFopType[]; fopTypes?: EFopPaymentType[]; requestId?: number; status?: Status }
+      | undefined,
     pageCurrent: number | undefined,
     pageSize: number | undefined,
   ) {
@@ -74,4 +82,5 @@ export class FormOfPaymmentQueryParams {
   }
 }
 
-export interface IFormOfPaymentListRs extends BaseResponse<IFormOfPayment[]> {}
+export interface FormOfPaymentListRs extends BaseResponse<IFormOfPayment[]> {}
+export interface FormOfPaymentRs extends BaseResponse<IFormOfPayment> {}

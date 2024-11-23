@@ -12,7 +12,7 @@ interface OrderInformationProps {
   name?: string;
   code?: string;
   className?: string;
-  orderId?: number;
+  orderId: number;
   paymentStatus?: PaymentStatus;
   sysFstUpdate?: string;
   referenceId?: string;
@@ -50,12 +50,9 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
   return (
     <>
       <div
-        className={classNames(
-          "flex items-center bg-white border border-slate-200 px-6 py-4 rounded-md flex-wrap gap-y-4",
-          {
-            [className]: className,
-          },
-        )}
+        className={classNames("flex items-center bg-white", {
+          [className]: className,
+        })}
       >
         <div className="w-20 border-r mr-6 pr-6">
           <span className="block">ID</span>
@@ -82,9 +79,8 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
           <span className="block">Kênh bán</span>
           <span className="block text-[15px] font-[500] ">{channel ?? "--"}</span>
         </div>
-
         <div className="border-r mr-6 pr-6 w-fit">
-          <span className="block">AgentId</span>
+          <span className="block">Mã đại lý</span>
           <span className="block text-[15px] font-[500] ">{agentId ?? "--"}</span>
         </div>
 
@@ -97,13 +93,24 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
         <div className="">
           <span className="block">Trạng thái</span>
           <span className="block text-[15px] font-[500] ">
-            {(paymentStatus === PaymentStatus.PAID && <Tag color="green">Đã thanh toán</Tag>) ||
-              (paymentStatus === PaymentStatus.DEPOSITED && <Tag color="blue">Thanh toán 1 phần</Tag>) || (
-                <Tag color="red">Chưa thanh toán</Tag>
-              )}
+            <Tag
+              color={
+                paymentStatus === PaymentStatus.PAID
+                  ? "green"
+                  : paymentStatus === PaymentStatus.DEPOSITED
+                  ? "blue"
+                  : "red"
+              }
+            >
+              {paymentStatus === PaymentStatus.PAID
+                ? "Đã thanh toán"
+                : paymentStatus === PaymentStatus.DEPOSITED
+                ? "Thanh toán 1 phần"
+                : " Chưa thanh toán"}
+            </Tag>
           </span>
         </div>
-        <div className="ml-auto">
+        {/* <div className="ml-auto">
           <Space>
             <Button
               size="small"
@@ -116,33 +123,14 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
               Huỷ đặt chỗ
             </Button>
           </Space>
-        </div>
+        </div> */}
       </div>
       <ModalCancelBookingConfirmation
+        orderId={orderId}
         isShowModal={isShowModalConfirm}
         title="Huỷ đặt chỗ!"
         descriptions="Bạn chắc chắn muốn huỷ đặt chỗ?"
-        onCancel={onCloseModalCancelConfirm}
-        render={() => (
-          <Form layout="vertical">
-            <FormItem required>
-              <Input.TextArea
-                placeholder="Lý do huỷ"
-                name="rmk4"
-                onChange={(ev) =>
-                  setCancelBookingData((prev) => ({
-                    ...prev,
-                    bookingOrder: {
-                      ...prev?.bookingOrder,
-                      rmk4: ev.target.value,
-                    },
-                  }))
-                }
-              />
-            </FormItem>
-          </Form>
-        )}
-        onConfirm={onConfirmCancelBookingOrder}
+        onCancel={onConfirmCancelBookingOrder}
       />
     </>
   );

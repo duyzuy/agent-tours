@@ -1,6 +1,5 @@
 import { getAgToken } from "@/utils/common";
 import { client } from "@/services/api";
-import { BaseResponse } from "@/models/common.interface";
 import {
   CMSTemplateListRs,
   CMSTemplateRs,
@@ -21,7 +20,7 @@ import {
   CMSTemplateContentMinimalQueryParams,
 } from "@/models/management/cms/cmsTemplateContent.interface";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
-import { sortBy } from "lodash";
+
 export const cmsTemplateAPIs = {
   create: async (payload?: CMSTemplatePayload) => {
     return await client.post<ICMSTemplateContent>("local/cms_template_Addnew_ByKey", {

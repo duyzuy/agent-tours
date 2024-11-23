@@ -1,10 +1,10 @@
 import { Status } from "@/models/common.interface";
-import { FOP_TYPE, FOP_PAYMENT_TYPE } from "@/models/management/core/formOfPayment.interface";
+import { EFopType, EFopPaymentType } from "@/models/management/core/formOfPayment.interface";
 
 export class FOPFormData {
   orderId: number;
-  type?: FOP_TYPE;
-  fopType?: FOP_PAYMENT_TYPE;
+  type?: EFopType;
+  fopType?: EFopPaymentType;
   fopDocument?: string;
   amount?: number;
   payer?: string;
@@ -18,8 +18,8 @@ export class FOPFormData {
   status?: Status;
   constructor(
     orderId: number,
-    type: FOP_TYPE | undefined,
-    fopType: FOP_PAYMENT_TYPE | undefined,
+    type: EFopType | undefined,
+    fopType: EFopPaymentType | undefined,
     fopDocument: string,
     amount: number,
     payer: string,
@@ -49,16 +49,16 @@ export class FOPFormData {
 }
 
 export const FOP_PAYMENT_TYPE_LIST = [
-  { label: "Tiền mặt", value: FOP_PAYMENT_TYPE.CASH },
-  { label: "Chuyển khoản ngân hàng", value: FOP_PAYMENT_TYPE.BANKTRANSFER },
-  { label: "Thẻ tín dụng", value: FOP_PAYMENT_TYPE.CREDITCARD },
-  { label: "Phiếu giảm giá", value: FOP_PAYMENT_TYPE.COUPON },
-  { label: "Hệ thống", value: FOP_PAYMENT_TYPE.SYSTEM },
+  { label: "Tiền mặt", value: EFopPaymentType.CASH },
+  { label: "Chuyển khoản ngân hàng", value: EFopPaymentType.BANKTRANSFER },
+  { label: "Thẻ tín dụng", value: EFopPaymentType.CREDITCARD },
+  { label: "Phiếu giảm giá", value: EFopPaymentType.COUPON },
+  { label: "Hệ thống", value: EFopPaymentType.SYSTEM },
 ];
 
 export const FOP_TYPE_LIST = [
-  { label: "Thanh toán", value: FOP_TYPE.PAYMENT },
-  { label: "Hoàn tiền", value: FOP_TYPE.REFUND },
-  { label: "Phí thuế", value: FOP_TYPE.CHARGE },
-  { label: "Giảm giá", value: FOP_TYPE.DISCOUNT },
+  { label: "Thanh toán", value: EFopType.PAYMENT },
+  { label: "Hoàn tiền", value: EFopType.REFUND },
+  { label: "Phí thuế", value: EFopType.CHARGE },
+  { label: "Giảm giá", value: EFopType.DISCOUNT },
 ];

@@ -2,7 +2,7 @@ import { PriceConfig } from "../core/priceConfig.interface";
 import { BaseResponse } from "../../common.interface";
 import { IInventory, IInventoryDetail } from "../core/inventory.interface";
 import { IStock } from "../core/stock.interface";
-export interface IProdutService {
+export interface IProductService {
   inventory: Pick<
     IInventoryDetail,
     "recId" | "type" | "productType" | "code" | "name" | "airItinerary" | "tourItinerary" | "supplier" | "status"
@@ -13,4 +13,4 @@ export interface IProdutService {
   configs: Omit<PriceConfig, "inventory" | "stock">[];
 }
 
-export interface ProductServiceListResponse extends BaseResponse<{ extraConfigs: IProdutService[] }> {}
+export interface ProductServiceListResponse extends BaseResponse<{ extraConfigs: IProductService[] }> {}

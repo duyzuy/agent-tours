@@ -115,7 +115,7 @@ function InventoryExtraListSelector(props: InventoryExtraListSelectorProps) {
   const { inventories, onChangeQuantity, onAdd, onRemove, inventoryTypes, enabled = true, ...restProps } = props;
 
   const initQueryParams = new InventoryQueryParams(
-    { productType: [EProductType.EXTRA], isStock: true, type: inventoryTypes },
+    { productType: [EProductType.EXTRA], isStock: false, type: inventoryTypes },
     1,
     999,
   );

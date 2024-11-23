@@ -2,7 +2,7 @@ import {
   useUpdateCustomerInformationMutation,
   useUpdatePassengersInformationMutation,
 } from "@/mutations/managements/booking";
-import { IBookingOrderCustomerPayload, IBookingOrderPassengersPayload } from "./bookingOrder.interface";
+import { IBookingOrderCustomerPayload, IOrderPassengerEditPayload } from "./bookingOrder.interface";
 import useMessage from "@/hooks/useMessage";
 import { isUndefined } from "lodash";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,15 +17,11 @@ const useUpdateCustomerAndPassenger = () => {
 
   const mesage = useMessage();
 
-  const onUpdateCustomerInfo = (payload?: IBookingOrderCustomerPayload, cb?: () => void) => {
-    if (isUndefined(payload)) {
-      throw new Error("Thiếu payload thông tin người đặt");
-    }
-
+  const onUpdateCustomerInfo = (payload: IBookingOrderCustomerPayload, cb?: () => void) => {
     makeUpdateCustomerInformation(payload, {
       onSuccess(data, variables, context) {
         mesage.success("Cập nhật thành công.");
-        console.log(variables.bookingOrder?.recId);
+
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_BOOKING_ORDER_DETAIL, { recId: Number(variables.bookingOrder?.recId) }],
         });
@@ -42,15 +38,12 @@ const useUpdateCustomerAndPassenger = () => {
     });
   };
 
-  const onUpdatePassengerInfo = (payload?: IBookingOrderPassengersPayload, cb?: () => void) => {
-    if (isUndefined(payload)) {
-      throw new Error("Thiếu payload thông tin hành khách");
-    }
+  const onUpdatePassengerInfo = (payload: IOrderPassengerEditPayload, cb?: () => void) => {
     makeUpdatePassengersInformation(payload, {
       onSuccess(data, variables, context) {
         mesage.success("Cập nhật thông tin hành khách thành công");
         queryClient.invalidateQueries({
-          queryKey: [queryCore.GET_BOOKING_ORDER_DETAIL, { recId: Number(variables.bookingOrder?.recId) }],
+          queryKey: [queryCore.GET_BOOKING_ORDER_DETAIL, { recId: Number(variables.bookingOrderId) }],
         });
         queryClient.invalidateQueries({
           queryKey: [queryCore.GET_BOOKING_ORDER_LIST],

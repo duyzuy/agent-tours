@@ -1,5 +1,5 @@
 import { localRuleAndPolicyAPIs } from "@/services/management/ruleAndPolicy";
-import { IRuleAndPolicyPayload } from "@/app/(management)/portal/rule-policy/modules/ruleAndPolicy.interface";
+import { IRuleAndPolicyPayload } from "@/models/management/core/ruleAndPolicy.interface";
 import { IRuleAndPolicyRs } from "@/models/ruleAndPolicy.interface";
 import { useCustomMutation } from "../useCustomMutation";
 

@@ -41,7 +41,7 @@ const getColumn = (
       editable: true,
     },
     {
-      title: "LM. per booking",
+      title: "Max each booking",
       dataIndex: "limitPerBooking",
       key: "limitPerBooking",
       width: 80,
@@ -55,7 +55,7 @@ const getColumn = (
       editable: true,
     },
     {
-      title: "SL đang còn",
+      title: "Đang còn",
       dataIndex: "open",
       key: "open",
       width: 80,
@@ -98,27 +98,21 @@ const getColumn = (
         return moneyFormatNoSymbol(infant);
       },
     },
+    {
+      title: "Chi tiết",
+      dataIndex: "details",
+      key: "details",
+      width: 120,
+      editable: false,
+      render: (_, { details }) => {
+        return details;
+      },
+    },
   ];
 
   return [...tourConfigColumn, ...(columns || [])];
 };
 const tourConfigColumn = getColumn();
-const extraConfigColumn = getColumn([
-  {
-    title: "Tên dịch vụ",
-    dataIndex: "inventory",
-    key: "inventory",
-    width: 160,
-    editable: false,
-    render: (_, { inventory, stock }) => {
-      return (
-        <span className="text-xs">
-          <span className="block">{inventory?.name}</span>
-          <span className="block">{stock?.code}</span>
-        </span>
-      );
-    },
-  },
-]);
+const extraConfigColumn = getColumn();
 
 export { tourConfigColumn, extraConfigColumn };

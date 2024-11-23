@@ -6,6 +6,7 @@ import { IBookingOrderCustomerPayload } from "../../../modules/bookingOrder.inte
 import DrawerCustomerInformation, { DrawerCustomerInformationProps } from "./DrawerCustomerInformation";
 import { ICustomerInformation } from "@/models/management/booking/customer.interface";
 import { ButtonSecondary } from "@/components/base/buttons";
+import { ContentDetailList } from "@/components/admin/ContentDetailList";
 
 interface CustomerInformationProps {
   className?: string;
@@ -26,57 +27,43 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({ orderId, cusI
   };
 
   return (
-    <>
-      <div
-        className={classNames("order__detail-customer-info", {
-          [className]: className,
-        })}
-      >
-        <div className="order__detail-customer-info-head mb-2">
-          <span className="font-semibold text-[16px] mr-3">Thông tin người đặt</span>
-          <ButtonSecondary
-            buttonProps={{
-              icon: <EditOutlined />,
-              size: "small",
-              shape: "circle",
-            }}
-            color="primary"
-            onClick={onOpenDrawer}
-          ></ButtonSecondary>
-        </div>
-        <Row gutter={16}>
-          <Col span={12} className="mb-3">
-            <div className="">
-              <span className="block text-xs">Họ và tên</span>
-              <span className="font-[500]">{cusInfo?.custName}</span>
-            </div>
-          </Col>
-          <Col span={12} className="mb-3">
-            <div className="">
-              <span className="block text-xs">Email</span>
-              <span className="font-[500]">{cusInfo?.custEmail}</span>
-            </div>
-          </Col>
-          <Col span={12} className="mb-3">
-            <div className="">
-              <span className="block text-xs">Số điện thoại</span>
-              <span className="font-[500]">{cusInfo?.custPhoneNumber}</span>
-            </div>
-          </Col>
-          <Col span={12} className="mb-3">
-            <div className="">
-              <span className="block text-xs">Địa chỉ</span>
-              <span className="font-[500]">{cusInfo?.custAddress}</span>
-            </div>
-          </Col>
-          <Col span={12} className="mb-3">
-            <div className="">
-              <span className="block text-xs">Ghi chú</span>
-              <span className="font-[500]">{cusInfo?.rmk}</span>
-            </div>
-          </Col>
-        </Row>
+    <div
+      className={classNames("order__detail-customer-info", {
+        [className]: className,
+      })}
+    >
+      <div className="order__detail-customer-info-head mb-2">
+        <span className="font-semibold text-[16px] mr-3">Thông tin người đặt</span>
+        <ButtonSecondary
+          buttonProps={{
+            icon: <EditOutlined />,
+            size: "small",
+            shape: "circle",
+          }}
+          color="primary"
+          onClick={onOpenDrawer}
+        ></ButtonSecondary>
       </div>
+      <div className="grid grid-cols-2 gap-4">
+        <ContentDetailList.Item
+          label="Họ và tên"
+          value={<span className="font-[500]">{cusInfo?.custName || "--"}</span>}
+        />
+        <ContentDetailList.Item
+          label="Email"
+          value={<span className="font-[500]">{cusInfo?.custEmail || "--"}</span>}
+        />
+        <ContentDetailList.Item
+          label="Số điện thoại"
+          value={<span className="font-[500]">{cusInfo?.custPhoneNumber || "--"}</span>}
+        />
+        <ContentDetailList.Item
+          label="Địa chỉ"
+          value={<span className="font-[500]">{cusInfo?.custAddress || "--"}</span>}
+        />
+        <ContentDetailList.Item label="Ghi chú" value={<span className="font-[500]">{cusInfo?.rmk || "--"}</span>} />
+      </div>
+
       <DrawerCustomerInformation
         isOpen={showDrawer}
         orderId={orderId}
@@ -84,7 +71,7 @@ const CustomerInformation: React.FC<CustomerInformationProps> = ({ orderId, cusI
         onClose={onCloseDrawer}
         onSubmit={handleUpdate}
       />
-    </>
+    </div>
   );
 };
 export default memo(CustomerInformation);

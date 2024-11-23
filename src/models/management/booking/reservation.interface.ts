@@ -94,29 +94,5 @@ export interface IReservation {
   passengers: IPassengerInformation[];
   ssr: IBookingDetailItem[];
 }
-export class BookingOrderListQueryParams {
-  requestObject?: {
-    createdFrom?: string;
-    createdTo?: string;
-    status?: Status;
-  };
-  pageCurrent: number;
-  pageSize: number;
-  constructor(
-    requestObject:
-      | {
-          createdFrom?: string;
-          createdTo?: string;
-          status?: Status;
-        }
-      | undefined,
-    pageCurrent: number,
-    pageSize: number,
-  ) {
-    this.requestObject = requestObject;
-    this.pageCurrent = pageCurrent;
-    this.pageSize = pageSize;
-  }
-}
 
 export interface ReservationRs extends BaseResponse<IReservation> {}

@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
-import { Breadcrumb, Col, Row, Spin } from "antd";
+import { Breadcrumb, Col, Divider, Row, Spin } from "antd";
 import useBooking, { useBookingSelector } from "../hooks/useBooking";
 import { useRouter } from "next/navigation";
-import { Space, Button } from "antd";
-import { IProdutService } from "@/models/management/booking/service.interface";
 import BookingSummary from "../_components/BookingSummary";
 import ServiceListContainer from "./_components/ServiceListContainer";
 import { ContentDetailList } from "@/components/admin/ContentDetailList";
@@ -90,23 +88,19 @@ const ServicePage = () => {
             },
           ]}
         />
-      </div>
-      <div className="bg-white p-6 rounded-md mb-6 shadow-sm">
+        <Divider />
         <h4 className="font-semibold mb-3">Các dịch vụ đi kèm</h4>
         <div className="flex flex-wrap gap-4">
           {productInformation.sellableDetails.inventories.map((item) => (
             <div className="detail-item flex mb-1 items-start" key={item.recId}>
               <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
-              <div>{`${item.name} - ${item.code}`}</div>
+              <div>{item.name}</div>
             </div>
           ))}
           {productInformation.sellableDetails.stocks.map((item) => (
             <div className="detail-item flex mb-1 items-start" key={item.recId}>
               <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
-              <div>
-                <span>{`${item.invenroty.name} - ${item.invenroty.code}`}</span>
-                <div>{item.code}</div>
-              </div>
+              <div>{`${item.invenroty.name} - ${item.code}`}</div>
             </div>
           ))}
         </div>
@@ -119,6 +113,7 @@ const ServicePage = () => {
           </div>
         ))}
       </div>
+
       <div className="max-w-6xl">
         <Row gutter={32}>
           <Col span={15}>

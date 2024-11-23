@@ -93,7 +93,7 @@ const SellTemplatePage = () => {
       <div className="search-bar">
         <Form>
           {productTypeList && (
-            <FormItem label="Loại sản phẩm">
+            <FormItem label="Loại mẫu sản phẩm">
               {productTypeList.map((type) => (
                 <Radio
                   key={type}
