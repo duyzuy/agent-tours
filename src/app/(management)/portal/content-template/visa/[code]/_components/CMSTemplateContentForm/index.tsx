@@ -210,7 +210,6 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
     clearErrors();
   }, [lang, initData]);
 
-  console.log(initData);
   return (
     <>
       <Form layout="vertical">
@@ -225,10 +224,9 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
                 </FormItem>
               )}
             />
-
             <Controller
               control={control}
-              name="name"
+              name="slug"
               render={({ field, fieldState: { error } }) => (
                 <FormItem label="Tiêu đề template" required validateStatus={error ? "error" : ""} help={error?.message}>
                   <Slug
@@ -246,37 +244,33 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
 
             <Typography.Title level={4}>Meta data</Typography.Title>
             <div className="border p-6 rounded-md mb-6">
-              <div className="meta-list">
-                <Controller
-                  control={control}
-                  name="metaData"
-                  render={({ field, fieldState: { error } }) => (
-                    <>
-                      {field.value?.map((metaItem, _index) => (
-                        <MetaDataFields
-                          key={_index}
-                          index={_index}
-                          values={metaItem}
-                          onChange={onChangeMetaDataForm}
-                          onRemove={removeMetaDataItem}
-                        />
-                      ))}
-                    </>
-                  )}
-                />
-              </div>
-              <div>
-                <Button
-                  icon={<PlusOutlined />}
-                  type="primary"
-                  ghost
-                  disabled={getValues("metaData")?.length === 6}
-                  onClick={addMetaDataFields}
-                  size="small"
-                >
-                  Thêm
-                </Button>
-              </div>
+              <Controller
+                control={control}
+                name="metaData"
+                render={({ field, fieldState: { error } }) => (
+                  <>
+                    {field.value?.map((metaItem, _index) => (
+                      <MetaDataFields
+                        key={_index}
+                        index={_index}
+                        values={metaItem}
+                        onChange={onChangeMetaDataForm}
+                        onRemove={removeMetaDataItem}
+                      />
+                    ))}
+                  </>
+                )}
+              />
+              <Button
+                icon={<PlusOutlined />}
+                type="primary"
+                ghost
+                disabled={getValues("metaData")?.length === 6}
+                onClick={addMetaDataFields}
+                size="small"
+              >
+                Thêm
+              </Button>
             </div>
             <Controller
               control={control}
@@ -327,52 +321,48 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
             />
           </div>
           <div className="post-right w-[320px] xl:w-[380px]">
-            <div className="inner-right">
-              <Publishing
-                // templateValue={formData.templateId}
-                // templateList={CONTENTS_LAYOUT_PAGE_TEMPLATE}
-                // onChangeTemplate={onChangeTemplate}
-                onChangeTime={onChangePublishTime}
-                onChangeDate={onChangePublishDate}
-                timeValue={dayjs(getValues("publishDate"))}
-                dateValue={dayjs(getValues("publishDate"))}
-                onSaveAndPublish={handleSubmit((data) =>
-                  onSubmit?.({
-                    ...data,
-                    status: PageContentStatus.PUBLISH,
-                  }),
-                )}
-                onDelete={() => onDelete?.(initData?.id)}
-                onApproval={() => onPublish?.(initData?.id)}
-                onChangeStatus={onChangeStatusPage}
-                hideSaveForApproval={action === "update" ?? false}
-                hideApproval={getValues("status") !== PageContentStatus.PENDING || action === "create"}
-                hideDelete={action === "create"}
-                action={action}
-                status={getValues("status")}
-                disableSubmit={isDisablePublishButton}
-                disableSaveForApproval={isDisablePublishButton}
-                // errors={{
-                //   publishDate: errors?.publishDate,
-                // }}
-              />
-              <Controller
-                control={control}
-                name="thumbnail"
-                render={({ field, fieldState: { error } }) => (
-                  <ThumbnailImage
-                    thumbnailUrl={
-                      field.value && field.value.id !== 0
-                        ? `${mediaConfig.rootPath}/${field.value.original}`
-                        : undefined
-                    }
-                    onRemove={onRemoveThumbnail}
-                    onAdd={handleAddThumb}
-                    error={error?.message}
-                  />
-                )}
-              />
-            </div>
+            <Publishing
+              // templateValue={formData.templateId}
+              // templateList={CONTENTS_LAYOUT_PAGE_TEMPLATE}
+              // onChangeTemplate={onChangeTemplate}
+              onChangeTime={onChangePublishTime}
+              onChangeDate={onChangePublishDate}
+              timeValue={dayjs(getValues("publishDate"))}
+              dateValue={dayjs(getValues("publishDate"))}
+              onSaveAndPublish={handleSubmit((data) =>
+                onSubmit?.({
+                  ...data,
+                  status: PageContentStatus.PUBLISH,
+                }),
+              )}
+              onDelete={() => onDelete?.(initData?.id)}
+              onApproval={() => onPublish?.(initData?.id)}
+              onChangeStatus={onChangeStatusPage}
+              hideSaveForApproval={action === "update"}
+              hideApproval={getValues("status") !== PageContentStatus.PENDING || action === "create"}
+              hideDelete={action === "create"}
+              action={action}
+              status={getValues("status")}
+              disableSubmit={isDisablePublishButton}
+              disableSaveForApproval={isDisablePublishButton}
+              // errors={{
+              //   publishDate: errors?.publishDate,
+              // }}
+            />
+            <Controller
+              control={control}
+              name="thumbnail"
+              render={({ field, fieldState: { error } }) => (
+                <ThumbnailImage
+                  thumbnailUrl={
+                    field.value && field.value.id !== 0 ? `${mediaConfig.rootPath}/${field.value.original}` : undefined
+                  }
+                  onRemove={onRemoveThumbnail}
+                  onAdd={handleAddThumb}
+                  error={error?.message}
+                />
+              )}
+            />
           </div>
         </div>
       </Form>

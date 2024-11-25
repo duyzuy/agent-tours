@@ -104,11 +104,11 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
             value: templateDetail.recId,
           },
           {
-            label: "Mã nhóm sản phẩm",
+            label: "Mã",
             value: templateDetail.code,
           },
           {
-            label: "Tên nhóm sản phẩm",
+            label: "Tên mẫu sản phẩm",
             value: templateDetail.name,
           },
           {

@@ -1,7 +1,5 @@
 import React, { memo } from "react";
 import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
-import { usePathname } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 import {
   DashboardOutlined,
   ContainerOutlined,
@@ -145,7 +143,7 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
       },
       {
         key: "rule-policy/payment",
-        label: "Chính sách thanh toán",
+        label: "Thanh toán, thuế, phí",
         rolepers: PATH_WITH_PERMISSION["rule-policy/payment"],
       },
     ],
@@ -187,7 +185,7 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
       },
       {
         key: "content-template/misc-document/list",
-        label: "Danh sách document",
+        label: "Document",
         rolepers: PATH_WITH_PERMISSION["content-template/misc-document/list"],
       },
       {

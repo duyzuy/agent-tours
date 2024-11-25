@@ -85,7 +85,7 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
       );
     },
   },
-  Table.EXPAND_COLUMN,
+  // Table.EXPAND_COLUMN,
   {
     title: "Nhóm điểm đến",
     dataIndex: "destListJson",

@@ -30,7 +30,9 @@ const LoginPage = () => {
       {
         onSuccess: (data, variables) => {
           setToken(data.result);
-          router.push(LINKS.DashBoard);
+          // window.location.reload();
+          router.refresh();
+          // router.push(LINKS.DashBoard);
         },
         onError(error, variables, context) {
           console.log(error);
@@ -50,7 +52,9 @@ const LoginPage = () => {
       {
         onSuccess: (data, variables) => {
           setToken(data.result);
-          router.push(LINKS.DashBoard);
+          router.refresh();
+          // router.push(LINKS.DashBoard);
+          // window.location.reload();
         },
         onError(error, variables, context) {
           console.log(error);
@@ -69,7 +73,9 @@ const LoginPage = () => {
       {
         onSuccess: (data, variables) => {
           setToken(data.result);
-          router.push(LINKS.DashBoard);
+          // router.push(LINKS.DashBoard);
+          router.refresh();
+          // window.location.reload();
         },
         onError(error, variables, context) {
           console.log(error);

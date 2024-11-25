@@ -6,22 +6,22 @@ import { getAgToken } from "@/utils/common";
 /** USE CHECK AUTH FOR LOGIN PAGE / REGISTER PAGE **/
 
 const Auth = ({ children }: any) => {
-    const isAuth = !!getAgToken();
-    const router = useRouter();
-    const [show, setShow] = useState(false);
-    useEffect(() => {
-        if (isAuth) {
-            router.push(LINKS.DashBoard);
-        } else {
-            setShow(true);
-        }
-    }, [isAuth]);
-
-    if (show) {
-        return children;
+  const isAuth = !!getAgToken();
+  const router = useRouter();
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (isAuth) {
+      router.push(LINKS.DashBoard);
+    } else {
+      setShow(true);
     }
+  }, [isAuth]);
 
-    return null;
+  if (show) {
+    return children;
+  }
+
+  return null;
 };
 
 export default Auth;

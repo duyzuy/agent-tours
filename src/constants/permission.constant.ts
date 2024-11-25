@@ -231,7 +231,6 @@ export const roleConfigs = {
   systemConfig: {
     management: [ERolesFunctions.SYSTEM_MANAGEMENT],
   },
-
   operation: {
     list: [ERolesFunctions.OPERATION],
   },
@@ -268,11 +267,7 @@ export const PATH_WITH_PERMISSION = {
   "product/stock": roleConfigs.product.stock.list,
   "product/template-sellable": roleConfigs.product.template.list,
   "product/sellable": roleConfigs.product.selable.list,
-  "content-template": [
-    {
-      $or: roleConfigs.product.templateContent.list,
-    },
-  ],
+  "content-template": roleConfigs.product.templateContent.list,
   "content-template/sellable/list": roleConfigs.product.templateContent.list,
   "content-template/misc-document/list": roleConfigs.product.templateContent.list,
   "content-template/misc-depart/list": roleConfigs.product.templateContent.list,

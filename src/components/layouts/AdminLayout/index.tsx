@@ -116,8 +116,8 @@ const AdminLayout = ({ children }: Props) => {
             <Space className="cursor-pointer">
               <Avatar shape="circle" size={28} icon={<UserOutlined />} className="!bg-orange-500" />
               <div className="text-sm leading-none">
-                <span className="block text-xs">{userProfile?.fullname}</span>
-                <span className="text-xs text-gray-400">{userProfile?.email}</span>
+                <span className="block text-xs">{userProfile?.userType}</span>
+                <span className="text-xs text-gray-400">{userProfile?.fullname}</span>
               </div>
             </Space>
           </Dropdown>

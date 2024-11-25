@@ -209,26 +209,21 @@ const DrawerTemplateSellableForm: React.FC<DrawerTemplateSellableFormProps> = ({
     >
       <Form layout="vertical" colon={false} labelWrap className="max-w-4xl">
         <FormItem
-          label="Tên nhóm sản phẩm"
+          label="Tên mẫu sản phẩm"
           required
           validateStatus={errors?.name ? "error" : ""}
           help={errors?.name || ""}
         >
           <Input
-            placeholder="Tên nhóm sản phẩm"
+            placeholder="Tên mẫu sản phẩm"
             disabled={isWaitingApproval}
             value={templateSellableFormData.name}
             onChange={(ev) => onChangeSellableFormData("name", ev.target.value)}
           />
         </FormItem>
-        <FormItem
-          label="Mã nhóm sản phẩm"
-          required
-          validateStatus={errors?.code ? "error" : ""}
-          help={errors?.code || ""}
-        >
+        <FormItem label="Mã" required validateStatus={errors?.code ? "error" : ""} help={errors?.code || ""}>
           <Input
-            placeholder="Mã nhóm sản phẩm"
+            placeholder="Mã"
             disabled={isWaitingApproval || actionType === "EDIT"}
             value={templateSellableFormData.code}
             onChange={(ev) => onChangeSellableFormData("code", ev.target.value)}

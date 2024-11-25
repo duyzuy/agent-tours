@@ -5,8 +5,10 @@ import useAuth from "@/hooks/useAgAuth";
 import { LINKS } from "@/constants/links.constant";
 import PermissionWrapper from "./PermissionWrapper";
 
-import { useLocalUserGetProfileQuery } from "@/queries/localUser";
+import { useLocalUserGetProfileQuery, useLocalUserGetRolesQuery } from "@/queries/localUser";
 import { LocalUserProfileContext } from "@/context/localUserProfileContext";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 interface Props {
   children: React.ReactNode;
@@ -17,6 +19,9 @@ const AdminAuthorized: React.FC<Props> = ({ children }) => {
   const { clearToken, setLocalUserName } = useAuth();
 
   const { data: userProfile, isLoading } = useLocalUserGetProfileQuery();
+  const { data: rolesPers, isLoading: isLoadingRole } = useLocalUserGetRolesQuery({
+    enabled: !isLoading && !!userProfile,
+  });
 
   useEffect(() => {
     if (!userProfile && !isLoading) {
@@ -27,10 +32,17 @@ const AdminAuthorized: React.FC<Props> = ({ children }) => {
     }
   }, [userProfile, isLoading]);
 
-  if (!userProfile) return null;
+  if (isLoading || isLoadingRole) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      </div>
+    );
+  }
+  if (!userProfile || !rolesPers) return null;
   return (
     <LocalUserProfileContext.Provider value={userProfile}>
-      <PermissionWrapper>{children}</PermissionWrapper>
+      <PermissionWrapper rolePers={rolesPers.roleList[0].localUser_RolePermissionList}>{children}</PermissionWrapper>
     </LocalUserProfileContext.Provider>
   );
 };
