@@ -61,6 +61,7 @@ const GROUP_PERMISSION_LIST = [
   { label: "Destination", value: "DESTINATION" },
   { label: "Coupon", value: "COUPON" },
   { label: "Leading", value: "LEADING" },
+  { label: "Payment", value: "PAYMENT" },
 ];
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 const DrawerPermissions: React.FC<DrawerPermissionsProps> = ({

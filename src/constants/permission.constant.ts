@@ -35,7 +35,6 @@ export enum ERolesFunctions {
   AGENT_CREATE = "AGENT_CREATE",
   AGENT_LIST = "AGENT_LIST",
   AGENT_DELETE = "AGENT_DELETE",
-  MANAGE_BOOKING = "MANAGE_BOOKING",
   MANAGE_BOOKING_LIST = "MANAGE_BOOKING_LIST",
   MANAGE_BOOKING_ADD_ONS = "MANAGE_BOOKING_ADD_ONS",
   MANAGE_BOOKING_SPLIT = "MANAGE_BOOKING_SPLIT",
@@ -69,6 +68,7 @@ export enum ERolesFunctions {
   SUPPLIER_CREATE = "SUPPLIER_CREATE",
   SUPPLIER_UPDATE = "SUPPLIER_UPDATE",
   SUPPLIER_DELETE = "SUPPLIER_DELETE",
+
   FOP_LIST = "FOP_LIST",
   FOP_CREATE = "FOP_CREATE",
   FOP_UPDATE = "FOP_UPDATE",
@@ -123,6 +123,8 @@ export enum ERolesFunctions {
   BOOKING_TOUR_CREATE = "BOOKING_TOUR_CREATE",
   BOOKING_MICE_CREATE = "BOOKING_MICE_CREATE",
   BOOKING_SERVICE_CREATE = "BOOKING_SERVICE_CREATE",
+
+  PAYMENT_RULES = "PAYMENT_RULES",
 }
 
 export type TRoleCondition = (ERolesFunctions | { $or: TRoleCondition })[];
@@ -212,6 +214,7 @@ export const roleConfigs = {
       list: [ERolesFunctions.SUPPLIER_LIST],
     },
     coupon: { list: [ERolesFunctions.COUPON_LIST] },
+    payment: { rules: [ERolesFunctions.PAYMENT_RULES] },
     templateContent: {
       list: [ERolesFunctions.TEMPLATE_CONTENT_LIST],
     },
@@ -279,12 +282,13 @@ export const PATH_WITH_PERMISSION = {
   language: roleConfigs.language.list,
   "system-configuration": roleConfigs.systemConfig.management,
   "system-configuration/general": roleConfigs.systemConfig.management,
-  "system-configuration/rule-policy": roleConfigs.systemConfig.management,
+
   "operation/list": roleConfigs.operation.list,
   operation: roleConfigs.operation.list,
-  "discount-policy": roleConfigs.product.coupon.list,
-  "discount-policy/coupon": roleConfigs.product.coupon.list,
-  "discount-policy/policy": roleConfigs.product.coupon.list,
+  "rule-policy": roleConfigs.product.coupon.list,
+  "rule-policy/coupon": roleConfigs.product.coupon.list,
+  "rule-policy/coupon-policy": roleConfigs.product.coupon.list,
+  "rule-policy/payment": roleConfigs.product.payment.rules,
   destination: roleConfigs.product.destination.list,
   "destination/list": roleConfigs.product.destination.list,
   "destination/search-group": roleConfigs.product.destination.list,
