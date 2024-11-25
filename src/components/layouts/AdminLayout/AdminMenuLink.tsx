@@ -20,20 +20,20 @@ import {
   ControlOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
-import { ERolesFunctions, PATH_WITH_PERMISSION } from "@/constants/permission.constant";
+import { PATH_WITH_PERMISSION, TRoleCondition } from "@/constants/permission.constant";
 
 type MenuItem = Required<MenuProps>["items"][number] & {
   children?: MenuItem[];
   group?: string;
   pathname?: string;
-  rolepers?: ERolesFunctions[];
+  rolepers?: TRoleCondition;
 };
 
 type AdminMenuProps = MenuProps & {
   onNavigation?: MenuProps["onClick"];
 };
 const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
-  const [_, checkOnePermission] = useLocalUserPermissions();
+  const [_, checkPermession] = useLocalUserPermissions();
 
   let ADMIN_MENU_ITEMS: MenuItem[] = [
     {
@@ -287,6 +287,11 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
           label: "Nhóm chức năng",
           rolepers: PATH_WITH_PERMISSION["role-permission"],
         },
+        {
+          key: "permission",
+          label: "Chức năng",
+          rolepers: PATH_WITH_PERMISSION["role-permission"],
+        },
       ],
     },
     {
@@ -327,12 +332,13 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
       ],
     },
   ];
-  const adminMenuItems = ADMIN_MENU_ITEMS.reduce<MenuItem[]>((acc, item) => {
+
+  const adminMenuMappingRule = ADMIN_MENU_ITEMS.reduce<MenuItem[]>((acc, item) => {
     const childItems = item.children?.reduce<MenuItem[]>((childItems, childItem) => {
       if (!childItem.rolepers) {
         childItems = [...childItems, childItem];
       }
-      if (childItem.rolepers && checkOnePermission(childItem.rolepers)) {
+      if (childItem.rolepers && checkPermession(childItem.rolepers)) {
         childItems = [...childItems, childItem];
       }
       return childItems;
@@ -342,7 +348,7 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
       acc = [...acc, { ...item, children: childItems }];
     }
 
-    if (item.rolepers && checkOnePermission(item.rolepers)) {
+    if (item.rolepers && checkPermession(item.rolepers)) {
       acc = [...acc, { ...item, children: childItems }];
     }
     return acc;
@@ -355,7 +361,7 @@ const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
       selectable
       onClick={onNavigation}
       defaultSelectedKeys={["dashboard"]}
-      items={adminMenuItems}
+      items={adminMenuMappingRule}
       style={{
         borderWidth: 0,
       }}

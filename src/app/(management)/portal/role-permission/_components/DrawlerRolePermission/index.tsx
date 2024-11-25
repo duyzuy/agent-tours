@@ -29,6 +29,7 @@ export interface DrawlerRolePermissionProps {
   actionType?: DrawerAction;
   initialValues?: RolesPermissionListResponse["result"]["rolePermissionList"][0];
   onSubmit?: (action: DrawerAction, data: RolePermissionFormData) => void;
+  isLoading?: boolean;
 }
 const DrawlerRolePermission: React.FC<DrawlerRolePermissionProps> = ({
   isOpen,
@@ -36,11 +37,10 @@ const DrawlerRolePermission: React.FC<DrawlerRolePermissionProps> = ({
   actionType = "CREATE",
   onSubmit,
   initialValues,
+  isLoading,
 }) => {
-  const { data: permissions, isLoading } = useGetPermissionsQuery({ enabled: isOpen });
-
+  const { data: permissions, isLoading: isLoadingPermissionList } = useGetPermissionsQuery({ enabled: isOpen });
   const initFormData = new RolePermissionFormData("", undefined, [], "OX");
-
   const { setValue, getValues, watch, control, handleSubmit, formState } = useForm<RolePermissionFormData>({
     defaultValues: { ...initFormData },
     resolver: yupResolver(rolePermissionSchema),
@@ -204,7 +204,7 @@ const DrawlerRolePermission: React.FC<DrawlerRolePermissionProps> = ({
           )}
         />
 
-        {isLoading && <Spin />}
+        {isLoadingPermissionList && <Spin />}
         <Controller
           control={control}
           name="localUser_PermissionList"
@@ -217,7 +217,7 @@ const DrawlerRolePermission: React.FC<DrawlerRolePermissionProps> = ({
             >
               {error?.message ? <p className="text-red-500 mb-2">{error?.message}</p> : null}
               <div className="grid grid-cols-3 gap-4">
-                {!isLoading &&
+                {!isLoadingPermissionList &&
                   groupedPermissionsList &&
                   Object.entries(groupedPermissionsList).map(([groupKey, values]) => (
                     <div className="border p-4 h-full rounded-md drop-shadow-sm bg-white" key={groupKey}>
@@ -253,13 +253,16 @@ const DrawlerRolePermission: React.FC<DrawlerRolePermissionProps> = ({
       </Form>
       <div className="drawler-action absolute px-4 py-4 border-t left-0 right-0 bg-white bottom-0">
         <Space>
-          <Button onClick={onClose}>Huỷ</Button>
+          <Button onClick={onClose} className="w-28">
+            Huỷ
+          </Button>
           <Button
             onClick={handleSubmit((data) => onSubmit && onSubmit(actionType, data))}
             type="primary"
             disabled={isDisabledSubmitButton}
+            className="w-28"
           >
-            {actionType === "CREATE" ? "Thêm mới" : "Cập nhật"}
+            Lưu
           </Button>
         </Space>
       </div>

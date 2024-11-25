@@ -60,11 +60,14 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
     "",
   );
 
-  const { setValue, control, handleSubmit } = useForm<LocalUserFormData>({
-    defaultValues: { ...initFormData },
+  const { setValue, control, handleSubmit, formState } = useForm<
+    LocalUserFormData & { isRequirePassword?: boolean; isCreate?: boolean }
+  >({
+    defaultValues: { ...initFormData, isRequirePassword: actionType === "CREATE", isCreate: actionType === "CREATE" },
     resolver: yupResolver(localUserSchema),
   });
 
+  console.log(formState.errors);
   const [isEditPassword, setEditPassword] = useState(false);
 
   const onChangeStatus = (checked: boolean) => {
@@ -95,33 +98,35 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
   };
 
   useEffect(() => {
-    if (initialValues) {
-      const initFormData = new LocalUserFormData(
-        initialValues.username,
-        initialValues.fullname,
-        initialValues.infoEmail,
-        initialValues.password,
-        initialValues.phoneNumber,
-        initialValues.email,
-        initialValues.status,
-        initialValues.mainRole,
-        initialValues.mainRoleName,
-        initialValues.descriptions,
-        initialValues.infoCompanyName,
-        initialValues.infoLegalRepresentative,
-        initialValues.infoPosition,
-        initialValues.infoPhoneNumber,
-        initialValues.infoAddress,
-        initialValues.infoTaxcode,
-        initialValues.infoBanking,
-        initialValues.infoSpecialNote,
-      );
+    const formData = initialValues
+      ? new LocalUserFormData(
+          initialValues.username,
+          initialValues.fullname,
+          initialValues.infoEmail,
+          initialValues.password,
+          initialValues.phoneNumber,
+          initialValues.email,
+          initialValues.status,
+          initialValues.mainRole,
+          initialValues.mainRoleName,
+          initialValues.descriptions,
+          initialValues.infoCompanyName,
+          initialValues.infoLegalRepresentative,
+          initialValues.infoPosition,
+          initialValues.infoPhoneNumber,
+          initialValues.infoAddress,
+          initialValues.infoTaxcode,
+          initialValues.infoBanking,
+          initialValues.infoSpecialNote,
+        )
+      : initFormData;
 
-      Object.entries(initFormData).forEach(([key, value]) => {
-        setValue(key as keyof LocalUserFormData, value as LocalUserFormData[keyof LocalUserFormData]);
-      });
-    }
-  }, [initialValues, isOpen]);
+    Object.entries(formData).forEach(([key, value]) => {
+      setValue(key as keyof LocalUserFormData, value as LocalUserFormData[keyof LocalUserFormData]);
+    });
+    setValue("isRequirePassword", actionType === "CREATE");
+    setValue("isCreate", actionType === "CREATE");
+  }, [initialValues, isOpen, actionType]);
 
   return (
     <>
@@ -221,7 +226,6 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
                 )}
               />
             </Col>
-
             <Col span={12}>
               {(actionType === "CREATE" && (
                 <React.Fragment>
@@ -346,7 +350,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
                 name="infoPhoneNumber"
                 render={({ field, fieldState: { error } }) => (
                   <FormItem label="Số điện thoại" validateStatus={error?.message ? "error" : ""} help={error?.message}>
-                    <Input placeholder="Số điện thoại" {...field} />
+                    <Input placeholder="Số điện thoại" value={field.value ?? undefined} onChange={field.onChange} />
                   </FormItem>
                 )}
               />

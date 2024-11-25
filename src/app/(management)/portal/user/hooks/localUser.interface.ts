@@ -19,7 +19,7 @@ export class LocalUserFormData implements ILocalUserPayload {
   infoCompanyName?: string;
   infoLegalRepresentative?: string;
   infoPosition?: string;
-  infoPhoneNumber?: string;
+  infoPhoneNumber?: string | null;
   infoAddress?: string;
   infoTaxcode?: string;
   infoBanking?: string;

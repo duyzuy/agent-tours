@@ -1,9 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-
 import DrawlerRolePermission from "./_components/DrawlerRolePermission";
-
 import { RolesPermissionListResponse } from "@/models/management/rolePermission.interface";
 import { useGetRolePermission } from "@/queries/role";
 import TableListPage from "@/components/admin/TableListPage";
@@ -17,8 +15,8 @@ const RolePermissionPage = () => {
   const [actionType, setActionType] = useState<DrawlerRolePermissionProps["actionType"]>();
   const [isOpenDrawler, setOpenDrawler] = useState(false);
   const { onCreate, onDelete, onUpdate } = useCRUDRolePermission();
-
-  const [editRecord, setEditRecord] = useState<RolesPermissionListResponse["result"]["rolePermissionList"][0]>();
+  const [loading, setLoading] = useState(false);
+  const [editRecord, setEditRecord] = useState<RolesPermissionListResponse["result"]["rolePermissionList"][number]>();
 
   const onHandleDrawlerRolePermission = (actions: TDrawlerRolePermission) => {
     if (actions.action === "EDIT") {
@@ -29,21 +27,20 @@ const RolePermissionPage = () => {
     setOpenDrawler(true);
     setActionType(() => actions.action);
   };
-  const onCancelEdit = () => {
+  const onCancel = () => {
     setOpenDrawler(false);
     setEditRecord(undefined);
   };
 
-  /**
-   * Handle submit form data.
-   * @param actionType
-   * @param payload
-   */
   const handleSubmitFormRolePermissions: DrawlerRolePermissionProps["onSubmit"] = (action, formData) => {
+    setLoading(true);
     if (action === "CREATE") {
       onCreate(formData, {
         onSuccess(data, variables, context) {
           setOpenDrawler(() => false);
+        },
+        onSettled(data, error, variables, context) {
+          setLoading(false);
         },
       });
     }
@@ -51,6 +48,9 @@ const RolePermissionPage = () => {
       onUpdate(formData, {
         onSuccess(data, variables, context) {
           setOpenDrawler(() => false);
+        },
+        onSettled(data, error, variables, context) {
+          setLoading(false);
         },
       });
     }
@@ -87,10 +87,11 @@ const RolePermissionPage = () => {
       </PageContainer>
       <DrawlerRolePermission
         isOpen={isOpenDrawler}
-        onClose={onCancelEdit}
+        onClose={onCancel}
         actionType={actionType}
         initialValues={editRecord}
         onSubmit={handleSubmitFormRolePermissions}
+        isLoading={loading}
       />
     </React.Fragment>
   );

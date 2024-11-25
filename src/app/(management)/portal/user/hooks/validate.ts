@@ -51,6 +51,7 @@ export const localUserSchema: ObjectSchema<TLocalUserObjectSchema> = object({
   mainRoleName: string(),
   descriptions: string(),
   infoPhoneNumber: string()
+    .nullable()
     .transform((v, o) => (o === "" ? null : v))
     .min(10, "Số điện thoại tối thiểu 10 số.")
     .max(11, "Số điện thoại không quá 11 số."),

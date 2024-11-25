@@ -18,7 +18,6 @@ const AdminAuthorized: React.FC<Props> = ({ children }) => {
 
   const { data: userProfile, isLoading } = useLocalUserGetProfileQuery();
 
-  console.log(userProfile);
   useEffect(() => {
     if (!userProfile && !isLoading) {
       clearToken();

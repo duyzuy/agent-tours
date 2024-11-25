@@ -2,6 +2,7 @@ import { getAgToken } from "@/utils/common";
 import { client } from "../api";
 import { RolePayload } from "@/models/management/role.interface";
 import { RolePermissionPayload, RolesPermissionListResponse } from "@/models/management/rolePermission.interface";
+import { PermissionPayload } from "@/models/management/permission.interface";
 
 export const roleAndPermissionAPIs = {
   getPermissions: async () => {
@@ -142,6 +143,48 @@ export const roleAndPermissionAPIs = {
           roleList: [
             {
               localUser_RoleKey: roleKey,
+            },
+          ],
+        },
+      },
+    });
+  },
+
+  createPermission: async (payload: PermissionPayload) => {
+    return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Addnew", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
+      },
+      params: {
+        requestObject: {
+          ...payload,
+        },
+      },
+    });
+  },
+  updatePermission: async (payload: PermissionPayload) => {
+    return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Edit", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
+      },
+      params: {
+        requestObject: {
+          ...payload,
+        },
+      },
+    });
+  },
+  deletePermission: async (permissionKey: string) => {
+    return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Delete", {
+      headers: {
+        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
+      },
+      params: {
+        requestObject: {
+          cat: "LOCALUSER_PERMISSION",
+          permissionList: [
+            {
+              localUser_PermissionKey: permissionKey,
             },
           ],
         },

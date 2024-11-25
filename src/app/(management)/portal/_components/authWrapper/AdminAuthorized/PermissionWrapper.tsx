@@ -41,9 +41,8 @@ const PermissionWrapper: React.FC<Props> = ({ children }) => {
   );
 
   useEffect(() => {
-    const corectPath = path.replace("/portal", "") as keyof typeof PATH_WITH_PERMISSION;
+    const corectPath = path.replace("/portal/", "") as keyof typeof PATH_WITH_PERMISSION;
     const perms = PATH_WITH_PERMISSION[corectPath] || [];
-
     if (!checkPermission(perms) && !isLoadingRole) {
       setValidPerm(false);
       router.push(LINKS.DashBoard);
@@ -66,12 +65,12 @@ const PermissionWrapper: React.FC<Props> = ({ children }) => {
 };
 export default PermissionWrapper;
 
-const checkOnePermission = (roles: ERolesFunctions[], condition: TRoleCondition[0]): boolean => {
+const checkOnePermission = (roles: ERolesFunctions[], condition: TRoleCondition[number]): boolean => {
   if (!condition) return true;
   if (typeof condition === "object" && condition.$or) {
     return (
       isEmpty(condition.$or) ||
-      condition.$or.reduce((hasPerm, cond) => hasPerm || !!checkOnePermission(roles, cond), false)
+      condition.$or.reduce((hasPerm, cond) => hasPerm || checkOnePermission(roles, cond), false)
     );
   }
 

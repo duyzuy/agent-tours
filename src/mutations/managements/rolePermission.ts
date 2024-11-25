@@ -2,6 +2,7 @@ import { roleAndPermissionAPIs } from "@/services/management/roles";
 import { RolePayload } from "@/models/management/role.interface";
 import { RolePermissionPayload } from "@/models/management/rolePermission.interface";
 import { useCustomMutation } from "../useCustomMutation";
+import { PermissionPayload } from "@/models/management/permission.interface";
 
 export const useCreateRolePermissionsMutation = () => {
   return useCustomMutation({
@@ -36,5 +37,23 @@ export const useUpdateRoleMutation = () => {
 export const useDeleteRoleMutation = () => {
   return useCustomMutation({
     mutationFn: (roleKey: string) => roleAndPermissionAPIs.deleteRole(roleKey),
+  });
+};
+
+export const useCreatePermissionMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: PermissionPayload) => roleAndPermissionAPIs.createPermission(payload),
+  });
+};
+
+export const useUpdatePermissionMutation = () => {
+  return useCustomMutation({
+    mutationFn: (payload: PermissionPayload) => roleAndPermissionAPIs.updatePermission(payload),
+  });
+};
+
+export const useDeletePermissionMutation = () => {
+  return useCustomMutation({
+    mutationFn: (permissionKey: string) => roleAndPermissionAPIs.deletePermission(permissionKey),
   });
 };
