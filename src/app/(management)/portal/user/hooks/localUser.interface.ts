@@ -27,6 +27,7 @@ export class LocalUserFormData implements ILocalUserPayload {
 
   constructor(
     username: string | undefined,
+    userType: ELocalUserType,
     fullname: string | undefined,
     infoEmail: string | undefined,
     password: string | undefined,
@@ -63,7 +64,7 @@ export class LocalUserFormData implements ILocalUserPayload {
     this.infoBanking = infoBanking;
     this.infoSpecialNote = infoSpecialNote;
     this.status = status;
-    this.userType = ELocalUserType.ADMIN;
+    this.userType = userType;
   }
 }
 

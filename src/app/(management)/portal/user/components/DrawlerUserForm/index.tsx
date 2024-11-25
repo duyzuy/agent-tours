@@ -41,6 +41,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
 }) => {
   const initFormData = new LocalUserFormData(
     "",
+    ELocalUserType.ADMIN,
     "",
     "",
     "",
@@ -101,6 +102,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
     const formData = initialValues
       ? new LocalUserFormData(
           initialValues.username,
+          initialValues.userType,
           initialValues.fullname,
           initialValues.infoEmail,
           initialValues.password,
