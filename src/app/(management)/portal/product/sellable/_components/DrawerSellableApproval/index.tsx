@@ -2,29 +2,26 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { Form, Space, Button, Drawer, message, Row, Col, Tabs, TabsProps, InputNumber, InputNumberProps } from "antd";
-import FormItem from "@/components/base/FormItem";
+import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import dayjs from "dayjs";
 import { DatePickerProps, RangePickerProps } from "antd/es/date-picker";
 import { ISellable } from "@/models/management/core/sellable.interface";
-import { SellableApprovalFormData } from "../../../modules/sellable.interface";
-import dayjs from "dayjs";
+import { SellableApprovalFormData } from "../../modules/sellable.interface";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { IInventory } from "@/models/management/core/inventory.interface";
-
+import FormItem from "@/components/base/FormItem";
 import InventoryExtraListSelector, { InventoryExtraListSelectorProps } from "./InventoryExtraListSelector";
 import StockExtraListSelector, { StockExtraListSelectorProps } from "./StockExtraListSelector";
 import ModalConfirmResetCap from "./ModalConfirmResetCap";
-import { sellableApprovalSchema } from "../../../schema/sellable.schema";
-import { TIME_FORMAT, DATE_TIME_FORMAT } from "@/constants/common";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
-
-import { stringToDate } from "@/utils/date";
 import InventoryTourListSelector, { InventoryTourListSelectorProps } from "./InventoryTourListSelector";
-import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import StockExtraList, { StockExtraListProps } from "./StockExtraListSelector/StockExtraList";
 import StockTourListTableSelector, { StockTourListTableSelectorProps } from "./StockTourListTableSelector";
-import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { boolean } from "yup";
+import { stringToDate } from "@/utils/date";
+import { sellableApprovalSchema } from "../../schema/sellable.schema";
+import { TIME_FORMAT, DATE_TIME_FORMAT } from "@/constants/common";
 
 const MAXIMUM_CAP_AMOUNT = 999;
 
@@ -397,16 +394,21 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
   return (
     <>
       <Drawer
-        title={`Duyệt ${sellableName}`}
+        title={sellableName}
         destroyOnClose
+        closeIcon={null}
+        maskClosable={false}
         width={850}
         onClose={onCancel}
+        footer={
+          <Space className="py-3">
+            <Button onClick={onCancel}>Huỷ bỏ</Button>
+            <Button type="primary" onClick={onSubmit && handleSubmit(onSubmit)}>
+              Duyệt
+            </Button>
+          </Space>
+        }
         open={isOpen}
-        styles={{
-          body: {
-            paddingBottom: 80,
-          },
-        }}
       >
         <Form layout="vertical" colon={false} labelWrap className="max-w-4xl">
           <Row gutter={16}>
@@ -528,14 +530,6 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
           </Row>
           <Tabs type="card" items={tabItems} />
         </Form>
-        <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white z-50">
-          <Space>
-            <Button onClick={onCancel}>Huỷ bỏ</Button>
-            <Button type="primary" onClick={onSubmit && handleSubmit(onSubmit)}>
-              Duyệt
-            </Button>
-          </Space>
-        </div>
       </Drawer>
 
       <ModalConfirmResetCap

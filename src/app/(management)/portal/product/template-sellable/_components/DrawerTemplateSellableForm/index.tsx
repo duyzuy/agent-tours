@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { Form, Input, Select, Space, Button, Drawer, Tag, Checkbox } from "antd";
+import { Form, Input, Select, Space, Button, Drawer, Tag, Checkbox, Radio } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { vietnameseTonesToUnderscoreKeyname } from "@/utils/helper";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
@@ -201,11 +201,20 @@ const DrawerTemplateSellableForm: React.FC<DrawerTemplateSellableFormProps> = ({
       onClose={onCancel}
       open={isOpen}
       className="drawer-template-sellable"
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <Space className="py-2">
+          <Button onClick={onCancel} className="min-w-[120px]">
+            Huỷ bỏ
+          </Button>
+          <Button
+            type="primary"
+            className="min-w-[120px]"
+            onClick={() => handlerSubmit(templateSellableFormData, handleSubmitForm)}
+          >
+            Lưu
+          </Button>
+        </Space>
+      }
     >
       <Form layout="vertical" colon={false} labelWrap className="max-w-4xl">
         <FormItem label="Tên sản phẩm" required validateStatus={errors?.name ? "error" : ""} help={errors?.name || ""}>
@@ -225,26 +234,22 @@ const DrawerTemplateSellableForm: React.FC<DrawerTemplateSellableFormProps> = ({
           />
         </FormItem>
         <FormItem label="Loại sản phẩm" required validateStatus={errors?.type ? "error" : ""} help={errors?.type || ""}>
-          <Space wrap direction="vertical">
+          <Space wrap direction="horizontal">
             {productTypeList?.map((item) => (
-              <Checkbox
+              <Radio
                 key={item}
                 value={item}
                 checked={templateSellableFormData.type?.includes(item)}
                 onChange={() => onChangeProductType(item)}
                 disabled={isWaitingApproval || actionType === "EDIT"}
               >
-                {item === EProductType.TOUR
-                  ? "Sản phẩm, dịch vụ tour."
-                  : item === EProductType.EXTRA
-                  ? "Sản phẩm, dịch vụ."
-                  : item}
-              </Checkbox>
+                {item === EProductType.TOUR ? "Tour" : item === EProductType.EXTRA ? "Dịch vụ" : item}
+              </Radio>
             ))}
           </Space>
         </FormItem>
         <FormItem
-          label="Loại dịch vụ bao gồm"
+          label="Loại dịch vụ đi kèm"
           required
           validateStatus={errors?.inventoryTypeList ? "error" : ""}
           help={errors?.inventoryTypeList || ""}
@@ -290,21 +295,6 @@ const DrawerTemplateSellableForm: React.FC<DrawerTemplateSellableFormProps> = ({
           value={isEmpty(templateSellableFormData.cmsIdentity) ? undefined : templateSellableFormData.cmsIdentity}
         />
       </Form>
-
-      <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-        <Space>
-          <Button onClick={onCancel} className="min-w-[120px]">
-            Huỷ bỏ
-          </Button>
-          <Button
-            type="primary"
-            className="min-w-[120px]"
-            onClick={() => handlerSubmit(templateSellableFormData, handleSubmitForm)}
-          >
-            Lưu
-          </Button>
-        </Space>
-      </div>
     </Drawer>
   );
 };

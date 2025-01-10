@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import TableListPage from "@/components/admin/TableListPage";
-import { SellableListRs } from "@/models/management/core/sellable.interface";
+import { ISellable, SellableListRs } from "@/models/management/core/sellable.interface";
 import { sellableColumns } from "./sellableColumns";
 import { Status } from "@/models/common.interface";
 import { PaginationProps } from "antd";
 import { ITemplateSellableDetail } from "@/models/management/core/templateSellable.interface";
 import { useRouter } from "next/navigation";
-import DrawerSellableApproval, { DrawerSellableApprovalProps } from "./DrawerSellableApproval";
+import DrawerSellableApproval, { DrawerSellableApprovalProps } from "../DrawerSellableApproval";
 export interface SellableListProps {
   dataSource?: SellableListRs["result"];
   templateSellable?: ITemplateSellableDetail;
@@ -16,7 +16,6 @@ export interface SellableListProps {
   totalItems?: number;
   isLoading?: boolean;
   render?: () => React.ReactNode;
-  // onApproval?: (record: SellableConfirmFormData, cb?: () => void) => void;
   onChangePageSellable?: PaginationProps["onChange"];
 }
 
@@ -26,37 +25,25 @@ const SellableListContainer: React.FC<SellableListProps> = ({
   pageSize,
   pageCurrent,
   totalItems,
-  templateSellable,
-  // onApproval,
   onChangePageSellable,
   render,
 }) => {
-  const [showDrawerApproval, setShowDrawerApproval] = useState(false);
-  const [approvalRecord, setApprovalRecord] = useState<SellableListRs["result"][0]>();
-
+  const [approvalRecord, setApprovalRecord] = useState<SellableListRs["result"][number]>();
+  const [showDrawer, setShowDrawer] = useState(false);
   const router = useRouter();
-
-  // const onCloseDrawerAndResetRecord = () => {
-  //   setShowDrawerApproval(false);
-  //   setApprovalRecord(undefined);
-  // };
-
-  // const setApproval = (record: SellableListRs["result"][0]) => {
-  //   setApprovalRecord(record);
-  //   setShowDrawerApproval(true);
-  // };
-
-  // const handleApproval: DrawerSellableApprovalProps["onSubmit"] = (formData) => {
-  //   onApproval(formData, () => {
-  //     setShowDrawerApproval(false);
-  //     setApprovalRecord(undefined);
-  //   });
-  // };
-
+  const handleApproval = (record: SellableListRs["result"][number]) => {
+    setApprovalRecord(record);
+    setShowDrawer(true);
+  };
+  const handleCancel = () => {
+    setApprovalRecord(undefined);
+    setShowDrawer(false);
+  };
+  const handleSubmit = () => {};
   return (
     <React.Fragment>
       {render?.()}
-      <TableListPage<SellableListRs["result"][0]>
+      <TableListPage<SellableListRs["result"][number]>
         dataSource={dataSource}
         scroll={{ x: 1600 }}
         rowKey={"recId"}
@@ -67,26 +54,29 @@ const SellableListContainer: React.FC<SellableListProps> = ({
           pageSize: pageSize,
           onChange: onChangePageSellable,
           total: totalItems,
-          position: ["bottomRight"],
+          position: ["bottomRight", "topRight"],
           hideOnSinglePage: true,
+          showQuickJumper: false,
+          size: "small",
         }}
-        // onApproval={(record) => setApproval(record)}
-        hideApproval={({ status }) => status === Status.OK}
-        showActionsLess={false}
-        onView={(record) => router.push(`/portal/product/sellable/${record.recId}`)}
-        hideEdit={({ status }) => status === Status.QQ || status === Status.OK}
+        fixedActionsColumn={false}
+        // onApproval={(record) => handleApproval(record)}
+        // hideApproval={({ status }) => status === Status.OK}
+        // showActionsLess={false}
+        // onView={(record) => router.push(`/portal/product/sellable/${record.recId}`)}
+        // hideEdit={({ status }) => status === Status.QQ || status === Status.OK}
       />
-
-      {/* {approvalRecord && templateSellable && (
+      {(approvalRecord && approvalRecord.type === "EXTRA") || (approvalRecord && approvalRecord.type === "TOUR") ? (
         <DrawerSellableApproval
-          isOpen={showDrawerApproval}
-          sellableName={approvalRecord?.code}
-          inventoryTypeList={templateSellable.inventoryTypeList}
-          onCancel={onCloseDrawerAndResetRecord}
+          isOpen={showDrawer}
+          inventoryTypeList={[]}
+          productType={approvalRecord.type}
+          sellableName={approvalRecord.code}
+          onCancel={handleCancel}
           initialValues={approvalRecord}
-          onSubmit={handleApproval}
+          onSubmit={handleSubmit}
         />
-      )} */}
+      ) : null}
     </React.Fragment>
   );
 };

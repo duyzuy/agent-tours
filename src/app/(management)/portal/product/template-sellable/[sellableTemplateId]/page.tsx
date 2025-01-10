@@ -60,43 +60,40 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
       breadCrumItems={[{ title: "Sản phẩm", href: LINKS.TemplateSellable }, { title: templateDetail.name }]}
       hideAddButton
     >
-      <div className="flex py-2 mb-6">
-        <Space>
-          {templateDetail.status === Status.QQ ? (
-            <Button
-              className="!bg-emerald-100 !text-emerald-600 w-[80px]"
-              type="text"
-              size="small"
-              onClick={() => onApprovalTemplate(templateDetail.recId)}
-            >
-              Duyệt
-            </Button>
-          ) : (
-            <Button
-              className="!bg-blue-100 !text-blue-600 w-[80px]"
-              type="text"
-              icon={<EditOutlined />}
-              size="small"
-              onClick={() => setShowTemplateDrawer(true)}
-            >
-              Sửa
-            </Button>
-          )}
-
-          <Popconfirm
-            placement="topLeft"
-            title="Xoá"
-            description={`Bạn muốn xoá dịch vụ ${templateDetail.name}`}
-            okText="Xác nhận"
-            cancelText="Huỷ bỏ"
-            onConfirm={() => handleDeleteTemplate(templateDetail.recId)}
+      <Space className="mb-6">
+        {templateDetail.status === Status.QQ ? (
+          <Button
+            className="!bg-emerald-100 !text-emerald-600 w-[80px]"
+            type="text"
+            size="small"
+            onClick={() => onApprovalTemplate(templateDetail.recId)}
           >
-            <Button className="!bg-red-100 !text-red-600 w-[80px]" type="text" icon={<DeleteOutlined />} size="small">
-              Xoá
-            </Button>
-          </Popconfirm>
-        </Space>
-      </div>
+            Duyệt
+          </Button>
+        ) : (
+          <Button
+            className="!bg-blue-100 !text-blue-600 w-[80px]"
+            type="text"
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => setShowTemplateDrawer(true)}
+          >
+            Sửa
+          </Button>
+        )}
+        <Popconfirm
+          placement="topLeft"
+          title="Xoá"
+          description={`Bạn muốn xoá dịch vụ ${templateDetail.name}`}
+          okText="Xác nhận"
+          cancelText="Huỷ bỏ"
+          onConfirm={() => handleDeleteTemplate(templateDetail.recId)}
+        >
+          <Button className="!bg-red-100 !text-red-600 w-[80px]" type="text" icon={<DeleteOutlined />} size="small">
+            Xoá
+          </Button>
+        </Popconfirm>
+      </Space>
       <ContentDetailList
         items={[
           {
@@ -106,14 +103,6 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
           {
             label: "Mã",
             value: templateDetail.code,
-          },
-          {
-            label: "Tên sản phẩm",
-            value: templateDetail.name,
-          },
-          {
-            label: "Chi tiết nội dung",
-            value: <>{templateDetail.cmsIdentity || "--"}</>,
           },
           {
             label: "Ngày tạo",
@@ -136,7 +125,19 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
       <Divider />
       <ContentDetailList.Item
         direction="horizontal"
-        className="mb-2"
+        className="mb-3"
+        label="Tên sản phẩm"
+        value={templateDetail.name}
+      />
+      <ContentDetailList.Item
+        direction="horizontal"
+        className="mb-3"
+        label="Chi tiết nội dung"
+        value={templateDetail.cmsIdentity || "--"}
+      />
+      <ContentDetailList.Item
+        direction="horizontal"
+        className="mb-3"
         label="Loại sản phẩm"
         value={
           templateDetail.type === EProductType.TOUR
@@ -148,7 +149,7 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
       />
       <ContentDetailList.Item
         direction="horizontal"
-        className="mb-2"
+        className="mb-3"
         label="Loại dịch vụ"
         value={templateDetail.inventoryTypeList.map((item) => (
           <Tag key={item} bordered={false}>
@@ -158,39 +159,41 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
       />
       <ContentDetailList.Item
         direction="horizontal"
-        className="mb-2"
+        className="mb-3"
         label="Hồ sơ giấy tờ bắt buộc"
         value={
-          templateDetail.checkListJson
-            ? templateDetail.checkListJson?.map(({ name, link }, _index) => (
-                <div key={_index} className="flex">
-                  {link && (
-                    <span className="mr-1">
-                      <Link href={link} target="_blank">
+          templateDetail.checkListJson && templateDetail.checkListJson.length ? (
+            <>
+              <ul className="list-decimal pl-5">
+                {templateDetail.checkListJson?.map(({ name, link }, _index) => (
+                  <li key={_index}>
+                    {link && (
+                      <Link href={link} target="_blank" className="mr-1">
                         <FileExcelOutlined />
                       </Link>
-                    </span>
-                  )}
-                  {name}
-                </div>
-              ))
-            : "--"
+                    )}
+                    {name}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            "Không yêu cầu."
+          )
         }
       />
-
       <ContentDetailList.Item
         direction="horizontal"
-        className="mb-2"
+        className="mb-3"
         label="Khởi hành"
         value={templateDetail.depart?.name_vi || "--"}
       />
       <ContentDetailList.Item
         direction="horizontal"
-        className="mb-2"
         label="Điểm đến"
-        value={templateDetail.destListJson.map((des) => (
-          <div key={des.id} className="mb-3">
-            <div className="font-semibold mb-1">{des.codeName}</div>
+        value={templateDetail.destListJson.map((des, _index) => (
+          <div key={des.id} className={_index !== 0 ? "mt-3" : ""}>
+            <div className="font-semibold">{des.codeName}</div>
             <Space wrap>
               {des.listStateProvince.map((item, _index) => (
                 <React.Fragment key={_index}>
@@ -217,7 +220,22 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
           />
         </>
       ) : (
-        <Empty description="Duyệt để tạo sản phẩm" />
+        <Empty
+          imageStyle={{ width: 60, height: 60, margin: "auto" }}
+          description={
+            <>
+              <p className="mb-3">Sản phẩm đang chờ duyệt.</p>
+              <Button
+                className="w-[80px]"
+                type="primary"
+                size="small"
+                onClick={() => onApprovalTemplate(templateDetail.recId)}
+              >
+                Duyệt
+              </Button>
+            </>
+          }
+        />
       )}
     </PageContainer>
   );

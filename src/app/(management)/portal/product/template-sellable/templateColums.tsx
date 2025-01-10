@@ -18,15 +18,12 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     title: "Sản phẩm",
     dataIndex: "name",
     key: "name",
-    width: 220,
+    width: 250,
     render: (_, { status, recId, code, name, type }) => {
       return (
         <div>
-          <div className="mb-2">
-            <p className="text-xs text-gray-600">{code}</p>
-            <p className="font-[500] mb-2">{name}</p>
-            <span className="block">{type}</span>
-          </div>
+          <p className="text-xs text-gray-600">{code}</p>
+          <p className="font-[500] mb-2">{name}</p>
           <Link href={`/portal/product/template-sellable/${recId}`} className="text-xs">
             <span>Chi tiết</span>
             <span className="text-[10px] ml-1">
@@ -90,7 +87,7 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     title: "Nhóm điểm đến",
     dataIndex: "destListJson",
     key: "destListJson",
-    width: 200,
+    width: 150,
     render(value, { destListJson }) {
       return (
         <Space wrap>
@@ -102,20 +99,6 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
         </Space>
       );
     },
-  },
-  {
-    title: "Ngày tạo",
-    key: "sysLstUpdate",
-    width: 160,
-    render: (_, { sysLstUpdate }) => {
-      return formatDate(sysLstUpdate);
-    },
-  },
-  {
-    title: "Người tạo",
-    dataIndex: "sysFstUser",
-    key: "sysFstUser",
-    width: 100,
   },
   {
     title: "Trạng thái",
@@ -132,5 +115,19 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
         </Tag>
       );
     },
+  },
+  {
+    title: "Ngày tạo",
+    key: "sysLstUpdate",
+    width: 160,
+    render: (_, { sysLstUpdate }) => {
+      return formatDate(sysLstUpdate);
+    },
+  },
+  {
+    title: "Người tạo",
+    dataIndex: "sysFstUser",
+    key: "sysFstUser",
+    width: 150,
   },
 ];

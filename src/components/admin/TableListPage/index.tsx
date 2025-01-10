@@ -165,74 +165,76 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
     [renderDropdownItems],
   );
 
-  const mergeColumns: ColumnsType<T> = [
-    ...columns,
-    {
-      title: "",
-      dataIndex: "action",
-      key: "action",
-      width: 160,
-      fixed: fixedActionsColumn ? "right" : undefined,
-      render: (_, record) => {
-        return (
-          <Space>
-            {!onEdit || hideEdit?.(record) === true ? null : (
-              <span
-                className="edit-btn flex items-center text-primary-default justify-center rounded-full  hover:bg-gray-100 cursor-pointer mr-1"
-                onClick={() => onEdit?.(record)}
-                title="Sửa"
-              >
-                <EditOutlined className="p-[8px] block" />
-              </span>
-            )}
-            {onSetting ? (
-              <span
-                className="edit-btn flex items-center text-primary-default justify-center rounded-full  hover:bg-gray-100 cursor-pointer mr-1"
-                title="Thiết lập"
-                onClick={() => onSetting?.(record)}
-              >
-                <SettingOutlined className="p-[8px] block" />
-              </span>
-            ) : null}
-            {!showActionsLess ? (
-              rowActions.map((item, _index) => (
-                <React.Fragment key={_index}>
-                  {item.func && (isUndefined(item.hide) || item.hide(record) === false) ? (
-                    <span
-                      key={item.key}
-                      className={classNames(
-                        "flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer mr-1",
-                        {
-                          [item.clasName]: item.clasName,
-                        },
-                      )}
-                      title={item.text}
-                      onClick={() => (item.key === "delete" ? onShowModalConfirm(record) : item.func?.(record))}
-                    >
-                      {item.icon}
-                    </span>
-                  ) : null}
-                </React.Fragment>
-              ))
-            ) : hasShowMore(record) ? (
-              <Dropdown
-                menu={{
-                  items: renderDropdownItems(record) as MenuProps["items"],
-                }}
-                placement="bottomRight"
-                arrow
-              >
-                <span className="edit-btn flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 cursor-pointer">
-                  <EllipsisOutlined className="p-[8px]" />
+  let mergeColumns: ColumnsType<T> = [...columns];
+  if (onEdit || onSetting || onDelete || onView || onApproval) {
+    mergeColumns = [
+      ...mergeColumns,
+      {
+        title: "",
+        dataIndex: "action",
+        key: "action",
+        width: 160,
+        fixed: fixedActionsColumn ? "right" : undefined,
+        render: (_, record) => {
+          return (
+            <Space>
+              {!onEdit || hideEdit?.(record) === true ? null : (
+                <span
+                  className="edit-btn flex items-center text-primary-default justify-center rounded-full  hover:bg-gray-100 cursor-pointer mr-1"
+                  onClick={() => onEdit?.(record)}
+                  title="Sửa"
+                >
+                  <EditOutlined className="p-[8px] block" />
                 </span>
-              </Dropdown>
-            ) : null}
-          </Space>
-        );
+              )}
+              {onSetting ? (
+                <span
+                  className="edit-btn flex items-center text-primary-default justify-center rounded-full  hover:bg-gray-100 cursor-pointer mr-1"
+                  title="Thiết lập"
+                  onClick={() => onSetting?.(record)}
+                >
+                  <SettingOutlined className="p-[8px] block" />
+                </span>
+              ) : null}
+              {!showActionsLess ? (
+                rowActions.map((item, _index) => (
+                  <React.Fragment key={_index}>
+                    {item.func && (isUndefined(item.hide) || item.hide(record) === false) ? (
+                      <span
+                        key={item.key}
+                        className={classNames(
+                          "flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer mr-1",
+                          {
+                            [item.clasName]: item.clasName,
+                          },
+                        )}
+                        title={item.text}
+                        onClick={() => (item.key === "delete" ? onShowModalConfirm(record) : item.func?.(record))}
+                      >
+                        {item.icon}
+                      </span>
+                    ) : null}
+                  </React.Fragment>
+                ))
+              ) : hasShowMore(record) ? (
+                <Dropdown
+                  menu={{
+                    items: renderDropdownItems(record) as MenuProps["items"],
+                  }}
+                  placement="bottomRight"
+                  arrow
+                >
+                  <span className="edit-btn flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 cursor-pointer">
+                    <EllipsisOutlined className="p-[8px]" />
+                  </span>
+                </Dropdown>
+              ) : null}
+            </Space>
+          );
+        },
       },
-    },
-  ];
-
+    ];
+  }
   return (
     <React.Fragment>
       <CustomTable

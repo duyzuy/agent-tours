@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Divider, Popconfirm, Space, Spin, Tag } from "antd";
+import { Button, Divider, Empty, Popconfirm, Space, Spin, Tag } from "antd";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetSellableDetailCoreQuery } from "@/queries/core/Sellable";
 import { useRouter } from "next/navigation";
@@ -9,9 +9,7 @@ import { DeleteOutlined, EditOutlined, SwapRightOutlined } from "@ant-design/ico
 import { formatDate } from "@/utils/date";
 import { Status } from "@/models/common.interface";
 import { ContentDetailList } from "@/components/admin/ContentDetailList";
-import DrawerSellableApproval, {
-  DrawerSellableApprovalProps,
-} from "../_components/SellableListContainer/DrawerSellableApproval";
+import DrawerSellableApproval, { DrawerSellableApprovalProps } from "../_components/DrawerSellableApproval";
 import useCRUDSellable from "../modules/useCRUDSellable";
 import Link from "next/link";
 
@@ -204,18 +202,34 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
         }
       />
       <Divider />
-      <SellableContainerDetail data={data} disabled={data.sellable.status !== Status.OK} />
-      {data.sellable.type === "EXTRA" || data.sellable.type === "TOUR" ? (
-        <DrawerSellableApproval
-          isOpen={openDrawerAppoval}
-          inventoryTypeList={data.sellable.template?.inventoryTypeList || []}
-          productType={data.sellable.type}
-          sellableName={data.sellable.code}
-          onCancel={() => setOpenDrawerApproval(false)}
-          initialValues={data.sellable}
-          onSubmit={handleApproval}
-        />
-      ) : null}
+      {data.sellable.status === Status.OK ? (
+        <SellableContainerDetail data={data} disabled={data.sellable.status !== Status.OK} />
+      ) : (
+        <>
+          <Empty
+            imageStyle={{ width: 60, height: 60, margin: "auto" }}
+            description={
+              <>
+                <p className="mb-3">Sản phẩm đang chờ duyệt.</p>
+                <Button className="w-[80px]" type="primary" onClick={() => setOpenDrawerApproval(true)}>
+                  Duyệt
+                </Button>
+              </>
+            }
+          />
+          {data.sellable.type === "EXTRA" || data.sellable.type === "TOUR" ? (
+            <DrawerSellableApproval
+              isOpen={openDrawerAppoval}
+              inventoryTypeList={data.sellable.template?.inventoryTypeList || []}
+              productType={data.sellable.type}
+              sellableName={data.sellable.code}
+              onCancel={() => setOpenDrawerApproval(false)}
+              initialValues={data.sellable}
+              onSubmit={handleApproval}
+            />
+          ) : null}
+        </>
+      )}
     </PageContainer>
   );
 };

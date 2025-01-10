@@ -14,7 +14,7 @@ export interface TempalateSellableTabsProps {
   data: ITemplateSellableDetail;
 }
 const TempalateSellableTabs: React.FC<TempalateSellableTabsProps> = ({ templateId, data }) => {
-  const { onCreate, onApproval } = useCRUDSellable();
+  const { onCreate } = useCRUDSellable();
 
   const [sellableQueryParams, setSellableQueryParams] = useState(
     new SellableQueryParams({ sellableTemplateId: templateId }, 1, 20),
@@ -49,7 +49,6 @@ const TempalateSellableTabs: React.FC<TempalateSellableTabsProps> = ({ templateI
             pageCurrent={pageCurrent}
             totalItems={totalItems}
             isLoading={isLoadingSellable}
-            // onApproval={onApproval}
             onChangePageSellable={(page) =>
               setSellableQueryParams((prev) => ({
                 ...prev,
@@ -60,13 +59,12 @@ const TempalateSellableTabs: React.FC<TempalateSellableTabsProps> = ({ templateI
               <Form layout="horizontal">
                 <Row gutter={12}>
                   <Col span={8} offset={16}>
-                    <FormItem>
-                      <Input.Search
-                        placeholder="Nhập mã sản phẩm cần tìm"
-                        enterButton="Tìm kiếm"
-                        onSearch={(value, ev) => onSearchSellableCode(value)}
-                      />
-                    </FormItem>
+                    <Input.Search
+                      size="large"
+                      placeholder="Nhập mã sản phẩm cần tìm"
+                      enterButton="Tìm kiếm"
+                      onSearch={(value, ev) => onSearchSellableCode(value)}
+                    />
                   </Col>
                 </Row>
               </Form>

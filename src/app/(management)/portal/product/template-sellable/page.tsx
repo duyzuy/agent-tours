@@ -90,28 +90,23 @@ const SellTemplatePage = () => {
       breadCrumItems={[{ title: "Sản phẩm" }]}
       onClick={setCreateTemplateproduct}
     >
-      <div className="search-bar">
-        <Form>
-          {productTypeList && (
-            <FormItem label="Loại sản phẩm">
-              {productTypeList.map((type) => (
-                <Radio
-                  key={type}
-                  value={type}
-                  checked={queryFilter?.requestObject?.andType === type}
-                  onChange={() => onFilterProductType(type)}
-                >
-                  {type === EProductType.TOUR
-                    ? "Sản phẩm, dịch vụ tour."
-                    : type === EProductType.EXTRA
-                    ? "Sản phẩm, dịch vụ."
-                    : type}
-                </Radio>
-              ))}
-            </FormItem>
-          )}
-        </Form>
-      </div>
+      <Form>
+        {productTypeList && (
+          <FormItem>
+            {productTypeList.map((type) => (
+              <Radio
+                key={type}
+                value={type}
+                checked={queryFilter?.requestObject?.andType === type}
+                onChange={() => onFilterProductType(type)}
+              >
+                {type === EProductType.TOUR ? "Tour" : type === EProductType.EXTRA ? "Dịch vụ" : type}
+              </Radio>
+            ))}
+          </FormItem>
+        )}
+      </Form>
+
       <Divider />
       <TableListPage<ITemplateSaleableListRs["result"][0]>
         modelName="Template"
@@ -149,11 +144,11 @@ const SellTemplatePage = () => {
         //   },
         // }}
         //onEdit={(record) => handleOpenDrawer({ type: EActionType.EDIT, record })}
-        onView={({ recId }) => router.push(`/portal/product/template-sellable/${recId}`)}
+        // onView={({ recId }) => router.push(`/portal/product/template-sellable/${recId}`)}
         // onDelete={(record) => onDelete(record.recId)}
-        onApproval={(record) => onApproval(record.recId)}
-        hideApproval={(record) => record.status === Status.OK}
-        showActionsLess={false}
+        // onApproval={(record) => onApproval(record.recId)}
+        // hideApproval={(record) => record.status === Status.OK}
+        // showActionsLess={false}
       />
       <DrawerTemplateSellableForm
         onSubmit={onSubmitTemplateSellable}
