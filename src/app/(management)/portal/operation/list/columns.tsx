@@ -22,7 +22,7 @@ export const columns: ColumnsType<IOperation> = [
       return (
         <>
           <div className="mb-2">
-            <span className="block">{template.name}</span>
+            <span className="block">{template?.name}</span>
             <span className="block text-xs">{sellable.code}</span>
           </div>
         </>

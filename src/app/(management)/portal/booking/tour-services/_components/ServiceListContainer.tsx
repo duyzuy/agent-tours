@@ -50,65 +50,62 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
 
   return (
     <>
-      <div>
-        <Tabs
-          type="card"
-          size="large"
-          items={[
-            {
-              label: "Dịch vụ theo khách",
-              key: "serviceWithPax",
-              children: (
-                <>
-                  {serviceList?.map((serviceItem) => (
-                    <BoxServiceItemByPax
-                      key={`${serviceItem.inventory.recId}${serviceItem.stock?.recId ? serviceItem.stock?.recId : ""}`}
-                      serviceName={`${serviceItem.inventory.name}${
-                        serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""
-                      }`}
-                      serviceItem={serviceItem}
-                      bookingItems={bookingItems}
-                      consfigItems={serviceItem.configs}
-                      selectedItems={bookingSsrWithPax}
-                      onChangeQuantity={onChangeQuantity}
-                    />
-                  ))}
-                </>
-              ),
-            },
-            {
-              label: "Dịch vụ không theo khách",
-              key: "serviceNoPax",
-              children: (
-                <>
-                  {serviceList?.map((serviceItem) => (
-                    <BoxServiceItemNoPax
-                      key={`${serviceItem.inventory.recId}${serviceItem.stock?.recId ? serviceItem.stock?.recId : ""}`}
-                      serviceName={`${serviceItem.inventory.name}${
-                        serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""
-                      }`}
-                      serviceItem={serviceItem}
-                      consfigItems={serviceItem.configs}
-                      selectedItems={bookingSsr}
-                      onChangeQuantity={onChangeQuantityWithoutPax}
-                    />
-                  ))}
-                </>
-              ),
-            },
-          ]}
-        />
+      <Tabs
+        size="large"
+        items={[
+          {
+            label: "Dịch vụ theo khách",
+            key: "serviceWithPax",
+            children: (
+              <>
+                {serviceList?.map((serviceItem) => (
+                  <BoxServiceItemByPax
+                    key={`${serviceItem.inventory.recId}${serviceItem.stock?.recId ? serviceItem.stock?.recId : ""}`}
+                    serviceName={`${serviceItem.inventory.name}${
+                      serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""
+                    }`}
+                    serviceItem={serviceItem}
+                    bookingItems={bookingItems}
+                    consfigItems={serviceItem.configs}
+                    selectedItems={bookingSsrWithPax}
+                    onChangeQuantity={onChangeQuantity}
+                  />
+                ))}
+              </>
+            ),
+          },
+          {
+            label: "Dịch vụ không theo khách",
+            key: "serviceNoPax",
+            children: (
+              <>
+                {serviceList?.map((serviceItem) => (
+                  <BoxServiceItemNoPax
+                    key={`${serviceItem.inventory.recId}${serviceItem.stock?.recId ? serviceItem.stock?.recId : ""}`}
+                    serviceName={`${serviceItem.inventory.name}${
+                      serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""
+                    }`}
+                    serviceItem={serviceItem}
+                    consfigItems={serviceItem.configs}
+                    selectedItems={bookingSsr}
+                    onChangeQuantity={onChangeQuantityWithoutPax}
+                  />
+                ))}
+              </>
+            ),
+          },
+        ]}
+      />
 
-        <div className="text-right">
-          <Space align="end">
-            <Button type="primary" ghost onClick={() => router.back()}>
-              Quay lại
-            </Button>
-            <Button type="primary" loading={isInitGotoNext} onClick={handleGotoNext}>
-              Tiến hành đặt chỗ
-            </Button>
-          </Space>
-        </div>
+      <div className="text-right">
+        <Space align="end">
+          <Button type="primary" ghost onClick={() => router.back()}>
+            Nhập thông tin khách
+          </Button>
+          <Button type="primary" loading={isInitGotoNext} onClick={handleGotoNext}>
+            Tiến hành đặt chỗ
+          </Button>
+        </Space>
       </div>
     </>
   );

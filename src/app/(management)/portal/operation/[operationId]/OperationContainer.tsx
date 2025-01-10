@@ -86,7 +86,7 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
       },
       {
         key: "cancel",
-        label: <span className="text-red-600">Huỷ</span>,
+        label: <span className="text-white">Huỷ</span>,
         onClick: () => onUpdateStatusThenRevalidateQuery("CANCELED"),
         className: "!bg-red-600 !text-red-600",
       },
@@ -186,6 +186,7 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
       </div>
       <div className="h-[1px] bg-gray-100 mt-6 mb-6"></div>
       <div>
+        {status === "NEW" ? <p className="mb-3">Vui lòng duyệt để tiến hành điều hành.</p> : null}
         <Space>
           {operationActions?.map((act) => (
             <Button key={act.key} onClick={act.onClick} className={act.className} type="text">

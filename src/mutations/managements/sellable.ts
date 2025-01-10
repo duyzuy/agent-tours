@@ -1,6 +1,6 @@
 import { BaseResponse } from "@/models/common.interface";
 import { sellableAPIs } from "@/services/management/cores/sellable";
-import { ISellablePayload, SellableConfirmPayload } from "@/models/management/core/sellable.interface";
+import { ISellablePayload, SellableApprovalPayload } from "@/models/management/core/sellable.interface";
 import { SellablePriceConfigPayload, SellablePriceConfigRs } from "@/models/management/core/priceConfig.interface";
 import { useCustomMutation } from "../useCustomMutation";
 
@@ -13,7 +13,7 @@ export const useCreateSellableMutation = () => {
 };
 
 export const useApprovalSellableMutation = () => {
-  return useCustomMutation<BaseResponse<any>, SellableConfirmPayload>({
+  return useCustomMutation<BaseResponse<any>, SellableApprovalPayload>({
     mutationFn: (payload) => sellableAPIs.approval(payload),
   });
 };

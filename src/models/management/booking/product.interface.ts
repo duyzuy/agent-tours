@@ -37,7 +37,7 @@ export type IProductTour = Pick<
       IStock,
       "recId" | "available" | "type" | "inventoryType" | "code" | "description" | "cap" | "open" | "used"
     > & {
-      invenroty: Pick<
+      inventory: Pick<
         IInventory,
         "recId" | "type" | "code" | "name" | "airItinerary" | "tourItinerary" | "supplier" | "status"
       > & { productType: EProductType.TOUR; isStock: true };

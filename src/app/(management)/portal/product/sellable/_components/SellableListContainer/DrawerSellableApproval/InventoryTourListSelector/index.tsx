@@ -37,7 +37,7 @@ function InventoryTourListSelector({
         fieldNames={{ label: "name", value: "recId" }}
         options={data?.list}
         loading={isLoading}
-        placeholder="Loại dịch vụ"
+        placeholder="Chọn dịch vụ"
         onChange={handleChange}
       />
     </React.Fragment>

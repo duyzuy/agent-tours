@@ -1,19 +1,16 @@
-import { IInventoryPayload } from "@/models/management/core/inventory.interface";
 import { useCreateSellableMutation, useApprovalSellableMutation } from "@/mutations/managements/sellable";
-
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
-
 import { queryCore } from "@/queries/var";
 import {
   ISellablePayload,
-  SellableConfirmFormData,
-  SellableConfirmPayload,
+  SellableApprovalPayload,
   SellableFormData,
 } from "@/models/management/core/sellable.interface";
+import { SellableApprovalFormData } from "./sellable.interface";
 import dayjs from "dayjs";
 import { DATE_TIME_FORMAT } from "@/constants/common";
-export type TInventoryErrorsField = Partial<Record<keyof IInventoryPayload, string>>;
+
 const useCRUDSellable = () => {
   const { mutate: makeCreateSellable } = useCreateSellableMutation();
   const { mutate: makeApproval } = useApprovalSellableMutation();
@@ -22,13 +19,14 @@ const useCRUDSellable = () => {
   const message = useMessage();
 
   const onCreateSellable = (formData: SellableFormData, cb?: () => void) => {
-    let payload = {
+    let payload: ISellablePayload = {
       ...formData,
       start: formData.start ? convertFormatDate(formData.start) : undefined,
       end: formData.end ? convertFormatDate(formData.end) : undefined,
       valid: formData.valid ? convertFormatDate(formData.valid) : undefined,
       validTo: formData.validTo ? convertFormatDate(formData.validTo) : undefined,
       closeDate: formData.closeDate ? convertFormatDate(formData.closeDate) : undefined,
+      fromValidTo: formData.fromValidTo ? convertFormatDate(formData.fromValidTo) : undefined,
     };
     const exclusiveDateFormated = formData.exclusives.reduce<{ from?: string; to?: string }[]>((acc, item) => {
       acc = [
@@ -59,8 +57,9 @@ const useCRUDSellable = () => {
       },
     });
   };
-  const onApprovalSellable = (formData: SellableConfirmFormData, cb?: () => void) => {
-    const sellablePayload = corectSellablePayload(formData);
+
+  const onApprovalSellable = (formData: SellableApprovalFormData, cb?: () => void) => {
+    const sellablePayload = getSellableApprovalPayload(formData);
 
     makeApproval(sellablePayload, {
       onSuccess: (data, variables) => {
@@ -80,39 +79,28 @@ const useCRUDSellable = () => {
       },
     });
   };
-  const corectSellablePayload = (formData: SellableConfirmFormData): SellableConfirmPayload => {
-    const {
-      extraInventories,
 
-      extraStocks,
-      stocks,
-      inventories,
-      recId,
-      cap,
-      closeDate,
-      valid,
-      validTo,
-      start,
-      end,
-    } = formData;
+  const getSellableApprovalPayload = (formData: SellableApprovalFormData): SellableApprovalPayload => {
+    const { extraInventories, extraStocks, recId, cap, closeDate, valid, validTo, start, end, stocks, inventories } =
+      formData;
 
-    const extraInventoriesPayload = extraInventories.reduce<SellableConfirmPayload["extraInventories"]>((acc, inv) => {
-      return [...acc, { qty: inv.qty, recId: inv.inventory.recId }];
-    }, []);
-    const inventoriesPayload = inventories.reduce<SellableConfirmPayload["inventories"]>((acc, inv) => {
-      return [...acc, { qty: inv.qty, recId: inv.inventory.recId }];
+    const extraInventoriesPayload = extraInventories?.reduce<SellableApprovalFormData["extraInventories"]>(
+      (acc, item) => {
+        return [...(acc || []), { qty: item.qty, recId: item.recId }];
+      },
+      [],
+    );
+
+    const extraStocksPayload = extraStocks?.reduce<SellableApprovalFormData["extraStocks"]>((acc, item) => {
+      return [...(acc || []), { qty: item.qty, recId: item.recId }];
     }, []);
 
-    const extraStocksPayload = extraStocks.reduce<SellableConfirmPayload["extraStocks"]>((acc, inv) => {
-      return [...acc, { qty: inv.qty, recId: inv.stock.recId }];
+    const stocksPayload = stocks?.reduce<SellableApprovalFormData["stocks"]>((acc, item) => {
+      return [...(acc || []), { qty: item.qty, recId: item.recId }];
     }, []);
-
-    const stocksPayload = stocks.reduce<SellableConfirmPayload["stocks"]>((acc, inv) => {
-      return [...acc, { qty: inv.qty, recId: inv.stock.recId }];
+    const inventoriesPayload = inventories?.reduce<SellableApprovalFormData["inventories"]>((acc, item) => {
+      return [...(acc || []), { qty: item.qty, recId: item.recId }];
     }, []);
-    // const otherSellablesPayload = otherSellables.reduce<SellableConfirmPayload["otherSellables"]>((acc, inv) => {
-    //   return [...acc, { qty: inv.qty, recId: inv.sellable.recId }];
-    // }, []);
 
     return {
       recId,
@@ -128,6 +116,7 @@ const useCRUDSellable = () => {
       stocks: stocksPayload,
     };
   };
+
   const convertFormatDate = (dateStr: string) => {
     return dayjs(dateStr).locale("en").format(DATE_TIME_FORMAT);
   };

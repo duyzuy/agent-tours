@@ -6,7 +6,7 @@ import { getAgToken } from "@/utils/common";
 import { CMSTemplateQueryParams } from "@/models/management/cms/cmsTemplate.interface";
 import { CMSTemplateContentMinimalQueryParams } from "@/models/management/cms/cmsTemplateContent.interface";
 
-export const useGetCMSTemplateListQuery = (queryParams?: CMSTemplateQueryParams) => {
+export const useGetCMSTemplateListQuery = (queryParams: CMSTemplateQueryParams, enabled = true) => {
   return useQuery({
     queryKey: [queryCMS.GET_CMS_TEMPLATE_LIST, { ...queryParams }],
     queryFn: () => cmsTemplateAPIs.getList(queryParams),
@@ -18,7 +18,7 @@ export const useGetCMSTemplateListQuery = (queryParams?: CMSTemplateQueryParams)
         totalItems: data.totalItems,
       };
     },
-    enabled: Boolean(getAgToken()),
+    enabled: enabled,
   });
 };
 

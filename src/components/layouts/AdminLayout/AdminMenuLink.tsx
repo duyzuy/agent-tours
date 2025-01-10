@@ -45,29 +45,16 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
     rolepers: PATH_WITH_PERMISSION["guide"],
   },
   {
-    key: "booking",
-    icon: React.createElement(TagOutlined),
-    label: "Đặt tour",
-    rolepers: PATH_WITH_PERMISSION["booking"],
-  },
-  {
     key: "booking-request",
     icon: React.createElement(TagOutlined),
     label: "Đặt tour yêu cầu",
     rolepers: PATH_WITH_PERMISSION["booking-request"],
   },
   {
-    key: "operation",
-    icon: React.createElement(ControlOutlined),
-    label: "Điều hành",
-    rolepers: PATH_WITH_PERMISSION["operation"],
-    children: [
-      {
-        key: "operation/list",
-        label: "Mã điều hành",
-        rolepers: PATH_WITH_PERMISSION["operation/list"],
-      },
-    ],
+    key: "booking",
+    icon: React.createElement(TagOutlined),
+    label: "Đặt tour",
+    rolepers: PATH_WITH_PERMISSION["booking"],
   },
   {
     key: "manage-booking",
@@ -84,6 +71,19 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         key: "manage-booking/form-of-payment",
         label: "Phiếu thu",
         rolepers: PATH_WITH_PERMISSION["manage-booking/form-of-payment"],
+      },
+    ],
+  },
+  {
+    key: "operation",
+    icon: React.createElement(ControlOutlined),
+    label: "Điều hành",
+    rolepers: PATH_WITH_PERMISSION["operation"],
+    children: [
+      {
+        key: "operation/list",
+        label: "Mã điều hành",
+        rolepers: PATH_WITH_PERMISSION["operation/list"],
       },
     ],
   },
@@ -115,14 +115,14 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
       },
       {
         key: "product/template-sellable",
-        label: "Mẫu sản phẩm",
+        label: "Sản phẩm",
         rolepers: PATH_WITH_PERMISSION["product/template-sellable"],
       },
-      {
-        key: "product/sellable",
-        label: "Sản phẩm",
-        rolepers: PATH_WITH_PERMISSION["product/sellable"],
-      },
+      // {
+      //   key: "product/sellable",
+      //   label: "Sản phẩm",
+      //   rolepers: PATH_WITH_PERMISSION["product/sellable"],
+      // },
     ],
   },
   {
@@ -151,12 +151,12 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
   {
     key: "destination",
     icon: React.createElement(ClusterOutlined),
-    label: "Nhóm điểm đến",
+    label: "Điểm đến",
     rolepers: PATH_WITH_PERMISSION["destination"],
     children: [
       {
         key: "destination/",
-        label: "Danh sách nhóm",
+        label: "Danh sách điểm đến",
         rolepers: PATH_WITH_PERMISSION["destination/list"],
       },
       {
@@ -175,7 +175,7 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
   {
     key: "content-template",
     icon: React.createElement(FileTextOutlined),
-    label: "Quản lý mẫu nội dung",
+    label: "Thông tin chi tiết",
     rolepers: PATH_WITH_PERMISSION["content-template"],
     children: [
       {
@@ -184,19 +184,19 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         rolepers: PATH_WITH_PERMISSION["content-template/sellable/list"],
       },
       {
+        key: "content-template/visa/list",
+        label: "Nội dung visa",
+        rolepers: PATH_WITH_PERMISSION["content-template/visa/list"],
+      },
+      {
         key: "content-template/misc-document/list",
-        label: "Document",
+        label: "Hồ sơ, giấy tờ yêu cầu",
         rolepers: PATH_WITH_PERMISSION["content-template/misc-document/list"],
       },
       {
         key: "content-template/misc-depart/list",
         label: "Điểm khởi hành",
         rolepers: PATH_WITH_PERMISSION["content-template/misc-depart/list"],
-      },
-      {
-        key: "content-template/visa/list",
-        label: "Nội dung visa",
-        rolepers: PATH_WITH_PERMISSION["content-template/visa/list"],
       },
     ],
   },

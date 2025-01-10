@@ -15,7 +15,7 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
     width: 80,
   },
   {
-    title: "Mẫu sản phẩm",
+    title: "Sản phẩm",
     dataIndex: "name",
     key: "name",
     width: 220,

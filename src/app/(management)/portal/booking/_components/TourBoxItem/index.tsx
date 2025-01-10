@@ -50,12 +50,8 @@ export const TourBoxItem = ({
       <div className="tour__box__item-inner">
         <div className="flex items-center tour__box__item-top">
           <div className="tour__box__item-left w-[320px]">
-            <div className="">
-              <div className="mb-2">
-                <span className="text-primary-default font-semibold text-[16px]">{tourName}</span>
-              </div>
-              <span className="tour-code">{productCode}</span>
-            </div>
+            <div className="text-primary-default font-semibold text-[16px] mb-1">{tourName}</div>
+            <div className="tour-code">{productCode}</div>
           </div>
           <div className="tour__box__item-middle flex-1 px-6 flex justify-center items-center">
             <div className="flex items-center">
@@ -63,9 +59,7 @@ export const TourBoxItem = ({
                 <span className="block text-xs">Ngày đi</span>
                 <span className="text-lg">{formatDate(startDate)}</span>
               </div>
-              <span className="mx-6">
-                <SwapOutlined />
-              </span>
+              <SwapOutlined className="mx-6" />
               <div>
                 <span className="block text-xs">Ngày về</span>
                 <span className="text-lg">{formatDate(endDate)}</span>
@@ -87,23 +81,20 @@ export const TourBoxItem = ({
         </div>
         <div className="tour__box__item-dropdown border-t pt-4 mt-4">
           <h4 className="font-semibold mb-3">Các dịch vụ đi kèm</h4>
-          <div className="flex flex-wrap gap-6">
+          <div className="flex flex-wrap gap-6 mb-3">
             {inventories.map((item) => (
               <div className="detail-item flex mb-1 items-start" key={item.recId}>
                 <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
-                <div>{item.name}</div>
+                <span>{item.name}</span>
               </div>
             ))}
             {stocks.map((item) => (
               <div className="detail-item flex mb-1 items-start" key={item.recId}>
                 <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
-                <div>
-                  <span>{`${item.invenroty.name} - ${item.code}`}</span>
-                </div>
+                <span>{`${item.inventory.name} - ${item.code}`}</span>
               </div>
             ))}
           </div>
-          <div className="h-4"></div>
           <h4 className="font-semibold mb-3">Các giảm giá có thể áp dụng</h4>
           {promotions.map((promo) => (
             <div className="promo-item flex mb-1 items-start" key={promo.code}>

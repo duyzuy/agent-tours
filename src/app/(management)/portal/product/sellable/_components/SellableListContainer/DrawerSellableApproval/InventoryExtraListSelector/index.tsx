@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Form, FormInstance, Button, InputNumber, Select, SelectProps } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import Table, { TableProps } from "antd/es/table";
-import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
+
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
 import { IInventory, InventoryQueryParams } from "@/models/management/core/inventory.interface";
@@ -11,7 +11,7 @@ import { isArray } from "lodash";
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
-type InventoryItemType = SellableConfirmFormData["inventories"][0];
+type InventoryItemType = { inventory: IInventory; qty: number };
 
 interface EditableCellProps {
   title: React.ReactNode;

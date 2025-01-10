@@ -19,29 +19,27 @@ const useSelectProductTour = () => {
       return;
     }
 
-    const allBookingItems = Object.keys(passengerPriceConfigs).reduce<
-      {
-        type: PassengerType;
-        item: PriceConfig;
-      }[]
-    >((totalConfigItems, paxType) => {
-      const totalBookingItemsPax = passengerPriceConfigs[paxType as PassengerType].reduce<
-        {
-          type: PassengerType;
-          item: PriceConfig;
-        }[]
-      >((configItems, item) => {
-        const priceConfigItems = Array.from({ length: item.qty }, (_, index) => ({
-          type: paxType as PassengerType,
-          item: item.priceConfig,
-        }));
+    type BookingItemType = {
+      type: PassengerType;
+      item: PriceConfig;
+    };
+    const allBookingItems = Object.keys(passengerPriceConfigs).reduce<BookingItemType[]>(
+      (totalConfigItems, paxType) => {
+        const totalBookingItemsPax = passengerPriceConfigs[paxType as PassengerType].reduce<BookingItemType[]>(
+          (configItems, item) => {
+            const priceConfigItems = Array.from({ length: item.qty }, (_, index) => ({
+              type: paxType as PassengerType,
+              item: item.priceConfig,
+            }));
 
-        configItems = [...configItems, ...priceConfigItems];
-        return configItems;
-      }, []);
-      totalConfigItems = [...totalConfigItems, ...totalBookingItemsPax];
-      return totalConfigItems;
-    }, []);
+            return [...configItems, ...priceConfigItems];
+          },
+          [],
+        );
+        return [...totalConfigItems, ...totalBookingItemsPax];
+      },
+      [],
+    );
 
     const bookingItems = allBookingItems.reduce<IProductTourBookingItem[]>((acc, paxItem, _index) => {
       acc = [
@@ -66,6 +64,7 @@ const useSelectProductTour = () => {
     }));
     router.push("/portal/booking/tour-services");
   };
+
   const onSetProductItem = (productItem: IProductTour) => {
     setBookingInformation((prev) => ({
       ...prev,
@@ -94,6 +93,7 @@ const useSelectProductTour = () => {
       channel: newChannel,
     }));
   };
+
   const onSetPassengerConfig = (type: PassengerType, quantity: number, priceConfig: PriceConfig) => {
     setBookingInformation((oldData) => {
       let newPassengerPriceConfigs = { ...oldData.passengerPriceConfigs };
@@ -139,6 +139,7 @@ const useSelectProductTour = () => {
       };
     });
   };
+
   const onReselectProduct = () => {
     setBookingInformation((prev) => ({
       ...prev,

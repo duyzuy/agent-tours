@@ -1,22 +1,18 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Form, Input, Select, Space, Button, SelectProps, Drawer, Tag, message, Row, Col, Divider, Empty } from "antd";
+import { Form, Space, Button, Drawer, message, Row, Col, Tabs, TabsProps, InputNumber, InputNumberProps } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { DatePickerProps, RangePickerProps } from "antd/es/date-picker";
-import { ISellable, SellableConfirmFormData } from "@/models/management/core/sellable.interface";
-import { Status } from "@/models/common.interface";
-import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import { SellableListRs } from "@/models/management/core/sellable.interface";
+import { ISellable } from "@/models/management/core/sellable.interface";
+import { SellableApprovalFormData } from "../../../modules/sellable.interface";
 import dayjs from "dayjs";
 import { IInventory } from "@/models/management/core/inventory.interface";
-import { isArray, isEmpty, isUndefined } from "lodash";
-import StockTourListSelector, { StockTourListSelectorProps } from "./StockTourListSelector";
 
 import InventoryExtraListSelector, { InventoryExtraListSelectorProps } from "./InventoryExtraListSelector";
 import StockExtraListSelector, { StockExtraListSelectorProps } from "./StockExtraListSelector";
 import ModalConfirmResetCap from "./ModalConfirmResetCap";
-import { sellableConfirmSchema } from "../../../schema/sellable.schema";
+import { sellableApprovalSchema } from "../../../schema/sellable.schema";
 import { TIME_FORMAT, DATE_TIME_FORMAT } from "@/constants/common";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
@@ -24,9 +20,13 @@ import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import { stringToDate } from "@/utils/date";
 import InventoryTourListSelector, { InventoryTourListSelectorProps } from "./InventoryTourListSelector";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-import { IStock } from "@/models/management/core/stock.interface";
 import StockExtraList, { StockExtraListProps } from "./StockExtraListSelector/StockExtraList";
-const MAX_NUMBER_INPUT = 999;
+import StockTourListTableSelector, { StockTourListTableSelectorProps } from "./StockTourListTableSelector";
+import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { boolean } from "yup";
+
+const MAXIMUM_CAP_AMOUNT = 999;
 
 export interface IInventoryOption {
   label: string;
@@ -37,8 +37,9 @@ export interface IInventoryOption {
 export interface DrawerSellableApprovalProps {
   isOpen?: boolean;
   onCancel: () => void;
+  productType: "TOUR" | "EXTRA";
   initialValues: ISellable;
-  onSubmit?: (formData: SellableConfirmFormData) => void;
+  onSubmit?: SubmitHandler<SellableApprovalFormData>;
   sellableName: string;
   inventoryTypeList: EInventoryType[];
 }
@@ -47,174 +48,150 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
   isOpen,
   onCancel,
   onSubmit,
+  productType,
   initialValues,
   sellableName,
   inventoryTypeList,
 }) => {
-  const initSellableConfirmFormData = new SellableConfirmFormData(
-    0,
-    0,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
+  const initFormData = new SellableApprovalFormData(
+    initialValues.recId,
+    initialValues.cap,
+    stringToDate(initialValues.closeDate).toDate().toString(),
+    stringToDate(initialValues.validFrom).toDate().toString(),
+    stringToDate(initialValues.validTo).toDate().toString(),
+    stringToDate(initialValues.startDate).toDate().toString(),
+    stringToDate(initialValues.endDate).toDate().toString(),
+    productType,
     [],
     [],
     [],
     [],
   );
-
-  const [showModalResetCap, setShowModalResetCap] = useState(false);
-  const [sellableConfirmFormData, setSellableConfirmFormData] = useState(initSellableConfirmFormData);
-  const [openStockModal, setOpenStockTourModal] = useState(false);
-  const [openStockExtraModal, setOpenStockExtraModal] = useState(false);
-
-  const { handlerSubmit, errors } = useFormSubmit<SellableConfirmFormData>({
-    schema: sellableConfirmSchema,
+  const { control, getValues, setValue, getFieldState, watch, handleSubmit } = useForm<SellableApprovalFormData>({
+    defaultValues: initFormData,
+    resolver: yupResolver(sellableApprovalSchema),
   });
 
-  const onChangeFormData = (key: keyof SellableConfirmFormData, value: string | number) => {
-    if (key === "cap") {
-      if (!isNaN(value as number)) {
-        value = Number(value);
+  const validField = getFieldState("valid");
+  const validToField = getFieldState("validTo");
 
-        if (value > MAX_NUMBER_INPUT) {
-          return;
-        }
-      }
+  const startField = getFieldState("start");
+  const endField = getFieldState("end");
 
-      /**
-       * Check extra selected
-       */
-      const hasAnyPicked =
-        (!isUndefined(sellableConfirmFormData.stocks) && !isEmpty(sellableConfirmFormData.stocks)) ||
-        (!isUndefined(sellableConfirmFormData.extraStocks) && !isEmpty(sellableConfirmFormData.extraStocks));
+  const [resetCap, setResetCap] = useState({
+    show: false,
+    value: initialValues.cap,
+  });
 
-      if (hasAnyPicked) {
-        setShowModalResetCap(true);
-        return;
-      }
-    }
-    setSellableConfirmFormData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
+  const [openStockExtraModal, setOpenStockExtraModal] = useState(false);
 
-  const onConfirmUpdateCapAndResetSelection = () => {
-    setShowModalResetCap(false);
-    setSellableConfirmFormData((prev) => ({
-      ...prev,
-      extraStocks: [],
-      stocks: [],
-    }));
+  const onConfirmUpdateCapAndResetSelection = (newcap: number) => {
+    setResetCap((prev) => ({ ...prev, show: false }));
+
+    setValue("cap", newcap);
+    setValue("extraStocks", []);
+    setValue("stocks", []);
   };
   const onCancelUpdateCap = () => {
-    setShowModalResetCap(false);
+    setResetCap((prev) => ({ ...prev, show: false }));
   };
-  const onChangeValidDateRange: RangePickerProps["onChange"] = (date, dateStr) => {
-    if (!date) {
+  const onChangeCap: InputNumberProps<number>["onChange"] = (cap) => {
+    const extraStocks = getValues("extraStocks");
+    const stocks = getValues("stocks");
+    if (!cap) return;
+
+    if (cap > MAXIMUM_CAP_AMOUNT) {
       return;
     }
-    // console.log(date[0]?.toDate().t);
-    setSellableConfirmFormData((prev) => ({
-      ...prev,
-      valid: date[0]?.toDate().toString(),
-      validTo: date[1]?.toDate().toString(),
-    }));
 
-    // setSellableConfirmFormData((prev) => ({
-    //   ...prev,
-    //   valid: date[0]?.locale("en").format(DATE_TIME_FORMAT),
-    //   validTo: date[1]?.locale("en").format(DATE_TIME_FORMAT),
-    // }));
+    if ((stocks && stocks.length) || (extraStocks && extraStocks.length)) {
+      setResetCap((prev) => ({ value: cap, show: true }));
+      return;
+    }
+
+    setValue("cap", cap);
+  };
+  const onChangeValidDateRange: RangePickerProps["onChange"] = (date, dateStr) => {
+    const [newValidDate, newValidToDate] = date || [];
+    setValue("valid", newValidDate?.toDate().toString());
+    setValue("validTo", newValidToDate?.toDate().toString());
   };
 
   const onChangeCloseDate: DatePickerProps["onChange"] = (closeDate, closeDateStr) => {
+    const valid = getValues("valid");
+    const validTo = getValues("validTo");
     if (!closeDate) return;
-    if (
-      closeDate.isBefore(dayjs(sellableConfirmFormData.valid, DATE_TIME_FORMAT)) ||
-      closeDate.isAfter(dayjs(sellableConfirmFormData.validTo, DATE_TIME_FORMAT))
-    ) {
-      message.error("Close date phải nằm trong khoảng ngày Valid");
-    } else {
-      setSellableConfirmFormData((prev) => ({
-        ...prev,
-        closeDate: closeDate.toDate().toString(),
-      }));
-    }
-  };
-  const onChangeUsedDateRange: RangePickerProps["onChange"] = (date, dateStr) => {
-    if (!date) return;
 
-    if (date[1]?.isBefore(dayjs(sellableConfirmFormData.validTo, DATE_TIME_FORMAT))) {
+    if (
+      (valid && closeDate.isBefore(dayjs(valid, DATE_TIME_FORMAT))) ||
+      (validTo && closeDate.isAfter(dayjs(validTo, DATE_TIME_FORMAT)))
+    ) {
+      message.error("Ngày kết thúc mở bán phải nằm trong khoảng ngày mở bán.");
+      return;
+    }
+
+    setValue("closeDate", closeDate.toDate().toString());
+  };
+  const onChangeUsedDateRange: RangePickerProps["onChange"] = (usedDate, usedDateStr) => {
+    const validTo = getValues("validTo");
+
+    if (!usedDate) return;
+
+    const [startUsedDate, endUsedData] = usedDate;
+
+    if (validTo && endUsedData?.isBefore(dayjs(validTo, DATE_TIME_FORMAT))) {
       message.error("Ngày kết thúc áp dụng phải lớn hơn ngày kết thúc mở bán.");
       return;
     }
-    setSellableConfirmFormData((prev) => ({
-      ...prev,
-      start: date[0]?.toDate().toString(),
-      end: date[1]?.toDate().toString(),
-    }));
+    setValue("start", startUsedDate?.toDate().toString());
+    setValue("end", endUsedData?.toDate().toString());
   };
 
-  const onChangeInventoryTour: InventoryTourListSelectorProps["onChange"] = (value, options) => {
-    let inventories: SellableConfirmFormData["inventories"] = [];
+  const onChangeInventoryTour: InventoryTourListSelectorProps["onChange"] = (value, inventories) => {
+    const cap = getValues("cap");
+    const correctInventories = inventories.reduce<Exclude<SellableApprovalFormData["inventories"], undefined>>(
+      (acc, inv) => {
+        return [...acc, { qty: cap, inventory: inv, recId: inv.recId }];
+      },
+      [],
+    );
 
-    const qty = sellableConfirmFormData.cap;
-
-    options.forEach((opt) => {
-      inventories = [...(inventories || []), { qty: qty, inventory: opt }];
-    });
-
-    setSellableConfirmFormData((prev) => ({
-      ...prev,
-      inventories,
-    }));
+    setValue("inventories", correctInventories);
   };
 
-  const handleConfirmSelectStockTour: StockTourListSelectorProps["onConfirm"] = (stockList) => {
-    setSellableConfirmFormData((oldData) => {
-      const stockItems = stockList.reduce<{ qty: number; stock: Partial<IStock> }[]>((acc, item) => {
-        return [
-          ...acc,
-          {
-            qty: sellableConfirmFormData.cap,
-            stock: item,
-          },
-        ];
-      }, []);
-
-      return {
-        ...oldData,
-        stocks: stockItems,
-      };
-    });
-    setOpenStockTourModal(false);
+  const onAddTourStock: StockTourListTableSelectorProps["onAdd"] = (stock) => {
+    const currentStocks = getValues("stocks") || [];
+    const cap = getValues("cap");
+    setValue("stocks", [...currentStocks, { qty: cap, stock: stock, recId: stock.recId }]);
   };
-  const onConfirmExtraStock: StockExtraListSelectorProps["onConfirm"] = (stockList) => {
-    setSellableConfirmFormData((oldData) => {
-      const newStockList = stockList.reduce<{ qty: number; stock: IStock }[]>((acc, item) => {
-        return [...acc, { qty: 1, stock: item }];
-      }, []);
+  const onRemoveTourStock: StockTourListTableSelectorProps["onRemove"] = (recId) => {
+    let newStocks = getValues("stocks") || [];
 
-      return {
-        ...oldData,
-        extraStocks: [...oldData.extraStocks, ...newStockList],
-      };
-    });
+    const indexStock = newStocks.findIndex((item) => item.recId === recId);
+    if (indexStock !== -1) {
+      newStocks.splice(indexStock, 1);
+    }
+    setValue("stocks", [...newStocks]);
   };
 
-  const onChangeQuantityExtraStock: StockExtraListProps["onChangeQuantity"] = (record) => {
-    const { stock, qty } = record;
+  const onAddExtraStock: StockExtraListSelectorProps["onConfirm"] = (stockList) => {
+    const newStockList = stockList.reduce<Exclude<SellableApprovalFormData["extraStocks"], undefined>>((acc, item) => {
+      return [...acc, { qty: 1, stock: item, recId: item.recId }];
+    }, []);
 
+    setValue("extraStocks", [...newStockList]);
+  };
+
+  const onChangeQuantityExtraStock: StockExtraListProps["onChangeQuantity"] = ({ stock, qty }) => {
+    const cap = getValues("cap");
+    if (!cap) {
+      message.error("Cap không hợp lệ.");
+      return;
+    }
     if (qty < 0) {
       message.error("Số lượng tối thiểu là 1.");
       return;
     }
-
-    const { cap } = sellableConfirmFormData;
 
     const stockOpen = stock.open || 0;
 
@@ -227,45 +204,34 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
       message.error(`Số lượng được phép thêm tối đa ${cap}`);
       return;
     }
+    let newExtraStocks = getValues("extraStocks") || [];
 
-    setSellableConfirmFormData((oldData) => {
-      const { extraStocks } = oldData;
-      let newExtraStocks = [...extraStocks];
-      const indexItem = newExtraStocks.findIndex((stk) => stk.stock.recId === stock.recId);
+    const indexItem = newExtraStocks.findIndex((item) => item.recId === stock.recId);
 
-      if (indexItem !== -1) {
-        newExtraStocks.splice(indexItem, 1, {
-          stock,
-          qty: qty,
-        });
-      }
-      return {
-        ...oldData,
-        extraStocks: [...newExtraStocks],
-      };
-    });
+    if (indexItem !== -1) {
+      newExtraStocks.splice(indexItem, 1, {
+        ...newExtraStocks[indexItem],
+        qty: qty,
+      });
+      setValue("extraStocks", newExtraStocks);
+    }
   };
-  const onRemoveExtraStock: StockExtraListProps["onRemove"] = (recId) => {
-    setSellableConfirmFormData((oldData) => {
-      const { extraStocks } = oldData;
-      let newExtraStocks = [...extraStocks];
-      const indexItem = newExtraStocks.findIndex((stk) => stk.stock.recId === recId);
 
-      if (indexItem !== -1) {
-        newExtraStocks.splice(indexItem, 1);
-      }
-      return {
-        ...oldData,
-        extraStocks: [...newExtraStocks],
-      };
-    });
+  const onRemoveExtraStock: StockExtraListProps["onRemove"] = (recId) => {
+    let newExtraStocks = getValues("extraStocks") || [];
+    const indexItem = newExtraStocks.findIndex((item) => item.recId === recId);
+    if (indexItem !== -1) {
+      newExtraStocks.splice(indexItem, 1);
+      setValue("extraStocks", newExtraStocks);
+    }
   };
 
   const onSaveQuantityInventoryExtra: InventoryExtraListSelectorProps["onChangeQuantity"] = ({ qty, inventory }) => {
     /**
      * check quantity remain from inventories
      */
-    const { cap } = sellableConfirmFormData;
+
+    const cap = getValues("cap");
     if (qty < 0) {
       message.error("Số lượng phải lớn hơn 1");
       return;
@@ -274,78 +240,159 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
       message.error(`Số lượng được phép thêm tối đa ${cap}`);
       return;
     }
-
-    setSellableConfirmFormData((oldData) => {
-      const { extraInventories } = oldData;
-
-      const indxInventoryExtra = extraInventories.findIndex((inv) => inv.inventory.recId === inventory.recId);
-
-      let newExtraInventories = [...sellableConfirmFormData.extraInventories];
-
-      if (indxInventoryExtra !== -1) {
-        newExtraInventories.splice(indxInventoryExtra, 1, {
-          qty: qty,
-          inventory: inventory,
-        });
-      }
-
-      return {
-        ...oldData,
-        extraInventories: [...newExtraInventories],
-      };
-    });
-  };
-  const onAddInventoryExtra: InventoryExtraListSelectorProps["onAdd"] = (inventory) => {
-    const { extraInventories } = sellableConfirmFormData;
-
-    const indxInventoryExtra = extraInventories.findIndex((inv) => inv.inventory.recId === inventory.recId);
+    let newExtraInventories = getValues("extraInventories") || [];
+    const indxInventoryExtra = newExtraInventories.findIndex((item) => item.recId === inventory.recId);
 
     if (indxInventoryExtra !== -1) {
-      message.error(`Dịch vụ đã được thêm vào danh sách`);
-      return;
+      newExtraInventories.splice(indxInventoryExtra, 1, {
+        ...newExtraInventories[indxInventoryExtra],
+        qty: qty,
+      });
+
+      setValue("extraInventories", newExtraInventories);
     }
-    setSellableConfirmFormData((prev) => ({
-      ...prev,
-      extraInventories: [...prev.extraInventories, { qty: 1, inventory: inventory }],
-    }));
+  };
+  const onAddInventoryExtra: InventoryExtraListSelectorProps["onAdd"] = (inventory) => {
+    const extraInventories = getValues("extraInventories") || [];
+    setValue("extraInventories", [...extraInventories, { recId: inventory.recId, qty: 1, inventory: inventory }]);
   };
 
   const onRemoveInventoryExtra: InventoryExtraListSelectorProps["onRemove"] = (record) => {
-    setSellableConfirmFormData((oldData) => {
-      const { extraInventories } = oldData;
-
-      const indxInventoryExtra = extraInventories.findIndex((inv) => inv.inventory.recId === record.inventory.recId);
-      let updateExtraInventory = [...extraInventories];
-      if (indxInventoryExtra !== -1) {
-        updateExtraInventory.splice(indxInventoryExtra, 1);
-      }
-      return {
-        ...oldData,
-        extraInventories: [...updateExtraInventory],
-      };
-    });
-  };
-
-  const onSubmitForm: HandleSubmit<SellableConfirmFormData> = (data) => {
-    onSubmit?.(data);
-  };
-
-  useEffect(() => {
-    if (initialValues) {
-      setSellableConfirmFormData((prev) => ({
-        ...prev,
-        start: stringToDate(initialValues.startDate).toDate().toString(),
-        end: stringToDate(initialValues.endDate).toDate().toString(),
-        valid: stringToDate(initialValues.validFrom).toDate().toString(),
-        validTo: stringToDate(initialValues.validTo).toDate().toString(),
-        closeDate: stringToDate(initialValues.closeDate).toDate().toString(),
-        recId: initialValues.recId,
-        cap: initialValues.cap,
-      }));
-    } else {
-      setSellableConfirmFormData(initSellableConfirmFormData);
+    let newExtraInventories = getValues("extraInventories") || [];
+    const indexItem = newExtraInventories.findIndex((item) => item.recId === record.inventory.recId);
+    if (indexItem !== -1) {
+      newExtraInventories.splice(indexItem, 1);
+      setValue("extraInventories", [...newExtraInventories]);
     }
-  }, [initialValues, isOpen]);
+  };
+
+  const extraStockSelected = useMemo(() => {
+    const extraStocks = getValues("extraStocks") || [];
+    return extraStocks.reduce<Required<StockExtraListSelectorProps>["extraStocks"]>((acc, item) => {
+      if (item.stock) {
+        acc = [...acc, { stock: item.stock, qty: item.qty }];
+      }
+      return acc;
+    }, []);
+  }, [watch("extraStocks")]);
+
+  const extraInventoriesSelected = useMemo(() => {
+    const extraInventories = getValues("extraInventories") || [];
+
+    return extraInventories.reduce<Exclude<InventoryExtraListSelectorProps["inventories"], undefined>>((acc, item) => {
+      if (item.inventory) {
+        acc = [...acc, { qty: item.qty, inventory: item.inventory }];
+      }
+      return acc;
+    }, []);
+  }, [watch("extraInventories")]);
+  const stocksSelected = useMemo(() => {
+    const stocks = getValues("stocks") || [];
+
+    return stocks.reduce<Exclude<StockTourListTableSelectorProps["stocks"], undefined>>((acc, item) => {
+      if (item.stock) {
+        acc = [...acc, { qty: item.qty, stock: item.stock }];
+      }
+      return acc;
+    }, []);
+  }, [watch("stocks")]);
+
+  const inventoriesSelected = useMemo(() => {
+    const inventories = getValues("inventories") || [];
+
+    return inventories.reduce<Exclude<InventoryTourListSelectorProps["value"], undefined>>((acc, item) => {
+      return [...acc, item.recId];
+    }, []);
+  }, [watch("inventories")]);
+
+  let tabItems: TabsProps["items"] = [
+    {
+      label: "Dịch vụ mua thêm",
+      key: "extra",
+      children: (
+        <>
+          <FormItem label="Dịch vụ bổ sung không stock">
+            <InventoryExtraListSelector
+              enabled={isOpen}
+              inventories={extraInventoriesSelected}
+              inventoryTypes={inventoryTypeList}
+              onChangeQuantity={onSaveQuantityInventoryExtra}
+              onAdd={onAddInventoryExtra}
+              onRemove={onRemoveInventoryExtra}
+            />
+          </FormItem>
+          <FormItem label="Dịch vụ bổ sung có stock">
+            <Button type="dashed" size="small" onClick={() => setOpenStockExtraModal(true)} className="mb-6">
+              Thêm
+            </Button>
+            <StockExtraList
+              stocks={extraStockSelected}
+              onChangeQuantity={onChangeQuantityExtraStock}
+              onRemove={onRemoveExtraStock}
+            />
+          </FormItem>
+          <StockExtraListSelector
+            isOpen={openStockExtraModal}
+            onClose={() => setOpenStockExtraModal(false)}
+            inventoryTypeList={inventoryTypeList}
+            validFrom={getValues("valid")}
+            validTo={getValues("validTo")}
+            onConfirm={onAddExtraStock}
+            extraStocks={extraStockSelected}
+          />
+        </>
+      ),
+    },
+  ];
+  if (productType === "TOUR") {
+    tabItems = [
+      {
+        label: "Dịch vụ Tour bao gồm",
+        key: "tour",
+        children: (
+          <>
+            <Controller
+              control={control}
+              name="stocks"
+              render={() => (
+                <FormItem label="Dịch vụ không có stock" required>
+                  <InventoryTourListSelector
+                    inventoryTypes={inventoryTypeList}
+                    value={inventoriesSelected}
+                    onChange={onChangeInventoryTour}
+                    enabled={isOpen}
+                  />
+                </FormItem>
+              )}
+            />
+            <div>Dịch vụ có stock</div>
+            <Controller
+              control={control}
+              name="cap"
+              render={() => (
+                <StockTourListTableSelector
+                  inventoryTypeList={inventoryTypeList}
+                  validFrom={getValues("valid")}
+                  validTo={getValues("validTo")}
+                  minimumQuantity={getValues("cap")}
+                  onAdd={onAddTourStock}
+                  onRemove={onRemoveTourStock}
+                  stocks={stocksSelected}
+                />
+              )}
+            />
+          </>
+        ),
+      },
+      ...tabItems,
+    ];
+  }
+  useWatch({ control: control });
+  useEffect(() => {
+    Object.keys(initFormData).forEach((key) => {
+      setValue(key as keyof SellableApprovalFormData, initFormData[key as keyof SellableApprovalFormData]);
+    });
+  }, [isOpen]);
 
   return (
     <>
@@ -367,8 +414,8 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
               <FormItem
                 label="Ngày mở bán (valid date)"
                 required
-                validateStatus={errors?.valid || errors?.validTo ? "error" : ""}
-                help={errors?.valid || errors?.validTo || ""}
+                validateStatus={validField.error || validToField.error ? "error" : undefined}
+                help={validField.error?.message || validToField.error?.message}
               >
                 <CustomRangePicker
                   showTime={{
@@ -376,17 +423,18 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
                     hideDisabledOptions: true,
                     defaultValue: [dayjs("00:00:00", "HH:mm:ss"), dayjs("23:59:59", "HH:mm:ss")],
                   }}
+                  allowClear={false}
                   placeholder={["Từ ngày", "Đến ngày"]}
                   format={"DD/MM/YYYY - HH:mm"}
                   value={[
-                    sellableConfirmFormData.valid ? dayjs(sellableConfirmFormData.valid) : null,
-                    sellableConfirmFormData.validTo ? dayjs(sellableConfirmFormData.validTo) : null,
+                    getValues("valid") ? dayjs(getValues("valid")) : null,
+                    getValues("validTo") ? dayjs(getValues("validTo")) : null,
                   ]}
                   disabledDate={(date) => {
                     return dayjs().isAfter(date) && !dayjs().isSame(date, "date");
                   }}
                   onChange={onChangeValidDateRange}
-                  className="w-full "
+                  className="w-full"
                 />
               </FormItem>
             </Col>
@@ -394,8 +442,8 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
               <FormItem
                 label="Ngày áp dụng (used)"
                 required
-                validateStatus={errors?.start || errors?.end ? "error" : ""}
-                help={errors?.start || errors?.end || ""}
+                validateStatus={startField.error || endField.error ? "error" : undefined}
+                help={startField.error?.message || endField.error?.message}
               >
                 <CustomRangePicker
                   showTime={{
@@ -403,157 +451,99 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
                     hideDisabledOptions: true,
                     defaultValue: [dayjs("00:00:00", "HH:mm:ss"), dayjs("23:59:59", "HH:mm:ss")],
                   }}
+                  allowClear={false}
                   placeholder={["Từ ngày", "Đến ngày"]}
                   format={"DD/MM/YYYY - HH:mm"}
                   disabled={false}
                   value={[
-                    sellableConfirmFormData.start ? dayjs(sellableConfirmFormData.start) : null,
-                    sellableConfirmFormData.end ? dayjs(sellableConfirmFormData.end) : null,
+                    getValues("start") ? dayjs(getValues("start")) : null,
+                    getValues("end") ? dayjs(getValues("end")) : null,
                   ]}
                   disabledDate={(date) => {
-                    return sellableConfirmFormData.valid
-                      ? dayjs(sellableConfirmFormData.valid).isAfter(date)
-                      : dayjs().isAfter(date);
+                    return getValues("validTo") ? dayjs(getValues("validTo")).isAfter(date) : dayjs().isAfter(date);
                   }}
                   onChange={onChangeUsedDateRange}
-                  className="w-full "
-                />
-              </FormItem>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <FormItem
-                label="Ngày kết thúc mở bán"
-                required
-                validateStatus={errors?.start || errors?.end ? "error" : ""}
-                help={errors?.start || errors?.end || ""}
-              >
-                <CustomDatePicker
-                  showTime={{
-                    format: TIME_FORMAT,
-                    hideDisabledOptions: true,
-                    defaultValue: dayjs("23:59:59", "HH:mm:ss"),
-                  }}
-                  placeholder="Ngày kết thúc mở bán"
-                  format={"DD/MM/YYYY - HH:mm"}
-                  disabled={false}
-                  value={sellableConfirmFormData.closeDate ? dayjs(sellableConfirmFormData.closeDate) : null}
-                  disabledDate={(date) => {
-                    return (
-                      dayjs().isAfter(date) ||
-                      dayjs(sellableConfirmFormData.valid).isAfter(date) ||
-                      dayjs(sellableConfirmFormData.validTo).isBefore(date)
-                    );
-                  }}
-                  onChange={onChangeCloseDate}
-                  className="w-full "
+                  className="w-full"
                 />
               </FormItem>
             </Col>
             <Col span={12}>
-              <FormItem
-                label="Số lượng (cap)"
-                required
-                validateStatus={errors?.cap ? "error" : ""}
-                help={errors?.cap || ""}
-              >
-                <Input
-                  placeholder="Số lượng"
-                  type="number"
-                  max={999}
-                  min={1}
-                  value={sellableConfirmFormData?.cap}
-                  disabled={false}
-                  onChange={(ev) => onChangeFormData("cap", ev.target.value)}
-                />
-              </FormItem>
+              <Controller
+                control={control}
+                name="closeDate"
+                render={({ field: { value }, fieldState: { error } }) => (
+                  <FormItem
+                    label="Ngày kết thúc mở bán"
+                    required
+                    validateStatus={error ? "error" : undefined}
+                    help={error?.message}
+                  >
+                    <CustomDatePicker
+                      showTime={{
+                        format: TIME_FORMAT,
+                        hideDisabledOptions: true,
+                        defaultValue: dayjs("23:59:59", "HH:mm:ss"),
+                      }}
+                      allowClear={false}
+                      placeholder="Ngày kết thúc mở bán"
+                      format={"DD/MM/YYYY - HH:mm"}
+                      disabled={false}
+                      value={value ? dayjs(value) : null}
+                      disabledDate={(date) =>
+                        dayjs().isAfter(date) ||
+                        dayjs(getValues("valid")).isAfter(date) ||
+                        dayjs(getValues("validTo")).isBefore(date)
+                      }
+                      onChange={onChangeCloseDate}
+                      className="w-full"
+                    />
+                  </FormItem>
+                )}
+              />
+            </Col>
+            <Col span={12}>
+              <Controller
+                control={control}
+                name="cap"
+                render={({ field: { value }, fieldState: { error } }) => (
+                  <FormItem
+                    label="Số lượng (cap)"
+                    required
+                    validateStatus={error ? "error" : undefined}
+                    help={error?.message}
+                  >
+                    <InputNumber
+                      placeholder="Số lượng"
+                      max={999}
+                      min={1}
+                      value={value}
+                      onChange={(value) => onChangeCap(value)}
+                      disabled={false}
+                      className="!w-full"
+                    />
+                  </FormItem>
+                )}
+              />
             </Col>
           </Row>
-          <Divider />
-          <h3 className="font-semibold text-[16px] mb-6">Dịch vụ tour bao gồm</h3>
-          <FormItem label="Dịch vụ không có stock" required>
-            <InventoryTourListSelector
-              inventoryTypes={inventoryTypeList}
-              onChange={onChangeInventoryTour}
-              enabled={isOpen}
-            />
-          </FormItem>
-          <FormItem label="Dịch vụ có stock">
-            <div className="mb-3">
-              <Button type="dashed" size="small" onClick={() => setOpenStockTourModal(true)}>
-                Thêm
-              </Button>
-            </div>
-            <div>
-              <Space>
-                {sellableConfirmFormData.stocks.map((item) => (
-                  <Tag key={item.stock.recId}>{`#${item.stock.code}`}</Tag>
-                ))}
-              </Space>
-            </div>
-          </FormItem>
-          <Divider />
-          <h3 className="font-semibold text-[16px] mb-6">Dịch vụ mua thêm</h3>
-
-          <FormItem label="Dịch vụ bổ sung không stock">
-            <InventoryExtraListSelector
-              enabled={isOpen}
-              inventories={sellableConfirmFormData.extraInventories}
-              inventoryTypes={inventoryTypeList}
-              onChangeQuantity={onSaveQuantityInventoryExtra}
-              onAdd={onAddInventoryExtra}
-              onRemove={onRemoveInventoryExtra}
-            />
-          </FormItem>
-          <FormItem label="Loại dịch vụ bổ sung có stock">
-            <Button type="dashed" size="small" onClick={() => setOpenStockExtraModal(true)}>
-              Thêm
-            </Button>
-            <div className="h-6"></div>
-            <StockExtraList
-              stocks={sellableConfirmFormData.extraStocks}
-              onChangeQuantity={onChangeQuantityExtraStock}
-              onRemove={onRemoveExtraStock}
-            />
-          </FormItem>
+          <Tabs type="card" items={tabItems} />
         </Form>
-
         <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white z-50">
           <Space>
             <Button onClick={onCancel}>Huỷ bỏ</Button>
-            <Button type="primary" onClick={() => handlerSubmit(sellableConfirmFormData, onSubmitForm)}>
+            <Button type="primary" onClick={onSubmit && handleSubmit(onSubmit)}>
               Duyệt
             </Button>
           </Space>
         </div>
       </Drawer>
-      <StockTourListSelector
-        isOpen={openStockModal}
-        inventoryTypeList={inventoryTypeList}
-        onClose={() => setOpenStockTourModal(false)}
-        validFrom={sellableConfirmFormData.valid}
-        validTo={sellableConfirmFormData.validTo}
-        minimumQuantity={sellableConfirmFormData.cap}
-        onConfirm={handleConfirmSelectStockTour}
-        stocks={sellableConfirmFormData.stocks}
-      />
-      <StockExtraListSelector
-        isOpen={openStockExtraModal}
-        onClose={() => setOpenStockExtraModal(false)}
-        inventoryTypeList={inventoryTypeList}
-        validFrom={sellableConfirmFormData.valid}
-        validTo={sellableConfirmFormData.validTo}
-        onConfirm={onConfirmExtraStock}
-        extraStocks={sellableConfirmFormData.extraStocks}
-      />
 
       <ModalConfirmResetCap
         title="Lưu ý"
         descriptions="Cập nhật lại Số lượng (Cap) sẽ remove toàn bộ các stocks đã chọn trước đó"
-        isShowModal={showModalResetCap}
+        isShowModal={resetCap.show}
         onCancel={onCancelUpdateCap}
-        onConfirm={onConfirmUpdateCapAndResetSelection}
+        onConfirm={() => onConfirmUpdateCapAndResetSelection(resetCap.value)}
       />
     </>
   );

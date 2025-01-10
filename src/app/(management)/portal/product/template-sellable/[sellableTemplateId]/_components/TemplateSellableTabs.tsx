@@ -49,7 +49,7 @@ const TempalateSellableTabs: React.FC<TempalateSellableTabsProps> = ({ templateI
             pageCurrent={pageCurrent}
             totalItems={totalItems}
             isLoading={isLoadingSellable}
-            onApproval={onApproval}
+            // onApproval={onApproval}
             onChangePageSellable={(page) =>
               setSellableQueryParams((prev) => ({
                 ...prev,
@@ -88,10 +88,6 @@ const TempalateSellableTabs: React.FC<TempalateSellableTabsProps> = ({ templateI
     },
   ];
 
-  return (
-    <>
-      <Tabs type="card" items={tabItems} />
-    </>
-  );
+  return <Tabs type="card" items={tabItems} />;
 };
 export default TempalateSellableTabs;

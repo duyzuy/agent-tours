@@ -61,11 +61,11 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
       return (
         <>
           <div className="flex items-center">
-            <span className="w-8 inline-block text-red-500 text-xs">Từ</span>
+            <span className="w-8 inline-block text-blue-600 text-xs">Từ</span>
             {formatDate(record.validFrom)}
           </div>
           <div className="flex items-center">
-            <span className="w-8 inline-block text-amber-500 text-xs">Đến</span>
+            <span className="w-8 inline-block text-cyan-600 text-xs">Đến</span>
             {formatDate(record.validTo)}
           </div>
         </>
@@ -81,12 +81,12 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][0]> = [
       return (
         <>
           <div className="flex items-center">
-            <span className="w-6 inline-block text-red-500 text-xs">Đi</span>
-            {formatDate(record.validFrom)}
+            <span className="w-6 inline-block text-blue-600 text-xs">Đi</span>
+            {formatDate(record.startDate)}
           </div>
           <div className="flex items-center">
-            <span className="w-6 inline-block text-amber-500 text-xs">Về</span>
-            {formatDate(record.validTo)}
+            <span className="w-6 inline-block text-cyan-600 text-xs">Về</span>
+            {formatDate(record.endDate)}
           </div>
         </>
       );

@@ -4,7 +4,7 @@ import { coreApi } from "../coreApi";
 import {
   SellableListRs,
   ISellablePayload,
-  SellableConfirmPayload,
+  SellableApprovalPayload,
   ISellable,
   SellableQueryParams,
   SellableDetail,
@@ -20,7 +20,7 @@ export const sellableAPIs = {
       },
     });
   },
-  approval: async (payload: SellableConfirmPayload) => {
+  approval: async (payload: SellableApprovalPayload) => {
     return await coreApi.post<BaseResponse<ISellable>, BaseResponse<null>>("core/Sellable_Confirm", {
       requestObject: {
         ...payload,

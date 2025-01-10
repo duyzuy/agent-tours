@@ -21,10 +21,10 @@ import dayjs from "dayjs";
 import { isUndefined } from "lodash";
 
 type StockExtraItemType = {
-  stock: IStock;
   qty: number;
+  stock: IStock;
 };
-export type StockExtraListSelectorProps = TableProps<IStock> & {
+export type StockExtraListTableSelectorProps = TableProps<IStock> & {
   inventoryTypeList: EInventoryType[];
   validFrom?: string;
   validTo?: string;
@@ -35,7 +35,7 @@ export type StockExtraListSelectorProps = TableProps<IStock> & {
   onConfirm?: (data: IStock[]) => void;
 };
 
-function StockExtraListSelector(props: StockExtraListSelectorProps) {
+function StockExtraListTableSelector(props: StockExtraListTableSelectorProps) {
   const {
     validFrom,
     validTo,
@@ -367,4 +367,4 @@ function StockExtraListSelector(props: StockExtraListSelectorProps) {
     </React.Fragment>
   );
 }
-export default StockExtraListSelector;
+export default StockExtraListTableSelector;

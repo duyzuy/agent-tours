@@ -106,7 +106,7 @@ export class SellableFormData {
 }
 export interface SellableListRs extends BaseResponse<ISellable[]> {}
 
-export interface SellableConfirmPayload {
+type SellableApprovalBasePayload = {
   recId?: number;
   cap?: number;
   closeDate?: string;
@@ -114,73 +114,36 @@ export interface SellableConfirmPayload {
   validTo?: string;
   start?: string;
   end?: string;
-  inventories: {
-    recId?: number;
-    qty?: number;
+};
+type SellableTourApprovalPayload = SellableApprovalBasePayload & {
+  inventories?: {
+    recId: number;
+    qty: number;
   }[];
-
-  stocks: {
-    recId?: number;
-    qty?: number;
+  stocks?: {
+    recId: number;
+    qty: number;
   }[];
-
-  extraInventories: {
-    recId?: number;
-    qty?: number;
+  extraInventories?: {
+    recId: number;
+    qty: number;
   }[];
-  extraStocks: {
-    recId?: number;
-    qty?: number;
+  extraStocks?: {
+    recId: number;
+    qty: number;
   }[];
-
-  // otherSellables: {
-  //   recId?: number;
-  //   qty?: number;
-  // }[];
-}
-
-export class SellableConfirmFormData {
-  recId: number;
-  cap: number;
-  closeDate?: string;
-  valid?: string;
-  validTo?: string;
-  start?: string;
-  end?: string;
-  inventories: { inventory: Partial<IInventory>; qty: number }[];
-  stocks: { stock: Partial<IStock>; qty: number }[];
-  extraInventories: { inventory: Partial<IInventory>; qty: number }[];
-  extraStocks: { stock: Partial<IStock>; qty: number }[];
-  // otherSellables: { sellable: Partial<ISellable>; qty: number }[];
-
-  constructor(
-    recId: number,
-    cap: number,
-    closeDate: string | undefined,
-    valid: string | undefined,
-    validTo: string | undefined,
-    start: string | undefined,
-    end: string | undefined,
-    inventories: { inventory: Partial<IInventory>; qty: number }[],
-    stocks: { stock: Partial<IStock>; qty: number }[],
-    extraInventories: { inventory: Partial<IInventory>; qty: number }[],
-    extraStocks: { stock: Partial<IStock>; qty: number }[],
-    // otherSellables: { sellable: Partial<ISellable>; qty: number }[],
-  ) {
-    this.recId = recId;
-    this.cap = cap;
-    this.closeDate = closeDate;
-    this.valid = valid;
-    this.validTo = validTo;
-    this.start = start;
-    this.end = end;
-    this.inventories = inventories;
-    this.stocks = stocks;
-    this.extraInventories = extraInventories;
-    this.extraStocks = extraStocks;
-    // this.otherSellables = otherSellables;
-  }
-}
+};
+type SellableExtraApprovalPayload = SellableApprovalBasePayload & {
+  extraInventories?: {
+    recId: number;
+    qty: number;
+  }[];
+  extraStocks?: {
+    recId: number;
+    qty: number;
+  }[];
+};
+export type SellableApprovalPayload = SellableExtraApprovalPayload | SellableTourApprovalPayload;
 
 export interface InventoryOfSellableItem {
   recId: number;

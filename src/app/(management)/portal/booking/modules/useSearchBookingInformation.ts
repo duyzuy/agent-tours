@@ -1,59 +1,65 @@
 import { SearchBookingPayload, SearchBookingFormData } from "./searchBooking.interface";
 import { useSearchBookingMutation } from "@/mutations/managements/booking";
 import useBooking from "../hooks/useBooking";
-import { useState } from "react";
-import useMessage from "@/hooks/useMessage";
-import { BookingInfo } from "./bookingInformation.interface";
 
-export const initBookingInfo = new BookingInfo(undefined, [], undefined, undefined, undefined, undefined);
+import useMessage from "@/hooks/useMessage";
+import { MutateOptions } from "@tanstack/react-query";
+import { ProductTouListResponse } from "@/models/management/booking/product.interface";
+import { BaseResponse } from "@/models/common.interface";
+
+export interface UseSearchBookingInformation {
+  onSearch: (
+    formData: SearchBookingFormData,
+    options?: MutateOptions<ProductTouListResponse, BaseResponse<null>, SearchBookingPayload, unknown>,
+  ) => void;
+}
 const useSearchBookingInformation = () => {
-  const { mutate: makeSearchBooking } = useSearchBookingMutation();
+  const { mutate: makeSearchBooking, isPending } = useSearchBookingMutation();
   const [_, setBookingInformation] = useBooking();
-  const [isLoading, setLoading] = useState(false);
+
   const message = useMessage();
 
-  const onSearchBooking = (formData: SearchBookingFormData) => {
-    const searchPayload: SearchBookingPayload = {
-      byMonth: formData.byMonth,
-      byCode: formData.byCode,
-      byInventoryType: formData.byInventoryType,
-      byProductType: formData.byProductType,
-      byDest: formData.byDest?.reduce<SearchBookingPayload["byDest"]>(
-        (acc, item) => [
-          ...(acc || []),
-          {
-            countryKey: item.countryKey,
-            stateProvinceKey: item.stateProvinceKey,
-            keyType: item.keyType,
-            regionKey: item.regionKey,
-            subRegionKey: item.subRegionKey,
-          },
-        ],
-        [],
-      ),
+  const onSearchBooking: UseSearchBookingInformation["onSearch"] = (formData, options) => {
+    let searchBookingPayload: SearchBookingPayload = { ...formData };
+
+    const destinations = formData.byDest?.reduce<Required<SearchBookingPayload>["byDest"]>(
+      (acc, item) => [
+        ...acc,
+        {
+          countryKey: item.countryKey,
+          stateProvinceKey: item.stateProvinceKey,
+          keyType: item.keyType,
+          regionKey: item.regionKey,
+          subRegionKey: item.subRegionKey,
+        },
+      ],
+      [],
+    );
+    searchBookingPayload = {
+      ...searchBookingPayload,
+      byDest: destinations,
     };
 
-    setLoading(true);
-    makeSearchBooking(searchPayload, {
-      onSuccess: (response, variables) => {
+    makeSearchBooking(searchBookingPayload, {
+      onSuccess: (response, variables, ctx) => {
         setBookingInformation((prev) => ({
           ...prev,
-          bookingInfo: { ...initBookingInfo },
+          // bookingInfo: { ...initBookingInfo },
           productList: response.result,
           searchBooking: formData,
         }));
-        setLoading(false);
+        options?.onSuccess?.(response, variables, ctx);
       },
-      onError: (err) => {
+      onError: (err, variables, ctx) => {
         message.error(err.message);
-        setLoading(false);
+        options?.onError?.(err, variables, ctx);
       },
     });
   };
-  const getSearchPayload = () => {};
+
   return {
     onSearchBooking,
-    isLoading,
+    isPending,
   };
 };
 export default useSearchBookingInformation;

@@ -6,10 +6,7 @@ import { IStock } from "@/models/management/core/stock.interface";
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
-type StockItemType = {
-  stock: IStock;
-  qty: number;
-};
+type StockItemType = { stock: IStock; qty: number };
 
 interface EditableCellProps {
   title: React.ReactNode;
@@ -99,7 +96,7 @@ type EditableTableProps = TableProps<StockItemType>;
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
 export type StockExtraListProps = {
-  stocks?: StockItemType[];
+  stocks: StockItemType[];
   onChangeQuantity?: (record: StockItemType) => void;
   onRemove?: (recId: number) => void;
 };

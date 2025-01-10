@@ -7,7 +7,7 @@ import { miniStockColumns } from "./miniStockColumns";
 import { formatDate } from "@/utils/date";
 import ModalContent from "@/components/admin/ModalContent";
 import ContentDetail from "@/components/admin/ContentDetail";
-import { SellableConfirmFormData } from "@/models/management/core/sellable.interface";
+
 import { Status } from "@/models/common.interface";
 import { IInventory } from "@/models/management/core/inventory.interface";
 import { IStock, StockQueryParams } from "@/models/management/core/stock.interface";
@@ -17,6 +17,10 @@ import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { isUndefined } from "lodash";
 
+type StockItem = {
+  stock: IStock;
+  qty: number;
+};
 export type StockTourListSelectorProps = {
   inventories?: IInventory[];
   inventoryTypeList: EInventoryType[];
@@ -24,7 +28,7 @@ export type StockTourListSelectorProps = {
   onClose?: () => void;
   validFrom?: string;
   validTo?: string;
-  stocks?: SellableConfirmFormData["stocks"];
+  stocks?: StockItem[];
   minimumQuantity: number;
   onConfirm?: (stockList: Partial<IStock>[]) => void;
 };
@@ -232,6 +236,7 @@ function StockTourListSelector({
           size="small"
           dataSource={stockList || []}
           loading={isLoadingStock}
+          rowKey={"recId"}
           locale={{
             emptyText: (
               <div className="py-4">

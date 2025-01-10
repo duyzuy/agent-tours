@@ -85,15 +85,15 @@ const SellTemplatePage = () => {
   };
   return (
     <PageContainer
-      name="Mẫu sản phẩm"
-      modelName="mẫu sản phẩm"
-      breadCrumItems={[{ title: "Mẫu sản phẩm" }]}
+      name="Sản phẩm"
+      modelName="sản phẩm"
+      breadCrumItems={[{ title: "Sản phẩm" }]}
       onClick={setCreateTemplateproduct}
     >
       <div className="search-bar">
         <Form>
           {productTypeList && (
-            <FormItem label="Loại mẫu sản phẩm">
+            <FormItem label="Loại sản phẩm">
               {productTypeList.map((type) => (
                 <Radio
                   key={type}

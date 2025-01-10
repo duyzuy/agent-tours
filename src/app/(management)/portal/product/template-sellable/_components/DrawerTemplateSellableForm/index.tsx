@@ -208,14 +208,9 @@ const DrawerTemplateSellableForm: React.FC<DrawerTemplateSellableFormProps> = ({
       }}
     >
       <Form layout="vertical" colon={false} labelWrap className="max-w-4xl">
-        <FormItem
-          label="Tên mẫu sản phẩm"
-          required
-          validateStatus={errors?.name ? "error" : ""}
-          help={errors?.name || ""}
-        >
+        <FormItem label="Tên sản phẩm" required validateStatus={errors?.name ? "error" : ""} help={errors?.name || ""}>
           <Input
-            placeholder="Tên mẫu sản phẩm"
+            placeholder="Tên sản phẩm"
             disabled={isWaitingApproval}
             value={templateSellableFormData.name}
             onChange={(ev) => onChangeSellableFormData("name", ev.target.value)}
@@ -249,7 +244,7 @@ const DrawerTemplateSellableForm: React.FC<DrawerTemplateSellableFormProps> = ({
           </Space>
         </FormItem>
         <FormItem
-          label="Loại dịch vụ"
+          label="Loại dịch vụ bao gồm"
           required
           validateStatus={errors?.inventoryTypeList ? "error" : ""}
           help={errors?.inventoryTypeList || ""}

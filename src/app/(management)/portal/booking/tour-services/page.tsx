@@ -100,7 +100,7 @@ const ServicePage = () => {
           {productInformation.sellableDetails.stocks.map((item) => (
             <div className="detail-item flex mb-1 items-start" key={item.recId}>
               <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
-              <div>{`${item.invenroty.name} - ${item.code}`}</div>
+              <div>{`${item.inventory.name} - ${item.code}`}</div>
             </div>
           ))}
         </div>

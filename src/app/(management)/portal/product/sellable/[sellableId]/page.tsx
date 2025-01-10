@@ -180,19 +180,16 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
         className="mb-6"
       />
       <Divider />
-      <h3 className="mb-6 font-semibold text-lg">Mẫu sản phẩm</h3>
+      <h3 className="mb-6 font-semibold text-lg">Sản phẩm</h3>
       <ContentDetailList.Item direction="horizontal" label="Mã" value={data.sellable.template?.code} className="mb-2" />
       <ContentDetailList.Item
         direction="horizontal"
-        label="Tên mẫu sản phẩm"
+        label="Sản phẩm"
         className="mb-2"
         value={
-          <>
-            <p>{data.sellable.template?.name}</p>
-            <Link href={`/portal/product/template-sellable/${data.sellable.template?.templateId}`} className="text-xs">
-              Chi tiết
-            </Link>
-          </>
+          <Link href={`/portal/product/template-sellable/${data.sellable.template?.templateId}`} className="text-xs">
+            {data.sellable.template?.name}
+          </Link>
         }
       />
       <ContentDetailList.Item
@@ -208,14 +205,17 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
       />
       <Divider />
       <SellableContainerDetail data={data} disabled={data.sellable.status !== Status.OK} />
-      <DrawerSellableApproval
-        isOpen={openDrawerAppoval}
-        inventoryTypeList={data.sellable.template?.inventoryTypeList || []}
-        sellableName={data.sellable.code}
-        onCancel={() => setOpenDrawerApproval(false)}
-        initialValues={data.sellable}
-        onSubmit={handleApproval}
-      />
+      {data.sellable.type === "EXTRA" || data.sellable.type === "TOUR" ? (
+        <DrawerSellableApproval
+          isOpen={openDrawerAppoval}
+          inventoryTypeList={data.sellable.template?.inventoryTypeList || []}
+          productType={data.sellable.type}
+          sellableName={data.sellable.code}
+          onCancel={() => setOpenDrawerApproval(false)}
+          initialValues={data.sellable}
+          onSubmit={handleApproval}
+        />
+      ) : null}
     </PageContainer>
   );
 };

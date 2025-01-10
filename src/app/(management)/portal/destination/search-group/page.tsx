@@ -11,6 +11,7 @@ import { LocalSearchDestinationListRs } from "@/models/management/localSearchDes
 import DrawerGroupSearch, { DrawerGroupSearchProps, EActionType, TDrawerSearch } from "./_components/DrawerGroupSearch";
 import useCRUDLocalSearch from "../hooks/useCRUDLocalSearch";
 import { columnsSearchDestination } from "./columnsSearchDestination";
+import { Status } from "@/models/common.interface";
 
 const GroupDestinationPage = () => {
   const [editRecord, setEditRecord] = useState<LocalSearchDestinationListRs["result"][0]>();
@@ -19,7 +20,7 @@ const GroupDestinationPage = () => {
 
   const { data: localSearchList, isLoading: isLoadingSearchDesList } = useGetLocalSearchListMISCQuery();
 
-  const { onCreate, onUpdate } = useCRUDLocalSearch();
+  const { onCreate, onUpdate, onDelete } = useCRUDLocalSearch();
 
   const [actionType, setActionType] = useState<EActionType>(EActionType.CREATE);
   const [isOpenDrawler, setOpenDrawler] = useState(false);
@@ -44,10 +45,6 @@ const GroupDestinationPage = () => {
     }
   };
 
-  // const onDelete = (record: IDestinationListRs["result"][0]) => {
-  //     onUpdateStatus(record.id, Status.XX);
-  // };
-
   const onCloseDrawlerAndReset = () => {
     setOpenDrawler(false);
     setEditRecord(undefined);
@@ -67,13 +64,14 @@ const GroupDestinationPage = () => {
           modelName="Nhóm search"
           dataSource={localSearchList || []}
           columns={columnsSearchDestination}
+          showActionsLess={false}
           onEdit={(record) =>
             onHandleDrawer({
               action: EActionType.EDIT,
               record: record,
             })
           }
-          onDelete={(record) => {}}
+          onDelete={(record) => onDelete(record.id)}
           isLoading={isLoadingSearchDesList}
         />
       </PageContainer>

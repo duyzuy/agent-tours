@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import TableListPage from "@/components/admin/TableListPage";
-import { SellableConfirmFormData, SellableListRs } from "@/models/management/core/sellable.interface";
+import { SellableListRs } from "@/models/management/core/sellable.interface";
 import { sellableColumns } from "./sellableColumns";
 import { Status } from "@/models/common.interface";
 import { PaginationProps } from "antd";
@@ -16,7 +16,7 @@ export interface SellableListProps {
   totalItems?: number;
   isLoading?: boolean;
   render?: () => React.ReactNode;
-  onApproval?: (record: SellableConfirmFormData, cb?: () => void) => void;
+  // onApproval?: (record: SellableConfirmFormData, cb?: () => void) => void;
   onChangePageSellable?: PaginationProps["onChange"];
 }
 
@@ -27,7 +27,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
   pageCurrent,
   totalItems,
   templateSellable,
-  onApproval,
+  // onApproval,
   onChangePageSellable,
   render,
 }) => {

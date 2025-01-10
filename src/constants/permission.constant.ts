@@ -119,7 +119,7 @@ export enum ERolesFunctions {
   DESTINATION_LIST = "DESTINATION_LIST",
   DESTINATION_DELETE = "DESTINATION_DELETE",
 
-  OPERATION = "OPERATION",
+  OPERATION_LIST = "OPERATION_LIST",
   BOOKING_TOUR_CREATE = "BOOKING_TOUR_CREATE",
   BOOKING_MICE_CREATE = "BOOKING_MICE_CREATE",
   BOOKING_SERVICE_CREATE = "BOOKING_SERVICE_CREATE",
@@ -232,7 +232,7 @@ export const roleConfigs = {
     management: [ERolesFunctions.SYSTEM_MANAGEMENT],
   },
   operation: {
-    list: [ERolesFunctions.OPERATION],
+    list: [ERolesFunctions.OPERATION_LIST],
   },
 };
 
@@ -277,9 +277,9 @@ export const PATH_WITH_PERMISSION = {
   language: roleConfigs.language.list,
   "system-configuration": roleConfigs.systemConfig.management,
   "system-configuration/general": roleConfigs.systemConfig.management,
-
-  "operation/list": roleConfigs.operation.list,
   operation: roleConfigs.operation.list,
+  "operation/list": roleConfigs.operation.list,
+
   "rule-policy": roleConfigs.product.coupon.list,
   "rule-policy/coupon": roleConfigs.product.coupon.list,
   "rule-policy/coupon-policy": roleConfigs.product.coupon.list,

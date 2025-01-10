@@ -12,7 +12,7 @@ export type CMSTemplateSelectorContainerProps = SelectProps & {
 };
 const CMSTemplateSelectorContainer: React.FC<CMSTemplateSelectorContainerProps> = ({
   errors,
-  label = "Mẫu nội dung",
+  label = "Chi tiết nội dung",
   disabled,
   onChange,
   value,
@@ -24,7 +24,7 @@ const CMSTemplateSelectorContainer: React.FC<CMSTemplateSelectorContainerProps> 
   return (
     <FormItem label={label} validateStatus={errors ? "error" : ""} help={errors || ""}>
       <Select
-        placeholder="Bản mẫu nội dung"
+        placeholder="Chi tiết nội dung"
         value={value}
         disabled={disabled}
         onChange={onChange}

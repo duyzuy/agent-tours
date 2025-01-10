@@ -56,8 +56,8 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
     <PageContainer
       name={templateDetail.name}
       onBack={router.back}
-      modelName="mẫu sản phẩm"
-      breadCrumItems={[{ title: "Mẫu sản phẩm", href: LINKS.TemplateSellable }, { title: templateDetail.name }]}
+      modelName="sản phẩm"
+      breadCrumItems={[{ title: "Sản phẩm", href: LINKS.TemplateSellable }, { title: templateDetail.name }]}
       hideAddButton
     >
       <div className="flex py-2 mb-6">
@@ -108,11 +108,11 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
             value: templateDetail.code,
           },
           {
-            label: "Tên mẫu sản phẩm",
+            label: "Tên sản phẩm",
             value: templateDetail.name,
           },
           {
-            label: "Key mẫu nội dung",
+            label: "Chi tiết nội dung",
             value: <>{templateDetail.cmsIdentity || "--"}</>,
           },
           {
