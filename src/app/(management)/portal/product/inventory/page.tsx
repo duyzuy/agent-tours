@@ -2,7 +2,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Select, SelectProps, Row, Col, Radio, Space, Divider } from "antd";
-import FormItem from "@/components/base/FormItem";
 import PageContainer from "@/components/admin/PageContainer";
 import { IInventoryListRs, InventoryQueryParams } from "@/models/management/core/inventory.interface";
 import { useGetInventoryListCoreQuery } from "@/queries/core/inventory";
@@ -14,7 +13,6 @@ import { isUndefined } from "lodash";
 import { useGetInventoryTypeListCoreQuery } from "@/queries/core/inventoryType";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import ModalProductTypeSelector from "./_components/ModalProductTypeSelector";
 
 const initQueryParams = new InventoryQueryParams(
   {
@@ -38,9 +36,8 @@ const InventoryPage = () => {
   const router = useRouter();
 
   const [isOpenDrawler, setOpenDrawler] = useState(false);
-  const [productType, setProductType] = useState<EProductType>();
   const [queryParams, setQueryParams] = useState(initQueryParams);
-  const [openModalProductType, setOpenModalProductType] = useState(false);
+
   const { data: inventoryResponse, isLoading } = useGetInventoryListCoreQuery({
     queryParams: queryParams,
     enabled: !isUndefined(queryParams.requestObject?.type),
@@ -57,11 +54,6 @@ const InventoryPage = () => {
 
   const { onCreateInventory } = useCRUDInventory();
 
-  const setCreateInventory = (productType: EProductType) => {
-    setOpenDrawler(true);
-    setProductType(productType);
-    setOpenModalProductType(false);
-  };
   const onCancelDrawler = useCallback(() => {
     setOpenDrawler(false);
   }, []);
@@ -73,6 +65,7 @@ const InventoryPage = () => {
       });
     }
   }, []);
+
   const onChangeInventoryTypeQueryParams: SelectProps<string[], { label: string; value: string }>["onChange"] = (
     types,
   ) => {
@@ -92,7 +85,6 @@ const InventoryPage = () => {
   };
 
   const onFilterProductType = (productType: EProductType) => {
-    console.log(productType);
     setQueryParams((prev) => ({
       ...prev,
       requestObject: {
@@ -106,39 +98,40 @@ const InventoryPage = () => {
       name="Quản lý dịch vụ"
       modelName="dịch vụ"
       breadCrumItems={[{ title: "Quản lý dịch vụ" }]}
-      onClick={() => setOpenModalProductType(true)}
+      onClick={() => setOpenDrawler(true)}
     >
-      <div className="mb-6">
-        <Space>
-          <Radio
-            value={EProductType.TOUR}
-            checked={queryParams.requestObject?.productType?.includes(EProductType.TOUR)}
-            onChange={() => onFilterProductType(EProductType.TOUR)}
-          >
-            Dịch vụ trong tour
-          </Radio>
-          <Radio
-            value={EProductType.EXTRA}
-            checked={queryParams.requestObject?.productType?.includes(EProductType.EXTRA)}
-            onChange={() => onFilterProductType(EProductType.EXTRA)}
-          >
-            Dịch vụ trong và ngoài tour
-          </Radio>
-        </Space>
-      </div>
-      <div className="mb-3 max-w-[420px]">
-        <Select
-          value={queryParams?.requestObject?.type}
-          mode="tags"
-          style={{ width: "100%" }}
-          placeholder="Loại kho"
-          onChange={onChangeInventoryTypeQueryParams}
-          options={inventoryTypeOptions}
-          loading={isLoadingInventoryType}
-          maxTagCount="responsive"
-        />
-      </div>
-
+      <Row gutter={16} align={"middle"}>
+        <Col span={12} xl={8}>
+          <Select
+            value={queryParams?.requestObject?.type}
+            mode="tags"
+            style={{ width: "100%" }}
+            placeholder="Loại kho"
+            onChange={onChangeInventoryTypeQueryParams}
+            options={inventoryTypeOptions}
+            loading={isLoadingInventoryType}
+            maxTagCount="responsive"
+          />
+        </Col>
+        <Col>
+          <Space>
+            <Radio
+              value={EProductType.TOUR}
+              checked={queryParams.requestObject?.productType?.includes(EProductType.TOUR)}
+              onChange={() => onFilterProductType(EProductType.TOUR)}
+            >
+              Dịch vụ trong tour
+            </Radio>
+            <Radio
+              value={EProductType.EXTRA}
+              checked={queryParams.requestObject?.productType?.includes(EProductType.EXTRA)}
+              onChange={() => onFilterProductType(EProductType.EXTRA)}
+            >
+              Dịch vụ trong và ngoài tour
+            </Radio>
+          </Space>
+        </Col>
+      </Row>
       <Divider />
       <TableListPage<IInventoryListRs["result"][0]>
         scroll={{ x: 1000 }}
@@ -163,10 +156,8 @@ const InventoryPage = () => {
             })),
         }}
       />
-      <ModalProductTypeSelector open={openModalProductType} onSelect={setCreateInventory} />
       <DrawerInventoryForm
         isOpen={isOpenDrawler}
-        productType={productType}
         onCancel={onCancelDrawler}
         actionType={"CREATE"}
         onSubmit={handleCreateInventory}

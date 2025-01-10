@@ -4,6 +4,8 @@ import { stringToDate } from "@/utils/date";
 import { Status } from "@/models/common.interface";
 import React from "react";
 import { ISupplier } from "@/models/management/supplier.interface";
+import Link from "next/link";
+import { RightOutlined } from "@ant-design/icons";
 
 export const supplierColumn: ColumnsType<ISupplier> = [
   {
@@ -17,33 +19,49 @@ export const supplierColumn: ColumnsType<ISupplier> = [
     dataIndex: "supplier",
     key: "supplier",
     width: 200,
-    render(value, record, index) {
+    render(value, { fullName, shortName, recId }, index) {
       return (
         <span>
-          <span className="block text-xs text-primary-default">{record.shortName}</span>
-          <span className="block">{record.fullName}</span>
+          <span className="block text-xs">{shortName}</span>
+          <span className="block mb-2">{fullName}</span>
+          <Link href={`/portal/product/manage-supplier/${recId}`}>
+            Chi tiết
+            <RightOutlined className="ml-1 !text-[10px] relative -top-[1px]" />
+          </Link>
         </span>
       );
     },
   },
   {
     title: "Dịch vụ cung ứng",
-    dataIndex: "supplier",
-    key: "supplier",
+    dataIndex: "typeList",
+    key: "typeList",
     width: 200,
-    render(value, { typeList }, index) {
-      return (
-        <Space wrap={true}>
-          {typeList.map((sv, _index) => (
-            <Tag className="item" color="blue" key={sv} bordered={false}>
-              {sv}
-            </Tag>
-          ))}
-        </Space>
-      );
-    },
+    render: (_, { typeList }) => (
+      <Space wrap={true}>
+        {typeList.map((sv, _index) => (
+          <Tag className="item" key={sv}>
+            {sv}
+          </Tag>
+        ))}
+      </Space>
+    ),
   },
-
+  {
+    title: "Trạng thái",
+    dataIndex: "status",
+    key: "status",
+    width: 150,
+    render: (_, { status }) => (
+      <Tag color={(status === Status.OK && "green") || (status === Status.QQ && "orange") || "red"} bordered={false}>
+        {(status === Status.OK && "Đang kích hoạt") ||
+          (status === Status.XX && "Đã xoá") ||
+          (status === Status.QQ && "Chờ duyệt") ||
+          (status === Status.OX && "Chưa kích hoạt") ||
+          "none"}
+      </Tag>
+    ),
+  },
   {
     title: "Ngày tạo",
     key: "sysFstUpdate",
@@ -57,22 +75,5 @@ export const supplierColumn: ColumnsType<ISupplier> = [
     dataIndex: "sysFstUser",
     key: "sysFstUser",
     width: 100,
-  },
-  {
-    title: "Trạng thái",
-    dataIndex: "status",
-    key: "status",
-    width: 150,
-    render: (_, record) => {
-      return (
-        <Tag color={(record.status === Status.OK && "green") || (record.status === Status.QQ && "orange") || "red"}>
-          {(record.status === Status.OK && "Đang kích hoạt") ||
-            (record.status === Status.XX && "Đã xoá") ||
-            (record.status === Status.QQ && "Chờ duyệt") ||
-            (record.status === Status.OX && "Chưa kích hoạt") ||
-            "none"}
-        </Tag>
-      );
-    },
   },
 ];

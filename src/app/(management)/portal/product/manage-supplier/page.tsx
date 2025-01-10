@@ -56,9 +56,6 @@ const ManageSupplierPage = () => {
         rowKey={"recId"}
         isLoading={isLoading}
         columns={supplierColumn}
-        fixedActionsColumn={false}
-        showActionsLess={false}
-        onView={({ recId }) => router.push(`/portal/product/manage-supplier/${recId}`)}
         pagination={{
           current: supplierData?.pageCurrent,
           pageSize: supplierData?.pageSize,

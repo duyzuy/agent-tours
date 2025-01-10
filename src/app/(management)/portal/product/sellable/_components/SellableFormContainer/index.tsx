@@ -14,6 +14,8 @@ import {
   CheckboxProps,
   message,
   SelectProps,
+  InputNumber,
+  Divider,
 } from "antd";
 import dayjs from "dayjs";
 import { isArray, isEmpty, isUndefined } from "lodash";
@@ -252,13 +254,13 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
     <Form
       layout="horizontal"
       labelCol={{ span: 6 }}
-      wrapperCol={{ flex: 1 }}
+      wrapperCol={{ span: 18 }}
       colon={false}
       labelWrap
       className="max-w-4xl"
     >
       <FormItem
-        label="Nhóm sản phẩm"
+        label="Sản phẩm"
         required
         validateStatus={errors?.sellableTemplateId ? "error" : ""}
         help={errors?.sellableTemplateId || ""}
@@ -271,6 +273,7 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
           onChange={onChangeTempleateSellable}
           options={template ? [template] : templateList}
           disabled={!isUndefined(template)}
+          className="flex-1"
         />
       </FormItem>
       <FormItem label="Affix Code" validateStatus={errors?.codeAffix ? "error" : ""} help={errors?.codeAffix || ""}>
@@ -281,13 +284,14 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
         />
       </FormItem>
       <FormItem label="Số lượng" required validateStatus={errors?.cap ? "error" : ""} help={errors?.cap || ""}>
-        <Input
+        <InputNumber
           placeholder="Số lượng"
           type="number"
           min={0}
           name="cap"
           value={sellableFormData.cap}
-          onChange={(ev) => onChangeSellableForm("cap", ev.target.value)}
+          onChange={(value) => onChangeSellableForm("cap", value || 0)}
+          className="!w-full max-w-[380px]"
         />
       </FormItem>
 
@@ -343,14 +347,11 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
           className="w-full max-w-[380px]"
         />
       </FormItem>
-
-      <hr className="mb-6" />
+      <Divider />
       <FormItem label="Tuỳ chọn nâng cao">
-        <Space>
-          <Checkbox checked={showCreateSeries} onChange={() => setCreateSeries((show) => !show)}>
-            Hiển thị các tuỳ chọn nâng cao và khởi tạo series Sellable.
-          </Checkbox>
-        </Space>
+        <Checkbox checked={showCreateSeries} onChange={() => setCreateSeries((show) => !show)}>
+          Hiển thị các tuỳ chọn nâng cao và khởi tạo series.
+        </Checkbox>
       </FormItem>
       {showCreateSeries ? (
         <>
@@ -472,20 +473,13 @@ const SellableFormContainer: React.FC<SellableFormContainerProps> = ({
                 </Col>
               </Row>
             ))}
-          </FormItem>
-          <FormItem
-            wrapperCol={{
-              span: 18,
-              offset: 6,
-            }}
-          >
-            <Space>
-              <Button onClick={onCloneExclusiveDate}>Thêm</Button>
-            </Space>
+            <Button onClick={onCloneExclusiveDate} type="dashed">
+              Thêm
+            </Button>
           </FormItem>
         </>
       ) : null}
-      <hr className="mb-6" />
+      <Divider />
       <FormItem
         wrapperCol={{
           span: 18,

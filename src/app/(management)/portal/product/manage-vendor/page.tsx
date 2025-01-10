@@ -72,7 +72,7 @@ const ManageVendorPage = () => {
         fixedActionsColumn={false}
         showActionsLess={false}
         // onEdit={({ recId }) => setEditVendor(recId)}
-        onView={({ recId }) => router.push(`/portal/product/manage-vendor/${recId}`)}
+        // onView={({ recId }) => router.push(`/portal/product/manage-vendor/${recId}`)}
         pagination={{
           current: vendorData?.pageCurrent,
           pageSize: vendorData?.pageSize,

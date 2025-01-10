@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import { useRouter } from "next/navigation";
 import { useGetVendorDetailCoreQuery } from "@/queries/core/vendor";
-import { Badge, Button, Col, Divider, Popconfirm, Row, Space, Spin, Switch, SwitchProps, Tabs, Tag } from "antd";
+import { Badge, Button, Col, Divider, Empty, Popconfirm, Row, Space, Spin, Switch, SwitchProps, Tabs, Tag } from "antd";
 import { ContentDetailList } from "@/components/admin/ContentDetailList";
 import { Status } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
@@ -183,7 +183,10 @@ const VendorDetailPage: React.FC<VendorDetailPageProps> = ({ params: { vendorId 
           {
             label: "Trạng thái",
             value: (
-              <Tag color={(data.status === Status.OK && "green") || (data.status === Status.QQ && "orange") || "red"}>
+              <Tag
+                color={(data.status === Status.OK && "green") || (data.status === Status.QQ && "orange") || "red"}
+                bordered={false}
+              >
                 {(data.status === Status.OK && "Đang kích hoạt") ||
                   (data.status === Status.XX && "Đã xoá") ||
                   (data.status === Status.QQ && "Chờ duyệt") ||
@@ -200,9 +203,7 @@ const VendorDetailPage: React.FC<VendorDetailPageProps> = ({ params: { vendorId 
         value={
           <div className="flex gap-2 mt-2">
             {data.typeList.map((type) => (
-              <Tag key={type} bordered={false} color="blue">
-                {type}
-              </Tag>
+              <Tag key={type}>{type}</Tag>
             ))}
           </div>
         }
@@ -238,16 +239,37 @@ const VendorDetailPage: React.FC<VendorDetailPageProps> = ({ params: { vendorId 
         ]}
       />
       <Divider />
-      <VendorContainerTab vendorId={data.recId} inventoriesType={data.typeList} />
-      <DrawerVendorForm
-        isOpen={showDrawer}
-        onCancel={() => setShowDrawer(false)}
-        initialValues={data}
-        actionType="EDIT"
-        // onActive={onActive}
-        // onDeactive={onDeactive}
-        onSubmit={handleUpdate}
-      />
+      {data.status !== Status.QQ ? (
+        <>
+          <VendorContainerTab
+            vendorId={data.recId}
+            inventoriesType={data.typeList}
+            canCreateSupplier={data.status === Status.OK}
+          />
+          <DrawerVendorForm
+            isOpen={showDrawer}
+            onCancel={() => setShowDrawer(false)}
+            initialValues={data}
+            actionType="EDIT"
+            // onActive={onActive}
+            // onDeactive={onDeactive}
+            onSubmit={handleUpdate}
+          />
+        </>
+      ) : null}
+      {data.status === Status.QQ ? (
+        <Empty
+          imageStyle={{ width: 60, height: 60, margin: "auto" }}
+          description={
+            <>
+              <p className="mb-3">Vendor đang chờ duyệt.</p>
+              <Button className="w-[80px]" size="small" type="primary" onClick={() => onApproval(data.recId)}>
+                Duyệt
+              </Button>
+            </>
+          }
+        />
+      ) : null}
     </PageContainer>
   );
 };

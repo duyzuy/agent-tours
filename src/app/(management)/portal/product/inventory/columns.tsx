@@ -3,7 +3,8 @@ import { Tag } from "antd";
 import { formatDate } from "@/utils/date";
 import { IInventoryListRs } from "@/models/management/core/inventory.interface";
 import { Status } from "@/models/common.interface";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined, RightOutlined } from "@ant-design/icons";
+import Link from "next/link";
 export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
   {
     title: "#ID",
@@ -16,23 +17,23 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     dataIndex: "name",
     key: 2,
     width: 250,
-    render(value, record, index) {
-      return (
-        <div>
-          <span className="block">{record.name}</span>
-          <span className="text-primary-default text-xs">{record.code}</span>
-        </div>
-      );
-    },
+    render: (value, record, index) => (
+      <>
+        <div className="text-xs">{record.code}</div>
+        <div className="mb-2">{record.name}</div>
+        <Link href={`/portal/product/inventory/${record.recId}`}>
+          Chi tiết
+          <RightOutlined className="ml-1 !text-xs" />
+        </Link>
+      </>
+    ),
   },
   {
     title: "Loại",
     dataIndex: "productType",
     key: 2,
     width: 140,
-    render(value, record, index) {
-      return record.productType;
-    },
+    render: (value, { productType }, index) => <span>{productType}</span>,
   },
   {
     title: "Loại dịch vụ",
@@ -45,21 +46,15 @@ export const inventoryColumns: ColumnsType<IInventoryListRs["result"][0]> = [
     dataIndex: "isStock",
     key: 7,
     width: 80,
-    render: (_, record) => {
-      return (
-        <>
-          {record.isStock ? (
-            <span className="text-green-600">
-              <CheckCircleOutlined />
-            </span>
-          ) : (
-            <span className="text-red-600">
-              <CloseCircleOutlined />
-            </span>
-          )}
-        </>
-      );
-    },
+    render: (_, record) => (
+      <>
+        {record.isStock ? (
+          <CheckCircleOutlined className="!text-green-600" />
+        ) : (
+          <CloseCircleOutlined className="!text-red-600" />
+        )}
+      </>
+    ),
   },
   {
     title: "Ngày tạo",

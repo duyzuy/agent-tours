@@ -12,8 +12,13 @@ import useManageSupplier from "../../../manage-supplier/modules/useManageSupplie
 export interface VendorContainerTabProps {
   vendorId: number;
   inventoriesType: EInventoryType[];
+  canCreateSupplier?: boolean;
 }
-const VendorContainerTab: React.FC<VendorContainerTabProps> = ({ vendorId, inventoriesType }) => {
+const VendorContainerTab: React.FC<VendorContainerTabProps> = ({
+  vendorId,
+  inventoriesType,
+  canCreateSupplier = true,
+}) => {
   const [showDrawerSupplier, setShowDrawer] = useState(false);
   const initQueryParams = new SupplierQueryParams({ vendorId: vendorId }, 1, 10);
 
@@ -30,34 +35,18 @@ const VendorContainerTab: React.FC<VendorContainerTabProps> = ({ vendorId, inven
         setShowDrawer(false);
       });
   };
-  const mergedColumns: ColumnsType<ISupplier> = [
-    ...supplierColumn,
-    {
-      title: "",
-      dataIndex: "actions",
-      width: 200,
-      render(_, { recId }) {
-        return (
-          <Link href={`/portal/product/manage-supplier/${recId}`}>
-            <span className="flex">
-              <EyeOutlined className="mr-2" /> Chi tiết
-            </span>
-          </Link>
-        );
-      },
-    },
-  ];
-
   return (
     <>
       <div className="flex gap-x-2 mb-3">
         <h3 className="font-semibold text-lg mb-3">Danh sách supplier</h3>
-        <Button size="small" type="primary" ghost icon={<PlusOutlined />} onClick={setCreateSupplier}>
-          Thêm
-        </Button>
+        {canCreateSupplier ? (
+          <Button size="small" type="primary" ghost icon={<PlusOutlined />} onClick={setCreateSupplier}>
+            Thêm
+          </Button>
+        ) : null}
       </div>
       <Table
-        columns={mergedColumns}
+        columns={supplierColumn}
         rowKey={"recId"}
         dataSource={data?.list || []}
         loading={isLoading}

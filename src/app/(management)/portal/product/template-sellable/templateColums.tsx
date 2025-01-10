@@ -24,11 +24,9 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
         <div>
           <p className="text-xs text-gray-600">{code}</p>
           <p className="font-[500] mb-2">{name}</p>
-          <Link href={`/portal/product/template-sellable/${recId}`} className="text-xs">
-            <span>Chi tiết</span>
-            <span className="text-[10px] ml-1">
-              <RightOutlined />
-            </span>
+          <Link href={`/portal/product/template-sellable/${recId}`}>
+            Chi tiết
+            <RightOutlined className="ml-1 !text-xs" />
           </Link>
         </div>
       );

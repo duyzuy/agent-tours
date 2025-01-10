@@ -52,9 +52,9 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
     "",
     "",
     undefined,
+    EProductType.TOUR,
     undefined,
-    undefined,
-    undefined,
+    true,
     Status.QQ,
   );
   const { control, getValues, setValue, clearErrors, watch, handleSubmit } = useForm<InventoryFormData>({
@@ -62,7 +62,6 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
     defaultValues: { ...initFormData },
   });
 
-  console.log(getValues(), initialValues);
   const [currentInventoriesTypeList, setCurrentInventoriesTypeList] = useState<EInventoryType[]>();
 
   const onClose = useCallback(() => {
@@ -115,112 +114,13 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
   }, [inventoriesType, isOpen]);
   return (
     <Drawer
-      title={
-        actionType === "CREATE"
-          ? `Thêm ${
-              getValues("productType") === EProductType.EXTRA
-                ? "dịch vụ trong và ngoài tour."
-                : getValues("productType") === EProductType.TOUR
-                ? "dịch vụ trong tour."
-                : getValues("productType")
-            }`
-          : "Chỉnh sửa"
-      }
+      title={actionType === "CREATE" ? "Tạo dịch vụ" : "Chỉnh sửa"}
       destroyOnClose
       width={550}
       onClose={onClose}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
-    >
-      <Form layout="vertical" className=" max-w-4xl">
-        <Row gutter={24}>
-          <Col span={24}>
-            <Controller
-              control={control}
-              name="name"
-              render={({ field, fieldState: { error } }) => (
-                <FormItem label="Tên dịch vụ" required validateStatus={error ? "error" : ""} help={error?.message}>
-                  <Input placeholder="Tên dịch vụ" {...field} />
-                </FormItem>
-              )}
-            />
-          </Col>
-          <Col span={24}>
-            <Controller
-              control={control}
-              name="code"
-              render={({ field: { value, onChange }, fieldState: { error } }) => (
-                <FormItem label="Mã dịch vụ" required validateStatus={error ? "error" : ""} help={error?.message}>
-                  <Input
-                    placeholder="Mã dịch vụ"
-                    onChange={onChange}
-                    value={vietnameseTonesToUnderscoreKeyname(value)}
-                    disabled={actionType === "EDIT"}
-                  />
-                  <ul className="list-disc pl-4 text-xs text-gray-600 pt-2">
-                    <li>Không dấu và không chứa ký tự đặc biệt.</li>
-                    <li>Ngăn cách bằng dấu gạch dưới &quot;_&ldquo;.</li>
-                  </ul>
-                </FormItem>
-              )}
-            />
-          </Col>
-        </Row>
-        {disableSupplierField ? null : (
-          <Controller
-            control={control}
-            name="supplierId"
-            render={({ field, fieldState: { error } }) => (
-              <FormItem label="Chọn Supplier" required validateStatus={error ? "error" : ""} help={error?.message}>
-                <SelectorSupplier value={field.value} onChange={selectSupplier} disabled={actionType === "EDIT"} />
-              </FormItem>
-            )}
-          />
-        )}
-        <Controller
-          control={control}
-          name="type"
-          render={({ field, fieldState: { error } }) => (
-            <FormItem label="Loại dịch vụ" required validateStatus={error ? "error" : ""} help={error?.message}>
-              {currentInventoriesTypeList ? (
-                <Radio.Group {...field} disabled={actionType === "EDIT"}>
-                  <Space wrap>
-                    {currentInventoriesTypeList
-                      ? currentInventoriesTypeList?.map((inventoryType) => (
-                          <Radio value={inventoryType} key={inventoryType}>
-                            {inventoryType}
-                          </Radio>
-                        ))
-                      : null}
-                  </Space>
-                </Radio.Group>
-              ) : (
-                <p className="text-xs text-red-600 pl-2">Chọn supplier để hiển thị dịch vụ tương ứng.</p>
-              )}
-            </FormItem>
-          )}
-        />
-        <Controller
-          control={control}
-          name="isStock"
-          render={({ field, fieldState: { error } }) => (
-            <FormItem label="Quản lý kho" validateStatus={error ? "error" : ""} help={error?.message}>
-              <Radio.Group onChange={field.onChange} value={field.value} disabled={actionType === "EDIT"}>
-                <Space wrap>
-                  <Radio value={true}>Có</Radio>
-                  <Radio value={false}>Không</Radio>
-                </Space>
-              </Radio.Group>
-            </FormItem>
-          )}
-        />
-      </Form>
-      <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-        <Space>
+      footer={
+        <Space className="py-2">
           <Button type="default" onClick={onCancel}>
             Huỷ bỏ
           </Button>
@@ -253,7 +153,116 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
             </>
           ) : null}
         </Space>
-      </div>
+      }
+    >
+      <Form layout="vertical" className=" max-w-4xl">
+        <Controller
+          control={control}
+          name="name"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem label="Tên dịch vụ" required validateStatus={error ? "error" : ""} help={error?.message}>
+              <Input placeholder="Tên dịch vụ" {...field} />
+            </FormItem>
+          )}
+        />
+        <Controller
+          control={control}
+          name="code"
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <FormItem label="Mã dịch vụ" required validateStatus={error ? "error" : ""} help={error?.message}>
+              <Input
+                placeholder="Mã dịch vụ"
+                onChange={onChange}
+                value={vietnameseTonesToUnderscoreKeyname(value)}
+                disabled={actionType === "EDIT"}
+              />
+              <div className="bg-red-50 p-3 rounded-md mt-3">
+                <ul className="list-disc pl-4 text-gray-600">
+                  <li>Không dấu và không chứa ký tự đặc biệt.</li>
+                  <li>Ngăn cách bởi dấu gạch dưới &quot;_&ldquo;.</li>
+                </ul>
+              </div>
+            </FormItem>
+          )}
+        />
+        {disableSupplierField ? null : (
+          <Controller
+            control={control}
+            name="supplierId"
+            render={({ field, fieldState: { error } }) => (
+              <FormItem label="Chọn Supplier" required validateStatus={error ? "error" : ""} help={error?.message}>
+                <SelectorSupplier value={field.value} onChange={selectSupplier} disabled={actionType === "EDIT"} />
+              </FormItem>
+            )}
+          />
+        )}
+        <Controller
+          control={control}
+          name="type"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem label="Loại dịch vụ" required validateStatus={error ? "error" : ""} help={error?.message}>
+              {currentInventoriesTypeList ? (
+                <Radio.Group {...field} disabled={actionType === "EDIT"}>
+                  <Space wrap>
+                    {currentInventoriesTypeList
+                      ? currentInventoriesTypeList?.map((inventoryType) => (
+                          <Radio value={inventoryType} key={inventoryType}>
+                            {inventoryType}
+                          </Radio>
+                        ))
+                      : null}
+                  </Space>
+                </Radio.Group>
+              ) : (
+                <p className="text-red-600 pl-2">Chọn supplier để hiển thị dịch vụ cung ứng tương ứng.</p>
+              )}
+            </FormItem>
+          )}
+        />
+        <Controller
+          control={control}
+          name="productType"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem
+              label="Loại"
+              required
+              validateStatus={error ? "error" : ""}
+              help={error?.message}
+              tooltip="Dịch vụ sẽ được áp dụng tuỳ vào loại sản phẩm tương ứng bên dưới."
+            >
+              <Radio.Group {...field} disabled={actionType === "EDIT"}>
+                <Space wrap>
+                  {[EProductType.EXTRA, EProductType.TOUR].map((type) => (
+                    <Radio value={type} key={type}>
+                      {type}
+                    </Radio>
+                  ))}
+                </Space>
+              </Radio.Group>
+              <div className="bg-red-50 p-3 rounded-md mt-3">
+                <ul className="list-disc pl-4 text-gray-600">
+                  <li>TOUR: Dịch vụ sẽ chỉ áp dụng cho sản phẩm là tour.</li>
+                  <li>EXTRA: Dịch vụ áp dụng cho sản phẩm là tour hoặc sản phẩm bán không phải là tour.</li>
+                </ul>
+              </div>
+            </FormItem>
+          )}
+        />
+        <Controller
+          control={control}
+          name="isStock"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem label="Quản lý kho" validateStatus={error ? "error" : ""} help={error?.message}>
+              <Radio.Group onChange={field.onChange} value={field.value} disabled={actionType === "EDIT"}>
+                <Space wrap>
+                  <Radio value={true}>Có</Radio>
+                  <Radio value={false}>Không</Radio>
+                </Space>
+              </Radio.Group>
+            </FormItem>
+          )}
+        />
+      </Form>
     </Drawer>
   );
 };

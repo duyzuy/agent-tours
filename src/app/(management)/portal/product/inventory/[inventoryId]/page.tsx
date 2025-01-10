@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Spin, Divider, Space, Button, Popconfirm } from "antd";
+import { Spin, Divider, Space, Button, Popconfirm, Empty } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetInventoryDetailCoreQuery } from "@/queries/core/inventory";
@@ -113,16 +113,12 @@ const InventoryDetailPage = ({ params }: { params: { inventoryId: number } }) =>
           { label: "#ID", value: inventoryDetail.recId.toString() },
           { label: "Mã dịch vụ", value: inventoryDetail.code },
           { label: "Tên dịch vụ", value: inventoryDetail.name },
-          { label: "Loại dịch vụ", value: inventoryDetail.type },
+
           {
-            label: "Loại sản phẩm",
-            value:
-              inventoryDetail.productType === EProductType.TOUR
-                ? "Sản phẩm dịch vụ kèm tour"
-                : inventoryDetail.productType === EProductType.EXTRA
-                ? "Sản phẩm dịch vụ"
-                : inventoryDetail.productType,
+            label: "Loại",
+            value: inventoryDetail.productType,
           },
+          { label: "Loại dịch vụ", value: inventoryDetail.type },
           {
             label: "Stock",
             value: inventoryDetail.isStock ? (
@@ -159,7 +155,7 @@ const InventoryDetailPage = ({ params }: { params: { inventoryId: number } }) =>
           )}
         </div>
       ) : (
-        <div>Dịch vụ không có quản lý kho.</div>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Dịch vụ không quản lý số lượng kho." />
       )}
       <DrawerInventoryForm
         isOpen={showDrawer}
