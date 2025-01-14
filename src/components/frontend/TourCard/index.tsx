@@ -7,9 +7,10 @@ import IconShare from "@/assets/icons/IconShare";
 import classNames from "classnames";
 import { useTranslations } from "next-intl";
 import { Link } from "@/utils/navigation";
-import { IconImage } from "@/assets/icons";
+import { IconCalendarRange, IconImage } from "@/assets/icons";
 import { moneyFormatVND } from "@/utils/helper";
 import { getLabelHotDealIcon } from "@/constants/icons.constant";
+import { Space, Tag } from "antd";
 
 type TourCardBaseType = {
   children?: React.ReactNode;
@@ -90,7 +91,11 @@ const CardHead: TourCardCompound["Head"] = ({ children }) => {
   return <div className="tour-card__head relative">{children}</div>;
 };
 const CardBody: TourCardCompound["Body"] = ({ children }) => {
-  return <div className="tour-card__body px-2 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">{children}</div>;
+  return (
+    <div className="tour-card__body px-3 lg:px-4 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">
+      {children}
+    </div>
+  );
 };
 
 const CardFooter: TourCardCompound["Footer"] = () => {
@@ -121,39 +126,46 @@ const CardFooter: TourCardCompound["Footer"] = () => {
   );
 };
 
-const CardDurationDays: TourCardCompound["Days"] = () => {
+const CardDurationDays: TourCardCompound["Days"] = ({ className }) => {
   const { durationDays } = useTourCardContext();
   const t = useTranslations("String");
+
   return (
-    <>
+    <div className={classNames(className)}>
       {durationDays ? (
-        <span className="text-gray-500 text-xs">
+        <span className="flex items-center">
+          <IconCalendarRange className="mr-1 w-5 h-5" />
           {t("card.durationDayValues", { day: durationDays, night: durationDays - 1 })}
         </span>
       ) : null}
-    </>
+    </div>
   );
 };
-const CardPrice: TourCardCompound["Price"] = () => {
+const CardPrice: TourCardCompound["Price"] = ({ className = "" }) => {
   const t = useTranslations("String");
   const { promotion, price, showPromotion } = useTourCardContext();
 
-  if (!price) {
-    return <p className="text-xs h-[22px]">{t("card.contact")}</p>;
-  }
-  if (!promotion?.promotionReferencePrice || promotion?.promotionReferencePrice < price || !showPromotion) {
-    return (
-      <div className="price lg:flex lg:items-center">
-        <p className="text-red-600 text-[16px] lg:text-lg font-[500]">{moneyFormatVND(price)}</p>
-      </div>
-    );
-  }
   return (
-    <div className="price lg:flex lg:items-center">
-      <span className="text-red-600 text-sm lg:text-[16px] font-[500] mr-2 inline-block">{moneyFormatVND(price)}</span>
-      <span className="font-[500] line-through text-[12px] lg:text-[14px] opacity-40 inline-block">
-        {moneyFormatVND(promotion.promotionReferencePrice)}
-      </span>
+    <div
+      className={classNames("price no-price", {
+        [className]: className,
+      })}
+    >
+      {!price ? (
+        <p className="text-[16px] lg:text-lg">{t("card.contact")}</p>
+      ) : promotion &&
+        promotion.promotionReferencePrice &&
+        promotion?.promotionReferencePrice > price &&
+        showPromotion ? (
+        <>
+          <span className="text-red-600 text-[16px] lg:text-lg font-[500] block">{moneyFormatVND(price)}</span>
+          <span className="line-through text-[12px] lg:text-[14px] opacity-60 block">
+            {moneyFormatVND(promotion.promotionReferencePrice)}
+          </span>
+        </>
+      ) : (
+        <p className="text-red-600 text-[16px] lg:text-lg font-[500]">{moneyFormatVND(price)}</p>
+      )}
     </div>
   );
 };
@@ -203,8 +215,8 @@ const CardThumbnail: TourCardCompound["Thumbnail"] = () => {
 const CardTitle: TourCardCompound["Title"] = () => {
   const { href, name } = useTourCardContext();
   return (
-    <Link href={href ?? "/"} className="text-main-400 text-[15px]">
-      <h3 className="line-clamp-2 mb-2 h-10 lg:h-12 leading-5 lg:leading-6 font-[500] text-main-400 text-sm lg:text-[16px]">
+    <Link href={href ?? "/"} className="text-main-400 text-[15px] mb-3">
+      <h3 className="line-clamp-2 h-10 lg:h-12 leading-5 lg:leading-6 font-[500] text-main-400 text-sm lg:text-[16px]">
         {name}
       </h3>
     </Link>
@@ -212,10 +224,10 @@ const CardTitle: TourCardCompound["Title"] = () => {
 };
 
 const TourCardInfo: TourCardCompound["Information"] = ({ children }) => {
-  const { tourCode, departDate, openAmount, otherDepartDate } = useTourCardContext();
+  const { tourCode, departDate, openAmount, otherDepartDate, durationDays } = useTourCardContext();
   const t = useTranslations("String");
   return (
-    <div className="tour-card__info-list text-xs">
+    <div className="tour-card__info-list grid lg:grid-cols-3 grid-cols-2 gap-2">
       <TourCard.InfoItem label={t("card.tourCode")} value={tourCode} />
       <TourCard.InfoItem label={t("card.departDate")} value={departDate} />
       <TourCard.InfoItem
@@ -227,35 +239,34 @@ const TourCardInfo: TourCardCompound["Information"] = ({ children }) => {
         value={
           <>
             {otherDepartDate?.length ? (
-              <div className="flex-1 w-full">
-                <span className="flex flex-wrap gap-1">
-                  {otherDepartDate.map((departStr, _index) => (
-                    <span className="depart text-xs" key={_index}>
-                      {_index !== 0 ? <span className="text-[8px] mx-1">|</span> : null}
-                      {departStr}
-                    </span>
-                  ))}
-                </span>
+              <div className="flex-1 w-full pt-2">
+                {otherDepartDate.map((departStr, _index) => (
+                  <Tag key={_index} className="text-xs !rounded-full !mr-1" color="blue" bordered={false}>
+                    {departStr}
+                  </Tag>
+                ))}
               </div>
             ) : (
-              <span className="text-xs">Không có</span>
+              <span className="text-xs">--</span>
             )}
           </>
         }
+        className="col-span-2 lg:col-span-3"
       />
     </div>
   );
 };
 
 interface TourCardInfoItemProps {
+  className?: string;
   label: string;
   value?: React.ReactNode;
 }
-TourCard.InfoItem = function TourCardInfoItem({ label, value }: TourCardInfoItemProps) {
+TourCard.InfoItem = function TourCardInfoItem({ label, value, className = "" }: TourCardInfoItemProps) {
   return (
-    <div className="flex mb-1">
-      <span className="text-gray-500 w-[65px] lg:w-[80px] block mr-2">{label}</span>
-      {typeof value === "string" ? <span className="text-gray-800">{value}</span> : value}
+    <div className={classNames(className)}>
+      <div className="text-gray-500 block text-[10px] lg:text-xs">{label}</div>
+      <div className="text-gray-800 text-[13px] lg:text-sm">{value}</div>
     </div>
   );
 };

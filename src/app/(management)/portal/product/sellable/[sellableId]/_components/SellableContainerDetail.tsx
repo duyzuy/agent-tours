@@ -347,8 +347,8 @@ const SellableContainerDetail: React.FC<SellableContainerDetailProps> = ({ data,
           <div className="price-config pt-3">
             <h3 className="text-lg font-semibold mb-3">Thiết lập giá tour</h3>
             <PriceConfigContainer
-              tableColumn={tourConfigColumn}
               sellableId={sellable.recId}
+              tableColumn={tourConfigColumn}
               cap={sellable.cap}
               priceConfigs={priceConfigs?.tourConfigs || []}
               onSubmit={handleSaveTourPriceConfig}

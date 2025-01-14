@@ -45,7 +45,7 @@ const BoxServiceItemByPax: React.FC<BoxServiceItemByPaxProps> = ({
 
   return (
     <div className="service__item bg-white mb-6 rounded-sm drop-shadow-sm">
-      <div className="service__item-head px-6 py-6 flex justify-between">
+      <div className="service__item-head px-6 pt-6 flex justify-between">
         <span className="text-[16px] font-semibold">{serviceName}</span>
       </div>
       <div className="service__item-body px-6 pb-6">

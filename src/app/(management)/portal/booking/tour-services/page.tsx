@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
-import { Breadcrumb, Col, Divider, Row, Spin } from "antd";
+import React, { useEffect, useMemo, useTransition } from "react";
+import { Breadcrumb, Button, Col, Divider, Empty, Row, Space, Spin } from "antd";
 import useBooking, { useBookingSelector } from "../hooks/useBooking";
 import { useRouter } from "next/navigation";
 import BookingSummary from "../_components/BookingSummary";
@@ -14,6 +14,7 @@ const ServicePage = () => {
   const [bookingInformation, setBookingInfomation] = useBooking();
   // const bookingItems = useBookingSelector((state) => state.bookingInfo?.bookingItems);
   // const productInformation = useBookingSelector((state) => state.bookingInfo?.product);
+  const [isInitGotoNext, startGotoNext] = useTransition();
 
   const router = useRouter();
 
@@ -36,6 +37,14 @@ const ServicePage = () => {
   if (!productInformation || !bookingItems) {
     return null;
   }
+  const isNoSSR = (!bookingSsrWithPax || !bookingSsrWithPax.length) && (!bookingSsr || !bookingSsr.length);
+
+  const handleGotoPayment = () => {
+    startGotoNext(() => router.push("/portal/booking/payment"));
+  };
+  const handleGotoPassengerInformation = () => {
+    startGotoNext(() => router.push("/portal/booking/passenger-information"));
+  };
 
   //   useEffect(() => {
   //     if (!isUndefined(tourServices) && !isLoading) {
@@ -72,7 +81,6 @@ const ServicePage = () => {
       <div className="bg-white p-6 rounded-md mb-6 shadow-sm">
         <ContentDetailList
           items={[
-            { label: "Tên sản phẩm", value: productInformation.template.name },
             { label: "Mã sản phẩm", value: productInformation.template.code },
             {
               label: "Ngày đi",
@@ -81,10 +89,6 @@ const ServicePage = () => {
             {
               label: "Ngày về",
               value: formatDate(productInformation.endDate),
-            },
-            {
-              label: "Số lượng đang còn",
-              value: productInformation.open,
             },
           ]}
         />
@@ -117,17 +121,32 @@ const ServicePage = () => {
       <div className="max-w-6xl">
         <Row gutter={32}>
           <Col span={15}>
-            <ServiceListContainer
-              sellableId={productInformation?.sellableId}
-              bookingItems={bookingItems}
-              bookingSsrWithPax={bookingSsrWithPax}
-              bookingSsr={bookingSsr}
-            />
+            {isNoSSR ? (
+              <Empty description={<p>Không có dịch vụ nào khả dụng.</p>} />
+            ) : (
+              <ServiceListContainer
+                sellableId={productInformation?.sellableId}
+                bookingItems={bookingItems}
+                bookingSsrWithPax={bookingSsrWithPax}
+                bookingSsr={bookingSsr}
+              />
+            )}
           </Col>
           <Col span={9}>
             <BookingSummary label="Chi tiết giá tour" />
           </Col>
         </Row>
+
+        <div className="">
+          <Space>
+            <Button type="primary" size="large" ghost onClick={handleGotoPassengerInformation} loading={isInitGotoNext}>
+              Nhập thông tin khách
+            </Button>
+            <Button type="primary" size="large" onClick={handleGotoPayment} loading={isInitGotoNext}>
+              Tiến hành đặt chỗ
+            </Button>
+          </Space>
+        </div>
       </div>
     </div>
   );

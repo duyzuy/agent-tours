@@ -68,7 +68,7 @@ const InventoryDetailContainer: React.FC<{ data: IInventoryDetail }> = ({ data }
   const tabItems: TabsProps["items"] = [
     {
       key: "stockList",
-      label: "Danh sách kho",
+      label: "Danh sách dịch vụ",
       children: (
         <StockListContainer
           items={stockList || []}
@@ -160,7 +160,7 @@ const InventoryDetailContainer: React.FC<{ data: IInventoryDetail }> = ({ data }
     },
     {
       key: "createStock",
-      label: "Tạo số lượng kho",
+      label: "Tạo dịch vụ",
       children: (
         <StockFormContainer
           inventoryId={data.recId}

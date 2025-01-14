@@ -21,11 +21,13 @@ const useSelectPassengerQuantity = () => {
     const { infant, ...restBookingPax } = bookingPassenger;
     return Object.entries(restBookingPax).reduce((acc, [k, v]) => (acc += v), 0);
   };
+
   const resetQuantityPassenger = () => {
     dispatch({
       type: EBookingActions.RESET_PASSENGER_QUANTITY,
     });
   };
+
   const setQuantityPassenger = (passenger: { type: PassengerType; quantity: number; action: "plus" | "minus" }) => {
     const { type, quantity, action } = passenger;
     let newPassengers = { ...bookingPassenger };
@@ -96,13 +98,13 @@ const useSelectPassengerQuantity = () => {
     }
 
     let passengersFormList: Required<FeBookingInformation>["bookingInfo"]["passengers"] = [];
-
-    Object.entries(bookingPassenger).forEach(([type, quantity], _index) => {
+    let _indexPax = 0;
+    Object.entries(bookingPassenger).forEach(([type, quantity]) => {
       for (let i = 0; i < quantity; i++) {
         passengersFormList = [
           ...passengersFormList,
           {
-            index: _index,
+            index: _indexPax,
             type: type as PassengerType,
             info: new FePassengerInformationFormData(
               undefined,
@@ -121,6 +123,7 @@ const useSelectPassengerQuantity = () => {
             ),
           },
         ];
+        _indexPax++;
       }
     });
 

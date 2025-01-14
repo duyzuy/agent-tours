@@ -79,10 +79,11 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
         {/* <FlashSale /> */}
 
         <PromotionSlider items={[]} title="Tour khuyến mại" />
+
         <div className="lg:h-12 h-4"></div>
         <Suspense
           fallback={
-            <div className="container mx-auto px-4 md:px-6 lg:px-8">
+            <div className="container mx-auto px-3 md:px-6 lg:px-8">
               <SkeletonLoadingCards length={4} />
             </div>
           }

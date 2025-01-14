@@ -19,7 +19,12 @@ import {
   UseFormSetValue,
   UseFormClearErrors,
 } from "react-hook-form";
-import { PassengerFormValues } from ".";
+import { FeBookingInformation } from "../../../modules/booking.interface";
+export type PassengerItemType = FeBookingInformation["bookingInfo"]["passengers"][number];
+
+export type PassengerFormValues = {
+  passengerItem: PassengerItemType[];
+};
 
 export interface PassengerFormProps {
   index: number;
@@ -94,7 +99,7 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
       paxBirthDate: undefined,
     }));
 
-    date && setValue?.(`passengerItem.${index}.info.paxBirthDate`, date.toDate()),
+    date && setValue?.(`passengerItem.${index}.info.paxBirthDate`, date.toDate().toDateString()),
       clearErrors?.(`passengerItem.${index}.info.paxBirthDate`);
   };
 

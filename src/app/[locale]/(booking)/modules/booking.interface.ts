@@ -5,31 +5,32 @@ import { PassengerType } from "@/models/common.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { FePassengerInformationFormData } from "../passenger/modules/passegner.interface";
 import { IPromotion } from "@/models/management/core/promotion.interface";
-import { FePriceConfig } from "@/models/fe/serviceItem.interface";
+import { FeProductService } from "@/models/fe/serviceItem.interface";
 import { FeReservation } from "@/models/fe/reservation.interface";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 
-export interface IFeSSRItem {
-  priceConfig: PriceConfig;
-  qty: number;
+export interface IBookingSsrItemNoPax {
+  priceConfig: FeProductService["configs"][number];
+  inventory: FeProductService["inventory"];
+  stock: FeProductService["stock"];
   amount: number;
   type: PassengerType;
 }
-export interface IBookingSsrItemWithPax {
+export type IBookingSsrItemWithPax = {
   paxIndex: number;
   paxType: PassengerType;
-  sellableDetailId: number;
-  serviceName: string;
-  priceConfig: FePriceConfig;
-}
-export interface IFeBookingDetailItem {
+  inventory: FeProductService["inventory"];
+  stock: FeProductService["stock"];
+  priceConfig: FeProductService["configs"][number];
+};
+interface IFeBookingDetailItem {
   priceConfig: PriceConfig;
   index: number;
   amount: number;
   type: PassengerType;
   pax?: FePassengerInformationFormData;
-  ssr?: IFeSSRItem[];
 }
+
 export interface FeBookingInformation {
   bookingInfo: {
     cmsTemplate: FeCMSTemplateContent | undefined;
@@ -38,7 +39,7 @@ export interface FeBookingInformation {
     coupons: IPromotion[] | undefined;
     bookingDetails: IFeBookingDetailItem[];
     bookingSsrWithPax: IBookingSsrItemWithPax[] | undefined;
-    bookingSsr: IFeSSRItem[] | undefined;
+    bookingSsr: IBookingSsrItemNoPax[] | undefined;
     customerInformation: ICustomerInformation | undefined;
     invoiceInformation: IInvoice | undefined;
     passengers: {
@@ -47,7 +48,7 @@ export interface FeBookingInformation {
       info: FePassengerInformationFormData;
     }[];
   };
-  servicePriceConfigs: FePriceConfig[] | undefined;
+  services: FeProductService[] | undefined;
   bookingPassenger: {
     [PassengerType.ADULT]: number;
     [PassengerType.CHILD]: number;
@@ -63,7 +64,7 @@ export class FeBookingFormData implements FeBookingInformation {
     couponPolicy: IPromotion | undefined;
     coupons: IPromotion[] | undefined;
     bookingDetails: IFeBookingDetailItem[];
-    bookingSsr: IFeSSRItem[] | undefined;
+    bookingSsr: IBookingSsrItemNoPax[] | undefined;
     bookingSsrWithPax: IBookingSsrItemWithPax[] | undefined;
     customerInformation: ICustomerInformation | undefined;
     invoiceInformation: IInvoice | undefined;
@@ -74,7 +75,7 @@ export class FeBookingFormData implements FeBookingInformation {
     }[];
   };
 
-  servicePriceConfigs: FePriceConfig[] | undefined;
+  services: FeProductService[] | undefined;
   bookingPassenger: {
     [PassengerType.ADULT]: number;
     [PassengerType.CHILD]: number;
@@ -88,7 +89,7 @@ export class FeBookingFormData implements FeBookingInformation {
       couponPolicy: IPromotion | undefined;
       coupons: IPromotion[] | undefined;
       bookingDetails: IFeBookingDetailItem[];
-      bookingSsr: IFeSSRItem[] | undefined;
+      bookingSsr: IBookingSsrItemNoPax[] | undefined;
       bookingSsrWithPax: IBookingSsrItemWithPax[] | undefined;
       customerInformation: ICustomerInformation | undefined;
       invoiceInformation: IInvoice | undefined;
@@ -98,7 +99,7 @@ export class FeBookingFormData implements FeBookingInformation {
         info: FePassengerInformationFormData;
       }[];
     },
-    servicePriceConfigs: FePriceConfig[] | undefined,
+    services: FeProductService[] | undefined,
     bookingPassenger: {
       [PassengerType.ADULT]: number;
       [PassengerType.CHILD]: number;
@@ -108,7 +109,7 @@ export class FeBookingFormData implements FeBookingInformation {
   ) {
     this.bookingInfo = bookingInfo;
     this.bookingPassenger = bookingPassenger;
-    this.servicePriceConfigs = servicePriceConfigs;
+    this.services = services;
     this.reservation = reservation;
   }
 }

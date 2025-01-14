@@ -8,9 +8,11 @@ import { PaginationProps } from "antd";
 import { ITemplateSellableDetail } from "@/models/management/core/templateSellable.interface";
 import { useRouter } from "next/navigation";
 import DrawerSellableApproval, { DrawerSellableApprovalProps } from "../DrawerSellableApproval";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 export interface SellableListProps {
   dataSource?: SellableListRs["result"];
   templateSellable?: ITemplateSellableDetail;
+  inventoryTypeList?: EInventoryType[];
   pageSize?: number;
   pageCurrent?: number;
   totalItems?: number;
@@ -23,6 +25,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
   dataSource = [],
   isLoading,
   pageSize,
+  inventoryTypeList,
   pageCurrent,
   totalItems,
   onChangePageSellable,
@@ -45,7 +48,7 @@ const SellableListContainer: React.FC<SellableListProps> = ({
       {render?.()}
       <TableListPage<SellableListRs["result"][number]>
         dataSource={dataSource}
-        scroll={{ x: 1600 }}
+        scroll={{ x: 1400 }}
         rowKey={"recId"}
         isLoading={isLoading}
         columns={sellableColumns}
@@ -59,17 +62,17 @@ const SellableListContainer: React.FC<SellableListProps> = ({
           showQuickJumper: false,
           size: "small",
         }}
-        fixedActionsColumn={false}
-        // onApproval={(record) => handleApproval(record)}
+        //fixedActionsColumn={false}
+        //  onApproval={(record) => handleApproval(record)}
         // hideApproval={({ status }) => status === Status.OK}
-        // showActionsLess={false}
+        //  showActionsLess={false}
         // onView={(record) => router.push(`/portal/product/sellable/${record.recId}`)}
         // hideEdit={({ status }) => status === Status.QQ || status === Status.OK}
       />
       {(approvalRecord && approvalRecord.type === "EXTRA") || (approvalRecord && approvalRecord.type === "TOUR") ? (
         <DrawerSellableApproval
           isOpen={showDrawer}
-          inventoryTypeList={[]}
+          inventoryTypeList={inventoryTypeList || []}
           productType={approvalRecord.type}
           sellableName={approvalRecord.code}
           onCancel={handleCancel}

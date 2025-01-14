@@ -53,7 +53,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     const newProduct = productList?.find((prd) => {
       return stringToDate(prd.startDate).isSame(date, "date");
     });
-
+    console.log(newProduct);
     newProduct && setProductItem(newProduct);
   }, []);
 
@@ -85,6 +85,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     onNext: handleNextToPassengerInfo,
     onChangeCoupon: handleChangeCoupon,
     isLoading: isPendingInitBookingDetails,
+
     promotion: {
       promotionImage: cmsTemplate.promotionImage,
       promotionLabel: cmsTemplate.promotionLabel,
@@ -118,7 +119,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
           })}
         >
           <ProductSummaryCard {...productCardProps}>
-            <div className="box-booking border lg:px-6 px-4 pt-4 pb-6 mb-4 rounded-md bg-white shadow-sm relative z-10 overflow-hidden">
+            <div className="box-booking border min-h-[650px] lg:px-6 px-4 pt-4 pb-6 mb-4 rounded-md bg-white shadow-sm relative z-10 overflow-hidden">
               <div className="header py-3 flex items-center justify-between">
                 <h3 className="font-semibold text-primary-default uppercase">{t("productSummary.title")}</h3>
               </div>

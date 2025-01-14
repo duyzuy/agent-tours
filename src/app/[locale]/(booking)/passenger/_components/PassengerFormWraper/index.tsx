@@ -1,18 +1,16 @@
 "use client";
 import React, { memo, useState } from "react";
-import { Control, FieldArrayWithId, UseFormClearErrors, UseFormSetValue } from "react-hook-form";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
-import PassengerForm from "./PassengerForm";
-import ModalConfirmation from "./ModalConfirmation";
-import { FeBookingInformation } from "../../../modules/booking.interface";
-import { IconPen } from "@/assets/icons";
-export type PassengerItemType = FeBookingInformation["bookingInfo"]["passengers"][0];
 
-export type PassengerFormValues = {
-  passengerItem: PassengerItemType[];
-};
+import { FeBookingInformation } from "../../../modules/booking.interface";
+import { IconPen, IconUser } from "@/assets/icons";
+import { getPassengerType } from "@/utils/common";
+import { Button, Space } from "antd";
+import DrawerPassengerInformationForm from "./DrawerPassengerInformationForm";
+export type PassengerItemType = FeBookingInformation["bookingInfo"]["passengers"][number];
+
 export interface FePassengerInformationFormProps {
   className?: string;
   startDate?: string;
@@ -20,13 +18,7 @@ export interface FePassengerInformationFormProps {
   title?: string;
   descriptions?: React.ReactNode;
   children?: React.ReactNode;
-  isCompleted?: boolean;
-  canEditPax?: boolean;
-  control?: Control<PassengerFormValues>;
-  fields?: FieldArrayWithId<PassengerFormValues, "passengerItem", "id">[];
-  clearErrors?: UseFormClearErrors<PassengerFormValues>;
-  setValue?: UseFormSetValue<PassengerFormValues>;
-  onEditPax?: () => void;
+  onUpdate?: (data: FeBookingInformation["bookingInfo"]["passengers"][number]) => void;
 }
 
 const PassengerFormWraper = ({
@@ -35,17 +27,23 @@ const PassengerFormWraper = ({
   startDate,
   title,
   descriptions,
-  children,
-  isCompleted = false,
-  canEditPax = true,
-  setValue,
-  clearErrors,
-  fields,
-  control,
-  onEditPax,
+  onUpdate,
 }: FePassengerInformationFormProps) => {
   const [isShow, setShowModal] = useState(false);
+  const [editPax, setEditPax] = useState<FeBookingInformation["bookingInfo"]["passengers"][number]>();
 
+  const onEditPassengerInformation = (record: FeBookingInformation["bookingInfo"]["passengers"][number]) => {
+    setEditPax(record);
+    setShowModal(true);
+  };
+  const onCancelPassengerInformation = () => {
+    setEditPax(undefined);
+    setShowModal(false);
+  };
+  const onSavePassengerInformation = (record: FeBookingInformation["bookingInfo"]["passengers"][number]) => {
+    onUpdate?.(record);
+    setShowModal(false);
+  };
   const t = useTranslations("String");
 
   return (
@@ -55,44 +53,38 @@ const PassengerFormWraper = ({
           [className]: className,
         })}
       >
-        <div className="page-passenger__head mb-3">
-          <h1 className="text-xl font-[500]">{title}</h1>
+        <div className="page-passenger__head relative mb-6">
+          <span className="w-1 h-4 block rounded-full bg-primary-default absolute -left-6 top-2"></span>
+          <h3 className="text-xl font-[500] mb-2">{title}</h3>
+          <p className="text-gray-600">{descriptions}</p>
         </div>
 
-        <div className="page-passenger__note mb-6 text-gray-600 rounded-md">
-          <p>{descriptions}</p>
-        </div>
-        <div className="passenger__information-body">
-          {isCompleted && !canEditPax
-            ? passengerList.map(({ info, index, type }) => (
-                <PassengerFormWraper.Info
-                  key={index}
-                  className={classNames("pax-item-info border rounded-md px-4", {
-                    "mt-6": index !== 0,
-                  })}
-                  paxLastname={info.paxLastname}
-                  paxBirthDate={info.paxBirthDate ? dayjs(info.paxBirthDate).locale("en").format("DD/MM/YYYY") : "--"}
-                  paxGender={t(`gender.${info.paxGender}`)}
-                  paxMiddleFirstName={info.paxMiddleFirstName}
-                  onClick={onEditPax}
-                />
-              ))
-            : fields?.map((paxField, index) => (
-                <PassengerForm
-                  key={paxField.id}
-                  {...{ control, index, field: paxField }}
-                  startDate={startDate}
-                  type={paxField.type}
-                  setValue={setValue}
-                  clearErrors={clearErrors}
-                  className={classNames("bg-white ", {
-                    "mt-6 pt-6 border-t": index !== 0,
-                  })}
-                />
-              ))}
-        </div>
+        {passengerList.map(({ info, index, type }) => (
+          <PassengerFormWraper.Info
+            key={index}
+            className={classNames("", {
+              "mt-3 border-t pt-3": index !== 0,
+            })}
+            paxIndex={index}
+            paxType={getPassengerType(type)}
+            paxLastname={info.paxLastname}
+            paxTitle={info.paxTitle}
+            paxBirthDate={info.paxBirthDate ? dayjs(info.paxBirthDate).locale("en").format("DD/MM/YYYY") : "--"}
+            paxGender={info.paxGender ? t(`gender.${info.paxGender}`) : "--"}
+            paxMiddleFirstName={info.paxMiddleFirstName}
+            onClick={() => onEditPassengerInformation({ info, index, type })}
+          />
+        ))}
       </div>
-      <ModalConfirmation isShowModal={isShow} onCancel={() => {}} onConfirm={() => {}} />
+      <DrawerPassengerInformationForm
+        open={isShow}
+        data={editPax?.info}
+        bookingIndex={editPax?.index}
+        paxType={editPax?.type}
+        onClose={onCancelPassengerInformation}
+        startDate={startDate}
+        onOk={onSavePassengerInformation}
+      />
     </>
   );
 };
@@ -102,47 +94,67 @@ interface PassengerFormWrapperInfomationItemProps {
   className?: string;
   paxLastname?: string;
   paxMiddleFirstName?: string;
+  paxTitle?: string;
   paxType?: string;
   paxGender?: string;
   paxBirthDate?: string;
+  paxIndex?: number;
   onClick?: () => void;
 }
 PassengerFormWraper.Info = function PassengerFormWrapperInfomationItem({
   className = "",
   paxLastname,
+  paxTitle,
   paxMiddleFirstName,
   paxType,
   paxGender,
   paxBirthDate,
+  paxIndex = 0,
   onClick,
 }: PassengerFormWrapperInfomationItemProps) {
   const t = useTranslations("String");
   return (
     <div
-      className={classNames("pax-item-info border rounded-md px-4", {
+      className={classNames("pax-item-info", {
         [className]: className,
       })}
     >
-      <div className="pax-item-info__head py-3 flex justify-between">
-        <span className="flex items-center gap-x-2">
-          <span className="text-[16px] uppercase">{`${paxLastname}, ${paxMiddleFirstName}`}</span>
-          <span className="text-xs text-gray-500">{paxType}</span>
-        </span>
-        <span className="flex items-center gap-x-1 cursor-pointer text-primary-default" onClick={onClick}>
-          <IconPen width={14} height={14} />
-          {t("button.edit")}
-        </span>
-      </div>
-      <div className="pax-item-info__body">
-        <div className="flex flex-wrap -mx-3">
-          <div className="w-1/2 px-3 mb-3">
-            <span className="block w-24 text-xs text-gray-500">{t("gender.label")}</span>
-            <span>{paxGender}</span>
-          </div>
-          <div className="w-1/2 px-3 mb-3">
-            <span className="block w-24 text-xs text-gray-500">{t("DOB")}</span>
-            <span>{paxBirthDate}</span>
-          </div>
+      <Space className="mb-3 font-[500]">
+        <IconUser className="w-6 h-6 bg-slate-100 p-1 rounded-full" />
+        {`Hành khách ${paxIndex + 1}`}
+        <span className="text-xs text-gray-500 font-normal">{`(${paxType})`}</span>
+      </Space>
+      <div className="grid grid-cols-3 gap-2">
+        <div className="">
+          <span className="block w-24 text-xs text-gray-500">{t("paxTitle")}</span>
+          <span>{paxTitle || "--"}</span>
+        </div>
+        <div className="">
+          <span className="block w-24 text-xs text-gray-500">{t("lastName")}</span>
+          <span>{paxLastname || "--"}</span>
+        </div>
+        <div className="">
+          <span className="block w-24 text-xs text-gray-500">{t("middleAndFirstName")}</span>
+          <span>{paxMiddleFirstName || "--"}</span>
+        </div>
+        <div className="">
+          <span className="block w-24 text-xs text-gray-500">{t("gender.label")}</span>
+          <span>{paxGender}</span>
+        </div>
+        <div className="">
+          <span className="block w-24 text-xs text-gray-500">{t("DOB")}</span>
+          <span>{paxBirthDate}</span>
+        </div>
+        <div>
+          <Button
+            type="link"
+            size="small"
+            className="!p-0 !inline-flex items-center !underline"
+            icon={<IconPen className="w-3 h-3" />}
+            onClick={onClick}
+          >
+            {t("button.editInformation")}
+          </Button>
         </div>
       </div>
     </div>

@@ -232,7 +232,7 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
     <Form
       layout="horizontal"
       labelCol={{ span: 6 }}
-      wrapperCol={{ flex: 1 }}
+      wrapperCol={{ span: 18 }}
       colon={false}
       labelWrap
       className="max-w-4xl"
@@ -245,8 +245,8 @@ const StockFormContainer: React.FC<StockFormContainerProps> = ({
       >
         <InventorySelector disabled={!!inventoryId} value={stockFormData?.inventoryId} onChange={onChangeInventory} />
       </FormItem>
-      <FormItem label="Loại" required validateStatus={errors?.type ? "error" : ""} help={errors?.type || ""}>
-        <Space>
+      <FormItem label="Loại kho" required validateStatus={errors?.type ? "error" : ""} help={errors?.type || ""}>
+        <Space wrap>
           {stockInventoryType?.map((item) => (
             <Checkbox
               key={item}

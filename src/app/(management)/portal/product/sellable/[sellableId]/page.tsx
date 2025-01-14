@@ -19,7 +19,7 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
   const { data, isLoading } = useGetSellableDetailCoreQuery(Number(sellableId), {
     enabled: !!Number(sellableId),
   });
-  const { onApproval } = useCRUDSellable();
+  const { onApproval, onCreate } = useCRUDSellable();
 
   const [openDrawerAppoval, setOpenDrawerApproval] = useState(false);
 

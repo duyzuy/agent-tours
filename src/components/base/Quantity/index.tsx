@@ -22,9 +22,6 @@ const Quantity: React.FC<QuantityProps> = ({
   shape = "default",
 }) => {
   const [quantity, setQuantity] = useState(0);
-  useEffect(() => {
-    setQuantity(() => (value ? value : defaultValue));
-  }, [defaultValue, value]);
 
   const onChangeQuantity = (action: "minus" | "plus") => {
     let qty = quantity;
@@ -46,6 +43,9 @@ const Quantity: React.FC<QuantityProps> = ({
 
     onChange ? onChange(action, qty) : setQuantity(qty);
   };
+  useEffect(() => {
+    setQuantity(() => (value ? value : defaultValue));
+  }, [defaultValue, value]);
   return (
     <span className={classNames("quantity__control")}>
       <span

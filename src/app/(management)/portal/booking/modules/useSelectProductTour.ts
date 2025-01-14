@@ -62,7 +62,8 @@ const useSelectProductTour = () => {
         bookingItems: [...bookingItems],
       },
     }));
-    router.push("/portal/booking/tour-services");
+    // router.push("/portal/booking/tour-services");
+    router.push("/portal/booking/payments");
   };
 
   const onSetProductItem = (productItem: IProductTour) => {

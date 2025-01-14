@@ -49,7 +49,7 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
   }
 
   return (
-    <>
+    <div className="bg-white rounded-mb p-4">
       <Tabs
         size="large"
         items={[
@@ -96,8 +96,7 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
           },
         ]}
       />
-
-      <div className="text-right">
+      {/* <div className="text-right">
         <Space align="end">
           <Button type="primary" ghost onClick={() => router.back()}>
             Nhập thông tin khách
@@ -106,8 +105,8 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
             Tiến hành đặt chỗ
           </Button>
         </Space>
-      </div>
-    </>
+      </div> */}
+    </div>
   );
 };
 export default ServiceListContainer;

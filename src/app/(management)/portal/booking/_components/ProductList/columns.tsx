@@ -1,17 +1,18 @@
 import { IProductTour } from "@/models/management/booking/product.interface";
 import { formatDate } from "@/utils/date";
 import { moneyFormatVND } from "@/utils/helper";
+import { DollarCircleOutlined, MoneyCollectOutlined } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
 
 export const columns: ColumnsType<IProductTour> = [
   {
     title: "Mã tour",
     width: 150,
-    render(value, record, index) {
+    render(value, { template, code }, index) {
       return (
         <>
-          <div className="text-primary-default font-[500]">{record.template.code}</div>
-          <div className="text-xs text-gray-600 break-words whitespace-pre-wrap">{record.code}</div>
+          <div className="text-primary-default font-[500]">{template.code}</div>
+          <div className="text-xs text-gray-600 break-words whitespace-pre-wrap">{code}</div>
         </>
       );
     },
@@ -19,14 +20,7 @@ export const columns: ColumnsType<IProductTour> = [
   {
     title: "Tên tour",
     width: 350,
-    render(value, record, index) {
-      return (
-        <div>
-          <div>{record.template.name}</div>
-          <div>Chi tiết</div>
-        </div>
-      );
-    },
+    render: (value, record, index) => <div>{record.template.name}</div>,
   },
   {
     title: "Ngày khởi hành",
@@ -35,11 +29,11 @@ export const columns: ColumnsType<IProductTour> = [
       return (
         <div className="whitespace-nowrap">
           <div>
-            <span className="text-blue-600 mr-1 w-4 inline-block">Đi</span>
+            <span className="text-blue-600 mr-1 w-4 inline-block text-xs">Đi</span>
             {formatDate(record.startDate)}
           </div>
           <div>
-            <span className="text-cyan-600 mr-1 w-4 inline-block">Về</span>
+            <span className="text-cyan-600 mr-1 w-4 inline-block text-xs">Về</span>
             {formatDate(record.endDate)}
           </div>
         </div>
@@ -55,12 +49,11 @@ export const columns: ColumnsType<IProductTour> = [
       return (
         <div>
           {!configs.length ? (
-            <span>Chưa có giá bán</span>
-          ) : lowestPriceItem ? (
-            <span className="text-red-600 text-lg">
-              <span className="block text-xs text-gray-500">Giá chỉ từ</span>
-              {moneyFormatVND(lowestPriceItem.adult)}
+            <span className="opacity-60">
+              <DollarCircleOutlined /> Chưa có giá bán
             </span>
+          ) : lowestPriceItem ? (
+            <span className="text-red-600 text-lg">{moneyFormatVND(lowestPriceItem.adult)}</span>
           ) : (
             <span>Đã hết</span>
           )}

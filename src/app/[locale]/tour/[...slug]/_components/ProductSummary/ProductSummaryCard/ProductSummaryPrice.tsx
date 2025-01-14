@@ -24,10 +24,8 @@ const ProductSummaryCardWithPrice = ({
         {subText && <span className="text-xs block">{subText}</span>}
         {referencePrice ? (
           <>
-            <span className="text-red-600 font-[500] text-2xl inline-block mr-2">{moneyFormatVND(price)}</span>
-            <span className="font-[500] text-xl inline-block line-through opacity-30">
-              {moneyFormatVND(referencePrice)}
-            </span>
+            <span className="text-red-600 font-[500] text-2xl block mr-2">{moneyFormatVND(price)}</span>
+            <span className="text-xl block line-through opacity-60">{moneyFormatVND(referencePrice)}</span>
           </>
         ) : (
           <span className="text-red-600 font-[500] text-2xl inline-block">{moneyFormatVND(price)}</span>

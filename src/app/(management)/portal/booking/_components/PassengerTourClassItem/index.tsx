@@ -34,12 +34,12 @@ const PassengerTourClassItem = ({
   return (
     <div className="tour__class-item border rounded-md mb-4 bg-white overflow-hidden">
       <div
-        className={classNames("flex gap-6", {
+        className={classNames("flex gap-3", {
           "flex-row items-center": variant === "horizontal",
           "flex-col": variant === "vertical",
         })}
       >
-        <div className="tour__item-info flex items-center gap-3 pl-6 py-4 bg-slate-100">
+        <div className="tour__item-info flex items-center gap-3 pl-6 py-3 bg-gray-50">
           <span className="tour__item-class w-16">
             <span className="block text-xs text-gray-600">Class</span>
             <span className="font-[500]">{classChannel}</span>
@@ -56,7 +56,7 @@ const PassengerTourClassItem = ({
         <div
           className={classNames("tour__item-passenger-types flex", {
             "flex-row items-center gap-6": variant === "horizontal",
-            "flex-col gap-3 px-6 pb-6": variant === "vertical",
+            "flex-col gap-3 px-6 pb-3": variant === "vertical",
           })}
         >
           <PassengerTourClassItem.Pax
@@ -117,14 +117,14 @@ PassengerTourClassItem.Pax = function PassengerTourClassItemPax({
       })}
     >
       <div>
-        <span className="font-[500] block leading-none">{title}</span>
+        <span className="block">{title}</span>
         <span className="text-primary-default text-xs">{pricing}</span>
       </div>
       <div>
         {isOutOfOpenAmount ? (
           <span className="text-gray-600">Đã hết</span>
         ) : (
-          <Quantity size="sm" value={quantity} onChange={(action, value) => onQuantity(paxType, value, action)} />
+          <Quantity value={quantity} onChange={(action, value) => onQuantity(paxType, value, action)} />
         )}
       </div>
     </div>

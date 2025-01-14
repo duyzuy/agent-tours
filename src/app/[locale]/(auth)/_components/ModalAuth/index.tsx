@@ -18,13 +18,15 @@ const ModalAuth: React.FC = () => {
   const authModal = useModalManagerSelector((state) => state.authModal);
   const message = useMessage();
   const [error, setError] = useState<string | undefined | null>();
+  const [isLoading, setLoading] = useState(false);
   const router = useRouter();
   const t = useTranslations("String");
   const { hideAuthModal } = useAuthModal();
   const pathname = usePathname();
-  const { signUp } = useSignUp();
+  const { signUp, loading: isLoadingRegister } = useSignUp();
 
   const onSignIn = async (formData: CustomerLoginFormData) => {
+    setLoading(true);
     try {
       const response = await signIn("credentials", {
         username: formData.username,
@@ -43,6 +45,8 @@ const ModalAuth: React.FC = () => {
     } catch (error) {
       message.error("Login failed!");
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,12 +54,12 @@ const ModalAuth: React.FC = () => {
     {
       key: "signin",
       label: <span className="text-lg">{t("login")}</span>,
-      children: <LoginForm error={error} onSubmit={onSignIn} />,
+      children: <LoginForm error={error} onSubmit={onSignIn} loading={isLoading} />,
     },
     {
       key: "signup",
       label: <span className="text-lg">{t("register")}</span>,
-      children: <RegistrationForm onSubmit={signUp} />,
+      children: <RegistrationForm onSubmit={signUp} loading={isLoadingRegister} />,
     },
   ];
   useEffect(() => {

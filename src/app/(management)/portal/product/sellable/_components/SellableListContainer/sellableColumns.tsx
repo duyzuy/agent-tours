@@ -4,6 +4,7 @@ import { formatDate } from "@/utils/date";
 import { Status } from "@/models/common.interface";
 import { SellableListRs } from "@/models/management/core/sellable.interface";
 import Link from "next/link";
+import { RightOutlined } from "@ant-design/icons";
 
 export const sellableColumns: ColumnsType<SellableListRs["result"][number]> = [
   {
@@ -20,8 +21,9 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][number]> = [
     render: (_, { code, recId }) => (
       <div>
         <span className="block mb-1 font-semibold">{code}</span>
-        <Link href={`/portal/product/sellable/${recId}`} className="text-xs">
+        <Link href={`/portal/product/sellable/${recId}`}>
           Chi tiết
+          <RightOutlined className="ml-1 relative -top-[1px] !text-[10px]" />
         </Link>
       </div>
     ),

@@ -63,7 +63,7 @@ function StockTourListTableSelector({
           inventoryType: inventoryTypeList,
         },
         1,
-        5,
+        10,
       ),
   );
 

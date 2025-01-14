@@ -1,4 +1,3 @@
-import { FePriceConfig } from "@/models/fe/serviceItem.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 
 export const getLowestPriceAvailable = (priceConfigs: PriceConfig[]) => {

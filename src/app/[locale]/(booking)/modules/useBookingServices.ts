@@ -1,64 +1,55 @@
-import { PassengerType } from "@/models/common.interface";
 import { useBookingInformation } from "../../hooks/useBookingInformation";
 import { EBookingActions } from "../../store/actions/bookingActions";
 import { IBookingSsrItemWithPax } from "./booking.interface";
-import { FePriceConfig } from "@/models/fe/serviceItem.interface";
 
-type BookingSSRPaxItem = {
-    paxIndex: number;
-    paxType: PassengerType;
-    priceConfig: FePriceConfig;
-};
+type PassengerWithConfig = Omit<IBookingSsrItemWithPax, "inventory" | "stock">;
 
 export interface UseBookingServicesProps {
-    addService: (
-        data: BookingSSRPaxItem[],
-        sellableDetailId: number,
-        serviceName: string,
-    ) => void;
+  addService: (
+    passengerWithConfigs: PassengerWithConfig[],
+    inventory: IBookingSsrItemWithPax["inventory"],
+    stock: IBookingSsrItemWithPax["stock"],
+  ) => void;
 }
+
 const useBookingServices = (): UseBookingServicesProps => {
-    const [{ bookingInfo }, dispatch] = useBookingInformation();
+  const [{ bookingInfo }, dispatch] = useBookingInformation();
 
-    const { bookingSsrWithPax } = bookingInfo;
-    const addService: UseBookingServicesProps["addService"] = (
-        data,
-        sellableDetailId,
-        serviceName,
-    ) => {
-        const newBookingSsrWithPax = [...(bookingSsrWithPax || [])];
+  const { bookingSsrWithPax } = bookingInfo;
 
-        const filterSSRItemsWithPax = newBookingSsrWithPax.filter(
-            (item) => item.sellableDetailId !== sellableDetailId,
-        );
+  const addService: UseBookingServicesProps["addService"] = (PassengerWithConfig, inventory, stock) => {
+    let newSsrWithPax = [...(bookingSsrWithPax || [])];
 
-        /**
-         * new items
-         */
-        const dataBookingItems = data?.reduce<IBookingSsrItemWithPax[]>(
-            (acc, item) => {
-                return [
-                    ...acc,
-                    {
-                        paxType: item.paxType,
-                        paxIndex: item.paxIndex,
-                        priceConfig: item.priceConfig,
-                        sellableDetailId: sellableDetailId,
-                        serviceName: serviceName,
-                    },
-                ];
-            },
-            [],
-        );
+    const ssrItemsExcludedOld = newSsrWithPax.filter((item) => {
+      if (item.stock && stock && stock.recId === item.stock.recId) {
+        return false;
+      }
+      if (!item.stock && !stock && item.inventory.recId === inventory.recId) {
+        return false;
+      }
+      return true;
+    });
+    const newServiceItems = PassengerWithConfig.reduce<IBookingSsrItemWithPax[]>((acc, item) => {
+      return [
+        ...acc,
+        {
+          paxIndex: item.paxIndex,
+          paxType: item.paxType,
+          priceConfig: item.priceConfig,
+          stock: stock,
+          inventory: inventory,
+        },
+      ];
+    }, []);
 
-        dispatch({
-            type: EBookingActions.ADD_BOOKING_SERVICE_LIST,
-            payload: [...filterSSRItemsWithPax, ...dataBookingItems],
-        });
-    };
+    dispatch({
+      type: EBookingActions.ADD_SERVICE_LIST,
+      payload: [...ssrItemsExcludedOld, ...newServiceItems],
+    });
+  };
 
-    return {
-        addService,
-    };
+  return {
+    addService,
+  };
 };
 export default useBookingServices;

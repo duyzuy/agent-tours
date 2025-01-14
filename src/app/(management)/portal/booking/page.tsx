@@ -6,6 +6,7 @@ import ProductList from "./_components/ProductList";
 import DrawerSelectProduct from "./_components/DrawerSelectProduct";
 import { IProductTour } from "@/models/management/booking/product.interface";
 import useSearchBookingInformation from "./modules/useSearchBookingInformation";
+import useSelectProductTour from "./modules/useSelectProductTour";
 
 const BookingPage = () => {
   const [bookingInformation, _] = useBooking();
@@ -14,6 +15,7 @@ const BookingPage = () => {
   const [showDrawer, setShowDrawer] = useState(false);
 
   const productList = useMemo(() => bookingInformation?.productList, [bookingInformation]);
+  const { onNext } = useSelectProductTour();
 
   const onCloseDrawer = () => {
     setSelectedProduct(undefined);
@@ -37,10 +39,9 @@ const BookingPage = () => {
         <div className="h-44"></div>
         <SearchBookingBox className="searchbox shadow-lg" onSubmit={onSearchBooking} loading={isPending} />
       </div>
-
       <div className="font-[500] text-lg mb-3">Danh sách tour</div>
       <ProductList items={productList || []} onSelect={onSelectProduct} loading={isPending} />
-      <DrawerSelectProduct open={showDrawer} data={selectedProduct} onClose={onCloseDrawer} />
+      <DrawerSelectProduct open={showDrawer} data={selectedProduct} onClose={onCloseDrawer} onOk={onNext} />
     </div>
   );
 };

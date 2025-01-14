@@ -75,6 +75,20 @@ export const bookingReducer = (state = initBookingState, action: BookingActions)
     }
     case EBookingActions.SET_PASSENGER_INFORMATION: {
       const { payload: passengersInformation } = action;
+
+      let newPassengers = [...state.bookingInfo.passengers];
+      newPassengers.splice(passengersInformation.index, 1, { ...passengersInformation });
+      state = {
+        ...state,
+        bookingInfo: {
+          ...state.bookingInfo,
+          passengers: newPassengers,
+        },
+      };
+      return state;
+    }
+    case EBookingActions.SET_PASSENGERS_INFORMATION: {
+      const { payload: passengersInformation } = action;
       state = {
         ...state,
         bookingInfo: {
@@ -131,11 +145,11 @@ export const bookingReducer = (state = initBookingState, action: BookingActions)
       const { payload: serviceList } = action;
       state = {
         ...state,
-        servicePriceConfigs: serviceList,
+        services: serviceList,
       };
       return state;
     }
-    case EBookingActions.ADD_BOOKING_SERVICE_LIST: {
+    case EBookingActions.ADD_SERVICE_LIST: {
       const { payload: bookingSSRItems } = action;
       state = {
         ...state,
@@ -159,7 +173,7 @@ export const bookingReducer = (state = initBookingState, action: BookingActions)
         ...state,
         bookingInfo: initBookingState.bookingInfo,
         bookingPassenger: initBookingState.bookingPassenger,
-        servicePriceConfigs: initBookingState.servicePriceConfigs,
+        services: initBookingState.services,
       };
       return state;
     }

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Space, Spin, Tag, Divider, Button, Popconfirm, Empty } from "antd";
-import { DeleteOutlined, EditOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FileExcelOutlined, LinkOutlined } from "@ant-design/icons";
 import { LINKS } from "@/constants/links.constant";
 import { useRouter } from "next/navigation";
 import { useGetOneTemplateSellableCoreQuery } from "@/queries/core/templateSellable";
@@ -133,7 +133,15 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
         direction="horizontal"
         className="mb-3"
         label="Chi tiết nội dung"
-        value={templateDetail.cmsIdentity || "--"}
+        value={
+          templateDetail.cmsIdentity ? (
+            <Link href={`/portal/content-template/sellable/${templateDetail.cmsIdentity}`}>
+              <LinkOutlined /> {templateDetail.cmsIdentity}
+            </Link>
+          ) : (
+            "--"
+          )
+        }
       />
       <ContentDetailList.Item
         direction="horizontal"
@@ -152,9 +160,7 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
         className="mb-3"
         label="Loại dịch vụ"
         value={templateDetail.inventoryTypeList.map((item) => (
-          <Tag key={item} bordered={false}>
-            {item}
-          </Tag>
+          <Tag key={item}>{item}</Tag>
         ))}
       />
       <ContentDetailList.Item
@@ -163,20 +169,18 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
         label="Hồ sơ giấy tờ bắt buộc"
         value={
           templateDetail.checkListJson && templateDetail.checkListJson.length ? (
-            <>
-              <ul className="list-decimal pl-5">
-                {templateDetail.checkListJson?.map(({ name, link }, _index) => (
-                  <li key={_index}>
-                    {link && (
-                      <Link href={link} target="_blank" className="mr-1">
-                        <FileExcelOutlined />
-                      </Link>
-                    )}
-                    {name}
-                  </li>
-                ))}
-              </ul>
-            </>
+            <ul className="list-decimal pl-5">
+              {templateDetail.checkListJson?.map(({ name, link }, _index) => (
+                <li key={_index}>
+                  {link && (
+                    <Link href={link} target="_blank" className="mr-1">
+                      <FileExcelOutlined />
+                    </Link>
+                  )}
+                  {name}
+                </li>
+              ))}
+            </ul>
           ) : (
             "Không yêu cầu."
           )

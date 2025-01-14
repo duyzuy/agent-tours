@@ -9,7 +9,8 @@ import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import { PassengerType } from "@/models/common.interface";
 import { useTranslations } from "next-intl";
-import { Tag } from "antd";
+import { Divider, Tag } from "antd";
+import { IconCheckCircle } from "@/assets/icons";
 interface BookingBreakDownProps {
   className?: string;
 }
@@ -50,7 +51,25 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({ className = "" }) =
             </div>
             <div className="content flex-1">
               <p className="text-lg font-[500] mb-3">{cmsTemplate?.name}</p>
-              <Tag color="blue">{`#${product?.code}`}</Tag>
+              <div>{`Mã tour: #${product?.code}`}</div>
+              <Divider />
+              <div>
+                <div className="font-semibold mb-2">Tour bao gồm</div>
+                <ul>
+                  {product?.sellableDetails.inventories.map((item, _index) => (
+                    <li key={_index} className="flex gap-x-2">
+                      <IconCheckCircle className="w-4 h-4 !text-emerald-600" />
+                      {item.name}
+                    </li>
+                  ))}
+                  {product?.sellableDetails.stocks.map((item, _index) => (
+                    <li key={_index} className="flex gap-x-2">
+                      <IconCheckCircle className="w-4 h-4 !text-emerald-600" />
+                      {`${item.inventory.name} - ${item.type}`}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
           <div className="border-t mt-4 pt-4">
@@ -94,40 +113,47 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({ className = "" }) =
             <div className="service__breakdown-body">
               {Object.entries(servicesBreakdown).map(([key, svItem]) => (
                 <div className="service__breakdown-item" key={key}>
-                  <div className="service__breakdown-item__inner">
-                    <div className="service__breakdown-item__name mb-3 bg-slate-50 rounded-md px-3 py-2">
-                      <span className="text-primary-default block font-[500]">{svItem.serviceName}</span>
+                  <div className="service__breakdown-item__name mb-3 py-2 flex justify-between">
+                    <div className="flex-1">
+                      <span className="text-primary-default block font-[500]">{`${svItem.inventory.name}${
+                        svItem.stock ? ` - ${svItem.stock.code}` : ""
+                      }`}</span>
                     </div>
-                    <div className="service__breakdown-item__passengers">
-                      {svItem.passengers.map(({ info, index, priceConfigs, type }, _index) => (
-                        <div key={_index} className="service__breakdown-item__passenger-item flex justify-between mb-2">
-                          <div className="service__breakdown-item__passenger-item-name flex-1">
-                            <span>{`${info.paxLastname}, ${info.paxMiddleFirstName}`}</span>
-                          </div>
-                          <div className="service__breakdown-item__passenger-item__price-configs w-48">
-                            {priceConfigs.map((configItem) => (
-                              <div
-                                className="service__breakdown-item__passenger-item__price-config"
-                                key={configItem.priceConfig.recId}
-                              >
-                                <div className="flex justify-end">
-                                  <span className="breakdown__quantity">
-                                    <span className="text-xs text-gray-500 blockk mr-1">
-                                      {`(${configItem.priceConfig.class})`}
-                                    </span>
-                                    <span>{`${configItem.quantity} x`}</span>
-                                  </span>
-
-                                  <span className="block ml-2 text-right">
-                                    {moneyFormatVND(configItem.priceConfig[type])}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+                    <span className="w-36 text-right text-red-600">{moneyFormatVND(svItem.subTotal)}</span>
+                  </div>
+                  <div className="service__breakdown-item__passengers">
+                    {svItem.passengers.map(({ info, index, priceConfigs, type }, _index) => (
+                      <div key={_index} className="service__breakdown-item__passenger-item flex justify-between mb-2">
+                        <div className="service__breakdown-item__passenger-item-name flex-1">
+                          <span>
+                            {info.paxLastname && info.paxMiddleFirstName
+                              ? getPassengerFullname(info.paxLastname, info.paxMiddleFirstName)
+                              : `Hành khách ${index + 1}`}
+                          </span>
                         </div>
-                      ))}
-                    </div>
+                        <div className="service__breakdown-item__passenger-item__price-configs w-48">
+                          {priceConfigs.map((configItem) => (
+                            <div
+                              className="service__breakdown-item__passenger-item__price-config"
+                              key={configItem.priceConfig.recId}
+                            >
+                              <div className="flex justify-end">
+                                <span className="breakdown__quantity">
+                                  <span className="text-xs text-gray-500 blockk mr-1">
+                                    {`(${configItem.priceConfig.class})`}
+                                  </span>
+                                  <span>{`${configItem.quantity} x`}</span>
+                                </span>
+
+                                <span className="block ml-2 text-right">
+                                  {moneyFormatVND(configItem.priceConfig[type])}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))}
@@ -180,3 +206,7 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({ className = "" }) =
   );
 };
 export default BookingBreakDown;
+
+const getPassengerFullname = (paxLastname: string, paxMiddleFirstName: string) => {
+  return `${paxLastname}, ${paxMiddleFirstName}`;
+};

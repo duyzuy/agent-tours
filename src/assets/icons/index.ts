@@ -72,6 +72,7 @@ import IconUsers from "./IconUsers";
 import IconBan from "./IconBan";
 import IconBookMark from "./IconBookMark";
 import IconCalendarDays from "./IconCalendarDays";
+import IconCalendarRange from "./IconCalendarRange";
 import IconLayoutGrid from "./IconLayoutGrid";
 import IconMapPinned from "./IconMapPinned";
 import IconMessageSquareMore from "./IconMessageSqureMore";
@@ -196,6 +197,7 @@ export {
   IconBan,
   IconBookMark,
   IconCalendarDays,
+  IconCalendarRange,
   IconLayoutGrid,
   IconMapPinned,
   IconMessageSquareMore,

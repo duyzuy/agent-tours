@@ -27,7 +27,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
   }, [sellables]);
 
   const otherDeparts = useMemo(() => {
-    return sellables.map((item) => stringToDate(item.startDate).format("DD/MM/YYYY")).splice(1);
+    return sellables.map((item) => stringToDate(item.startDate).format("DD/MM")).splice(1);
   }, [sellables]);
 
   const durationDays = useMemo(() => {
@@ -73,16 +73,15 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
   };
 
   return (
-    <TourCard data={cardDataProps}>
+    <TourCard data={cardDataProps} shadow="none">
       <TourCard.Head>
         <TourCard.Thumbnail />
         <TourCard.Badget />
       </TourCard.Head>
       <TourCard.Body>
         <TourCard.Title />
-        <TourCard.Price />
-        <TourCard.Days />
-        <div className="flex-1 mb-3 border-b border-[#f1f1f1] pb-3"></div>
+        <TourCard.Price className="mb-2" />
+        <TourCard.Days className="mb-3" />
         <TourCard.Information />
       </TourCard.Body>
     </TourCard>

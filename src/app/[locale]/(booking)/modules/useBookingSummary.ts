@@ -4,18 +4,19 @@ import { useCallback } from "react";
 import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { FePassengerInformationFormData } from "../passenger/modules/passegner.interface";
-import { FePriceConfig } from "@/models/fe/serviceItem.interface";
+import { FeProductService } from "@/models/fe/serviceItem.interface";
+import { IBookingSsrItemWithPax } from "./booking.interface";
 
-type BreakDownServiceItemGroupByPassengerType = {
+type BreakDownServiceItemGroupByPassenger = {
   index: number;
   type: PassengerType;
   info: FePassengerInformationFormData;
   ssrList: {
     [key: string]: {
-      sellableDetailId: number;
-      serviceName?: string;
+      stock: FeProductService["stock"];
+      inventory: FeProductService["inventory"];
       priceConfigs: {
-        item: FePriceConfig;
+        item: FeProductService["configs"][number];
         quantity: number;
       }[];
     };
@@ -23,8 +24,8 @@ type BreakDownServiceItemGroupByPassengerType = {
 };
 type BreakdownServices = {
   [key: string]: {
-    sellableDetailId: number;
-    serviceName: string;
+    stock: FeProductService["stock"];
+    inventory: FeProductService["inventory"];
     subTotal: number;
     passengers: {
       info: FePassengerInformationFormData;
@@ -32,7 +33,7 @@ type BreakdownServices = {
       type: PassengerType;
       priceConfigs: {
         quantity: number;
-        priceConfig: FePriceConfig;
+        priceConfig: FeProductService["configs"][number];
       }[];
     }[];
   };
@@ -108,15 +109,28 @@ const useBookingSummary = () => {
     return subTotal + subTotalService;
   };
   const getServiceBreakdownGroupByPassenger = () => {
-    return passengers.reduce<BreakDownServiceItemGroupByPassengerType[]>((accBreakdown, paxItem) => {
+    return passengers.reduce<BreakDownServiceItemGroupByPassenger[]>((accBreakdown, paxItem) => {
       const ssrItemsBypax = bookingSsrWithPax?.filter((item) => item.paxIndex === paxItem.index);
 
-      if (ssrItemsBypax) {
-        let ssrList = ssrItemsBypax.reduce<BreakDownServiceItemGroupByPassengerType["ssrList"]>((acc, item) => {
-          const sellableDetailId = item.sellableDetailId;
+      if (ssrItemsBypax && ssrItemsBypax.length) {
+        let ssrItemsByPaxInventories: typeof ssrItemsBypax = [];
+        let ssrItemsByPaxStocks: typeof ssrItemsBypax = [];
 
-          if (acc[sellableDetailId]) {
-            const configItems = acc[sellableDetailId].priceConfigs;
+        ssrItemsBypax.forEach((item) => {
+          if (item.stock) {
+            ssrItemsByPaxStocks = [...ssrItemsByPaxStocks, item];
+          } else {
+            ssrItemsByPaxInventories = [...ssrItemsByPaxInventories, item];
+          }
+        });
+
+        let ssrItemsInventoriesGrouped = ssrItemsByPaxInventories.reduce<
+          BreakDownServiceItemGroupByPassenger["ssrList"]
+        >((acc, item) => {
+          const serviceId = item.inventory.recId;
+
+          if (acc[serviceId]) {
+            const configItems = acc[serviceId].priceConfigs;
 
             let newConfigItems = [...configItems];
 
@@ -139,17 +153,17 @@ const useBookingSummary = () => {
 
             acc = {
               ...acc,
-              [sellableDetailId]: {
-                ...acc[sellableDetailId],
+              [serviceId]: {
+                ...acc[serviceId],
                 priceConfigs: newConfigItems,
               },
             };
           } else {
             acc = {
               ...acc,
-              [sellableDetailId]: {
-                sellableDetailId: sellableDetailId,
-                serviceName: item.serviceName,
+              [serviceId]: {
+                inventory: item.inventory,
+                stock: item.stock,
                 priceConfigs: [
                   {
                     item: item.priceConfig,
@@ -169,7 +183,7 @@ const useBookingSummary = () => {
             type: paxItem.type,
             info: paxItem.info,
             ssrList: {
-              ...ssrList,
+              ...ssrItemsInventoriesGrouped,
             },
           },
         ];
@@ -179,8 +193,8 @@ const useBookingSummary = () => {
   };
   const getServiceBreakdown = () => {
     return bookingSsrWithPax?.reduce<BreakdownServices>((acc, bkSSRItem) => {
-      const sellableDetailId = bkSSRItem.sellableDetailId;
-      const serviceItem = acc[sellableDetailId];
+      const serviceId = bkSSRItem.stock ? bkSSRItem.stock.recId : bkSSRItem.inventory.recId;
+      const serviceItem = acc[serviceId];
 
       const paxItem = passengers.find((item) => item.index === bkSSRItem.paxIndex);
       if (!paxItem) {
@@ -224,8 +238,8 @@ const useBookingSummary = () => {
           newPassengers = [
             ...newPassengers,
             {
+              index: bkSSRItem.paxIndex,
               info: paxItem.info,
-              index: paxItem.index,
               type: paxItem.type,
               priceConfigs: [
                 {
@@ -238,18 +252,18 @@ const useBookingSummary = () => {
         }
         acc = {
           ...acc,
-          [sellableDetailId]: {
-            ...acc[sellableDetailId],
-            subTotal: acc[sellableDetailId].subTotal + bkSSRItem.priceConfig[bkSSRItem.paxType],
+          [serviceId]: {
+            ...acc[serviceId],
+            subTotal: acc[serviceId].subTotal + bkSSRItem.priceConfig[bkSSRItem.paxType],
             passengers: [...newPassengers],
           },
         };
       } else {
         acc = {
           ...acc,
-          [bkSSRItem.sellableDetailId]: {
-            sellableDetailId: bkSSRItem.sellableDetailId,
-            serviceName: bkSSRItem.serviceName,
+          [serviceId]: {
+            stock: bkSSRItem.stock,
+            inventory: bkSSRItem.inventory,
             subTotal: bkSSRItem.priceConfig[bkSSRItem.paxType],
             passengers: [
               {
@@ -270,6 +284,7 @@ const useBookingSummary = () => {
       return acc;
     }, {});
   };
+
   const getBreakdownDiscount = () => {
     let breakdownCounpons: BreakdownCoupons = {
       coupons: [],
@@ -312,6 +327,7 @@ const useBookingSummary = () => {
 
     return totalBooking - totalDiscount;
   };
+
   return {
     productBreakdown: getBreakDownProductPrice(),
     subTotal: getBookingProductAndServiceSubtotal(),

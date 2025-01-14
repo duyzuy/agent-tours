@@ -7,7 +7,7 @@ import { moneyFormatVND } from "@/utils/helper";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { useCallback, useMemo, useTransition } from "react";
 import { PassengerType } from "@/models/common.interface";
-import { CheckCircleOutlined, SwapLeftOutlined, SwapOutlined, UndoOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, SwapOutlined } from "@ant-design/icons";
 import useBooking from "../../hooks/useBooking";
 import useMessage from "@/hooks/useMessage";
 import { formatDate } from "@/utils/date";
@@ -15,16 +15,16 @@ import { formatDate } from "@/utils/date";
 export interface DrawerSelectProduct {
   open: boolean;
   onClose: () => void;
+  onOk?: () => void;
   data?: IProductTour;
 }
-const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, data }) => {
+const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onOk, data }) => {
   const [bookingInformation, _] = useBooking();
   const stocks = useMemo(() => data?.sellableDetails.stocks, [data]);
   const inventories = useMemo(() => data?.sellableDetails.inventories, [data]);
   const promotions = useMemo(() => data?.promotions, [data]);
   const message = useMessage();
-  const { onNext, onSetPassengerConfig, onReselectProduct, onChangeSellChannel, onSetProductItem } =
-    useSelectProductTour();
+  const { onSetPassengerConfig, onReselectProduct, onChangeSellChannel, onSetProductItem } = useSelectProductTour();
 
   const [isInitGotoNext, startGoToNext] = useTransition();
 
@@ -106,7 +106,8 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, dat
     onClose?.();
   };
   const handleConfirmSelection = () => {
-    data && onSetProductItem(data), startGoToNext(onNext);
+    data && onSetProductItem(data);
+    data && onOk && startGoToNext(onOk);
   };
   const isDisableNextButton = useMemo(() => {
     return (
@@ -114,6 +115,7 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, dat
       bookingInformation.passengerPriceConfigs.child.length === 0
     );
   }, [bookingInformation]);
+
   return (
     <Drawer
       title={data?.template.name}
@@ -123,13 +125,29 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, dat
       destroyOnClose
       maskClosable={false}
       closeIcon={null}
+      footer={
+        <Space className="py-2">
+          <Button size="large" type="text" className="!bg-gray-200 !text-gray-600 w-36" onClick={onCancelSelection}>
+            Huỷ bỏ
+          </Button>
+          <Button
+            type="primary"
+            size="large"
+            className="w-36"
+            onClick={handleConfirmSelection}
+            loading={isInitGotoNext}
+            disabled={isDisableNextButton}
+          >
+            Mua dịch vụ
+          </Button>
+        </Space>
+      }
     >
-      <div className="mb-3">
-        <div className="text-primary-default">
-          <span className="block font-[500]">{data?.template.code}</span>
-          <span className="text-sm">{data?.code}</span>
-        </div>
+      <div className="text-primary-default mb-3">
+        <span className="block font-[500]">{data?.template.code}</span>
+        <span className="text-sm">{data?.code}</span>
       </div>
+
       <div className="flex items-center">
         <div>
           <span className="block text-xs">Ngày đi</span>
@@ -170,7 +188,7 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, dat
         ) : null}
       </div>
       <div className="section-sell-channel mt-3 pt-3 border-t">
-        <p className="text-lg font-[500] mb-3">Kênh bán</p>
+        <h3 className="text-lg font-[500] mb-3">Kênh bán</h3>
         <Segmented
           value={bookingInformation.channel}
           options={SELL_CHANNEL}
@@ -179,10 +197,8 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, dat
           }}
         />
       </div>
-      <div className="tour__item-classes-head mt-3 pb-12">
-        <span className="block text-lg font-[500]">Chọn số lượng khách</span>
-        <p className="mb-3">* Giá lựa chọn sẽ dc áp dụng cho toàn bộ hành khách trong tour.</p>
-
+      <div className="tour__item-classes-head mt-3">
+        <h3 className="text-lg font-[500] mb-3">Chọn số lượng khách</h3>
         {filterPriceConfigbySellChannel(data?.configs || []).map((config) => (
           <PassengerTourClassItem
             variant="vertical"
@@ -200,23 +216,6 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, dat
             onSelectPassenger={(type, value, action) => onSelectPassenger(type, value, config, action)}
           />
         ))}
-      </div>
-      <div className="absolute left-0 right-0 py-4 px-6 bottom-0 bg-white border-t">
-        <Space>
-          <Button
-            type="primary"
-            size="large"
-            className="w-48"
-            onClick={handleConfirmSelection}
-            loading={isInitGotoNext}
-            disabled={isDisableNextButton}
-          >
-            Mua thêm dịch vụ
-          </Button>
-          <Button size="large" type="text" className="!bg-gray-200 !text-gray-600 w-48" onClick={onCancelSelection}>
-            Huỷ bỏ
-          </Button>
-        </Space>
       </div>
     </Drawer>
   );

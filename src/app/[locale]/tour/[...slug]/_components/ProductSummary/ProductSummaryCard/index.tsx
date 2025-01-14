@@ -1,4 +1,4 @@
-import { Button, Drawer } from "antd";
+import { Button, Drawer, Tag } from "antd";
 import classNames from "classnames";
 import styled from "styled-components";
 import Quantity from "@/components/base/Quantity";
@@ -12,10 +12,11 @@ import ProductSummarySubtotal, { ProductSummarySubtotalProps } from "./ProductSu
 import { ProductSummaryCardNoPrice, ProductSummaryCardWithPrice } from "./ProductSummaryPrice";
 import CalendarSelector from "../CalendarSelector";
 import { stringToDate } from "@/utils/date";
-import { IconCalendarDays } from "@/assets/icons";
+import { IconCalendarDays, IconCheckCircle } from "@/assets/icons";
 import { moneyFormatVND } from "@/utils/helper";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 import { getLabelHotDealIcon } from "@/constants/icons.constant";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 
 type ProductSummaryContextType = {
   productItem?: FeProductItem;
@@ -203,17 +204,17 @@ const CardPrice: ProductSummaryCardCompound["Price"] = ({ className }) => {
 
     const { configs } = productItem;
 
-    let output = configs[0];
+    let lowestItem = configs[0];
 
     configs.forEach((item) => {
-      if (output.open <= 0 && item.open > 0) {
-        output = item;
+      if (lowestItem.open <= 0 && item.open > 0) {
+        lowestItem = item;
       }
-      if (item.open > 0 && item.adult < output.adult) {
-        output = item;
+      if (item.open > 0 && item.adult < lowestItem.adult) {
+        lowestItem = item;
       }
     });
-    return output;
+    return lowestItem;
   }, [productItem]);
 
   return (
@@ -366,7 +367,7 @@ const ProductSummaryCardDurations: ProductSummaryCardCompound["Durations"] = ({ 
   }, [productItem]);
 
   return durationDay ? (
-    <div className="duration-day mb-6">
+    <div className="duration-day mb-3">
       <div className="flex items-center">
         <span className="mr-2">
           <IconCalendarDays width={20} height={20} />
@@ -376,6 +377,7 @@ const ProductSummaryCardDurations: ProductSummaryCardCompound["Durations"] = ({ 
     </div>
   ) : null;
 };
+
 const ProductSummaryCardInventories: ProductSummaryCardCompound["Inventories"] = () => {
   const t = useTranslations("String");
   const { productItem } = useProductSummaryCard();
@@ -384,14 +386,35 @@ const ProductSummaryCardInventories: ProductSummaryCardCompound["Inventories"] =
     return productItem?.sellableDetails.inventories;
   }, [productItem]);
 
-  return inventories ? (
-    <div className="includes mb-6">
-      {inventories.map((inv) => (
-        <div className="inv" key={inv.recId}>
-          <div className="inv-inner">{inv.type}</div>
-        </div>
-      ))}
-    </div>
+  const stocks = useMemo(() => {
+    return productItem?.sellableDetails.stocks;
+  }, [productItem]);
+
+  return inventories || stocks ? (
+    <>
+      <h3 className="font-[500]">Tour bao gồm</h3>
+      <ul className="service-includes mb-6">
+        {inventories?.map((inv) => (
+          <li className="inv" key={inv.recId}>
+            {/* {inv.type === EInventoryType.AIR ? ""} */}
+            <div className="inv-inner flex items-center gap-x-2">
+              <IconCheckCircle className="text-emerald-600 w-4 h-4" />
+              {inv.name}
+            </div>
+          </li>
+        ))}
+        {stocks?.map((item) => (
+          <li className="inv" key={item.recId}>
+            {/* {inv.type === EInventoryType.AIR ? ""} */}
+            <div className="inv-inner flex items-center gap-x-2">
+              <IconCheckCircle className="text-emerald-600 w-4 h-4" />
+              {`${item.inventory.name}`}
+              <span className="text-xs text-gray-600">{item.type}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </>
   ) : null;
 };
 

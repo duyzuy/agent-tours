@@ -1,6 +1,6 @@
 import { client } from "@/services/api";
 import { BaseResponse } from "@/models/common.interface";
-import { PriceConfigServiceListResponse } from "@/models/fe/serviceItem.interface";
+import { ProductServiceListResponse } from "@/models/fe/serviceItem.interface";
 import { DiscountType } from "@/models/management/core/discountPolicy.interface";
 import { FeBookingPayload } from "@/models/fe/booking.interface";
 import { FeReservationResponse } from "@/models/fe/reservation.interface";
@@ -8,7 +8,7 @@ import { IPromotion } from "@/models/management/core/promotion.interface";
 
 export const feBookingAPIs = {
   getServiceList: async (sellableId?: number) => {
-    return await client.post<PriceConfigServiceListResponse>("localfront/BookingOrder_Search_GetSellableSsr", {
+    return await client.post<ProductServiceListResponse>("localfront/BookingOrder_Search_GetSellableSsr", {
       params: {
         requestObject: {
           sellableId,

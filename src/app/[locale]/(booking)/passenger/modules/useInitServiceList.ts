@@ -1,37 +1,34 @@
-import { useBookingInformation } from "@/app/[locale]/hooks/useBookingInformation";
+import { useBookingInformation, useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import { useGetServiceListMutation } from "@/mutations/fe/booking";
 import useMessage from "@/hooks/useMessage";
 import { EBookingActions } from "@/app/[locale]/store/actions/bookingActions";
-const useInitServiceList = () => {
-    const [_, dispatch] = useBookingInformation();
+import { useEffect } from "react";
 
-    const {
-        mutate: getServiceList,
-        isPending,
-        isIdle,
-    } = useGetServiceListMutation();
-    const message = useMessage();
+const useInitServiceList = (sellableId: number) => {
+  const [_, dispatch] = useBookingInformation();
+  const services = useBookingSelector((state) => state.services);
+  const { mutate: getServiceList, isPending, isIdle } = useGetServiceListMutation();
+  const message = useMessage();
 
-    const initServiceBooking = (seellableId?: number) => {
-        getServiceList(seellableId, {
-            onSuccess(data, variables, context) {
-                dispatch({
-                    type: EBookingActions.SET_SERVICE_LIST,
-                    payload: data.result,
-                });
-            },
-            onError(error, variables, context) {
-                message.error("Get list service fail");
-                console.log(error);
-            },
+  useEffect(() => {
+    getServiceList(sellableId, {
+      onSuccess(data, variables, context) {
+        dispatch({
+          type: EBookingActions.SET_SERVICE_LIST,
+          payload: data.result.extraConfigs,
         });
-    };
+      },
+      onError(error, variables, context) {
+        message.error("Get list service fail");
+        console.log(error);
+      },
+    });
+  }, [sellableId]);
 
-    return {
-        initServiceBooking,
-
-        isPending,
-        isIdle,
-    };
+  return {
+    services,
+    isPending,
+    isIdle,
+  };
 };
 export default useInitServiceList;
