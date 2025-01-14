@@ -11,13 +11,18 @@ import { useState, useRef } from "react";
 import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
 import { useEffect } from "react";
 import { usePathname } from "@/utils/navigation";
+import { useSession } from "next-auth/react";
+
 interface CardDropdownProps {
   isAuth?: boolean;
   username?: string | null;
   children?: React.ReactNode;
+  session: any;
 }
-const CardDropdown: React.FC<CardDropdownProps> = ({ isAuth, username, children }) => {
+const CardDropdown: React.FC<CardDropdownProps> = ({ isAuth, username, children, session }) => {
   const t = useTranslations("String");
+  // const sessionClient = useSession();
+
   const pathname = usePathname();
   const [showDropdown, setShowDropdown] = useState(false);
   const toggleDropdown = () => {
@@ -32,8 +37,53 @@ const CardDropdown: React.FC<CardDropdownProps> = ({ isAuth, username, children 
     setShowDropdown(false);
   }, [pathname]);
   return (
-    <div className="item-account">
-      {!isAuth ? (
+    <div className="item-account relative">
+      {isAuth ? (
+        <>
+          <div
+            className="flex items-center px-3 py-2 cursor-pointer hover:bg-gray-100 rounded-md"
+            onClick={toggleDropdown}
+          >
+            <IconAccount className="w-5 h-5 mr-2" />
+            <span className="name">{username}</span>
+          </div>
+          {showDropdown ? (
+            <div
+              className="account__item-dropdown absolute z-10 bg-white px-4 py-3 w-48 drop-shadow-lg rounded-md text-left"
+              ref={dropdownRef}
+            >
+              <ul className="menu-list">
+                <li>
+                  <Link
+                    href={`/${CLIENT_LINKS.Customer}`}
+                    className="block py-2 px-3 hover:bg-gray-100 rounded-md !text-gray-800"
+                  >
+                    {t("myAccount")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={`/${CLIENT_LINKS.Customer}`}
+                    className="block py-2 px-3 hover:bg-gray-100 rounded-md !text-gray-800"
+                  >
+                    {t("order")}
+                  </Link>
+                </li>
+              </ul>
+              <div className="border-t pt-3 mt-3">
+                <Button
+                  type="text"
+                  onClick={() => signOut()}
+                  className="w-full !text-red-600 !hover:bg-gray-100"
+                  icon={<LogoutOutlined />}
+                >
+                  {t("logOut")}
+                </Button>
+              </div>
+            </div>
+          ) : null}
+        </>
+      ) : (
         <Space className="inner">
           <Link href={`/${CLIENT_LINKS.CustomerLogin}`} className="inline-block">
             <span className="text-gray-800 hover:text-primary-default font-[500]">{t("login")}</span>
@@ -43,41 +93,6 @@ const CardDropdown: React.FC<CardDropdownProps> = ({ isAuth, username, children 
             <span className="text-gray-800 hover:text-primary-default font-[500]">{t("register")}</span>
           </Link>
         </Space>
-      ) : (
-        <div className="relative">
-          <div
-            className="flex items-center px-3 py-2 cursor-pointer hover:bg-gray-100 rounded-md"
-            onClick={toggleDropdown}
-          >
-            <span className="mr-2">
-              <IconAccount className="w-5 h-5" />
-            </span>
-            <span className="name">{username}</span>
-          </div>
-          {showDropdown ? (
-            <div className="account__item-dropdown absolute z-10" ref={dropdownRef}>
-              <div className="inner bg-white px-4 py-3 w-48 drop-shadow-lg rounded-md text-left">
-                <ul className="">
-                  <li>
-                    <Link href={`/${CLIENT_LINKS.Customer}`} className="block py-2 px-3 hover:bg-gray-100 rounded-md">
-                      <span className="block  text-gray-600">{t("myAccount")}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href={`/${CLIENT_LINKS.Customer}`} className="block py-2 px-3 hover:bg-gray-100 rounded-md">
-                      <span className="block  text-gray-600">{t("order")}</span>
-                    </Link>
-                  </li>
-                </ul>
-                <div className="border-t pt-3 mt-3">
-                  <Button type="text" onClick={() => signOut()} className="w-full" icon={<LogoutOutlined />}>
-                    <span className="block  text-gray-600">{t("logOut")}</span>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ) : null}
-        </div>
       )}
     </div>
   );

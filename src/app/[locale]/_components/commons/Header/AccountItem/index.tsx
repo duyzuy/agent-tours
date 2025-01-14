@@ -16,14 +16,10 @@ export default async function AccountItem({ isMobile }: AccountItemProps) {
   const isAuth = !!session;
 
   return isMobile ? (
-    <div className="block">
-      <Link href={isAuth ? `/${CLIENT_LINKS.Customer}` : `/${CLIENT_LINKS.CustomerLogin}`}>
-        <span className="text-gray-800">
-          <IconUser className="w-5 h-5" />
-        </span>
-      </Link>
-    </div>
+    <Link href={isAuth ? `/${CLIENT_LINKS.Customer}` : `/${CLIENT_LINKS.CustomerLogin}`}>
+      <IconUser className="w-5 h-5 !text-gray-800" />
+    </Link>
   ) : (
-    <CardDropdown isAuth={isAuth} username={session?.user.name}></CardDropdown>
+    <CardDropdown isAuth={isAuth} session={session} username={session?.user.name}></CardDropdown>
   );
 }

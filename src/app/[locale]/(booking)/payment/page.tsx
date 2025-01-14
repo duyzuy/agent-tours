@@ -12,5 +12,6 @@ interface Props {
 export default async function PaymentPage({ params: { locale } }: Props) {
   unstable_setRequestLocale(locale);
   const session = await getServerSession(authOptions);
+
   return <PageWraper session={session} />;
 }
