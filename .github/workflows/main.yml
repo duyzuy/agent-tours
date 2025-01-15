@@ -32,9 +32,10 @@ jobs:
           server: ${{ secrets.SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          #   exclude: |
-          #       **/.git*
-          #       **/.git*/**
-          #       **/node_modules/**
+            exclude: |
+                **/.git*
+                **/.git*/**
+                **/node_modules/**
+                **/build/
           server-dir: "httpdocs/"
-          exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
+        #   exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
