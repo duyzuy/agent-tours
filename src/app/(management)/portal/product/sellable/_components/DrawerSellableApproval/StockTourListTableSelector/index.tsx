@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { isUndefined } from "lodash";
+import dayjs from "dayjs";
 import { Empty, Space, Tag, Button } from "antd";
 import Table, { ColumnsType } from "antd/es/table";
 import {
@@ -16,11 +18,10 @@ import ContentDetail from "@/components/admin/ContentDetail";
 import { Status } from "@/models/common.interface";
 import { IInventory } from "@/models/management/core/inventory.interface";
 import { IStock, StockQueryParams } from "@/models/management/core/stock.interface";
-import dayjs from "dayjs";
+
 import useMessage from "@/hooks/useMessage";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-import { isUndefined } from "lodash";
 
 type StockItem = { stock: IStock; qty: number };
 
@@ -66,7 +67,6 @@ function StockTourListTableSelector({
         10,
       ),
   );
-
   const { data: stockResponse, isLoading: isLoadingStock } = useGetStockInventoryListCoreQuery({
     queryparams: stockQueryparams,
     enabled:

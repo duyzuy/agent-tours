@@ -38,4 +38,5 @@ jobs:
             **/node_modules/**
           server-dir:
             "httpdocs/"
+            # timeout: 300000
             #exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
