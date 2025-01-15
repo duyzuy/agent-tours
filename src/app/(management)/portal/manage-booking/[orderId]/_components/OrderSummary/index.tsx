@@ -45,7 +45,7 @@ const OrderSummary = ({ orderId, data, code, rulesAndPolicies, name, className =
           tourPrice={moneyFormatVND(data?.tourPrice)}
           extraPrice={moneyFormatVND(data?.extraPrice)}
           charge={moneyFormatVND(data?.charge)}
-          totalAmount={moneyFormatVND(data?.totalAmount)}
+          totalAmount={moneyFormatVND(totalAmount)}
           totalRemainTopay={moneyFormatVND(totalAmount - totalPaid)}
           totalPaid={moneyFormatVND(data?.totalPaid)}
           totalRefunded={moneyFormatVND(data?.totalRefunded)}

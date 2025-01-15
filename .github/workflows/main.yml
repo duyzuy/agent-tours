@@ -1,39 +1,41 @@
 name: Deploy to server
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 jobs:
-    web-deploy:
-        name: 🎉 Deploy
-        runs-on: ubuntu-latest
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                node-version: [21.x]
-        steps:
-            - name: 🚚 Get latest code
-              uses: actions/checkout@v4
+    strategy:
+      matrix:
+        node-version: [21.x]
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
 
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@master
-              with:
-                  node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node-version }}
 
-            - name: 🔨 Build Project
-              run: |
-                  npm install
-                  npm run build
+      - name: 🔨 Build Project
+        run: |
+          npm install
+          npm run build
 
-            - name: 📂 Sync files
-              uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-              with:
-                  server: ${{ secrets.SERVER }}
-                  username: ${{ secrets.FTP_USERNAME }}
-                  password: ${{ secrets.FTP_PASSWORD }}
-                  exclude: |
-                      **/.git*
-                      **/.git*/**
-                      **/node_modules/**
-                  server-dir: "httpdocs/"
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          #   exclude: |
+          #       **/.git*
+          #       **/.git*/**
+          #       **/node_modules/**
+          server-dir: "httpdocs/"
+          protocol: ftps,
+          exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
