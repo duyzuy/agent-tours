@@ -35,10 +35,10 @@ export default function FeBookingLayout({ children, params: { locale } }: Props)
     redirect("/");
   }
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 booking-wrapper">
       <BookingSteps activeKey={activeKey} />
       <div className="container lg:px-8 md:px-6 px-3 mx-auto py-6 lg:py-12 flex flex-wrap justify-center">
-        <div className="page__layout-wraper w-full lg:w-7/12 lg:mb-0 mb-6">{children}</div>
+        <div className="booking-content w-full lg:w-7/12 lg:mb-0 mb-6">{children}</div>
         <BookingBreakDown className="w-full lg:w-5/12 lg:pl-8" />
       </div>
     </div>

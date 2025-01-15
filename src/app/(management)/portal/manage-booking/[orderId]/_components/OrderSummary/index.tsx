@@ -6,6 +6,7 @@ import { formatDate } from "@/utils/date";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { PaymentStatus } from "@/models/common.interface";
 import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
+import { isUndefined } from "lodash";
 
 type DataType = Pick<
   IOrderDetail["bookingOrder"],
@@ -23,12 +24,14 @@ interface OrderDetailProps {
   orderId?: number;
   name?: string;
   code?: string;
-  data?: Partial<DataType>;
+  data: Partial<DataType>;
   rulesAndPolicies?: IOrderDetail["rulesAndPolicies"];
   className?: string;
   coupons?: IFormOfPayment[];
 }
 const OrderSummary = ({ orderId, data, code, rulesAndPolicies, name, className = "", coupons }: OrderDetailProps) => {
+  const totalAmount = data?.totalAmount || 0;
+  const totalPaid = data.totalPaid || 0;
   return (
     <>
       <div
@@ -43,7 +46,7 @@ const OrderSummary = ({ orderId, data, code, rulesAndPolicies, name, className =
           extraPrice={moneyFormatVND(data?.extraPrice)}
           charge={moneyFormatVND(data?.charge)}
           totalAmount={moneyFormatVND(data?.totalAmount)}
-          totalFop={moneyFormatVND(data?.totalFop)}
+          totalRemainTopay={moneyFormatVND(totalAmount - totalPaid)}
           totalPaid={moneyFormatVND(data?.totalPaid)}
           totalRefunded={moneyFormatVND(data?.totalRefunded)}
           sysFstUpdate={data?.sysFstUpdate && formatDate(data?.sysFstUpdate)}
@@ -54,28 +57,6 @@ const OrderSummary = ({ orderId, data, code, rulesAndPolicies, name, className =
             )
           }
           coupons={coupons}
-          // timelimit={
-          //     data?.timelimits && data?.timelimits.length ? (
-          //         <div className="flex-1">
-          //             <span className="block">
-          //                 Thời hạn thanh toán
-          //             </span>
-          //             <span className="block text-[16px]">
-          //                 {data?.timelimits.map((item) => (
-          //                     <div key={item.recId}>
-          //                         <span>
-          //                             {formatDate(item.deadline)}
-          //                         </span>
-          //                     </div>
-          //                 ))}
-          //             </span>
-          //             <p className="text-xs">
-          //                 * Đặt chỗ sẽ bị huỷ nếu chưa thực hiện thanh
-          //                 toán trước thời hạn thanh toán.
-          //             </p>
-          //         </div>
-          //     ) : null
-          // }
         />
       </div>
     </>
@@ -91,6 +72,7 @@ interface OrderSummaryPricings {
   sysFstUpdate?: string;
   paymentStatus?: React.ReactNode;
   totalFop?: string;
+  totalRemainTopay?: string;
   totalRefunded?: string;
   totalPaid?: string;
   coupons?: IFormOfPayment[];
@@ -102,6 +84,7 @@ OrderSummary.Pricings = function OrderSummaryPricings({
   totalAmount,
   charge,
   paymentStatus,
+  totalRemainTopay,
   totalFop,
   totalRefunded,
   totalPaid,
@@ -111,15 +94,15 @@ OrderSummary.Pricings = function OrderSummaryPricings({
     <>
       <div className="order__detail--subtotal mb-6 border-b pb-6">
         <div className="flex items-center">
-          <div className="w-40 border-r mr-6">
+          <div className="w-48 border-r mr-6">
             <span className="block">Giá tour</span>
             <span className="block text-[16px] font-semibold text-primary-default">{tourPrice}</span>
           </div>
-          <div className="w-40 border-r mr-6">
+          <div className="w-48 border-r mr-6">
             <span className="block">Phí bổ sung</span>
             <span className="block text-[16px] font-semibold text-primary-default">{extraPrice}</span>
           </div>
-          <div className="w-40 border-r mr-6">
+          <div className="w-48 border-r mr-6">
             <span className="block">Thuế phí</span>
             <span className="block text-[16px] font-semibold text-primary-default">{charge}</span>
           </div>
@@ -138,7 +121,7 @@ OrderSummary.Pricings = function OrderSummaryPricings({
                 : "--"}
             </span>
           </div>
-          <div className="w-40 mr-6">
+          <div className="w-48 mr-6">
             <span className="block">Tổng tiền</span>
             <span className="block text-[16px] font-semibold text-primary-default">{totalAmount}</span>
           </div>
@@ -146,17 +129,17 @@ OrderSummary.Pricings = function OrderSummaryPricings({
       </div>
       <div className="order__detail--payment-detail mb-6 border-b pb-6">
         <div className="flex items-center">
-          <div className="w-40 border-r mr-6">
+          <div className="w-48 border-r mr-6">
             <span className="block">Đã thanh toán</span>
             <span className="block text-[16px] font-semibold text-green-600">{totalPaid}</span>
           </div>
-          <div className="w-40 border-r mr-6">
+          <div className="w-48 border-r mr-6">
             <span className="block">Đã hoàn</span>
             <span className="block text-[16px] font-semibold text-amber-400">{totalRefunded}</span>
           </div>
-          <div className="w-40 border-r mr-6">
-            <span className="block">Tổng thanh toán</span>
-            <span className="block text-[16px] font-semibold text-red-600">{totalFop}</span>
+          <div className="w-48">
+            <span className="block">Số tiền còn lại phải thanh toán</span>
+            <span className="block text-[16px] font-semibold text-red-600">{totalRemainTopay}</span>
           </div>
         </div>
       </div>

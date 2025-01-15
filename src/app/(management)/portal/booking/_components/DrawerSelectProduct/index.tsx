@@ -1,11 +1,11 @@
 import { ESellChannel, SELL_CHANNEL } from "@/constants/channel.constant";
 import { IProductTour } from "@/models/management/booking/product.interface";
-import { Button, Divider, Drawer, Segmented, Space } from "antd";
+import { Button, Drawer, Empty, Segmented, Space } from "antd";
 import useSelectProductTour from "../../modules/useSelectProductTour";
 import PassengerTourClassItem from "../PassengerTourClassItem";
 import { moneyFormatVND } from "@/utils/helper";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
-import { useCallback, useMemo, useTransition } from "react";
+import { memo, useCallback, useMemo, useTransition } from "react";
 import { PassengerType } from "@/models/common.interface";
 import { CheckCircleOutlined, SwapOutlined } from "@ant-design/icons";
 import useBooking from "../../hooks/useBooking";
@@ -28,18 +28,20 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onO
 
   const [isInitGotoNext, startGoToNext] = useTransition();
 
-  const filterPriceConfigbySellChannel = (priceConfigs: PriceConfig[]) => {
+  const filterPriceConfigbySellChannel = (priceConfigs?: PriceConfig[]) => {
     const { channel } = bookingInformation;
 
-    return priceConfigs.reduce<PriceConfig[]>((acc, item) => {
+    return priceConfigs?.reduce<PriceConfig[]>((acc, item) => {
       if (channel === ESellChannel.B2C) {
         if (item.channel === "CUSTOMER") {
           acc = [...acc, item];
         }
-      } else {
-        acc = [...acc, item];
       }
-
+      if (channel === ESellChannel.B2B) {
+        if (item.channel === "AGENT") {
+          acc = [...acc, item];
+        }
+      }
       return acc;
     }, []);
   };
@@ -147,7 +149,6 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onO
         <span className="block font-[500]">{data?.template.code}</span>
         <span className="text-sm">{data?.code}</span>
       </div>
-
       <div className="flex items-center">
         <div>
           <span className="block text-xs">Ngày đi</span>
@@ -161,15 +162,15 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onO
       </div>
       <div className="tour__box__item-dropdown border-t pt-4 mt-4">
         {inventories || stocks ? <h4 className="font-semibold mb-3">Dịch vụ đi kèm</h4> : null}
-        <div className="flex flex-wrap gap-6 mb-3">
+        <div className="flex flex-wrap gap-3 mb-3">
           {inventories?.map((item) => (
-            <div className="detail-item flex mb-1 items-start" key={item.recId}>
+            <div className="detail-item flex items-start" key={item.recId}>
               <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
               <span>{item.name}</span>
             </div>
           ))}
           {stocks?.map((item) => (
-            <div className="detail-item flex mb-1 items-start" key={item.recId}>
+            <div className="detail-item flex items-start" key={item.recId}>
               <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
               <span>{`${item.inventory.name} - ${item.code}`}</span>
             </div>
@@ -199,25 +200,29 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onO
       </div>
       <div className="tour__item-classes-head mt-3">
         <h3 className="text-lg font-[500] mb-3">Chọn số lượng khách</h3>
-        {filterPriceConfigbySellChannel(data?.configs || []).map((config) => (
-          <PassengerTourClassItem
-            variant="vertical"
-            key={config.recId}
-            channel={config.channel}
-            classChannel={config.class}
-            open={config.open}
-            sold={config.sold}
-            adultPricing={moneyFormatVND(config.adult)}
-            childPricing={moneyFormatVND(config.child)}
-            infantPricing={moneyFormatVND(config.infant)}
-            adultAmount={getPassengerAmount(PassengerType.ADULT, config)}
-            childAmount={getPassengerAmount(PassengerType.CHILD, config)}
-            infantAmount={getPassengerAmount(PassengerType.INFANT, config)}
-            onSelectPassenger={(type, value, action) => onSelectPassenger(type, value, config, action)}
-          />
-        ))}
+        {filterPriceConfigbySellChannel(data?.configs)?.length ? (
+          filterPriceConfigbySellChannel(data?.configs)?.map((config) => (
+            <PassengerTourClassItem
+              variant="vertical"
+              key={config.recId}
+              channel={config.channel}
+              classChannel={config.class}
+              open={config.open}
+              sold={config.sold}
+              adultPricing={moneyFormatVND(config.adult)}
+              childPricing={moneyFormatVND(config.child)}
+              infantPricing={moneyFormatVND(config.infant)}
+              adultAmount={getPassengerAmount(PassengerType.ADULT, config)}
+              childAmount={getPassengerAmount(PassengerType.CHILD, config)}
+              infantAmount={getPassengerAmount(PassengerType.INFANT, config)}
+              onSelectPassenger={(type, value, action) => onSelectPassenger(type, value, config, action)}
+            />
+          ))
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Số lượng hiện đã bán hết." />
+        )}
       </div>
     </Drawer>
   );
 };
-export default DrawerSelectProduct;
+export default memo(DrawerSelectProduct);

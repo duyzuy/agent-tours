@@ -72,6 +72,7 @@ const BoxServiceItemNoPax: React.FC<BoxServiceItemNoPaxProps> = ({
         <span className="text-[16px] font-semibold">{serviceName}</span>
       </div>
       <Table<(typeof consfigItems)[number]>
+        rowKey={"recId"}
         pagination={{
           hideOnSinglePage: true,
           pageSize: 100,

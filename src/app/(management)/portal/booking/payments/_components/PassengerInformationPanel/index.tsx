@@ -59,14 +59,11 @@ const PassengerInformationPanel: React.FC<PassengerInformationPanelProps> = ({ b
         <h3 className="font-[500] text-lg">Thông tin hành khách</h3>
         <p>Thông tin hành khách được thay đổi trong quản lý booking.</p>
       </div>
-
       {bookingItems.map(({ index, passengerInformation, type }) => (
         <div key={index} className="passenger-information rounded-md p-4 border mb-3">
           <div className="passenger-information__head flex items-center justify-between">
             <div className="passenger-information__head flex items-center gap-x-2">
-              <span className="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center">
-                <UserOutlined />
-              </span>
+              <UserOutlined className="bg-gray-50 rounded-full p-2 w-8 h-8" />
               <div>
                 <span className="text-xs text-gray-600 block">{getPassengerType(type)}</span>
                 <span className="font-[500]">Hành khách {index + 1}</span>

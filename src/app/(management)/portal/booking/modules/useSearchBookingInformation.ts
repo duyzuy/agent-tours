@@ -19,10 +19,10 @@ const useSearchBookingInformation = () => {
 
   const message = useMessage();
 
-  const onSearchBooking: UseSearchBookingInformation["onSearch"] = (formData, options) => {
-    let searchBookingPayload: SearchBookingPayload = { ...formData };
+  const onSearchBooking: UseSearchBookingInformation["onSearch"] = (searchData, options) => {
+    let searchBookingPayload: SearchBookingPayload = { ...searchData };
 
-    const destinations = formData.byDest?.reduce<Required<SearchBookingPayload>["byDest"]>(
+    const destinations = searchData.byDest?.reduce<Required<SearchBookingPayload>["byDest"]>(
       (acc, item) => [
         ...acc,
         {
@@ -44,9 +44,8 @@ const useSearchBookingInformation = () => {
       onSuccess: (response, variables, ctx) => {
         setBookingInformation((prev) => ({
           ...prev,
-          // bookingInfo: { ...initBookingInfo },
           productList: response.result,
-          searchBooking: formData,
+          searchBooking: { ...searchData },
         }));
         options?.onSuccess?.(response, variables, ctx);
       },

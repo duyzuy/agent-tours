@@ -16,8 +16,7 @@ import PaymentPanel from "./_components/PaymentPanel";
 
 const ServicePage = () => {
   const [bookingInformation, _] = useBooking();
-  // const bookingItems = useBookingSelector((state) => state.bookingInfo?.bookingItems);
-  // const productInformation = useBookingSelector((state) => state.bookingInfo?.product);
+
   const [tabKey, setTabsKeys] = useState<"PASSENGER" | "SERVICE" | "PAYMENT">("PASSENGER");
   const bookingItems = useMemo(() => {
     return bookingInformation.bookingInfo?.bookingItems;
@@ -27,38 +26,38 @@ const ServicePage = () => {
     return bookingInformation.bookingInfo?.product;
   }, [bookingInformation]);
 
-  if (!productInformation || !bookingItems) {
-    return null;
-  }
+  console.log(bookingInformation);
+
   const onChangeTabKey = (newTabKey: "PASSENGER" | "SERVICE" | "PAYMENT") => {
     setTabsKeys(newTabKey);
   };
+
   return (
     <div className="services__page bg-slate-50 -mx-6 -my-6 p-6 h-full mb-8">
       <div className="bg-white p-6 rounded-md mb-6">
         <ContentDetailList
           items={[
-            { label: "Mã sản phẩm", value: productInformation.template.code },
+            { label: "Mã sản phẩm", value: productInformation?.template.code },
             {
               label: "Ngày đi",
-              value: formatDate(productInformation.startDate),
+              value: productInformation?.startDate ? formatDate(productInformation.startDate) : "--",
             },
             {
               label: "Ngày về",
-              value: formatDate(productInformation.endDate),
+              value: productInformation?.endDate ? formatDate(productInformation.endDate) : "--",
             },
           ]}
         />
         <Divider />
         <h4 className="font-semibold mb-3">Các dịch vụ đi kèm</h4>
         <div className="flex flex-wrap gap-4">
-          {productInformation.sellableDetails.inventories.map((item) => (
+          {productInformation?.sellableDetails.inventories.map((item) => (
             <div className="detail-item flex mb-1 items-start" key={item.recId}>
               <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
               <div>{item.name}</div>
             </div>
           ))}
-          {productInformation.sellableDetails.stocks.map((item) => (
+          {productInformation?.sellableDetails.stocks.map((item) => (
             <div className="detail-item flex mb-1 items-start" key={item.recId}>
               <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
               <div>{`${item.inventory.name} - ${item.code}`}</div>
@@ -67,14 +66,13 @@ const ServicePage = () => {
         </div>
         <div className="h-4"></div>
         <h4 className="font-semibold mb-3">Các giảm giá có thể áp dụng</h4>
-        {productInformation.promotions.map((promo) => (
+        {productInformation?.promotions.map((promo) => (
           <div className="promo-item flex mb-1 items-start" key={promo.code}>
             <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
             <span>{moneyFormatVND(promo.discountAmount)}</span>
           </div>
         ))}
       </div>
-
       <Row gutter={32} className="max-w-7xl">
         <Col span={15}>
           <ServiceContainerTabStyled
@@ -88,7 +86,7 @@ const ServicePage = () => {
                 label: "Thông tin hành khách",
                 key: "PASSENGER",
                 children: (
-                  <PassengerInformationPanel bookingItems={bookingItems} onNext={() => setTabsKeys("SERVICE")} />
+                  <PassengerInformationPanel bookingItems={bookingItems || []} onNext={() => setTabsKeys("SERVICE")} />
                 ),
               },
               {
@@ -96,8 +94,8 @@ const ServicePage = () => {
                 key: "SERVICE",
                 children: (
                   <ServicePanel
-                    sellableId={productInformation.sellableId}
-                    bookingItems={bookingItems}
+                    sellableId={productInformation?.sellableId}
+                    bookingItems={bookingItems || []}
                     onNext={() => setTabsKeys("PAYMENT")}
                   />
                 ),

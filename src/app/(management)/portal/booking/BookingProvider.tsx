@@ -10,7 +10,7 @@ import { MONTH_FORMAT } from "@/constants/common";
 const initSearchFormData = new SearchBookingFormData(dayjs().locale("en").format(MONTH_FORMAT), undefined, [], [], []);
 const initBookingInfo = new BookingInfo(undefined, [], undefined, undefined, undefined, undefined);
 
-export const initBookingData = new AppBookingManager(
+export const initBookingDataAppManager = new AppBookingManager(
   initBookingInfo,
   { adult: [], child: [], infant: [] },
   initSearchFormData,
@@ -21,7 +21,7 @@ export const initBookingData = new AppBookingManager(
   undefined,
 );
 const BookingProvider = ({ children }: { children: React.ReactNode }) => {
-  const [bookingInformation, setBookingInformation] = useState(initBookingData);
+  const [bookingInformation, setBookingInformation] = useState(initBookingDataAppManager);
   return (
     <BookingContext.Provider value={[bookingInformation, setBookingInformation]}>{children}</BookingContext.Provider>
   );

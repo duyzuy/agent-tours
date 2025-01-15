@@ -6,6 +6,7 @@ import { AppBookingManager, IProductTourBookingItem } from "./bookingInformation
 import { useRouter } from "next/navigation";
 import { ESellChannel } from "@/constants/channel.constant";
 import { IProductTour } from "@/models/management/booking/product.interface";
+import { initBookingDataAppManager } from "../BookingProvider";
 const useSelectProductTour = () => {
   const message = useMessage();
   const [bookingInformation, setBookingInformation] = useBooking();
@@ -88,9 +89,9 @@ const useSelectProductTour = () => {
   };
   const onChangeSellChannel = (newChannel: ESellChannel) => {
     setBookingInformation((prev) => ({
-      ...prev,
-      agentUserId: undefined,
-      passengerPriceConfigs: { adult: [], child: [], infant: [] },
+      ...initBookingDataAppManager,
+      productList: prev.productList,
+      searchBooking: prev.searchBooking,
       channel: newChannel,
     }));
   };
@@ -143,21 +144,10 @@ const useSelectProductTour = () => {
 
   const onReselectProduct = () => {
     setBookingInformation((prev) => ({
-      ...prev,
-      bookingInfo: {
-        ...prev.bookingInfo,
-        product: undefined,
-        bookingItems: [],
-      },
-      passengerPriceConfigs: {
-        adult: [],
-        child: [],
-        infant: [],
-      },
-      searchBooking: {
-        ...prev.searchBooking,
-        passengers: { adult: 1, child: 0, infant: 0 },
-      },
+      ...initBookingDataAppManager,
+      productList: prev.productList,
+      searchBooking: prev.searchBooking,
+      channel: prev.channel,
     }));
   };
 

@@ -1,4 +1,4 @@
-import { useMemo, useTransition } from "react";
+import { useCallback, useMemo, useTransition } from "react";
 import { Button, Empty, Space, Spin, Tabs } from "antd";
 import { isUndefined } from "lodash";
 import styled from "styled-components";
@@ -10,14 +10,17 @@ import useAddOnService from "../../../modules/servies/useAddOnService";
 import BoxServiceItemByPax, { BoxServiceItemByPaxProps } from "./BoxServiceItemByPax";
 import BoxServiceItemNoPax, { BoxServiceItemNoPaxProps } from "./BoxServiceItemNoPax";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import { ESellChannel } from "@/constants/channel.constant";
+import { IProductService } from "@/models/management/booking/service.interface";
 
 interface ServicePanelProps {
-  sellableId: number;
+  sellableId?: number;
   bookingItems: IProductTourBookingItem[];
   onNext?: () => void;
 }
 const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, onNext }) => {
   const [bookingInformation, _] = useBooking();
+  const { channel } = bookingInformation;
   const [isTransition, startTransition] = useTransition();
   const { onAddServiceByPax, onAddServiceNoPax } = useAddOnService();
   const { data: serviceList, isLoading } = useGetBookingTourServicesCoreQuery({
@@ -32,6 +35,18 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, o
     return bookingInformation.bookingInfo?.bookingSsr;
   }, [bookingInformation]);
 
+  const getPriceConfigListByChannel = useCallback(
+    (configs: IProductService["configs"]) => {
+      return configs?.filter((item) => {
+        return (
+          (channel === ESellChannel.B2B && item.channel === "AGENT") ||
+          (channel === ESellChannel.B2C && item.channel === "CUSTOMER")
+        );
+      });
+    },
+    [channel, serviceList],
+  );
+
   const onChangeQuantity: BoxServiceItemByPaxProps["onChangeQuantity"] = (data) => {
     onAddServiceByPax(data.action, data.qty, data.bookingIndex, data.configItem, data.serviceItem, data.type);
   };
@@ -42,53 +57,56 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, o
   const handleGoNext = () => {
     onNext && startTransition(onNext);
   };
-  if (isLoading) {
-    return <Spin />;
-  }
-  if ((!serviceList && !isLoading) || (serviceList && !serviceList.length && !isLoading)) {
-    return <Empty description="Không có dịch vụ nào khả dụng." />;
-  }
 
   return (
     <>
       <div className="mb-3">
         <h3 className="font-[500] text-lg">Mua thêm dịch vụ</h3>
-        <p>Các dịch vụ có thể mua theo cả hai lựa chọn bên dưới</p>
+        <p>Các dịch vụ có thể mua theo cả hai lựa chọn bên dưới.</p>
       </div>
-      <TabStyled
-        items={[
-          {
-            label: "Thêm dịch vụ theo khách",
-            key: "serviceWithPax",
-            children: serviceList?.map((serviceItem) => (
-              <BoxServiceItemByPax
-                key={`${serviceItem.inventory.recId}${serviceItem.stock?.recId ? serviceItem.stock?.recId : ""}`}
-                serviceName={`${serviceItem.inventory.name}${serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""}`}
-                serviceItem={serviceItem}
-                bookingItems={bookingItems}
-                consfigItems={serviceItem.configs}
-                selectedItems={bookingSsrWithPax}
-                onChangeQuantity={onChangeQuantity}
-              />
-            )),
-          },
-          {
-            label: "Thêm dịch vụ",
-            key: "serviceNoPax",
-            children: serviceList?.map((serviceItem) => (
-              <BoxServiceItemNoPax
-                key={`${serviceItem.inventory.recId}${serviceItem.stock?.recId ? serviceItem.stock?.recId : ""}`}
-                serviceName={`${serviceItem.inventory.name}${serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""}`}
-                serviceItem={serviceItem}
-                consfigItems={serviceItem.configs}
-                selectedItems={bookingSsr}
-                onChangeQuantity={onChangeQuantityWithoutPax}
-              />
-            )),
-          },
-        ]}
-      />
-
+      {isLoading ? (
+        <Spin />
+      ) : !serviceList || !serviceList.length ? (
+        <Empty description="Không có dịch vụ nào khả dụng." />
+      ) : (
+        <TabStyled
+          items={[
+            {
+              label: "Thêm dịch vụ theo khách",
+              key: "serviceWithPax",
+              children: serviceList?.map((serviceItem, _index) => (
+                <BoxServiceItemByPax
+                  key={`${serviceItem.inventory.recId}${serviceItem.stock?.recId ? serviceItem.stock?.recId : _index}`}
+                  serviceName={`${serviceItem.inventory.name}${
+                    serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""
+                  }`}
+                  serviceItem={serviceItem}
+                  bookingItems={bookingItems}
+                  consfigItems={getPriceConfigListByChannel(serviceItem.configs)}
+                  selectedItems={bookingSsrWithPax}
+                  onChangeQuantity={onChangeQuantity}
+                />
+              )),
+            },
+            {
+              label: "Thêm dịch vụ",
+              key: "serviceNoPax",
+              children: serviceList?.map((serviceItem, _index) => (
+                <BoxServiceItemNoPax
+                  key={`${serviceItem.inventory.recId}${serviceItem.stock?.recId ? serviceItem.stock?.recId : _index}`}
+                  serviceName={`${serviceItem.inventory.name}${
+                    serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""
+                  }`}
+                  serviceItem={serviceItem}
+                  consfigItems={getPriceConfigListByChannel(serviceItem.configs)}
+                  selectedItems={bookingSsr}
+                  onChangeQuantity={onChangeQuantityWithoutPax}
+                />
+              )),
+            },
+          ]}
+        />
+      )}
       <div className="text-right">
         <Button type="primary" ghost size="large" onClick={handleGoNext} loading={isTransition} className="w-48">
           <span>

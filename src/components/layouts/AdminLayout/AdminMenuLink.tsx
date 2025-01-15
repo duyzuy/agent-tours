@@ -82,7 +82,7 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
     children: [
       {
         key: "operation/list",
-        label: "Mã điều hành",
+        label: "Phân công điều hành",
         rolepers: PATH_WITH_PERMISSION["operation/list"],
       },
     ],

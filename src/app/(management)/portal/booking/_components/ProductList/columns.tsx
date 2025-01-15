@@ -1,26 +1,21 @@
 import { IProductTour } from "@/models/management/booking/product.interface";
 import { formatDate } from "@/utils/date";
 import { moneyFormatVND } from "@/utils/helper";
-import { DollarCircleOutlined, MoneyCollectOutlined } from "@ant-design/icons";
+import { DollarCircleOutlined, StopOutlined } from "@ant-design/icons";
+import { Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 
 export const columns: ColumnsType<IProductTour> = [
   {
     title: "Mã tour",
-    width: 150,
-    render(value, { template, code }, index) {
-      return (
-        <>
-          <div className="text-primary-default font-[500]">{template.code}</div>
-          <div className="text-xs text-gray-600 break-words whitespace-pre-wrap">{code}</div>
-        </>
-      );
-    },
-  },
-  {
-    title: "Tên tour",
     width: 350,
-    render: (value, record, index) => <div>{record.template.name}</div>,
+    render: (value, { template, code }, index) => (
+      <>
+        <div className="text-primary-default font-[500]">{template.code}</div>
+        <div>{template.name}</div>
+        <div className="text-xs text-gray-600 break-words whitespace-pre-wrap">{code}</div>
+      </>
+    ),
   },
   {
     title: "Ngày khởi hành",
@@ -41,13 +36,13 @@ export const columns: ColumnsType<IProductTour> = [
     },
   },
   {
-    title: "Giá bán",
+    title: "Giá bán B2B",
     width: 200,
     render(value, { configs }, index) {
-      const lowestPriceItem = getConfigLowestPrice(configs);
-
+      const priceConfigAgent = configs.filter((item) => item.channel === "AGENT");
+      const lowestPriceItem = getConfigLowestPrice(priceConfigAgent);
       return (
-        <div>
+        <>
           {!configs.length ? (
             <span className="opacity-60">
               <DollarCircleOutlined /> Chưa có giá bán
@@ -55,12 +50,41 @@ export const columns: ColumnsType<IProductTour> = [
           ) : lowestPriceItem ? (
             <span className="text-red-600 text-lg">{moneyFormatVND(lowestPriceItem.adult)}</span>
           ) : (
-            <span>Đã hết</span>
+            <Space className="opacity-60">
+              <StopOutlined />
+              Đã bán hết
+            </Space>
           )}
-        </div>
+        </>
       );
     },
   },
+  {
+    title: "Giá bán B2C",
+    width: 200,
+    render(value, { configs }, index) {
+      const priceConfigClient = configs.filter((item) => item.channel === "CUSTOMER");
+      const lowestPriceItem = getConfigLowestPrice(priceConfigClient);
+      return (
+        <>
+          {!configs.length ? (
+            <Space className="opacity-60">
+              <DollarCircleOutlined />
+              Chưa có giá bán
+            </Space>
+          ) : lowestPriceItem ? (
+            <span className="text-red-600 text-lg">{moneyFormatVND(lowestPriceItem.adult)}</span>
+          ) : (
+            <Space className="opacity-60">
+              <StopOutlined />
+              Đã bán hết
+            </Space>
+          )}
+        </>
+      );
+    },
+  },
+
   {
     title: "Tổng chỗ",
     width: 100,

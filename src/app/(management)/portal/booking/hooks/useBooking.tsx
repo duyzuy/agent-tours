@@ -22,8 +22,6 @@ export const useBookingSelector = <T,>(selector?: (state: AppBookingManager) => 
   const [booingInfo, _] = context;
 
   return selector?.(booingInfo) || booingInfo;
-
-  return booingInfo;
 };
 
 // type UseBoookingSelectorDefault  = () => BookingInformation

@@ -1,16 +1,15 @@
 import { IProductTour } from "@/models/management/booking/product.interface";
-import { formatDate } from "@/utils/date";
-import { moneyFormatVND } from "@/utils/helper";
 import { Button, Table } from "antd";
-import React from "react";
+import React, { memo } from "react";
 import { columns } from "./columns";
 
 interface ProductListProps {
-  items: IProductTour[];
+  items?: IProductTour[];
   onSelect?: (data: IProductTour) => void;
   loading?: boolean;
 }
 const ProductList: React.FC<ProductListProps> = ({ items, onSelect, loading }) => {
+  console.log("render");
   const isValidPriceConfig = (priceConfigs: IProductTour["configs"]) => {
     let isValid = true;
 
@@ -55,4 +54,4 @@ const ProductList: React.FC<ProductListProps> = ({ items, onSelect, loading }) =
     />
   );
 };
-export default ProductList;
+export default memo(ProductList);

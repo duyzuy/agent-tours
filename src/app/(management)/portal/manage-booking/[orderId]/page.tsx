@@ -168,6 +168,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
       <DepositTimeline
         depositTimelimits={orderInformation?.rulesAndPolicies?.depositTimelimits}
         paymentStatus={bookingOrder?.paymentStatus}
+        className="mb-6"
       />
 
       <BookingOrderActions

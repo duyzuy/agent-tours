@@ -101,7 +101,6 @@ const BoxServiceItemByPax: React.FC<BoxServiceItemByPaxProps> = ({
       },
     ];
   };
-
   return (
     <div className="service__item bg-white mb-6 rounded-sm">
       <div className="service__item-head pt-6 flex justify-between mb-3">
@@ -110,6 +109,7 @@ const BoxServiceItemByPax: React.FC<BoxServiceItemByPaxProps> = ({
       {consfigItems.map((configItem, _indexConfig) => (
         <Table<IProductTourBookingItem>
           key={configItem.recId}
+          rowKey={"index"}
           pagination={{
             hideOnSinglePage: true,
             pageSize: 100,
