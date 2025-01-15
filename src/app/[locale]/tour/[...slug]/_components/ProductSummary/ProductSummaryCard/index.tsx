@@ -480,22 +480,22 @@ const ProductSummaryCardDrawer: ProductSummaryCardCompound["Drawer"] = ({ childr
         height={"calc(80vh - env(safe-area-inset-bottom))"}
         push={false}
         destroyOnClose={true}
-        afterOpenChange={(open) => {
-          const body = document.getElementsByTagName("body")[0];
-          const scrollY = window.scrollY;
-          if (open) {
-            body.style.overflowY = "hidden";
-            body.style.position = "fixed";
-            body.style.top = `-${scrollY}px`;
-            positionRef.current = scrollY;
-            body.style.left = "0px";
-            body.style.right = "0px";
-            body.style.overflowY = "hidden";
-          } else {
-            body.removeAttribute("style");
-            window.scrollTo({ top: positionRef.current });
-          }
-        }}
+        // afterOpenChange={(open) => {
+        //   const body = document.getElementsByTagName("body")[0];
+        //   const scrollY = window.scrollY;
+        //   if (open) {
+        //     body.style.overflowY = "hidden";
+        //     body.style.position = "fixed";
+        //     body.style.top = `-${scrollY}px`;
+        //     positionRef.current = scrollY;
+        //     body.style.left = "0px";
+        //     body.style.right = "0px";
+        //     body.style.overflowY = "hidden";
+        //   } else {
+        //     body.removeAttribute("style");
+        //     window.scrollTo({ top: positionRef.current });
+        //   }
+        // }}
         onClose={closeDrawer}
       >
         {children}

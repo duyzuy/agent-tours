@@ -48,16 +48,16 @@ const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
   return (
     <>
       <div className="payment-page bg-white rounded-md mb-6">
-        <div className="payment-page-head px-6 py-4">
+        <div className="payment-page-head px-3 lg:px-6 py-4">
           <h1 className="text-xl font-[500]">Thanh toán</h1>
           <p>Quý khách vui lòng nhập đầy đủ thông tin và thực hiện thanh toán.</p>
         </div>
-        <CustomerInformationForm control={control} disabled={isPending} className="bg-white px-6" />
-        <InvoiceForm className="px-6" control={control} />
+        <CustomerInformationForm control={control} disabled={isPending} className="px-3 lg:px-6" />
+        <InvoiceForm className="px-3 lg:px-6" control={control} />
         <Divider />
-        <CouponForm />
+        <CouponForm className="px-3 lg:px-6" />
         <Divider />
-        <PaymentMethod />
+        <PaymentMethod className="px-3 lg:px-6" />
       </div>
       <PolicyContent />
       <div className="text-right">

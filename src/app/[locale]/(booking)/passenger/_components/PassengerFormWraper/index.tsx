@@ -54,7 +54,7 @@ const PassengerFormWraper = ({
         })}
       >
         <div className="page-passenger__head relative mb-6">
-          <span className="w-1 h-4 block rounded-full bg-primary-default absolute -left-6 top-2"></span>
+          <span className="w-1 h-4 block rounded-full bg-primary-default absolute -left-3 lg:-left-6 top-2"></span>
           <h3 className="text-xl font-[500] mb-2">{title}</h3>
           <p className="text-gray-600">{descriptions}</p>
         </div>

@@ -24,7 +24,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({ class
       })}
     >
       <div className="customer__information-head relative mb-3">
-        <span className="w-1 h-4 block rounded-full bg-primary-default absolute -left-6 top-1"></span>
+        <span className="w-1 h-4 block rounded-full bg-primary-default absolute -left-3 lg:-left-6 top-1"></span>
         <h3 className="font-[500] text-base">Thông tin người đặt</h3>
       </div>
       <div className="customer__information-body">

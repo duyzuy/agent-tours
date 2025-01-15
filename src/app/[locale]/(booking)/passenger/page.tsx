@@ -54,7 +54,7 @@ const PassengerPage = () => {
   return (
     <>
       <div className="page-passenger">
-        <div className="bg-white rounded-lg p-4 lg:p-6">
+        <div className="bg-white rounded-lg p-3 lg:p-6">
           <PassengerFormWraper
             title={t("page.title")}
             descriptions="Nhập tiếng Việt không dấu, họ tên trùng khớp trên giấy tờ tuỳ thân, passport."

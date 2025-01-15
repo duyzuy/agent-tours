@@ -39,7 +39,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({ className = "", pas
       })}
     >
       <div className="service-container-wraper__head mb-6 relative">
-        <span className="w-1 h-4 block rounded-full bg-primary-default absolute -left-6 top-2"></span>
+        <span className="w-1 h-4 block rounded-full bg-primary-default absolute -left-3 lg:-left-6 top-2"></span>
         <h3 className="text-xl font-[500]">Dịch vụ</h3>
       </div>
       <div className="service-container-wraper__body">
