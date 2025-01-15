@@ -1,27 +1,23 @@
 "use client";
 import { LINKS } from "@/constants/links.constant";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAgToken } from "@/utils/common";
 /** USE CHECK AUTH FOR LOGIN PAGE / REGISTER PAGE **/
-
-const Auth = ({ children }: any) => {
+interface AuthProps {
+  children?: React.ReactNode;
+}
+const Auth = ({ children }: AuthProps) => {
   const isAuth = !!getAgToken();
   const router = useRouter();
-  const [show, setShow] = useState(false);
+
   useEffect(() => {
     if (isAuth) {
       router.push(LINKS.DashBoard);
-    } else {
-      setShow(true);
     }
   }, [isAuth]);
 
-  if (show) {
-    return children;
-  }
-
-  return null;
+  return children;
 };
 
 export default Auth;

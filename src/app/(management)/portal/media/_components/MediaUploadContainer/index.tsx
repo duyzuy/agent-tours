@@ -37,8 +37,6 @@ const MediaUploadContainer: React.FC<MediaUploadContainerProps> = ({
     () => new QueryParamsMediaFiles({ mediaType: mediaTypes, mediaInFolderRecid: 0, objectType: "MEDIA" }, 1, 30),
   );
 
-  // const [queryMediaFileParams, setQueryMediaFileParams] = useState(initQueryFiles);
-
   const { data: fileData, isLoading: isLoadingFile } = useGetMediaFiles(queryMediaFileParams);
 
   /**
@@ -78,21 +76,23 @@ const MediaUploadContainer: React.FC<MediaUploadContainerProps> = ({
           }}
         />
       </div>
-      <MediaFiles
-        items={fileData?.list || []}
-        isLoading={isLoadingFile}
-        selectedFiles={selectedFiles}
-        onSelect={onSelect}
-        hasRoleCreate={hasRoleCreate}
-        paginations={{
-          onChangePage: (page, pageSize) => {
-            setQueryMediaFileParams((oldData) => ({ ...oldData, pageCurrent: page }));
-          },
-          totalItems: fileData?.totalItems,
-          pageSize: fileData?.pageSize,
-          currentPage: fileData?.pageCurrent,
-        }}
-      />
+      <div className="col-right flex-1 px-6">
+        <MediaFiles
+          items={fileData?.list || []}
+          isLoading={isLoadingFile}
+          selectedFiles={selectedFiles}
+          onSelect={onSelect}
+          hasRoleCreate={hasRoleCreate}
+          paginations={{
+            onChangePage: (page, pageSize) => {
+              setQueryMediaFileParams((oldData) => ({ ...oldData, pageCurrent: page }));
+            },
+            totalItems: fileData?.totalItems,
+            pageSize: fileData?.pageSize,
+            currentPage: fileData?.pageCurrent,
+          }}
+        />
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { mediaApis } from "@/services/management/localMedia.service";
+import { mediaApis } from "@/services/management/localMedia";
 import { getAgToken } from "@/utils/common";
 import {
   IMediaFileListRs,

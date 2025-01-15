@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { GET_MEDIA_FOLDERS, GET_MEDIA_FILES } from "./var";
-import { localMediaAPIs } from "@/services/management/localMedia.service";
+import { localMediaAPIs } from "@/services/management/localMedia";
 import { TQueryParamsMediaFiles, TQueryParamsMediaFolders } from "@/models/management/media.interface";
 
 export const useGetMediaFolders = (params: TQueryParamsMediaFolders) => {

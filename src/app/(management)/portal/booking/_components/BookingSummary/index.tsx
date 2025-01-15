@@ -257,11 +257,9 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
         ) : null}
 
         <Divider />
-        <div className="booking__summary-total">
-          <div className="flex justify-between">
-            <span>Tổng tiền</span>
-            <span className="font-[500] text-primary-default text-lg">{moneyFormatVND(total)}</span>
-          </div>
+        <div className="booking__summary-total flex justify-between">
+          <span>Tổng tiền</span>
+          <span className="font-[500] text-primary-default text-lg">{moneyFormatVND(total)}</span>
         </div>
       </div>
     </div>

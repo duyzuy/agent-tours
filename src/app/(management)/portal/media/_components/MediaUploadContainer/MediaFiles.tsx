@@ -57,22 +57,20 @@ const MediaFiles = ({
       ...itemsTab,
       {
         key: "upload",
-        label: "Tải file",
+        label: "Upload",
         children: <UploadFileForm onUpload={onUploadFile} uploading={isUploading} onResetTab={onResetTab} />,
       },
     ];
   }
   return (
-    <div className="col-right flex-1 px-6">
-      <Tabs
-        destroyInactiveTabPane={true}
-        defaultActiveKey={mediaTab}
-        activeKey={mediaTab}
-        onChange={onChangeTab}
-        items={itemsTab}
-        indicatorSize={(origin) => origin - 16}
-      />
-    </div>
+    <Tabs
+      destroyInactiveTabPane={true}
+      defaultActiveKey={mediaTab}
+      activeKey={mediaTab}
+      onChange={onChangeTab}
+      items={itemsTab}
+      indicatorSize={(origin) => origin - 16}
+    />
   );
 };
 export default memo(MediaFiles);
@@ -126,6 +124,7 @@ MediaFiles.ItemList = function MediaFilesItemList({
     <>
       {isEmpty(items) ? (
         <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
           description={
             <div className="text-center">
               <p>Chưa có file nào trong thư mục này.</p>
@@ -134,7 +133,7 @@ MediaFiles.ItemList = function MediaFilesItemList({
           }
         />
       ) : (
-        <div className="thumbnail-list mb-12">
+        <>
           <div className="text-right pt-4 pb-6 px-3 border-b">
             <Pagination
               total={paginations?.totalItems}
@@ -145,7 +144,7 @@ MediaFiles.ItemList = function MediaFilesItemList({
               showTotal={(total) => `Có tất cả ${total} items`}
             />
           </div>
-          <div className="flex items-center flex-wrap gap-4 py-8 mb-12">
+          <div className="flex items-center flex-wrap gap-4 py-8">
             {items.map((item) => (
               <MediaFileItem
                 key={item.key}
@@ -160,7 +159,7 @@ MediaFiles.ItemList = function MediaFilesItemList({
               />
             ))}
           </div>
-        </div>
+        </>
       )}
       <ModalPreview
         isOpen={preview.isShow}

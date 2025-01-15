@@ -78,19 +78,21 @@ const MediaPage = () => {
             }}
           />
         </div>
-        <MediaFiles
-          items={filesData?.list || []}
-          isLoading={isLoadingFileList}
-          hasRoleCreate={checkPermission?.([ERolesFunctions.MEDIA_CREATE])}
-          paginations={{
-            onChangePage: (page, pageSize) => {
-              setQueryMediaFileParams((oldData) => ({ ...oldData, pageCurrent: page }));
-            },
-            totalItems: filesData?.totalItems,
-            pageSize: filesData?.pageSize,
-            currentPage: filesData?.pageCurrent,
-          }}
-        />
+        <div className="flex-1 px-6">
+          <MediaFiles
+            items={filesData?.list || []}
+            isLoading={isLoadingFileList}
+            hasRoleCreate={checkPermission?.([ERolesFunctions.MEDIA_CREATE])}
+            paginations={{
+              onChangePage: (page, pageSize) => {
+                setQueryMediaFileParams((oldData) => ({ ...oldData, pageCurrent: page }));
+              },
+              totalItems: filesData?.totalItems,
+              pageSize: filesData?.pageSize,
+              currentPage: filesData?.pageCurrent,
+            }}
+          />
+        </div>
       </div>
     </PageContainer>
   );

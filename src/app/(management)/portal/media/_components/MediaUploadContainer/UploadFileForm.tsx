@@ -3,7 +3,6 @@ import { Upload, Button, Form, Row, Col, Empty, TreeSelect, TreeSelectProps } fr
 import { UploadFile, UploadProps } from "antd/es/upload";
 import { UploadOutlined } from "@ant-design/icons";
 import FormItem from "@/components/base/FormItem";
-import { IMediaFolderListRs } from "@/models/management/media.interface";
 import useMessage from "@/hooks/useMessage";
 import { isArray, isEmpty } from "lodash";
 import { mediaConfig } from "@/configs";
@@ -43,7 +42,7 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
   }>({ folder: initFolderItem, fileList: [] });
 
   const beforeUpload: UploadProps["beforeUpload"] = (file) => {
-    const isValidFileType = isValidMediaFileTypes(file.type);
+    const isValidFileType = checkValidFileType(file.type);
 
     if (!isValidFileType) {
       message.error("Định dạng file không hợp lệ");
@@ -86,20 +85,15 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
     <React.Fragment>
       <div className="upload-area mb-8 flex items-center justify-center">
         <div className="upload-form w-96">
-          <Form layout="vertical">
-            <FormItem label="Chọn thư mục lưu trữ" required>
-              <FolderTreeSelector value={formData.folder.value} onSelect={onSelectFolder} disabled={uploading} />
-            </FormItem>
-          </Form>
           <Upload
             multiple={true}
+            listType="picture-card"
+            accept={mediaConfig.accept}
             maxCount={mediaConfig.maxCount}
             fileList={formData.fileList}
-            listType="picture-card"
+            disabled={uploading}
             beforeUpload={beforeUpload}
             onRemove={onRemoveFile}
-            accept={mediaConfig.accept}
-            disabled={uploading}
             className="w-full"
           >
             {formData.fileList.length >= mediaConfig.maxCount ? null : (
@@ -109,27 +103,27 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
               </div>
             )}
           </Upload>
-          {isEmpty(formData.fileList) ? (
-            <Empty description={<p className="text-gray-500">Chưa có file nào được chọn</p>} className="pt-6" />
-          ) : null}
+          <Form layout="vertical">
+            <FormItem label="Chọn thư mục lưu trữ" required>
+              <FolderTreeSelector value={formData.folder.value} onSelect={onSelectFolder} disabled={uploading} />
+            </FormItem>
+            <Button
+              type="primary"
+              onClick={() => onUpload(formData, onResetFiles)}
+              disabled={isEmpty(formData.fileList)}
+              loading={uploading}
+            >
+              {uploading ? "Uploading" : "Upload"}
+            </Button>
+          </Form>
         </div>
-      </div>
-      <div className="actions flex items-center justify-center mb-8">
-        <Button
-          type="primary"
-          onClick={() => onUpload(formData, onResetFiles)}
-          disabled={isEmpty(formData.fileList)}
-          loading={uploading}
-        >
-          {uploading ? "Uploading" : "Upload"}
-        </Button>
       </div>
     </React.Fragment>
   );
 };
 export default UploadFileForm;
 
-const isValidMediaFileTypes = (fileType: string) => {
+const checkValidFileType = (fileType: string) => {
   let isValid = false;
   Object.keys(mediaConfig.fileType).forEach((key: string) => {
     if (!isValid) {
