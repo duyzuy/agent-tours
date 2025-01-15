@@ -14,13 +14,14 @@ import PolicyContent from "./PolicyContent";
 import { Session } from "next-auth";
 import { useTransition } from "react";
 import { useUserSelector } from "@/app/[locale]/hooks/useUser";
+import { useRouter } from "@/utils/navigation";
 
 interface PageWraperProps {
   session: Session | null;
 }
 const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
   const userProfile = useUserSelector((state) => state.profile);
-
+  const router = useRouter();
   const initCustomerInformation = new FeCustomerInformationFormData(
     userProfile?.fullname,
     userProfile?.user.phoneNumber,
@@ -31,7 +32,6 @@ const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
   );
   const initInvoiceData = new FeInvoiceFormData("", "", "", "", "");
 
-  console.log(userProfile);
   const { handleSubmit, control } = useForm({
     resolver: yupResolver(paymentSchema),
     defaultValues: {
@@ -47,25 +47,22 @@ const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
 
   return (
     <>
-      <div className="payment-page bg-white rounded-md">
+      <div className="payment-page bg-white rounded-md mb-6">
         <div className="payment-page-head px-6 py-4">
           <h1 className="text-xl font-[500]">Thanh toán</h1>
+          <p>Quý khách vui lòng nhập đầy đủ thông tin và thực hiện thanh toán.</p>
         </div>
-        <CustomerInformationForm control={control} className="bg-white px-6" />
+        <CustomerInformationForm control={control} disabled={isPending} className="bg-white px-6" />
         <InvoiceForm className="px-6" control={control} />
-
-        <div className="payment__methods bg-white mb-6 rounded-md">
-          <div className="payment__methods-head px-6 py-3">
-            <span className="font-[500] text-base">Phương thức thanh toán</span>
-          </div>
-          <CouponForm />
-          <PaymentMethod />
-        </div>
+        <Divider />
+        <CouponForm />
+        <Divider />
+        <PaymentMethod />
       </div>
       <PolicyContent />
       <div className="text-right">
         <Space align="end">
-          <Button type="primary" size="large" className="w-[180px]" onClick={() => {}} ghost>
+          <Button type="primary" size="large" className="w-[180px]" onClick={() => router.push("/passenger")} ghost>
             Quay lại
           </Button>
           <Button

@@ -103,7 +103,9 @@ import IconTreePalm from "./IconTreePalm";
 import IconFileText from "./IconFileText";
 import IconDock from "./IconDock";
 import IconRocket from "./IconRocket";
+import IconCash from "./IconCash";
 export {
+  IconCash,
   IconRocket,
   IconTrees,
   IconTreeDeciduous,

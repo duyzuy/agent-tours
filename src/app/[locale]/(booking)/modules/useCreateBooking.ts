@@ -15,7 +15,7 @@ import useMessage from "@/hooks/useMessage";
 import { useTranslations } from "next-intl";
 
 const useCreateBooking = () => {
-  const { mutate: makeBooking, isPending } = useCreateBookingOrderMutation();
+  const { mutate: makeBooking, isPending, isIdle } = useCreateBookingOrderMutation();
   const router = useRouter();
   const [{ bookingInfo }, dispatch] = useBookingInformation();
   const { passengers, product, couponPolicy, coupons, bookingSsrWithPax } = bookingInfo;
@@ -145,6 +145,7 @@ const useCreateBooking = () => {
   return {
     createBooking: onCreateBooking,
     isPending,
+    isIdle,
   };
 };
 export default useCreateBooking;
