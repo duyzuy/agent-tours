@@ -37,5 +37,5 @@ jobs:
           #       **/.git*/**
           #       **/node_modules/**
           server-dir: "httpdocs/"
-          protocol: ftps,
+          protocol: ftps-legacy,
           exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
