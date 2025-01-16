@@ -1,22 +1,20 @@
 "use client";
 
+import React, { useRef } from "react";
 import Image from "next/image";
-import React, { useState, useRef, useCallback, forwardRef, useEffect, Suspense } from "react";
-import { Link } from "@/utils/navigation";
-import classNames from "classnames";
 
-// Import Swiper React components
+import classNames from "classnames";
+import { Swiper as SwiperType } from "swiper/types";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation, Autoplay } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
+
+import IconChevronLeft from "@/assets/icons/IconChevronLeft";
+import IconChevronRight from "@/assets/icons/IconChevronRight";
+import { Link } from "@/utils/navigation";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "swiper/css/virtual";
-import { Swiper as SwiperType } from "swiper/types";
-import IconChevronLeft from "@/assets/icons/IconChevronLeft";
-import IconChevronRight from "@/assets/icons/IconChevronRight";
-import { Virtual } from "swiper/modules";
 interface PromotionSliderProps {
   items: { id: number; thumb?: string; title: string; slug: string; date: string; description: string }[];
   title?: string;
@@ -50,56 +48,52 @@ const PromotionSlider: React.FC<PromotionSliderProps> = ({ items, title }) => {
   ];
   const swiperRef = useRef<SwiperType>();
   return (
-    <section className="promotion-section">
-      <div className="container mx-auto px-3 md:px-6 lg:px-8">
-        <div className="section__body slider relative block w-full">
-          <Swiper
-            virtual
-            slidesPerView={3}
-            spaceBetween={12}
-            autoplay={{
-              delay: 8000,
-              disableOnInteraction: false,
-            }}
-            breakpoints={{
-              640: {
-                slidesPerView: 3,
-                spaceBetween: 12,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 12,
-              },
-            }}
-            modules={[Autoplay, Navigation, Virtual]}
-            onBeforeInit={(swiper) => {
-              swiperRef.current = swiper;
-            }}
-          >
-            {ITEMS.map((_item) => (
-              <SwiperSlide key={_item.id}>
-                <div className="banner overflow-hidden">
-                  <Link href={_item.slug}>
-                    <Image src={_item.thumb} alt={_item.name} width={900} height={600} className="rounded-md" />
-                  </Link>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <div className="swiper-navigation hidden lg:block">
-            <ButtonNavigation className="-left-5 top-[50%]" onClick={() => swiperRef.current?.slidePrev()}>
-              <IconChevronLeft width={16} />
-            </ButtonNavigation>
-            <ButtonNavigation className="-right-5 top-[50%]" onClick={() => swiperRef.current?.slideNext()}>
-              <IconChevronRight width={16} />
-            </ButtonNavigation>
-          </div>
+    <div className="container mx-auto px-3 md:px-6 lg:px-8">
+      <div className="slider-container relative">
+        <Swiper
+          slidesPerView={1}
+          spaceBetween={12}
+          autoplay={{
+            delay: 8000,
+            disableOnInteraction: false,
+          }}
+          breakpoints={{
+            640: {
+              slidesPerView: 3,
+              spaceBetween: 12,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 12,
+            },
+          }}
+          modules={[Autoplay, Navigation]}
+          onBeforeInit={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+        >
+          {ITEMS.map((_item) => (
+            <SwiperSlide key={_item.id}>
+              <div className="banner overflow-hidden">
+                <Link href={_item.slug}>
+                  <Image src={_item.thumb} alt={_item.name} width={900} height={600} className="rounded-md" />
+                </Link>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <div className="swiper-navigation hidden lg:block">
+          <ButtonNavigation className="-left-5 top-[50%]" onClick={() => swiperRef.current?.slidePrev()}>
+            <IconChevronLeft width={16} />
+          </ButtonNavigation>
+          <ButtonNavigation className="-right-5 top-[50%]" onClick={() => swiperRef.current?.slideNext()}>
+            <IconChevronRight width={16} />
+          </ButtonNavigation>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
-export default PromotionSlider;
 
 interface ButtonNavigationProps {
   children?: React.ReactNode;
@@ -121,3 +115,20 @@ const ButtonNavigation = function (props: ButtonNavigationProps) {
     </button>
   );
 };
+
+function PromotionSliderSkeleton() {
+  return (
+    <div className="container md:px-6 px-3 lg:px-8 mx-auto">
+      <div className="animate-pulse border bg-white rounded-md lg:p-6 p-3 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="bg-slate-100 rounded-sm aspect-video"></div>
+          <div className="bg-slate-100 rounded-sm aspect-video lg:block hidden"></div>
+          <div className="bg-slate-100 rounded-sm aspect-video lg:block hidden"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default PromotionSlider;
+export { PromotionSliderSkeleton };

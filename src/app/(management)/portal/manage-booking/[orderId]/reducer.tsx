@@ -10,7 +10,6 @@ export const manageBookingReducer = (state = initManageBookingState, action: Man
         order: payload,
       };
     }
-
     case "SPLIT_BOOKING": {
       return state;
     }

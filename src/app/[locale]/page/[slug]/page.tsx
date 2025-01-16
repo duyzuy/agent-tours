@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { getPageContentDetail } from "../../_actions/pageContent";
+import { getPageContentDetail } from "../../../../actions/pageContent";
 import { mediaConfig } from "@/configs";
 import SinglePageContentWraper from "../_components/SinglePageContentWraper";
 import { unstable_setRequestLocale } from "next-intl/server";

@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import { HandleSubmit } from "@/hooks/useFormSubmit";
-import { customerProfileSchema } from "../schema/customerSchema";
+import { customerProfileSchema } from "../modules/customerSchema";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "@/constants/common";
 

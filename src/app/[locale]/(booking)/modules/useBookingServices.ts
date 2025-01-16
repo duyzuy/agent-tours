@@ -1,7 +1,6 @@
-import { useBookingInformation } from "../../hooks/useBookingInformation";
-import { EBookingActions } from "../../store/actions/bookingActions";
 import { IBookingSsrItemWithPax } from "./booking.interface";
-
+import { useBookingInformation } from "@/store/hooks";
+import { EBookingActions } from "@/store/actions/bookingActions";
 type PassengerWithConfig = Omit<IBookingSsrItemWithPax, "inventory" | "stock">;
 
 export interface UseBookingServicesProps {

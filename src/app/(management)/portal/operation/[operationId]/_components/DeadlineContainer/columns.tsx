@@ -16,13 +16,13 @@ export const columns: ColumnsType<IOperationDeadline> = [
     title: "Loại dịch vụ",
     key: "type",
     dataIndex: "type",
-    width: 200,
+    width: 100,
   },
   {
     title: "Ghi chú",
     key: "remark",
     dataIndex: "remark",
-    width: 200,
+    width: 400,
   },
   {
     title: "Ngày thanh toán 1",
@@ -30,11 +30,7 @@ export const columns: ColumnsType<IOperationDeadline> = [
     dataIndex: "preDeadline",
     width: 180,
     render(value, { preDeadline, deadline }, index) {
-      return (
-        <div>
-          <span className="block">{preDeadline ? formatDate(preDeadline) : "--"}</span>
-        </div>
-      );
+      return <div>{preDeadline ? formatDate(preDeadline) : "--"}</div>;
     },
   },
   {
@@ -43,11 +39,7 @@ export const columns: ColumnsType<IOperationDeadline> = [
     dataIndex: "sellableCode",
     width: 180,
     render(value, { preDeadline, deadline }, index) {
-      return (
-        <div>
-          <span className="block">{deadline ? formatDate(deadline) : "--"}</span>
-        </div>
-      );
+      return <div>{deadline ? formatDate(deadline) : "--"}</div>;
     },
   },
   {
@@ -56,7 +48,14 @@ export const columns: ColumnsType<IOperationDeadline> = [
     dataIndex: "status",
     width: 100,
     render: (value, { status }, index) => {
-      return <Tag color={status === "DONE" ? "blue" : "green"}>{status}</Tag>;
+      return (
+        <Tag
+          color={status === "NEW" ? "blue" : status === "DONE" ? "green" : status === "EXPIRED" ? "red" : "default"}
+          bordered={false}
+        >
+          {status === "NEW" ? "Mới" : status === "DONE" ? "Hoàn thành" : "Không xác định"}
+        </Tag>
+      );
     },
   },
 ];

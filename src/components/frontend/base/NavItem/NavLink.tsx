@@ -25,7 +25,7 @@ const NavLinkBase: React.FC<NavLinkProps> = ({ prefix, children, title, href = "
       ) : (
         <>
           {prefix ? <span className="mr-2">{prefix}</span> : null}
-          <span className="text-gray-600 hover:text-primary-default">{title}</span>
+          <span className="text-gray-800 hover:text-primary-default">{title}</span>
         </>
       )}
     </Link>

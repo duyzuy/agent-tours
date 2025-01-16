@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import useInitServiceList from "../../modules/useInitServiceList";
-import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
-
+import { useBookingSelector } from "@/store/hooks";
 import classNames from "classnames";
 import { Empty, Spin } from "antd";
 import { FeBookingInformation } from "../../../modules/booking.interface";

@@ -2,24 +2,25 @@
 import TourCard, { TourCardProps } from "@/components/frontend/TourCard";
 import { mediaConfig } from "@/configs";
 import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
-import { LangCode } from "@/models/management/cms/language.interface";
 import { formatDate, stringToDate } from "@/utils/date";
 import { useMemo } from "react";
 import duration from "dayjs/plugin/duration";
 import dayjs from "dayjs";
 import { getLowestPriceAvailable } from "@/utils/product";
+import { useLocale } from "next-intl";
+
 dayjs.extend(duration);
 dayjs.duration(100);
 
 interface TourCardTemplateItemProps {
   data: IFeTemplateProductItem;
-  lang?: LangCode;
 }
-const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang }) => {
+const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data }) => {
+  const locale = useLocale();
   const { sellables, cms } = data;
 
   const tourCMSContent = useMemo(() => {
-    return cms.find((cmsItem) => cmsItem.lang === lang);
+    return cms.find((cmsItem) => cmsItem.lang === locale);
   }, [cms]);
 
   const sellableItem = useMemo(() => {
@@ -27,7 +28,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
   }, [sellables]);
 
   const otherDeparts = useMemo(() => {
-    return sellables.map((item) => stringToDate(item.startDate).format("DD/MM")).splice(1);
+    return sellables.map((item) => stringToDate(item.startDate).format("DD/MM"));
   }, [sellables]);
 
   const durationDays = useMemo(() => {
@@ -48,7 +49,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
     return true;
   }, [tourCMSContent]);
 
-  const cardDataProps: TourCardProps["data"] = {
+  const tourCardProps: TourCardProps["data"] = {
     tourCode: data.code,
     thumbnail:
       tourCMSContent && tourCMSContent.thumbnail
@@ -73,7 +74,7 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
   };
 
   return (
-    <TourCard data={cardDataProps} shadow="none">
+    <TourCard data={tourCardProps} shadow="none">
       <TourCard.Head>
         <TourCard.Thumbnail />
         <TourCard.Badget />
@@ -87,4 +88,27 @@ const TourCardTemplateItem: React.FC<TourCardTemplateItemProps> = ({ data, lang 
     </TourCard>
   );
 };
+
+function TourCardTemplateItemSkeleton() {
+  return (
+    <div className="rounded-lg bg-white overflow-hidden">
+      <div className="animate-pulse">
+        <div className="bg-slate-100 rounded-sm w-full h-32 lg:h-48"></div>
+        <div className="w-full pt-6 px-3 pb-3">
+          <div className="h-2 bg-slate-100 rounded w-8 mb-6"></div>
+          <div className="space-y-3 mb-8">
+            <div className="h-6 bg-slate-100 rounded mb-6"></div>
+            <div className="h-2 bg-slate-100 rounded w-24"></div>
+            <div className="h-2 bg-slate-100 rounded w-20"></div>
+          </div>
+          <div className="flex justify-between gap-x-3">
+            <div className="h-3 bg-slate-100 rounded w-1/3"></div>
+            <div className="h-3 bg-slate-100 rounded flex-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 export default TourCardTemplateItem;
+export { TourCardTemplateItemSkeleton };

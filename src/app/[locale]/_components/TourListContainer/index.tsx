@@ -1,18 +1,20 @@
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
-import { getTemplateProductList } from "../../_actions/searchProduct";
+import { getTemplateProductList } from "../../../../actions/searchProduct";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { localeDefault } from "@/constants/locale.constant";
-import TourCardTemplateItem from "./TourCardTemplateItem";
+import TourCardTemplateItem, { TourCardTemplateItemSkeleton } from "./TourCardTemplateItem";
+import dynamic from "next/dynamic";
+
+const DynamicTourCardItem = dynamic(() => import("./TourCardTemplateItem"), {
+  loading: () => <TourCardTemplateItemSkeleton />,
+  ssr: false,
+});
+
 interface TourListContainerProps {
-  lang?: LangCode;
   querySearch: FeSearchTourQueryParams;
   title?: string;
 }
-const TourListContainer: React.FC<TourListContainerProps> = async ({
-  lang = localeDefault.key,
-  querySearch,
-  title,
-}) => {
+const TourListContainer: React.FC<TourListContainerProps> = async ({ querySearch, title }) => {
   const productList = await getTemplateProductList(querySearch);
   return (
     <section className="tour__list-wraper">
@@ -23,7 +25,7 @@ const TourListContainer: React.FC<TourListContainerProps> = async ({
         {productList ? (
           <div className="tour__list-items grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-3 lg:gap-4">
             {productList.map((prd) => (
-              <TourCardTemplateItem key={prd.recId} data={prd} lang={lang} />
+              <DynamicTourCardItem key={prd.recId} data={prd} />
             ))}
           </div>
         ) : (

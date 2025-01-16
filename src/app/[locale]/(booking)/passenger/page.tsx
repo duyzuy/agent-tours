@@ -10,7 +10,7 @@ import { isEmpty, isNull, isUndefined } from "lodash";
 import { FeBookingInformation } from "../modules/booking.interface";
 import { useTransition } from "react";
 import { useRouter } from "@/utils/navigation";
-import { useBookingSelector } from "../../hooks/useBookingInformation";
+import { useBookingSelector } from "@/store/hooks";
 
 export type PassengerItemType = FeBookingInformation["bookingInfo"]["passengers"][0];
 

@@ -1,6 +1,7 @@
-import { useBookingInformation } from "@/app/[locale]/hooks/useBookingInformation";
-import { EBookingActions } from "@/app/[locale]/store/actions/bookingActions";
+import { EBookingActions } from "@/store/actions/bookingActions";
+import { useBookingInformation } from "@/store/hooks";
 import { FeBookingFormData, FeBookingInformation } from "../../modules/booking.interface";
+
 const usePassengerInformation = () => {
   const [bookingInformation, dispatch] = useBookingInformation();
   const updatePassengersInformation = (passengers: FeBookingInformation["bookingInfo"]["passengers"]) => {

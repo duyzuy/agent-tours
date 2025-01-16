@@ -1,8 +1,8 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
-import { UserManagerProvider } from "@/app/[locale]/store/providers/UserManagerProvider";
-import UserProfileContainer from "@/app/[locale]/containers/UserProfileContainer";
+import UserProfileContainer from "@/containers/UserProfileContainer";
+import { UserManagerProvider } from "@/store/providers/UserManagerProvider";
 type Props = {
   children?: React.ReactNode;
   session?: Session | null;

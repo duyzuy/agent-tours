@@ -4,7 +4,7 @@ import BookingBreakDown from "./_components/BookingBreakDown";
 import BookingSteps from "./_components/BookingSteps";
 import { usePathname } from "@/utils/navigation";
 import { useSession } from "next-auth/react";
-import { useBookingSelector } from "../hooks/useBookingInformation";
+import { useBookingSelector } from "@/store/hooks";
 import { isUndefined } from "lodash";
 import { redirect } from "@/utils/navigation";
 import { useEffect, useMemo } from "react";

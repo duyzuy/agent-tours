@@ -12,7 +12,7 @@ interface SecondaryNavItemProps {
   className?: string;
   slug?: string;
 }
-const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({
+export default function SecondaryNavItem({
   name,
   iconName,
   items,
@@ -20,7 +20,7 @@ const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({
   className = "",
   descriptions,
   slug,
-}) => {
+}: SecondaryNavItemProps) {
   const icItem = ICON_LIST.find((ic) => ic.key === iconName);
   return (
     <div
@@ -28,27 +28,22 @@ const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({
         [className]: className,
       })}
     >
-      <div className="menu-secondary-item__name group-hover/item:bg-white/10 cursor-pointer px-4 py-2 rounded-md">
-        <Link href={slug ?? "/"}>
-          <span className="flex items-center">
-            {icItem ? (
-              <span className="mr-2">
-                <icItem.icon stroke="white" />
-              </span>
-            ) : null}
-            <span className="nav-link-text text-white font-[500]">{name}</span>
-          </span>
-        </Link>
-      </div>
+      <Link
+        href={slug ?? "/"}
+        className="menu-secondary-item__link flex items-center group-hover/item:bg-white/10 cursor-pointer px-3 py-2 rounded-md"
+      >
+        {icItem ? <icItem.icon stroke="white" className="mr-2" /> : null}
+        <span className="nav-link-text text-white font-[500]">{name}</span>
+      </Link>
       {isMega ? (
-        <MegaMenuDropdown
+        <SecondaryNavItem.MegaDropdown
           name={name}
           descriptions={descriptions}
           items={items}
           className="w-full left-0 right-0 pt-4 absolute invisible group-hover/item:visible"
         />
       ) : (
-        <MenuDropdownItem
+        <SecondaryNavItem.Dropdown
           name={name}
           items={items}
           className="w-[260px] pt-4 absolute invisible group-hover/item:visible"
@@ -56,93 +51,65 @@ const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({
       )}
     </div>
   );
-};
-export default SecondaryNavItem;
+}
 
 interface MenuDropdownItemProps {
   name?: string;
   items?: MenuItemType[];
   className?: string;
 }
-const MenuDropdownItem: React.FC<MenuDropdownItemProps> = ({ name, items, className = "" }) => {
-  if (!items || !items.length) {
-    return null;
-  }
+function Dropdown({ name, items, className = "" }: MenuDropdownItemProps) {
+  if (!items || !items.length) return null;
   return (
     <div
-      className={classNames("menu-secondary-item__dropdown-item ", {
+      className={classNames("dropdown", {
         [className]: className,
       })}
     >
-      <div className="bg-white px-6 py-4 rounded-lg shadow-lg">
-        <div className="menu-secondary-item__dropdown-head py-2 mb-3 hidden">
-          <h4 className="text-lg font-[500]">{name}</h4>
-        </div>
-        <div className="menu-secondary-item__dropdown-body">
-          <div className="sub-item-list">
-            {items?.map(({ name, slug, objectType, id }) => (
-              <div className="child-item mb-2 py-1" key={id}>
-                <NavLink href={slug} title={name} target={objectType === "custom" ? "_blank" : "_self"} />
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="dropdown-item__inner bg-white px-6 py-4 rounded-lg shadow-lg">
+        <ul className="sub-items">
+          {items?.map(({ name, slug, objectType, id }) => (
+            <li className="child-item mb-2 py-1" key={id}>
+              <NavLink href={slug} title={name} target={objectType === "custom" ? "_blank" : "_self"} />
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
-};
+}
 interface MegaMenuDropdownProps {
   name?: string;
   descriptions?: string;
   items?: MenuItemType[];
   className?: string;
 }
-const MegaMenuDropdown: React.FC<MegaMenuDropdownProps> = ({ name, items, className = "", descriptions }) => {
-  if (!items || !items.length) {
-    return null;
-  }
+function MegaMenuDropdown({ name, items, className = "", descriptions }: MegaMenuDropdownProps) {
+  if (!items || !items.length) return null;
   return (
     <div
-      className={classNames("menu-secondary-item__dropdown", {
+      className={classNames("mega-dropdown", {
         [className]: className,
       })}
     >
-      <div className="menu-secondary-item__dropdown-inner bg-white rounded-lg w-full py-6 px-6 shadow-lg">
-        <div className="menu-secondary-item__dropdown-head py-2 mb-3 hidden">
-          <h5 className="text-lg font-[500]">{name}</h5>
-          {descriptions ? <div className="descriptions text-gray-500 text-xs">{descriptions}</div> : null}
-        </div>
-        <div className="menu-secondary-item__dropdown-body">
-          <div className="menu-secondary-item__dropdown-row flex flex-wrap -mx-3">
-            {items?.map((mItem) => (
-              <MegaMenuColumn name={mItem.name} items={mItem.children} key={mItem.id} />
-            ))}
-          </div>
+      <div className="mega-dropdown__inner bg-white rounded-lg w-full py-6 px-6 shadow-lg">
+        <div className="grid grid-cols-5 gap-3">
+          {items.map(({ children: items, name, id }) => (
+            <div className="menu-secondary-column" key={id}>
+              <div className="sub-item-name text-rose-600 font-[500] text-base mb-3">{name}</div>
+              <ul className="sub-items">
+                {items?.map(({ id, slug, name, objectType }) => (
+                  <li className="child-item py-2" key={id}>
+                    <NavLink href={slug} title={name} target={objectType === "custom" ? "_blank" : "_self"} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
-};
-
-interface MegaMenuColumnProps {
-  name?: string;
-  items?: MenuItemType[];
-  className?: string;
 }
-
-const MegaMenuColumn: React.FC<MegaMenuColumnProps> = ({ name, items }) => {
-  return (
-    <div className="menu-secondary-column w-1/5 px-3">
-      <div className="sub-item-name mb-3">
-        <span className="text-red-600 font-[500] text-base">{name}</span>
-      </div>
-      <div className="sub-item-list">
-        {items?.map(({ id, slug, name, objectType }) => (
-          <div className="child-item mb-2 py-1" key={id}>
-            <NavLink href={slug} title={name} target={objectType === "custom" ? "_blank" : "_self"} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+SecondaryNavItem.Dropdown = Dropdown;
+SecondaryNavItem.MegaDropdown = MegaMenuDropdown;

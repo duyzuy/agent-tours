@@ -1,15 +1,20 @@
 import { unstable_setRequestLocale } from "next-intl/server";
-import { Suspense } from "react";
+
 import { LangCode } from "@/models/management/cms/language.interface";
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import HeroHomeWraper from "./_components/HeroHomeWraper";
+import HeroSearchSection from "./_components/HeroSearchSection";
 import DestinationsList from "./_components/DestinationsList";
 import PostListContainer from "./_components/PostListContainer";
 import VisaSection from "./_components/VisaSection";
-import PromotionSlider from "./_components/PromotionSlider";
+import { PromotionSliderSkeleton } from "./_components/PromotionSlider";
 import TourListContainer from "./_components/TourListContainer";
-import SkeletonLoadingCards from "@/components/frontend/skeletons/SkeletonLoadingCards";
+import dynamic from "next/dynamic";
+
+const DynamicSlider = dynamic(() => import("./_components/PromotionSlider"), {
+  loading: () => <PromotionSliderSkeleton />,
+  ssr: false,
+});
 
 export default async function FeHomePage({ params }: { params: { locale: LangCode } }) {
   const { locale } = params;
@@ -64,7 +69,7 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
 
   return (
     <div className="page-home">
-      <HeroHomeWraper
+      <HeroSearchSection
         title="Trải nghiệm kỳ nghỉ tuyệt vời"
         subTitle="Combo khách sạn - vé máy bay - đưa đón sân bay giá tốt nhất"
       />
@@ -78,40 +83,10 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
       >
         {/* <FlashSale /> */}
 
-        <PromotionSlider items={[]} title="Tour khuyến mại" />
+        <DynamicSlider items={[]} title="Tour khuyến mại" />
 
         <div className="lg:h-12 h-4"></div>
-        <Suspense
-          fallback={
-            <div className="container mx-auto px-3 md:px-6 lg:px-8">
-              <SkeletonLoadingCards length={4} />
-            </div>
-          }
-        >
-          <TourListContainer lang={locale} querySearch={travelTour} title="Chương trình du lịch hấp dẫn" />
-        </Suspense>
-        {/*         
-        <div className="lg:h-12 h-4"></div>
-        <Suspense
-          fallback={
-            <div className="container mx-auto px-4 md:px-6 lg:px-8">
-              <SkeletonLoadingCards length={4} />
-            </div>
-          }
-        >
-          <TourListContainer lang={locale} querySearch={travelthaiAug} title="Du lich thailand thang 8" />
-        </Suspense>
-        <div className="lg:h-12 h-4"></div>
-        <Suspense
-          fallback={
-            <div className="container mx-auto px-4 md:px-6 lg:px-8">
-              <SkeletonLoadingCards length={4} />
-            </div>
-          }
-        >
-          <TourListContainer lang={locale} querySearch={traveltaiwanAug} title="Du lich Dailoan thang 8" />
-        </Suspense> */}
-
+        <TourListContainer querySearch={travelTour} title="Chương trình du lịch hấp dẫn" />
         <div className="lg:h-12 h-4"></div>
         <VisaSection label="Dịch vụ thị thực nhập cảnh (Visa)" />
         <div className="lg:h-12 h-4"></div>

@@ -3,18 +3,22 @@ import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { set } from "lodash";
-import { LanguageProvider } from "./store/providers/LanguageProvider";
-import LangContainer from "./containers/LangContainer";
+
+import { LanguageProvider } from "@/store/providers/LanguageProvider";
+
+import LangContainer from "@/containers/LangContainer";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
 import { locales } from "@/constants/locale.constant";
 import Header from "./_components/commons/Header";
 import Footer from "./_components/commons/Footer";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
-import { FeBookingProvider } from "./store/providers/BookingProvider";
+
+import { FeBookingProvider } from "@/store/providers/BookingProvider";
 import ModalAuth from "./(auth)/_components/ModalAuth";
-import { ModalManagerProvider } from "./store/providers/ModalManagerProvider";
-import { getTranslationFe } from "./_actions/feTranslations";
+
+import { ModalManagerProvider } from "@/store/providers/ModalManagerProvider";
+import { getTranslationFe } from "../../actions/feTranslations";
 import { SITE_NAME } from "@/configs/site";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { RQClientProvider } from "@/providers/RQClientProvider";

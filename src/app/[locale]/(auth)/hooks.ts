@@ -1,5 +1,5 @@
-import { useModalManager } from "../hooks/useModalManager";
-import { EModalManagerActions } from "../store/actions/modalActions";
+import { EModalManagerActions } from "@/store/actions/modalActions";
+import { useModalManager } from "@/store/hooks";
 const useAuthModal = () => {
   const [_, dispatch] = useModalManager();
   const showAuthModal = () => {

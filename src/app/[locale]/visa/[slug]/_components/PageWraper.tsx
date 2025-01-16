@@ -1,6 +1,6 @@
 import { VisaDetailsByLangResponse } from "@/models/fe/visa.interface";
 import BlockPanels from "@/components/frontend/TabsBlockContentPanel/BlockPanels";
-import BoxSearchSkeleton from "@/app/[locale]/_components/BoxSearchTourFe/BoxSearchSkeleton";
+import { BoxSearchBookingSkeleton } from "@/app/[locale]/_components/BoxSearchBookingContainer";
 import { BreadCrumb } from "@/components/frontend/BreadCrumb";
 import dynamic from "next/dynamic";
 import RegisterVisaForm from "./RegisterVisaForm";
@@ -8,10 +8,10 @@ interface PageWraperProps {
   data: VisaDetailsByLangResponse["result"][0];
 }
 
-const DynamicSearchBox = dynamic(() => import("@/app/[locale]/_components/BoxSearchTourFe"), {
+const DynamicSearchBox = dynamic(() => import("@/app/[locale]/_components/BoxSearchBookingContainer"), {
   loading: () => (
     <div className="container mx-auto lg:px-8 md:px-6 px-4">
-      <BoxSearchSkeleton />
+      <BoxSearchBookingSkeleton />
     </div>
   ),
   ssr: false,

@@ -17,6 +17,8 @@ import {
   IOperationThingTodo,
   OperationThingTodoQueryParams,
 } from "@/models/management/core/operationThingTodo.interface";
+import OperationThingTodoList from "@/components/admin/OperationThingTodoList";
+import OperationThingTodoItemListContainer from "./_components/OperationThingTodoItemListContainer";
 
 interface OperationContainerProps {
   operationId: number;
@@ -28,13 +30,6 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
   const { data: operationStatus, isLoading } = useGetOperationStatusQuery({
     queryParams: { operationId: operationId },
     enabled: !!operationId,
-  });
-
-  const thingsQueryParams = new OperationThingTodoQueryParams(undefined, operationId, "NEW", 20);
-  const [queryParams, setQueryParams] = useState(thingsQueryParams);
-  const { data: todoList, isLoading: loadingTodoList } = useGetOperationThingTodoList({
-    queryParams: queryParams,
-    enabled: true,
   });
 
   const { onUpdateStatus } = useOperation();
@@ -174,7 +169,11 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
 
   return (
     <>
-      <ProductBoxInfo data={data?.sellable} templateCode={data?.template.code} templateName={data?.template.name} />
+      <ProductTourDetailInformation
+        data={data?.sellable}
+        templateCode={data?.template.code}
+        templateName={data?.template.name}
+      />
 
       <div className="flex flex-wrap gap-6">
         <OperationPersonInfo
@@ -182,11 +181,12 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
           email={data?.pic?.email}
           phoneNumber={data?.pic?.phoneNumber}
         />
-        <OperationTodoList items={todoList} />
+        <OperationThingTodoItemListContainer operationId={operationId} />
       </div>
+
       <div className="h-[1px] bg-gray-100 mt-6 mb-6"></div>
       <div>
-        {status === "NEW" ? <p className="mb-3">Vui lòng duyệt để tiến hành điều hành.</p> : null}
+        {status === "NEW" ? <p className="mb-3">Duyệt để tiến hành điều hành.</p> : null}
         <Space>
           {operationActions?.map((act) => (
             <Button key={act.key} onClick={act.onClick} className={act.className} type="text">
@@ -202,12 +202,16 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
 };
 export default OperationContainer;
 
-interface ProductBoxInfoProps {
+interface ProductTourDetailInformationProps {
   data?: IOperation["sellable"];
   templateCode?: string;
   templateName?: string;
 }
-const ProductBoxInfo: React.FC<ProductBoxInfoProps> = ({ data, templateCode, templateName }) => {
+const ProductTourDetailInformation: React.FC<ProductTourDetailInformationProps> = ({
+  data,
+  templateCode,
+  templateName,
+}) => {
   return (
     <>
       <div className="mb-3">
@@ -227,9 +231,7 @@ const ProductBoxInfo: React.FC<ProductBoxInfoProps> = ({ data, templateCode, tem
             <span className="mb-1 block text-xs text-gray-500">Ngày khởi hành</span>
             <div className="flex gap-x-3">
               <span>{data?.startDate ? formatDate(data?.startDate) : "--"}</span>
-              <span>
-                <RetweetOutlined />
-              </span>
+              <RetweetOutlined />
               <span>{data?.endDate ? formatDate(data?.endDate) : "--"}</span>
             </div>
           </div>
@@ -237,35 +239,25 @@ const ProductBoxInfo: React.FC<ProductBoxInfoProps> = ({ data, templateCode, tem
             <span className="mb-1 block text-xs text-gray-500">Ngày mở bán</span>
             <div className="flex gap-x-3">
               <span>{data?.validFrom ? formatDate(data?.validFrom) : "--"}</span>
-              <span>
-                <SwapRightOutlined />
-              </span>
+              <SwapRightOutlined />
               <span>{data?.validTo ? formatDate(data?.validTo) : "--"}</span>
             </div>
           </div>
           <div>
             <span className="mb-1 block text-xs text-gray-500">Ngày đóng</span>
-            <div>
-              <span className="">{data?.closeDate ? formatDate(data?.closeDate) : "--"}</span>
-            </div>
+            <span className="">{data?.closeDate ? formatDate(data?.closeDate) : "--"}</span>
           </div>
           <div>
             <span className="mb-1 block text-xs text-gray-500">Khả dụng</span>
-            <div>
-              <span className="text-main-500">{data?.available}</span>
-            </div>
+            <span className="text-main-500">{data?.available}</span>
           </div>
           <div>
             <span className="mb-1 block text-xs text-gray-500">Đã bán</span>
-            <div>
-              <span className="text-rose-600">{data?.used}</span>
-            </div>
+            <span className="text-rose-600">{data?.used}</span>
           </div>
           <div>
             <span className="mb-1 block text-xs text-gray-500">Đang còn</span>
-            <div>
-              <span className="text-green-600">{data?.open}</span>
-            </div>
+            <span className="text-green-600">{data?.open}</span>
           </div>
         </div>
       </div>
@@ -301,52 +293,6 @@ const OperationPersonInfo: React.FC<{
           <span className="w-28 inline-block">Điện thoại</span>
           <span>{phoneNumber}</span>
         </div>
-      </div>
-    </div>
-  );
-};
-
-const OperationTodoList: React.FC<{
-  items?: IOperationThingTodo[];
-  isLoading?: boolean;
-  className?: string;
-}> = ({ className = "", items, isLoading }) => {
-  return (
-    <div
-      className={classNames("info w-[380px] border rounded-md p-4", {
-        [className]: className,
-      })}
-    >
-      <div className="box-head mb-3 pb-3 border-b">
-        <h3 className="font-semibold">Công việc cần làm</h3>
-      </div>
-      <div className="box-content max-h-[240px] overflow-y-auto pr-2 -mr-2">
-        {items?.map(({ operationId, status, type, preDeadline, deadline, remark, deadlineId }) => (
-          <div className="todo-item border-b mb-2 pb-2" key={deadlineId}>
-            <div className="p-1 hover:bg-gray-100 rounded-md">
-              <div className="flex justify-between mb-2">
-                <span className="font-semibold">{type}</span>
-                <Tag color={status === "NEW" ? "blue" : "green"} bordered={false} className="!mr-0">
-                  {status === "NEW" ? "Mới" : status === "DONE" ? "Hoàn thành" : "Không xác định"}
-                </Tag>
-              </div>
-              <div className="text-xs">
-                <div className="flex justify-between gap-2">
-                  <span className="w-20">Pre deadline</span>
-                  <span className="flex-1">{formatDate(preDeadline)}</span>
-                </div>
-                <div className="flex justify-between gap-2">
-                  <span className="w-20">Deadline</span>
-                  <span className="flex-1">{formatDate(deadline)}</span>
-                </div>
-                <div className="flex justify-between gap-2">
-                  <span className="w-20">Ghi chú</span>
-                  <span className="flex-1">{remark}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );

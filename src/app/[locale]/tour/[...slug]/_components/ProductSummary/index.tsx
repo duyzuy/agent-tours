@@ -5,9 +5,8 @@ import classNames from "classnames";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import { useTranslations } from "next-intl";
 import useSelectPassengerQuantity from "@/app/[locale]/(booking)/modules/useSelectPassengerQuantity";
-import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import HotlineBox from "@/components/frontend/HotlineBox";
-import useAuth from "@/app/[locale]/hooks/useAuth";
+
 import useAuthModal from "@/app/[locale]/(auth)/hooks";
 import { stringToDate } from "@/utils/date";
 
@@ -15,7 +14,8 @@ import ProductSummaryCard, { ProductSummaryCardProps } from "./ProductSummaryCar
 import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 import useSelectProduct from "@/app/[locale]/(booking)/modules/useSelectProduct";
-
+import { useBookingSelector } from "@/store/hooks";
+import useAuth from "@/hooks/fe/useAuth";
 interface ProductSummaryProps {
   cmsTemplate: FeCMSTemplateContent;
   defaultProductItem: FeProductItem;

@@ -1,5 +1,5 @@
 import { LangCode } from "@/models/management/cms/language.interface";
-import { getDestinationContentList } from "../../_actions/destination";
+import { getDestinationContentList } from "../../../../actions/destination";
 import { FeDestinationContentQueryParams } from "@/models/fe/destination.interface";
 import { getLocale } from "next-intl/server";
 import Title from "@/components/frontend/Title";

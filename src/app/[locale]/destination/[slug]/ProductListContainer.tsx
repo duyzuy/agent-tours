@@ -1,7 +1,7 @@
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
-import { getTemplateProductList } from "../../_actions/searchProduct";
+import { getTemplateProductList } from "../../../../actions/searchProduct";
 import TourCardTemplateItem from "../../_components/TourListContainer/TourCardTemplateItem";
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
@@ -52,7 +52,7 @@ export default async function ProductListContainer({ destinations }: ProductList
   ) : (
     <div className="product-list grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
       {productList?.map((prd) => (
-        <TourCardTemplateItem key={prd.recId} data={prd} lang={locale as LangCode} />
+        <TourCardTemplateItem key={prd.recId} data={prd} />
       ))}
     </div>
   );

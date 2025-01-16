@@ -41,6 +41,20 @@ const useOperationDeadline = () => {
       },
     });
   };
+  const onApproval = (data: OperationDeadlineFormData, cb?: () => void) => {
+    updateOperation(data, {
+      onSuccess(data, variables, context) {
+        cb?.();
+        queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_DEADLINE_LIST] });
+        queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_THING_TODO_LIST] });
+        message.success("Cập nhật thành công");
+      },
+      onError(error, variables, context) {
+        console.log(data);
+        message.error(error.message);
+      },
+    });
+  };
   return {
     onCreate,
     onUpdate,

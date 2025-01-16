@@ -1,7 +1,7 @@
 "use client";
 import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import { useModalManagerSelector } from "@/app/[locale]/hooks/useModalManager";
+import { useModalManagerSelector } from "@/store/hooks";
 import useAuthModal from "../../hooks";
 import { TabsProps, Tabs } from "antd";
 import LoginForm from "../LoginForm";

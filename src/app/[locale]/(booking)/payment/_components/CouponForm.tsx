@@ -2,7 +2,7 @@ import FormItem from "@/components/base/FormItem";
 import { Space, Input, Button } from "antd";
 import useCoupon from "../../modules/useCoupon";
 import { memo, useState } from "react";
-import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
+import { useBookingSelector } from "@/store/hooks";
 
 interface CouponFormProps {
   className?: string;

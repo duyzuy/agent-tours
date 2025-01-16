@@ -7,13 +7,12 @@ import CouponForm from "./CouponForm";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { FeCustomerInformationFormData, FeInvoiceFormData, IPaymentInformation } from "../modules/payment.interface";
-import { paymentSchema } from "../schema/payment.schema";
+import { paymentSchema } from "../modules/payment.schema";
 import PaymentMethod from "./PaymentMethod";
 import useCreateBooking from "../../modules/useCreateBooking";
 import PolicyContent from "./PolicyContent";
 import { Session } from "next-auth";
-import { useTransition } from "react";
-import { useUserSelector } from "@/app/[locale]/hooks/useUser";
+import { useUserSelector } from "@/store/hooks";
 import { useRouter } from "@/utils/navigation";
 
 interface PageWraperProps {

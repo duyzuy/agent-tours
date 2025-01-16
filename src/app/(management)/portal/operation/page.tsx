@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { redirect } from "next/navigation";
 
-const MemberPage: React.FC = () => {
+const OperationPage: React.FC = () => {
   return redirect("operation/list");
 };
-export default MemberPage;
+export default OperationPage;

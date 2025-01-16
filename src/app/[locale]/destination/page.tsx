@@ -1,19 +1,26 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { notFound } from "next/navigation";
-import { getDestinationContentList } from "../_actions/destination";
+import { getDestinationContentList } from "../../../actions/destination";
 
 import { mediaConfig } from "@/configs";
 import { FeDestinationContentQueryParams } from "@/models/fe/destination.interface";
 import { BreadCrumb } from "@/components/frontend/BreadCrumb";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import BoxSearchSkeleton from "../_components/BoxSearchTourFe/BoxSearchSkeleton";
-import DestinationSearch from "./_components/DestinationSearch";
 import { Link } from "@/utils/navigation";
 import Title from "@/components/frontend/Title";
-import { IconChevronRight } from "@/assets/icons";
 
+import { BoxSearchBookingSkeleton } from "../_components/BoxSearchBookingContainer";
+
+const DynamicSearchBox = dynamic(() => import("../_components/BoxSearchBookingContainer"), {
+  loading: () => (
+    <div className="container mx-auto">
+      <BoxSearchBookingSkeleton />
+    </div>
+  ),
+  ssr: false,
+});
 type PageProps = { locale: LangCode };
 
 const initQueryParams = new FeDestinationContentQueryParams(undefined, 1, 10, { sortColumn: "id", direction: "desc" });
@@ -56,19 +63,30 @@ export default async function DestinationPage({ params }: { params: PageProps })
   } else {
     return (
       <div className="page-destination mb-12">
-        <DestinationSearch />
-        <BreadCrumb items={[{ title: "Điểm đến" }]} classname="container mx-auto py-4 lg:px-8 md:px-6 px-4 mb-8" />
-        <div className="page-destination__head mb-6">
-          <div className="container mx-auto lg:px-8 md:px-6 px-4">
-            <Title>Điểm đến hấp dẫn</Title>
-          </div>
+        <div
+          className="search-wraper py-8 min-h-[280px] lg:min-h-[320px] flex items-end relative z-10"
+          style={{
+            background: "url('/assets/images/search-bg.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <DynamicSearchBox
+            className="absolute -bottom-[125px] md:relative md:bottom-auto md:left-auto md:translate-x-0 left-[50%] -translate-x-[50%]"
+            isLoading={false}
+          />
         </div>
+        <BreadCrumb items={[{ title: "Điểm đến" }]} classname="container mx-auto py-4 lg:px-8 md:px-6 px-4 mb-8" />
+
+        <div className="container mx-auto lg:px-8 md:px-6 px-4 mb-6">
+          <Title>Điểm đến hấp dẫn</Title>
+        </div>
+
         <div className="container mx-auto lg:px-8 md:px-6 px-4">
           {!destinationContentList.length ? (
             <div className="empty">
-              <div>
-                <p>Hiện chưa có tour nào cho điểm đến này</p>
-              </div>
+              <p>Hiện chưa có tour nào cho điểm đến này</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">

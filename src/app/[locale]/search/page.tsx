@@ -3,23 +3,29 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { BoxSearchTourFeProps } from "../_components/BoxSearchTourFe";
-import BoxSearchSkeleton from "../_components/BoxSearchTourFe/BoxSearchSkeleton";
+import { BoxSearchBookingSkeleton, BoxSearchBookingContainerProps } from "../_components/BoxSearchBookingContainer";
 import { useSearchTemplateTourMutation } from "@/mutations/fe/searchTour";
 import { Spin } from "antd";
 import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 import EmptySearch from "./_components/EmptySearch";
-import ProductListEntry from "./_components/ProductListEntry";
+import TourCardTemplateItem from "../_components/TourListContainer/TourCardTemplateItem";
+
+const DynamicTourCardItem = dynamic(() => import("../_components/TourListContainer/TourCardTemplateItem"), {
+  loading: () => <>loading</>,
+  ssr: true,
+});
+
+import { useLocale } from "next-intl";
 
 interface PageProps {
   params: { locale: LangCode };
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-const DynamicSearchBox = dynamic(() => import("../_components/BoxSearchTourFe"), {
+const DynamicSearchBox = dynamic(() => import("../_components/BoxSearchBookingContainer"), {
   loading: () => (
     <div className="container mx-auto">
-      <BoxSearchSkeleton />
+      <BoxSearchBookingSkeleton />
     </div>
   ),
   ssr: false,
@@ -36,7 +42,7 @@ export default function FeSearchPage({ params, searchParams }: PageProps) {
   const { mutate: onSearch, isPending, isIdle } = useSearchTemplateTourMutation();
 
   const [productList, setProductList] = useState<IFeTemplateProductItem[]>([]);
-  const handleSubmitSearch: BoxSearchTourFeProps["onSubmit"] = (data) => {
+  const handleSubmitSearch: BoxSearchBookingContainerProps["onSubmit"] = (data) => {
     console.log("submit search");
     console.log(data);
 
@@ -49,7 +55,6 @@ export default function FeSearchPage({ params, searchParams }: PageProps) {
       },
     });
   };
-
   const content = <div style={contentStyle} />;
   return (
     <div className="page-search">
@@ -76,11 +81,20 @@ export default function FeSearchPage({ params, searchParams }: PageProps) {
                 <Spin tip="Đang tìm kiếm...">{content}</Spin>
               </div>
             ) : (
-              <>{productList.length ? <ProductListEntry items={productList} /> : <EmptySearch />}</>
+              <>
+                {productList.length ? (
+                  <div className="grid md:grid-cols-4 grid-cols-2 gap-4 lg:gap-6">
+                    {productList?.map((product) => (
+                      <DynamicTourCardItem key={product.recId} data={product} />
+                    ))}
+                  </div>
+                ) : (
+                  <EmptySearch />
+                )}
+              </>
             )}
           </>
         )}
-
         {/* <FlashSale /> */}
         {/* <LineSpacing spaceY={12} className="lg:px-0 px-4" /> */}
       </div>

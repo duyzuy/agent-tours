@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useGetResetPasswordQuery } from "@/queries/fe/auth";
 import { isEmpty, isUndefined } from "lodash";
 import CreatePasswordForm, { CreatePasswordFormProps } from "../_components/CreatePasswordForm";
-import useBroadcastChannel from "../../hooks/useBroadcastChanel";
+import useBroadcastChannel from "@/hooks/fe/useBroadcastChanel";
 import { BroadcastMessageResetPassword } from "../customer-forgot-password/page";
 import { useCustomerSetNewPasswordMutation } from "@/mutations/auth";
 import { useRouter } from "@/utils/navigation";

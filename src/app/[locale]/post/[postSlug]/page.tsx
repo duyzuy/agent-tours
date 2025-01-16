@@ -1,11 +1,11 @@
-import { getPostDetail } from "../../_actions/post";
+import { getPostDetail } from "../../../../actions/post";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { notFound } from "next/navigation";
 import SinglePostWraper from "../_components/SinglePostWraper";
 import { Metadata, ResolvingMetadata } from "next";
 import { mediaConfig } from "@/configs";
 import { SITE_NAME } from "@/configs/site";
-import { getPostListByCategorySlug } from "../../_actions/post";
+import { getPostListByCategorySlug } from "../../../../actions/post";
 import { IFePostItem, PostsQueryParamsData } from "@/models/fe/post";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
 import ClientDispatchContent from "../_components/ClientDispatchContent";

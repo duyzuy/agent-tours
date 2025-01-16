@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
 import { Space, Button, Tag } from "antd";
-import { useBookingSelector } from "../../hooks/useBookingInformation";
+import { useBookingSelector } from "@/store/hooks";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { useRouter } from "@/utils/navigation";
 

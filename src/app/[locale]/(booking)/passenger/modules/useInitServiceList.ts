@@ -1,7 +1,7 @@
-import { useBookingInformation, useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
 import { useGetServiceListMutation } from "@/mutations/fe/booking";
 import useMessage from "@/hooks/useMessage";
-import { EBookingActions } from "@/app/[locale]/store/actions/bookingActions";
+import { useBookingInformation, useBookingSelector } from "@/store/hooks";
+import { EBookingActions } from "@/store/actions/bookingActions";
 import { useEffect } from "react";
 
 const useInitServiceList = (sellableId: number) => {

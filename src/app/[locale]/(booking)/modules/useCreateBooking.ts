@@ -1,4 +1,3 @@
-import { useBookingInformation } from "../../hooks/useBookingInformation";
 import { FeBookingPayload } from "@/models/fe/booking.interface";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import { useCreateBookingOrderMutation } from "@/mutations/fe/booking";
@@ -9,8 +8,8 @@ import dayjs from "dayjs";
 import { DATE_FORMAT } from "@/constants/common";
 import { Session } from "next-auth";
 import { useRouter } from "@/utils/navigation";
-import { EBookingActions } from "../../store/actions/bookingActions";
-import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
+import { EBookingActions } from "@/store/actions/bookingActions";
+import { useBookingInformation } from "@/store/hooks";
 import useMessage from "@/hooks/useMessage";
 import { useTranslations } from "next-intl";
 

@@ -1,9 +1,8 @@
 "use client";
-import { useLanguage } from "@/app/[locale]/hooks/useLanguage";
-import { ELanguageActionType } from "@/app/[locale]/store/actions/languageActions";
 import { ICMSTemplateContent } from "@/models/management/cms/cmsTemplateContent.interface";
 import { useEffect } from "react";
-
+import { ELanguageActionType } from "@/store/actions/languageActions";
+import { useLanguage } from "@/store/hooks";
 interface ClientStoreDataProps {
   data?: ICMSTemplateContent["languages"];
   log: any;

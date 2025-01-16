@@ -1,6 +1,4 @@
 import { EPassengerGender, EPassengerTitle } from "@/constants/common";
-import dayjs from "dayjs";
-
 export class FePassengerInformationFormData {
   recId?: number;
   paxTitle?: EPassengerTitle;

@@ -10,7 +10,7 @@ import { useResetPassowrd } from "../modules/useAuth";
 import { useEffect, useState } from "react";
 import Counter from "./Counter";
 import { Button } from "antd";
-import useBroadcastChannel from "../../hooks/useBroadcastChanel";
+import useBroadcastChannel from "@/hooks/fe/useBroadcastChanel";
 
 export type BroadcastMessageResetPassword = {
   message: string;

@@ -12,7 +12,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { isUndefined } from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FePassengerInformationFormData } from "../../modules/passegner.interface";
-import { passengerSchema } from "../../schema/passenger.schema";
+import { passengerSchema } from "../../modules/passenger.schema";
 import { FeBookingInformation } from "../../../modules/booking.interface";
 import { useTranslations } from "next-intl";
 

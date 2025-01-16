@@ -1,6 +1,6 @@
 import { DiscountType } from "@/models/management/core/discountPolicy.interface";
-import { useBookingInformation } from "../../hooks/useBookingInformation";
-import { EBookingActions } from "../../store/actions/bookingActions";
+import { EBookingActions } from "@/store/actions/bookingActions";
+import { useBookingInformation } from "@/store/hooks";
 import { useCheckCouponMutation } from "@/mutations/fe/booking";
 import useMessage from "@/hooks/useMessage";
 import { IPromotion } from "@/models/management/core/promotion.interface";

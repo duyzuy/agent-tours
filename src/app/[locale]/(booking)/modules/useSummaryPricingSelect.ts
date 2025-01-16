@@ -1,7 +1,7 @@
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import { PassengerType } from "@/models/common.interface";
 import { useCallback } from "react";
-import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
+import { useBookingSelector } from "@/store/hooks";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 
 const useSummaryPricingSelect = () => {

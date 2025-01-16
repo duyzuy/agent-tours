@@ -1,8 +1,9 @@
 "use client";
-import useServiceWorker from "../hooks/useServiceWorker";
+
+import useServiceWorker from "@/hooks/fe/useServiceWorker";
 
 const ServiceWorker = () => {
-    useServiceWorker();
-    return null;
+  useServiceWorker();
+  return null;
 };
 export default ServiceWorker;

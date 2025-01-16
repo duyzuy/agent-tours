@@ -1,13 +1,13 @@
-import { getMobileMenu } from "@/app/[locale]/_actions/menu";
-import AccountItem from "./AccountItem";
-import MenuMobileNavs, { MenuMobileNavsProps } from "./MenuMobileNavs";
+import { getMobileMenu } from "@/actions/menu";
+import UserButton from "./UserButton";
+import MobileMenuItems from "./MobileMenuItems";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getLocale } from "next-intl/server";
 import { getMenuListFomatedTypes } from "@/utils/menu";
 export interface MobileHeaderMainWraperProps {
-  isMobile?: boolean;
+  children?: React.ReactNode;
 }
-export default async function MobileHeaderMainWraper({ isMobile }: MobileHeaderMainWraperProps) {
+export default async function MobileHeaderMainWraper({ children }: MobileHeaderMainWraperProps) {
   const locale = await getLocale();
 
   const mobileMenuResult = await getMobileMenu(locale as LangCode);
@@ -18,9 +18,9 @@ export default async function MobileHeaderMainWraper({ isMobile }: MobileHeaderM
 
   return (
     <>
-      <AccountItem isMobile={true} />
+      <UserButton isMobile={true} />
       <div className="space mx-2 text-xs text-gray-400">|</div>
-      <MenuMobileNavs items={mobileMenuItems} />
+      <MobileMenuItems items={mobileMenuItems} />
     </>
   );
 }

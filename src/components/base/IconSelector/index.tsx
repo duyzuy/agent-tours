@@ -1,4 +1,4 @@
-import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
+import { useClickOutSide } from "@/hooks/fe/useClickOutSide";
 import { ICON_LIST } from "@/constants/icons.constant";
 import { DownOutlined } from "@ant-design/icons";
 import classNames from "classnames";

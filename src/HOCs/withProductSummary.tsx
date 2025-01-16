@@ -1,7 +1,5 @@
 "use client";
 import { FeProductItem } from "@/models/fe/productItem.interface";
-import { useBookingSelector } from "@/app/[locale]/hooks/useBookingInformation";
-import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useSummaryPricingSelect from "@/app/[locale]/(booking)/modules/useSummaryPricingSelect";
 import { stringToDate } from "@/utils/date";

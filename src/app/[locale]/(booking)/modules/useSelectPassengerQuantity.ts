@@ -1,5 +1,5 @@
-import { useBookingInformation } from "../../hooks/useBookingInformation";
-import { EBookingActions } from "../../store/actions/bookingActions";
+import { EBookingActions } from "@/store/actions/bookingActions";
+import { useBookingInformation } from "@/store/hooks";
 import { PassengerType } from "@/models/common.interface";
 import useMessage from "@/hooks/useMessage";
 import { FeBookingInformation } from "./booking.interface";

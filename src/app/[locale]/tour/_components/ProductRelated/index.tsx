@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { getTranslations } from "next-intl/server";
 import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
-import { getTemplateProductList } from "@/app/[locale]/_actions/searchProduct";
+import { getTemplateProductList } from "@/actions/searchProduct";
 import ProductListSlider, { ProductListSliderProps } from "@/components/frontend/ProductListSlider";
 import { getLocale } from "next-intl/server";
 import { formatDate, stringToDate } from "@/utils/date";

@@ -1,7 +1,7 @@
 import { LangCode } from "@/models/management/cms/language.interface";
 import { BreadCrumb } from "@/components/frontend/BreadCrumb";
 import { notFound } from "next/navigation";
-import { getDestinationContentDetail } from "../../_actions/destination";
+import { getDestinationContentDetail } from "../../../../actions/destination";
 import { mediaConfig } from "@/configs";
 
 import AreaContentHtml from "@/components/frontend/AreaContentHtml";

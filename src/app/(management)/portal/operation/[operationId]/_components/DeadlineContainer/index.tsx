@@ -7,8 +7,9 @@ import useOperationDeadline from "../../../modules/useOperationDeadline";
 import { columns } from "./columns";
 import DrawerOperationDeadline, { DrawerOperationDeadlineProps } from "./DrawerOperationDeadline";
 import { useGetOperationDeadlineListQuery } from "@/queries/core/operation";
-import { Button } from "antd";
+import { Button, Table, TableProps } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { ColumnsType } from "antd/es/table";
 
 interface DeadlineContainerProps {
   operationId: number;
@@ -52,6 +53,18 @@ const DeadlineContainer: React.FC<DeadlineContainerProps> = ({ operationId, isEd
       });
   };
 
+  const mergedColumns: ColumnsType<IOperationDeadline> = isEditAble
+    ? [
+        ...columns,
+        {
+          title: "Hành động",
+          width: 200,
+          render: (record) => {
+            return <Button onClick={() => setEdit(record)}>Sửa</Button>;
+          },
+        },
+      ]
+    : [...columns];
   return (
     <>
       <div className="pt-6">
@@ -64,12 +77,11 @@ const DeadlineContainer: React.FC<DeadlineContainerProps> = ({ operationId, isEd
           ) : null}
         </div>
 
-        <TableListPage<IOperationDeadline>
+        <Table<IOperationDeadline>
           dataSource={deadlineData || []}
           loading={loadingDeadline}
-          columns={columns}
+          columns={[...mergedColumns]}
           rowKey={"id"}
-          onEdit={isEditAble ? (record) => setEdit(record) : undefined}
         />
       </div>
       <DrawerOperationDeadline

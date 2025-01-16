@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
-import { useLanguage } from "../../hooks/useLanguage";
-import { ELanguageActionType } from "../../store/actions/languageActions";
+import { useLanguage } from "@/store/hooks";
+import { ELanguageActionType } from "@/store/actions/languageActions";
 import { LangCode } from "@/models/management/cms/language.interface";
 
 interface ClientDispatchContentProps {

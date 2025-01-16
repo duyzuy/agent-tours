@@ -1,6 +1,6 @@
 "use server";
 import { Link } from "@/utils/navigation";
-import { IconAccount, IconChevronRight, IconLogout, IconRecieptText, IconKeyRound, IconUser } from "@/assets/icons";
+import { IconAccount, IconRecieptText, IconKeyRound } from "@/assets/icons";
 import classNames from "classnames";
 import CustomerAvatarInformation from "@/components/frontend/CustomerAvatarInformation";
 import { getTranslations } from "next-intl/server";
@@ -24,9 +24,9 @@ export default async function CustomerSidebar({ username, className = "" }: Cust
     },
     {
       title: t("navItem.order"),
-      key: "orders",
+      key: "/customer/order",
       icon: IconRecieptText,
-      path: "/customer/orders",
+      path: "/customer/order",
     },
     {
       title: t("navItem.changePassword"),

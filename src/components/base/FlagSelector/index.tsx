@@ -1,5 +1,4 @@
-import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
-
+import { useClickOutSide } from "@/hooks/fe/useClickOutSide";
 import { DownOutlined } from "@ant-design/icons";
 import classNames from "classnames";
 import { FC, SVGProps, useState, useRef } from "react";

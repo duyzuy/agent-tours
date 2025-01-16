@@ -2,7 +2,7 @@ import { memo, useCallback, useRef, useState } from "react";
 import dayjs from "dayjs";
 import FeCustomDatePicker, { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import { IconCalendar } from "@/assets/icons";
-import { useClickOutSide } from "@/app/[locale]/hooks/useClickOutSide";
+import { useClickOutSide } from "@/hooks/fe/useClickOutSide";
 import { useLocale } from "next-intl";
 import classNames from "classnames";
 import styles from "./style.module.scss";

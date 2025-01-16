@@ -1,7 +1,7 @@
 import { LangCode } from "@/models/management/cms/language.interface";
-import { getCategoryDetail } from "../../_actions/category";
+import { getCategoryDetail } from "../../../../actions/category";
 import { Metadata, ResolvingMetadata } from "next";
-import { getPostListByCategorySlug } from "../../_actions/post";
+import { getPostListByCategorySlug } from "../../../../actions/post";
 import { PostsQueryParamsData } from "@/models/fe/post";
 import CategoryPageWraper from "../_components/CategoryPageWraper";
 import { mediaConfig } from "@/configs";

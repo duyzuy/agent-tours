@@ -13,7 +13,7 @@ import ProductGalleries from "@/components/frontend/skeletons/ProductGalleries";
 import { isMobile } from "@/utils/detectMobile";
 import ProductContent from "./_components/ProductContent";
 import { getTemplateContentDetail } from "../_actions/templateContent";
-import { getProductListByTemplateId } from "../../_actions/searchProduct";
+import { getProductListByTemplateId } from "../../../../actions/searchProduct";
 
 import { ProductRelated } from "../_components/ProductRelated";
 

@@ -1,6 +1,6 @@
 import { FeProductItem } from "@/models/fe/productItem.interface";
-import { useBookingInformation } from "../../hooks/useBookingInformation";
-import { EBookingActions } from "../../store/actions/bookingActions";
+import { EBookingActions } from "@/store/actions/bookingActions";
+import { useBookingInformation } from "@/store/hooks";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 
 const useSelectProduct = () => {

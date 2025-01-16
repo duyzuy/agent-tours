@@ -4,7 +4,7 @@ import BlockPanels, { BlockPanelsProps } from "@/components/frontend/TabsBlockCo
 import { FeTemplateContentResponse } from "@/models/fe/templateContent.interface";
 import { getVisaTemplateDetail } from "@/app/[locale]/visa/_actions/getVisaTemplateDetail";
 import { getTranslations } from "next-intl/server";
-import { getPageContentDetail } from "@/app/[locale]/_actions/pageContent";
+import { getPageContentDetail } from "@/actions/pageContent";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getTravelInformationNotice } from "../../../_actions/templateContent";
 import IconDock from "@/assets/icons/IconDock";
