@@ -23,3 +23,15 @@ export const useConfigPricingSellableMudation = () => {
     mutationFn: (payload) => sellableAPIs.updateSellablePriceConfigs(payload),
   });
 };
+
+export const useUpdateStatus = () => {
+  return useCustomMutation({
+    mutationFn: (recId: number) => sellableAPIs.updateStatus(recId),
+  });
+};
+
+export const useDelete = () => {
+  return useCustomMutation({
+    mutationFn: (recId: number) => sellableAPIs.delete(recId),
+  });
+};

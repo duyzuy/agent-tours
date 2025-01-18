@@ -1,13 +1,13 @@
 import { memo, useCallback, useRef, useState } from "react";
 import dayjs from "dayjs";
 import FeCustomDatePicker, { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
-import { IconCalendar } from "@/assets/icons";
+import { IconCalendar, IconCalendarDays } from "@/assets/icons";
 import { useClickOutSide } from "@/hooks/fe/useClickOutSide";
 import { useLocale } from "next-intl";
 import classNames from "classnames";
 import styles from "./style.module.scss";
 import styled from "styled-components";
-import { Drawer } from "antd";
+import { Button, Drawer } from "antd";
 import { useTranslations } from "next-intl";
 interface CalendarSelectorProps {
   label?: string;
@@ -51,7 +51,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
     disabledDate: disabledDate,
     onChange: handleChangeDate,
   };
-  const wraperComponent = () => {};
+
   return (
     <>
       {!isMobile ? (
@@ -69,7 +69,7 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
               onClick={openCalendar}
             >
               <span className="text-base">{dayjs(value).format("DD/MM/YYYY")}</span>
-              <IconCalendar width={16} height={16} />
+              <IconCalendarDays className="w-4 h-4" />
             </div>
           </div>
           {open ? (
@@ -79,19 +79,24 @@ const CalendarSelector: React.FC<CalendarSelectorProps> = ({
           ) : null}
         </div>
       ) : (
-        <div className={classNames("control border border-gray-200 rounded-lg px-4 py-4", { [className]: className })}>
+        <div className={classNames("control border border-gray-200 rounded-lg px-3 py-3", { [className]: className })}>
           <div className="depart-date w-full">
-            <div className="mb-4 border-b pb-4 flex justify-between">
+            <div className="border-b pb-3 mb-3 flex justify-between">
               <span className="block">{label}</span>
-              <span className="text-base inline-block rounded-lg  text-primary-default ">
+              <span className="text-base inline-block rounded-lg  text-primary-default font-semibold">
                 {dayjs(value).format("DD/MM/YYYY")}
               </span>
             </div>
             <div className="block">
-              <span className="flex items-center cursor-pointer" onClick={openCalendar}>
-                <IconCalendar width={16} height={16} className="mr-2" />
-                {t("productSummary.button.otherDate")}
-              </span>
+              <Button
+                type="text"
+                icon={<IconCalendarDays className="w-4 h-4" />}
+                className="!inline-flex items-center !bg-gray-100 !px-3"
+                shape="round"
+                onClick={openCalendar}
+              >
+                <span>{t("productSummary.button.otherDate")}</span>
+              </Button>
             </div>
           </div>
           <DrawerCalendar

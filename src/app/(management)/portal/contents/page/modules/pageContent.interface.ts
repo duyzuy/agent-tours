@@ -16,7 +16,7 @@ export class PageContentFormData implements IPageContentPayload {
   lang?: LangCode;
   metaTitle?: string;
   metaDescription?: string;
-  publishDate: string;
+  publishDate?: string;
   metaKeyword?: string;
   status?: PageContentStatus;
 
@@ -35,7 +35,7 @@ export class PageContentFormData implements IPageContentPayload {
     metaTitle: string | undefined,
     metaDescription: string | undefined,
     metaKeyword: string | undefined,
-    publishDate: string,
+    publishDate: string | undefined,
     status: PageContentStatus,
   ) {
     this.id = id;

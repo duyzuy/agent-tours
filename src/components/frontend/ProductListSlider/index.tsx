@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef } from "react";
 import classNames from "classnames";
-import TourCard, { TourCardProps } from "@/components/frontend/TourCard";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper as SwiperType } from "swiper/types";
@@ -11,10 +11,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 
 import styles from "./style.module.scss";
+import TourCard, { TourCardProps } from "@/components/frontend/TourCard";
+import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 
 export interface ProductListSliderProps {
   className?: string;
-  items?: TourCardProps["data"][];
+  items: IFeTemplateProductItem[];
 }
 const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", items }) => {
   const swiperRef = useRef<SwiperType>();
@@ -27,18 +29,7 @@ const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", i
     >
       <Swiper
         slidesPerView={"auto"}
-        // slidesPerView={1}
         spaceBetween={7}
-        // breakpoints={{
-        //     640: {
-        //         slidesPerView: 2,
-        //         spaceBetween: 16,
-        //     },
-        //     1024: {
-        //         slidesPerView: 2,
-        //         spaceBetween: 16,
-        //     },
-        // }}
         pagination={{
           el: ".swiper-pagination",
           clickable: true,
@@ -56,19 +47,7 @@ const ProductListSlider: React.FC<ProductListSliderProps> = ({ className = "", i
             key={item?.recId}
             style={{ width: "40%", paddingLeft: "5px", paddingRight: "5px", paddingBottom: "10px" }}
           >
-            <TourCard data={item}>
-              <TourCard.Head>
-                <TourCard.Thumbnail />
-                <TourCard.Badget />
-              </TourCard.Head>
-              <TourCard.Body>
-                <TourCard.Title />
-                <TourCard.Price />
-                <TourCard.Days />
-                <div className="flex-1 mb-3 border-b border-[#f1f1f1] pb-3"></div>
-                <TourCard.Information />
-              </TourCard.Body>
-            </TourCard>
+            <TourCard templateId={item.recId} tourCode={item.code} sellables={item.sellables} cms={item.cms} />
           </SwiperSlide>
         ))}
       </Swiper>

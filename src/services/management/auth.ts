@@ -14,7 +14,6 @@ export const agAuthAPIs = {
       },
     });
   },
-
   getProfileUser: async <T>(token: string) => {
     return await client.post<T, any>("local/getLocalProfile", {
       headers: {

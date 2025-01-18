@@ -10,18 +10,18 @@ import { FeReservation } from "@/models/fe/reservation.interface";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 
 export interface IBookingSsrItemNoPax {
-  priceConfig: FeProductService["configs"][number];
   inventory: FeProductService["inventory"];
   stock: FeProductService["stock"];
+  priceConfig: FeProductService["configs"][number];
   amount: number;
   type: PassengerType;
 }
 export type IBookingSsrItemWithPax = {
-  paxIndex: number;
-  paxType: PassengerType;
   inventory: FeProductService["inventory"];
   stock: FeProductService["stock"];
   priceConfig: FeProductService["configs"][number];
+  paxIndex: number;
+  paxType: PassengerType;
 };
 interface IFeBookingDetailItem {
   priceConfig: PriceConfig;

@@ -143,7 +143,7 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
     let newInitData = initData || initPageContentFormData;
 
     if (initData?.publishDate) {
-      newInitData = { ...newInitData, publishDate: stringToDate(initData.publishDate).toISOString() };
+      newInitData = { ...newInitData, publishDate: stringToDate(initData.publishDate)?.toISOString() || "" };
     }
     return isEqualObject(
       [
@@ -188,7 +188,7 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
           initData.metaTitle,
           initData.metaDescription,
           initData.metaKeyword,
-          stringToDate(initData.publishDate).toISOString(),
+          stringToDate(initData.publishDate)?.toISOString(),
           initData.status,
         )
       : { ...initPageContentFormData, originId, lang };
@@ -287,7 +287,7 @@ const ContentPageForm: React.FC<ContentPageFormProps> = ({
               loading={loadingStatus}
               onChangeStatus={onChangeStatusPage}
               onDelete={() => initData?.id && onDelete?.(initData.id)}
-              hideSaveForApproval={action === "update" ?? false}
+              hideSaveForApproval={action === "update"}
               hideApproval={getValues("status") !== PageContentStatus.PENDING || action === "create"}
               action={action}
               status={getValues("status")}

@@ -44,34 +44,33 @@ const PageWraper: React.FC<PageWraperProps> = ({ data }) => {
               title: data.name,
             },
           ]}
+          classname="mb-3"
         />
-        <div className="post__page-head py-4">
-          <h1 className="text-xl text-primary-default font-[500]">{data.name}</h1>
-        </div>
-        <div className="post__page-body">
-          <div className="flex flex-wrap -mx-3">
-            <div className="col-left w-full lg:w-7/12 px-3 mb-6 lg:mb-0">
-              {/* <AreaContentHtml content={data.subContent} /> */}
-              {visaContent && panelItems ? (
-                <div className="content-block">
-                  <BlockPanels descriptions={visaContent.content} items={panelItems} />
+
+        <h1 className="text-xl text-primary-default font-[500]">{data.name}</h1>
+
+        <div className="flex flex-wrap -mx-3">
+          <div className="col-left w-full lg:w-7/12 px-3 mb-6 lg:mb-0">
+            {/* <AreaContentHtml content={data.subContent} /> */}
+            {visaContent && panelItems ? (
+              <div className="content-block">
+                <BlockPanels descriptions={visaContent.content} items={panelItems} />
+              </div>
+            ) : null}
+          </div>
+          <div className="col-left w-full lg:w-5/12 px-3">
+            <RegisterVisaForm title={data.name} amount={data.amount} className="mb-6" />
+            <div className="mb-6">
+              <div className="box border rounded-lg px-4 py-4">
+                <div className="head py-3">
+                  <p className="text-red-600 font-[500] text-base">Vì sao chọn An Thái Travel</p>
                 </div>
-              ) : null}
-            </div>
-            <div className="col-left w-full lg:w-5/12 px-3">
-              <RegisterVisaForm title={data.name} amount={data.amount} className="mb-6" />
-              <div className="mb-6">
-                <div className="box border rounded-lg px-4 py-4">
-                  <div className="head py-3">
-                    <p className="text-red-600 font-[500] text-base">Vì sao chọn An Thái Travel</p>
-                  </div>
-                  <ul className="list-disc pl-5">
-                    <li>Thủ tục đơn giản.</li>
-                    <li>Thông tin minh bạch, công khai.</li>
-                    <li>Dịch vụ tận tâm, hỗ trợ nhiệt tình sau làm visa.</li>
-                    <li>Dịch vụ tận tâm, hỗ trợ nhiệt tình sau làm visa.</li>
-                  </ul>
-                </div>
+                <ul className="list-disc pl-5">
+                  <li>Thủ tục đơn giản.</li>
+                  <li>Thông tin minh bạch, công khai.</li>
+                  <li>Dịch vụ tận tâm, hỗ trợ nhiệt tình sau làm visa.</li>
+                  <li>Dịch vụ tận tâm, hỗ trợ nhiệt tình sau làm visa.</li>
+                </ul>
               </div>
             </div>
           </div>

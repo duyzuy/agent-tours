@@ -2,11 +2,19 @@ import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
 import { getTemplateProductList } from "../../../../actions/searchProduct";
-import TourCardTemplateItem from "../../_components/TourListContainer/TourCardTemplateItem";
+import { TourCardSkeleton } from "@/components/frontend/TourCard";
+
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { IconPlanet } from "@/assets/icons";
 import { Link } from "@/utils/navigation";
+import dynamic from "next/dynamic";
+
+const DynamicTourCardItem = dynamic(() => import("@/components/frontend/TourCard"), {
+  loading: () => <>loading</>,
+  ssr: true,
+});
+
 interface ProductListContainerProps {
   destinations?: ILocalSeachDestination[];
 }
@@ -51,8 +59,15 @@ export default async function ProductListContainer({ destinations }: ProductList
     </div>
   ) : (
     <div className="product-list grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-      {productList?.map((prd) => (
-        <TourCardTemplateItem key={prd.recId} data={prd} />
+      {productList?.map((product) => (
+        <DynamicTourCardItem
+          key={product.recId}
+          templateId={product.recId}
+          tourCode={product.code}
+          sellables={product.sellables}
+          depart={product.depart}
+          cms={product.cms}
+        />
       ))}
     </div>
   );

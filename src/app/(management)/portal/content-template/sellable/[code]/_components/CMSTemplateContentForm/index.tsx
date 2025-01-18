@@ -187,13 +187,16 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
     let newInitData = initData || initCmsTemplate;
 
     if (initData?.publishDate) {
-      newInitData = { ...newInitData, publishDate: stringToDate(initData.publishDate).toISOString() };
+      newInitData = { ...newInitData, publishDate: stringToDate(initData.publishDate)?.toISOString() || "" };
     }
     if (initData?.promotionValidFrom) {
-      newInitData = { ...newInitData, promotionValidFrom: stringToDate(initData.promotionValidFrom).toISOString() };
+      newInitData = {
+        ...newInitData,
+        promotionValidFrom: stringToDate(initData.promotionValidFrom)?.toISOString() || "",
+      };
     }
     if (initData?.promotionValidTo) {
-      newInitData = { ...newInitData, promotionValidTo: stringToDate(initData.promotionValidTo).toISOString() };
+      newInitData = { ...newInitData, promotionValidTo: stringToDate(initData.promotionValidTo)?.toISOString() || "" };
     }
     return isEqualObject(
       [
@@ -243,13 +246,13 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
           initData.metaTitle,
           initData.metaDescription,
           initData.metaKeyword,
-          stringToDate(initData.publishDate).toISOString(),
+          stringToDate(initData.publishDate)?.toISOString(),
           initData.promotionReferencePrice,
           initData.promotionLabel,
           initData.promotionImage,
           isEmpty(initData.promotionLabelType) ? "text" : initData.promotionLabelType,
-          stringToDate(initData.promotionValidFrom).toISOString(),
-          stringToDate(initData.promotionValidTo).toISOString(),
+          stringToDate(initData.promotionValidFrom)?.toISOString(),
+          stringToDate(initData.promotionValidTo)?.toISOString(),
           initData.status,
           initData.lang,
         )

@@ -65,7 +65,7 @@ export const vendorColumns: ColumnsType<VendorListRs["result"][0]> = [
     key: "sysFstUpdate",
     width: 160,
     render: (_, { sysFstUpdate }) => {
-      return stringToDate(sysFstUpdate).format("DD/MM/YYYY HH:mm");
+      return stringToDate(sysFstUpdate)?.format("DD/MM/YYYY HH:mm");
     },
   },
   {

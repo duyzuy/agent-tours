@@ -10,6 +10,7 @@ import { EPassengerGender, EPassengerTitle } from "@/constants/common";
 import { RoomingType } from "./rooming.interface";
 import { IDocument } from "../core/document.interface";
 import { IComment } from "./comment.interface";
+import { EProductType } from "../core/productType.interface";
 
 export interface IOrderDetail {
   bookingOrderId: number;
@@ -152,6 +153,9 @@ export class BookingOrderListQueryParams
   implements BaseQueryParams<{ createdFrom?: string; createdTo?: string; status?: Status }>
 {
   requestObject?: {
+    type?: EProductType;
+    channel?: string;
+    paymentStatus?: string;
     createdFrom?: string;
     createdTo?: string;
     status?: Status;
@@ -162,6 +166,9 @@ export class BookingOrderListQueryParams
   constructor(
     requestObject:
       | {
+          type?: EProductType;
+          channel?: string;
+          paymentStatus?: string;
           createdFrom?: string;
           createdTo?: string;
           status?: Status;
@@ -170,11 +177,12 @@ export class BookingOrderListQueryParams
 
     pageCurrent: number,
     pageSize: number,
+    orderBy?: { sortColumn?: string; direction?: "asc" | "desc" } | undefined,
   ) {
     this.requestObject = requestObject;
     this.pageCurrent = pageCurrent;
     this.pageSize = pageSize;
-    this.orderBy = { sortColumn: undefined, direction: "desc" };
+    this.orderBy = orderBy ? orderBy : { sortColumn: undefined, direction: "desc" };
   }
 }
 

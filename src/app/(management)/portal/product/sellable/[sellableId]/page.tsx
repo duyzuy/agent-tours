@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Divider, Empty, Popconfirm, Space, Spin, Tag } from "antd";
+import { Button, Divider, Empty, Popconfirm, Space, Spin, Switch, Tag } from "antd";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetSellableDetailCoreQuery } from "@/queries/core/Sellable";
 import { useRouter } from "next/navigation";
@@ -19,11 +19,9 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
   const { data, isLoading } = useGetSellableDetailCoreQuery(Number(sellableId), {
     enabled: !!Number(sellableId),
   });
-  const { onApproval, onCreate } = useCRUDSellable();
+  const { onApproval, onDelete, onUpdateStatus } = useCRUDSellable();
 
   const [openDrawerAppoval, setOpenDrawerApproval] = useState(false);
-
-  const handleDeleteSellable = () => {};
 
   const handleApproval: DrawerSellableApprovalProps["onSubmit"] = (formData) => {
     onApproval(formData, () => {
@@ -56,28 +54,43 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
       <div className="flex py-2 mb-6">
         <Space>
           {data.sellable.status === Status.QQ ? (
-            <Button
-              className="!bg-emerald-100 !text-emerald-600 w-[80px]"
-              type="text"
-              size="small"
-              onClick={() => setOpenDrawerApproval(true)}
-            >
-              Duyệt
-            </Button>
-          ) : null}
-
-          <Popconfirm
-            placement="topLeft"
-            title="Xoá"
-            description={`Bạn muốn xoá sản phẩm ${data.sellable.code}`}
-            okText="Xác nhận"
-            cancelText="Huỷ bỏ"
-            onConfirm={() => handleDeleteSellable()}
-          >
-            <Button className="!bg-red-100 !text-red-600 w-[80px]" type="text" icon={<DeleteOutlined />} size="small">
-              Xoá
-            </Button>
-          </Popconfirm>
+            <>
+              <Button
+                className="!bg-emerald-100 !text-emerald-600 w-[80px]"
+                type="text"
+                size="small"
+                onClick={() => setOpenDrawerApproval(true)}
+              >
+                Duyệt
+              </Button>
+              <Popconfirm
+                placement="topLeft"
+                title="Xoá"
+                description={`Bạn muốn xoá sản phẩm ${data.sellable.code}`}
+                okText="Xác nhận"
+                cancelText="Huỷ bỏ"
+                onConfirm={() =>
+                  onDelete(data.sellable.recId, () => {
+                    router.push("/portal/product/sellable");
+                  })
+                }
+              >
+                <Button
+                  className="!bg-red-100 !text-red-600 w-[80px]"
+                  type="text"
+                  icon={<DeleteOutlined />}
+                  size="small"
+                >
+                  Xoá
+                </Button>
+              </Popconfirm>
+            </>
+          ) : (
+            <Space>
+              <Switch loading={false} checked />
+              Mở
+            </Space>
+          )}
         </Space>
       </div>
       <ContentDetailList

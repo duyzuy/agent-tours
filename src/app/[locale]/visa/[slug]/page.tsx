@@ -2,8 +2,7 @@ import { unstable_setRequestLocale } from "next-intl/server";
 import type { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { notFound } from "next/navigation";
-
-import { getVisaTemplateDetail } from "../_actions/getVisaTemplateDetail";
+import { getVisaTemplateDetail } from "@/actions/visa.action";
 import { mediaConfig } from "@/configs";
 
 import PageWraper from "./_components/PageWraper";

@@ -346,10 +346,10 @@ export const ICON_LABEL_HOTDEAL_LIST = [
   },
 ];
 
-export const getLabelHotDealIcon = (key: string) => {
+export const getLabelHotDealIcon = (key?: string) => {
   return ICON_LABEL_HOTDEAL_LIST.find((item) => item.key === key);
 };
 
-export const getIcon = (key: string) => {
+export const getIcon = (key?: string) => {
   return ICON_LIST.find((item) => item.key === key);
 };

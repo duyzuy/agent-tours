@@ -52,7 +52,7 @@ const ProductSummaryCardNoPrice = ({ label, description, className = "" }: Produ
         [className]: className,
       })}
     >
-      <p className="text-red-600 font-semibold text-2xl mb-4">{label}</p>
+      <p className="text-red-600 font-semibold text-2xl mb-3">{label}</p>
       <p>{description}</p>
     </div>
   );

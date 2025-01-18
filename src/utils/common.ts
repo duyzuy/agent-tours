@@ -23,6 +23,19 @@ export const getLocalUserName = () => {
   return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME);
 };
 
+export const getLocalUserInformationStorage = () => {
+  return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.LOCAL_USER_INFORMATION);
+};
+export const setLocalUserInformationStorage = (userInfo: {
+  localUserType: "ADMIN" | "AGENT" | "STAFF" | "AGENT_STAFF";
+  localChildrendUsername: string[];
+}) => {
+  return isSSR() ? "" : localStorage.setItem(LOCAL_STORAGE_KEY.LOCAL_USER_INFORMATION, JSON.stringify(userInfo));
+};
+export const removeLocalUserInformation = () => {
+  !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.LOCAL_USER_INFORMATION);
+};
+
 export const removeLocalUserName = () => {
   !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME);
 };

@@ -64,4 +64,18 @@ export const sellableAPIs = {
       },
     });
   },
+  delete: async (recId?: number) => {
+    return await coreApi.post<BaseResponse<SellableDetail>, BaseResponse<null>>("core/Sellable_Close", {
+      requestObject: {
+        recId,
+      },
+    });
+  },
+  updateStatus: async (recId?: number) => {
+    return await coreApi.post<BaseResponse<SellableDetail>, BaseResponse<null>>("core/Sellable_UpdateStatus", {
+      requestObject: {
+        recId,
+      },
+    });
+  },
 };

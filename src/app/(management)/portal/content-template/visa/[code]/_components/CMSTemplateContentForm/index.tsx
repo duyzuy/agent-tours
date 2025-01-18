@@ -159,7 +159,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
     let newInitData = initData || initCmsTemplate;
 
     if (initData?.publishDate) {
-      newInitData = { ...newInitData, publishDate: stringToDate(initData.publishDate).toISOString() };
+      newInitData = { ...newInitData, publishDate: stringToDate(initData.publishDate)?.toISOString() || "" };
     }
 
     return isEqualObject(
@@ -198,7 +198,7 @@ const CMSTemplateContentForm: React.FC<CMSTemplateContentFormProps> = ({
           initData.metaTitle,
           initData.metaDescription,
           initData.metaKeyword,
-          stringToDate(initData.publishDate).toISOString(),
+          stringToDate(initData.publishDate)?.toISOString(),
           initData.status,
           initData.lang,
         )

@@ -8,7 +8,7 @@ import DestinationsList from "./_components/DestinationsList";
 import PostListContainer from "./_components/PostListContainer";
 import VisaSection from "./_components/VisaSection";
 import { PromotionSliderSkeleton } from "./_components/PromotionSlider";
-import TourListContainer from "./_components/TourListContainer";
+import TourCardListContainer from "./_components/TourCardListContainer";
 import dynamic from "next/dynamic";
 
 const DynamicSlider = dynamic(() => import("./_components/PromotionSlider"), {
@@ -86,7 +86,7 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
         <DynamicSlider items={[]} title="Tour khuyến mại" />
 
         <div className="lg:h-12 h-4"></div>
-        <TourListContainer querySearch={travelTour} title="Chương trình du lịch hấp dẫn" />
+        <TourCardListContainer querySearch={travelTour} title="Chương trình du lịch hấp dẫn" />
         <div className="lg:h-12 h-4"></div>
         <VisaSection label="Dịch vụ thị thực nhập cảnh (Visa)" />
         <div className="lg:h-12 h-4"></div>

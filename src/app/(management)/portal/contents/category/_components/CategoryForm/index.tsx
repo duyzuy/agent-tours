@@ -205,7 +205,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                 onSaveForApproval={handleSubmit((data) => onSubmit?.({ ...data, status: PageContentStatus.PENDING }))}
                 onApproval={() => onPublish?.(initData?.id)}
                 onChangeStatus={handleChangeStatus}
-                hideSaveForApproval={action === "update" ?? false}
+                hideSaveForApproval={action === "update"}
                 hideApproval={getValues("status") !== PageContentStatus.PENDING || action === "create"}
                 action={action}
                 onDelete={() => onDelete?.(initData?.id)}

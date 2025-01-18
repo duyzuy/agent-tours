@@ -63,7 +63,7 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     width: 150,
   },
   {
-    title: "Số tiền phải thanh toán",
+    title: "Tổng tiền",
     dataIndex: "totalAmount",
     key: "totalAmount",
     width: 200,

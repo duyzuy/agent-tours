@@ -93,7 +93,7 @@ OrderSummary.Pricings = function OrderSummaryPricings({
   return (
     <>
       <div className="order__detail--subtotal mb-6 border-b pb-6">
-        <div className="flex items-center">
+        <div className="flex">
           <div className="w-48 border-r mr-6">
             <span className="block">Giá tour</span>
             <span className="block text-[16px] font-semibold text-primary-default">{tourPrice}</span>
@@ -107,15 +107,15 @@ OrderSummary.Pricings = function OrderSummaryPricings({
             <span className="block text-[16px] font-semibold text-primary-default">{charge}</span>
           </div>
           <div className="w-60 mr-6 border-r">
-            <span className="block">Mã giảm giá</span>
+            <span className="block">Áp dụng mã giảm</span>
             <span className="block">
               {coupons && coupons.length
                 ? coupons.map((item) => (
                     <div className="coupon-item" key={item.recId}>
-                      <span className="text-[16px] font-semibold text-green-600">{moneyFormatVND(item.amount)}</span>
-                      <span className=" bg-pink-100 px-3 py-1 ml-2 text-pink-600 rounded-sm text-xs">
-                        {item.fopDocument}
+                      <span className="text-[16px] font-semibold text-green-600 mr-1">
+                        {moneyFormatVND(item.amount)}
                       </span>
+                      <span className="text-[10px]">{item.type}</span>
                     </div>
                   ))
                 : "--"}

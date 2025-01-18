@@ -80,7 +80,7 @@ const withProductSummary = (
     }, [productItem]);
 
     const durationDay = useMemo(() => {
-      const dayNum = stringToDate(endDate).diff(stringToDate(startDate), "days");
+      const dayNum = stringToDate(endDate)?.diff(stringToDate(startDate), "days");
       return dayNum;
     }, [startDate, endDate]);
 

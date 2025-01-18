@@ -141,6 +141,15 @@ export const bookingReducer = (state = initBookingState, action: BookingActions)
       };
       return state;
     }
+    case EBookingActions.REMOVE_COUPONS: {
+      return {
+        ...state,
+        bookingInfo: {
+          ...state.bookingInfo,
+          coupons: [],
+        },
+      };
+    }
     case EBookingActions.SET_SERVICE_LIST: {
       const { payload: serviceList } = action;
       state = {

@@ -22,19 +22,6 @@ export const getTemplateContentDetail = async (payload: FeTemplateContentPayload
   return response?.result[0];
 };
 
-export const getSellableListByTemplateIdNew = async (templateId: number) => {
-  const response = await serverRequest.post<ProductListResponse, BaseResponse<null>>("localfront/BookingOrder_Search", {
-    next: { tags: ["sellableListByTemplateIdNew"] },
-    cache: "no-store",
-    params: {
-      requestObject: {
-        byTemplateId: templateId,
-      },
-    },
-  });
-  return response?.result;
-};
-
 export const getTravelInformationNotice = async (templateId: number, lang: LangCode) => {
   const response = await serverRequest.post<FeTravelInformationNoticeResponse, BaseResponse<null>>(
     "localfront/SellableTemplate_MustKnow",

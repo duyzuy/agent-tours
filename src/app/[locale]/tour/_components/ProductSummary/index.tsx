@@ -51,7 +51,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
   };
   const onChangeProduct = useCallback<Required<DatePickerProps>["onChange"]>((date) => {
     const newProduct = productList?.find((prd) => {
-      return stringToDate(prd.startDate).isSame(date, "date");
+      return stringToDate(prd.startDate)?.isSame(date, "date");
     });
     console.log(newProduct);
     newProduct && setProductItem(newProduct);
@@ -102,14 +102,15 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
         <ProductSummaryCard {...productCardProps}>
           <ProductSummaryCard.Drawer>
             <ProductSummaryCard.Title className="mb-4" text={tourName} />
-            <ProductSummaryCard.Promotion className="mb-6" />
             <ProductSummaryCard.CalendarSelector className="mb-6" isMobile={true} />
             <ProductSummaryCard.Durations />
-            <ProductSummaryCard.Inventories />
-            <ProductSummaryCard.Price className="mb-4" />
-            <ProductSummaryCard.PassengerSelector className="mb-6" layout="vertical" size="md" />
-            <ProductSummaryCard.Subtotal className="py-6" />
-            <ProductSummaryCard.SubmitButton />
+            <ProductSummaryCard.Inventories className="mb-6" />
+            <ProductSummaryCard.Promotion className="mb-6" />
+            <ProductSummaryCard.CanBooking>
+              <ProductSummaryCard.Price className="mb-6" />
+              <ProductSummaryCard.PassengerSelector className="mb-6" layout="vertical" size="md" />
+              <ProductSummaryCard.Subtotal />
+            </ProductSummaryCard.CanBooking>
           </ProductSummaryCard.Drawer>
         </ProductSummaryCard>
       ) : (
@@ -123,13 +124,14 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
               <div className="header py-3 flex items-center justify-between">
                 <h3 className="font-semibold text-primary-default uppercase">{t("productSummary.title")}</h3>
               </div>
-              <ProductSummaryCard.Promotion className="mb-4" />
+
               <ProductSummaryCard.Badget />
               <ProductSummaryCard.CalendarSelector className="mb-6" />
               <ProductSummaryCard.Durations />
-              <ProductSummaryCard.Inventories />
+              <ProductSummaryCard.Inventories className="mb-6" />
+              <ProductSummaryCard.Promotion className="mb-6" />
               <ProductSummaryCard.CanBooking>
-                <ProductSummaryCard.Price className="mb-4" />
+                <ProductSummaryCard.Price className="mb-6" />
                 <ProductSummaryCard.PassengerSelector className="mb-6" />
                 <ProductSummaryCard.Subtotal className="py-6" />
                 <ProductSummaryCard.SubmitButton />

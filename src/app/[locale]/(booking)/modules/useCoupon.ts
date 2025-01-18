@@ -7,7 +7,7 @@ import { IPromotion } from "@/models/management/core/promotion.interface";
 
 const useCoupon = () => {
   const [bookingInformation, dispatch] = useBookingInformation();
-  const { mutate: makeCheckCouppon } = useCheckCouponMutation();
+  const { mutate: makeCheckCouppon, isPending } = useCheckCouponMutation();
   const {
     bookingInfo: { product, couponPolicy, coupons },
   } = bookingInformation;
@@ -49,10 +49,23 @@ const useCoupon = () => {
       },
     );
   };
+  const removeCoupon = (code: string) => {
+    const couponItem = coupons?.find((item) => item.code === code);
+    if (!couponItem) {
+      throw new Error("Coupon Invalid");
+    }
+
+    dispatch({
+      type: EBookingActions.REMOVE_COUPONS,
+    });
+  };
+
   return {
     couponPolicy,
     addCouponPolicy,
     addCoupon,
+    removeCoupon,
+    loading: isPending,
     removeCouponPolicy,
   };
 };

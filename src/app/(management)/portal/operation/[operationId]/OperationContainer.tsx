@@ -72,6 +72,7 @@ const OperationContainer: React.FC<OperationContainerProps> = ({ operationId, da
         key: "lock",
         label: <span>Khoá</span>,
         onClick: () => onUpdateStatusThenRevalidateQuery("LOCKED"),
+        className: "!bg-gray-100 !text-gray-600",
       },
       {
         key: "pendingCancel",

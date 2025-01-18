@@ -2,7 +2,7 @@ import { format, compareAsc } from "date-fns";
 
 export const formatDate = (date: Date | string, strFm = "DD/MM/YYYY - HH:mm") => {
   if (typeof date === "string") {
-    return stringToDate(date).format(strFm);
+    return stringToDate(date)?.format(strFm);
   }
   return dayjs(new Date(date)).format(strFm);
 };
@@ -32,7 +32,8 @@ export const getDayNameOfWeek = ({
   return daysName;
 };
 
-export const stringToDate = (dateTimeStr: string) => {
+export const stringToDate = (dateTimeStr?: string) => {
+  if (!dateTimeStr) return;
   const [dateStr, timeStr] = dateTimeStr.split(" ");
 
   const dStr = dateStr.slice(0, 2);

@@ -174,7 +174,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
           tags: initData.tags.map((tag) => {
             return { id: tag.id, name: tag.name, slug: tag.slug };
           }),
-          publishDate: stringToDate(initData.publishDate).toISOString(),
+          publishDate: stringToDate(initData.publishDate)?.toISOString(),
         }
       : initFormData;
 
@@ -228,7 +228,7 @@ const PostContentForm: React.FC<PostContentFormProps> = ({
           initData.metaTitle,
           initData.metaDescription,
           initData.metaKeyword,
-          stringToDate(initData.publishDate).toISOString(),
+          stringToDate(initData.publishDate)?.toISOString(),
           initData.status,
         )
       : { ...initFormData, lang, originId };

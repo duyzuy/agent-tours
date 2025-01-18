@@ -2,7 +2,7 @@ import { coreOneTimeKeys } from "./cores/oneTimeKeyAccess";
 import { client } from "../api";
 import { createHash256 } from "@/utils/hash";
 import { coreAccountConfig } from "@/configs";
-import { getLocalUserName } from "@/utils/common";
+import { getLocalUserName, getLocalUserInformationStorage } from "@/utils/common";
 import { BaseResponse } from "@/models/common.interface";
 export const coreApi = {
   post: async <TSuccess, TError extends object = BaseResponse<null>>(
@@ -16,12 +16,17 @@ export const coreApi = {
     },
   ) => {
     const localUsername = getLocalUserName();
+    const userInfo = getLocalUserInformationStorage();
+    const localUserInfo = userInfo
+      ? (JSON.parse(userInfo) as {
+          localUserType: "ADMIN" | "AGENT" | "STAFF" | "AGENT_STAFF";
+          localChildrendUsername: string[];
+        })
+      : undefined;
 
     return await coreOneTimeKeys
       .getKey()
       .then(async (key) => {
-        //Sort object
-
         const soredQueryObject = Object.keys(queryParams.requestObject)
           .sort()
           .reduce<{ [key: string]: any }>((acc, key) => {
@@ -31,14 +36,6 @@ export const coreApi = {
           }, {});
 
         const hashData = createHash256(JSON.stringify(soredQueryObject) + key + coreAccountConfig.privateKey);
-        // console.log({
-        //     key,
-        //     queryParams,
-        //     endpoint,
-        //     hashData,
-        //     objstr: JSON.stringify(soredQueryObject),
-        // });
-
         return await client.post<TSuccess>(endpoint, {
           params: {
             requestObject: soredQueryObject,
@@ -47,7 +44,9 @@ export const coreApi = {
             pageSize: queryParams?.pageSize,
             userId: coreAccountConfig.userId,
             userName: coreAccountConfig.userName,
-            localUsername: localUsername ?? "",
+            localUsername: localUsername,
+            localChildrendUsername: localUserInfo?.localChildrendUsername,
+            localUserType: localUserInfo?.localUserType,
             hashCheck: hashData,
           },
         });

@@ -1,4 +1,4 @@
-import { Button, Drawer, Tag } from "antd";
+import { Button, Drawer, Space, Tag } from "antd";
 import classNames from "classnames";
 import styled from "styled-components";
 import Quantity from "@/components/base/Quantity";
@@ -6,17 +6,17 @@ import { PassengerType } from "@/models/common.interface";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
-import React, { createContext, PropsWithChildren, useCallback, useContext, useMemo, useRef, useState } from "react";
+import React, { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import PromotionSelector from "./PromotionSelector";
 import ProductSummarySubtotal, { ProductSummarySubtotalProps } from "./ProductSummarySubtotal";
 import { ProductSummaryCardNoPrice, ProductSummaryCardWithPrice } from "./ProductSummaryPrice";
 import CalendarSelector from "../CalendarSelector";
 import { stringToDate } from "@/utils/date";
-import { IconCalendarDays, IconCheckCircle } from "@/assets/icons";
+import { IconCalendarRange, IconCheckCircle, IconPlane } from "@/assets/icons";
 import { moneyFormatVND } from "@/utils/helper";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 import { getLabelHotDealIcon } from "@/constants/icons.constant";
-import { EInventoryType } from "@/models/management/core/inventoryType.interface";
+import { usePathname } from "@/utils/navigation";
 
 type ProductSummaryContextType = {
   productItem?: FeProductItem;
@@ -117,8 +117,8 @@ const CardPassengerSelector: ProductSummaryCardCompound["PassengerSelector"] = (
         [className]: className,
       })}
     >
-      <div className="label mb-6 border-b pb-3">
-        <span>{t("productSummary.passengerQuantity.title")}</span>
+      <div className="label mb-3 border-b pb-3">
+        <span className="font-semibold">{t("productSummary.passengerQuantity.title")}</span>
       </div>
       <div
         className={classNames("flex gap-y-3", {
@@ -133,7 +133,8 @@ const CardPassengerSelector: ProductSummaryCardCompound["PassengerSelector"] = (
           })}
         >
           <div className="label">
-            <span>{t("adult")}</span>
+            <p>{t("adult")}</p>
+            <p className="text-xs text-gray-600">{`Từ 12 tuổi`}</p>
           </div>
           <Quantity
             maximum={9}
@@ -150,7 +151,8 @@ const CardPassengerSelector: ProductSummaryCardCompound["PassengerSelector"] = (
           })}
         >
           <div className="label">
-            <span>{t("children")}</span>
+            <p>{t("children")}</p>
+            <p className="text-xs text-gray-600">{`Từ 2 - 11 tuổi`}</p>
           </div>
           <Quantity
             maximum={9}
@@ -168,6 +170,7 @@ const CardPassengerSelector: ProductSummaryCardCompound["PassengerSelector"] = (
         >
           <div className="label">
             <span>{t("infant")}</span>
+            <p className="text-xs text-gray-600">{`Dưới 2 tuổi`}</p>
           </div>
           <Quantity
             maximum={9}
@@ -356,29 +359,39 @@ const CardSubmitButton: ProductSummaryCardCompound["SubmitButton"] = ({ classNam
   );
 };
 
-const ProductSummaryCardDurations: ProductSummaryCardCompound["Durations"] = ({ className }) => {
+const ProductSummaryDepartInformation: ProductSummaryCardCompound["Durations"] = ({ className }) => {
   const t = useTranslations("String");
   const { productItem } = useProductSummaryCard();
 
   const durationDay = useMemo(() => {
     if (!productItem || !productItem.endDate || !productItem.startDate) return;
-    const dayNum = stringToDate(productItem.endDate).diff(stringToDate(productItem.startDate), "days");
+    const dayNum = stringToDate(productItem.endDate)?.diff(stringToDate(productItem.startDate), "days");
     return dayNum;
   }, [productItem]);
 
-  return durationDay ? (
-    <div className="duration-day mb-3">
-      <div className="flex items-center">
-        <span className="mr-2">
-          <IconCalendarDays width={20} height={20} />
-        </span>
-        <span>{t("card.durationDayValues", { day: durationDay, night: durationDay - 1 })}</span>
-      </div>
-    </div>
-  ) : null;
+  return (
+    <ul className="mb-3">
+      {durationDay ? (
+        <li>
+          <Space>
+            <IconCalendarRange className="w-5 h-5" />
+            <span className="text-[16px]">
+              {t("card.durationDayValues", { day: durationDay, night: durationDay - 1 })}
+            </span>
+          </Space>
+        </li>
+      ) : null}
+      <li>
+        <Space>
+          <IconPlane className="w-5 h-5" />
+          <span className="text-[16px]">{productItem?.template.depart.name_vi}</span>
+        </Space>
+      </li>
+    </ul>
+  );
 };
 
-const ProductSummaryCardInventories: ProductSummaryCardCompound["Inventories"] = () => {
+const ProductSummaryCardInventories: ProductSummaryCardCompound["Inventories"] = ({ className = "" }) => {
   const t = useTranslations("String");
   const { productItem } = useProductSummaryCard();
 
@@ -391,9 +404,13 @@ const ProductSummaryCardInventories: ProductSummaryCardCompound["Inventories"] =
   }, [productItem]);
 
   return inventories || stocks ? (
-    <>
-      <h3 className="font-[500]">Tour bao gồm</h3>
-      <ul className="service-includes mb-6">
+    <div
+      className={classNames("tour-included", {
+        [className]: className,
+      })}
+    >
+      <h3 className="font-[500] mb-2">Tour bao gồm</h3>
+      <ul className="service-includes">
         {inventories?.map((inv) => (
           <li className="inv" key={inv.recId}>
             {/* {inv.type === EInventoryType.AIR ? ""} */}
@@ -414,13 +431,16 @@ const ProductSummaryCardInventories: ProductSummaryCardCompound["Inventories"] =
           </li>
         ))}
       </ul>
-    </>
+    </div>
   ) : null;
 };
 
 const ProductSummaryCardDrawer: ProductSummaryCardCompound["Drawer"] = ({ children }) => {
-  const { productItem } = useProductSummaryCard();
+  const { productItem, onNext, isLoading } = useProductSummaryCard();
+
+  const pathName = usePathname();
   const t = useTranslations("String");
+
   const lowestConfig = useMemo(() => {
     if (!productItem || !productItem.configs || !productItem.configs.length) return;
 
@@ -440,14 +460,15 @@ const ProductSummaryCardDrawer: ProductSummaryCardCompound["Drawer"] = ({ childr
   }, [productItem]);
   const [isOpenDrawer, setOpenDrawer] = useState(false);
 
-  const positionRef = useRef(0);
   const closeDrawer = () => {
     setOpenDrawer(false);
   };
   const openDrawer = () => {
     setOpenDrawer(true);
   };
-
+  useEffect(() => {
+    setOpenDrawer(false);
+  }, [pathName]);
   return (
     <>
       <div
@@ -467,11 +488,14 @@ const ProductSummaryCardDrawer: ProductSummaryCardCompound["Drawer"] = ({ childr
             </div>
           </div>
         ) : (
-          <ProductSummaryCardNoPrice
-            label={t("card.contact")}
-            description={t("productSummary.emptyPrices")}
-            className="px-4 py-3"
-          />
+          <div className="flex items-center px-3 gap-3 py-2">
+            <div className="text-xs">
+              <p>Hiện chưa có mức giá bán cho tour khởi hành ngày này.</p>
+            </div>
+            <Button type="primary" onClick={openDrawer} size="large">
+              Chọn ngày khác
+            </Button>
+          </div>
         )}
       </div>
       <DrawerBookingSummary
@@ -480,23 +504,25 @@ const ProductSummaryCardDrawer: ProductSummaryCardCompound["Drawer"] = ({ childr
         height={"calc(80vh - env(safe-area-inset-bottom))"}
         push={false}
         destroyOnClose={true}
-        // afterOpenChange={(open) => {
-        //   const body = document.getElementsByTagName("body")[0];
-        //   const scrollY = window.scrollY;
-        //   if (open) {
-        //     body.style.overflowY = "hidden";
-        //     body.style.position = "fixed";
-        //     body.style.top = `-${scrollY}px`;
-        //     positionRef.current = scrollY;
-        //     body.style.left = "0px";
-        //     body.style.right = "0px";
-        //     body.style.overflowY = "hidden";
-        //   } else {
-        //     body.removeAttribute("style");
-        //     window.scrollTo({ top: positionRef.current });
-        //   }
-        // }}
+        closeIcon={null}
         onClose={closeDrawer}
+        footer={
+          <div className="flex gap-x-3 py-3">
+            <Button type="text" size="large" className="!bg-gray-100 !text-gray-600 flex-1" onClick={closeDrawer}>
+              Huỷ bỏ
+            </Button>
+            <Button
+              type="primary"
+              block
+              className="bg-primary-default flex-1"
+              onClick={onNext}
+              size="large"
+              loading={isLoading}
+            >
+              {t("button.bookNow")}
+            </Button>
+          </div>
+        }
       >
         {children}
       </DrawerBookingSummary>
@@ -568,7 +594,7 @@ const createArrayItemFromLength = <ItemType,>(length: number, item: ItemType) =>
 ProductSummaryCard.Title = CardTitle;
 ProductSummaryCard.PassengerSelector = CardPassengerSelector;
 ProductSummaryCard.Price = CardPrice;
-ProductSummaryCard.Durations = ProductSummaryCardDurations;
+ProductSummaryCard.Durations = ProductSummaryDepartInformation;
 ProductSummaryCard.Inventories = ProductSummaryCardInventories;
 ProductSummaryCard.Drawer = ProductSummaryCardDrawer;
 ProductSummaryCard.Promotion = CardPromotion;

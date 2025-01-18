@@ -8,9 +8,8 @@ import { useSearchTemplateTourMutation } from "@/mutations/fe/searchTour";
 import { Spin } from "antd";
 import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
 import EmptySearch from "./_components/EmptySearch";
-import TourCardTemplateItem from "../_components/TourListContainer/TourCardTemplateItem";
 
-const DynamicTourCardItem = dynamic(() => import("../_components/TourListContainer/TourCardTemplateItem"), {
+const DynamicTourCardItem = dynamic(() => import("@/components/frontend/TourCard"), {
   loading: () => <>loading</>,
   ssr: true,
 });
@@ -85,7 +84,14 @@ export default function FeSearchPage({ params, searchParams }: PageProps) {
                 {productList.length ? (
                   <div className="grid md:grid-cols-4 grid-cols-2 gap-4 lg:gap-6">
                     {productList?.map((product) => (
-                      <DynamicTourCardItem key={product.recId} data={product} />
+                      <DynamicTourCardItem
+                        key={product.recId}
+                        templateId={product.recId}
+                        tourCode={product.code}
+                        sellables={product.sellables}
+                        depart={product.depart}
+                        cms={product.cms}
+                      />
                     ))}
                   </div>
                 ) : (

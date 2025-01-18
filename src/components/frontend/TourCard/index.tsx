@@ -1,44 +1,56 @@
 "use client";
 import React, { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import Image from "next/image";
-import IconStar from "@/assets/icons/IconStar";
-import IconHeart from "@/assets/icons/IconHeart";
-import IconShare from "@/assets/icons/IconShare";
-import classNames from "classnames";
-import { useTranslations } from "next-intl";
-import { Link } from "@/utils/navigation";
-import { IconCalendarRange, IconImage } from "@/assets/icons";
-import { moneyFormatVND } from "@/utils/helper";
-import { getLabelHotDealIcon } from "@/constants/icons.constant";
-import { Tag } from "antd";
 
-type TourCardBaseType = {
+import classNames from "classnames";
+import { useLocale, useTranslations } from "next-intl";
+
+import { getLabelHotDealIcon } from "@/constants/icons.constant";
+import { Space, Tag } from "antd";
+
+import { mediaConfig } from "@/configs";
+import duration from "dayjs/plugin/duration";
+
+import dayjs from "dayjs";
+import { IconCalendarRange, IconImage, IconStar, IconHeart, IconShare, IconMapPin, IconPlane } from "@/assets/icons";
+import { getLowestPriceAvailable } from "@/utils/product";
+import { formatDate, stringToDate } from "@/utils/date";
+import { Link } from "@/utils/navigation";
+
+import { moneyFormatVND } from "@/utils/helper";
+import { IFeTemplateProductItem } from "@/models/fe/productItem.interface";
+import { LangCode } from "@/models/management/cms/language.interface";
+
+dayjs.extend(duration);
+dayjs.duration(100);
+
+type TourCardBase = {
   children?: React.ReactNode;
   className?: string;
 };
 interface TourCardCompound {
-  Head: React.FC<TourCardBaseType>;
-  Body: React.FC<TourCardBaseType>;
-  Footer: React.FC<TourCardBaseType>;
-  Price: React.FC<TourCardBaseType>;
-  Title: React.FC<TourCardBaseType>;
-  Badget: React.FC<TourCardBaseType>;
-  Thumbnail: React.FC<TourCardBaseType>;
-  Information: React.FC<TourCardBaseType>;
-  Days: React.FC<TourCardBaseType>;
+  Head: React.FC<TourCardBase>;
+  Body: React.FC<TourCardBase>;
+  Footer: React.FC<TourCardBase>;
+  Price: React.FC<TourCardBase>;
+  Title: React.FC<TourCardBase>;
+  Badget: React.FC<TourCardBase>;
+  Thumbnail: React.FC<TourCardBase>;
+  Information: React.FC<TourCardBase>;
+  Days: React.FC<TourCardBase>;
 }
-interface TourCardContextType {
+interface TourCardDataContext {
   recId?: number;
   name?: string;
-  thumbnail?: string;
+  thumbnailUrl?: string;
   href?: string;
   tourCode?: string;
-  durationDays?: number;
-  departDate?: string;
+  startDate?: string;
+  endDate?: string;
   openAmount?: number;
   price?: number;
   otherDepartDate?: string[];
-  showPromotion?: boolean;
+  departLocation?: string;
   promotion?: {
     promotionImage?: string;
     promotionLabel?: string;
@@ -49,12 +61,17 @@ interface TourCardContextType {
   };
 }
 export type TourCardProps = PropsWithChildren & {
-  data: TourCardContextType;
+  templateId: number;
+  tourCode: string;
+  sellables: IFeTemplateProductItem["sellables"];
+  cms: IFeTemplateProductItem["cms"];
+  depart?: IFeTemplateProductItem["depart"];
   className?: string;
   shadow?: "none" | "sm" | "md" | "lg";
+  bordered?: boolean;
 };
 
-const TourCardContext = createContext<TourCardContextType | undefined>(undefined);
+const TourCardContext = createContext<TourCardDataContext | undefined>(undefined);
 
 const useTourCardContext = () => {
   const context = useContext(TourCardContext);
@@ -64,9 +81,78 @@ const useTourCardContext = () => {
   return context;
 };
 
-const TourCard = ({ className = "", shadow = "md", children, data }: TourCardProps) => {
+const TourCard = ({
+  sellables,
+  cms,
+  templateId,
+  depart,
+  tourCode,
+  bordered = true,
+  shadow = "none",
+  className,
+}: TourCardProps) => {
+  const locale = useLocale();
+  const sellableItem = sellables.shift();
+  const tourCardContentByLanguage = useMemo(() => {
+    return cms.find((item) => item.lang === locale);
+  }, [cms]);
+
+  const otherDeparts = useMemo(() => {
+    return sellables.map((item) => {
+      const dateStr = stringToDate(item.startDate)?.format("DD/MM");
+      return dateStr ?? "";
+    });
+  }, [sellables]);
+
+  const tourCardProps: TourCardWraperProps = {
+    tourCode: tourCode,
+    thumbnailUrl:
+      tourCardContentByLanguage && tourCardContentByLanguage.thumbnail
+        ? `${mediaConfig.rootApiPath}/${tourCardContentByLanguage?.thumbnail.original}`
+        : undefined,
+    name: tourCardContentByLanguage?.name,
+    price: sellableItem?.configs ? getLowestPriceAvailable(sellableItem.configs)?.adult : undefined,
+    openAmount: sellableItem?.open,
+    href: sellableItem?.recId ? `/tour/${templateId}/${sellableItem.recId}/${tourCardContentByLanguage?.slug}` : "/",
+    otherDepartDate: otherDeparts,
+    startDate: sellableItem?.startDate,
+    endDate: sellableItem?.endDate,
+    departLocation: locale === LangCode.VI ? depart?.name_vi : depart?.name_en,
+    promotion: {
+      promotionImage: tourCardContentByLanguage?.promotionImage,
+      promotionLabel: tourCardContentByLanguage?.promotionLabel,
+      promotionLabelType: tourCardContentByLanguage?.promotionLabelType,
+      promotionReferencePrice: tourCardContentByLanguage?.promotionReferencePrice,
+      promotionValidTo: tourCardContentByLanguage?.promotionValidTo,
+      promotionValidFrom: tourCardContentByLanguage?.promotionValidFrom,
+    },
+  };
+
   return (
-    <TourCardContext.Provider value={{ ...data }}>
+    <TourCardWraper bordered={bordered} shadow={shadow} className={className} {...tourCardProps}>
+      <div className="tour-card__head relative">
+        <TourCardWraper.Thumbnail />
+        <TourCardWraper.Badget />
+      </div>
+      <div className="tour-card__body px-3 lg:px-4 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">
+        <TourCardWraper.Title />
+        <TourCardWraper.Price className="mb-2" />
+        <TourCardWraper.Days className="mb-3" />
+        <TourCardWraper.Information />
+      </div>
+    </TourCardWraper>
+  );
+};
+
+type TourCardWraperProps = TourCardDataContext & {
+  children?: React.ReactNode;
+  className?: string;
+  shadow?: "none" | "sm" | "md" | "lg";
+  bordered?: boolean;
+};
+const TourCardWraper = ({ shadow, bordered, className = "", children, ...rest }: TourCardWraperProps) => {
+  return (
+    <TourCardContext.Provider value={{ ...rest }}>
       <div
         className={classNames("tour-card", {
           [className]: className,
@@ -77,24 +163,13 @@ const TourCard = ({ className = "", shadow = "md", children, data }: TourCardPro
             "shadow-sm": shadow === "sm",
             "shadow-md": shadow === "md",
             "shadow-lg": shadow === "lg",
+            border: bordered,
           })}
         >
           {children}
         </div>
       </div>
     </TourCardContext.Provider>
-  );
-};
-export default TourCard;
-
-const CardHead: TourCardCompound["Head"] = ({ children }) => {
-  return <div className="tour-card__head relative">{children}</div>;
-};
-const CardBody: TourCardCompound["Body"] = ({ children }) => {
-  return (
-    <div className="tour-card__body px-3 lg:px-4 py-3 rounded-bl-xl rounded-br-xl bg-white flex flex-col">
-      {children}
-    </div>
   );
 };
 
@@ -124,24 +199,51 @@ const CardFooter: TourCardCompound["Footer"] = () => {
   );
 };
 
-const CardDurationDays: TourCardCompound["Days"] = ({ className }) => {
-  const { durationDays } = useTourCardContext();
+const CardDurationDays: TourCardCompound["Days"] = ({ className = "" }) => {
+  const { startDate, endDate, departLocation } = useTourCardContext();
   const t = useTranslations("String");
 
+  const durationDays = useMemo(() => {
+    if (!startDate || !endDate) return;
+    return stringToDate(endDate)?.diff(stringToDate(startDate), "day");
+  }, [startDate, endDate]);
+
   return (
-    <div className={classNames(className)}>
+    <div
+      className={classNames("flex flex-wrap gap-2", {
+        [className]: className,
+      })}
+    >
+      {departLocation ? (
+        <Space>
+          <IconPlane className="w-4 h-4" />
+          {departLocation}
+        </Space>
+      ) : null}
       {durationDays ? (
-        <span className="flex items-center">
-          <IconCalendarRange className="mr-1 w-5 h-5" />
+        <Space>
+          <IconCalendarRange className="w-4 h-4" />
           {t("card.durationDayValues", { day: durationDays, night: durationDays - 1 })}
-        </span>
+        </Space>
       ) : null}
     </div>
   );
 };
+
 const CardPrice: TourCardCompound["Price"] = ({ className = "" }) => {
   const t = useTranslations("String");
-  const { promotion, price, showPromotion } = useTourCardContext();
+  const { promotion, price } = useTourCardContext();
+
+  const { promotionValidTo, promotionValidFrom, promotionReferencePrice } = promotion || {};
+  const now = dayjs();
+
+  const showPromotion = useMemo(() => {
+    if (!promotionValidTo || !promotionValidFrom) return false;
+    if (now.isBefore(stringToDate(promotionValidFrom)) || now.isAfter(stringToDate(promotionValidTo))) {
+      return false;
+    }
+    return true;
+  }, [promotionValidTo, promotionValidFrom]);
 
   return (
     <div
@@ -151,14 +253,11 @@ const CardPrice: TourCardCompound["Price"] = ({ className = "" }) => {
     >
       {!price ? (
         <p className="text-[16px] lg:text-lg">{t("card.contact")}</p>
-      ) : promotion &&
-        promotion.promotionReferencePrice &&
-        promotion?.promotionReferencePrice > price &&
-        showPromotion ? (
+      ) : promotionReferencePrice && promotionReferencePrice > price && showPromotion ? (
         <>
           <span className="text-red-600 text-[16px] lg:text-lg font-[500] block">{moneyFormatVND(price)}</span>
           <span className="line-through text-[12px] lg:text-[14px] opacity-60 block">
-            {moneyFormatVND(promotion.promotionReferencePrice)}
+            {moneyFormatVND(promotionReferencePrice)}
           </span>
         </>
       ) : (
@@ -168,39 +267,45 @@ const CardPrice: TourCardCompound["Price"] = ({ className = "" }) => {
   );
 };
 
-const CardBadget: TourCardCompound["Badget"] = () => {
-  const { promotion, showPromotion } = useTourCardContext();
-  const { promotionLabelType, promotionLabel, promotionImage } = promotion || {};
-  const IconEl = getLabelHotDealIcon(promotionImage ?? "");
+const CardBadgetPromotion: TourCardCompound["Badget"] = () => {
+  const { promotion } = useTourCardContext();
 
-  if (!showPromotion) return null;
-  if (promotionLabelType === "text") {
-    return (
-      <span className="absolute z-10 w-24 h-24 -top-12 -right-6 bg-rose-600 rounded-full">
-        <span className="w-12 h-12 absolute left-4 bottom-0 flex items-center bg-rose-600 text-[13px] leading-[16px] rounded-full text-white text-center">
-          {promotionLabel}
+  const { promotionLabelType, promotionLabel, promotionImage, promotionValidTo, promotionValidFrom } = promotion || {};
+  const now = dayjs();
+  const IconEl = getLabelHotDealIcon(promotionImage)?.icon;
+
+  const showPromotion = useMemo(() => {
+    if (!promotionValidTo || !promotionValidFrom) return false;
+    if (now.isBefore(stringToDate(promotionValidFrom)) || now.isAfter(stringToDate(promotionValidTo))) {
+      return false;
+    }
+    return true;
+  }, [promotionValidFrom, promotionValidTo]);
+
+  return (
+    <>
+      {showPromotion && promotionLabelType === "text" ? (
+        <span className="absolute z-10 w-24 h-24 -top-12 -right-6 bg-rose-600 rounded-full">
+          <span className="w-12 h-12 absolute left-4 bottom-0 flex items-center bg-rose-600 text-[13px] leading-[16px] rounded-full text-white text-center">
+            {promotionLabel}
+          </span>
         </span>
-      </span>
-    );
-  }
-  if (promotionLabelType === "image") {
-    return IconEl ? (
-      <span className="absolute z-10 top-1 right-1">{<IconEl.icon width={32} height={32} />}</span>
-    ) : null;
-  }
-
-  return null;
+      ) : showPromotion && promotionLabelType === "image" ? (
+        <span className="absolute z-10 top-1 right-1">{IconEl ? <IconEl className="w-8 h-8" /> : ""}</span>
+      ) : null}
+    </>
+  );
 };
 
 const CardThumbnail: TourCardCompound["Thumbnail"] = () => {
-  const { thumbnail, name } = useTourCardContext();
+  const { thumbnailUrl, name } = useTourCardContext();
   return (
     <div className="thumbnail w-full pt-[66.67%] relative italic bg-slate-50">
-      {thumbnail ? (
-        <Image src={thumbnail} alt={name ?? ""} fill className="rounded-tl-lg rounded-tr-lg object-cover" />
+      {thumbnailUrl ? (
+        <Image src={thumbnailUrl} alt={name ?? ""} fill className="rounded-tl-lg rounded-tr-lg object-cover" />
       ) : (
         <div className="w-full h-full absolute left-0 top-0 flex items-center justify-center">
-          <span className="text-center text-gray-500 block">
+          <span className="text-center text-gray-500 block opacity-60">
             <IconImage className="mx-auto mb-1" />
             <span className="block text-xs">no image</span>
           </span>
@@ -213,7 +318,7 @@ const CardThumbnail: TourCardCompound["Thumbnail"] = () => {
 const CardTitle: TourCardCompound["Title"] = () => {
   const { href, name } = useTourCardContext();
   return (
-    <Link href={href ?? "/"} className="text-main-400 text-[15px] mb-3">
+    <Link href={href ?? "/"} className="text-main-400 text-[15px]">
       <h3 className="line-clamp-2 h-10 lg:h-12 leading-5 lg:leading-6 font-[500] text-main-400 text-sm lg:text-[16px]">
         {name}
       </h3>
@@ -221,18 +326,21 @@ const CardTitle: TourCardCompound["Title"] = () => {
   );
 };
 
-const TourCardInfo: TourCardCompound["Information"] = ({ children }) => {
-  const { tourCode, departDate, openAmount, otherDepartDate, durationDays } = useTourCardContext();
+const CardInformation: TourCardCompound["Information"] = ({ children }) => {
+  const { tourCode, startDate, openAmount, otherDepartDate } = useTourCardContext();
   const t = useTranslations("String");
   return (
     <div className="tour-card__info-list grid lg:grid-cols-3 grid-cols-2 gap-2">
-      <TourCard.InfoItem label={t("card.tourCode")} value={tourCode} />
-      <TourCard.InfoItem label={t("card.departDate")} value={departDate} />
-      <TourCard.InfoItem
+      <InformationItem label={t("card.tourCode")} value={tourCode} />
+      <InformationItem
+        label={t("card.departDate")}
+        value={<>{startDate ? formatDate(startDate, "MM/DD/YYYY") : null}</>}
+      />
+      <InformationItem
         label={t("card.amountRemaining")}
         value={<span className="text-red-600">{openAmount?.toString()}</span>}
       />
-      <TourCard.InfoItem
+      <InformationItem
         label={t("card.otherDepart")}
         value={
           <>
@@ -260,21 +368,43 @@ interface TourCardInfoItemProps {
   label: string;
   value?: React.ReactNode;
 }
-TourCard.InfoItem = function TourCardInfoItem({ label, value, className = "" }: TourCardInfoItemProps) {
+function InformationItem({ label, value, className = "" }: TourCardInfoItemProps) {
   return (
     <div className={classNames(className)}>
       <div className="text-gray-500 block text-[10px] lg:text-xs">{label}</div>
       <div className="text-gray-800 text-[13px] lg:text-sm">{value}</div>
     </div>
   );
-};
+}
 
-TourCard.Head = CardHead;
-TourCard.Body = CardBody;
-TourCard.Price = CardPrice;
-TourCard.Badget = CardBadget;
-TourCard.Thumbnail = CardThumbnail;
-TourCard.Title = CardTitle;
-TourCard.Information = TourCardInfo;
-TourCard.Footer = CardFooter;
-TourCard.Days = CardDurationDays;
+function TourCardSkeleton() {
+  return (
+    <div className="rounded-lg bg-white overflow-hidden">
+      <div className="animate-pulse">
+        <div className="bg-slate-100 rounded-sm w-full h-32 lg:h-48"></div>
+        <div className="w-full pt-6 px-3 pb-3">
+          <div className="h-2 bg-slate-100 rounded w-8 mb-6"></div>
+          <div className="space-y-3 mb-8">
+            <div className="h-6 bg-slate-100 rounded mb-6"></div>
+            <div className="h-2 bg-slate-100 rounded w-24"></div>
+            <div className="h-2 bg-slate-100 rounded w-20"></div>
+          </div>
+          <div className="flex justify-between gap-x-3">
+            <div className="h-3 bg-slate-100 rounded w-1/3"></div>
+            <div className="h-3 bg-slate-100 rounded flex-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+TourCardWraper.Price = CardPrice;
+TourCardWraper.Badget = CardBadgetPromotion;
+TourCardWraper.Thumbnail = CardThumbnail;
+TourCardWraper.Title = CardTitle;
+TourCardWraper.Information = CardInformation;
+TourCardWraper.Footer = CardFooter;
+TourCardWraper.Days = CardDurationDays;
+
+export { TourCardSkeleton };
+export default TourCard;

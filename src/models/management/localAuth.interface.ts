@@ -23,7 +23,7 @@ export interface ILocalUserProfile {
   infoEmail: string;
   mainRole: string;
   mainRoleName: string;
-  userType: "ADMIN" | "AGENT" | "STAFF";
+  userType: "ADMIN" | "AGENT" | "STAFF" | "AGENT_STAFF";
   fullname: string;
   descriptions: string;
   infoCompanyName: string;
@@ -38,6 +38,8 @@ export interface ILocalUserProfile {
   sysFstUser: string;
   sysFstUpdate: string;
   sysBelongTo: string;
+  childrendUsername: string[];
+  parentUsername: string;
 }
 export interface ILocalUserProfileRs extends BaseResponse<ILocalUserProfile> {}
 export interface ILocalProfileErr extends BaseResponse<string> {}

@@ -63,10 +63,10 @@ const AirDetailForm: React.FC<AirDetailFormProps> = ({ stockTypes, onChangeForm,
           infant: initialValues.details?.infant,
           fullItinerary: initialValues.details?.fullItinerary,
           departureDate: initialValues.details?.departureDate
-            ? stringToDate(initialValues.details?.departureDate).toDate().toString()
+            ? stringToDate(initialValues.details?.departureDate)?.toDate().toString()
             : undefined,
           arrivalDate: initialValues.details?.arrivalDate
-            ? stringToDate(initialValues.details?.arrivalDate).toDate().toString()
+            ? stringToDate(initialValues.details?.arrivalDate)?.toDate().toString()
             : undefined,
           tripType: initialValues.details?.tripType,
           specialRequest: initialValues.details?.specialRequest,

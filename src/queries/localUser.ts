@@ -5,7 +5,7 @@ import { localUserAPIs } from "@/services/management/localUser";
 import { ELocalUserType } from "@/models/management/localUser.interface";
 import { isUndefined } from "lodash";
 
-export const useLocalUserGetProfileQuery = (options?: { enabled?: boolean }) => {
+export const useGetProfileQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [GET_LOCAL_USER_PROFILE],
     queryFn: () => localAuthAPIs.getProfile(),

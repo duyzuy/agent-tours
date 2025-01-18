@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { agAuthAPIs } from "@/services/management/auth";
 import { useRouter } from "next/navigation";
-import { LINKS } from "@/constants/links.constant";
-import { removeAgToken, removeLocalUserName } from "@/utils/common";
+import { removeAgToken, removeLocalUserName, removeLocalUserInformation } from "@/utils/common";
 import { IAgLoginErr, IAgLoginPayload, IAgLoginRs } from "@/models/management/localAuth.interface";
 
 const useLoginPortal = () => {
@@ -18,7 +17,7 @@ const useLogoutPortal = () => {
   const onLogoutPortal = () => {
     removeAgToken();
     removeLocalUserName();
-    // router.push(LINKS.PortalLogin);
+    removeLocalUserInformation();
     window.location.reload();
   };
   return onLogoutPortal;

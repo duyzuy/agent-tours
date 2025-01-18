@@ -22,6 +22,7 @@ export interface ICMSTemplateContent {
   code: string;
   name: string;
   thumbnail: IThumbnail | null;
+  descriptions: string;
   downloads: { title: string; link: string }[];
   images: IThumbnail[] | null;
   content: string;

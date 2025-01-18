@@ -1,7 +1,7 @@
 import { unstable_setRequestLocale } from "next-intl/server";
 import { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { getTemplateContentDetail } from "../_actions/templateContent";
+import { getTemplateContentDetail } from "@/actions/product.action";
 import { mediaConfig } from "@/configs";
 
 export const dynamic = "force-dynamic";
@@ -12,13 +12,6 @@ type Props = {
     slug: string[];
   };
 };
-
-// export async function generateStaticParams() {
-//   // const posts = await fetch("https://.../posts").then((res) => res.json());
-//   // return posts.map((post) => ({
-//   //   slug: post.slug,
-//   // }));
-// }
 
 export async function generateMetadata(
   { params: { slug, locale } }: Props,
@@ -49,7 +42,7 @@ export async function generateMetadata(
   };
 }
 
-const LayoutTourSingle = ({
+const SingleTourLayout = ({
   children,
   params,
 }: {
@@ -62,4 +55,4 @@ const LayoutTourSingle = ({
   unstable_setRequestLocale(params.locale);
   return <>{children}</>;
 };
-export default LayoutTourSingle;
+export default SingleTourLayout;

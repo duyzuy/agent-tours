@@ -17,7 +17,13 @@ import { DATE_FORMAT } from "@/constants/common";
 export default function ManageBookingOrderListPage() {
   const router = useRouter();
 
-  const [booingQueryParams, setBookingQueryParams] = useState(() => new BookingOrderListQueryParams(undefined, 1, 20));
+  const [booingQueryParams, setBookingQueryParams] = useState(
+    () =>
+      new BookingOrderListQueryParams(undefined, 1, 20, {
+        sortColumn: "recId",
+        direction: "desc",
+      }),
+  );
 
   const { data: ruleAndPolicyList, isLoading: isLoadingRule } = useLocalGetRuleAndPolicyQuery();
 
@@ -65,61 +71,60 @@ export default function ManageBookingOrderListPage() {
       breadCrumItems={[{ title: "Quản lý đặt chỗ" }, { title: "Danh sách đặt chỗ" }]}
       hideAddButton
     >
-      <div className="">
-        <Form layout="vertical">
-          <Row gutter={16}>
-            <Col lg={3}>
-              <FormItem>
-                <Select
-                  options={[
-                    {
-                      value: Status.OK,
-                      label: "Đã duyệt",
-                    },
-                    {
-                      value: Status.QQ,
-                      label: "Chờ duyệt",
-                    },
-                    { value: Status.XX, label: "Đã huỷ" },
-                  ]}
-                  onChange={onChangeStatus}
-                  placeholder="Trạng thái"
-                />
-              </FormItem>
-            </Col>
-            <Col lg={4}>
-              <FormItem>
-                <CustomDatePicker
-                  placeholder="Từ ngày"
-                  className="w-full"
-                  disabledDate={(date) => {
-                    if (booingQueryParams.requestObject?.createdTo) {
-                      return date.isAfter(dayjs(booingQueryParams.requestObject?.createdTo, DATE_FORMAT));
-                    }
-                    return false;
-                  }}
-                  onChange={onChangeCreatedFrom}
-                />
-              </FormItem>
-            </Col>
-            <Col span={6} lg={4}>
-              <FormItem>
-                <CustomDatePicker
-                  placeholder="Đến ngày"
-                  className="w-full"
-                  disabledDate={(date) => {
-                    if (booingQueryParams.requestObject?.createdFrom) {
-                      return date.isBefore(dayjs(booingQueryParams.requestObject?.createdFrom, DATE_FORMAT));
-                    }
-                    return false;
-                  }}
-                  onChange={onChangeCreatedTo}
-                />
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
-      </div>
+      <Form layout="vertical">
+        <Row gutter={16}>
+          <Col lg={3}>
+            <FormItem>
+              <Select
+                options={[
+                  {
+                    value: Status.OK,
+                    label: "Đã duyệt",
+                  },
+                  {
+                    value: Status.QQ,
+                    label: "Chờ duyệt",
+                  },
+                  { value: Status.XX, label: "Đã huỷ" },
+                ]}
+                onChange={onChangeStatus}
+                placeholder="Trạng thái"
+              />
+            </FormItem>
+          </Col>
+          <Col lg={4}>
+            <FormItem>
+              <CustomDatePicker
+                placeholder="Từ ngày"
+                className="w-full"
+                disabledDate={(date) => {
+                  if (booingQueryParams.requestObject?.createdTo) {
+                    return date.isAfter(dayjs(booingQueryParams.requestObject?.createdTo, DATE_FORMAT));
+                  }
+                  return false;
+                }}
+                onChange={onChangeCreatedFrom}
+              />
+            </FormItem>
+          </Col>
+          <Col span={6} lg={4}>
+            <FormItem>
+              <CustomDatePicker
+                placeholder="Đến ngày"
+                className="w-full"
+                disabledDate={(date) => {
+                  if (booingQueryParams.requestObject?.createdFrom) {
+                    return date.isBefore(dayjs(booingQueryParams.requestObject?.createdFrom, DATE_FORMAT));
+                  }
+                  return false;
+                }}
+                onChange={onChangeCreatedTo}
+              />
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+
       <TableListPage<IOrderListRs["result"][0]>
         dataSource={reservationResponse?.list || []}
         columns={columnsOrderList}

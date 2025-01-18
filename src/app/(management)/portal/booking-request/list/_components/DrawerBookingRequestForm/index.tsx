@@ -87,8 +87,8 @@ const DrawerBookingRequestForm: React.FC<DrawerBookingRequestFormProps> = ({
       const updateFormData = new BookingRequestFormData(
         initialValues.requestId,
         initialValues.requestName,
-        stringToDate(initialValues.startDate).toDate().toString(),
-        stringToDate(initialValues.endDate).toDate().toString(),
+        stringToDate(initialValues.startDate)?.toDate().toString(),
+        stringToDate(initialValues.endDate)?.toDate().toString(),
         initialValues.custName,
         initialValues.custPhoneNumber,
         initialValues.custEmail,

@@ -1,10 +1,10 @@
 import { ICON_LIST } from "@/constants/icons.constant";
 import { isUndefined } from "lodash";
 
-interface BenefitProps {
+interface SingleTourMetaContentProps {
   items?: { key?: string; value?: string; icon?: string }[];
 }
-const Benefit: React.FC<BenefitProps> = ({ items }) => {
+const SingleTourMetaContent: React.FC<SingleTourMetaContentProps> = ({ items }) => {
   const getICon = (item?: string) => {
     return ICON_LIST.find((ic) => ic.key === item);
   };
@@ -27,7 +27,7 @@ const Benefit: React.FC<BenefitProps> = ({ items }) => {
     </div>
   );
 };
-export default Benefit;
+export default SingleTourMetaContent;
 
 const renderIcon = (props?: (typeof ICON_LIST)[0]) => {
   const Icon = props?.icon;

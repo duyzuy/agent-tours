@@ -2,11 +2,11 @@ import dynamic from "next/dynamic";
 import { IconScrollText, IconCalendarCheck, IconBookMark, IconFileText } from "@/assets/icons";
 import BlockPanels, { BlockPanelsProps } from "@/components/frontend/TabsBlockContentPanel/BlockPanels";
 import { FeTemplateContentResponse } from "@/models/fe/templateContent.interface";
-import { getVisaTemplateDetail } from "@/app/[locale]/visa/_actions/getVisaTemplateDetail";
+import { getVisaTemplateDetail } from "@/actions/visa.action";
 import { getTranslations } from "next-intl/server";
 import { getPageContentDetail } from "@/actions/pageContent";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { getTravelInformationNotice } from "../../../_actions/templateContent";
+import { getTravelInformationNotice } from "@/actions/product.action";
 import IconDock from "@/assets/icons/IconDock";
 
 const CustomTabsDynamic = dynamic(() => import("@/components/frontend/CustomTabs"), {
@@ -14,13 +14,13 @@ const CustomTabsDynamic = dynamic(() => import("@/components/frontend/CustomTabs
   ssr: false,
 });
 
-interface ProductContentProps {
+interface TourTabsContentProps {
   data?: FeTemplateContentResponse["result"][0];
   locale: LangCode;
   templateId: number;
   log?: any;
 }
-export default async function ProductContent({ data, log, locale, templateId }: ProductContentProps) {
+export default async function TourTabsContent({ data, log, locale, templateId }: TourTabsContentProps) {
   const t = await getTranslations("String");
 
   const { visaTemplates } = data || {};

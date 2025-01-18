@@ -67,7 +67,7 @@ export const supplierColumn: ColumnsType<ISupplier> = [
     key: "sysFstUpdate",
     width: 160,
     render: (_, { sysFstUpdate }) => {
-      return stringToDate(sysFstUpdate).format("DD/MM/YYYY HH:mm");
+      return stringToDate(sysFstUpdate)?.format("DD/MM/YYYY HH:mm");
     },
   },
   {

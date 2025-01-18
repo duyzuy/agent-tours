@@ -69,17 +69,8 @@ const useCreateBooking = () => {
     let bookingDetailsItem: Required<FeBookingPayload>["bookingDetails"] = [];
 
     passengers.forEach((pax) => {
-      /**
-       * pick priceConfigs of product
-       */
       const priceConfigItem = pricingListPicker.shift();
-
       const ssrItem = getSSRItemByPassenger(pax);
-
-      /**
-       * correct date format from paxInfo
-       */
-
       bookingDetailsItem = priceConfigItem
         ? [
             ...bookingDetailsItem,
@@ -91,6 +82,9 @@ const useCreateBooking = () => {
               pax: {
                 ...pax.info,
                 paxBirthDate: pax.info.paxBirthDate ? dayjs(pax.info.paxBirthDate).format(DATE_FORMAT) : undefined,
+                paxPassortExpiredDate: pax.info.paxPassortExpiredDate
+                  ? dayjs(pax.info.paxPassortExpiredDate).format(DATE_FORMAT)
+                  : undefined,
               },
               ssr: ssrItem,
             },
@@ -118,8 +112,6 @@ const useCreateBooking = () => {
       ...customerInformation,
       ...invoice,
     };
-
-    console.log(payload);
 
     makeBooking(
       { payload, token: session.user.accessToken },

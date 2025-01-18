@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Col, DatePickerProps, Drawer, Form, Input, Row, Select, Space } from "antd";
 import { PassengerType } from "@/models/common.interface";
-
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-
 import FormItem from "@/components/base/FormItem";
-import { DATE_FORMAT, PASSENGER_AGES, PASSENGER_GENDER, PASSENGER_TITLES } from "@/constants/common";
+import { PASSENGER_AGES, PASSENGER_GENDER, PASSENGER_TITLES } from "@/constants/common";
 import { getPassengerType } from "@/utils/common";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import dayjs, { Dayjs } from "dayjs";
@@ -15,6 +13,7 @@ import { FePassengerInformationFormData } from "../../modules/passegner.interfac
 import { passengerSchema } from "../../modules/passenger.schema";
 import { FeBookingInformation } from "../../../modules/booking.interface";
 import { useTranslations } from "next-intl";
+import { stringToDate } from "@/utils/date";
 
 export interface DrawerPassengerInformationFormProps {
   open?: boolean;
@@ -51,7 +50,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
   );
   const t = useTranslations("Passenger");
   const er = useTranslations("Error");
-  const { control, handleSubmit, setValue, clearErrors } = useForm<FePassengerInformationFormData>({
+  const { control, handleSubmit, setValue, clearErrors, getValues } = useForm<FePassengerInformationFormData>({
     defaultValues: { ...initFormData },
     resolver: yupResolver(passengerSchema),
   });
@@ -62,7 +61,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
 
     switch (paxType) {
       case PassengerType.ADULT: {
-        if (dayjs(startDate).diff(date, "years") < PASSENGER_AGES.adult.min) {
+        if (dayjs(stringToDate(startDate)).diff(date, "years") < PASSENGER_AGES.adult.min) {
           errorMess = er("passenger.age.adult.invalidLess");
           setErrorForm((prev) => ({
             ...prev,
@@ -74,8 +73,8 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
       }
       case PassengerType.CHILD: {
         if (
-          dayjs(startDate).diff(date, "years") < PASSENGER_AGES.child.min ||
-          dayjs(startDate).diff(date, "years") > PASSENGER_AGES.child.max
+          dayjs(stringToDate(startDate)).diff(date, "years") < PASSENGER_AGES.child.min ||
+          dayjs(stringToDate(startDate)).diff(date, "years") > PASSENGER_AGES.child.max
         ) {
           errorMess = er("passenger.age.child.invalid");
           setErrorForm((prev) => ({
@@ -87,7 +86,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
         break;
       }
       case PassengerType.INFANT: {
-        if (dayjs(startDate).diff(date, "years") + 1 > PASSENGER_AGES.infant.max) {
+        if (dayjs(stringToDate(startDate)).diff(date, "years") + 1 > PASSENGER_AGES.infant.max) {
           errorMess = er("passenger.age.infant.invalid");
           setErrorForm((prev) => ({
             ...prev,
@@ -103,7 +102,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
       paxBirthDate: undefined,
     }));
 
-    setValue("paxBirthDate", date?.locale("en").format(DATE_FORMAT));
+    setValue("paxBirthDate", date?.toISOString());
   };
   const renderLabelDOBPax = () => {
     return (
@@ -125,7 +124,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
   };
 
   const onChangeNationalityDate: DatePickerProps["onChange"] = (date) => {
-    setValue("paxPassortExpiredDate", date?.locale("en").format(DATE_FORMAT));
+    setValue("paxPassortExpiredDate", date?.toISOString());
   };
 
   const onSubmit: SubmitHandler<FePassengerInformationFormData> = (data) => {
@@ -153,6 +152,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
     Object.keys(passengerInfo).forEach((key) => {
       setValue(key as keyof FePassengerInformationFormData, passengerInfo[key as keyof FePassengerInformationFormData]);
     });
+    setErrorForm(undefined);
     clearErrors();
   }, [open, data]);
 
@@ -257,7 +257,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
               )}
             />
           </Col>
-          <Col span={12}>
+          <Col span={24} lg={12}>
             <Controller
               control={control}
               name="paxBirthDate"
@@ -272,7 +272,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
                     format="DD/MM/YYYY"
                     placeholder={t("input.dob.placeholder")}
                     className="w-full"
-                    value={field.value ? dayjs(field.value, { format: DATE_FORMAT }) : undefined}
+                    value={field.value ? dayjs(field.value) : undefined}
                     disabledDate={(date) => date.isAfter(dayjs())}
                     onChange={onChangeBirthDate}
                   />
@@ -280,7 +280,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
               )}
             />
           </Col>
-          <Col span={12}>
+          <Col span={24} lg={12}>
             <Controller
               control={control}
               name="paxPhoneNumber"
@@ -317,7 +317,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
           </Col>
         </Row>
         <Row gutter={16}>
-          <Col span={8}>
+          <Col span={24} lg={8}>
             <Controller
               control={control}
               name="paxPassportNumber"
@@ -336,7 +336,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
               )}
             />
           </Col>
-          <Col span={8}>
+          <Col span={24} lg={8}>
             <Controller
               control={control}
               name="paxPassortExpiredDate"
@@ -351,7 +351,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
                     format="DD/MM/YYYY"
                     className="w-full"
                     placeholder={t("input.passportExpiredDate.placeholder")}
-                    value={field.value ? dayjs(field.value, DATE_FORMAT) : undefined}
+                    value={field.value ? dayjs(field.value) : undefined}
                     disabledDate={(date) => date.isBefore(dayjs())}
                     onChange={onChangeNationalityDate}
                   />
@@ -359,7 +359,7 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
               )}
             />
           </Col>
-          <Col span={8}>
+          <Col span={24} lg={8}>
             <Controller
               control={control}
               name="paxNationality"

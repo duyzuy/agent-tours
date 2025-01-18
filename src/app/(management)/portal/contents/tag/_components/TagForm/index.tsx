@@ -193,7 +193,7 @@ const TagForm: React.FC<TagFormProps> = ({
               )}
               onApproval={() => onPublish?.(initData?.id)}
               onChangeStatus={onChangeStatusPage}
-              hideSaveForApproval={action === "update" ?? false}
+              hideSaveForApproval={action === "update"}
               hideApproval={getValues("status") !== PageContentStatus.PENDING || action === "create"}
               action={action}
               status={getValues("status")}

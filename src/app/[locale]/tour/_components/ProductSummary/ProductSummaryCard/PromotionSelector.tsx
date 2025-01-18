@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { memo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { IconTicketPercent } from "@/assets/icons";
@@ -35,13 +35,14 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className 
       })}
     >
       <div className="card-promotion-head">
-        <span
-          className="flex items-center text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-sm cursor-pointer"
+        <Button
+          type="text"
+          icon={<IconTicketPercent className="w-5 h-5" />}
           onClick={showModal}
+          className="!inline-flex !items-center !text-emerald-600 !bg-emerald-50 !px-3"
         >
-          <IconTicketPercent className="w-4 h-4 mr-2" />
-          <span>{t("promoCode")}</span>
-        </span>
+          <span>{t("button.applyPromo")}</span>
+        </Button>
       </div>
       <Modal open={openModal} centered onCancel={hideModal} width={420} footer={null}>
         <div className="modal__breakdown-header mb-4">

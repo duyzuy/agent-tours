@@ -1,4 +1,9 @@
-import { useCreateSellableMutation, useApprovalSellableMutation } from "@/mutations/managements/sellable";
+import {
+  useCreateSellableMutation,
+  useApprovalSellableMutation,
+  useDelete,
+  useUpdateStatus,
+} from "@/mutations/managements/sellable";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";
@@ -14,6 +19,8 @@ import { DATE_TIME_FORMAT } from "@/constants/common";
 const useCRUDSellable = () => {
   const { mutate: makeCreateSellable } = useCreateSellableMutation();
   const { mutate: makeApproval } = useApprovalSellableMutation();
+  const { mutate: makeDelete } = useDelete();
+  const { mutate: makeUpdateStatus } = useUpdateStatus();
 
   const queryClient = useQueryClient();
   const message = useMessage();
@@ -80,6 +87,43 @@ const useCRUDSellable = () => {
     });
   };
 
+  const onDelete = (recId: number, cb?: () => void) => {
+    makeDelete(recId, {
+      onSuccess: (data, variables) => {
+        message.success(`Xoá thành công.`);
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_SELLABLE_LIST],
+        });
+
+        cb?.();
+      },
+      onError: (error, variables) => {
+        console.log({ error, variables });
+        message.error(error.message);
+      },
+    });
+  };
+
+  const onUpdateStatus = (recId: number, cb?: () => void) => {
+    makeUpdateStatus(recId, {
+      onSuccess: (data, variables) => {
+        message.success(`Cập nhật thành công.`);
+
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_SELLABLE_LIST],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [queryCore.GET_SELLABLE_DETAIL],
+        });
+        cb?.();
+      },
+      onError: (error, variables) => {
+        console.log({ error, variables });
+        message.error(error.message);
+      },
+    });
+  };
+
   const getSellableApprovalPayload = (formData: SellableApprovalFormData): SellableApprovalPayload => {
     const { extraInventories, extraStocks, recId, cap, closeDate, valid, validTo, start, end, stocks, inventories } =
       formData;
@@ -123,6 +167,8 @@ const useCRUDSellable = () => {
   return {
     onCreate: onCreateSellable,
     onApproval: onApprovalSellable,
+    onUpdateStatus,
+    onDelete,
   };
 };
 export default useCRUDSellable;
