@@ -1,10 +1,11 @@
 import { formatNumber } from "@/utils/common";
 import dynamic from "next/dynamic";
 
-const DynamicArea = dynamic(
-  () => import("@ant-design/plots").then((module) => module.Area),
-  { ssr: false }
-);
+// const DynamicArea = dynamic(
+//   () => import("@ant-design/plots").then((module) => module.Area),
+//   { ssr: false }
+// );
+import { Area } from "@ant-design/plots";
 interface PropsAreaChart {
   scales: number;
   Date: string;
@@ -20,7 +21,7 @@ const AreaChartBookingDate = ({ dataItem }: { dataItem: PropsAreaChart[] }) => {
     },
     yAxis: {
       label: {
-        formatter: (value: any) => formatNumber(value)
+        formatter: (value: any) => formatNumber(value),
       },
     },
     areaStyle: () => {
@@ -61,7 +62,7 @@ const AreaChartBookingDate = ({ dataItem }: { dataItem: PropsAreaChart[] }) => {
     },
   };
 
-  return <DynamicArea data={data} {...config} />;
+  return <Area data={data} {...config} />;
 };
 
 export default AreaChartBookingDate;

@@ -1,9 +1,10 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
-const DynamicPie = dynamic(() => import("@ant-design/plots").then((module) => module.Pie), {
-  ssr: false,
-});
+// const DynamicPie = dynamic(() => import("@ant-design/plots").then((module) => module.Pie), {
+//   ssr: false,
+// });
+import { Pie } from "@ant-design/plots";
 interface PropsPieChart {
   key: string[];
   value: number;
@@ -47,6 +48,6 @@ const PieChartMethod = ({ dataItem }: { dataItem: PropsPieChart[] }) => {
       },
     ],
   };
-  return <DynamicPie data={data} {...config} />;
+  return <Pie data={data} {...config} />;
 };
 export default PieChartMethod;

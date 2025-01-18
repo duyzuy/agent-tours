@@ -1,10 +1,10 @@
 import React from "react";
 import dynamic from "next/dynamic";
-const DynamicPie = dynamic(
-  () => import("@ant-design/plots").then((module) => module.Pie),
-  { ssr: false }
-);
-
+// const DynamicPie = dynamic(
+//   () => import("@ant-design/plots").then((module) => module.Pie),
+//   { ssr: false }
+// );
+import { Pie } from "@ant-design/plots";
 interface PropsPieChart {
   value: number;
   type: string;
@@ -38,6 +38,6 @@ const PieChartBooking = ({ dataItem }: { dataItem: PropsPieChart[] }) => {
       },
     ],
   };
-  return <DynamicPie {...config} />;
+  return <Pie {...config} />;
 };
 export default PieChartBooking;
