@@ -20,7 +20,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({ activeKey = 1 }) => {
           {steps.map((step, _index) => (
             <div className="step relative flex-1 flex items-center justify-center" key={step.key}>
               <div className="content w-20 md:w-28 lg:w-48 text-center relative z-10">
-                <span className="w-8 h-8 bg-white rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="w-6 h-6 bg-white rounded-full flex items-center justify-center mx-auto lg:mb-2">
                   <span
                     className={classNames(
                       "rounded-full w-5 h-5 lg:w-6 lg:h-6 mx-auto flex items-center justify-center",
@@ -71,7 +71,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({ activeKey = 1 }) => {
               {_index !== 0 ? (
                 <span
                   className={classNames(
-                    "line h-[2px] bg-gray-200 w-full absolute top-4 right-[100%] translate-x-[50%]",
+                    "line h-[1px] bg-gray-200 w-full absolute top-3 right-[100%] translate-x-[50%]",
                     {
                       "bg-emerald-500": step.index <= activeKey,
                       "bg-gray-200": step.index > activeKey,

@@ -2,16 +2,16 @@
 import RegistrationForm from "../_components/RegistrationForm";
 import { useTranslations } from "next-intl";
 import { useSignUp } from "../modules/useAuth";
-import AuthLayoutWraper from "../_components/AuthLayoutWraper";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { Link } from "@/utils/navigation";
+import AuthLayout from "@/components/layouts/fe/AuthLayout";
 
 const CustomerRegisterPage = () => {
   const t = useTranslations("String");
 
   const { signUp, error, loading } = useSignUp();
   return (
-    <AuthLayoutWraper title={t("register")}>
+    <AuthLayout title={t("register")}>
       <RegistrationForm onSubmit={signUp} loading={loading}>
         <div className="content-form">
           <p className="text-center text-xs">
@@ -21,7 +21,7 @@ const CustomerRegisterPage = () => {
           </p>
         </div>
       </RegistrationForm>
-    </AuthLayoutWraper>
+    </AuthLayout>
   );
 };
 export default CustomerRegisterPage;

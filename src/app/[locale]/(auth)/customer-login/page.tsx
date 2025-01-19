@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 import { useSignIn } from "../modules/useAuth";
 import { Link } from "@/utils/navigation";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
-import AuthLayoutWraper from "../_components/AuthLayoutWraper";
 import { useRouter } from "@/utils/navigation";
+import AuthLayout from "@/components/layouts/fe/AuthLayout";
 
 const CustomerLogin = () => {
   const t = useTranslations("String");
@@ -16,7 +16,7 @@ const CustomerLogin = () => {
     router.push(`/${CLIENT_LINKS.CustomerForgotPassword}`);
   };
   return (
-    <AuthLayoutWraper title={t("login")}>
+    <AuthLayout title={t("login")}>
       <LoginForm
         onSubmit={signIn}
         error={error ? t(error) : undefined}
@@ -29,7 +29,7 @@ const CustomerLogin = () => {
           </Link>
         </p>
       </LoginForm>
-    </AuthLayoutWraper>
+    </AuthLayout>
   );
 };
 export default CustomerLogin;

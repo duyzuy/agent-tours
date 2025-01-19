@@ -5,7 +5,7 @@ import {
   CustomerForgotPasswordFormData,
   CustomerLoginFormData,
   CustomerRegisterFormData,
-} from "../modules/customerAuth.interface";
+} from "./customerAuth.interface";
 
 export const customerRegisterSchema: ObjectSchema<CustomerRegisterFormData> = object({
   faceBookId: string(),

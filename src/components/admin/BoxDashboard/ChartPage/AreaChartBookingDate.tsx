@@ -2,67 +2,59 @@ import { formatNumber } from "@/utils/common";
 import dynamic from "next/dynamic";
 
 // const DynamicArea = dynamic(
-//   () => import("@ant-design/plots").then((module) => module.Area),
-//   { ssr: false }
+//   () =>
+//     import("@ant-design/plots")
+//       .then((module) => module.Area)
+//       .catch((err) => {
+//         throw new Error(err);
+//       }),
+//   {
+//     ssr: false,
+//   },
 // );
 import { Area } from "@ant-design/plots";
+import { moneyFormatVND } from "@/utils/helper";
 interface PropsAreaChart {
-  scales: number;
-  Date: string;
+  booking: number;
+  destination: string;
+  month: string;
 }
 const AreaChartBookingDate = ({ dataItem }: { dataItem: PropsAreaChart[] }) => {
   const data = dataItem || [];
   const config = {
-    xField: "Date",
-    yField: "scales",
-    xAxis: {
-      range: [0, 1],
-      tickCount: 12,
-    },
-    yAxis: {
-      label: {
-        formatter: (value: any) => formatNumber(value),
-      },
-    },
-    areaStyle: () => {
-      return {
-        fill: "l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff", // Màu chart
-      };
-    },
-    tooltip: {
-      domStyles: {
-        "g2-tooltip": {
-          backgroundColor: "#000000",
-          boxShadow: "0px 0px 10px #aeaeae",
-          borderRadius: "4px",
-          fontSize: "14px",
-          lineHeight: "18px",
-          padding: "8px 12px",
-          color: "#ffffff", // Màu chữ trong tooltip
-        },
-        "g2-tooltip-title": {
-          marginBottom: "4px",
-          fontWeight: "bold",
-        },
-        "g2-tooltip-list-item": {
-          marginBottom: "4px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          color: "#ffffff", // Màu chữ trong tooltip
-          fontWeight: "bold",
-        },
-      },
-      formatter: (datum: any) => {
-        return {
-          name: "Lượt booking",
-          value: datum.scales,
-        };
-      },
-    },
+    data: data,
+    xField: "month",
+    yField: "booking",
+    colorField: "destination",
+    // xAxis: {
+    //   range: [0, 11111],
+    //   tickCount: 1,
+    // },
+    // yAxis: {
+    //   label: {
+    //     formatter: (value: any) => formatNumber(value),
+    //   },
+    // },
+    // areaStyle: () => {
+    //   return {
+    //     fill: "l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff", // Màu chart
+    //   };
+    // },
+    // line: {
+    //   style: {
+    //     stroke: "darkgreen",
+    //     strokeWidth: 2,
+    //   },
+    // },
+    // style: {
+    //   fill: "linear-gradient(-90deg, white 0%, darkgreen 100%)",
+    // },
+    // axis: {
+    //   y: { labelFormatter: "~s" },
+    // },
   };
 
-  return <Area data={data} {...config} />;
+  return <Area {...config} />;
 };
 
 export default AreaChartBookingDate;

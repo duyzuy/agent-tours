@@ -47,7 +47,7 @@ const RuleAndPolicyPage = () => {
       children: (
         <div className="pt-6">
           <div className="mb-3">
-            <span className="block font-[500] text-lg">Cấu hình FTP Gmail</span>
+            <span className="block font-[500] text-lg">Cấu hình SMTP Gmail</span>
           </div>
           <div className="form max-w-[450px]">
             <Form layout="vertical">

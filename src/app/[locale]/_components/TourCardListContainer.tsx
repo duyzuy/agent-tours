@@ -3,6 +3,7 @@ import { getTemplateProductList } from "../../../actions/searchProduct";
 
 import dynamic from "next/dynamic";
 import { TourCardSkeleton } from "@/components/frontend/TourCard";
+import { isMobile } from "@/utils/detectMobile";
 
 const DynamicTourCard = dynamic(() => import("@/components/frontend/TourCard"), {
   loading: () => <TourCardSkeleton />,
@@ -23,7 +24,7 @@ const TourCardListContainer: React.FC<TourCardListContainerProps> = async ({ que
           <h3 className="text-xl lg:text-2xl font-[500] uppercase">{title}</h3>
         </div>
         {productList ? (
-          <div className="tour__list-items grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-3 lg:gap-4">
+          <WraperDynamicDevice isMobile={isMobile()}>
             {productList.map((tourItem) => (
               <DynamicTourCard
                 key={tourItem.recId}
@@ -33,9 +34,10 @@ const TourCardListContainer: React.FC<TourCardListContainerProps> = async ({ que
                 depart={tourItem.depart}
                 cms={tourItem.cms}
                 bordered={false}
+                className={isMobile() ? "min-w-[240px]" : ""}
               />
             ))}
-          </div>
+          </WraperDynamicDevice>
         ) : (
           <div>Không có tour nào khả dụng.</div>
         )}
@@ -44,3 +46,11 @@ const TourCardListContainer: React.FC<TourCardListContainerProps> = async ({ que
   );
 };
 export default TourCardListContainer;
+
+const WraperDynamicDevice = ({ isMobile, children }: { isMobile: boolean; children?: React.ReactNode }) => {
+  return isMobile ? (
+    <div className="flex gap-x-3 w-full overflow-x-auto">{children}</div>
+  ) : (
+    <div className="tour__list-items grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-3 lg:gap-4">{children}</div>
+  );
+};

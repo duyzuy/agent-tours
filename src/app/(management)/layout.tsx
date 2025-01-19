@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import config from "@/configs";
-import ThemeProvider from "@/providers/ThemeProvider";
-import { RQClientProvider } from "@/providers/RQClientProvider";
+import ThemeProvider from "@/lib/ThemeProvider";
+import { RQClientProvider } from "@/lib/RQClientProvider";
 
 import "@/styles/globals.scss";
 

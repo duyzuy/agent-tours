@@ -53,7 +53,7 @@ export default async function PostListContainer() {
       }}
     >
       <div className="overlay bg-slate-900 opacity-40 absolute left-0 top-0 w-full h-full"></div>
-      <div className="container mx-auto relative z-10 px-4 md:px-6 lg:px-8">
+      <div className="container mx-auto relative z-10 px-3 md:px-6 lg:px-8">
         <div className="section-title w-full flex items-center justify-between mb-6 lg:mb-12">
           <div className="text-2xl lg:text-4xl drop-shadow-lg text-white relative">
             <span className="uppercase">Trải nghiệm, khám phá</span>

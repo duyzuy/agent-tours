@@ -4,7 +4,7 @@ import { Button, Form, Input } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CustomerForgotPasswordFormData } from "../modules/customerAuth.interface";
-import { customerForgotPasswordSchema } from "../schema/customerAuth.schema";
+import { customerForgotPasswordSchema } from "../modules/customerAuth.schema";
 import { useTranslations } from "next-intl";
 import { SubmitHandler } from "react-hook-form";
 import classNames from "classnames";

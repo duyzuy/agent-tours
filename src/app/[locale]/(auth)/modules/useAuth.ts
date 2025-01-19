@@ -12,7 +12,6 @@ import useMessage from "@/hooks/useMessage";
 import { useLocale } from "next-intl";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { useRouter } from "@/utils/navigation";
-import { isUndefined } from "lodash";
 
 /**
  * Customer forgot password

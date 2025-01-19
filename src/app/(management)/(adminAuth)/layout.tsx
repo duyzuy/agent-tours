@@ -1,12 +1,12 @@
 import Link from "next/link";
-import Auth from "../portal/_components/authWrapper/Auth";
+import AdminAuth from "@/components/admin/authWrapper/AdminAuth";
 import { Space } from "antd";
 interface Props {
   children: React.ReactNode;
 }
 const LayoutAgAuth = ({ children }: Props) => {
   return (
-    <Auth>
+    <AdminAuth>
       <div className="login-page h-screen flex flex-wrap">
         <div className="w-full lg:w-1/5 bg-gray-50 bg-gradient-to-t from-primary-dark to-primary-light flex items-end justify-center">
           <div className="content text-white px-2 py-8">
@@ -25,7 +25,7 @@ const LayoutAgAuth = ({ children }: Props) => {
         </div>
         <div className="w-full lg:w-4/5 px-6 pt-12 py-8 flex justify-center items-center min-h-full">{children}</div>
       </div>
-    </Auth>
+    </AdminAuth>
   );
 };
 export default LayoutAgAuth;

@@ -5,12 +5,12 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Link } from "@/utils/navigation";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
-import AuthLayoutWraper from "../_components/AuthLayoutWraper";
 import { useResetPassowrd } from "../modules/useAuth";
 import { useEffect, useState } from "react";
 import Counter from "./Counter";
 import { Button } from "antd";
 import useBroadcastChannel from "@/hooks/fe/useBroadcastChanel";
+import AuthLayout from "@/components/layouts/fe/AuthLayout";
 
 export type BroadcastMessageResetPassword = {
   message: string;
@@ -67,7 +67,7 @@ const CustomerForgotPasswordPage = () => {
   };
 
   return (
-    <AuthLayoutWraper title={t("forgotPassword")}>
+    <AuthLayout title={t("forgotPassword")}>
       {resetPasswordSuccess ? (
         <div className="text-center border rounded-md py-4 px-3 text-emerald-500">
           <p className="font-[500] text-lg">Lấy lại mật khẩu thành công.</p>
@@ -90,7 +90,7 @@ const CustomerForgotPasswordPage = () => {
           )}
         </>
       )}
-    </AuthLayoutWraper>
+    </AuthLayout>
   );
 };
 export default CustomerForgotPasswordPage;

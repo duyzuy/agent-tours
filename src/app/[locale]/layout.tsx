@@ -7,7 +7,7 @@ import { set } from "lodash";
 import { LanguageProvider } from "@/store/providers/LanguageProvider";
 
 import LangContainer from "@/containers/LangContainer";
-import { NextAuthProvider } from "@/providers/NextAuthProvider";
+import { NextAuthProvider } from "@/lib/NextAuthProvider";
 import { locales } from "@/constants/locale.constant";
 import Header from "./_components/commons/Header";
 import Footer from "./_components/commons/Footer";
@@ -20,8 +20,8 @@ import ModalAuth from "./(auth)/_components/ModalAuth";
 import { ModalManagerProvider } from "@/store/providers/ModalManagerProvider";
 import { getTranslationFe } from "../../actions/feTranslations";
 import { SITE_NAME } from "@/configs/site";
-import ThemeProvider from "@/providers/ThemeProvider";
-import { RQClientProvider } from "@/providers/RQClientProvider";
+import ThemeProvider from "@/lib/ThemeProvider";
+import { RQClientProvider } from "@/lib/RQClientProvider";
 
 const timeZone = "Asia/Bangkok";
 interface Props {

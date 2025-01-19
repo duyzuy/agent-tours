@@ -3,7 +3,7 @@ import { MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, FormItemProps, Input, InputProps } from "antd";
 import { useTranslations } from "next-intl";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
-import { customerRegisterSchema } from "../schema/customerAuth.schema";
+import { customerRegisterSchema } from "../modules/customerAuth.schema";
 import { CustomerRegisterFormData } from "../modules/customerAuth.interface";
 import { removeVietnameseTones } from "@/utils/helper";
 import { useForm, Controller } from "react-hook-form";

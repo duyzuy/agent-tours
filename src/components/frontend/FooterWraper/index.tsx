@@ -82,22 +82,22 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
   return (
     <footer className="footer">
       <div
-        className="footer-top  bg-main-400 py-12"
+        className="footer-top  bg-main-400 py-6 lg:py-12"
         style={{
           backgroundImage: "url(/assets/images/bg-ft-parten.png)",
         }}
       >
-        <div className="container mx-auto px-4 md:px-6 lg:px-8">
-          <div className="flex flex-wrap -mx-4 lg:-mx-8">
+        <div className="container mx-auto px-3 md:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-12 gap-y-6 mb-6">
             {menuItems?.map((mItem) => (
-              <div className="menu-footer-column w-full lg:w-1/2 px-4 lg:px-8 mb-6" key={mItem.id}>
+              <div className="menu-footer__column" key={mItem.id}>
                 <div className="ft-title py-2 mb-3">
-                  <h5 className="text-white font-[500] uppercase">{mItem.title}</h5>
+                  <h5 className="text-white font-[500] uppercase text-base">{mItem.title}</h5>
                 </div>
                 <div className="w-full h-[1px] bg-gray-400 mb-3 opacity-50"></div>
-                <div className="ft-contents flex -mx-2 lg:-mx-3">
+                <div className="grid grid-cols-3 gap-2 lg:gap-3">
                   {mItem.children?.map((childColumnItems, _index) => (
-                    <ul className="list w-1/3 px-2 lg:px-3" key={`doms-${childColumnItems.id}`}>
+                    <ul className="menu-footer__sub-column" key={`doms-${childColumnItems.id}`}>
                       {childColumnItems.children?.map(({ title, slug, id }) => (
                         <li className="py-[6px]" key={id}>
                           <Link href={`/${slug}`} className="flex">
@@ -112,10 +112,10 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
               </div>
             ))}
           </div>
-          <div className="flex flex-wrap -mx-4 lg:-mx-8">
-            <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6">
+          <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-12 gap-y-6">
+            <div className="menu-footer__column">
               <div className="ft-title py-2 mb-3">
-                <h5 className="text-white font-semibold">THÔNG TIN CHUNG</h5>
+                <h5 className="text-white font-semibold text-base">THÔNG TIN CHUNG</h5>
               </div>
               <div className="w-full h-[1px] bg-gray-400 mb-3 opacity-50"></div>
               <div className="ft-contents flex -mx-2 lg:-mx-3 flex-wrap">
@@ -129,20 +129,15 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                 ))}
               </div>
             </div>
-            <div className="w-full lg:w-1/2 px-4 lg:px-8 mb-6">
+            <div className="menu-footer__column">
               <div className="ft-title py-2 mb-3">
-                <h5 className="text-white font-semibold">CHẤP NHẬN THANH TOÁN</h5>
+                <h5 className="text-white font-semibold text-base">CHẤP NHẬN THANH TOÁN</h5>
               </div>
               <div className="w-full h-[1px] bg-gray-400 mb-3 opacity-50"></div>
               <div className="ft-contents bg-white rounded-lg py-3 px-3">
-                <ul className="list flex items-center">
+                <ul className="list flex items-center gap-x-2">
                   {PAYS.map((_item, _index) => (
-                    <li
-                      className={classNames("w-18", {
-                        "ml-1": _index !== 0,
-                      })}
-                      key={_index}
-                    >
+                    <li className={classNames("w-18")} key={_index}>
                       <Image src={_item.thumbnail} alt={_item.name} width={60} height={30} />
                     </li>
                   ))}

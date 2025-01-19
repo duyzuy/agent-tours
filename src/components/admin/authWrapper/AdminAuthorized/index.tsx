@@ -6,7 +6,7 @@ import { LINKS } from "@/constants/links.constant";
 import PermissionWrapper from "./PermissionWrapper";
 
 import { useGetProfileQuery, useLocalUserGetRolesQuery } from "@/queries/localUser";
-import { LocalUserProfileContext } from "@/context/localUserProfileContext";
+import { LocalUserProfileProvider } from "@/context/localUserProfileContext";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
@@ -50,9 +50,9 @@ const AdminAuthorized: React.FC<Props> = ({ children }) => {
   }
   if (!userProfile || !rolesPers) return null;
   return (
-    <LocalUserProfileContext.Provider value={userProfile}>
+    <LocalUserProfileProvider value={userProfile}>
       <PermissionWrapper rolePers={rolesPers.roleList[0].localUser_RolePermissionList}>{children}</PermissionWrapper>
-    </LocalUserProfileContext.Provider>
+    </LocalUserProfileProvider>
   );
 };
 export default AdminAuthorized;

@@ -7,7 +7,7 @@ import { getAgToken } from "@/utils/common";
 interface AuthProps {
   children?: React.ReactNode;
 }
-const Auth = ({ children }: AuthProps) => {
+const AdminAuth = ({ children }: AuthProps) => {
   const isAuth = !!getAgToken();
   const router = useRouter();
 
@@ -20,4 +20,4 @@ const Auth = ({ children }: AuthProps) => {
   return children;
 };
 
-export default Auth;
+export default AdminAuth;

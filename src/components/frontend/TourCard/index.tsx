@@ -210,7 +210,7 @@ const CardDurationDays: TourCardCompound["Days"] = ({ className = "" }) => {
 
   return (
     <div
-      className={classNames("flex flex-wrap gap-2", {
+      className={classNames("flex flex-wrap gap-x-3 gap-y-1", {
         [className]: className,
       })}
     >
@@ -330,7 +330,7 @@ const CardInformation: TourCardCompound["Information"] = ({ children }) => {
   const { tourCode, startDate, openAmount, otherDepartDate } = useTourCardContext();
   const t = useTranslations("String");
   return (
-    <div className="tour-card__info-list grid lg:grid-cols-3 grid-cols-2 gap-2">
+    <div className="tour-card__info-list grid lg:grid-cols-3 gap-2">
       <InformationItem label={t("card.tourCode")} value={tourCode} />
       <InformationItem
         label={t("card.departDate")}
@@ -357,7 +357,7 @@ const CardInformation: TourCardCompound["Information"] = ({ children }) => {
             )}
           </>
         }
-        className="col-span-2 lg:col-span-3"
+        className="col-span-3"
       />
     </div>
   );

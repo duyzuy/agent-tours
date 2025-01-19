@@ -1,24 +1,35 @@
 import dynamic from "next/dynamic";
-// const DynamicColumn = dynamic(() => import("@ant-design/plots").then((module) => module.Column), {
-//   ssr: false,
-// });
+// const DynamicColumn = dynamic(
+//   () =>
+//     import("@ant-design/plots")
+//       .then((module) => module.Column)
+//       .catch((err) => {
+//         throw new Error("Error");
+//       }),
+//   {
+//     ssr: false,
+//   },
+// );
 import { Column } from "@ant-design/plots";
 
 interface PropsColumn {
-  year: string;
-  value: number;
-  type: string;
+  month: string;
+  booking: number;
+  destination: string;
 }
 const ColumnChart = ({ dataItem }: { dataItem: PropsColumn[] }) => {
   const data = dataItem || [];
   const config: any = {
     data,
     isStack: true,
-    xField: "year",
-    yField: "value",
-    seriesField: "type",
-    label: {
-      position: "middle",
+    xField: "month",
+    yField: "booking",
+    seriesField: "destination",
+    colorField: "destination",
+    stack: true,
+    sort: {
+      reverse: true,
+      by: "y",
     },
     interactions: [
       {
@@ -26,9 +37,14 @@ const ColumnChart = ({ dataItem }: { dataItem: PropsColumn[] }) => {
         enable: false,
       },
     ],
-    legend: {
-      position: "bottom",
-      align: "center",
+    axis: {
+      y: { labelFormatter: "~s" },
+      x: {
+        labelSpacing: 4,
+        style: {
+          labelTransform: "rotate(90)",
+        },
+      },
     },
     color: ["#25E165", "#00A0E8"],
     columnBackground: {

@@ -3,13 +3,13 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import React from "react";
 
-interface AuthLayoutWraperProps {
+interface AuthLayoutProps {
   title?: string;
   children?: React.ReactNode;
   renderExtra?: React.ReactNode;
   bgUrl?: string;
 }
-const AuthLayoutWraper: React.FC<AuthLayoutWraperProps> = ({
+const AuthLayout: React.FC<AuthLayoutProps> = ({
   title,
   children,
   renderExtra,
@@ -44,4 +44,4 @@ const AuthLayoutWraper: React.FC<AuthLayoutWraperProps> = ({
     </div>
   );
 };
-export default AuthLayoutWraper;
+export default AuthLayout;

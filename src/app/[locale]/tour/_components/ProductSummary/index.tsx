@@ -39,21 +39,19 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
 
   const { initTemplateAndProduct, setProductItem } = useSelectProduct();
   const { session } = useAuth();
-  const { showAuthModal } = useAuthModal();
-
-  const { initPassengerFormDataThenGoToNext, setQuantityPassenger } = useSelectPassengerQuantity();
-
   const t = useTranslations("String");
+  const { showAuthModal } = useAuthModal();
+  const { initPassengerFormDataThenGoToNext, setQuantityPassenger } = useSelectPassengerQuantity();
   const [isPendingInitBookingDetails, startTransitionInitBookingDetailItems] = useTransition();
 
   const handleChangeCoupon: ProductSummaryCardProps["onChangeCoupon"] = (value, coupon) => {
     couponPolicy?.code === value ? removeCouponPolicy() : addCouponPolicy(coupon);
   };
+
   const onChangeProduct = useCallback<Required<DatePickerProps>["onChange"]>((date) => {
     const newProduct = productList?.find((prd) => {
       return stringToDate(prd.startDate)?.isSame(date, "date");
     });
-    console.log(newProduct);
     newProduct && setProductItem(newProduct);
   }, []);
 

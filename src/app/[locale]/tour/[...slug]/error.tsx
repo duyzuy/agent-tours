@@ -9,16 +9,18 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   }, [error]);
 
   return (
-    <div>
-      <h2>Co loi xay ra</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Vui long thu lai
-      </button>
+    <div className="flex items-center justify-center">
+      <div className="px-3 py-2">
+        <h2>Co loi xay ra</h2>
+        <button
+          onClick={
+            // Attempt to recover by trying to re-render the segment
+            () => reset()
+          }
+        >
+          Vui long thu lai
+        </button>
+      </div>
     </div>
   );
 }

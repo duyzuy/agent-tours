@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
-import AuthLayoutWraper from "../_components/AuthLayoutWraper";
+import AuthLayout from "@/components/layouts/fe/AuthLayout";
 import { useSearchParams } from "next/navigation";
 import { useGetResetPasswordQuery } from "@/queries/fe/auth";
 import { isEmpty, isUndefined } from "lodash";
@@ -54,10 +54,10 @@ const CustomerResetPasswordPage = () => {
     }
   }, [data, isLoading]);
   return (
-    <AuthLayoutWraper title={t("pageTitle.resetPassword")}>
+    <AuthLayout title={t("pageTitle.resetPassword")}>
       {/* <Button onClick={onFinishReset}>finish</Button> */}
       <CreatePasswordForm onSubmit={createNewPassword} userId={Number(userId)} isLoading={isPending} />
-    </AuthLayoutWraper>
+    </AuthLayout>
   );
 };
 export default CustomerResetPasswordPage;

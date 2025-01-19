@@ -4,7 +4,6 @@ import { useBookingSelector } from "@/store/hooks";
 import { useMemo } from "react";
 import { mediaConfig } from "@/configs";
 import Image from "next/image";
-import useBookingSummary from "../../modules/useBookingSummary";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate, stringToDate } from "@/utils/date";
 import { PassengerType } from "@/models/common.interface";
@@ -13,10 +12,11 @@ import { Divider, Space, Tag } from "antd";
 import { IconCalendarRange, IconCheckCircle, IconImage, IconPlane } from "@/assets/icons";
 import { useLocale } from "next-intl";
 import { LangCode } from "@/models/management/cms/language.interface";
-interface BookingBreakDownProps {
+import useBookingSummary from "@/app/[locale]/(booking)/modules/useBookingSummary";
+interface BookingSummaryProps {
   className?: string;
 }
-const BookingBreakDown: React.FC<BookingBreakDownProps> = ({ className = "" }) => {
+const BookingSummary: React.FC<BookingSummaryProps> = ({ className = "" }) => {
   const { productBreakdown, subTotal, subTotalProduct, lastTotalPayment, servicesBreakdown, discountBreakdown } =
     useBookingSummary();
   const product = useBookingSelector((state) => state.bookingInfo.product);
@@ -231,7 +231,7 @@ const BookingBreakDown: React.FC<BookingBreakDownProps> = ({ className = "" }) =
     </div>
   );
 };
-export default BookingBreakDown;
+export default BookingSummary;
 
 const getPassengerFullname = (paxLastname: string, paxMiddleFirstName: string) => {
   return `${paxLastname}, ${paxMiddleFirstName}`;

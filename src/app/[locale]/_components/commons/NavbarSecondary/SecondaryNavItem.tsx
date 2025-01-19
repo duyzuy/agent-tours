@@ -94,9 +94,18 @@ function MegaMenuDropdown({ name, items, className = "", descriptions }: MegaMen
     >
       <div className="mega-dropdown__inner bg-white rounded-lg w-full py-6 px-6 shadow-lg">
         <div className="grid grid-cols-5 gap-3">
-          {items.map(({ children: items, name, id }) => (
+          {items.map(({ children: items, name, id, slug, objectType }) => (
             <div className="menu-secondary-column" key={id}>
-              <div className="sub-item-name text-rose-600 font-[500] text-base mb-3">{name}</div>
+              <div className="sub-item-name text-rose-600 font-[500] text-base mb-3">
+                <Link
+                  href={slug}
+                  title={name}
+                  target={objectType === "custom" ? "_blank" : "_self"}
+                  className="!text-rose-600"
+                >
+                  {name}
+                </Link>
+              </div>
               <ul className="sub-items">
                 {items?.map(({ id, slug, name, objectType }) => (
                   <li className="child-item py-2" key={id}>

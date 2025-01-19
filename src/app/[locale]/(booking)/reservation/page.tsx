@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import { Space, Button, Tag } from "antd";
 import { useBookingSelector } from "@/store/hooks";
 import IconSuccess from "@/assets/icons/IconSuccess";
-import { useRouter } from "@/utils/navigation";
+import { Link, useRouter } from "@/utils/navigation";
 
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
@@ -99,6 +99,12 @@ const ReservationPage = () => {
           <Button type="primary" size="large" onClick={handleBackToHome}>
             Về trang chủ
           </Button>
+          <Link
+            href={`/customer/order/${reservation?.bookingOrder.recId}`}
+            className="!bg-emerald-600 !border-emerald-700 !text-white !h-10 px-3 inline-flex items-center justify-center rounded-md"
+          >
+            Chi tiết đặt chỗ
+          </Link>
         </Space>
       </div>
     </div>
