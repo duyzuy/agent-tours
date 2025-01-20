@@ -62,7 +62,7 @@ const BoxDashboard = ({ title, number, backgroundColor }: Props) => {
       <Divider />
       <h3 className="text-lg font-[500]">Lượt booking theo điểm đến</h3>
       <ColumnChart dataItem={demoColumnChart} />
-      {/* <div className="flex">
+      <div className="flex">
         <PieChartMethod
           dataItem={[
             { key: ["Thang 1", "Thang 2"], value: 20 },
@@ -79,7 +79,7 @@ const BoxDashboard = ({ title, number, backgroundColor }: Props) => {
             { type: "ccc", value: 20 },
           ]}
         />
-      </div> */}
+      </div>
     </Card>
   );
 };

@@ -137,7 +137,7 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         rolepers: PATH_WITH_PERMISSION["rule-policy/coupon"],
       },
       {
-        key: "rule-policy/coupon-policy",
+        key: "rule-policy/policy",
         label: "Policy",
         rolepers: PATH_WITH_PERMISSION["rule-policy/coupon-policy"],
       },
@@ -268,6 +268,19 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
     rolepers: PATH_WITH_PERMISSION["media"],
   },
   {
+    key: "leading",
+    icon: React.createElement(TeamOutlined),
+    label: "Leading",
+    rolepers: PATH_WITH_PERMISSION["leading"],
+    children: [
+      {
+        key: "leading/list",
+        label: "Leading list",
+        rolepers: PATH_WITH_PERMISSION["leading/list"],
+      },
+    ],
+  },
+  {
     key: "user-management",
     icon: React.createElement(UserOutlined),
     label: "Quản lý tài khoản",
@@ -295,19 +308,7 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
       },
     ],
   },
-  {
-    key: "leading",
-    icon: React.createElement(TeamOutlined),
-    label: "Leading",
-    rolepers: PATH_WITH_PERMISSION["leading"],
-    children: [
-      {
-        key: "leading/list",
-        label: "Leading list",
-        rolepers: PATH_WITH_PERMISSION["leading/list"],
-      },
-    ],
-  },
+
   {
     key: "language",
     icon: React.createElement(GlobalOutlined),

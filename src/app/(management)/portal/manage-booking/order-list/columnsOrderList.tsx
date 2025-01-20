@@ -24,7 +24,8 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
         <div>
           <Link href={`/portal/manage-booking/${record.recId}`} className="block">
             <div className="block text-gray-800 hover:text-blue-600">{record.template.name}</div>
-            <div className="text-xs text-gray-600">{record.sellable.code}</div>
+            <div className="text-xs text-gray-600 mb-2">{record.sellable.code}</div>
+            <span>Chi tiết</span>
           </Link>
         </div>
       );
@@ -61,6 +62,15 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     dataIndex: "custName",
     key: "custName",
     width: 150,
+  },
+  {
+    title: "Tổng tiền đã thanh toán",
+    dataIndex: "totalPaid",
+    key: "totalPaid",
+    width: 200,
+    render: (_, record) => {
+      return <span className="text-emerald-600">{moneyFormatVND(record.totalPaid)}</span>;
+    },
   },
   {
     title: "Tổng tiền",

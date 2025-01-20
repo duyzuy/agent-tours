@@ -41,7 +41,7 @@ const BookingPage = () => {
         <div className="h-44"></div>
         <SearchBookingBox className="searchbox shadow-lg" onSubmit={onSearchBooking} loading={isPending} />
       </div>
-      <div className="font-[500] text-lg mb-3">Danh sách touar</div>
+      <div className="font-[500] text-lg mb-3">Danh sách tour</div>
       <ProductList items={productList || []} onSelect={onSelectProduct} loading={isPending} />
       <DrawerSelectProduct open={showDrawer} data={selectedProduct} onClose={onCloseDrawer} onOk={onNext} />
     </div>

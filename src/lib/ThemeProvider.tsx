@@ -2,7 +2,7 @@
 
 import { PropsWithChildren } from "react";
 
-import { ConfigProvider, theme, App } from "antd";
+import { ConfigProvider, App } from "antd";
 import StyledComponentsRegistry from "@/lib/AntRegistry";
 import { antdTheme } from "@/styles/themes/antTheme";
 

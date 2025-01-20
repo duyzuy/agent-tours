@@ -10,6 +10,7 @@ import { LINKS } from "@/constants/links.constant";
 import AdminMenuLink from "./AdminMenuLink";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
 import { useLogoutPortal } from "@/app/(management)/(adminAuth)/ag/hooks/useAgAuth";
+import ThemeModeToggle from "@/components/ThemeModeToggle";
 interface Props {
   children: React.ReactNode;
 }
@@ -95,32 +96,35 @@ const AdminLayout = ({ children }: Props) => {
           className="flex justify-between border-b sticky top-0 z-10 items-center !px-6"
         >
           <span className="font-semibold text-xl">Tour Management Platform</span>
-          <Dropdown
-            menu={{
-              items: [
-                {
-                  label: "Thông tin cá nhân",
-                  key: "userInfo",
-                  icon: <UserOutlined />,
-                  onClick: () => onNavigation(LINKS.MyAccount),
-                },
-                {
-                  label: "Đăng xuất",
-                  key: "logout",
-                  icon: <LogoutOutlined />,
-                  onClick: logoutPortal,
-                },
-              ],
-            }}
-          >
-            <Space className="cursor-pointer">
-              <Avatar shape="circle" size={28} icon={<UserOutlined />} className="!bg-orange-500" />
-              <div className="text-sm leading-none">
-                <span className="block text-xs">{userProfile?.userType}</span>
-                <span className="text-xs text-gray-400">{userProfile?.fullname}</span>
-              </div>
-            </Space>
-          </Dropdown>
+          <div className="inline-flex items-center gap-x-3">
+            <ThemeModeToggle />
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    label: "Thông tin cá nhân",
+                    key: "userInfo",
+                    icon: <UserOutlined />,
+                    onClick: () => onNavigation(LINKS.MyAccount),
+                  },
+                  {
+                    label: "Đăng xuất",
+                    key: "logout",
+                    icon: <LogoutOutlined />,
+                    onClick: logoutPortal,
+                  },
+                ],
+              }}
+            >
+              <Space className="cursor-pointer">
+                <Avatar shape="circle" size={28} icon={<UserOutlined />} className="!bg-orange-500" />
+                <div className="text-sm leading-none">
+                  <span className="block text-xs">{userProfile?.userType}</span>
+                  <span className="text-xs text-gray-400">{userProfile?.fullname}</span>
+                </div>
+              </Space>
+            </Dropdown>
+          </div>
         </Header>
         <Content
           style={{
