@@ -49,7 +49,7 @@ export default TourCardListContainer;
 
 const WraperDynamicDevice = ({ isMobile, children }: { isMobile: boolean; children?: React.ReactNode }) => {
   return isMobile ? (
-    <div className="flex gap-x-3 w-full overflow-x-auto">{children}</div>
+    <div className="flex gap-x-3 w-full overflow-x-auto pb-3">{children}</div>
   ) : (
     <div className="tour__list-items grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-3 lg:gap-4">{children}</div>
   );
