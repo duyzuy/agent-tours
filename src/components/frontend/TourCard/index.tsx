@@ -92,7 +92,7 @@ const TourCard = ({
   className,
 }: TourCardProps) => {
   const locale = useLocale();
-  const sellableItem = sellables.shift();
+  const sellableItem = [...sellables].shift();
   const tourCardContentByLanguage = useMemo(() => {
     return cms.find((item) => item.lang === locale);
   }, [cms]);
