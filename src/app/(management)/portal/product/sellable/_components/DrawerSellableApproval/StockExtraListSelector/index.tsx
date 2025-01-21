@@ -54,7 +54,7 @@ function StockExtraListSelector(props: StockExtraListSelectorProps) {
       new StockQueryParams(
         { status: Status.OK, inventoryType: inventoryTypeList, productType: [EProductType.EXTRA] },
         1,
-        5,
+        10,
       ),
   );
   const [showModalDetail, setShowModalDetail] = useState<{
@@ -133,10 +133,23 @@ function StockExtraListSelector(props: StockExtraListSelectorProps) {
       },
     },
     {
+      title: "Loại dịch vụ",
+      dataIndex: "inventoryType",
+      width: 150,
+      render: (_, record) => {
+        return (
+          <>
+            <p>{record.inventoryType}</p>
+            <p className="text-xs text-gray-500">{record.type}</p>
+          </>
+        );
+      },
+    },
+    {
       title: "Ngày sử dụng",
       dataIndex: "used-date",
       key: "used-date",
-      width: 250,
+      width: 200,
       render: (_, { startDate, endDate }) => {
         return (
           <>
@@ -239,21 +252,21 @@ function StockExtraListSelector(props: StockExtraListSelectorProps) {
       <Modal
         open={isOpen}
         destroyOnClose={true}
-        width={850}
+        width={1040}
         onCancel={onClose}
         cancelText="Huỷ bỏ"
         okText="Xác nhận"
         onOk={handleConfirmSelection}
       >
         <div className="modal-head">
-          <h3 className="text-center font-semibold text-lg mb-6">Dịch vụ bổ sung có stock</h3>
+          <h3 className="text-center font-semibold text-lg mb-6">Lựa chọn dịch vụ bổ sung</h3>
         </div>
         <div className="w-full p-4 rounded-md bg-red-50 mb-3">
           <div className="text-red-600">
-            <InfoCircleOutlined /> Điều kiện lựa chọn dịch vụ có stock
+            <InfoCircleOutlined /> Điều kiện lựa chọn dịch vụ bổ sung
           </div>
           <div>
-            Ngày mở bán của dịch vụ có stock từ
+            Ngày mở bán của dịch vụ phải bao quát từ
             <span className="font-semibold mx-1">
               {validFrom ? dayjs(validFrom).locale("en").format("DD/MM/YYYY HH:mm") : "--"}
             </span>
@@ -267,7 +280,7 @@ function StockExtraListSelector(props: StockExtraListSelectorProps) {
         <h3 className="font-semibold mb-3">Danh sách dịch vụ đang chọn</h3>
         <div className="list-select py-2">
           {!currentSelectingStockList.length ? (
-            <Empty description="" imageStyle={{ width: 60, height: 60, margin: "auto" }} />
+            <Empty description="Đang trống" imageStyle={{ width: 60, height: 60, margin: "auto" }} />
           ) : (
             <Space wrap className="mb-2">
               {currentSelectingStockList.map((item) => (
@@ -282,9 +295,9 @@ function StockExtraListSelector(props: StockExtraListSelectorProps) {
         <Table
           columns={mergeColumns}
           rowKey="recId"
+          size="small"
           dataSource={stockSelectionList}
           loading={isLoadingStock}
-          size="small"
           locale={{
             emptyText: (
               <div className="py-4">

@@ -1,18 +1,32 @@
 import { Button } from "antd";
 import useToken from "antd/es/theme/useToken";
 import { App } from "antd";
+import { useContext } from "react";
+import { ThemeModeContext } from "@/context/themeModeContent";
+import classNames from "classnames";
 
 const ThemeModeToggle = () => {
   const token = useToken();
   const staticFunction = App.useApp();
+  const [themeMode, setThemeMode] = useContext(ThemeModeContext);
 
-  console.log(token);
+  const toggleThemeMode = () => {
+    setThemeMode((mode) => (mode === "light" ? "dark" : "light"));
+  };
   return (
     <>
-      <Button type="text" className="!inline-flex items-center justify-center !bg-gray-100" shape="circle">
+      <Button
+        type="text"
+        className={classNames("!inline-flex items-center justify-center ", {
+          "!text-gray-900 !bg-gray-100": themeMode === "light",
+          "!text-gray-100 !bg-gray-800": themeMode === "dark",
+        })}
+        shape="circle"
+        onClick={toggleThemeMode}
+      >
         <svg width="1em" height="1em" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg">
-          <g id="Dark-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-            <g id="Dark-2" transform="translate(-9.000000, -49.500000)" fill="currentColor" fill-rule="nonzero">
+          <g id="Dark-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+            <g id="Dark-2" transform="translate(-9.000000, -49.500000)" fill="currentColor" fillRule="nonzero">
               <g id="Dark-122" transform="translate(0.000000, 42.500000)">
                 <g id="Dark-moon" transform="translate(9.268811, 7.500000)">
                   <rect id="Dark-22" opacity="0" x="0" y="0" width="16" height="16"></rect>

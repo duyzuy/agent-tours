@@ -8,7 +8,7 @@ import {
   CheckCircleOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { ColumnsType, TableProps } from "antd/es/table";
+import Table, { ColumnsType, TableProps } from "antd/es/table";
 import CustomTable from "@/components/admin/CustomTable";
 import ModalDeleteConfirm from "./ModalDeleteConfirm";
 import classNames from "classnames";
@@ -237,7 +237,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
   }
   return (
     <React.Fragment>
-      <CustomTable
+      <Table<T>
         columns={mergeColumns}
         dataSource={dataSource}
         loading={isLoading}

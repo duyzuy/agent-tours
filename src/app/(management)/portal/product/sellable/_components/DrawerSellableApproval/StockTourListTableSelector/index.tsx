@@ -110,7 +110,7 @@ function StockTourListTableSelector({
       },
     },
     {
-      title: "Hành động",
+      title: "",
       dataIndex: "action",
       key: "action",
       width: 100,

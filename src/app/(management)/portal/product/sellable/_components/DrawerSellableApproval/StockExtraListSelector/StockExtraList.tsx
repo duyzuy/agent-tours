@@ -131,7 +131,20 @@ function StockExtraList(props: StockExtraListProps) {
         return (
           <>
             <p>{record.stock.code}</p>
-            <p className="text-xs text-primary-default">{record.stock.description}</p>
+            <p className="text-xs text-gray-600">{record.stock.description}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "Loại dịch vụ",
+      dataIndex: "type",
+      width: 150,
+      render: (_, { stock }) => {
+        return (
+          <>
+            <p>{stock.inventoryType}</p>
+            <p className="text-xs text-gray-600">{stock.type}</p>
           </>
         );
       },
@@ -143,7 +156,7 @@ function StockExtraList(props: StockExtraListProps) {
       editable: true,
     },
     {
-      title: "Hành động",
+      title: "",
       dataIndex: "actions",
       fixed: "right",
       width: 100,

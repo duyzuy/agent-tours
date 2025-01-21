@@ -398,19 +398,21 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
         destroyOnClose
         closeIcon={null}
         maskClosable={false}
-        width={850}
+        width={1040}
         onClose={onCancel}
         footer={
           <Space className="py-3">
-            <Button onClick={onCancel}>Huỷ bỏ</Button>
-            <Button type="primary" onClick={onSubmit && handleSubmit(onSubmit)}>
+            <Button onClick={onCancel} size="large" className="w-40">
+              Huỷ bỏ
+            </Button>
+            <Button type="primary" size="large" onClick={onSubmit && handleSubmit(onSubmit)} className="w-40">
               Duyệt
             </Button>
           </Space>
         }
         open={isOpen}
       >
-        <Form layout="vertical" colon={false} labelWrap className="max-w-4xl">
+        <Form layout="vertical" colon={false} labelWrap>
           <Row gutter={16}>
             <Col span={12}>
               <FormItem

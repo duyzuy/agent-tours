@@ -11,6 +11,7 @@ import AdminMenuLink from "./AdminMenuLink";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
 import { useLogoutPortal } from "@/app/(management)/(adminAuth)/ag/hooks/useAgAuth";
 import ThemeModeToggle from "@/components/ThemeModeToggle";
+import { useThemeMode } from "@/hooks/useThemeMode";
 interface Props {
   children: React.ReactNode;
 }
@@ -22,9 +23,10 @@ const AdminLayout = ({ children }: Props) => {
   const pathname = usePathname();
   const userProfile = useLocalUserProfile();
   const [collapsed, setCollapsed] = useState(false);
+  const [mode, _] = useThemeMode();
   const logoutPortal = useLogoutPortal();
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, colorBgContainerDisabled, colorTextLabel },
   } = theme.useToken();
 
   const [openKeys, setOpenKeys] = useState(["dashboard"]);
@@ -55,13 +57,13 @@ const AdminLayout = ({ children }: Props) => {
     router.push(`${path}`);
   };
   return (
-    <Layout hasSider style={{ minHeight: "100vh", background: "#ffffff" }}>
+    <Layout hasSider style={{ minHeight: "100vh" }}>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
         width={240}
-        theme="light"
+        theme={mode}
         className="border-r z-10 !fixed left-0 top-0 bottom-0"
       >
         <div className="flex flex-col h-full">
@@ -77,7 +79,7 @@ const AdminLayout = ({ children }: Props) => {
               selectedKeys={activeKeys}
             />
           </div>
-          <div className="flex items-center justify-center bg-slate-50 py-2">
+          <div className="flex items-center justify-center py-2" style={{ background: colorBgContainerDisabled }}>
             <Button
               type="text"
               shape="circle"
@@ -88,12 +90,10 @@ const AdminLayout = ({ children }: Props) => {
           </div>
         </div>
       </Sider>
-      <Layout className="bg-white" style={{ marginLeft: collapsed ? 80 : 240 }}>
+      <Layout style={{ marginLeft: collapsed ? 80 : 240 }}>
         <Header
-          style={{
-            background: colorBgContainer,
-          }}
           className="flex justify-between border-b sticky top-0 z-10 items-center !px-6"
+          style={{ background: colorBgContainer }}
         >
           <span className="font-semibold text-xl">Tour Management Platform</span>
           <div className="inline-flex items-center gap-x-3">
@@ -134,7 +134,7 @@ const AdminLayout = ({ children }: Props) => {
         >
           {children}
         </Content>
-        <Footer className="border-t text-right !bg-white !py-3">
+        <Footer className="border-t text-right !py-3" style={{ background: colorBgContainer, color: colorTextLabel }}>
           <p className="text-sm">Tour Management ©2023 Created by DVU</p>
         </Footer>
       </Layout>

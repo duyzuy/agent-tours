@@ -156,7 +156,20 @@ function InventoryExtraListSelector(props: InventoryExtraListSelectorProps) {
         return (
           <>
             <p>{record.inventory.name}</p>
-            <p className="text-xs text-primary-default">{record.inventory.code}</p>
+            <p className="text-xs text-gray-600">{record.inventory.code}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "Loại",
+      dataIndex: "type",
+      width: 150,
+      render: (_, record) => {
+        return (
+          <>
+            <p className="text-xs ">{record.inventory.type}</p>
+            <p>{record.inventory.tourItinerary}</p>
           </>
         );
       },
@@ -168,7 +181,7 @@ function InventoryExtraListSelector(props: InventoryExtraListSelectorProps) {
       editable: true,
     },
     {
-      title: "Hành động",
+      title: "",
       dataIndex: "actions",
       fixed: "right",
       width: 100,

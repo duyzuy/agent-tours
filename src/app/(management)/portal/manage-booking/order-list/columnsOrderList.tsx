@@ -1,11 +1,12 @@
 import React from "react";
 import { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
-import { Tag } from "antd";
+import { Space, Tag } from "antd";
 import { IOrderListRs } from "@/models/management/booking/order.interface";
 import { PaymentStatus } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
 import Link from "next/link";
+import { ArrowRightOutlined, RightOutlined } from "@ant-design/icons";
 
 export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
   {
@@ -22,10 +23,13 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     render(value, record, index) {
       return (
         <div>
+          <div className="text-xs text-gray-600">{record.sellable.code}</div>
+          <div className="block mb-2">{record.template.name}</div>
           <Link href={`/portal/manage-booking/${record.recId}`} className="block">
-            <div className="block text-gray-800 hover:text-blue-600">{record.template.name}</div>
-            <div className="text-xs text-gray-600 mb-2">{record.sellable.code}</div>
-            <span>Chi tiết</span>
+            <Space>
+              Chi tiết
+              <RightOutlined className="!w-3 !h-3" />
+            </Space>
           </Link>
         </div>
       );
@@ -64,21 +68,21 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
     width: 150,
   },
   {
-    title: "Tổng tiền đã thanh toán",
-    dataIndex: "totalPaid",
-    key: "totalPaid",
-    width: 200,
-    render: (_, record) => {
-      return <span className="text-emerald-600">{moneyFormatVND(record.totalPaid)}</span>;
-    },
-  },
-  {
     title: "Tổng tiền",
     dataIndex: "totalAmount",
     key: "totalAmount",
     width: 200,
     render: (_, record) => {
       return <span className="text-rose-600">{moneyFormatVND(record.totalAmount)}</span>;
+    },
+  },
+  {
+    title: "Đã thanh toán",
+    dataIndex: "totalPaid",
+    key: "totalPaid",
+    width: 200,
+    render: (_, record) => {
+      return <span className="text-emerald-600">{moneyFormatVND(record.totalPaid)}</span>;
     },
   },
   {

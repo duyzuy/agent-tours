@@ -239,7 +239,7 @@ function StockExtraListTableSelector(props: StockExtraListTableSelectorProps) {
       <Modal
         open={isOpen}
         destroyOnClose={true}
-        width={850}
+        width={1040}
         onCancel={onClose}
         cancelText="Huỷ bỏ"
         okText="Xác nhận"

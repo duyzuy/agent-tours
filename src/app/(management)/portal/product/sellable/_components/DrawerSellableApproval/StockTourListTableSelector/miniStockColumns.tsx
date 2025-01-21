@@ -27,6 +27,20 @@ export const miniStockColumns: ColumnsType<IStockListOfInventoryRs["result"][0]>
     },
   },
   {
+    title: "Loại dịch vụ",
+    dataIndex: "inventoryType",
+    key: "inventoryType",
+    width: 180,
+    render: (_, { inventoryType, type }) => {
+      return (
+        <>
+          <p>{inventoryType}</p>
+          <p className="text-xs text-gray-500">{type}</p>
+        </>
+      );
+    },
+  },
+  {
     title: "Ngày sử dụng",
     dataIndex: "used-date",
     key: "used-date",

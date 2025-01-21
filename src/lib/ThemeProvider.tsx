@@ -4,12 +4,19 @@ import { PropsWithChildren } from "react";
 
 import { ConfigProvider, App } from "antd";
 import StyledComponentsRegistry from "@/lib/AntRegistry";
-import { antdTheme } from "@/styles/themes/antTheme";
+import { lightTheme, darkTheme } from "@/styles/themes/antTheme";
+import { ThemeModeContext, ThemeModeProvider } from "@/context/themeModeContent";
+import { useContext } from "react";
 
 export function AntdConfigProvider({ children }: PropsWithChildren) {
+  const [themeMode, _] = useContext(ThemeModeContext);
   return (
     <StyledComponentsRegistry>
-      <ConfigProvider theme={antdTheme} prefixCls="travel" csp={{ nonce: "123456888" }}>
+      <ConfigProvider
+        theme={themeMode === "light" ? lightTheme : darkTheme}
+        prefixCls="travel"
+        csp={{ nonce: "123456888" }}
+      >
         <App>{children}</App>
       </ConfigProvider>
     </StyledComponentsRegistry>
@@ -30,5 +37,9 @@ export default function ThemeProvider(props: PropsWithChildren) {
     consoleError(message, ...args);
   };
 
-  return <AntdConfigProvider {...props} />;
+  return (
+    <ThemeModeProvider>
+      <AntdConfigProvider {...props} />;
+    </ThemeModeProvider>
+  );
 }

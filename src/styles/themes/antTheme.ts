@@ -1,8 +1,8 @@
 import { ThemeConfig, theme } from "antd";
 
-export const antdTheme: ThemeConfig = {
+const baseTheme: ThemeConfig = {
   //hashed: false, // this make issue overwriting component font size work doesn't exactly
-  algorithm: theme.defaultAlgorithm,
+
   hashed: true,
   token: {
     fontFamily: "Google Sans",
@@ -24,7 +24,7 @@ export const antdTheme: ThemeConfig = {
   },
   components: {
     Button: {
-      contentFontSizeSM: 13,
+      contentFontSizeSM: 12,
       controlHeightSM: 28,
       borderRadiusSM: 3,
       borderRadius: 4,
@@ -91,4 +91,8 @@ export const antdTheme: ThemeConfig = {
   },
 };
 
+const lightTheme = { ...baseTheme, algorithm: theme.defaultAlgorithm };
+const darkTheme = { ...baseTheme, algorithm: theme.darkAlgorithm };
+
+export { lightTheme, darkTheme };
 // export default mainTheme;
