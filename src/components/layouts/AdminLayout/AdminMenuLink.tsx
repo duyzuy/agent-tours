@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
+import { useAdminPermission } from "@/modules/admin/auth/store/AdminPermissionContext";
 import {
   DashboardOutlined,
   ContainerOutlined,
@@ -19,7 +19,7 @@ import {
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 import { PATH_WITH_PERMISSION, TRoleCondition } from "@/constants/permission.constant";
-import { useThemeMode } from "@/hooks/useThemeMode";
+import { useThemeMode } from "@/context";
 
 type MenuItem = Required<MenuProps>["items"][number] & {
   children?: MenuItem[];
@@ -332,7 +332,7 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
 ];
 
 const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
-  const [_, checkPermession] = useLocalUserPermissions();
+  const [_, checkPermession] = useAdminPermission();
   const [mode, setThemeMode] = useThemeMode();
   const adminMenuMappingRule = ADMIN_MENU_ITEMS.reduce<MenuItem[]>((acc, item) => {
     const childItems = item.children?.reduce<MenuItem[]>((childItems, childItem) => {

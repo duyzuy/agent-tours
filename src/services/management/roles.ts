@@ -28,9 +28,7 @@ export const roleAndPermissionAPIs = {
   },
   getRoles: async () => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Getbycat", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: "LOCALUSER_ROLE",
       },

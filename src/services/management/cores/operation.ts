@@ -4,6 +4,7 @@ import {
   IOperationStatus,
   OperationListResponse,
   OperationPayload,
+  OperationQueryParams,
   OperationResponse,
   OperationStatusPayload,
   OperationStatusResponse,
@@ -53,9 +54,12 @@ export const operationAPIs = {
       requestObject: { ...payload },
     });
   },
-  getList: async () => {
+  getList: async (queryParams?: OperationQueryParams) => {
     return await coreApi.post<OperationListResponse, BaseResponse<null>>("core/OperationCode_List", {
-      requestObject: {},
+      requestObject: {
+        ...queryParams?.requestObject,
+      },
+      orderBy: queryParams?.orderBy,
     });
   },
   getStatus: async (payload: OperationStatusPayload) => {

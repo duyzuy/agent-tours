@@ -1,6 +1,5 @@
 import { AdminLayout } from "@/components/layouts";
-import AdminAuthorized from "@/components/admin/authWrapper/AdminAuthorized";
-import "@/styles/globals.scss";
+import AdminAuthorized from "@/modules/admin/authWrapper/AdminAuthorized";
 
 interface Props {
   children: React.ReactNode;

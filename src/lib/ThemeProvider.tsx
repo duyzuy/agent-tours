@@ -1,15 +1,13 @@
 "use client";
 
-import { PropsWithChildren } from "react";
-
+import { PropsWithChildren, useContext } from "react";
 import { ConfigProvider, App } from "antd";
 import StyledComponentsRegistry from "@/lib/AntRegistry";
-import { lightTheme, darkTheme } from "@/styles/themes/antTheme";
-import { ThemeModeContext, ThemeModeProvider } from "@/context/themeModeContent";
-import { useContext } from "react";
+import { lightTheme, darkTheme } from "@/assets/styles/themes/antTheme";
+import { ThemeModeProvider, useThemeMode } from "@/context/ThemeModeContext";
 
 export function AntdConfigProvider({ children }: PropsWithChildren) {
-  const [themeMode, _] = useContext(ThemeModeContext);
+  const [themeMode, _] = useThemeMode();
   return (
     <StyledComponentsRegistry>
       <ConfigProvider
@@ -39,7 +37,7 @@ export default function ThemeProvider(props: PropsWithChildren) {
 
   return (
     <ThemeModeProvider>
-      <AntdConfigProvider {...props} />;
+      <AntdConfigProvider {...props} />
     </ThemeModeProvider>
   );
 }

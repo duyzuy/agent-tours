@@ -10,8 +10,15 @@ import { columns } from "./columns";
 import { IOperation } from "@/models/management/core/operation.interface";
 import { ColumnsType } from "antd/es/table";
 import { EditOutlined, EllipsisOutlined, EyeOutlined } from "@ant-design/icons";
+import { OperationFormQueryParams } from "@/models/management/core/operation.interface";
 const CodeListPage = () => {
-  const { data, isLoading } = useGetOperationListQuery();
+  const initQueryParams = new OperationFormQueryParams({
+    requestObject: undefined,
+    pageCurrent: 1,
+    pageSize: 20,
+    orderBy: { sortColumn: "id", direction: "desc" },
+  });
+  const { data, isLoading } = useGetOperationListQuery(initQueryParams);
   const [isSubmiting, setSubmiting] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [action, setAction] = useState<"create" | "edit">();
@@ -155,9 +162,9 @@ const CodeListPage = () => {
   ];
   return (
     <PageContainer
-      name="Điều hành"
+      name="Phân công điều hành"
       modelName="điều hành"
-      breadCrumItems={[{ title: "Điều hành" }]}
+      breadCrumItems={[{ title: "Phân công điều hành" }]}
       onClick={createOperation}
     >
       <Table<IOperation>
@@ -165,7 +172,6 @@ const CodeListPage = () => {
         rowKey="id"
         columns={mergedColumns}
         dataSource={data || []}
-        size="small"
         loading={isLoading}
         pagination={{
           size: "small",

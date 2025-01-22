@@ -3,16 +3,12 @@ import {
   MiscDepartLocationsResponse,
   MiscDepartPayload,
 } from "@/models/management/cms/miscDepartLocation.interface";
-
 import { client } from "@/services/api";
-import { getAgToken } from "@/utils/common";
 
 export const miscDepartAPIs = {
   create: async (payload: MiscDepartPayload) => {
     return await client.post<MiscDepartLocationResponse>("local/LocalMisc_DepartFrom_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -22,9 +18,7 @@ export const miscDepartAPIs = {
   },
   update: async (payload: MiscDepartPayload) => {
     return await client.post<MiscDepartLocationResponse>("local/LocalMisc_DepartFrom_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -34,9 +28,7 @@ export const miscDepartAPIs = {
   },
   getList: async () => {
     return await client.post<MiscDepartLocationsResponse>("local/LocalMisc_DepartFrom_List", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {},
       },
@@ -44,9 +36,7 @@ export const miscDepartAPIs = {
   },
   delete: async (id: number) => {
     return await client.post<MiscDepartLocationResponse>("local/LocalMisc_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           cat: "localmisc_departfrom",

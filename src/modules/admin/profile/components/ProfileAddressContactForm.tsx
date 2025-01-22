@@ -3,16 +3,16 @@ import { Form, Input, Row, Col, Button, Space } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { ILocalUserProfile } from "@/models/management/localAuth.interface";
 import { EditOutlined } from "@ant-design/icons";
-import { LocalUserProfileFormData } from "../../modules/userProfileInfo.interface";
+import { LocalUserProfileFormData } from "../adminProfile.types";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import { localUserProfileSchema } from "../../schema/localUserProfile.schema";
-import useUpdateUserProfile from "../../modules/useUpdateUserProfile";
+import { adminUpdateProfileSchema } from "../adminProfile.schema";
+import { useUpdateAdminProfile } from "../useAdminProfile";
 import { isEqual } from "lodash";
-export interface AddressContactFormProps {
+export interface ProfileAddressContactFormProps {
   data?: ILocalUserProfile;
 }
 type RequiredFormData = Required<LocalUserProfileFormData>;
-const AddressContactForm: React.FC<AddressContactFormProps> = ({ data }) => {
+const ProfileAddressContactForm: React.FC<ProfileAddressContactFormProps> = ({ data }) => {
   const [isEditing, setEditing] = useState(false);
   const initFormData = new LocalUserProfileFormData(
     data?.infoCompanyName,
@@ -26,9 +26,9 @@ const AddressContactForm: React.FC<AddressContactFormProps> = ({ data }) => {
     data?.infoSpecialNote,
   );
   const [formData, setFormData] = useState(initFormData);
-  const { onUpdate } = useUpdateUserProfile();
+  const { mutate: onUpdate, isPending } = useUpdateAdminProfile();
   const { handlerSubmit, errors } = useFormSubmit({
-    schema: localUserProfileSchema,
+    schema: adminUpdateProfileSchema,
   });
 
   const onChange = (key: keyof RequiredFormData, value: RequiredFormData[keyof RequiredFormData]) => {
@@ -38,8 +38,10 @@ const AddressContactForm: React.FC<AddressContactFormProps> = ({ data }) => {
     }));
   };
   const onSubmitForm: HandleSubmit<LocalUserProfileFormData> = (data) => {
-    onUpdate(data, () => {
-      setEditing(false);
+    onUpdate(data, {
+      onSuccess(data, variables, context) {
+        setEditing(false);
+      },
     });
   };
 
@@ -62,7 +64,6 @@ const AddressContactForm: React.FC<AddressContactFormProps> = ({ data }) => {
     <div className="address__contact">
       <div className="flex justify-between py-2 mb-2">
         <h4 className="font-semibold text-lg">Thông tin cá nhân</h4>
-
         {!isEditing && (
           <Button size="small" type="primary" ghost icon={<EditOutlined />} onClick={() => setEditing((edit) => !edit)}>
             Sửa
@@ -71,7 +72,7 @@ const AddressContactForm: React.FC<AddressContactFormProps> = ({ data }) => {
       </div>
 
       {isEditing ? (
-        <Form layout="vertical">
+        <Form layout="vertical" disabled={isPending}>
           <Row gutter={[24, 0]}>
             <Col span={12}>
               <FormItem
@@ -105,16 +106,17 @@ const AddressContactForm: React.FC<AddressContactFormProps> = ({ data }) => {
             <Col span={24}>
               <FormItem>
                 <Space>
-                  <Button type="primary" className="w-20" ghost danger onClick={onCancelEdit}>
-                    Huỷ bỏ
-                  </Button>
                   <Button
                     type="primary"
                     disabled={isDisableButton}
                     className="w-20"
                     onClick={() => handlerSubmit(formData, onSubmitForm)}
+                    loading={isPending}
                   >
                     Lưu
+                  </Button>
+                  <Button type="primary" className="w-20" ghost danger onClick={onCancelEdit} loading={isPending}>
+                    Huỷ bỏ
                   </Button>
                 </Space>
               </FormItem>
@@ -146,4 +148,4 @@ const AddressContactForm: React.FC<AddressContactFormProps> = ({ data }) => {
     </div>
   );
 };
-export default memo(AddressContactForm);
+export default memo(ProfileAddressContactForm);

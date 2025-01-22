@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { LocalUserPermissionContext } from "@/context/permissionContext";
 import { PATH_WITH_PERMISSION } from "@/constants/permission.constant";
 import { LINKS } from "@/constants/links.constant";
 import { ERolesFunctions, TRoleCondition } from "@/constants/permission.constant";
 import { isEmpty } from "lodash";
 
 import { IRolePermissions } from "@/models/management/rolePermission.interface";
+import { AdminPermissionProvider } from "../../auth/store/AdminPermissionContext";
 interface Props {
   children: React.ReactNode;
   rolePers: IRolePermissions[];
@@ -18,7 +18,7 @@ const PermissionWrapper: React.FC<Props> = ({ children, rolePers }) => {
 
   const [isValidPerm, setValidPerm] = useState(false);
 
-  const localUserPermissionsList = useMemo(() => {
+  const permissionList = useMemo(() => {
     let totalPermissions: ERolesFunctions[] = [];
     rolePers.forEach((rolePers) => {
       rolePers.localUser_PermissionList.forEach((per) => {
@@ -34,10 +34,10 @@ const PermissionWrapper: React.FC<Props> = ({ children, rolePers }) => {
     (conditions: TRoleCondition) => {
       // if (isEmpty(localUserPermissionsList)) return false;
       return conditions.reduce((hasPerm, cond) => {
-        return hasPerm && checkOnePermission(localUserPermissionsList, cond);
+        return hasPerm && checkOnePermission(permissionList, cond);
       }, true);
     },
-    [localUserPermissionsList],
+    [permissionList],
   );
 
   useEffect(() => {
@@ -51,14 +51,12 @@ const PermissionWrapper: React.FC<Props> = ({ children, rolePers }) => {
     }
   }, [path]);
 
-  if (!isValidPerm) {
-    return null;
-  }
+  if (!isValidPerm) return null;
 
   return (
-    <LocalUserPermissionContext.Provider value={[localUserPermissionsList, checkPermission]}>
+    <AdminPermissionProvider permissionList={permissionList} checkPers={checkPermission}>
       {children}
-    </LocalUserPermissionContext.Provider>
+    </AdminPermissionProvider>
   );
 };
 export default PermissionWrapper;

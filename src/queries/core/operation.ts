@@ -9,13 +9,13 @@ import {
   operationThingTodoAPIs,
 } from "@/services/management/cores/operation";
 import { OperationCostingParams } from "@/models/management/core/operationCosting.interface";
-import { OperationStatusPayload } from "@/models/management/core/operation.interface";
+import { OperationQueryParams, OperationStatusPayload } from "@/models/management/core/operation.interface";
 import { OperationThingTodoQueryParams } from "@/models/management/core/operationThingTodo.interface";
 
-export const useGetOperationListQuery = () => {
+export const useGetOperationListQuery = (queryParams?: OperationQueryParams) => {
   return useQuery({
     queryKey: [queryCore.GET_OPERATION_LIST],
-    queryFn: () => operationAPIs.getList(),
+    queryFn: () => operationAPIs.getList(queryParams),
     select: (data) => {
       return data.result;
     },

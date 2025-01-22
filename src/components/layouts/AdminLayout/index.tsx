@@ -1,17 +1,18 @@
 "use client";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, Suspense, useEffect, useState } from "react";
 import { Layout, Button, theme, Avatar, MenuProps, Dropdown, Space } from "antd";
 import { UserOutlined, SwapRightOutlined, LogoutOutlined, SwapLeftOutlined } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
-
 import { originalLogo } from "@/assets";
 import Image from "next/image";
 import { LINKS } from "@/constants/links.constant";
 import AdminMenuLink from "./AdminMenuLink";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
-import { useLogoutPortal } from "@/app/(management)/(adminAuth)/ag/hooks/useAgAuth";
+import useAdminAuth from "@/modules/admin/auth/hooks/useAdminAuth";
 import ThemeModeToggle from "@/components/ThemeModeToggle";
-import { useThemeMode } from "@/hooks/useThemeMode";
+import { useThemeMode } from "@/context";
+import classNames from "classnames";
+
 interface Props {
   children: React.ReactNode;
 }
@@ -24,14 +25,16 @@ const AdminLayout = ({ children }: Props) => {
   const userProfile = useLocalUserProfile();
   const [collapsed, setCollapsed] = useState(false);
   const [mode, _] = useThemeMode();
-  const logoutPortal = useLogoutPortal();
+
+  const { onLogout } = useAdminAuth();
   const {
-    token: { colorBgContainer, colorBgContainerDisabled, colorTextLabel },
+    token: { colorBgContainer, colorTextLabel },
   } = theme.useToken();
 
   const [openKeys, setOpenKeys] = useState(["dashboard"]);
   const [activeKeys, setActiveKeys] = useState(["dashboard"]);
 
+  const onOpenChange: MenuProps["onOpenChange"] = (data: any) => setOpenKeys(() => [...data]);
   const onMenuNavigation: MenuProps["onClick"] = (menuInfo) => {
     let fullPathname = "/portal";
 
@@ -40,14 +43,13 @@ const AdminLayout = ({ children }: Props) => {
     router.push(fullPathname);
   };
 
-  const onOpenChange: MenuProps["onOpenChange"] = (data: any) => setOpenKeys(() => [...data]);
-
   useEffect(() => {
     const formatPathname = pathname.replace("/portal/", "");
 
     setActiveKeys(() => [formatPathname]);
 
     const arrFormatPathname = formatPathname.split("/");
+
     if (arrFormatPathname.length > 1) {
       setOpenKeys(() => [arrFormatPathname[0]]);
     }
@@ -57,14 +59,20 @@ const AdminLayout = ({ children }: Props) => {
     router.push(`${path}`);
   };
   return (
-    <Layout hasSider style={{ minHeight: "100vh" }}>
+    <Layout
+      hasSider
+      style={{ minHeight: "100vh" }}
+      className={classNames(mode === "dark" ? "text-gray-300" : "text-gray-900")}
+    >
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
         width={240}
         theme={mode}
-        className="border-r z-10 !fixed left-0 top-0 bottom-0"
+        className={classNames("border-r z-10 !fixed left-0 top-0 bottom-0", {
+          "border-[#303030]": mode === "dark",
+        })}
       >
         <div className="flex flex-col h-full">
           <div className="logo p-4">
@@ -79,7 +87,7 @@ const AdminLayout = ({ children }: Props) => {
               selectedKeys={activeKeys}
             />
           </div>
-          <div className="flex items-center justify-center py-2" style={{ background: colorBgContainerDisabled }}>
+          <div className="flex items-center justify-center py-2" style={{ background: colorBgContainer }}>
             <Button
               type="text"
               shape="circle"
@@ -92,10 +100,13 @@ const AdminLayout = ({ children }: Props) => {
       </Sider>
       <Layout style={{ marginLeft: collapsed ? 80 : 240 }}>
         <Header
-          className="flex justify-between border-b sticky top-0 z-10 items-center !px-6"
           style={{ background: colorBgContainer }}
+          className={classNames("flex justify-between border-b sticky top-0 z-10 items-center !px-6", {
+            "border-[#303030] !text-gray-300": mode === "dark",
+            "text-gray-900 bg-white": mode === "light",
+          })}
         >
-          <span className="font-semibold text-xl">Tour Management Platform</span>
+          <div className="font-semibold text-xl">Tour Management Platform</div>
           <div className="inline-flex items-center gap-x-3">
             <ThemeModeToggle />
             <Dropdown
@@ -111,7 +122,7 @@ const AdminLayout = ({ children }: Props) => {
                     label: "Đăng xuất",
                     key: "logout",
                     icon: <LogoutOutlined />,
-                    onClick: logoutPortal,
+                    onClick: onLogout,
                   },
                 ],
               }}
@@ -120,20 +131,22 @@ const AdminLayout = ({ children }: Props) => {
                 <Avatar shape="circle" size={28} icon={<UserOutlined />} className="!bg-orange-500" />
                 <div className="text-sm leading-none">
                   <span className="block text-xs">{userProfile?.userType}</span>
-                  <span className="text-xs text-gray-400">{userProfile?.fullname}</span>
+                  <span className="text-xs">{userProfile?.fullname}</span>
                 </div>
               </Space>
             </Dropdown>
           </div>
         </Header>
-        <Content
-          style={{
-            background: colorBgContainer,
-          }}
-          className="p-6 min-h-full"
-        >
-          {children}
-        </Content>
+        <Suspense fallback={<div>Admin loading...</div>}>
+          <Content
+            style={{
+              background: colorBgContainer,
+            }}
+            className="p-6 min-h-full"
+          >
+            {children}
+          </Content>
+        </Suspense>
         <Footer className="border-t text-right !py-3" style={{ background: colorBgContainer, color: colorTextLabel }}>
           <p className="text-sm">Tour Management ©2023 Created by DVU</p>
         </Footer>

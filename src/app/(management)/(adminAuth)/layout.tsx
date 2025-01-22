@@ -1,5 +1,5 @@
 import Link from "next/link";
-import AdminAuth from "@/components/admin/authWrapper/AdminAuth";
+import AdminAuth from "@/modules/admin/authWrapper/AdminAuth";
 import { Space } from "antd";
 interface Props {
   children: React.ReactNode;

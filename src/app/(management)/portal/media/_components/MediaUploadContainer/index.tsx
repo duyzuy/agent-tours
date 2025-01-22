@@ -10,7 +10,7 @@ import {
 } from "@/models/management/media.interface";
 import classNames from "classnames";
 import { IMediaFolderListRs } from "@/models/management/media.interface";
-import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
+import { useAdminPermission } from "@/modules/admin/auth/store/AdminPermissionContext";
 import { ERolesFunctions } from "@/constants/permission.constant";
 export interface MediaUploadContainerProps {
   className?: string;
@@ -52,7 +52,7 @@ const MediaUploadContainer: React.FC<MediaUploadContainerProps> = ({
       },
     }));
   };
-  const [pers, checkPermission] = useLocalUserPermissions();
+  const [_, checkPermission] = useAdminPermission();
   const hasRoleCreate = checkPermission?.([ERolesFunctions.MEDIA_CREATE]);
   return (
     <div

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-import useLocalUserPermissions from "@/hooks/useLocalUserPermissions";
+import { useAdminPermission } from "@/modules/admin/auth/store/AdminPermissionContext";
 import { useGetMediaFolders, useGetMediaFiles } from "@/queries/media";
 import {
   IMediaFolderListRs,
@@ -29,7 +29,7 @@ const MediaPage = () => {
 
   const { data: filesData, isLoading: isLoadingFileList } = useGetMediaFiles(queryMediaFileParams);
 
-  const [pers, checkPermission] = useLocalUserPermissions();
+  const [_, checkPermission] = useAdminPermission();
 
   // console.log(
   //   checkPermission?.([

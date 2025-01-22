@@ -3,16 +3,16 @@ import { Form, Input, Row, Col, Button, Space } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { ILocalUserProfile } from "@/models/management/localAuth.interface";
 import { EditOutlined } from "@ant-design/icons";
-import { LocalUserProfileFormData } from "../../modules/userProfileInfo.interface";
+import { LocalUserProfileFormData } from "../adminProfile.types";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import { localUserProfileSchema } from "../../schema/localUserProfile.schema";
-import useUpdateUserProfile from "../../modules/useUpdateUserProfile";
+import { adminUpdateProfileSchema } from "../adminProfile.schema";
+import { useUpdateAdminProfile } from "../useAdminProfile";
 import { isEqual } from "lodash";
-export interface ExtraInformationFormProps {
+export interface ProfileExtraInformationFormProps {
   data?: ILocalUserProfile;
 }
 type RequiredFormData = Required<LocalUserProfileFormData>;
-const ExtraInformationForm: React.FC<ExtraInformationFormProps> = ({ data }) => {
+const ProfileExtraInformationForm: React.FC<ProfileExtraInformationFormProps> = ({ data }) => {
   const [isEditing, setEditing] = useState(false);
   const initFormData = new LocalUserProfileFormData(
     data?.infoCompanyName,
@@ -26,9 +26,9 @@ const ExtraInformationForm: React.FC<ExtraInformationFormProps> = ({ data }) => 
     data?.infoSpecialNote,
   );
   const [formData, setFormData] = useState(initFormData);
-  const { onUpdate } = useUpdateUserProfile();
+  const { mutate: onUpdate, isPending } = useUpdateAdminProfile();
   const { handlerSubmit, errors } = useFormSubmit({
-    schema: localUserProfileSchema,
+    schema: adminUpdateProfileSchema,
   });
 
   const onChange = (key: keyof RequiredFormData, value: RequiredFormData[keyof RequiredFormData]) => {
@@ -38,8 +38,10 @@ const ExtraInformationForm: React.FC<ExtraInformationFormProps> = ({ data }) => 
     }));
   };
   const onSubmitForm: HandleSubmit<LocalUserProfileFormData> = (data) => {
-    onUpdate(data, () => {
-      setEditing(false);
+    onUpdate(data, {
+      onSuccess(data, variables, context) {
+        setEditing(false);
+      },
     });
   };
 
@@ -78,7 +80,6 @@ const ExtraInformationForm: React.FC<ExtraInformationFormProps> = ({ data }) => 
     <div className="infor">
       <div className=" flex justify-between py-2 mb-2">
         <h4 className="font-semibold text-lg">Thông tin thêm</h4>
-
         {!isEditing && (
           <Button size="small" type="primary" ghost icon={<EditOutlined />} onClick={() => setEditing((edit) => !edit)}>
             Sửa
@@ -87,7 +88,7 @@ const ExtraInformationForm: React.FC<ExtraInformationFormProps> = ({ data }) => 
       </div>
       <div>
         {isEditing ? (
-          <Form layout="vertical">
+          <Form layout="vertical" disabled={isPending}>
             <Row gutter={[24, 0]}>
               <Col span={12}>
                 <FormItem label="Công ty">
@@ -162,7 +163,7 @@ const ExtraInformationForm: React.FC<ExtraInformationFormProps> = ({ data }) => 
               <Col span={24}>
                 <FormItem>
                   <Space>
-                    <Button type="primary" className="w-20" ghost danger onClick={onCancelEdit}>
+                    <Button type="primary" className="w-20" ghost danger onClick={onCancelEdit} disabled={isPending}>
                       Huỷ bỏ
                     </Button>
                     <Button
@@ -170,6 +171,7 @@ const ExtraInformationForm: React.FC<ExtraInformationFormProps> = ({ data }) => 
                       disabled={isDisableButton}
                       onClick={() => handlerSubmit(formData, onSubmitForm)}
                       className="w-20"
+                      loading={isPending}
                     >
                       Lưu
                     </Button>
@@ -228,8 +230,4 @@ const ExtraInformationForm: React.FC<ExtraInformationFormProps> = ({ data }) => 
     </div>
   );
 };
-export default memo(ExtraInformationForm);
-
-// "infoPhoneNumber": "string",
-// "infoEmail": "string",
-// "infoAddress": "string",
+export default memo(ProfileExtraInformationForm);

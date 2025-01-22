@@ -1,4 +1,4 @@
 export * from "./manageBookingContext";
 export * from "./bookingContext";
 export * from "./localUserProfileContext";
-export * from "./permissionContext";
+export * from "./ThemeModeContext";

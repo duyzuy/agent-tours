@@ -53,17 +53,16 @@ const PageContainer: React.FC<Props> = ({
       })}
     >
       <div className="page-head mb-6">
+        {hideBreadcrumb ? null : <Breadcrumb items={items} className="!mb-6" />}
         <TitleRow
           title={name}
           onClickAdd={onClick}
           onCanel={onCanel}
           onBack={onBack}
           onEdit={onEdit}
-          className="mb-3"
           modelName={modelName}
           hideAddButton={hideAddButton}
         />
-        {hideBreadcrumb ? null : <Breadcrumb items={items} />}
       </div>
       <div className="page-body" style={{ height: "calc(100% - 62px)" }}>
         {children ? children : null}

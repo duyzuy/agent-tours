@@ -3,24 +3,17 @@ import PageContainer from "@/components/admin/PageContainer";
 import useLocalUserProfile from "@/hooks/useLocalProfile";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { Row, Col, Button } from "antd";
-import { useLogoutPortal } from "../../(adminAuth)/ag/hooks/useAgAuth";
-import ExtraInformationForm from "./_components/ExtraInformationForm";
-import useUpdateUserProfile from "./modules/useUpdateUserProfile";
-import AddressContactForm from "./_components/AddressContactForm";
+
 import React, { useState } from "react";
-import ModalChangePassword, { ModalChangePasswordProps } from "./_components/ModalChangePassword";
 
-const MyAccountPage = () => {
+import AdminSignOutButton from "@/modules/admin/auth/components/AdminSignOutButton";
+import ProfileExtraInformationForm from "@/modules/admin/profile/components/ProfileExtraInformationForm";
+import ProfileAddressContactForm from "@/modules/admin/profile/components/ProfileAddressContactForm";
+import AdminChangePasswordButton from "@/modules/admin/profile/components/AdminChangePasswordButton";
+
+const ProfilePage = () => {
   const localProfile = useLocalUserProfile();
-  const onLogoutPortal = useLogoutPortal();
-  const { onChangePassword } = useUpdateUserProfile();
-  const [showModalChangePassword, setShowModalChangePassword] = useState(false);
 
-  const handleSubmitForm: ModalChangePasswordProps["onSubmit"] = (data) => {
-    onChangePassword(data, () => {
-      setShowModalChangePassword(false);
-    });
-  };
   if (!localProfile) {
     return null;
   }
@@ -44,9 +37,7 @@ const MyAccountPage = () => {
             </div>
           </div>
           <div className="actions">
-            <Button danger onClick={onLogoutPortal} size="small">
-              Đăng xuất
-            </Button>
+            <AdminSignOutButton />
           </div>
         </div>
         <div className="account py-6">
@@ -61,17 +52,7 @@ const MyAccountPage = () => {
               </div>
             </Col>
             <Col span={12} className="mb-4">
-              <div>
-                <p>
-                  <span className="inline-block mr-1">Mật khẩu</span>
-                  <span className="text-blue-600 cursor-pointer" onClick={() => setShowModalChangePassword(true)}>
-                    <EditOutlined />
-                  </span>
-                </p>
-                <p>
-                  <span>*******</span>
-                </p>
-              </div>
+              <AdminChangePasswordButton userName={localProfile.username} />
             </Col>
             <Col span={12} className="mb-4">
               <div>
@@ -87,16 +68,10 @@ const MyAccountPage = () => {
             </Col>
           </Row>
         </div>
-        <AddressContactForm data={localProfile} />
-        <ExtraInformationForm data={localProfile} />
+        <ProfileAddressContactForm data={localProfile} />
+        <ProfileExtraInformationForm data={localProfile} />
       </div>
-      <ModalChangePassword
-        userName={localProfile.username}
-        isOpen={showModalChangePassword}
-        onClose={() => setShowModalChangePassword(false)}
-        onSubmit={handleSubmitForm}
-      />
     </PageContainer>
   );
 };
-export default MyAccountPage;
+export default ProfilePage;

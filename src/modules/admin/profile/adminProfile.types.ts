@@ -1,5 +1,5 @@
 import { ILocalUserProfilePayload } from "@/models/management/localAuth.interface";
-import { LocalUserNewPasswordPayload } from "@/models/management/localUser.interface";
+
 export class LocalUserProfileFormData implements ILocalUserProfilePayload {
   infoCompanyName?: string;
   infoLegalRepresentative?: string;

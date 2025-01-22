@@ -1,38 +1,38 @@
 "use client";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import useAuth from "@/hooks/useAgAuth";
+import useAdminAuth from "@/modules/admin/auth/hooks/useAdminAuth";
 import { LINKS } from "@/constants/links.constant";
 import PermissionWrapper from "./PermissionWrapper";
-
-import { useGetProfileQuery, useLocalUserGetRolesQuery } from "@/queries/localUser";
+// import { useLocalUserGetRolesQuery } from "@/queries/localUser";
+import useAdminGetProfile from "../../auth/hooks/useAdminGetProfile";
+import useAdminGetRoles from "../../auth/hooks/useAdminGetRoles";
 import { LocalUserProfileProvider } from "@/context/localUserProfileContext";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import useMessage from "@/hooks/useMessage";
 
 interface Props {
   children: React.ReactNode;
 }
 const AdminAuthorized: React.FC<Props> = ({ children }) => {
   const router = useRouter();
+  const message = useMessage();
 
-  const { clearToken, setLocalUserName, setLocalInformation } = useAuth();
+  const { clearToken } = useAdminAuth();
 
-  const { data: userProfile, isLoading } = useGetProfileQuery();
-  const { data: rolesPers, isLoading: isLoadingRole } = useLocalUserGetRolesQuery({
-    enabled: !isLoading && !!userProfile,
+  const { data: userProfile, isLoading, isError, error } = useAdminGetProfile();
+
+  const { data: rolesPers, isLoading: isLoadingRole } = useAdminGetRoles({
+    enabled: !isLoading && !isError && !!userProfile,
   });
 
   useEffect(() => {
-    if (userProfile) {
-      setLocalUserName(userProfile?.username);
-
-      setLocalInformation({
-        localUserType: userProfile?.userType,
-        localChildrendUsername: userProfile?.childrendUsername,
-      });
+    if (isError) {
+      clearToken();
+      message.error(error.message);
     }
-  }, [userProfile]);
+  }, [error, isError]);
 
   useEffect(() => {
     if (!userProfile && !isLoading) {

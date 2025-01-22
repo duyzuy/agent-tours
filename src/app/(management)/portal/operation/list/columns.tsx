@@ -1,10 +1,12 @@
 import { ColumnsType } from "antd/es/table";
 import { Leading } from "@/models/management/leading.interface";
 import { Tag, Popover, Space, TagProps } from "antd";
-import { formatDate } from "@/utils/date";
+import { formatDate, stringToDate } from "@/utils/date";
 import { IOperation } from "@/models/management/core/operation.interface";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { moneyFormatVND } from "@/utils/helper";
+import dayjs from "dayjs";
+import classNames from "classnames";
 
 export const columns: ColumnsType<IOperation> = [
   {
@@ -17,15 +19,13 @@ export const columns: ColumnsType<IOperation> = [
     title: "Sản phẩm",
     key: "sellableCode",
     dataIndex: "sellableCode",
-    width: 300,
+    width: 350,
     render(value, { sellable, template }, index) {
       return (
-        <>
-          <div className="mb-2">
-            <span className="block">{template?.name}</span>
-            <span className="block text-xs">{sellable.code}</span>
-          </div>
-        </>
+        <div className="">
+          <span className="block text-xs mb-1">{sellable.code}</span>
+          <span className="block font-semibold">{template?.name}</span>
+        </div>
       );
     },
   },
@@ -36,8 +36,9 @@ export const columns: ColumnsType<IOperation> = [
     dataIndex: "sellableCode",
     width: 200,
     render(value, { sellable }, index) {
+      const colorType = dayjs().isAfter(stringToDate(sellable.startDate)) ? "red" : "emerald";
       return (
-        <div>
+        <div className={classNames("mb-2", `text-${colorType}-500`)}>
           <span className="block">Đi: {formatDate(sellable.startDate, "DD/MM/YYYY")}</span>
           <span className="block">Về: {formatDate(sellable.endDate, "DD/MM/YYYY")}</span>
         </div>
@@ -51,35 +52,37 @@ export const columns: ColumnsType<IOperation> = [
     width: 250,
     render: (value, { pic }, index) => {
       return pic ? (
-        <>
-          <div>
-            <Popover
-              title="Thông tin"
-              content={
-                <>
-                  <span className="flex gap-x-2 text-xs">
-                    <span className="block w-20">Họ và tên</span>
-                    <span>{pic.fullname}</span>
-                  </span>
-                  <span className="flex gap-x-2 text-xs">
-                    <span className="block w-20">Email</span>
-                    <span>{pic.email}</span>
-                  </span>
-                  <span className="flex gap-x-2 text-xs">
-                    <span className="block w-20">Điện thoại</span>
-                    <span>{pic.phoneNumber}</span>
-                  </span>
-                </>
-              }
-            >
-              <span className="flex items-center gap-x-2 cursor-pointer">
-                <InfoCircleOutlined />
-                {pic.username}
+        <Popover
+          title="Thông tin"
+          content={
+            <div className="flex gap-y-1 flex-col">
+              <span className="flex gap-x-2 text-xs">
+                <span className="block w-20">Họ và tên</span>
+                <span>{pic.fullname}</span>
               </span>
-            </Popover>
-          </div>
+              <span className="flex gap-x-2 text-xs">
+                <span className="block w-20">Email</span>
+                <span>{pic.email}</span>
+              </span>
+              <span className="flex gap-x-2 text-xs">
+                <span className="block w-20">Điện thoại</span>
+                <span>{pic.phoneNumber}</span>
+              </span>
+            </div>
+          }
+        >
+          <span className="flex items-center gap-x-2 cursor-pointer">
+            <InfoCircleOutlined />
+            {pic.username}
+          </span>
+        </Popover>
+      ) : (
+        <>
+          <span className="opacity-60 flex items-center gap-x-2">
+            <QuestionCircleOutlined /> Chưa có
+          </span>
         </>
-      ) : null;
+      );
     },
   },
   {

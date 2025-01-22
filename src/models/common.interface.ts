@@ -10,6 +10,31 @@ export interface BaseResponse<T> {
   totalItems: number;
   result: T;
 }
+export interface SuccessResponse<T> {
+  body: string;
+  status: "OK";
+  message: string;
+  jwt: string;
+  pageCurrent: number;
+  errorCode: string;
+  pageSize: number;
+  totalPages: number;
+  totalItems: number;
+  result: T;
+}
+
+export interface ErrorResponse {
+  body: string;
+  status: "XX";
+  message: string;
+  jwt: string;
+  pageCurrent: number;
+  errorCode: string;
+  pageSize: number;
+  totalPages: number;
+  totalItems: number;
+  result: null;
+}
 
 export interface BaseQueryParams<T> {
   requestObject?: T;

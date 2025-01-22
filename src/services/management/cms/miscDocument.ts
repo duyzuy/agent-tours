@@ -10,33 +10,23 @@ import { getAgToken } from "@/utils/common";
 export const miscDocumentAPIs = {
   create: async (payload: MiscDocumentPayload) => {
     return await client.post<MiscDocumentResponse>("local/LocalMisc_DocumentCheckList_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
-        requestObject: {
-          ...payload,
-        },
+        requestObject: payload,
       },
     });
   },
   update: async (payload: MiscDocumentPayload) => {
     return await client.post<MiscDocumentResponse>("local/LocalMisc_DocumentCheckList_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
-        requestObject: {
-          ...payload,
-        },
+        requestObject: payload,
       },
     });
   },
   getList: async () => {
     return await client.post<MiscDocumentListResponse>("local/LocalMisc_DocumentCheckList_List", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {},
       },
@@ -44,9 +34,7 @@ export const miscDocumentAPIs = {
   },
   delete: async (id: number) => {
     return await client.post<MiscDocumentResponse>("local/LocalMisc_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           cat: "localmisc_documentchecklist",

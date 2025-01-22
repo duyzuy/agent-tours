@@ -7,36 +7,36 @@ export const getAgToken = () => {
   return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN);
 };
 
-export const setAgToken = (token: string) => {
+export const setAdminUserToken = (token: string) => {
   !isSSR() && localStorage.setItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN, token);
 };
 
-export const removeAgToken = () => {
+export const removeAdminUserToken = () => {
   !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.AG_AUTH_TOKEN);
 };
 
-export const setLocalUserName = (username?: string) => {
+export const setAdminUsername = (username?: string) => {
   !isSSR() && username && localStorage.setItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME, username);
 };
 
-export const getLocalUserName = () => {
+export const getAdminUserName = () => {
   return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME);
 };
 
-export const getLocalUserInformationStorage = () => {
+export const getAdminUserInformationStorage = () => {
   return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.LOCAL_USER_INFORMATION);
 };
-export const setLocalUserInformationStorage = (userInfo: {
+export const setAdminUserInformationStorage = (userInfo: {
   localUserType: "ADMIN" | "AGENT" | "STAFF" | "AGENT_STAFF";
   localChildrendUsername: string[];
 }) => {
   return isSSR() ? "" : localStorage.setItem(LOCAL_STORAGE_KEY.LOCAL_USER_INFORMATION, JSON.stringify(userInfo));
 };
-export const removeLocalUserInformation = () => {
+export const removeAdminUserInformationStorage = () => {
   !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.LOCAL_USER_INFORMATION);
 };
 
-export const removeLocalUserName = () => {
+export const removeAdminUsername = () => {
   !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME);
 };
 

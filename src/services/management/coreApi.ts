@@ -2,7 +2,7 @@ import { coreOneTimeKeys } from "./cores/oneTimeKeyAccess";
 import { client } from "../api";
 import { createHash256 } from "@/utils/hash";
 import { coreAccountConfig } from "@/configs";
-import { getLocalUserName, getLocalUserInformationStorage } from "@/utils/common";
+import { getAdminUserName, getAdminUserInformationStorage } from "@/utils/common";
 import { BaseResponse } from "@/models/common.interface";
 export const coreApi = {
   post: async <TSuccess, TError extends object = BaseResponse<null>>(
@@ -15,8 +15,8 @@ export const coreApi = {
       localUsername?: string;
     },
   ) => {
-    const localUsername = getLocalUserName();
-    const userInfo = getLocalUserInformationStorage();
+    const localUsername = getAdminUserName();
+    const userInfo = getAdminUserInformationStorage();
     const localUserInfo = userInfo
       ? (JSON.parse(userInfo) as {
           localUserType: "ADMIN" | "AGENT" | "STAFF" | "AGENT_STAFF";

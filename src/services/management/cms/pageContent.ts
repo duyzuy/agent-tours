@@ -13,9 +13,7 @@ import { LangCode } from "@/models/management/cms/language.interface";
 export const pageContentAPIs = {
   create: async (payload: IPageContentPayload) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_page_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -25,9 +23,7 @@ export const pageContentAPIs = {
   },
   update: async (payload: IPageContentPayload) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_page_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -37,9 +33,7 @@ export const pageContentAPIs = {
   },
   getList: async (queryParams?: PageContentQueryParams) => {
     return await client.post<IPageContentListRs>("local/Cms_page_List", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...queryParams?.requestObject,
@@ -51,9 +45,7 @@ export const pageContentAPIs = {
   },
   getListMinimal: async (queryParams?: PageContentMinimalQueryParams) => {
     return await client.post<IPageContentMinimalListRs>("local/Cms_page_ListMinimal", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...queryParams?.requestObject,
@@ -66,9 +58,7 @@ export const pageContentAPIs = {
   },
   getParentListByLang: async (queryParams?: PageContentQueryParams) => {
     return await client.post<IPageContentListRs>("local/Cms_page_ListOnlyParent", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: { ...queryParams?.requestObject },
         pageCurrent: queryParams?.pageCurrent,
@@ -78,9 +68,7 @@ export const pageContentAPIs = {
   },
   getDetail: async (payload: { id: number } | { originId: number }) => {
     return await client.post<IPageContentDetailRs>("local/getCms_page_byId", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -90,9 +78,7 @@ export const pageContentAPIs = {
   },
   publish: async (id: number) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_page_Publish", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           id,
@@ -102,9 +88,7 @@ export const pageContentAPIs = {
   },
   unPublish: async (id: number) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_page_Unpublish", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           id,
@@ -114,9 +98,7 @@ export const pageContentAPIs = {
   },
   delete: async (id: number) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           cat: "cms_page",

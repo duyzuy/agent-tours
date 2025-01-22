@@ -1,7 +1,8 @@
 import useMessage from "@/hooks/useMessage";
 
 import { MutateOptions, useQueryClient } from "@tanstack/react-query";
-import { GET_LOCAL_ROLE_PERMISSION, GET_LOCAL_USER_ROLES } from "@/queries/var";
+import { GET_LOCAL_ROLE_PERMISSION } from "@/queries/var";
+import { ADMIN_AUTH } from "@/constants/query-var.constant";
 
 import {
   useCreateRolePermissionsMutation,
@@ -72,7 +73,7 @@ const useRolePermission = () => {
           queryKey: [GET_LOCAL_ROLE_PERMISSION],
         });
         queryClient.invalidateQueries({
-          queryKey: [GET_LOCAL_USER_ROLES],
+          queryKey: [ADMIN_AUTH.GET_ADMIN_ROLES],
         });
         options?.onSuccess?.(response, variables, context);
       },
@@ -105,7 +106,7 @@ const useRolePermission = () => {
             queryKey: [GET_LOCAL_ROLE_PERMISSION],
           });
           queryClient.invalidateQueries({
-            queryKey: [GET_LOCAL_USER_ROLES],
+            queryKey: [ADMIN_AUTH.GET_ADMIN_ROLES],
           });
           options?.onSuccess?.(response, variables, context);
         },

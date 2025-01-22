@@ -3,8 +3,6 @@ import config from "@/configs";
 import ThemeProvider from "@/lib/ThemeProvider";
 import { RQClientProvider } from "@/lib/RQClientProvider";
 
-import "@/styles/globals.scss";
-
 export const metadata: Metadata = {
   metadataBase: new URL(config.DOMAIN_ROOT),
   openGraph: {

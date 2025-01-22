@@ -1,4 +1,3 @@
-import { getAgToken } from "@/utils/common";
 import { client } from "@/services/api";
 import { LangCode } from "@/models/management/cms/language.interface";
 import {
@@ -12,9 +11,7 @@ import {
 export const menuAPIs = {
   create: async (payload: MenuItemPayload) => {
     return await client.post<MenuItemResponse>("local/cms_frontendMenu_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -24,9 +21,7 @@ export const menuAPIs = {
   },
   updateItem: async (payload: MenuItemPayload & { id: number }) => {
     return await client.post<MenuItemResponse>("local/cms_frontendMenu_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -36,9 +31,7 @@ export const menuAPIs = {
   },
   updateList: async (items: IMenuItem[]) => {
     return await client.post<MenuItemResponse>("local/cms_frontendMenu_Update", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           menuItems: [...items],
@@ -48,9 +41,7 @@ export const menuAPIs = {
   },
   getList: async (payload: { menuPosition: MenuPositionType; lang: LangCode }) => {
     return await client.post<MenuListResponse>("local/cms_frontendMenu_List", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -64,9 +55,7 @@ export const menuAPIs = {
   },
   delete: async (id: number) => {
     return await client.post<MenuItemResponse>("local/Cms_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           cat: "cms_frontendMenu_item",

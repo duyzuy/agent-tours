@@ -1,81 +1,82 @@
 "use client";
 import { objectToQueryString } from "@/utils/helper";
 import { getAgToken } from "@/utils/common";
-import { BaseResponse } from "@/models/common.interface";
-enum METHODS {
-  Post = "POST",
-  Get = "GET",
-  Put = "PUT",
-  Patch = "PATCH",
-}
+import { BaseResponse, ErrorResponse } from "@/models/common.interface";
+type Methods = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
 type Options = RequestInit & {
   params?: { [key: string]: any };
   headers?: HeadersInit;
   isAuth?: boolean;
 };
 
-const request = async <TSuccess, TError>(url: string, method: METHODS, options: Options) => {
+const buildConfig = (method: Methods, options: Options): RequestInit => {
+  const { headers, params, isAuth = false } = options;
+
   let config: RequestInit = {
-    method: method ? method : METHODS.Post,
+    method,
     headers: {
       "Content-Type": "application/json",
-      ...(options.headers || {}),
+      ...headers,
     },
   };
 
-  const { params, isAuth = false } = options;
-
-  let baseUrl = `${process.env.API_ROOT}/${url}`;
-
   if (isAuth) {
-    const token = getAgToken() || "";
+    const token = getAgToken();
     config.headers = {
       ...config.headers,
-      Authorization: `Bearer ${encodeURIComponent(token)}`,
-    };
-  }
-  if (method === METHODS.Post || method === METHODS.Put || method === METHODS.Patch) {
-    config = {
-      ...config,
-      body: JSON.stringify(params || {}),
+      Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
     };
   }
 
-  if (params && method === METHODS.Get) {
+  if (["POST", "PUT", "PATCH"].includes(method)) {
+    config.body = JSON.stringify(params || {});
+  }
+  return config;
+};
+
+const buildUrl = (url: string, method: Methods, params?: Record<string, any>): string => {
+  let baseUrl = `${process.env.API_ROOT}/${url}`;
+  if (params && method === "GET") {
     const queryString = objectToQueryString(params);
     baseUrl = `${baseUrl}?${queryString}`;
   }
+  return baseUrl;
+};
+
+const request = async <TSuccess, TError>(url: string, method: Methods, options: Options) => {
+  const config = buildConfig(method, options);
+  const baseUrl = buildUrl(url, method, options.params);
 
   try {
-    const response = await fetch(baseUrl, { ...config });
+    const response = await fetch(baseUrl, config);
 
     const data = await response.json();
 
     if (!response.ok || data.status !== "OK") {
       return Promise.reject(data as TError);
     }
-
-    return Promise.resolve(data as TSuccess);
+    return data as TSuccess;
   } catch (error) {
-    let message = "Unknown Error";
+    let message = "Fetching failed, please try again later.";
     if (error instanceof Error) message = error.message;
-    throw new Error(message);
+    throw new Error(message) as TError;
   }
 };
 
 export const client = {
-  get: <Success, Error extends object = BaseResponse<null>>(url: string, options: Options) => {
-    return request<Success, Error>(url, METHODS.Get, {
+  get: <Success, Error extends ErrorResponse = ErrorResponse>(url: string, options?: Options) => {
+    return request<Success, Error>(url, "GET", {
       ...(options || {}),
     });
   },
-  post: <Success, Error extends object = BaseResponse<null>>(url: string, options: Options) => {
-    return request<Success, Error>(url, METHODS.Post, {
+  post: <Success, Error extends ErrorResponse = ErrorResponse>(url: string, options?: Options) => {
+    return request<Success, Error>(url, "POST", {
       ...(options || {}),
     });
   },
-  put: <Success, Error extends object = BaseResponse<null>>(url: string, options: Options) => {
-    return request<Success, Error>(url, METHODS.Put, {
+  put: <Success, Error extends ErrorResponse = ErrorResponse>(url: string, options?: Options) => {
+    return request<Success, Error>(url, "PUT", {
       ...(options || {}),
     });
   },

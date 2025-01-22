@@ -6,6 +6,7 @@ import { EPassengerGender, EPassengerTitle } from "@/constants/common";
 import { RoomingStatusType, RoomingType } from "../booking/rooming.interface";
 import { EConfigChannel, ESellChannel } from "@/constants/channel.constant";
 import { IDocument } from "./document.interface";
+import { BaseQueryParams } from "@/models/common.interface";
 
 export interface IPic {
   recId: number;
@@ -64,6 +65,25 @@ export interface OperationPayload {
   sellableCode?: string;
   pic?: Partial<IPic>;
   status?: IOperationStatus;
+}
+
+export type OperationQueryParams = BaseQueryParams<{
+  sellableId?: number;
+  sellableTemplateId?: number;
+  picRecId?: number;
+}>;
+export class OperationFormQueryParams implements OperationQueryParams {
+  requestObject?: { sellableId?: number; sellableTemplateId?: number; picRecId?: number } | undefined;
+  orderBy?: { sortColumn?: string; direction?: "asc" | "desc" } | undefined;
+  pageCurrent?: number | undefined;
+  pageSize?: number | undefined;
+
+  constructor(params: OperationQueryParams) {
+    this.requestObject = params.requestObject;
+    this.orderBy = params.orderBy;
+    this.pageCurrent = params.pageCurrent;
+    this.pageSize = params.pageSize;
+  }
 }
 
 export interface OperationStatusOperationIdPayload {

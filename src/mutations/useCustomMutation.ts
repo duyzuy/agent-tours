@@ -1,5 +1,6 @@
 import { useMutation, MutationFunction } from "@tanstack/react-query";
 import { BaseResponse } from "@/models/common.interface";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useCustomMutation = <TSuccess, TPayLoad extends unknown, TError extends object = BaseResponse<null>>({
   mutationFn,
