@@ -18,9 +18,6 @@ export const useDeleteRolePermissions = () => {
       queryClient.invalidateQueries({
         queryKey: [ADMIN_AUTH.GET_ADMIN_ROLES],
       });
-      queryClient.invalidateQueries({
-        queryKey: [ADMIN_AUTH.GET_ADMIN_PERMISSIONS],
-      });
     },
     onError: (error, variables, context) => {
       console.log({ error });

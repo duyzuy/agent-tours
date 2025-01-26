@@ -43,7 +43,7 @@ const OperationDetailPage: React.FC<OperationDetailPage> = ({ params }) => {
       onBack={() => router.push("/portal/operation/list")}
     >
       <Row gutter={[24, 0]}>
-        <Col span={16}>
+        <Col span={24} xxl={16}>
           <OperationStatus status={data.status} />
           <Divider />
           <OperationSellableDetail
@@ -62,13 +62,12 @@ const OperationDetailPage: React.FC<OperationDetailPage> = ({ params }) => {
           <OperationActions operationId={data.id} status={data.status} />
           <OperationTabsControl operationId={data.id} status={data.status} sellableId={data.sellableId} />
         </Col>
-        <Col span={8} className="!max-w-md">
+        <Col span={24} xxl={8} className="!max-w-md">
           <OperationPersonInformation
             fullName={data.pic?.fullname || "--"}
             email={data.pic?.email || "--"}
             phoneNumber={data.pic?.phoneNumber || "--"}
           />
-
           <div className="h-6"></div>
           <OperationThingTodoItemListContainer operationId={data.id} />
         </Col>

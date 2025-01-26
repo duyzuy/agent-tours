@@ -2,7 +2,7 @@ import { EInventoryType } from "@/models/management/core/inventoryType.interface
 import { OperationThingTodoListResponse } from "@/models/management/core/operation/operationThingTodo.interface";
 import { formatDate } from "@/utils/date";
 import { ClockCircleOutlined } from "@ant-design/icons";
-import { Tabs, TabsProps, Tag } from "antd";
+import { Card, Divider, Space, Tabs, TabsProps, Tag } from "antd";
 import classNames from "classnames";
 import React, { useMemo } from "react";
 
@@ -34,49 +34,52 @@ const OperationThingTodoList: React.FC<OperationThingTodoListProps> = ({ classNa
         label: key,
         key: key,
         children: (
-          <div className="max-h-96 overflow-y-auto -mx-4 p-4">
+          <div className="max-h-96 overflow-y-auto -mx-3 p-3 flex flex-col gap-y-3">
             {items?.map(({ deadline, deadlineId, preDeadline, remark, type, status }) => (
-              <div className="todo-item border p-3 mb-3 rounded-md" key={deadlineId}>
-                <div className="relative">
-                  <Tag
-                    color={status === "NEW" ? "blue" : "green"}
-                    bordered={false}
-                    className="!mr-0 !absolute right-0 bottom-0"
-                  >
-                    {status === "NEW" ? "Mới" : status === "DONE" ? "Hoàn thành" : "Không xác định"}
-                  </Tag>
-                  <div className="mb-2">{remark}</div>
-                  <div className="flex gap-2 text-xs opacity-80">
-                    <ClockCircleOutlined />
-                    <div className="flex">
-                      <div className="date">{deadline ? formatDate(deadline) : null}</div>
-                      {preDeadline ? (
-                        <>
-                          <span className="mx-2">|</span>
-                          <div className="pre-date">{formatDate(preDeadline)}</div>
-                        </>
-                      ) : null}
-                    </div>
+              <Card
+                className="todo-item"
+                key={deadlineId}
+                size="small"
+                title={
+                  <div className="flex items-center justify-between">
+                    <Space className="!text-xs font-normal">
+                      <ClockCircleOutlined />
+                      <div className="flex">
+                        <div className="date">{deadline ? formatDate(deadline) : null}</div>
+                        {preDeadline ? (
+                          <>
+                            <span className="mx-2">|</span>
+                            <div className="pre-date">{formatDate(preDeadline)}</div>
+                          </>
+                        ) : null}
+                      </div>
+                    </Space>
+                    <Tag color={status === "NEW" ? "blue" : "green"} bordered={false} className="!mr-0">
+                      {status === "NEW" ? "Mới" : status === "DONE" ? "Hoàn thành" : "Không xác định"}
+                    </Tag>
                   </div>
-                </div>
-              </div>
+                }
+              >
+                <div className="content">{remark}</div>
+              </Card>
             ))}
           </div>
         ),
       },
     ];
   }, []);
+
   return (
-    <div
+    <Card
+      size="small"
       className={classNames("info border w-full rounded-md p-4", {
         [className]: className,
       })}
     >
-      <div className="box-head mb-3 pb-3 border-b">
-        <h3 className="font-semibold text-lg">Công việc cần làm</h3>
-      </div>
+      <h3 className="font-semibold text-lg">Công việc cần làm</h3>
+      <Divider style={{ margin: "12px 0" }} />
       <Tabs items={tabItems} />
-    </div>
+    </Card>
   );
 };
 

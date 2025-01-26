@@ -1,22 +1,27 @@
 import { RoomingItem, RoomingType } from "@/models/management/booking/rooming.interface";
-import { Checkbox, Tag, TagProps } from "antd";
+import { Checkbox, Divider, Tag, TagProps } from "antd";
 import { EPassengerGender, EPassengerTitle } from "@/constants/common";
 import { getPassengerTitle, getPassengerGender } from "@/constants/common";
 import { getRoomingName, ROOM_TYPES } from "@/constants/rooming.constant";
 import { getPassengerType } from "@/utils/common";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 export interface RoomingListProps {
   items: RoomingItem[];
   value?: RoomingItem[];
   onChange?: (item: RoomingItem, items: RoomingItem[]) => void;
-  isEditable?: boolean;
+  editAble?: boolean;
 }
-const RoomingList: React.FC<RoomingListProps> = ({ items, value, onChange, isEditable }) => {
+const RoomingList: React.FC<RoomingListProps> = ({ items, value, onChange, editAble }) => {
+  type RoomingGroupByPax = { [key: string]: { items: RoomingItem[]; roomType: RoomingType } | undefined };
+
   const roomGroupByPax = useMemo(() => {
-    return items?.reduce<{ [key: string]: RoomingItem[] }>((acc, item) => {
+    return items?.reduce<RoomingGroupByPax>((acc, item) => {
       return {
         ...acc,
-        [item.roomingListNumber]: [...(acc[item.roomingListNumber] || []), item],
+        [item.roomingListNumber]: {
+          roomType: item.roomingListType,
+          items: [...(acc[item.roomingListNumber]?.items || []), item],
+        },
       };
     }, {});
   }, [items]);
@@ -47,7 +52,7 @@ const RoomingList: React.FC<RoomingListProps> = ({ items, value, onChange, isEdi
     onChange?.(roomingItem, newValues);
   };
 
-  const getRoomingColor = (type: RoomingType): TagProps["color"] => {
+  const getRoomingColor = (type?: RoomingType): TagProps["color"] => {
     return type === "DOUBLE"
       ? "volcano"
       : type === "TRIPLE"
@@ -60,43 +65,45 @@ const RoomingList: React.FC<RoomingListProps> = ({ items, value, onChange, isEdi
   };
 
   return (
-    <div className="rooming-list w-fit">
-      <div className="flex items-center bg-slate-50 rounded-md py-2 px-4">
+    <div className="rooming-list">
+      <div className="flex items-center rounded-md py-2 px-4 font-semibold">
         <div className="w-20">Chọn</div>
         <div className="w-20">Order ID</div>
-        <div className="w-36">Danh xưng</div>
         <div className="w-56">Họ và tên</div>
-        <div className="w-28">Hành khách</div>
         <div className="w-24">Giới tính</div>
-        <div className="w-36">Loại phòng</div>
+        <div className="w-32">Hành khách</div>
+        <div className="flex-1">Loại phòng</div>
       </div>
-      {roomGroupByPax
-        ? Object.entries(roomGroupByPax).map(([key, roomingItem], _index) => (
-            <div className="mb-2 pb-2 border-b px-4" key={_index}>
-              {roomingItem?.map((paxItem) => (
-                <div className="pax-item flex items-center py-2" key={paxItem.bookingPaxId}>
-                  <div className="w-20">
-                    <Checkbox
-                      checked={hasSelectedPaxItem(paxItem)}
-                      onChange={() => onChangeRoomingItem(paxItem)}
-                      disabled={!isEditable}
-                    ></Checkbox>
+      <Divider style={{ margin: "12px 0" }} />
+      <div>
+        {roomGroupByPax
+          ? Object.entries(roomGroupByPax).map(([key, value], _index) => (
+              <React.Fragment key={_index}>
+                {_index !== 0 ? <Divider style={{ margin: "12px 0" }} /> : null}
+                <div className="room-item flex items-center px-4">
+                  <div className="room-item__passengers" key={_index}>
+                    {value?.items.map((paxItem) => (
+                      <div className="pax-item flex items-center py-2" key={paxItem.bookingPaxId}>
+                        <div className="w-20">
+                          <Checkbox
+                            checked={hasSelectedPaxItem(paxItem)}
+                            onChange={() => onChangeRoomingItem(paxItem)}
+                            disabled={!editAble}
+                          />
+                        </div>
+                        <div className="w-20">{`#${paxItem.orderId}`}</div>
+                        <div className="w-56">{getFullName(paxItem.paxLastname, paxItem.paxMiddleFirstName)}</div>
+                        <div className="w-24">{getPassengerGender(paxItem.paxGender as EPassengerGender)}</div>
+                        <div className="w-32">{getPassengerType(paxItem.type)}</div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="w-20">{`#${paxItem.orderId}`}</div>
-                  <div className="w-36">{getPassengerTitle(paxItem.paxTitle as EPassengerTitle)}</div>
-                  <div className="w-56">{getFullName(paxItem.paxLastname, paxItem.paxMiddleFirstName)}</div>
-                  <div className="w-28">{getPassengerType(paxItem.type)}</div>
-                  <div className="w-24">{getPassengerGender(paxItem.paxGender as EPassengerGender)}</div>
-                  <div className="w-36">
-                    <Tag color={getRoomingColor(paxItem.roomingListType)} bordered={false}>
-                      {getRoomingName(paxItem.roomingListType)}
-                    </Tag>
-                  </div>
+                  <Tag color={getRoomingColor(value?.roomType)}>{getRoomingName(value?.roomType)}</Tag>
                 </div>
-              ))}
-            </div>
-          ))
-        : null}
+              </React.Fragment>
+            ))
+          : null}
+      </div>
     </div>
   );
 };

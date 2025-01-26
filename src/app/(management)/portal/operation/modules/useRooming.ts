@@ -8,8 +8,8 @@ import { queryCore } from "@/queries/var";
 import { PassengerType } from "@/models/common.interface";
 
 const useRooming = (roomingItems: RoomingItem[]) => {
-  const { mutate: makeUpdate } = useUpdateRoomingMutation();
-  const { mutate: makeHandOver } = useHandOverRoomingMutation();
+  const { mutate: updateRoom } = useUpdateRoomingMutation();
+  const { mutate: handOverRoom } = useHandOverRoomingMutation();
 
   const initFormData = new RoomingFormData(undefined, 0, []);
   const [formData, setFormdata] = useState(initFormData);
@@ -18,46 +18,47 @@ const useRooming = (roomingItems: RoomingItem[]) => {
   const message = useMessage();
 
   const onChangeRooming = (item: RoomingItem) => {
-    const { roomingItems, roomingType } = formData;
+    setFormdata((oldData) => {
+      const { roomingItems, roomingType } = oldData;
 
-    if (!roomingType) {
-      message.warning("Vui lòng chọn loại phòng trước.");
-      return;
-    }
-
-    let newRoomingItems = [...roomingItems];
-
-    const indexItem = roomingItems.findIndex((pItem) => pItem.bookingPaxId === item.bookingPaxId);
-
-    const paxCount = roomingItems.filter((item) => item.type !== PassengerType.INFANT).length;
-    if (indexItem !== -1) {
-      newRoomingItems.splice(indexItem, 1);
-    } else {
-      console.log(roomingType, roomingItems.length, item.type);
-      if (roomingType === "SINGLE" && paxCount >= 1 && item.type !== PassengerType.INFANT) {
-        message.warning("Phòng đơn tối đa 1 người.");
-        return;
-      }
-      if (
-        (roomingType === "DOUBLE" && paxCount >= 2 && item.type !== PassengerType.INFANT) ||
-        (roomingType === "TWIN" && paxCount >= 2 && item.type !== PassengerType.INFANT)
-      ) {
-        message.warning("Phòng tối đa 2 người");
-        return;
-      }
-      if (roomingType === "TRIPLE" && paxCount >= 3 && item.type !== PassengerType.INFANT) {
-        message.warning("Phòng tối đa 3 người");
-        return;
+      if (!roomingType) {
+        message.warning("Vui lòng chọn loại phòng trước.");
+        return oldData;
       }
 
-      newRoomingItems = [...newRoomingItems, item];
-    }
+      let newRoomingItems = [...roomingItems];
 
-    setFormdata((prev) => ({ ...prev, roomingItems: [...newRoomingItems] }));
+      const indexItem = roomingItems.findIndex((pItem) => pItem.bookingPaxId === item.bookingPaxId);
+
+      const paxCount = roomingItems.filter((item) => item.type !== PassengerType.INFANT).length;
+      if (indexItem !== -1) {
+        newRoomingItems.splice(indexItem, 1);
+      } else {
+        if (roomingType === "SINGLE" && paxCount >= 1 && item.type !== PassengerType.INFANT) {
+          message.warning("Phòng đơn tối đa 1 người.");
+          return oldData;
+        }
+        if (
+          (roomingType === "DOUBLE" && paxCount >= 2 && item.type !== PassengerType.INFANT) ||
+          (roomingType === "TWIN" && paxCount >= 2 && item.type !== PassengerType.INFANT)
+        ) {
+          message.warning("Phòng tối đa 2 người");
+          return oldData;
+        }
+        if (roomingType === "TRIPLE" && paxCount >= 3 && item.type !== PassengerType.INFANT) {
+          message.warning("Phòng tối đa 3 người");
+          return oldData;
+        }
+
+        newRoomingItems = [...newRoomingItems, item];
+      }
+
+      return { ...oldData, roomingItems: [...newRoomingItems] };
+    });
   };
 
-  const getNextRoomingNumber = () => {
-    const currentRoomingNumberList = roomingItems?.reduce<number[]>((acc, item) => {
+  const genrateRoomingNumber = () => {
+    const currentRoomingNumberList = roomingItems.reduce<number[]>((acc, item) => {
       if (!acc.length || !acc.includes(item.roomingListNumber)) {
         acc = [...acc, item.roomingListNumber];
       }
@@ -75,13 +76,15 @@ const useRooming = (roomingItems: RoomingItem[]) => {
   };
 
   const onChangeRoomingType = (type: RoomingType) => {
-    const nextNum = getNextRoomingNumber();
-    setFormdata((oldData) => ({
-      ...oldData,
-      roomingType: type,
-      roomingItems: [],
-      roomingNumber: nextNum,
-    }));
+    setFormdata((oldData) => {
+      const nextNum = genrateRoomingNumber();
+      return {
+        ...oldData,
+        roomingType: type,
+        roomingItems: [],
+        roomingNumber: nextNum,
+      };
+    });
   };
 
   const onSubmit = (cb?: () => void) => {
@@ -104,7 +107,7 @@ const useRooming = (roomingItems: RoomingItem[]) => {
       roomingList: [...roomingItems],
     };
 
-    makeUpdate(payload, {
+    updateRoom(payload, {
       onSuccess(data, variables, context) {
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_ROOMING_LIST] });
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_STATUS] });
@@ -120,7 +123,7 @@ const useRooming = (roomingItems: RoomingItem[]) => {
   };
 
   const onHandOver = (formData: RoomingHandOverFormData, cb?: () => void) => {
-    makeHandOver(formData, {
+    handOverRoom(formData, {
       onSuccess(data, variables, context) {
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_STATUS] });
         message.success("Bàn giao thành công.");
@@ -134,11 +137,23 @@ const useRooming = (roomingItems: RoomingItem[]) => {
     });
   };
 
+  const clearSelection = () => {
+    setFormdata((oldData) => {
+      const nextNum = genrateRoomingNumber();
+      return {
+        ...oldData,
+        roomingType: undefined,
+        roomingItems: [],
+        roomingNumber: nextNum,
+      };
+    });
+  };
   return {
     onChangeRoomingType,
     onChangeRooming,
     onSubmit,
     onHandOver,
+    clearSelection,
     roomingData: formData,
   };
 };

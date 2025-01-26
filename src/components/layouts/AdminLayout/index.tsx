@@ -93,7 +93,7 @@ const AdminLayout = ({ children }: Props) => {
           </div>
         </Sider>
       </div>
-      <Layout className=" transition-all" style={{ marginLeft: collapsed ? 80 : 240 }}>
+      <Layout className="!min-h-screen transition-all" style={{ marginLeft: collapsed ? 80 : 240 }}>
         <Header
           style={{ background: colorBgContainer }}
           className={classNames("flex border-b sticky top-0 ml-[1px] z-10 items-center !px-6", {

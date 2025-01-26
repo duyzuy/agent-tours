@@ -72,9 +72,18 @@ const RoomingPage: React.FC<RoomingPageProps> = ({ params }) => {
           email={operation?.pic.email}
           fullName={operation?.pic.fullname}
         />
+        <div className="h-6"></div>
         <div className="flex gap-6 mb-6">
           <div>Trạng thái xếp phòng:</div>
-          {isInProgress ? <Tag color="green">Đã bàn giao</Tag> : <Tag color="orange">Đang xếp phòng</Tag>}
+          {isInProgress ? (
+            <Tag color="green" bordered={false}>
+              Đã bàn giao
+            </Tag>
+          ) : (
+            <Tag color="orange" bordered={false}>
+              Đang xếp phòng
+            </Tag>
+          )}
         </div>
         <Form layout="vertical">
           <FormItem label="Loại phòng" required>
@@ -97,7 +106,7 @@ const RoomingPage: React.FC<RoomingPageProps> = ({ params }) => {
               value={roomingData.roomingItems}
               onChange={onChangeRooming}
               items={data || []}
-              isEditable={!isInProgress}
+              editAble={!isInProgress}
             />
           </FormItem>
         </Form>

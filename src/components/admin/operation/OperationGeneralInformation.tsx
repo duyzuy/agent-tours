@@ -6,9 +6,9 @@ import { RoomingType } from "@/models/management/booking/rooming.interface";
 import { OperationStatusResponse } from "@/models/management/core/operation/OperationStatus.interface";
 import { getPassengerType } from "@/utils/common";
 import { moneyFormatVND } from "@/utils/helper";
-import { Table, Tag, TagProps } from "antd";
+import { Card, Divider, Table, Tag, TagProps } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 
 interface OperationGeneralInformationProps {
   passengerList?: OperationStatusResponse["result"]["passengerList"];
@@ -120,61 +120,80 @@ const OperationGeneralInformation: React.FC<OperationGeneralInformationProps> = 
       </div>
       <div className="passenger-container">
         <h3 className="text-lg font-semibold mb-6">Danh sách hành khách</h3>
-        <div className="passenger-list">
+        <div className="passenger-list flex flex-col gap-y-3">
           {passengersGroupByRoom
             ? Object.entries(passengersGroupByRoom)?.map(([key, { roomNumber, roomType, passengers }], _index) => (
-                <div className="room-item border rounded-md p-4 mb-4" key={_index}>
+                <Card key={_index} size="small">
                   <div className="mb-3">
                     <Tag color={getRoomingColor(roomType)} bordered={false}>
                       <span className="text-[14px]">{getRoomingName(roomType)}</span>
                     </Tag>
                   </div>
                   {passengers.map((pax, _paxIndex) => (
-                    <div className={`pax-item flex ${_paxIndex !== 0 ? "border-t pt-3 mt-3" : null}`} key={pax.paxId}>
-                      <div className="w-[160px]">
-                        <div className="text-xs text-gray-500">Hành khách</div>
-                        {getPassengerType(pax.type)}
-                      </div>
-                      <div className="w-[160px]">
-                        <div className="text-xs text-gray-500">Danh xưng</div>
-                        {getPassengerTitle(pax.paxTitle)}
-                      </div>
-                      <div className="w-[160px]">
-                        <div className="text-xs text-gray-500">Họ</div>
-                        {pax.paxLastname ? pax.paxLastname : "--"}
-                      </div>
-                      <div className="w-[160px]">
-                        <div className="text-xs text-gray-500">Tên đệm và tên</div>
-                        {pax.paxMiddleFirstName ? pax.paxMiddleFirstName : "--"}
-                      </div>
-                      <div className="w-[160px]">
-                        <div className="text-xs text-gray-500">Giới tính</div>
-                        {getPassengerGender(pax.paxGender)}
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-xs text-gray-500">Hồ sơ giấy tờ</div>
-                        <div>
-                          {pax.documents?.map(({ documentName, status }, _index) => (
-                            <div key={_index} className="flex items-center gap-x-3">
-                              <div>{documentName}</div>-
-                              <span className="text-xs">
-                                {status === "FINISHED"
-                                  ? "Đã nộp"
-                                  : status === "HANDOVERED"
-                                  ? "Đã bàn giao"
-                                  : status === "NEW"
-                                  ? "Mới"
-                                  : status === "NOT_FINISHED"
-                                  ? "Chưa nộp"
-                                  : "Unknown"}
-                              </span>
-                            </div>
-                          )) || "--"}
+                    <React.Fragment key={pax.paxId}>
+                      {_paxIndex !== 0 ? <Divider style={{ margin: "12px 0" }} /> : null}
+                      <div className="pax-item ">
+                        <div className="flex flex-wrap gap-3 mb-3">
+                          <div className="w-[120px]">
+                            <div className="text-xs text-gray-500 mb-1">Hành khách</div>
+                            {getPassengerType(pax.type)}
+                          </div>
+                          <div className="w-[80px]">
+                            <div className="text-xs text-gray-500 mb-1">Danh xưng</div>
+                            {getPassengerTitle(pax.paxTitle)}
+                          </div>
+                          <div className="w-[100px]">
+                            <div className="text-xs text-gray-500 mb-1">Họ</div>
+                            {pax.paxLastname ? pax.paxLastname : "--"}
+                          </div>
+                          <div className="w-[120px]">
+                            <div className="text-xs text-gray-500 mb-1">Tên đệm và tên</div>
+                            {pax.paxMiddleFirstName ? pax.paxMiddleFirstName : "--"}
+                          </div>
+                          <div className="w-[80px]">
+                            <div className="text-xs text-gray-500 mb-1">Giới tính</div>
+                            {getPassengerGender(pax.paxGender)}
+                          </div>
+                          <div className="flex-1 max-w-xs">
+                            <div className="text-xs text-gray-500 mb-1">Hồ sơ giấy tờ yêu cầu</div>
+                            <ul className="pl-4 flex flex-col gap-y-1">
+                              {pax.documents?.map(({ documentName, status }, _index) => (
+                                <li key={_index} className="list-decimal">
+                                  <div className="flex gap-x-3 justify-between items-start">
+                                    <div className="flex-1">{documentName}</div>
+                                    <Tag
+                                      className="text-xs"
+                                      color={
+                                        status === "FINISHED"
+                                          ? "green"
+                                          : status === "NOT_FINISHED"
+                                          ? "red"
+                                          : status === "NEW"
+                                          ? "blue"
+                                          : "default"
+                                      }
+                                      bordered={false}
+                                    >
+                                      {status === "FINISHED"
+                                        ? "Đã nộp"
+                                        : status === "HANDOVERED"
+                                        ? "Đã bàn giao"
+                                        : status === "NEW"
+                                        ? "Mới"
+                                        : status === "NOT_FINISHED"
+                                        ? "Chưa nộp"
+                                        : "Unknown"}
+                                    </Tag>
+                                  </div>
+                                </li>
+                              )) || "--"}
+                            </ul>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </React.Fragment>
                   ))}
-                </div>
+                </Card>
               ))
             : null}
         </div>
