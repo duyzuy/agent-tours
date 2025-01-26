@@ -1,56 +1,75 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-import DrawlerRolePermission from "./_components/DrawlerRolePermission";
 import { RolesPermissionListResponse } from "@/models/management/rolePermission.interface";
-import { useGetRolePermission } from "@/queries/role";
+
 import TableListPage from "@/components/admin/TableListPage";
 import { columnRoleGroups } from "./columns";
-import useCRUDRolePermission from "./modules/useCRUDRolePermission";
-import { TDrawlerRolePermission, DrawlerRolePermissionProps } from "./_components/DrawlerRolePermission";
+import RolePermissionFormDrawer, {
+  RolePermissionFormDrawerProps,
+} from "@/modules/admin/rolePers/components/RolePermissionFormDrawer";
+
+import { useCreateRolePermissions, useUpdateRolePermissions, useDeleteRolePermissions } from "@/modules/admin/rolePers";
+import { useGetRolePermission } from "@/modules/admin/rolePers";
+import { getPermissionList } from "@/modules/admin/rolePers/utils";
 
 const RolePermissionPage = () => {
   const { data: rolesPermisions, isLoading } = useGetRolePermission();
 
-  const [actionType, setActionType] = useState<DrawlerRolePermissionProps["actionType"]>();
+  const [actionType, setActionType] = useState<RolePermissionFormDrawerProps["actionType"]>();
   const [isOpenDrawler, setOpenDrawler] = useState(false);
-  const { onCreate, onDelete, onUpdate } = useCRUDRolePermission();
-  const [loading, setLoading] = useState(false);
-  const [editRecord, setEditRecord] = useState<RolesPermissionListResponse["result"]["rolePermissionList"][number]>();
+  // const { onCreate, onDelete, onUpdate } = useCRUDRolePermission();
 
-  const onHandleDrawlerRolePermission = (actions: TDrawlerRolePermission) => {
-    if (actions.action === "EDIT") {
-      setEditRecord(() => actions.record);
-    } else {
-      setEditRecord(() => undefined);
-    }
+  const { mutate: createRolePers, isPending: isLoadingCreate } = useCreateRolePermissions();
+  const { mutate: updateRolePers, isPending: isLoadingUpdate } = useUpdateRolePermissions();
+  const { mutate: deleteRolePers, isPending: isLoadingDelete } = useDeleteRolePermissions();
+
+  type RecordDataType = Exclude<typeof rolesPermisions, undefined>["rolePermissionList"][number];
+
+  const [editRecord, setEditRecord] = useState<RecordDataType>();
+
+  const setCreateRolePer = () => {
+    setActionType("CREATE");
     setOpenDrawler(true);
-    setActionType(() => actions.action);
   };
+
+  const setEditRolePer = (record: RecordDataType) => {
+    setActionType("EDIT");
+    setEditRecord(record);
+    setOpenDrawler(true);
+  };
+
   const onCancel = () => {
     setOpenDrawler(false);
     setEditRecord(undefined);
   };
 
-  const handleSubmitFormRolePermissions: DrawlerRolePermissionProps["onSubmit"] = (action, formData) => {
-    setLoading(true);
+  const handleSubmitFormRolePermissions: RolePermissionFormDrawerProps["onSubmit"] = (action, formData) => {
+    const perList = getPermissionList(formData.localUser_PermissionList);
+
+    const payload = {
+      cat: formData.cat,
+      rolePermissionList: [
+        {
+          localUser_PermissionList: perList,
+          localUser_RolePermissionKey: formData.localUser_RolePermissionKey,
+          localUser_RolePermissionValue: formData.localUser_RolePermissionValue,
+        },
+      ],
+      status: formData.status,
+    };
+
     if (action === "CREATE") {
-      onCreate(formData, {
+      createRolePers(payload, {
         onSuccess(data, variables, context) {
           setOpenDrawler(() => false);
-        },
-        onSettled(data, error, variables, context) {
-          setLoading(false);
         },
       });
     }
     if (action === "EDIT") {
-      onUpdate(formData, {
+      updateRolePers(payload, {
         onSuccess(data, variables, context) {
           setOpenDrawler(() => false);
-        },
-        onSettled(data, error, variables, context) {
-          setLoading(false);
         },
       });
     }
@@ -61,11 +80,7 @@ const RolePermissionPage = () => {
       <PageContainer
         name="Danh sách nhóm chức năng"
         modelName="nhóm chức năng"
-        onClick={() =>
-          onHandleDrawlerRolePermission({
-            action: "CREATE",
-          })
-        }
+        onClick={setCreateRolePer}
         breadCrumItems={[{ title: "Nhóm chức năng" }]}
       >
         <TableListPage<RolesPermissionListResponse["result"]["rolePermissionList"][0]>
@@ -76,22 +91,17 @@ const RolePermissionPage = () => {
           rowKey={"localUser_RolePermissionKey"}
           columns={columnRoleGroups}
           isLoading={isLoading}
-          onEdit={(record) =>
-            onHandleDrawlerRolePermission({
-              action: "EDIT",
-              record,
-            })
-          }
-          onDelete={(record) => onDelete(record.localUser_RolePermissionKey)}
+          onEdit={(record) => setEditRolePer(record)}
+          onDelete={(record) => deleteRolePers(record.localUser_RolePermissionKey)}
         />
       </PageContainer>
-      <DrawlerRolePermission
+      <RolePermissionFormDrawer
         isOpen={isOpenDrawler}
         onClose={onCancel}
         actionType={actionType}
         initialValues={editRecord}
         onSubmit={handleSubmitFormRolePermissions}
-        isLoading={loading}
+        loading={isLoadingCreate || isLoadingUpdate}
       />
     </React.Fragment>
   );

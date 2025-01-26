@@ -6,10 +6,10 @@ import {
   operationCostingDetailAPIs,
 } from "@/services/management/cores/operation";
 import { useCustomMutation } from "../useCustomMutation";
-import { IOperation, IOperationStatus, OperationPayload } from "@/models/management/core/operation.interface";
-import { OperationCostingPayload } from "@/models/management/core/operationCosting.interface";
-import { OperationCostingDetailPayload } from "@/models/management/core/operationCostingDetail.interface";
-import { OperationDeadlinePayload } from "@/models/management/core/operationDeadline.interface";
+import { IOperation, IOperationStatus, OperationPayload } from "@/models/management/core/operation/operation.interface";
+import { OperationCostingPayload } from "@/models/management/core/operation/operationCosting.interface";
+import { OperationCostingDetailPayload } from "@/models/management/core/operation/operationCostingDetail.interface";
+import { OperationDeadlinePayload } from "@/models/management/core/operation/operationDeadline.interface";
 import { RoomingPayload, RoomingHandOverPayload } from "@/models/management/booking/rooming.interface";
 
 export const useCreateOperationMutation = () => {

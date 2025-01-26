@@ -20,7 +20,7 @@ import InventoryTourListSelector, { InventoryTourListSelectorProps } from "./Inv
 import StockExtraList, { StockExtraListProps } from "./StockExtraListSelector/StockExtraList";
 import StockTourListTableSelector, { StockTourListTableSelectorProps } from "./StockTourListTableSelector";
 import { stringToDate } from "@/utils/date";
-import { sellableApprovalSchema } from "../../schema/sellable.schema";
+import { sellableApprovalSchema } from "../../modules/sellable.schema";
 import { TIME_FORMAT, DATE_TIME_FORMAT } from "@/constants/common";
 
 const MAXIMUM_CAP_AMOUNT = 999;
@@ -402,11 +402,11 @@ const DrawerSellableApproval: React.FC<DrawerSellableApprovalProps> = ({
         onClose={onCancel}
         footer={
           <Space className="py-3">
-            <Button onClick={onCancel} size="large" className="w-40">
-              Huỷ bỏ
-            </Button>
             <Button type="primary" size="large" onClick={onSubmit && handleSubmit(onSubmit)} className="w-40">
               Duyệt
+            </Button>
+            <Button onClick={onCancel} size="large" className="w-40">
+              Huỷ bỏ
             </Button>
           </Space>
         }

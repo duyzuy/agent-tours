@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import useMessage from "@/hooks/useMessage";
 import { queryCore } from "@/queries/var";
 import { EStockType } from "@/models/management/core/inventoryType.interface";
-import { OperationCostingDetailPayload } from "@/models/management/core/operationCostingDetail.interface";
+import { OperationCostingDetailPayload } from "@/models/management/core/operation/operationCostingDetail.interface";
 import dayjs from "dayjs";
 import { DATE_TIME_FORMAT } from "@/constants/common";
 

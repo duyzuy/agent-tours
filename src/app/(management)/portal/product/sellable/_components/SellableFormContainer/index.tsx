@@ -25,7 +25,7 @@ import { RangePickerProps } from "antd/es/date-picker";
 import { CheckboxGroupProps } from "antd/es/checkbox";
 import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
 import { SellableFormData } from "@/models/management/core/sellable.interface";
-import { sellableSchema } from "../../schema/sellable.schema";
+import { sellableSchema } from "../../modules/sellable.schema";
 import { DATE_TIME_FORMAT, TIME_FORMAT, DAYS_OF_WEEK } from "@/constants/common";
 import { ITemplateSaleableListRs } from "@/models/management/core/templateSellable.interface";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";

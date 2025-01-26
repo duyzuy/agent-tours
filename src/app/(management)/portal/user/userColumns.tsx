@@ -13,13 +13,15 @@ export const userColumns: ColumnsType<LocalUserListResponse["result"][0]> = [
     title: "Họ và tên",
     dataIndex: "fullname",
     key: "fullname",
-    width: 150,
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-    width: 150,
+    width: 250,
+    render: (_, { email, fullname }) => {
+      return (
+        <>
+          <div>{fullname}</div>
+          <div>{email}</div>
+        </>
+      );
+    },
   },
   {
     title: "Quyền",

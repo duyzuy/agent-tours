@@ -14,7 +14,7 @@ const AdminLoginForm = () => {
   const { mutate: signIn, isPending } = useAdminLogin();
   const initalFormData = {
     userId: "99",
-    password: "111111111",
+    password: "123123123",
     username: "99",
   };
   return (

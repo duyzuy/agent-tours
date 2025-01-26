@@ -7,10 +7,10 @@ import DrawerOperation, { DrawerOperationProps } from "../_components/DrawerOper
 import useOperation from "../modules/useOperation";
 import { useGetOperationListQuery } from "@/queries/core/operation";
 import { columns } from "./columns";
-import { IOperation } from "@/models/management/core/operation.interface";
+import { IOperation } from "@/models/management/core/operation/operation.interface";
 import { ColumnsType } from "antd/es/table";
 import { EditOutlined, EllipsisOutlined, EyeOutlined } from "@ant-design/icons";
-import { OperationFormQueryParams } from "@/models/management/core/operation.interface";
+import { OperationFormQueryParams } from "@/models/management/core/operation/operation.interface";
 const CodeListPage = () => {
   const initQueryParams = new OperationFormQueryParams({
     requestObject: undefined,

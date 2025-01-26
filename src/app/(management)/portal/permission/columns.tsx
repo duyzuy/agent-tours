@@ -15,7 +15,7 @@ export const columns: ColumnsType<RolesPermissionListResponse["result"]["permiss
     width: 150,
   },
   {
-    title: "Chức năng",
+    title: "Key",
     key: "localUser_PermissionKey",
     dataIndex: "localUser_PermissionKey",
     width: 150,
@@ -25,7 +25,15 @@ export const columns: ColumnsType<RolesPermissionListResponse["result"]["permiss
     key: "status",
     dataIndex: "status",
     render: (_, record) => {
-      return record.status === "OK" ? <Tag color="green">Kích hoạt</Tag> : <Tag color="red">Chưa kích hoạt</Tag>;
+      return record.status === "OK" ? (
+        <Tag color="green" bordered={false}>
+          Kích hoạt
+        </Tag>
+      ) : (
+        <Tag color="red" bordered={false}>
+          Chưa kích hoạt
+        </Tag>
+      );
     },
     width: 150,
   },

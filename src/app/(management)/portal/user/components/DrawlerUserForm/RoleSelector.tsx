@@ -1,5 +1,5 @@
 import { IRole } from "@/models/management/role.interface";
-import { useGetRoles } from "@/queries/role";
+import { useGetRoles } from "@/modules/admin/role";
 import { Select, SelectProps } from "antd";
 
 export interface RoleSelectorProps {

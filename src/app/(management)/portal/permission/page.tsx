@@ -1,54 +1,72 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
+import {
+  useCreatePermission,
+  useUpdatePermission,
+  useDeletePermission,
+  useGetPermissions,
+} from "@/modules/admin/permission/hooks";
+import { PermissionPayload } from "@/models/management/permission.interface";
+import PermissionFormDrawer, {
+  PermissionFormDrawerProps,
+} from "@/modules/admin/permission/components/PermissionFormDrawer";
 import PageContainer from "@/components/admin/PageContainer";
-
-import { RolesPermissionListResponse } from "@/models/management/rolePermission.interface";
-import { useGetPermissionsQuery } from "@/queries/role";
 import TableListPage from "@/components/admin/TableListPage";
 import { columns } from "./columns";
-import DrawerPermissions, { DrawerPermissionsProps } from "./_components/DrawerPermissions";
-import useCRUDPermission from "./modules/useCRUDPermission";
 
-export type PermissionItemType = RolesPermissionListResponse["result"]["permissionList"][number];
 const PermissionPage = () => {
-  const { data: rolesPermisions, isLoading } = useGetPermissionsQuery();
-
-  const [actionType, setActionType] = useState<DrawerPermissionsProps["actionType"]>();
+  const [formAction, setFormAction] = useState<PermissionFormDrawerProps["action"]>();
   const [isOpenDrawler, setOpenDrawler] = useState(false);
-  const { onCreate, onDelete, onUpdate } = useCRUDPermission();
-  const [loading, setLoading] = useState(false);
-  const [editRecord, setEditRecord] = useState<PermissionItemType>();
+
+  const { data: rolesPermisions, isLoading } = useGetPermissions();
+  const { mutate: createPer, isPending: isLoadingCreate } = useCreatePermission();
+  const { mutate: updatePer, isPending: isLoadingUpdate } = useUpdatePermission();
+  const { mutate: deletePer } = useDeletePermission();
+
+  type PermissionRecord = Exclude<typeof rolesPermisions, undefined>["permissionList"][number];
+
+  const [editRecord, setEditRecord] = useState<PermissionRecord>();
 
   const setCreate = () => {
     setOpenDrawler(true);
-    setActionType("CREATE");
+    setFormAction("CREATE");
   };
-  const setEdit = (record: PermissionItemType) => {
+  const setEdit = (record: PermissionRecord) => {
     setOpenDrawler(true);
-    setActionType("EDIT");
+    setFormAction("EDIT");
     setEditRecord(record);
   };
   const onCancel = () => {
     setOpenDrawler(false);
     setEditRecord(undefined);
-    setActionType(undefined);
+    setFormAction(undefined);
   };
 
-  const handleSubmitFormRolePermissions: DrawerPermissionsProps["onSubmit"] = (action, formData) => {
-    setLoading(true);
+  const handleSubmitFormRolePermissions: PermissionFormDrawerProps["onSubmit"] = (action, formData) => {
     if (action === "CREATE") {
-      onCreate(formData, {
+      const payload: PermissionPayload = {
+        cat: formData.cat,
+        status: formData.status,
+        permissionList: [
+          {
+            groupKey: formData.groupKey,
+            groupName: formData.groupName,
+            localUser_PermissionKey: formData.localUser_PermissionKey,
+            localUser_PermissionValue: formData.localUser_PermissionValue,
+            status: formData.status,
+          },
+        ],
+      };
+      createPer(payload, {
         onSuccess(data, variables, context) {
           setOpenDrawler(() => false);
-          setLoading(false);
         },
       });
     }
     if (action === "EDIT") {
-      onUpdate(formData, {
+      updatePer(formData, {
         onSuccess(data, variables, context) {
           setOpenDrawler(() => false);
-          setLoading(false);
         },
       });
     }
@@ -62,7 +80,7 @@ const PermissionPage = () => {
         onClick={setCreate}
         breadCrumItems={[{ title: "chức năng" }]}
       >
-        <TableListPage<PermissionItemType>
+        <TableListPage<PermissionRecord>
           scroll={{ x: 1000 }}
           modelName="chức năng"
           showActionsLess={false}
@@ -71,19 +89,21 @@ const PermissionPage = () => {
           columns={columns}
           isLoading={isLoading}
           onEdit={(record) => setEdit(record)}
-          onDelete={(record) => onDelete(record.localUser_PermissionKey)}
+          onDelete={(record) => deletePer(record.localUser_PermissionKey)}
           pagination={{
             size: "small",
+            hideOnSinglePage: true,
+            pageSize: 20,
           }}
         />
       </PageContainer>
-      <DrawerPermissions
+      <PermissionFormDrawer
         isOpen={isOpenDrawler}
         onClose={onCancel}
-        actionType={actionType}
+        action={formAction}
         initialValues={editRecord}
         onSubmit={handleSubmitFormRolePermissions}
-        isLoading={loading}
+        loading={isLoadingCreate || isLoadingUpdate}
       />
     </React.Fragment>
   );

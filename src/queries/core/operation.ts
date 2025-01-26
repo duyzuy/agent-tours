@@ -8,9 +8,14 @@ import {
   operationRoomingAPIs,
   operationThingTodoAPIs,
 } from "@/services/management/cores/operation";
-import { OperationCostingParams } from "@/models/management/core/operationCosting.interface";
-import { OperationQueryParams, OperationStatusPayload } from "@/models/management/core/operation.interface";
-import { OperationThingTodoQueryParams } from "@/models/management/core/operationThingTodo.interface";
+import {
+  OperationCostingListResponse,
+  OperationCostingParams,
+} from "@/models/management/core/operation/operationCosting.interface";
+import { OperationQueryParams } from "@/models/management/core/operation/operation.interface";
+import { OperationThingTodoQueryParams } from "@/models/management/core/operation/operationThingTodo.interface";
+import { supplierAPIs } from "@/services/management/cores/supplier";
+import { SupplierRs } from "@/models/management/supplier.interface";
 
 export const useGetOperationListQuery = (queryParams?: OperationQueryParams) => {
   return useQuery({
@@ -19,24 +24,6 @@ export const useGetOperationListQuery = (queryParams?: OperationQueryParams) => 
     select: (data) => {
       return data.result;
     },
-  });
-};
-
-export const useGetOperationStatusQuery = ({
-  queryParams,
-  enabled = true,
-}: {
-  queryParams: OperationStatusPayload;
-  enabled?: boolean;
-}) => {
-  return useQuery({
-    queryKey: [queryCore.GET_OPERATION_STATUS, { ...queryParams }],
-    queryFn: () => operationAPIs.getStatus(queryParams),
-    retry: false,
-    select: (data) => {
-      return data.result;
-    },
-    enabled: enabled,
   });
 };
 
@@ -81,10 +68,39 @@ export const useGetOperationCostingListQuery = (options?: {
   const { queryParams, enabled } = options || {};
   return useQuery({
     queryKey: [queryCore.GET_OPERATION_COSTING_LIST, queryParams],
-    queryFn: () => operationCostingAPIs.getList(queryParams),
-    select: (data) => {
-      return data.result;
+    queryFn: async () => {
+      try {
+        const costingResponse = await operationCostingAPIs.getList(queryParams);
+
+        let costingListWithSupplierDetail: (OperationCostingListResponse["result"][number] & {
+          supplier: SupplierRs["result"];
+        })[] = [];
+
+        // await Promise.all(
+        //   costingResponse["result"].map(async (item) => {
+        //     const supplierResponse = await supplierAPIs.getDetail(item.supplierId);
+        //     costingListWithSupplierDetail = [
+        //       ...costingListWithSupplierDetail,
+        //       { ...item, supplier: supplierResponse["result"] },
+        //     ];
+        //   }),
+        // );
+
+        //sequence
+        for (const item of costingResponse["result"]) {
+          const supplierResponse = await supplierAPIs.getDetail(item.supplierId);
+          costingListWithSupplierDetail = [
+            ...costingListWithSupplierDetail,
+            { ...item, supplier: supplierResponse["result"] },
+          ];
+        }
+
+        return costingListWithSupplierDetail;
+      } catch (err) {
+        throw new Error("Lỗi");
+      }
     },
+    select: (data) => data,
     enabled: enabled,
   });
 };
@@ -118,7 +134,7 @@ export const useGetRoomingList = ({
   queryParams,
 }: {
   enabled?: boolean;
-  queryParams: { sellableId?: number } | { operationId?: number };
+  queryParams: { sellableId?: number; orderId?: number } | { operationId?: number };
 }) => {
   return useQuery({
     queryKey: [queryCore.GET_ROOMING_LIST, { ...queryParams }],

@@ -9,12 +9,11 @@ import { useGetRoomingList } from "@/queries/core/operation";
 import { ROOM_TYPES } from "@/constants/rooming.constant";
 import RoomingList from "@/app/(management)/portal/operation/[operationId]/_components/RoomingContainer/RoomingList";
 import { isUndefined } from "lodash";
-import { useGetOperationStatusQuery } from "@/queries/core/operation";
+import { useGetOperationStatus } from "@/app/(management)/portal/operation/modules/useGetOperationStatus";
 
 import HandOverRoomingForm from "../_components/HandOverRoomingForm";
-
-import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import useRooming from "@/app/(management)/portal/operation/modules/useRooming";
+import OperatorInformation from "../_components/OperatorInformation";
 
 interface RoomingPageProps {
   params: { orderId: number; sellableId: number };
@@ -24,10 +23,10 @@ const RoomingPage: React.FC<RoomingPageProps> = ({ params }) => {
 
   const message = useMessage();
   const { data, isLoading } = useGetRoomingList({
-    queryParams: { sellableId: Number(params.sellableId) },
+    queryParams: { sellableId: Number(params.sellableId), orderId: Number(params.orderId) },
     enabled: true,
   });
-  const { data: operation, isLoading: isLoadingOperation } = useGetOperationStatusQuery({
+  const { data: operation, isLoading: isLoadingOperation } = useGetOperationStatus({
     queryParams: { sellableId: Number(params.sellableId) },
   });
 
@@ -67,33 +66,15 @@ const RoomingPage: React.FC<RoomingPageProps> = ({ params }) => {
       hideAddButton
     >
       <div className="w-full max-w-4xl">
-        <div className="box-operation border rounded-md p-4 mb-6">
-          <div className="mb-3 pb-3 border-b">
-            <h3 className="font-semibold">
-              Điều hành
-              <span className={`ml-3 ${isHasOperationCode ? "text-green-600" : "text-red-600"}`}>
-                {isHasOperationCode ? <CheckCircleOutlined color="green" /> : <WarningOutlined color="red" />}
-              </span>
-            </h3>
-          </div>
-          <div className="flex flex-col gap-3">
-            <div className="flex">
-              <div className="w-[100px]">Họ tên:</div>
-              <span>: {operation ? operation.pic.fullname : "--"}</span>
-            </div>
-            <div className="flex">
-              <div className="w-[100px]">Email:</div>
-              <span>: {operation ? operation.pic.email : "--"}</span>
-            </div>
-            <div className="flex">
-              <div className="w-[100px]">Số điện thoại:</div>
-              <span>: {operation ? operation.pic.phoneNumber : "--"}</span>
-            </div>
-          </div>
-        </div>
+        <OperatorInformation
+          hasOperator={isHasOperationCode}
+          phoneNumber={operation?.pic.phoneNumber}
+          email={operation?.pic.email}
+          fullName={operation?.pic.fullname}
+        />
         <div className="flex gap-6 mb-6">
-          <div>Trạng thái:</div>
-          {isInProgress ? <Tag color="green">Đã bàn giao</Tag> : <Tag color="orange">Chờ sắp xếp</Tag>}
+          <div>Trạng thái xếp phòng:</div>
+          {isInProgress ? <Tag color="green">Đã bàn giao</Tag> : <Tag color="orange">Đang xếp phòng</Tag>}
         </div>
         <Form layout="vertical">
           <FormItem label="Loại phòng" required>
@@ -111,13 +92,15 @@ const RoomingPage: React.FC<RoomingPageProps> = ({ params }) => {
               ))}
             </Space>
           </FormItem>
+          <FormItem label="Danh sách hành khách" required>
+            <RoomingList
+              value={roomingData.roomingItems}
+              onChange={onChangeRooming}
+              items={data || []}
+              isEditable={!isInProgress}
+            />
+          </FormItem>
         </Form>
-        <RoomingList
-          value={roomingData.roomingItems}
-          onChange={onChangeRooming}
-          items={data || []}
-          isEditable={!isInProgress}
-        />
         <div className="py-8">
           <Space>
             <Button type="primary" onClick={() => onSubmit()} disabled={disabledButtonSave}>

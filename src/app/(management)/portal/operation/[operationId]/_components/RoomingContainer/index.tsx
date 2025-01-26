@@ -4,16 +4,17 @@ import useRooming from "../../../modules/useRooming";
 
 import { RoomingStatusType } from "@/models/management/booking/rooming.interface";
 
-import { Button, Radio, Space } from "antd";
+import { Button, Form, Radio, Space } from "antd";
 import { ROOM_TYPES } from "@/constants/rooming.constant";
 import { memo } from "react";
+import FormItem from "@/components/base/FormItem";
 
 export interface RoomingContainerProps {
   operationId: number;
-  isEditAble?: boolean;
+  editAble?: boolean;
   status?: RoomingStatusType;
 }
-const RoomingContainer: React.FC<RoomingContainerProps> = ({ operationId, isEditAble = false, status }) => {
+const RoomingContainer: React.FC<RoomingContainerProps> = ({ operationId, editAble = false, status }) => {
   const { data, isLoading } = useGetRoomingList({ queryParams: { operationId } });
 
   const { onChangeRoomingType, onChangeRooming, onSubmit, roomingData } = useRooming(data || []);
@@ -21,8 +22,8 @@ const RoomingContainer: React.FC<RoomingContainerProps> = ({ operationId, isEdit
   return (
     <div className="pt-6">
       <div className="mb-3 flex gap-x-4">
-        <h3 className="text-lg font-semibold">Sắp xếp phòng</h3>
-        {/* {isEditAble ? (
+        <h3 className="text-lg font-semibold">Xếp phòng</h3>
+        {/* {editAble ? (
             <Button onClick={setCreate} type="primary" ghost size="small" icon={<PlusOutlined />}>
               Thêm
             </Button>
@@ -37,33 +38,34 @@ const RoomingContainer: React.FC<RoomingContainerProps> = ({ operationId, isEdit
           ? "Điều hành sắp xếp"
           : "Không xác định"}
       </div>
-      <div className="mb-6">
-        <div className="mb-3">
-          <p className="font-semibold">Loại phòng</p>
-        </div>
+      <Form layout="vertical">
+        <FormItem label="Loại phòng">
+          <Space>
+            {ROOM_TYPES.map((type) => (
+              <Radio
+                key={type.value}
+                value={type.value}
+                checked={roomingData?.roomingType === type.value}
+                onChange={() => onChangeRoomingType(type.value)}
+                disabled={!editAble}
+              >
+                {type.label}
+              </Radio>
+            ))}
+          </Space>
+        </FormItem>
+        <FormItem label="Danh sách hành khách">
+          <RoomingList
+            value={roomingData.roomingItems}
+            isEditable={editAble}
+            onChange={onChangeRooming}
+            items={data || []}
+          />
+        </FormItem>
+      </Form>
+      <div className="">
         <Space>
-          {ROOM_TYPES.map((type) => (
-            <Radio
-              key={type.value}
-              value={type.value}
-              checked={roomingData?.roomingType === type.value}
-              onChange={() => onChangeRoomingType(type.value)}
-              disabled={!isEditAble}
-            >
-              {type.label}
-            </Radio>
-          ))}
-        </Space>
-      </div>
-      <RoomingList
-        value={roomingData.roomingItems}
-        isEditable={isEditAble}
-        onChange={onChangeRooming}
-        items={data || []}
-      />
-      <div className="py-8">
-        <Space>
-          <Button type="primary" onClick={() => onSubmit()} disabled={!isEditAble}>
+          <Button type="primary" onClick={() => onSubmit()} disabled={!editAble}>
             Lưu sắp xếp
           </Button>
         </Space>

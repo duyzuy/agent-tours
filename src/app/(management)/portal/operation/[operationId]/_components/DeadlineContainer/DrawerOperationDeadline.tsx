@@ -7,7 +7,7 @@ import { operationCreateDeadlineSchema } from "../../../schema/operation.schema"
 import { useEffect, useMemo } from "react";
 
 import { isEqualObject } from "@/utils/compare";
-import { IOperationDeadline } from "@/models/management/core/operationDeadline.interface";
+import { IOperationDeadline } from "@/models/management/core/operation/operationDeadline.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 

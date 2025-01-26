@@ -1,4 +1,5 @@
-import { IOperation, OperationPayload, IPic } from "@/models/management/core/operation.interface";
+import { IOperation, OperationPayload } from "@/models/management/core/operation/operation.interface";
+import { IPersonInCharge } from "@/models/management/core/operation/PersonInCharge.interface";
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
 import { RoomingType } from "@/models/management/booking/rooming.interface";
 import {
@@ -9,18 +10,18 @@ import {
   VisaCostingDetail,
   InsuranceCostingDetail,
   OperationCostingDetailPayload,
-} from "@/models/management/core/operationCostingDetail.interface";
+} from "@/models/management/core/operation/operationCostingDetail.interface";
 import { InventoryStockTypes } from "@/constants/inventory.constant";
 
 export class OperationFormData implements OperationPayload {
   id?: number;
-  pic?: Partial<IPic> | undefined;
+  pic?: Partial<IPersonInCharge> | undefined;
   sellableCode?: string | undefined;
   sellableId?: number | undefined;
 
   constructor(
     id: number | undefined,
-    pic: Partial<IPic> | undefined,
+    pic: Partial<IPersonInCharge> | undefined,
     sellableCode: string | undefined,
     sellableId: number | undefined,
   ) {

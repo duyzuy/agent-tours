@@ -1,23 +1,22 @@
 "use client";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
-import { useGetRoles } from "@/queries/role";
 import TableListPage from "@/components/admin/TableListPage";
 import { columnRoleGroups } from "./columns";
 import { RolesPermissionListResponse } from "@/models/management/rolePermission.interface";
-import DrawerRole from "./_components/DrawerRole";
-
-import { DrawerRoleProps } from "./_components/DrawerRole";
-import useCRUDRole from "./modules/useCRUDRole";
+import { useCreateRole, useDeleteRole, useUpdateRole, useGetRoles, getRolePermissionList } from "@/modules/admin/role";
+import RoleFormDrawer, { RoleFormDrawerProps } from "@/modules/admin/role/components/RoleFormDrawer";
 
 const RolePage = () => {
   const { data: roles, isLoading } = useGetRoles();
 
   const [editRecord, setEditRecord] = useState<RolesPermissionListResponse["result"]["roleList"][number]>();
-  const [actionType, setActionType] = useState<DrawerRoleProps["actionType"]>();
+  const [actionType, setActionType] = useState<RoleFormDrawerProps["actionType"]>();
   const [isOpenDrawler, setOpenDrawler] = useState(false);
 
-  const { onCreate, onDelete, onUpdate } = useCRUDRole();
+  const { mutate: createRole, isPending: isLoadingCreate } = useCreateRole();
+  const { mutate: updateRole, isPending: isLoadingUpdate } = useUpdateRole();
+  const { mutate: deleteRole, isPending: isLoadingDelete } = useDeleteRole();
 
   const setCreate = () => {
     setOpenDrawler(true);
@@ -36,15 +35,29 @@ const RolePage = () => {
     setEditRecord(undefined);
   };
 
-  const handleSubmitFormData = useCallback<Required<DrawerRoleProps>["onSubmit"]>((action, data) => {
+  const handleSubmitFormData = useCallback<Required<RoleFormDrawerProps>["onSubmit"]>((action, formData) => {
+    const rolePerList = getRolePermissionList(formData.localUser_RolePermissionList);
+
+    const payload = {
+      cat: formData.cat,
+      status: formData.status,
+      roleList: [
+        {
+          localUser_RoleKey: formData.localUser_RoleKey,
+          localUser_RolePermissionList: rolePerList,
+          localUser_RoleValue: formData.localUser_RoleValue,
+        },
+      ],
+    };
+
     action === "CREATE" &&
-      onCreate(data, {
+      createRole(payload, {
         onSuccess(data, variables, context) {
           setOpenDrawler(false);
         },
       });
     action === "EDIT" &&
-      onUpdate(data, {
+      updateRole(payload, {
         onSuccess(data, variables, context) {
           setOpenDrawler(false);
         },
@@ -67,16 +80,17 @@ const RolePage = () => {
           columns={columnRoleGroups}
           showActionsLess={false}
           onEdit={(record) => setEdit(record)}
-          onDelete={(record) => onDelete(record.localUser_RoleKey)}
+          onDelete={(record) => deleteRole(record.localUser_RoleKey)}
           isLoading={isLoading}
         />
       </PageContainer>
 
-      <DrawerRole
+      <RoleFormDrawer
         isOpen={isOpenDrawler}
         actionType={actionType}
         onClose={setCancel}
         initialValues={editRecord}
+        loading={isLoadingCreate || isLoadingUpdate}
         onSubmit={handleSubmitFormData}
       />
     </React.Fragment>

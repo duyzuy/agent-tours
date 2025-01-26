@@ -30,7 +30,7 @@ import {
 import { operationCostingDetailSchema } from "../../../schema/operation.schema";
 
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
-import { IOperationCosting } from "@/models/management/core/operationCosting.interface";
+import { IOperationCosting } from "@/models/management/core/operation/operationCosting.interface";
 
 import { useGetStockInventoryTypeCoreQuery } from "@/queries/core/stockInventory";
 import { useGetOperationCostingDetailsQuery } from "@/queries/core/operation";
@@ -54,7 +54,7 @@ import {
   RestaurantDetailType,
   TransportDetailType,
   VisaDetailType,
-} from "@/models/management/core/operationCostingDetail.interface";
+} from "@/models/management/core/operation/operationCostingDetail.interface";
 import { formatDate } from "@/utils/date";
 import { moneyFormatVND } from "@/utils/helper";
 import {

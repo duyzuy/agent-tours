@@ -1,7 +1,7 @@
 import { Button, Space } from "antd";
 import { EditOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import classnames from "classnames";
-import styled from "styled-components";
+import { useThemeMode } from "@/context";
 interface Props {
   modelName?: string;
   hideAddButton?: boolean;
@@ -24,6 +24,7 @@ const TitleRow: React.FC<Props> = ({
   onCanel,
   onBack,
 }) => {
+  const [mode, _] = useThemeMode();
   return (
     <Space
       className={classnames("w-full", {
@@ -32,8 +33,16 @@ const TitleRow: React.FC<Props> = ({
       })}
     >
       <div className="title flex items-center">
-        {onBack && <ButtonBack type="default" size="small" className="mr-2" icon={<LeftOutlined />} onClick={onBack} />}
-        <p className="font-semibold text-lg">{title}</p>
+        {onBack && (
+          <Button
+            type="text"
+            size="small"
+            icon={<LeftOutlined className="!text-xs" />}
+            onClick={onBack}
+            className={`mr-2 ${mode === "light" ? "text-gray-900 !bg-gray-100" : "!text-gray-400 !bg-gray-800"}`}
+          />
+        )}
+        <div className="font-semibold text-lg">{title}</div>
       </div>
       {!hideAddButton && (
         <Button type="primary" size="small" ghost icon={<PlusOutlined />} onClick={onClickAdd}>
@@ -50,17 +59,3 @@ const TitleRow: React.FC<Props> = ({
 };
 
 export default TitleRow;
-
-const ButtonBack = styled(Button)`
-  && {
-    border: none;
-    box-shadow: none;
-    font-size: 12px;
-  }
-  svg {
-    font-size: 12px;
-  }
-  &&:hover {
-    background-color: #f1f1f1;
-  }
-`;

@@ -1,5 +1,5 @@
-import OperationThingTodoList from "@/components/admin/OperationThingTodoList";
-import { OperationThingTodoQueryParams } from "@/models/management/core/operationThingTodo.interface";
+import OperationThingTodoList from "@/components/admin/operation/OperationThingTodoList";
+import { OperationThingTodoQueryParams } from "@/models/management/core/operation/operationThingTodo.interface";
 import { useGetOperationThingTodoList } from "@/queries/core/operation";
 import { Spin } from "antd";
 import { isUndefined } from "lodash";

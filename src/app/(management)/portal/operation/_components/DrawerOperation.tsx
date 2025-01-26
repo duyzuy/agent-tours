@@ -6,7 +6,7 @@ import { OperationFormData } from "../modules/operation.interface";
 import { operationSchema } from "../schema/operation.schema";
 import SellableCodeListSelector, { SellableCodeListSelectorProps } from "./SellableCodeListSelector";
 import PicListSelector, { PicListSelectorProps } from "./PicListSelector";
-import { IOperation } from "@/models/management/core/operation.interface";
+import { IOperation } from "@/models/management/core/operation/operation.interface";
 import { memo, Suspense, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { isEqualObject } from "@/utils/compare";
 import SellableCodeListSelector2 from "./SellableCodeListSelector2";

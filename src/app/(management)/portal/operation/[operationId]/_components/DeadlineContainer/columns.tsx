@@ -3,7 +3,7 @@ import { Leading } from "@/models/management/leading.interface";
 import { Tag, Popover, Space } from "antd";
 import { formatDate } from "@/utils/date";
 
-import { IOperationDeadline } from "@/models/management/core/operationDeadline.interface";
+import { IOperationDeadline } from "@/models/management/core/operation/operationDeadline.interface";
 
 export const columns: ColumnsType<IOperationDeadline> = [
   {

@@ -6,24 +6,26 @@ import {
   OperationPayload,
   OperationQueryParams,
   OperationResponse,
+} from "@/models/management/core/operation/operation.interface";
+import {
   OperationStatusPayload,
   OperationStatusResponse,
-} from "@/models/management/core/operation.interface";
+} from "@/models/management/core/operation/OperationStatus.interface";
 import {
   OperationDeadlineListResponse,
   OperationDeadlinePayload,
   OperationDeadlineResponse,
   OperationDeadlineUpdatePayload,
-} from "@/models/management/core/operationDeadline.interface";
+} from "@/models/management/core/operation/operationDeadline.interface";
 import {
   OperationCostingListResponse,
   OperationCostingParams,
   OperationCostingPayload,
-} from "@/models/management/core/operationCosting.interface";
+} from "@/models/management/core/operation/operationCosting.interface";
 import {
   OperationCostingDetailPayload,
   OperationCostingListDetailResponse,
-} from "@/models/management/core/operationCostingDetail.interface";
+} from "@/models/management/core/operation/operationCostingDetail.interface";
 import {
   RoomingListResponse,
   RoomingPayload,
@@ -32,7 +34,14 @@ import {
 import {
   OperationThingTodoListResponse,
   OperationThingTodoParams,
-} from "@/models/management/core/operationThingTodo.interface";
+} from "@/models/management/core/operation/operationThingTodo.interface";
+import {
+  OperationDutyListResponse,
+  OperationDutyQueryParams,
+  UpdateOperationDutyPayload,
+  UpdateOperationDutyResponse,
+} from "@/models/management/core/operation/operationDuty.interface";
+
 export const operationAPIs = {
   create: async (payload: OperationPayload) => {
     return await coreApi.post<OperationResponse, BaseResponse<null>>("core/OperationCode_Addnew", {
@@ -149,7 +158,7 @@ export const operationCostingDetailAPIs = {
 };
 
 export const operationRoomingAPIs = {
-  getRoomingList: async (params: { sellableId?: number } | { operationId?: number }) => {
+  getRoomingList: async (params: { sellableId?: number; orderId?: number } | { operationId?: number }) => {
     return await coreApi.post<RoomingListResponse>("core/Operation_RoomingList_List", {
       requestObject: {
         ...params,
@@ -177,6 +186,23 @@ export const operationThingTodoAPIs = {
     return await coreApi.post<OperationThingTodoListResponse>("core/OperationThingToDo_List", {
       requestObject: {
         ...params,
+      },
+    });
+  },
+};
+
+export const operationDutyAPIs = {
+  getList: async (params: OperationDutyQueryParams) => {
+    return await coreApi.post<OperationDutyListResponse>("core/OperationCode_GetDutySupplierList", {
+      requestObject: {
+        ...params,
+      },
+    });
+  },
+  update: async (payload: UpdateOperationDutyPayload) => {
+    return await coreApi.post<UpdateOperationDutyResponse>("core/OperationCode_UpdateDutySupplierList", {
+      requestObject: {
+        ...payload,
       },
     });
   },

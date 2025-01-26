@@ -13,8 +13,6 @@ import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { useSelectorManageBooking } from "./hooks/useManageBooking";
 import FormItem from "@/components/base/FormItem";
 import ModalCancelBookingConfirmation from "./_components/BookingOrderActions/ModalCanelBookingConfirmation";
-import useCancelBookingOrder from "../modules/useCancelBookingOrder";
-import { IBookingOrderCancelPayload } from "../modules/bookingOrder.interface";
 import ServiceListContainer from "./_components/ServiceListContainer";
 import CustomerInformation from "./_components/CustomerInformation";
 import PassengerListContainer from "./_components/PassengerListContainer";
@@ -27,11 +25,15 @@ import OrderInformation from "./_components/OrderInformation";
 
 import BookingTimeLimitation from "./_components/BookingTimeLimitation";
 import DrawerCommentContainer from "./_components/DrawerCommentContainer";
+import { useThemeMode } from "@/context";
+import classNames from "classnames";
+
 interface ReservationDetailPageProps {
   params: { orderId: number };
 }
 
 const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params }) => {
+  const [themeMode, _] = useThemeMode();
   const [isShowModalConfirm, setShowModalConfirm] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const router = useRouter();
@@ -121,7 +123,12 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         sellableCode={bookingOrder.sellable.code}
         className="mb-6"
       />
-      <div className="bg-slate-50 p-6 rounded-md mb-6">
+      <div
+        className={classNames("p-6 rounded-md mb-6", {
+          "bg-slate-50": themeMode === "light",
+          "bg-[#1d1d1d]": themeMode === "dark",
+        })}
+      >
         <TourBookingInfo
           startDate={formatDate(bookingOrder.sellable.startDate)}
           endDate={formatDate(bookingOrder.sellable.endDate)}
@@ -129,7 +136,11 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
           name={bookingOrder.template.name}
           code={bookingOrder.template.code}
           sellableCode={bookingOrder.sellable.code}
-          className="mb-6"
+          // className="mb-6"
+          className={classNames("border px-6 py-4 h-full rounded-md mb-6", {
+            "bg-white border-gray-100": themeMode === "light",
+            "bg-[#141414] border-[#303030]": themeMode === "dark",
+          })}
         />
         <Row gutter={[24, 24]}>
           <Col span={24} md={12}>
@@ -143,7 +154,10 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
                 rmk: bookingOrder.rmk,
               }}
               onSave={onUpdateCustomerInfo}
-              className="bg-white border border-slate-100 px-6 py-4 h-full rounded-md"
+              className={classNames("border px-6 py-4 h-full rounded-md", {
+                "bg-white border-gray-100": themeMode === "light",
+                "bg-[#141414] border-[#303030]": themeMode === "dark",
+              })}
             />
           </Col>
           <Col span={24} md={12}>
@@ -156,7 +170,10 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
                 invoiceName: bookingOrder?.invoiceName,
                 invoiceTaxCode: bookingOrder?.invoiceTaxCode,
               }}
-              className="bg-white border border-slate-100 px-6 py-4 h-full rounded-md"
+              className={classNames("border px-6 py-4 h-full rounded-md", {
+                "bg-white border-gray-100": themeMode === "light",
+                "bg-[#141414] border-[#303030]": themeMode === "dark",
+              })}
             />
           </Col>
         </Row>

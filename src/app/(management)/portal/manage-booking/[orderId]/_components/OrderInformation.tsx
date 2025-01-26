@@ -50,7 +50,7 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
   return (
     <>
       <div
-        className={classNames("flex items-center bg-white", {
+        className={classNames("flex items-center", {
           [className]: className,
         })}
       >

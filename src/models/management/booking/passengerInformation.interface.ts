@@ -1,3 +1,4 @@
+import { EPassengerGender, EPassengerTitle } from "@/constants/common";
 import { PassengerType, Status } from "../../common.interface";
 import { IDocument } from "../core/document.interface";
 
@@ -5,11 +6,11 @@ export interface IPassengerInformation {
   recId: number;
   bookingId: number;
   orderId: number;
-  paxTitle: string;
+  paxTitle: EPassengerTitle;
   type: PassengerType;
   paxLastname: string;
   paxMiddleFirstName: string;
-  paxGender: string;
+  paxGender: EPassengerGender;
   paxBirthDate: string;
   paxBirthYear: number;
   paxPhoneNumber: string;
@@ -31,10 +32,10 @@ export interface IPassengerInformation {
 
 export class PassengerInformationFormData implements Partial<IPassengerInformation> {
   recId: number;
-  paxTitle: string;
+  paxTitle?: EPassengerTitle;
   paxLastname: string;
   paxMiddleFirstName: string;
-  paxGender: string;
+  paxGender: EPassengerGender;
   paxBirthDate: string;
   paxBirthYear: number;
   paxPhoneNumber: string;
@@ -46,10 +47,10 @@ export class PassengerInformationFormData implements Partial<IPassengerInformati
   paxInfoJson: string;
   constructor(
     recId: number,
-    paxTitle: string,
+    paxTitle: EPassengerTitle | undefined,
     paxLastname: string,
     paxMiddleFirstName: string,
-    paxGender: string,
+    paxGender: EPassengerGender,
     paxBirthDate: string,
     paxBirthYear: number,
     paxPhoneNumber: string,

@@ -7,7 +7,11 @@ import { OperationFormData } from "./operation.interface";
 import { MutateOptions, useQueryClient } from "@tanstack/react-query";
 import useMessage from "@/hooks/useMessage";
 import { queryCore } from "@/queries/var";
-import { IOperationStatus, OperationPayload, OperationResponse } from "@/models/management/core/operation.interface";
+import {
+  IOperationStatus,
+  OperationPayload,
+  OperationResponse,
+} from "@/models/management/core/operation/operation.interface";
 import { BaseResponse } from "@/models/common.interface";
 const useOperation = () => {
   const { mutate: create } = useCreateOperationMutation();

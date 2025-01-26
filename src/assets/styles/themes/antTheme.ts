@@ -1,8 +1,6 @@
 import { ThemeConfig, theme } from "antd";
 
 const baseTheme: ThemeConfig = {
-  //hashed: false, // this make issue overwriting component font size work doesn't exactly
-
   hashed: true,
   token: {
     fontFamily: "Google Sans",
@@ -12,7 +10,7 @@ const baseTheme: ThemeConfig = {
     colorSuccess: "#00b43d",
     colorWarning: "#fec124",
     colorInfo: "#2563eb",
-    colorTextBase: "#141416",
+
     fontSizeHeading1: 26,
     fontSizeHeading2: 20,
     fontSizeHeading3: 18,
@@ -29,6 +27,9 @@ const baseTheme: ThemeConfig = {
       borderRadiusSM: 3,
       borderRadius: 4,
       borderRadiusLG: 6,
+    },
+    Table: {
+      // colorText: "red",
     },
     Input: {
       // paddingLG: 14,
@@ -51,30 +52,6 @@ const baseTheme: ThemeConfig = {
       borderRadiusSM: 3,
       borderRadius: 4,
       borderRadiusLG: 6,
-    },
-    Menu: {
-      radiusItem: 0,
-      itemBorderRadius: 0,
-      radiusSubMenuItem: 0,
-      subMenuItemBorderRadius: 0,
-      paddingXL: 32,
-      controlHeightLG: 48,
-      marginXS: 8,
-      paddingXS: 8,
-      itemMarginInline: 0,
-      controlHeightSM: 24,
-      // colorPrimary: "#124ba5",
-      // colorPrimaryBorder: "#7aedff",
-      // colorSplit: "rgba(5, 5, 5, 0.06)",
-      // controlItemBgActive: "rgb(18 75 165 / 7%)",
-      itemSelectedBg: "#f1f1f1",
-      subMenuItemBg: "#f9f9f9",
-      marginXXS: 0,
-      padding: 16,
-      fontSize: 14,
-      // itemColor: "#777E90",
-      // groupTitleColor: "rgba(0, 0, 0, 0.45)",
-      itemBg: "#fff",
     },
     Select: {
       // selectorBg: "red",

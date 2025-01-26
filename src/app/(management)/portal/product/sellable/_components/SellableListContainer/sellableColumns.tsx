@@ -28,27 +28,6 @@ export const sellableColumns: ColumnsType<SellableListRs["result"][number]> = [
       </div>
     ),
   },
-  // {
-  //   title: "Khả dụng",
-  //   dataIndex: "available",
-  //   key: "available",
-  //   width: 100,
-  //   render: (value, { available }) => <span className="text-gray-900">{available}</span>,
-  // },
-  // {
-  //   title: "Đang còn",
-  //   dataIndex: "open",
-  //   key: "open",
-  //   width: 100,
-  //   render: (value, { open }) => <span className="text-emerald-600">{open}</span>,
-  // },
-  // {
-  //   title: "Đã dùng",
-  //   dataIndex: "used",
-  //   key: "used",
-  //   width: 100,
-  //   render: (value, { used }) => <span className="text-red-600">{used}</span>,
-  // },
   {
     title: "Ngày bán",
     dataIndex: "valid-date",

@@ -5,7 +5,6 @@ import {
 } from "@/models/management/cms/miscDocument.interface";
 
 import { client } from "@/services/api";
-import { getAgToken } from "@/utils/common";
 
 export const miscDocumentAPIs = {
   create: async (payload: MiscDocumentPayload) => {

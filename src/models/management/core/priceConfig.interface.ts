@@ -6,7 +6,7 @@ export interface PriceConfig {
   recId: number;
   sellableId: number;
   sellableDetailsIds: number[];
-  channel: string;
+  channel: "DUTY" | "CUSTOMER" | "AGENT";
   class: string;
   maxAvailable: number;
   open: number;

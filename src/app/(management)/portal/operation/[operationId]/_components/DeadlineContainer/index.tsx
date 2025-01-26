@@ -1,14 +1,12 @@
 "use client";
-import TableListPage from "@/components/admin/TableListPage";
-import { IOperationDeadline } from "@/models/management/core/operationDeadline.interface";
+import { IOperationDeadline } from "@/models/management/core/operation/operationDeadline.interface";
 import { useState } from "react";
-import { useRouter } from "next/router";
 import useOperationDeadline from "../../../modules/useOperationDeadline";
 import { columns } from "./columns";
 import DrawerOperationDeadline, { DrawerOperationDeadlineProps } from "./DrawerOperationDeadline";
 import { useGetOperationDeadlineListQuery } from "@/queries/core/operation";
 import { Button, Table, TableProps } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
 
 interface DeadlineContainerProps {
@@ -57,10 +55,13 @@ const DeadlineContainer: React.FC<DeadlineContainerProps> = ({ operationId, isEd
     ? [
         ...columns,
         {
-          title: "Hành động",
-          width: 200,
+          title: "",
           render: (record) => {
-            return <Button onClick={() => setEdit(record)}>Sửa</Button>;
+            return (
+              <Button icon={<EditOutlined />} onClick={() => setEdit(record)} type="text" size="small">
+                Sửa
+              </Button>
+            );
           },
         },
       ]

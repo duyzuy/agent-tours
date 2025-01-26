@@ -15,7 +15,7 @@ import {
   HotelCostingDetail,
   TransportCostingDetail,
   VisaCostingDetail,
-} from "@/models/management/core/operationCostingDetail.interface";
+} from "@/models/management/core/operation/operationCostingDetail.interface";
 
 export const operationSchema: ObjectSchema<OperationFormData> = object({
   id: number(),
@@ -104,4 +104,21 @@ export const airCostingDetailSchema: ObjectSchema<AirCostingDetailFormData> = ob
     departureDate: string(),
     arrivalDate: string(),
   }),
+});
+
+export const updateOperationDutySchema: ObjectSchema<{
+  sellableId: number;
+  suppliers: { supplierId: number; fullname?: string; shortname?: string; remark: string }[];
+}> = object({
+  sellableId: number().required("Không bỏ trống"),
+  suppliers: array()
+    .of(
+      object({
+        supplierId: number().required("Thiếu Id supplier"),
+        fullname: string(),
+        shortname: string(),
+        remark: string().default(""),
+      }),
+    )
+    .default([]),
 });

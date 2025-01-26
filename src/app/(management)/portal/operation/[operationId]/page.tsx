@@ -1,12 +1,15 @@
 "use client";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Spin, TagProps } from "antd";
+import { Col, Divider, Row, Spin } from "antd";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetOperationDetailQuery } from "@/queries/core/operation";
-import OperationContainer from "./OperationContainer";
-import { IOperationStatus } from "@/models/management/core/operation.interface";
-import { useGetOperationThingTodoList } from "@/queries/core/operation";
+import OperationStatus from "@/components/admin/operation/OperationStatus";
+import OperationSellableDetail from "@/components/admin/operation/OperationSellableDetail";
+import OperationThingTodoItemListContainer from "./_components/OperationThingTodoItemListContainer";
+import OperationPersonInformation from "@/components/admin/operation/OperationPersonInformation";
+import OperationActions from "./_components/OperationActions";
+import OperationTabsControl from "./_components/OperationTabsControl";
 
 interface OperationDetailPage {
   params: { operationId: string };
@@ -16,60 +19,19 @@ const OperationDetailPage: React.FC<OperationDetailPage> = ({ params }) => {
 
   const router = useRouter();
 
-  const getOperationStatus = (status?: IOperationStatus) => {
-    let color: TagProps["color"];
-    color =
-      status === "ACCEPTED"
-        ? "cyan"
-        : status === "CANCELED"
-        ? "red"
-        : status === "HANDOVERED"
-        ? "magenta"
-        : status === "DONE"
-        ? "success"
-        : status === "NEW"
-        ? "blue"
-        : status === "LOCKED"
-        ? "default"
-        : status === "PENDINGCANCELED"
-        ? "gold"
-        : "";
-
-    let label: string;
-    label =
-      status === "ACCEPTED"
-        ? "Chấp nhận"
-        : status === "CANCELED"
-        ? "Huỷ"
-        : status === "HANDOVERED"
-        ? "Bàn giao"
-        : status === "DONE"
-        ? "Hoàn thành"
-        : status === "NEW"
-        ? "Mới"
-        : status === "LOCKED"
-        ? "Khoá"
-        : status === "PENDINGCANCELED"
-        ? "Chờ huỷ"
-        : "";
-    return label;
-  };
-
   useEffect(() => {
     if (!data && !isLoading) {
       router.push("/portal/operation/list");
     }
   }, [data, isLoading]);
 
-  if (isLoading) {
-    return <Spin />;
-  }
-  if ((!data && !isLoading) || !data) {
-    return null;
-  }
+  if (isLoading) return <Spin />;
+
+  if (!data) return null;
+
   return (
     <PageContainer
-      name={`Điều hành #${data.id.toString()} - ${getOperationStatus(data.status)}`}
+      name={`Điều hành #${data.id.toString()}`}
       modelName="Điều hành"
       breadCrumItems={[
         { title: "Điều hành", href: "/portal/operation/list" },
@@ -80,7 +42,37 @@ const OperationDetailPage: React.FC<OperationDetailPage> = ({ params }) => {
       hideAddButton
       onBack={() => router.push("/portal/operation/list")}
     >
-      <OperationContainer operationId={data.id} data={data} />
+      <Row gutter={[24, 0]}>
+        <Col span={16}>
+          <OperationStatus status={data.status} />
+          <Divider />
+          <OperationSellableDetail
+            sellableCode={data.sellable.code}
+            startDate={data.sellable.startDate}
+            endDate={data.sellable.endDate}
+            validFrom={data.sellable.validFrom}
+            validTo={data.sellable.validTo}
+            closeDate={data.sellable.closeDate}
+            open={data.sellable.open}
+            used={data.sellable.used}
+            available={data.sellable.available}
+            templateCode={data.template.code}
+            templateName={data.template.name}
+          />
+          <OperationActions operationId={data.id} status={data.status} />
+          <OperationTabsControl operationId={data.id} status={data.status} sellableId={data.sellableId} />
+        </Col>
+        <Col span={8} className="!max-w-md">
+          <OperationPersonInformation
+            fullName={data.pic?.fullname || "--"}
+            email={data.pic?.email || "--"}
+            phoneNumber={data.pic?.phoneNumber || "--"}
+          />
+
+          <div className="h-6"></div>
+          <OperationThingTodoItemListContainer operationId={data.id} />
+        </Col>
+      </Row>
     </PageContainer>
   );
 };

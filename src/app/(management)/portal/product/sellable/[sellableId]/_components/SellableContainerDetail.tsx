@@ -18,6 +18,7 @@ const SellableContainerDetail: React.FC<SellableContainerDetailProps> = ({ data,
     enabled: !disabled,
   });
   const { onUpdate } = useConfigPriceSellable();
+
   const extraConfigListByService = useMemo(() => {
     let extraListHasStock: SellablePriceConfigRs["result"]["extraConfigs"] = [];
     let extraListNoStock: SellablePriceConfigRs["result"]["extraConfigs"] = [];
@@ -359,6 +360,7 @@ const SellableContainerDetail: React.FC<SellableContainerDetailProps> = ({ data,
       ...tabItems,
     ];
   }
+
   return <Tabs defaultActiveKey="inventory" type="card" items={tabItems} />;
 };
 export default SellableContainerDetail;

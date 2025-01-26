@@ -41,7 +41,7 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
 
   return (
     <>
-      <div className="booking__order__Detail-actions pb-6 mb-6 border-b bg-white">
+      <div className="booking__order__Detail-actions pb-6 mb-6 border-b">
         <Space>
           {paymentStatus !== PaymentStatus.PAID ? (
             <Button

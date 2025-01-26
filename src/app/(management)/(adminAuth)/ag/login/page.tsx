@@ -12,7 +12,7 @@ const AdminLoginPage = () => {
     onLogin({
       userId: "12",
       username: "nguyenhoanglong",
-      password: "123123123123",
+      password: "123123123",
     });
   };
   const onAgLogin = () => {

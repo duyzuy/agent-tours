@@ -2,7 +2,7 @@ import { ColumnsType } from "antd/es/table";
 import { Leading } from "@/models/management/leading.interface";
 import { Tag, Popover, Space, TagProps } from "antd";
 import { formatDate, stringToDate } from "@/utils/date";
-import { IOperation } from "@/models/management/core/operation.interface";
+import { IOperation } from "@/models/management/core/operation/operation.interface";
 import { InfoCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { moneyFormatVND } from "@/utils/helper";
 import dayjs from "dayjs";

@@ -13,7 +13,15 @@ export const columnRoleGroups: ColumnsType<RolesPermissionListResponse["result"]
     key: "status",
     dataIndex: "status",
     render: (_, record) => {
-      return record.status === "OK" ? <Tag color="green">Kích hoạt</Tag> : <Tag color="red">Chưa kích hoạt</Tag>;
+      return record.status === "OK" ? (
+        <Tag color="green" bordered={false}>
+          Kích hoạt
+        </Tag>
+      ) : (
+        <Tag color="red" bordered={false}>
+          Chưa kích hoạt
+        </Tag>
+      );
     },
     width: 150,
   },

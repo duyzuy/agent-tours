@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { isEqualObject } from "@/utils/compare";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import SupplierSelector, { SupplierSelectorProps } from "../../../_components/SupplierSelector";
-import { IOperationCosting } from "@/models/management/core/operationCosting.interface";
+import { IOperationCosting } from "@/models/management/core/operation/operationCosting.interface";
 import { ISupplier } from "@/models/management/supplier.interface";
 
 export type DrawerCostingProps = DrawerProps & {

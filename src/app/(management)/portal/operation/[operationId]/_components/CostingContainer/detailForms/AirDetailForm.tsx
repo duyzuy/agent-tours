@@ -8,7 +8,7 @@ import { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import dayjs from "dayjs";
 import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import { memo, useEffect, useState } from "react";
-import { AirDetailType, ICostingDetailItem } from "@/models/management/core/operationCostingDetail.interface";
+import { AirDetailType, ICostingDetailItem } from "@/models/management/core/operation/operationCostingDetail.interface";
 import { stringToDate } from "@/utils/date";
 
 interface AirDetailFormProps {

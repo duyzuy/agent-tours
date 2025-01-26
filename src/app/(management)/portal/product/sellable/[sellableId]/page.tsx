@@ -12,6 +12,7 @@ import { ContentDetailList } from "@/components/admin/ContentDetailList";
 import DrawerSellableApproval, { DrawerSellableApprovalProps } from "../_components/DrawerSellableApproval";
 import useCRUDSellable from "../modules/useCRUDSellable";
 import Link from "next/link";
+import SellableActionsButton from "./_components/SellableActionsButton";
 
 const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ params: { sellableId } }) => {
   const router = useRouter();
@@ -19,15 +20,7 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
   const { data, isLoading } = useGetSellableDetailCoreQuery(Number(sellableId), {
     enabled: !!Number(sellableId),
   });
-  const { onApproval, onDelete, onUpdateStatus } = useCRUDSellable();
 
-  const [openDrawerAppoval, setOpenDrawerApproval] = useState(false);
-
-  const handleApproval: DrawerSellableApprovalProps["onSubmit"] = (formData) => {
-    onApproval(formData, () => {
-      setOpenDrawerApproval(false);
-    });
-  };
   useEffect(() => {
     if (!isLoading && !data) {
       router.push("./portal/product/inventory");
@@ -51,48 +44,13 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
       ]}
       modelName="Sản phẩm"
     >
-      <div className="flex py-2 mb-6">
-        <Space>
-          {data.sellable.status === Status.QQ ? (
-            <>
-              <Button
-                className="!bg-emerald-100 !text-emerald-600 w-[80px]"
-                type="text"
-                size="small"
-                onClick={() => setOpenDrawerApproval(true)}
-              >
-                Duyệt
-              </Button>
-              <Popconfirm
-                placement="topLeft"
-                title="Xoá"
-                description={`Bạn muốn xoá sản phẩm ${data.sellable.code}`}
-                okText="Xác nhận"
-                cancelText="Huỷ bỏ"
-                onConfirm={() =>
-                  onDelete(data.sellable.recId, () => {
-                    router.push("/portal/product/sellable");
-                  })
-                }
-              >
-                <Button
-                  className="!bg-red-100 !text-red-600 w-[80px]"
-                  type="text"
-                  icon={<DeleteOutlined />}
-                  size="small"
-                >
-                  Xoá
-                </Button>
-              </Popconfirm>
-            </>
-          ) : (
-            <Space>
-              <Switch loading={false} checked />
-              Mở
-            </Space>
-          )}
-        </Space>
-      </div>
+      <SellableActionsButton
+        item={data.sellable}
+        status={data.sellable.status}
+        type={data.sellable.type}
+        code={data.sellable.code}
+        inventoryTypeList={data.sellable.template?.inventoryTypeList || []}
+      />
       <ContentDetailList
         column={3}
         items={[
@@ -218,30 +176,10 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
       {data.sellable.status === Status.OK ? (
         <SellableContainerDetail data={data} disabled={data.sellable.status !== Status.OK} />
       ) : (
-        <>
-          <Empty
-            imageStyle={{ width: 60, height: 60, margin: "auto" }}
-            description={
-              <>
-                <p className="mb-3">Sản phẩm đang chờ duyệt.</p>
-                <Button className="w-[80px]" type="primary" onClick={() => setOpenDrawerApproval(true)}>
-                  Duyệt
-                </Button>
-              </>
-            }
-          />
-          {data.sellable.type === "EXTRA" || data.sellable.type === "TOUR" ? (
-            <DrawerSellableApproval
-              isOpen={openDrawerAppoval}
-              inventoryTypeList={data.sellable.template?.inventoryTypeList || []}
-              productType={data.sellable.type}
-              sellableName={data.sellable.code}
-              onCancel={() => setOpenDrawerApproval(false)}
-              initialValues={data.sellable}
-              onSubmit={handleApproval}
-            />
-          ) : null}
-        </>
+        <Empty
+          imageStyle={{ width: 60, height: 60, margin: "auto" }}
+          description={<p className="mb-3">Sản phẩm đang chờ duyệt.</p>}
+        />
       )}
     </PageContainer>
   );
