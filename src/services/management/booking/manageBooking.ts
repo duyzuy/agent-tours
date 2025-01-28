@@ -1,5 +1,4 @@
 import { coreApi } from "../coreApi";
-import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { IOrderListRs, IOrderDetailRs } from "@/models/management/booking/order.interface";
 import {
   IBookingOrderCustomerPayload,

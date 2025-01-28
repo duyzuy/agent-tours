@@ -9,7 +9,7 @@ import { IPromotion } from "@/models/management/core/promotion.interface";
 export const feBookingAPIs = {
   getServiceList: async (sellableId?: number) => {
     return await client.post<ProductServiceListResponse>("localfront/BookingOrder_Search_GetSellableSsr", {
-      params: {
+      body: {
         requestObject: {
           sellableId,
         },
@@ -26,14 +26,14 @@ export const feBookingAPIs = {
       | undefined,
   ) => {
     return await client.post<BaseResponse<IPromotion>>("localfront/Dc_CheckAvailability", {
-      params: {
+      body: {
         requestObject: { ...payload },
       },
     });
   },
   createBooking: async (payload: FeBookingPayload, token: string) => {
     return await client.post<FeReservationResponse>("localfront/BookingOrder_Addnew", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },

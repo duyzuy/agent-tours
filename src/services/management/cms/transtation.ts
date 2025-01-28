@@ -10,7 +10,7 @@ export const translationAPIs = {
   getList: async (queryParams?: TranslationQueryParams) => {
     return await client.post<TranslationListResponse>("local/getCms_translation_frontend", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: queryParams?.requestObject,
         pageSize: queryParams?.pageSize,
         orderBy: queryParams?.orderBy,
@@ -21,7 +21,7 @@ export const translationAPIs = {
   getAllByLang: async (lang: LangCode) => {
     return await client.post<any>("local/getCms_translation_frontend_Bylang", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           lang,
         },
@@ -31,7 +31,7 @@ export const translationAPIs = {
   create: async (payload: TranslationPayload) => {
     return await client.post<any>("local/Cms_translation_frontend_Addnew", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -41,7 +41,7 @@ export const translationAPIs = {
   update: async (payload: TranslationPayload) => {
     return await client.post<any>("local/Cms_translation_frontend_Edit", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -51,7 +51,7 @@ export const translationAPIs = {
   delete: async (id?: number) => {
     return await client.post<ITranslationRs>("local/Cms_Delete", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           cat: "cms_translation_frontend",
           recId: id,

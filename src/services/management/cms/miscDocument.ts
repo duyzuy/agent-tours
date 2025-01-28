@@ -10,7 +10,7 @@ export const miscDocumentAPIs = {
   create: async (payload: MiscDocumentPayload) => {
     return await client.post<MiscDocumentResponse>("local/LocalMisc_DocumentCheckList_Addnew", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: payload,
       },
     });
@@ -18,7 +18,7 @@ export const miscDocumentAPIs = {
   update: async (payload: MiscDocumentPayload) => {
     return await client.post<MiscDocumentResponse>("local/LocalMisc_DocumentCheckList_Edit", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: payload,
       },
     });
@@ -26,7 +26,7 @@ export const miscDocumentAPIs = {
   getList: async () => {
     return await client.post<MiscDocumentListResponse>("local/LocalMisc_DocumentCheckList_List", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {},
       },
     });
@@ -34,7 +34,7 @@ export const miscDocumentAPIs = {
   delete: async (id: number) => {
     return await client.post<MiscDocumentResponse>("local/LocalMisc_Delete", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           cat: "localmisc_documentchecklist",
           type: "localmisc_documentchecklist",

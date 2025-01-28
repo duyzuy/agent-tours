@@ -11,10 +11,8 @@ import {
 export const localUserAPIs = {
   getUserList: async (userTypeList?: ELocalUserType[]) => {
     return await client.post<LocalUserListResponse>("local/LocalUserList", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           userTypeList,
         },
@@ -23,47 +21,37 @@ export const localUserAPIs = {
   },
   getAgentList: async () => {
     return await client.post<LocalUserAgentListResponse>("local/LocalUser_ListAgent", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
     });
   },
   create: async (payload: ILocalUserPayload) => {
     return await client.post<LocalUserResponse>("local/LocalUser_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: { ...payload },
       },
     });
   },
   update: async (recId: number, payload: ILocalUserPayload) => {
     return await client.post<LocalUserResponse>("local/LocalUser_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: { recId, ...payload },
       },
     });
   },
   updateStatus: async (recId: number, payload: ILocalUserPayload["status"]) => {
     return await client.post<LocalUserResponse>("local/LocalUser_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: { recId, status: payload },
       },
     });
   },
   setNewPassword: async (payload: LocalUserNewPasswordPayload) => {
     return await client.post<LocalUserResponse>("local/LocalUser_SetnewPassword", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: { ...payload },
       },
     });

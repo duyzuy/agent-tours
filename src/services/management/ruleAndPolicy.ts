@@ -5,7 +5,7 @@ export const localRuleAndPolicyAPIs = {
   create: async (payload: IRuleAndPolicyPayload) => {
     return await client.post<IRuleAndPolicyRs>("local/RuleAndPolicy_Addnew", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: { ...payload },
       },
     });
@@ -13,7 +13,7 @@ export const localRuleAndPolicyAPIs = {
   getList: async () => {
     return await client.post<IRuleAndPolicyListRs>("local/RuleAndPolicy_List", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {},
       },
     });
@@ -21,7 +21,7 @@ export const localRuleAndPolicyAPIs = {
   delete: async (id?: number) => {
     return await client.post<any>("local/RuleAndPolicy_Delete", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           id,
         },

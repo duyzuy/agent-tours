@@ -2,7 +2,7 @@ import { client } from "../api";
 export const agAuthApis = {
   login: async <T>(userId: string, username: string, password: string) => {
     return await client.post<T, any>("local/CmsLabel", {
-      params: {
+      body: {
         requestObject: {
           localUser: {
             userId,

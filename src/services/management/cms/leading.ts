@@ -11,10 +11,8 @@ import {
 export const leadingAPIs = {
   getList: async (queryParams?: LeadingQueryParams) => {
     return await client.post<LeadingListResponse>("local/LeadInfo_List", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -25,10 +23,8 @@ export const leadingAPIs = {
   },
   update: async (payload?: LeadingPayload) => {
     return await client.post<LeadingResponse>("local/LeadInfo_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -37,10 +33,8 @@ export const leadingAPIs = {
   },
   createOne: async (payload?: LeadingPayload) => {
     return await client.post<LeadingResponse>("local/LeadInfo_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -49,10 +43,8 @@ export const leadingAPIs = {
   },
   createMultiple: async (payloadList?: LeadingPayload[]) => {
     return await client.post<LeadingResponse>("local/LeadInfo_AddnewByList", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: payloadList,
       },
     });

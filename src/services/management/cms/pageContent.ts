@@ -14,7 +14,7 @@ export const pageContentAPIs = {
   create: async (payload: IPageContentPayload) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_page_Addnew", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -24,7 +24,7 @@ export const pageContentAPIs = {
   update: async (payload: IPageContentPayload) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_page_Edit", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -34,7 +34,7 @@ export const pageContentAPIs = {
   getList: async (queryParams?: PageContentQueryParams) => {
     return await client.post<IPageContentListRs>("local/Cms_page_List", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -46,7 +46,7 @@ export const pageContentAPIs = {
   getListMinimal: async (queryParams?: PageContentMinimalQueryParams) => {
     return await client.post<IPageContentMinimalListRs>("local/Cms_page_ListMinimal", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -59,7 +59,7 @@ export const pageContentAPIs = {
   getParentListByLang: async (queryParams?: PageContentQueryParams) => {
     return await client.post<IPageContentListRs>("local/Cms_page_ListOnlyParent", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: { ...queryParams?.requestObject },
         pageCurrent: queryParams?.pageCurrent,
         pageSize: queryParams?.pageSize,
@@ -69,7 +69,7 @@ export const pageContentAPIs = {
   getDetail: async (payload: { id: number } | { originId: number }) => {
     return await client.post<IPageContentDetailRs>("local/getCms_page_byId", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -79,7 +79,7 @@ export const pageContentAPIs = {
   publish: async (id: number) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_page_Publish", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           id,
         },
@@ -89,7 +89,7 @@ export const pageContentAPIs = {
   unPublish: async (id: number) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_page_Unpublish", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           id,
         },
@@ -99,7 +99,7 @@ export const pageContentAPIs = {
   delete: async (id: number) => {
     return await client.post<IPageContentDetailPerLangRs>("local/Cms_Delete", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           cat: "cms_page",
           recId: id,

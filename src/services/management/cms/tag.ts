@@ -6,10 +6,8 @@ import { PageContentStatus } from "@/models/management/cms/pageContent.interface
 export const tagAPIs = {
   create: async (payload: TagPayload) => {
     return await client.post<TagItemResponse>("local/Cms_post_tag_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -18,10 +16,8 @@ export const tagAPIs = {
   },
   update: async (payload: TagPayload) => {
     return await client.post<TagItemResponse>("local/Cms_post_tag_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -31,10 +27,8 @@ export const tagAPIs = {
 
   getList: async (queryParams?: TagQueryParams) => {
     return await client.post<TagListResponse>("local/Cms_post_tag_ListMinimal", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -45,10 +39,8 @@ export const tagAPIs = {
   },
   getDetail: async ({ id, originId }: { id?: number; originId?: number }) => {
     return await client.post<TagListResponse>("local/Cms_post_tag_ById", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           id,
           originId,
@@ -58,10 +50,8 @@ export const tagAPIs = {
   },
   updateStatus: async (payload: { id: number; status: PageContentStatus }) => {
     return await client.post<TagItemResponse>("local/Cms_post_tag_UpdateStatus", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -71,10 +61,8 @@ export const tagAPIs = {
 
   delete: async (id: number) => {
     return await client.post<TagItemResponse>("local/Cms_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           cat: "cms_post_tag",
           recId: id,

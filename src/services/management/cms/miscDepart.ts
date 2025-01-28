@@ -9,7 +9,7 @@ export const miscDepartAPIs = {
   create: async (payload: MiscDepartPayload) => {
     return await client.post<MiscDepartLocationResponse>("local/LocalMisc_DepartFrom_Addnew", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -19,7 +19,7 @@ export const miscDepartAPIs = {
   update: async (payload: MiscDepartPayload) => {
     return await client.post<MiscDepartLocationResponse>("local/LocalMisc_DepartFrom_Edit", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -29,7 +29,7 @@ export const miscDepartAPIs = {
   getList: async () => {
     return await client.post<MiscDepartLocationsResponse>("local/LocalMisc_DepartFrom_List", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {},
       },
     });
@@ -37,7 +37,7 @@ export const miscDepartAPIs = {
   delete: async (id: number) => {
     return await client.post<MiscDepartLocationResponse>("local/LocalMisc_Delete", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           cat: "localmisc_departfrom",
           type: "localmisc_departfrom",

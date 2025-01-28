@@ -15,7 +15,7 @@ import { client } from "@/services/api";
 export const destinationAPIs = {
   createDestination: async (payload: IDestinationPayload) => {
     return await client.post<IDestinationRs>("local/LocalMisc_DestList_Addnew", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -25,7 +25,7 @@ export const destinationAPIs = {
   },
   getDestinationList: async () => {
     return await client.post<IDestinationListRs>("local/LocalMisc_DestList_Get", {
-      params: {
+      body: {
         requestObject: {},
       },
       isAuth: true,
@@ -33,7 +33,7 @@ export const destinationAPIs = {
   },
   getDestinationMinimalList: async (queryParams: DestinationMinimalQueryParams) => {
     return await client.post<IDestinationMinimalListRs>("local/Cms_DestListMinimal", {
-      params: {
+      body: {
         requestObject: {
           ...queryParams.requestObject,
         },
@@ -46,7 +46,7 @@ export const destinationAPIs = {
   },
   getDestinationDetail: async (id: number) => {
     return await client.post<IDestinationListRs>("local/LocalMisc_DestList_Get", {
-      params: {
+      body: {
         requestObject: { id },
       },
       isAuth: true,
@@ -54,7 +54,7 @@ export const destinationAPIs = {
   },
   updateDestination: async (payload: IDestinationEditPayload) => {
     return await client.post<IDestinationRs>("local/LocalMisc_DestList_Edit", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -65,7 +65,7 @@ export const destinationAPIs = {
 
   createCMSContent: async (payload: IDestinationContentPayload) => {
     return await client.post<IDestinationContentRs>("local/Cms_DestList_Addnew", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -75,7 +75,7 @@ export const destinationAPIs = {
   },
   getCMSContent: async (queryParams: IDestinationGetContentQueryParams) => {
     return await client.post<IDestinationContentsRs>("local/Cms_DestList", {
-      params: {
+      body: {
         requestObject: {
           ...queryParams,
         },
@@ -85,7 +85,7 @@ export const destinationAPIs = {
   },
   updateCMSContent: async (payload: IDestinationContentPayload & { id: number }) => {
     return await client.post<IDestinationContentRs>("local/Cms_DestList_Edit", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },

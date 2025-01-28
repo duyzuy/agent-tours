@@ -14,7 +14,7 @@ import { getAgToken } from "@/utils/common";
 export const localMediaAPIs = {
   getFolders: async (queryParams: MediaFolderQueryParams) => {
     return await client.post<IMediaFolderListRs>("local/Cms_Media", {
-      params: {
+      body: {
         requestObject: {
           ...queryParams.requestObject,
           objectType: "MEDIA_FOLDER", //MEDIA_FOLDER
@@ -28,7 +28,7 @@ export const localMediaAPIs = {
   },
   getFiles: async (queryParams: MediaFilesQueryParams) => {
     return await client.post<IMediaFileListRs>("local/Cms_Media", {
-      params: {
+      body: {
         requestObject: {
           ...queryParams.requestObject,
           objectType: "MEDIA",

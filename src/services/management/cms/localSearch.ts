@@ -10,7 +10,7 @@ import { client } from "@/services/api";
 export const localSearchAPIs = {
   create: async (payload: LocalSearchPayload) => {
     return await client.post<BaseResponse<ILocalSeachDestination>>("local/LocalMisc_SearchConfig_Addnew", {
-      params: {
+      body: {
         requestObject: payload,
       },
       isAuth: true,
@@ -18,7 +18,7 @@ export const localSearchAPIs = {
   },
   update: async (payload: LocalSearchPayload & { id: number }) => {
     return await client.post<BaseResponse<ILocalSeachDestination>>("local/LocalMisc_SearchConfig_Edit", {
-      params: {
+      body: {
         requestObject: payload,
       },
       isAuth: true,
@@ -26,7 +26,7 @@ export const localSearchAPIs = {
   },
   getList: async (queryParams?: LocalSearchQueryParams) => {
     return await client.post<LocalSearchDestinationListRs>("local/LocalMisc_SearchConfig_Get", {
-      params: {
+      body: {
         requestObject: queryParams,
       },
       isAuth: true,

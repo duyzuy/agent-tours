@@ -1,4 +1,3 @@
-import { getAgToken } from "@/utils/common";
 import { client } from "../api";
 import { RolePayload } from "@/models/management/role.interface";
 import { RolePermissionPayload, RolesPermissionListResponse } from "@/models/management/rolePermission.interface";
@@ -7,10 +6,8 @@ import { PermissionPayload } from "@/models/management/permission.interface";
 export const roleAndPermissionAPIs = {
   getPermissions: async () => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Getbycat", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: "LOCALUSER_PERMISSION",
       },
     });
@@ -18,10 +15,8 @@ export const roleAndPermissionAPIs = {
 
   getRolePermission: async () => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Getbycat", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: "LOCALUSER_ROLEPERMISSION",
       },
     });
@@ -29,7 +24,7 @@ export const roleAndPermissionAPIs = {
   getRoles: async () => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Getbycat", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: "LOCALUSER_ROLE",
       },
     });
@@ -37,50 +32,26 @@ export const roleAndPermissionAPIs = {
 
   createRolePermissions: async (payload: RolePermissionPayload) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
-        requestObject: {
-          // cat: "LOCALUSER_ROLEPERMISSION",
-          // rolePermissionList: [
-          //   {
-          //     localUser_RolePermissionValue: payload.localUser_RolePermissionValue,
-          //     localUser_PermissionList: payload.localUser_PermissionList,
-          //   },
-          // ],
-          ...payload,
-        },
+      isAuth: true,
+      body: {
+        requestObject: payload,
       },
     });
   },
 
   updateRolePermissions: async (payload?: RolePermissionPayload) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
-        requestObject: {
-          // cat: "LOCALUSER_ROLEPERMISSION",
-          // rolePermissionList: [
-          //   {
-          //     // localUser_RolePermissionKey,
-          //     ...payload,
-          //   },
-          // ],
-          ...payload,
-        },
+      isAuth: true,
+      body: {
+        requestObject: payload,
       },
     });
   },
 
   deleteRolePermissions: async (key: string) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           cat: "LOCALUSER_ROLEPERMISSION",
           rolePermissionList: [
@@ -95,47 +66,24 @@ export const roleAndPermissionAPIs = {
 
   createRole: async (payload: RolePayload) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
-        requestObject: {
-          // cat: "LOCALUSER_ROLE",
-          // roleList: [
-          //   {
-          //     ...payload,
-          //   },
-          // ],
-          ...payload,
-        },
+      isAuth: true,
+      body: {
+        requestObject: payload,
       },
     });
   },
   updateRoleByRoleKey: async (payload: RolePayload) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
-        requestObject: {
-          // cat: "LOCALUSER_ROLE",
-          // roleList: [
-          //   {
-          //     localUser_RoleKey: localUser_RoleKey,
-          //     ...payload,
-          //   },
-          // ],
-          ...payload,
-        },
+      isAuth: true,
+      body: {
+        requestObject: payload,
       },
     });
   },
   deleteRole: async (roleKey: string) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           cat: "LOCALUSER_ROLE",
           roleList: [
@@ -150,10 +98,8 @@ export const roleAndPermissionAPIs = {
 
   createPermission: async (payload: PermissionPayload) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -162,10 +108,8 @@ export const roleAndPermissionAPIs = {
   },
   updatePermission: async (payload: PermissionPayload) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -174,10 +118,8 @@ export const roleAndPermissionAPIs = {
   },
   deletePermission: async (permissionKey: string) => {
     return await client.post<RolesPermissionListResponse>("local/LocalUser_RoleAndPermission_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           cat: "LOCALUSER_PERMISSION",
           permissionList: [

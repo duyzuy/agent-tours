@@ -9,7 +9,7 @@ export const membersAPIs = {
   getList: async (queryParams?: MemberQueryParams) => {
     return await client.post<MemberListResponse>("local/B2cUser_List", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: queryParams?.requestObject,
         orderBy: queryParams?.orderBy,
         pageCurrent: queryParams?.pageCurrent,
@@ -20,7 +20,7 @@ export const membersAPIs = {
   update: async (payload: UpdateMemberPayload) => {
     return await client.post<MemberResponse>("local/B2cUser_Edit", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: payload,
       },
     });
@@ -28,7 +28,7 @@ export const membersAPIs = {
   resetPassword: async (id?: number) => {
     return await client.post<MemberResponse>("local/B2cUser_ResetPassword", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           id,
         },

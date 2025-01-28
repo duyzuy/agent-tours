@@ -5,9 +5,9 @@ export const customerAPIs = {
   updateProfile: async ({ payload, token = "" }: { payload?: CustomerProfilePayload; token?: string }) => {
     return await client.post<CustomerProfileResponse>("localfront/editProfile", {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
       },
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -17,9 +17,9 @@ export const customerAPIs = {
   getProfile: async (token?: string) => {
     return await client.post<CustomerProfileResponse>("localfront/getProfile", {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
       },
-      params: {
+      body: {
         requestObject: {},
       },
     });

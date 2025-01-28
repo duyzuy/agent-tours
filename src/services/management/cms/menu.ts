@@ -12,7 +12,7 @@ export const menuAPIs = {
   create: async (payload: MenuItemPayload) => {
     return await client.post<MenuItemResponse>("local/cms_frontendMenu_Addnew", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -22,7 +22,7 @@ export const menuAPIs = {
   updateItem: async (payload: MenuItemPayload & { id: number }) => {
     return await client.post<MenuItemResponse>("local/cms_frontendMenu_Edit", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -32,7 +32,7 @@ export const menuAPIs = {
   updateList: async (items: IMenuItem[]) => {
     return await client.post<MenuItemResponse>("local/cms_frontendMenu_Update", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           menuItems: [...items],
         },
@@ -42,7 +42,7 @@ export const menuAPIs = {
   getList: async (payload: { menuPosition: MenuPositionType; lang: LangCode }) => {
     return await client.post<MenuListResponse>("local/cms_frontendMenu_List", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -56,7 +56,7 @@ export const menuAPIs = {
   delete: async (id: number) => {
     return await client.post<MenuItemResponse>("local/Cms_Delete", {
       isAuth: true,
-      params: {
+      body: {
         requestObject: {
           cat: "cms_frontendMenu_item",
           type: "cms_frontendMenu",

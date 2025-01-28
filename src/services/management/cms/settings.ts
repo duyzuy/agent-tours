@@ -7,10 +7,8 @@ export const settingAPIs = {
     return await client.post<BaseResponse<{ type: "GOOGLE_APPPASSWORD"; email: string; appPassword: string }>>(
       "local/LocalMisc_GoogleEmailAppPassword_Get",
       {
-        headers: {
-          Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-        },
-        params: {
+        isAuth: true,
+        body: {
           requestObject: {},
         },
       },
@@ -20,10 +18,8 @@ export const settingAPIs = {
     return await client.post<BaseResponse<{ type: "GOOGLE_APPPASSWORD"; email: string; appPassword: string }>>(
       "local/LocalMisc_GoogleEmailAppPassword_Edit",
       {
-        headers: {
-          Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-        },
-        params: {
+        isAuth: true,
+        body: {
           requestObject: { ...payload },
         },
       },

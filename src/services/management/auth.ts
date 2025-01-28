@@ -10,7 +10,7 @@ export const getAdminProfile = async () => {
 
 export const adminSignIn = async (payload: AdminLoginPayload) => {
   return await client.post<AdminLoginResponse>("local/getLocalToken", {
-    params: {
+    body: {
       requestObject: {
         localUser: payload,
       },
@@ -27,7 +27,7 @@ export const adminGetRoles = async () => {
 export const adminUpdateProfile = async (payload: ILocalUserProfilePayload) => {
   return await client.post<ILocalUserProfileRs>("local/CurrentUser_updateInfo", {
     isAuth: true,
-    params: {
+    body: {
       requestObject: payload,
     },
   });

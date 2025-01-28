@@ -1,4 +1,3 @@
-import { getAgToken } from "@/utils/common";
 import { client } from "@/services/api";
 import {
   CMSTemplateListRs,
@@ -24,10 +23,8 @@ import { PageContentStatus } from "@/models/management/cms/pageContent.interface
 export const cmsTemplateAPIs = {
   create: async (payload?: CMSTemplatePayload) => {
     return await client.post<ICMSTemplateContent>("local/cms_template_Addnew_ByKey", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -36,10 +33,8 @@ export const cmsTemplateAPIs = {
   },
   createContent: async (payload?: CMSTemplateContentPayload) => {
     return await client.post<ICMSTemplate>("local/cms_template_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -48,10 +43,8 @@ export const cmsTemplateAPIs = {
   },
   getList: async (queryParams?: CMSTemplateQueryParams) => {
     return await client.post<CMSTemplateListRs>("local/cms_templateKey_List", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -62,10 +55,8 @@ export const cmsTemplateAPIs = {
   },
   getMinimalContentList: async (queryParams?: CMSTemplateContentMinimalQueryParams) => {
     return await client.post<CMSTemplateContentMinimalListRs>("local/cms_template_ListMinimal", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -77,10 +68,8 @@ export const cmsTemplateAPIs = {
   },
   getMinimalList: async (queryParams?: CMSTemplateQueryParams) => {
     return await client.post<CMSTemplateMinimalListRs>("local/cms_templateKey_ListMinimal", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -91,10 +80,8 @@ export const cmsTemplateAPIs = {
   },
   getDetailsTemplateKey: async (queryParams?: CMSTemplateQueryParams) => {
     return await client.post<CMSTemplateContentListRs>("local/cms_template_Details", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -105,10 +92,8 @@ export const cmsTemplateAPIs = {
   },
   getListContent: async (queryParams?: CMSTemplateQueryParams) => {
     return await client.post<CMSTemplateContentListRs>("local/cms_template_List", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -119,10 +104,8 @@ export const cmsTemplateAPIs = {
   },
   updateTemplateContent: async (payload?: CMSTemplateContentPayload) => {
     return await client.post<CMSTemplateContentItemRs>("local/cms_template_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -132,10 +115,8 @@ export const cmsTemplateAPIs = {
 
   updateStatusTemplateContent: async (payload?: { id: number; status: PageContentStatus }) => {
     return await client.post<CMSTemplateContentItemRs>("local/cms_template_UpdateStatus", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -145,10 +126,8 @@ export const cmsTemplateAPIs = {
 
   updateTemplate: async (payload?: CMSTemplatePayload) => {
     return await client.post<CMSTemplateRs>("local/cms_template_EditKey", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -157,10 +136,8 @@ export const cmsTemplateAPIs = {
   },
   createTemplateContentIncludeAndNote: async (payload?: CMSTemplateContentMetaDataPayload) => {
     return await client.post<CMSTemplateContentMetaDataRs>("local/cms_template_includedandnote_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -169,10 +146,8 @@ export const cmsTemplateAPIs = {
   },
   updateTemplateContentIncludeAndNote: async (payload?: CMSTemplateContentMetaDataPayload) => {
     return await client.post<CMSTemplateContentMetaDataRs>("local/cms_template_includedandnote_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -181,10 +156,8 @@ export const cmsTemplateAPIs = {
   },
   createTemplateContentItinerary: async (payload?: CMSTemplateContentMetaDataPayload) => {
     return await client.post<CMSTemplateContentMetaDataRs>("local/cms_template_itinerary_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -193,10 +166,8 @@ export const cmsTemplateAPIs = {
   },
   updateTemplateContentItinerary: async (payload?: CMSTemplateContentMetaDataPayload) => {
     return await client.post<CMSTemplateContentMetaDataRs>("local/cms_template_itinerary_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -205,10 +176,8 @@ export const cmsTemplateAPIs = {
   },
   deleteTemplateContent: async (recId?: number) => {
     return await client.post<CMSTemplateContentRs>("local/Cms_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           recId,
           type: "DETAILS",

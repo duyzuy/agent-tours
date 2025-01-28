@@ -11,7 +11,7 @@ import {
 export const authAPIs = {
   login: async (payload?: ICustomerLoginPayload) => {
     return await client.post<any>("localfront/Login", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -20,7 +20,7 @@ export const authAPIs = {
   },
   register: async (payload?: ICusTomerRegisterPayload) => {
     return await client.post<CustomerInformationResponse>("localfront/Register", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -29,7 +29,7 @@ export const authAPIs = {
   },
   resetPassword: async (payload?: ICustomerForgotPasswordPayload) => {
     return await client.post<CustomerForgotPasswordResponse>("localfront/resetPassword", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -51,16 +51,10 @@ export const authAPIs = {
       if (err instanceof Error) message = err.message;
       throw new Error(message);
     }
-
-    // return await client.get<boolean>("localfront/resetPassword", {
-    //   params: {
-    //     secretKey,
-    //   },
-    // });
   },
   setNewPassword: async (payload: ICustomerSetPasswordPayload) => {
     return await client.post<any>("localfront/setNewPassword", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },

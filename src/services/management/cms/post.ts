@@ -14,10 +14,8 @@ import {
 export const postAPIs = {
   getListMinimal: async (queryParams?: PostQueryParams) => {
     return await client.post<PostListResponse>("local/Cms_post_ListMinimal", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...queryParams?.requestObject,
         },
@@ -29,10 +27,8 @@ export const postAPIs = {
 
   create: async (payload: PostContentPayload) => {
     return await client.post<PostItemResponse>("local/Cms_post_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -42,10 +38,8 @@ export const postAPIs = {
 
   getDetail: async ({ id, originId }: { id?: number; originId?: number }) => {
     return await client.post<PostDetailsResponse>("local/Cms_post_ById", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           id,
           originId,
@@ -56,10 +50,8 @@ export const postAPIs = {
 
   update: async (payload: PostContentPayload) => {
     return await client.post<PostItemResponse>("local/Cms_post_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -69,10 +61,8 @@ export const postAPIs = {
 
   updateStatus: async (payload: { id: number; status: PageContentStatus }) => {
     return await client.post<PostItemResponse>("local/Cms_post_UpdateStatus", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           ...payload,
         },
@@ -82,10 +72,8 @@ export const postAPIs = {
 
   delete: async (id: number) => {
     return await client.post<PostItemResponse>("local/Cms_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
-      params: {
+      isAuth: true,
+      body: {
         requestObject: {
           cat: "cms_post",
           recId: id,

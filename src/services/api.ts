@@ -1,17 +1,18 @@
 "use client";
 import { objectToQueryString } from "@/utils/helper";
 import { getAgToken } from "@/utils/common";
-import { BaseResponse, ErrorResponse } from "@/models/common.interface";
+import { ErrorResponse } from "@/models/common.interface";
 type Methods = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-type Options = RequestInit & {
+type Options = Omit<RequestInit, "body"> & {
   params?: { [key: string]: any };
   headers?: HeadersInit;
   isAuth?: boolean;
+  body?: RequestInit["body"] | { [key: string]: any };
 };
 
 const buildConfig = (method: Methods, options: Options): RequestInit => {
-  const { headers, params, isAuth = false } = options;
+  const { headers, params, isAuth = false, body } = options;
 
   let config: RequestInit = {
     method,
@@ -30,15 +31,15 @@ const buildConfig = (method: Methods, options: Options): RequestInit => {
   }
 
   if (["POST", "PUT", "PATCH"].includes(method)) {
-    config.body = JSON.stringify(params || {});
+    config.body = JSON.stringify(body || {});
   }
   return config;
 };
 
-const buildUrl = (url: string, method: Methods, params?: Record<string, any>): string => {
+const buildUrl = (url: string, method: Methods, body?: Record<string, any>): string => {
   let baseUrl = `${process.env.API_ROOT}/${url}`;
-  if (params && method === "GET") {
-    const queryString = objectToQueryString(params);
+  if (body && method === "GET") {
+    const queryString = objectToQueryString(body);
     baseUrl = `${baseUrl}?${queryString}`;
   }
   return baseUrl;

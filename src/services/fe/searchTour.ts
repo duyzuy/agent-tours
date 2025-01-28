@@ -6,14 +6,14 @@ import { FeDestinationSearchConfigResponse } from "@/models/fe/destination.inter
 export const searchTourAPIs = {
   getList: async (payload?: FeSearchTourQueryParams) => {
     return await client.post<ProductListResponse>("localfront/BookingOrder_Search", {
-      params: {
+      body: {
         ...payload,
       },
     });
   },
   search: async (payload?: FeSearchProductFormData) => {
     return await client.post<ProductListResponse>("localfront/BookingOrder_Search", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
@@ -22,7 +22,7 @@ export const searchTourAPIs = {
   },
   searchTemplate: async (payload?: FeSearchProductFormData) => {
     return await client.post<TemplateProductListResponse>("localfront/SellableTemplate_Search", {
-      params: {
+      body: {
         requestObject: {
           ...payload,
         },
