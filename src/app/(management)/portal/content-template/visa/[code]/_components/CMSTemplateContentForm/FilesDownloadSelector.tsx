@@ -3,7 +3,9 @@ import { Button, Input, Typography } from "antd";
 
 import { DeleteOutlined, LinkOutlined, UploadOutlined } from "@ant-design/icons";
 import { mediaConfig } from "@/configs";
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, {
+  MediaUploadDrawerProps,
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawer";
 
 import { VisaTemplateContentFormData } from "../../../modules/visaTemplate.interface";
 import Link from "next/link";
@@ -18,7 +20,7 @@ const FileDownloadSelector: React.FC<FileDownloadSelectorProps> = ({ files = [],
   const [openMedia, setOpenMedia] = useState(false);
   const [indexItem, setIndexItem] = useState(-1);
 
-  const confirmSelect: MediaUploadProps["onConfirm"] = (fileItems) => {
+  const confirmSelect: MediaUploadDrawerProps["onConfirm"] = (fileItems) => {
     if (indexItem === -1) return;
     const fileSelect = fileItems[0];
     let newFileItems = [...files];
@@ -95,7 +97,7 @@ const FileDownloadSelector: React.FC<FileDownloadSelectorProps> = ({ files = [],
           </Button>
         </div>
       </div>
-      <MediaUploadDrawler
+      <MediaUploadDrawer
         mediaTypes={[MediaTypes.FILE]}
         isOpen={openMedia}
         onClose={closeMediaUpload}

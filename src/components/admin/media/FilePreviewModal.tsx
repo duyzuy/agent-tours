@@ -4,14 +4,13 @@ import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import FormItem from "@/components/base/FormItem";
 import Image from "next/image";
 
-interface ModalPreviewProps {
+interface FilePreviewModalProps {
   isOpen?: boolean;
   onClose?: () => void;
   thumbUrl?: string;
 }
 
-const ModalPreview: React.FC<ModalPreviewProps> = ({ isOpen, onClose, thumbUrl }) => {
-  useEffect(() => {}, [isOpen]);
+const FilePreviewModal: React.FC<FilePreviewModalProps> = ({ isOpen, onClose, thumbUrl }) => {
   return (
     <Modal open={isOpen} onCancel={onClose} footer={false} destroyOnClose={true} width={650}>
       <div className="image w-full h-[450px] relative bg-slate-50">
@@ -20,4 +19,4 @@ const ModalPreview: React.FC<ModalPreviewProps> = ({ isOpen, onClose, thumbUrl }
     </Modal>
   );
 };
-export default ModalPreview;
+export default FilePreviewModal;

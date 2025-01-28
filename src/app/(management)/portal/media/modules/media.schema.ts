@@ -1,5 +1,5 @@
 import { ObjectSchema, object, string, number } from "yup";
-import { MediaFolderCreateFormData, MediaFolderUpdateFormData } from "../modules/media.interface";
+import { MediaFolderCreateFormData, MediaFolderUpdateFormData } from "./media.interface";
 
 const vietnameseNamePattern =
   /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;

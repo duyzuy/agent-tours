@@ -1,7 +1,9 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { Form, Button, Input, Space, Drawer, Tabs } from "antd";
 import FormItem from "@/components/base/FormItem";
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, {
+  MediaUploadDrawerProps,
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawer";
 import { MiscDocumentFormData } from "../modules/miscDocument.interface";
 import { IMiscDocument } from "@/models/management/cms/miscDocument.interface";
 import { Controller, useForm } from "react-hook-form";
@@ -32,8 +34,10 @@ const DrawerDocument: React.FC<DrawerDocumentProps> = ({
 
   const [showMedia, setShowMedia] = useState(false);
 
-  const handleSelectFile: MediaUploadProps["onConfirm"] = (files) => {
-    setValue("link", `${mediaConfig.rootApiPath}/${files[0]["fullPath"]}`);
+  const handleSelectFile: MediaUploadDrawerProps["onConfirm"] = (files) => {
+    const fileItem = files?.[0];
+    if (!fileItem) return;
+    setValue("link", `${mediaConfig.rootApiPath}/${fileItem["fullPath"]}`);
   };
 
   const onRemoveDocument = () => {
@@ -130,7 +134,7 @@ const DrawerDocument: React.FC<DrawerDocumentProps> = ({
           </Space>
         </FormItem>
       </Form>
-      <MediaUploadDrawler
+      <MediaUploadDrawer
         mediaTypes={[MediaTypes.FILE]}
         onClose={() => setShowMedia(false)}
         isOpen={showMedia}

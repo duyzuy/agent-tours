@@ -22,19 +22,6 @@ export enum ExtensionType {
   PDF = "pdf",
 }
 
-export interface IMediaFolderPayload {
-  folderName?: string;
-  folderSlug?: string;
-  parentSlug?: string;
-  parent?: number;
-  folderPath?: string;
-}
-export interface IMediaFolderUpdatePayload {
-  id?: number;
-  folderName?: string;
-  oldFolderName?: string;
-  parent?: number;
-}
 export interface IMediaFolder {
   cat: string;
   id: number;
@@ -58,17 +45,34 @@ export interface IMediaFile {
   thumb: string;
 }
 
-export type TQueryParamsMediaFiles = {
+export type MediaFilesQueryParams = {
   requestObject: { objectType: "MEDIA"; mediaType: MediaTypes[]; mediaInFolderRecid: number };
   pageCurrent: number;
   pageSize: number;
+  orderBy?: { sortColumn?: string; direction?: "asc" | "desc" };
 };
 
-export type TQueryParamsMediaFolders = {
+export type MediaFolderQueryParams = {
   requestObject: { objectType: "MEDIA_FOLDER" };
   pageCurrent: number;
   pageSize: number;
+  orderBy?: { sortColumn?: string; direction?: "asc" | "desc" };
 };
+
+export interface CreateMediaFolderPayload {
+  folderName?: string;
+  folderSlug?: string;
+  parentSlug?: string;
+  parent?: number;
+  folderPath?: string;
+  key?: string;
+}
+export interface UpdateMediaFolderPayload {
+  id?: number;
+  folderName?: string;
+  key?: string;
+  parent?: number;
+}
 
 export interface IMediaFilePayload {
   files: UploadFile[];
@@ -76,32 +80,7 @@ export interface IMediaFilePayload {
     nestedSlug: string[];
   };
 }
-export class QueryParamsMediaFiles implements TQueryParamsMediaFiles {
-  requestObject: { objectType: "MEDIA"; mediaType: MediaTypes[]; mediaInFolderRecid: number };
-  pageCurrent: number;
-  pageSize: number;
 
-  constructor(
-    requestObject: { objectType: "MEDIA"; mediaType: MediaTypes[]; mediaInFolderRecid: number },
-    pageCurrent: number,
-    pageSize: number,
-  ) {
-    this.requestObject = requestObject;
-    this.pageCurrent = pageCurrent;
-    this.pageSize = pageSize;
-  }
-}
-export class QueryParamsMediaFolders implements TQueryParamsMediaFolders {
-  requestObject: { objectType: "MEDIA_FOLDER" };
-  pageCurrent: number;
-  pageSize: number;
-
-  constructor(pageCurrent: number, pageSize: number) {
-    this.requestObject = { objectType: "MEDIA_FOLDER" };
-    this.pageCurrent = pageCurrent;
-    this.pageSize = pageSize;
-  }
-}
 export interface IMediaFolderRs extends BaseResponse<IMediaFolder> {}
 export interface IMediaFolderListRs extends BaseResponse<IMediaFolder[]> {}
 export interface IMediaFileListRs extends BaseResponse<IMediaFile[]> {}

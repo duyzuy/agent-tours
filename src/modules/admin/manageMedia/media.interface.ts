@@ -10,17 +10,17 @@ import { UploadFile } from "antd";
 export class MediaFolderUpdateFormData implements UpdateMediaFolderPayload {
   id?: number;
   folderName?: string;
-  oldFolderName?: string;
   parent?: number;
+  key?: string;
   constructor(
     id: number | undefined,
     folderName: string | undefined,
-    oldFolderName: string | undefined,
     parent: number | undefined,
+    key: string | undefined,
   ) {
     this.id = id;
     this.folderName = folderName;
-    this.oldFolderName = oldFolderName;
+    this.key = key;
     this.parent = parent;
   }
 }

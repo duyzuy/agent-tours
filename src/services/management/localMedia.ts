@@ -4,14 +4,15 @@ import config from "@/configs";
 import {
   IMediaFileListRs,
   IMediaFolderListRs,
-  IMediaFolderPayload,
-  IMediaFolderUpdatePayload,
-  TQueryParamsMediaFiles,
-  TQueryParamsMediaFolders,
+  CreateMediaFolderPayload,
+  UpdateMediaFolderPayload,
+  MediaFolderQueryParams,
+  MediaFilesQueryParams,
 } from "@/models/management/media.interface";
+import { getAgToken } from "@/utils/common";
 
 export const localMediaAPIs = {
-  getFolders: async (queryParams: TQueryParamsMediaFolders) => {
+  getFolders: async (queryParams: MediaFolderQueryParams) => {
     return await client.post<IMediaFolderListRs>("local/Cms_Media", {
       params: {
         requestObject: {
@@ -20,11 +21,12 @@ export const localMediaAPIs = {
         },
         pageCurrent: queryParams.pageCurrent,
         pageSize: queryParams.pageSize,
+        orderBy: queryParams.orderBy,
       },
       isAuth: true,
     });
   },
-  getFiles: async (queryParams: TQueryParamsMediaFiles) => {
+  getFiles: async (queryParams: MediaFilesQueryParams) => {
     return await client.post<IMediaFileListRs>("local/Cms_Media", {
       params: {
         requestObject: {
@@ -33,6 +35,7 @@ export const localMediaAPIs = {
         },
         pageCurrent: queryParams.pageCurrent,
         pageSize: queryParams.pageSize,
+        orderBy: queryParams.orderBy,
       },
       isAuth: true,
     });
@@ -45,10 +48,12 @@ export const localMediaAPIs = {
  *
  */
 export const mediaApis = {
-  createFolderFromLocal: async (token: string, payload: IMediaFolderPayload) => {
+  createFolderFromLocal: async (payload: CreateMediaFolderPayload) => {
+    const token = getAgToken();
+
     const response = await fetch(`${config.LOCAL_API_URL}/mediaFolder`, {
       headers: {
-        Authorization: `Bearer ${encodeURIComponent(token)}`,
+        Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
       },
       method: "POST",
       body: JSON.stringify(payload),
@@ -58,13 +63,14 @@ export const mediaApis = {
     if (!response.ok) {
       return Promise.reject(data as BaseResponse<null>);
     }
-    return Promise.resolve(data as IMediaFolderListRs["result"][0]);
+    return Promise.resolve(data as IMediaFolderListRs["result"][number]);
   },
 
-  updateFolderFromLocal: async (token: string, id?: number, payload?: IMediaFolderUpdatePayload) => {
-    const response = await fetch(`${config.LOCAL_API_URL}/mediaFolder/${id}`, {
+  updateFolderFromLocal: async (payload?: UpdateMediaFolderPayload) => {
+    const token = getAgToken();
+    const response = await fetch(`${config.LOCAL_API_URL}/mediaFolder/${payload?.id}`, {
       headers: {
-        Authorization: `Bearer ${encodeURIComponent(token)}`,
+        Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
       },
       method: "PUT",
       body: JSON.stringify(payload),
@@ -74,13 +80,14 @@ export const mediaApis = {
     if (!response.ok) {
       return Promise.reject(data as BaseResponse<null>);
     }
-    return Promise.resolve(data as IMediaFolderListRs["result"][0]);
+    return Promise.resolve(data as IMediaFolderListRs["result"][number]);
   },
 
-  uploadMediaFilesFromLocal: async (token: string, payload: FormData) => {
+  uploadMediaFilesFromLocal: async (payload: FormData) => {
+    const token = getAgToken();
     const response = await fetch(`${config.LOCAL_API_URL}/mediaUpload`, {
       headers: {
-        Authorization: `Bearer ${encodeURIComponent(token)}`,
+        Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
       },
       method: "POST",
       body: payload,
@@ -90,6 +97,6 @@ export const mediaApis = {
     if (!response.ok) {
       return Promise.reject(data as BaseResponse<null>);
     }
-    return Promise.resolve(data as IMediaFileListRs["result"][0]);
+    return Promise.resolve(data as IMediaFileListRs["result"][number]);
   },
 };

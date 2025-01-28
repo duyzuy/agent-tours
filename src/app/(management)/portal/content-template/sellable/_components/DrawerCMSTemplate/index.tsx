@@ -1,7 +1,9 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { Form, Button, Input, Space, Tag, Drawer, Tabs } from "antd";
 import FormItem from "@/components/base/FormItem";
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, {
+  MediaUploadDrawerProps,
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawer";
 import Image from "next/image";
 import Slug from "@/components/admin/Slug";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
@@ -66,14 +68,15 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
     }));
   };
 
-  const onSelectThumb: MediaUploadProps["onConfirm"] = (files) => {
-    const file = files[0];
+  const onSelectThumb: MediaUploadDrawerProps["onConfirm"] = (files) => {
+    const fileItem = files?.[0];
+    if (!fileItem) return;
     setFormData((oldData) => ({
       ...oldData,
       codeImage: {
-        id: file.id,
-        original: file.fullPath,
-        small: file.thumb,
+        id: fileItem.id,
+        original: fileItem.fullPath,
+        small: fileItem.thumb,
       },
     }));
   };
@@ -237,7 +240,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
           </Space>
         </FormItem>
       </Form>
-      <MediaUploadDrawler onClose={() => setShowMedia(false)} isOpen={showMedia} onConfirm={onSelectThumb} />
+      <MediaUploadDrawer onClose={() => setShowMedia(false)} isOpen={showMedia} onConfirm={onSelectThumb} />
     </Drawer>
   );
 };

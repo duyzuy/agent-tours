@@ -9,7 +9,7 @@ import { IDestinationContentsRs, IDestinationRs } from "@/models/management/regi
 import { stringToSlug } from "@/utils/stringToSlug";
 import { destinationContentSchema } from "../../schema/destinationContent.schema";
 import { mediaConfig } from "@/configs";
-import MediaUploadDrawler, { MediaUploadProps } from "../../../media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, { MediaUploadDrawerProps } from "../../../media/_components/MediaUploadDrawer";
 import { DestinationContentFormData } from "../../modules/destinationContent.interface";
 import { PictureOutlined } from "@ant-design/icons";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
@@ -84,7 +84,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
   const onSaveSlug: SlugProps["onSave"] = (slug) => {
     setFormData((oldData) => ({ ...oldData, slug: slug }));
   };
-  const onChangeThumbnail: MediaUploadProps["onConfirm"] = (files) => {
+  const onChangeThumbnail: MediaUploadDrawerProps["onConfirm"] = (files) => {
     const file = files[0];
 
     setFormData((prev) => ({
@@ -291,7 +291,7 @@ const DestinationFormContent: React.FC<DestinationFormContentProps> = ({
           </Space>
         </FormItem>
       </Form>
-      <MediaUploadDrawler onClose={() => setOpenDrawler(false)} isOpen={isOpenDrawler} onConfirm={onChangeThumbnail} />
+      <MediaUploadDrawer onClose={() => setOpenDrawler(false)} isOpen={isOpenDrawler} onConfirm={onChangeThumbnail} />
     </>
   );
 };

@@ -3,7 +3,9 @@ import { Space, Button, Typography } from "antd";
 import Image from "next/image";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { mediaConfig } from "@/configs";
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, {
+  MediaUploadDrawerProps,
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawer";
 import { isUndefined } from "lodash";
 import { IThumbnail } from "@/models/thumbnail.interface";
 import { MediaTypes } from "@/models/management/media.interface";
@@ -26,10 +28,11 @@ const GallerySelector: React.FC<GallerySelectorProps> = ({ images, onSave, error
     setOpenMedia(true);
   };
 
-  const onConfirmSelect: MediaUploadProps["onConfirm"] = (files) => {
-    const newImages = files.reduce<IThumbnail[]>((acc, item) => {
-      return [...acc, { id: item.id, original: item.fullPath, small: item.thumb }];
-    }, []);
+  const onConfirmSelect: MediaUploadDrawerProps["onConfirm"] = (files) => {
+    const newImages =
+      files?.reduce<IThumbnail[]>((acc, item) => {
+        return [...acc, { id: item.id, original: item.fullPath, small: item.thumb }];
+      }, []) || [];
 
     onSave ? onSave([...items, ...newImages]) : setItems((oldItem) => [...oldItem, ...newImages]);
   };
@@ -94,7 +97,7 @@ const GallerySelector: React.FC<GallerySelectorProps> = ({ images, onSave, error
         </div>
         {error ? <p className=" text-red-500 text-xs">{error}</p> : null}
       </div>
-      <MediaUploadDrawler
+      <MediaUploadDrawer
         isOpen={openMedia}
         onClose={onCloseMediaUpload}
         mediaTypes={[MediaTypes.IMAGE]}

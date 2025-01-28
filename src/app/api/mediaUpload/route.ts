@@ -7,16 +7,17 @@ import { headers } from "next/headers";
 import { stringToSlug } from "@/utils/stringToSlug";
 import { mediaConfig } from "@/configs";
 import { isEmpty } from "lodash";
-import { ExtensionType, IMediaFile, IMediaFilePayload } from "@/models/management/media.interface";
+import { ExtensionType, IMediaFile } from "@/models/management/media.interface";
 import { getMediaFileType, isInValidFileSize, isInvalidFile } from "@/helpers/mediaFiles";
 import { BaseResponse, Status } from "@/models/common.interface";
-import { FolderItemTree } from "@/app/(management)/portal/media/_components/MediaUploadContainer/UploadFileForm";
+import { MediaUploadFormData } from "@/app/(management)/portal/media/modules/media.interface";
 
 export async function POST(request: NextRequest) {
   const headersList = headers();
   const authorization = headersList.get("authorization");
+  const authToken = authorization?.split("Bearer")[1].trim();
 
-  if (!authorization) {
+  if (!authToken) {
     return NextResponse.json(
       {
         message: `unAuthorize`,
@@ -25,7 +26,6 @@ export async function POST(request: NextRequest) {
       { status: 503 },
     );
   }
-  const authToken = authorization.split("Bearer")[1].trim();
 
   const formData = await request.formData();
 
@@ -40,19 +40,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Chưa có file.", code: "FILES_IS_EMPTY" }, { status: 400 });
   }
 
-  const folderParse = JSON.parse(folder) as FolderItemTree;
-  const directoryPath = folderParse.nestedSlug.reduce((path, curr) => path.concat("/", curr), "public");
+  const { folderId, folderPath, folderSlug, folderName } = JSON.parse(folder) as Pick<
+    MediaUploadFormData,
+    "folderId" | "folderName" | "folderPath" | "folderSlug"
+  >;
 
-  if (!existsSync(directoryPath)) {
-    mkdirSync(directoryPath);
+  if (!folderPath.startsWith(mediaConfig.rootFolder)) {
+    return NextResponse.json(
+      {
+        message: `Folder path invalid`,
+        code: "INVALID_NESTED_FOLDER",
+      },
+      { status: 400 },
+    );
+  }
 
-    // return NextResponse.json(
-    //   {
-    //     message: "Đường dẫn thư mục không tồn tại",
-    //     code: "FODLER_DIRECTORY_NO_EXISTS",
-    //   },
-    //   { status: 400 },
-    // );
+  const uploadDir = "public".concat("/", folderPath);
+
+  if (!existsSync(uploadDir)) {
+    mkdirSync(uploadDir);
   }
 
   if (isInValidFileSize(files)) {
@@ -76,6 +82,7 @@ export async function POST(request: NextRequest) {
   }
   let responseMessage = {
     message: "Upload Success",
+    fileName: "",
     isSuccess: true,
     code: "",
   };
@@ -88,7 +95,15 @@ export async function POST(request: NextRequest) {
       const fileExtension = fileNameToArr.pop(); // get last of array
       const fileSlugName = stringToSlug(fileNameToArr.join("")).concat("-", new Date().getTime().toString());
 
-      const originalFilePath = `${directoryPath}/${fileSlugName}.${fileExtension}`;
+      const originalFilePath = `${uploadDir}/${fileSlugName}.${fileExtension}`;
+
+      const requestObject = {
+        extension: `${fileExtension}`,
+        parent: folderId,
+        slug: fileSlugName,
+        path: `${fileSlugName}.${fileExtension}`,
+        mediaType: getMediaFileType(file.type) || "",
+      };
 
       const response = await fetch(`${process.env.API_ROOT}/local/Cms_Media_Addnew`, {
         method: "POST",
@@ -97,23 +112,15 @@ export async function POST(request: NextRequest) {
           Authorization: `Bearer ${encodeURIComponent(authToken)}`,
         },
         body: JSON.stringify({
-          requestObject: {
-            extension: `${fileExtension}`,
-            parent: folderParse.id,
-            slug: fileSlugName,
-            path: `${fileSlugName}.${fileExtension}`,
-            mediaType: getMediaFileType(file.type) || "",
-          },
+          requestObject,
         }),
       });
 
       const data = (await response.json()) as BaseResponse<IMediaFile>;
 
       if (response.ok && data.status === Status.OK) {
-        // saving file to local public
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-        await writeFile(path.join(process.cwd(), originalFilePath), buffer);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        await writeFile(path.join(process.cwd(), originalFilePath), new Uint8Array(buffer));
 
         if (
           fileExtension === ExtensionType.JPEG ||
@@ -121,29 +128,23 @@ export async function POST(request: NextRequest) {
           fileExtension === ExtensionType.GIF ||
           fileExtension === ExtensionType.JPG
         ) {
-          const thumbPath = `${directoryPath}/thumb-${fileSlugName}.${fileExtension}`;
-
-          const croppedImageBuffer = await sharp(buffer)
-            .resize({
-              height: 150,
-              fit: "contain",
-              background: { r: 0, g: 0, b: 0, alpha: 0 },
-            })
-            .toBuffer();
-          await writeFile(path.join(process.cwd(), thumbPath), croppedImageBuffer);
+          const thumbPath = `${uploadDir}/thumb-${fileSlugName}.${fileExtension}`;
+          await createThumbnail(buffer, path.join(process.cwd(), thumbPath));
         }
       } else {
         responseMessage = {
+          ...responseMessage,
           isSuccess: false,
           message: data.message,
+          fileName: fileSlugName,
           code: "UPLOAD_FAILED",
         };
         break;
       }
     }
   } catch (error) {
-    console.log({ error });
     responseMessage = {
+      ...responseMessage,
       isSuccess: false,
       message: "Error From Server",
       code: "SERVER_ERROR",
@@ -159,10 +160,20 @@ export async function POST(request: NextRequest) {
     );
   } else {
     return NextResponse.json(
-      { messate: responseMessage.message, code: responseMessage.code },
+      { messate: responseMessage.message, code: responseMessage.code, fileName: responseMessage.fileName },
       {
         status: 400,
       },
     );
   }
 }
+const createThumbnail = async (buffer: Buffer, thumbPath: string) => {
+  const croppedImageBuffer = await sharp(buffer)
+    .resize({
+      height: 150,
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .toBuffer();
+  await writeFile(thumbPath, new Uint8Array(croppedImageBuffer));
+};

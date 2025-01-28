@@ -1,22 +1,22 @@
 "use client";
 import React, { useState, memo } from "react";
 import { Drawer, Space, Button } from "antd";
-import MediaUploadContainer, { MediaUploadContainerProps } from "../MediaUploadContainer";
-import { IMediaFilesProps } from "../MediaUploadContainer/MediaFiles";
-
 import useMessage from "@/hooks/useMessage";
 import { isEmpty } from "lodash";
 import { MediaTypes } from "@/models/management/media.interface";
+import MediaManagerContainer, {
+  MediaManagerContainerProps,
+} from "@/modules/admin/manageMedia/components/MediaManagerContainer";
 
-export interface MediaUploadProps {
+export interface MediaUploadDrawerProps {
   onClose?: () => void;
   isOpen?: boolean;
   mode?: "multiple" | "single";
   mediaTypes?: MediaTypes[];
-  onConfirm?: (files: MediaUploadContainerProps["selectedFiles"]) => void;
-  initialValues?: MediaUploadContainerProps["selectedFiles"];
+  onConfirm?: (files: Exclude<MediaManagerContainerProps["selectedFiles"], undefined>) => void;
+  initialValues?: MediaManagerContainerProps["selectedFiles"];
 }
-const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
+const MediaUploadDrawer: React.FC<MediaUploadDrawerProps> = ({
   onClose,
   isOpen = false,
   mediaTypes = [MediaTypes.FILE, MediaTypes.ICON, MediaTypes.IMAGE],
@@ -24,13 +24,13 @@ const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
   initialValues = [],
   onConfirm,
 }) => {
-  const [selectedFiles, setSelectedFiles] = useState<MediaUploadContainerProps["selectedFiles"]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<Exclude<MediaManagerContainerProps["selectedFiles"], undefined>>(
+    [],
+  );
 
   const message = useMessage();
 
-  const onSelectingFile: IMediaFilesProps["onSelect"] = (file) => {
-    //Check file selected excepts.
-
+  const handleSelectFile: MediaManagerContainerProps["onSelect"] = (file) => {
     if (!mediaTypes.includes(file.mediaType)) {
       message.info(`Không cho phép chọn loại ${file.mediaType} .`);
       return;
@@ -43,16 +43,13 @@ const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
 
       if (fileIndex !== -1) {
         newFiles.splice(fileIndex, 1);
-      }
-
-      if (fileIndex === -1) {
+      } else {
         if (mode === "multiple") {
           newFiles = [...newFiles, file];
         } else {
           newFiles = [file];
         }
       }
-
       return newFiles;
     });
   };
@@ -85,14 +82,14 @@ const MediaUploadDrawler: React.FC<MediaUploadProps> = ({
           </Space>
         }
       >
-        <MediaUploadContainer
+        <MediaManagerContainer
           mediaTypes={mediaTypes}
           className="container-media"
-          onSelect={onSelectingFile}
+          onSelect={handleSelectFile}
           selectedFiles={selectedFiles}
         />
       </Drawer>
     </React.Fragment>
   );
 };
-export default memo(MediaUploadDrawler);
+export default memo(MediaUploadDrawer);

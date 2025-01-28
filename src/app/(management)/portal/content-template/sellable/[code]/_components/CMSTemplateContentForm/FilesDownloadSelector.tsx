@@ -4,7 +4,10 @@ import { Button, Input, Typography } from "antd";
 import { DeleteOutlined, LinkOutlined, UploadOutlined } from "@ant-design/icons";
 import { mediaConfig } from "@/configs";
 
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, {
+  MediaUploadDrawerProps,
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawer";
+
 import { CMSTemplateContentFormData } from "../../../modules/cmsTemplate.interface";
 import Link from "next/link";
 import { isEmpty, isUndefined } from "lodash";
@@ -18,12 +21,14 @@ const FileDownloadSelector: React.FC<FileDownloadSelectorProps> = ({ files = [],
   const [openMedia, setOpenMedia] = useState(false);
   const [indexItem, setIndexItem] = useState(-1);
 
-  const confirmSelect: MediaUploadProps["onConfirm"] = (fileItems) => {
+  const confirmSelect: MediaUploadDrawerProps["onConfirm"] = (fileItems) => {
     if (indexItem === -1) return;
-    const fileSelect = fileItems[0];
+    const fileSelect = fileItems?.[0];
     let newFileItems = [...files];
 
-    const filePath = fileSelect.fullPath;
+    const filePath = fileSelect?.fullPath;
+    if (!filePath) return;
+
     newFileItems.splice(indexItem, 1, {
       ...newFileItems[indexItem],
       link: filePath,
@@ -95,7 +100,7 @@ const FileDownloadSelector: React.FC<FileDownloadSelectorProps> = ({ files = [],
           </Button>
         </div>
       </div>
-      <MediaUploadDrawler
+      <MediaUploadDrawer
         mediaTypes={[MediaTypes.FILE]}
         isOpen={openMedia}
         onClose={closeMediaUpload}

@@ -1,7 +1,9 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { Form, Button, Input, Space, Drawer, Tabs } from "antd";
 import FormItem from "@/components/base/FormItem";
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, {
+  MediaUploadDrawerProps,
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawer";
 import Image from "next/image";
 import Slug from "@/components/admin/Slug";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
@@ -61,7 +63,7 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
     }));
   };
 
-  const onSelectThumb: MediaUploadProps["onConfirm"] = (files) => {
+  const onSelectThumb: MediaUploadDrawerProps["onConfirm"] = (files) => {
     const file = files[0];
     setFormData((oldData) => ({
       ...oldData,
@@ -119,111 +121,117 @@ const DrawerCMSTemplate: React.FC<DrawerCMSTemplateProps> = ({
   }, [isOpen]);
 
   return (
-    <Drawer
-      open={isOpen}
-      destroyOnClose={true}
-      onClose={onClose}
-      width={550}
-      title={action === "create" ? "Thêm template" : "Sửa template"}
-      push={false}
-    >
-      <Form layout="vertical">
-        <FormItem
-          label="Tên template"
-          required
-          validateStatus={errors?.codeName ? "error" : ""}
-          help={errors?.codeName || ""}
-        >
-          <Input
-            name="Tên template"
-            placeholder="Tên template"
-            value={formData.codeName}
-            onChange={(ev) => onChangeFormData("codeName", ev.target.value)}
-          />
-        </FormItem>
-        <FormItem label="Code" required validateStatus={errors?.code ? "error" : ""} help={errors?.code || ""}>
-          <Input
-            name="code"
-            placeholder="Mã template"
-            value={formData.code}
-            onChange={(ev) => onChangeFormData("code", ev.target.value)}
-            disabled={action === "edit"}
-          />
-        </FormItem>
-        <FormItem
-          label="Giá tiền (Mỗi khách)"
-          required
-          validateStatus={errors?.amount ? "error" : ""}
-          help={errors?.code || ""}
-        >
-          <Input
-            name="amount"
-            placeholder="Giá tiền"
-            value={formData.amount}
-            onChange={(ev) => onChangeFormData("amount", ev.target.value)}
-          />
-        </FormItem>
-        <FormItem label="Ảnh đại diện" validateStatus={errors?.codeImage ? "error" : ""} help={errors?.codeImage || ""}>
-          <div className="feature-image">
-            <span className="no-image border border-dashed w-24 h-24 p-1 rounded-md flex items-center justify-center bg-gray-50 mb-2 overflow-hidden">
-              {formData.codeImage ? (
-                <Image
-                  src={`${mediaConfig.rootApiPath}/${formData.codeImage.original}`}
-                  alt="feature image"
-                  width={80}
-                  height={80}
-                />
-              ) : (
-                <span className="text-slate-500 text-center">
-                  <span className="text-2xl">
-                    <PictureOutlined />
+    <>
+      <Drawer
+        open={isOpen}
+        destroyOnClose={true}
+        onClose={onClose}
+        width={550}
+        title={action === "create" ? "Thêm template" : "Sửa template"}
+        push={false}
+      >
+        <Form layout="vertical">
+          <FormItem
+            label="Tên template"
+            required
+            validateStatus={errors?.codeName ? "error" : ""}
+            help={errors?.codeName || ""}
+          >
+            <Input
+              name="Tên template"
+              placeholder="Tên template"
+              value={formData.codeName}
+              onChange={(ev) => onChangeFormData("codeName", ev.target.value)}
+            />
+          </FormItem>
+          <FormItem label="Code" required validateStatus={errors?.code ? "error" : ""} help={errors?.code || ""}>
+            <Input
+              name="code"
+              placeholder="Mã template"
+              value={formData.code}
+              onChange={(ev) => onChangeFormData("code", ev.target.value)}
+              disabled={action === "edit"}
+            />
+          </FormItem>
+          <FormItem
+            label="Giá tiền (Mỗi khách)"
+            required
+            validateStatus={errors?.amount ? "error" : ""}
+            help={errors?.code || ""}
+          >
+            <Input
+              name="amount"
+              placeholder="Giá tiền"
+              value={formData.amount}
+              onChange={(ev) => onChangeFormData("amount", ev.target.value)}
+            />
+          </FormItem>
+          <FormItem
+            label="Ảnh đại diện"
+            validateStatus={errors?.codeImage ? "error" : ""}
+            help={errors?.codeImage || ""}
+          >
+            <div className="feature-image">
+              <span className="no-image border border-dashed w-24 h-24 p-1 rounded-md flex items-center justify-center bg-gray-50 mb-2 overflow-hidden">
+                {formData.codeImage ? (
+                  <Image
+                    src={`${mediaConfig.rootApiPath}/${formData.codeImage.original}`}
+                    alt="feature image"
+                    width={80}
+                    height={80}
+                  />
+                ) : (
+                  <span className="text-slate-500 text-center">
+                    <span className="text-2xl">
+                      <PictureOutlined />
+                    </span>
+                    <span className="text-xs block">Chưa có ảnh</span>
                   </span>
-                  <span className="text-xs block">Chưa có ảnh</span>
-                </span>
-              )}
-            </span>
-          </div>
-          <div className="upload-media">
-            <Button onClick={() => setShowMedia(true)} size="small">
-              {`${formData.codeImage ? "Thay" : "Chọn"} ảnh `}
-            </Button>
-          </div>
-        </FormItem>
-        <Tabs
-          type="editable-card"
-          hideAdd
-          items={locales.map((locale, i) => {
-            return {
-              label: locale.name,
-              key: locale.key,
-              children: (
-                <FormContentTemplateByLang
-                  lang={locale.key}
-                  onChangeForm={onChangeTemplateFormContent}
-                  values={getContentByLang(locale.key)}
-                  disabled={action === "edit"}
-                />
-              ),
-            };
-          })}
-        />
-        <FormItem>
-          <Space>
-            <Button type="default" onClick={onClose}>
-              Huỷ bỏ
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => handlerSubmit(formData, onSubmit)}
-              //disabled={isDisableButton}
-            >
-              {action === "edit" ? "Cập nhật" : "Lưu"}
-            </Button>
-          </Space>
-        </FormItem>
-      </Form>
-      <MediaUploadDrawler onClose={() => setShowMedia(false)} isOpen={showMedia} onConfirm={onSelectThumb} />
-    </Drawer>
+                )}
+              </span>
+            </div>
+            <div className="upload-media">
+              <Button onClick={() => setShowMedia(true)} size="small">
+                {`${formData.codeImage ? "Thay" : "Chọn"} ảnh `}
+              </Button>
+            </div>
+          </FormItem>
+          <Tabs
+            type="editable-card"
+            hideAdd
+            items={locales.map((locale, i) => {
+              return {
+                label: locale.name,
+                key: locale.key,
+                children: (
+                  <FormContentTemplateByLang
+                    lang={locale.key}
+                    onChangeForm={onChangeTemplateFormContent}
+                    values={getContentByLang(locale.key)}
+                    disabled={action === "edit"}
+                  />
+                ),
+              };
+            })}
+          />
+          <FormItem>
+            <Space>
+              <Button type="default" onClick={onClose}>
+                Huỷ bỏ
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => handlerSubmit(formData, onSubmit)}
+                //disabled={isDisableButton}
+              >
+                {action === "edit" ? "Cập nhật" : "Lưu"}
+              </Button>
+            </Space>
+          </FormItem>
+        </Form>
+      </Drawer>
+      <MediaUploadDrawer onClose={() => setShowMedia(false)} isOpen={showMedia} onConfirm={onSelectThumb} />
+    </>
   );
 };
 export default DrawerCMSTemplate;

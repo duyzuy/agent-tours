@@ -3,7 +3,7 @@ import { existsSync } from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { stringToSlug } from "@/utils/stringToSlug";
-import { IMediaFolderPayload, IMediaFolderRs } from "@/models/management/media.interface";
+import { CreateMediaFolderPayload, IMediaFolderRs } from "@/models/management/media.interface";
 import { headers } from "next/headers";
 import { isEmpty } from "lodash";
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
   }
   const authToken = authorization.split("Bearer")[1].trim();
   // Check user permissions
-  const payload = (await request.json()) as Required<IMediaFolderPayload>;
+  const payload = (await request.json()) as Required<CreateMediaFolderPayload>;
 
   if (isEmpty(payload.folderName)) {
     return NextResponse.json(
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
-  if (isEmpty(payload.folderPath) || !payload.folderPath.startsWith(`/uploads`)) {
+  if (isEmpty(payload.folderPath) || !payload.folderPath.startsWith(`uploads`)) {
     return NextResponse.json(
       {
         message: `Đường dẫn thư mục không hợp lệ.`,
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     );
   }
   const folderSlugName = stringToSlug(payload.folderSlug);
-  const folderPath = path.join(`${process.cwd()}/public${payload.folderPath}`, folderSlugName);
+  const folderPath = path.join(`${process.cwd()}/public/${payload.folderPath}`, folderSlugName);
 
   if (existsSync(folderPath)) {
     return NextResponse.json(

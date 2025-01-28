@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { IMediaFolderRs, IMediaFolderUpdatePayload } from "@/models/management/media.interface";
+import { IMediaFolderRs, UpdateMediaFolderPayload } from "@/models/management/media.interface";
 import { headers } from "next/headers";
 import { Status } from "@/models/common.interface";
 
 export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
   const headersList = headers();
   const authorization = headersList.get("authorization");
+  const authToken = authorization?.split("Bearer")[1].trim();
 
-  if (!authorization) {
+  if (!authToken) {
     return NextResponse.json(
       {
         message: `Token is empty`,
@@ -16,8 +17,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
       { status: 403 },
     );
   }
-  const authToken = authorization.split("Bearer")[1].trim();
-  const payload = (await request.json()) as Required<IMediaFolderUpdatePayload>;
+
+  const payload = (await request.json()) as Required<UpdateMediaFolderPayload>;
 
   try {
     const response = await fetch(`${process.env.API_ROOT}/local/Cms_MediaFolder_Edit`, {

@@ -1,6 +1,8 @@
 import React, { useRef, useState, memo, useCallback } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, {
+  MediaUploadDrawerProps,
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawer";
 import { MediaTypes } from "@/models/management/media.interface";
 import { mediaConfig } from "@/configs";
 export interface TextEditorProps {
@@ -24,7 +26,7 @@ const TextEditor = ({
   const editorRef = useRef<any>(null);
   const [isShowMedia, setShowMedia] = useState(false);
 
-  const onConfirmSelection = useCallback<Required<MediaUploadProps>["onConfirm"]>((files) => {
+  const onConfirmSelection = useCallback<Required<MediaUploadDrawerProps>["onConfirm"]>((files) => {
     let contents = "";
     files.forEach((file) => {
       if (file.mediaType === MediaTypes.IMAGE || file.mediaType === MediaTypes.ICON) {
@@ -192,7 +194,7 @@ const TextEditor = ({
         }}
         onEditorChange={onEditorChange}
       />
-      <MediaUploadDrawler isOpen={isShowMedia} onClose={onCloseMedia} onConfirm={onConfirmSelection} mode="multiple" />
+      <MediaUploadDrawer isOpen={isShowMedia} onClose={onCloseMedia} onConfirm={onConfirmSelection} mode="multiple" />
     </>
   );
 };

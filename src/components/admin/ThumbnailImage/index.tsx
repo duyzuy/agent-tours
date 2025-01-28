@@ -4,7 +4,9 @@ import Image from "next/image";
 import { PictureOutlined } from "@ant-design/icons";
 import { isEmpty, isUndefined } from "lodash";
 import classNames from "classnames";
-import MediaUploadDrawler, { MediaUploadProps } from "@/app/(management)/portal/media/_components/MediaUploadDrawler";
+import MediaUploadDrawer, {
+  MediaUploadDrawerProps,
+} from "@/app/(management)/portal/media/_components/MediaUploadDrawer";
 import { MediaTypes } from "@/models/management/media.interface";
 
 export interface ThumbnailImageProps {
@@ -28,7 +30,7 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
   className = "",
 }) => {
   const [showMedia, setShowMedia] = useState(false);
-  const confirmSelect: MediaUploadProps["onConfirm"] = (files) => {
+  const confirmSelect: Exclude<MediaUploadDrawerProps["onConfirm"], undefined> = (files) => {
     onAdd?.({ id: files[0].id, fullPath: files[0].fullPath, thumb: files[0].thumb });
   };
   const closeMedia = () => {
@@ -80,7 +82,7 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
           {error ? <p className="text-xs text-red-600 pt-1">{error}</p> : null}
         </div>
       </div>
-      <MediaUploadDrawler
+      <MediaUploadDrawer
         isOpen={showMedia}
         onClose={closeMedia}
         onConfirm={confirmSelect}

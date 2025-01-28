@@ -1,16 +1,16 @@
-import React, { useMemo, useState } from "react";
-import { Upload, Button, Form, Row, Col, Empty, TreeSelect, TreeSelectProps } from "antd";
-import { UploadFile, UploadProps } from "antd/es/upload";
+import React, { useState } from "react";
+import { Upload, Button, Form } from "antd";
+import { UploadProps } from "antd/es/upload";
 import { UploadOutlined } from "@ant-design/icons";
 import FormItem from "@/components/base/FormItem";
 import useMessage from "@/hooks/useMessage";
 import { isArray, isEmpty } from "lodash";
 import { mediaConfig } from "@/configs";
-import FolderTreeSelector, { FolderTreeSelectorProps } from "./FolderSelector";
-
+import FolderTreeSelector, { FolderTreeSelectorProps } from "./CreateFolderForm/FolderTreeSelector";
+import { MediaUploadFormData } from "../media.interface";
 export interface UploadFileFormProps {
   uploading?: boolean;
-  onUpload: (payload: { folder: FolderItemTree; fileList: UploadFile[] }, cb?: () => void) => void;
+  onUpload: (data: MediaUploadFormData, cb?: () => void) => void;
   onResetTab?: () => void;
 }
 export type FolderItemTree = {
@@ -26,20 +26,15 @@ export type FolderItemTree = {
 
 const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, onResetTab }) => {
   const message = useMessage();
+  const initFormData = new MediaUploadFormData(
+    mediaConfig.rootFolder,
+    mediaConfig.rootFolder,
+    0,
+    [],
+    mediaConfig.rootFolder,
+  );
 
-  const initFolderItem: FolderItemTree = {
-    id: 0,
-    title: "Thư mục gốc",
-    slug: "uploads",
-    nestedSlug: ["uploads"],
-    path: "uploads",
-    value: "uploads",
-    children: [],
-  };
-  const [formData, setFormData] = useState<{
-    folder: FolderItemTree;
-    fileList: UploadFile[];
-  }>({ folder: initFolderItem, fileList: [] });
+  const [formData, setFormData] = useState<MediaUploadFormData>(initFormData);
 
   const beforeUpload: UploadProps["beforeUpload"] = (file) => {
     const isValidFileType = checkValidFileType(file.type);
@@ -72,14 +67,26 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
     }));
   };
   const onResetFiles = () => {
-    setFormData({ folder: initFolderItem, fileList: [] });
     onResetTab?.();
+    setFormData(initFormData);
   };
-  const onSelectFolder: FolderTreeSelectorProps["onSelect"] = (value, option) => {
-    setFormData((prev) => ({
-      ...prev,
-      folder: isArray(option) ? option[0] : option,
-    }));
+  const handleSelectFolder: FolderTreeSelectorProps["onSelect"] = (value, option) => {
+    const folderItem = isArray(option) ? option[0] : option;
+
+    setFormData((prev) => {
+      const { folderPath } = prev;
+      let newFolderPath = folderPath;
+      if (folderItem.nestedSlugs) {
+        newFolderPath = [...folderItem.nestedSlugs, folderItem.slug].join("/");
+      }
+      return {
+        ...prev,
+        folderId: folderItem.id,
+        folderName: folderItem.title,
+        folderPath: newFolderPath,
+        folderSlug: folderItem.slug,
+      };
+    });
   };
   return (
     <React.Fragment>
@@ -105,7 +112,7 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
           </Upload>
           <Form layout="vertical">
             <FormItem label="Chọn thư mục lưu trữ" required>
-              <FolderTreeSelector value={formData.folder.value} onSelect={onSelectFolder} disabled={uploading} />
+              <FolderTreeSelector value={formData.folderSlug} onSelect={handleSelectFolder} disabled={uploading} />
             </FormItem>
             <Button
               type="primary"
