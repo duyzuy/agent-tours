@@ -27,4 +27,7 @@ export type MediaManagerAction =
   | {
       type: "INIT_FOLDERS";
       payload: any;
+    }
+  | {
+      type: "SET_ROOT_FOLDER";
     };

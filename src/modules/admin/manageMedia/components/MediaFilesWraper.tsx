@@ -157,14 +157,14 @@ MediaFilesWraper.ItemList = function MediaFilesItemList({
         />
       </div>
       <Divider />
-      <div className="media-list py-8">
+      <div className="media-list py-6">
         {isLoading ? (
           <Spin>
             <div className="mx-auto w-40 h-10 flex items-center justify-center">Đang tải</div>
           </Spin>
-        ) : (
+        ) : data?.list.length ? (
           <div className="flex items-center flex-wrap gap-4">
-            {data?.list.map((item) => (
+            {data.list.map((item) => (
               <MediaFileItem
                 key={item.key}
                 type={item.mediaType}
@@ -177,18 +177,18 @@ MediaFilesWraper.ItemList = function MediaFilesItemList({
                 onPreview={onPreviewImage}
                 onCoppyPath={handleCoppyText}
               />
-            )) || (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={
-                  <div className="text-center">
-                    <p>Chưa có file nào trong thư mục này.</p>
-                    <p>Vui lòng chọn tải file để upload</p>
-                  </div>
-                }
-              />
-            )}
+            ))}
           </div>
+        ) : (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={
+              <div className="text-center">
+                <p>Chưa có file nào trong thư mục này.</p>
+                <p>Vui lòng chọn tải file để upload</p>
+              </div>
+            }
+          />
         )}
       </div>
       <FilePreviewModal

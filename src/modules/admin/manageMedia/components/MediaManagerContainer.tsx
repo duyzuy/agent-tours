@@ -32,7 +32,7 @@ const MediaManagerContainer: React.FC<MediaManagerContainerProps> = ({
           [className]: className,
         })}
       >
-        <div className="col-left w-[320px] h-full pr-4 border-r">
+        <div className="col-left w-[320px] h-full pr-3 border-r">
           <MediaFolderWraper hasRoleCreate={hasRoleCreate} />
         </div>
         <div className="col-right flex-1 px-6">

@@ -10,7 +10,7 @@ import { isEmpty } from "lodash";
 import { ExtensionType, IMediaFile } from "@/models/management/media.interface";
 import { getMediaFileType, isInValidFileSize, isInvalidFile } from "@/helpers/mediaFiles";
 import { BaseResponse, Status } from "@/models/common.interface";
-import { MediaUploadFormData } from "@/app/(management)/portal/media/modules/media.interface";
+import { MediaUploadFormData } from "@/modules/admin/manageMedia/media.interface";
 
 export async function POST(request: NextRequest) {
   const headersList = headers();

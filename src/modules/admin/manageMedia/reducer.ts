@@ -22,6 +22,21 @@ export const mediaManagerReducer = (mediaState: MediaManagerState, action: Media
     case "SET_FOLDER":
       const newFolder = action.payload;
       return { ...mediaState, selectedFolder: newFolder };
+    case "SET_ROOT_FOLDER":
+      return {
+        ...mediaState,
+        selectedFolder: initMediaManagerState.selectedFolder,
+        queryParams: {
+          ...mediaState.queryParams,
+          file: {
+            ...mediaState.queryParams.file,
+            requestObject: {
+              ...mediaState.queryParams.file.requestObject,
+              mediaInFolderRecid: 0,
+            },
+          },
+        },
+      };
 
     case "SET_QUERY_FILES":
       const newQueryFile = action.payload;

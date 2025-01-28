@@ -66,7 +66,7 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
       })}
     >
       <div
-        className="file-type inline-flex items-center cursor-pointer justify-center aspect-square w-full"
+        className="file-type inline-flex items-center cursor-pointer justify-center aspect-video w-full"
         onClick={() => onSelect?.(item)}
       >
         {renderIconImage(type)}

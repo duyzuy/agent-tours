@@ -89,7 +89,7 @@ MediaFolderWraper.PanelList = function MediaFolderPanelList() {
   });
   const [state, dispatch] = useMediaManager();
 
-  const openFolder = (folder: IMediaFolder) => {
+  const handleOpenFolder = (folder: IMediaFolder) => {
     dispatch({ type: "SET_FOLDER", payload: folder });
     dispatch({
       type: "SET_QUERY_FILES",
@@ -101,6 +101,9 @@ MediaFolderWraper.PanelList = function MediaFolderPanelList() {
         },
       },
     });
+  };
+  const handleOpenRootFolder = () => {
+    dispatch({ type: "SET_ROOT_FOLDER" });
   };
 
   const handleChangePage = (page: number, pageSize: number) => {
@@ -142,7 +145,13 @@ MediaFolderWraper.PanelList = function MediaFolderPanelList() {
         onChange={handleChangePage}
       />
       <Divider style={{ margin: "12px 0" }} />
-      <MediaFolderItem folderName="Thư mục gốc" editAble={false} folderColor="text-amber-600" isSelected={true} />
+      <MediaFolderItem
+        folderName="Thư mục gốc"
+        editAble={false}
+        onOpen={handleOpenRootFolder}
+        folderColor="text-amber-600"
+        isSelected={true}
+      />
       {isLoading ? (
         <Spin tip="Loading..." size="small">
           <div style={{ padding: 50, borderRadius: 4 }}></div>
@@ -155,7 +164,7 @@ MediaFolderWraper.PanelList = function MediaFolderPanelList() {
           selectedId={selectedFolder?.id}
           isLoading={isLoadingUpdate}
           onSave={handleUpdateFolder}
-          onOpen={openFolder}
+          onOpen={handleOpenFolder}
         />
       ) : (
         <Empty
@@ -203,9 +212,9 @@ MediaFolderWraper.FolderList = function MediaFolderList({
 
   return (
     <ul
-      className={classNames(`folders depth-${depth}`, {
+      className={classNames(`folder-list depth-${depth}`, {
         [className]: className,
-        "border-l ml-4": depth > 0,
+        "border-l ml-3": depth > 0,
       })}
     >
       {items.map((item) => (
@@ -225,7 +234,7 @@ MediaFolderWraper.FolderList = function MediaFolderList({
             <MediaFolderWraper.FolderList
               items={item.children}
               depth={depth + 1}
-              className={`pl-${depth * 4}`}
+              className={`pl-2`}
               selectedId={selectedId}
               onSave={onSave}
               onOpen={onOpen}
