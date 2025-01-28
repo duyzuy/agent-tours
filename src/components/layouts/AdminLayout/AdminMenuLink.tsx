@@ -309,7 +309,12 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
       },
     ],
   },
-
+  {
+    key: "member-management",
+    icon: React.createElement(UserOutlined),
+    label: "Thành viên đăng ký",
+    rolepers: PATH_WITH_PERMISSION["user"],
+  },
   {
     key: "language",
     icon: React.createElement(GlobalOutlined),

@@ -2,31 +2,66 @@
 import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
-import DrawerLanguage, { DrawerLanguageProps } from "./_components/DrawerLanguage";
 import { ITransation } from "@/models/management/cms/translations.interface";
-import { useGetTranslationFeQuery } from "@/queries/cms/translationFe";
-import useCRUDTranslation from "./modules/useCRUDTranslation";
+import { useGetTranslations } from "@/modules/admin/languageManager";
+
 import { columns } from "./columns";
-import { Button, Form, Input } from "antd";
+import { Form, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
+import { TranslationFormDataQeryParams } from "@/modules/admin/languageManager/translation.interface";
+import { useCreateTranslation, useUpdateTranslation, useDeleteTranslation } from "@/modules/admin/languageManager";
+import TranslationFormDrawer, {
+  TranslationFormDrawerProps,
+} from "@/modules/admin/languageManager/components/TranslationFormDrawer";
 
 const LanguagePage = () => {
-  const [queryString, setQueryString] = useState("");
-  const { data: translationList, isLoading } = useGetTranslationFeQuery(queryString);
-  const { onCreate, onUpdate, onDelete } = useCRUDTranslation();
-  const [drawerAction, setDrawerAction] = useState<{
-    isShow: boolean;
-    action?: "create" | "edit";
-    record?: ITransation;
-  }>({ isShow: false });
+  const [queryParams, setQueryParams] = useState(() => new TranslationFormDataQeryParams({ name: "" }, 1, 20));
 
-  const handleSubmitForm: DrawerLanguageProps["onSubmit"] = (type, formData, cb) => {
-    if (type === "create") {
-      onCreate(formData, cb);
+  const { data: translationData, isLoading } = useGetTranslations({ queryParams: queryParams });
+
+  const { mutate: createTranslation, isPending: loaddingCreate } = useCreateTranslation();
+  const { mutate: updateTranslation, isPending: loaddingUpdate } = useUpdateTranslation();
+  const { mutate: deleteTranslation, isPending: loadingDelete } = useDeleteTranslation();
+  const [editRecord, setEditRecord] = useState<ITransation>();
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const [action, setAction] = useState<TranslationFormDrawerProps["action"]>();
+
+  const setCreateTranslation = () => {
+    setAction("create");
+    setOpenDrawer(true);
+  };
+  const setEditTranslation = (record: ITransation) => {
+    setAction("edit");
+    setOpenDrawer(true);
+    setEditRecord(record);
+  };
+  const setCancelForm = () => {
+    setAction(undefined);
+    setOpenDrawer(false);
+    setEditRecord(undefined);
+  };
+  const handleChangePage = (page: number, pageSize: number) => {
+    setQueryParams((prev) => ({ ...prev, pageCurrent: page, pageSize }));
+  };
+  const handleSearchName = (value: string) => {
+    setQueryParams((prev) => ({ ...prev, requestObject: { ...prev.requestObject, name: value } }));
+  };
+
+  const handleSubmitForm: TranslationFormDrawerProps["onSubmit"] = (action, formData, cb) => {
+    if (action === "create") {
+      createTranslation(formData, {
+        onSuccess(data, variables, context) {
+          cb?.();
+        },
+      });
     }
-
-    if (type === "edit") {
-      drawerAction.record && onUpdate(drawerAction.record.id, formData, cb);
+    if (action === "edit") {
+      updateTranslation(formData, {
+        onSuccess(data, variables, context) {
+          cb?.();
+        },
+      });
     }
   };
   return (
@@ -34,60 +69,40 @@ const LanguagePage = () => {
       <PageContainer
         name="Bản dịch"
         modelName="Bản dịch"
-        onClick={() =>
-          setDrawerAction({
-            isShow: true,
-            action: "create",
-          })
-        }
+        onClick={setCreateTranslation}
         breadCrumItems={[{ title: "Bản dịch" }]}
       >
-        <div>
-          <Form>
-            <div className="lg:w-3/6 md:w-4/6 xl:w-2/6">
-              <FormItem>
-                <Input.Search
-                  placeholder="Nhập từ cần tìm"
-                  enterButton="Tìm kiếm"
-                  onSearch={(value) => {
-                    setQueryString(value);
-                  }}
-                />
-              </FormItem>
-            </div>
-          </Form>
-        </div>
+        <Form>
+          <div className="lg:w-3/6 md:w-4/6 xl:w-2/6">
+            <FormItem>
+              <Input.Search placeholder="Nhập từ cần tìm" enterButton="Tìm kiếm" onSearch={handleSearchName} />
+            </FormItem>
+          </div>
+        </Form>
         <TableListPage<ITransation>
-          scroll={{ x: 1200 }}
-          modelName="Bản dịch"
-          dataSource={translationList || []}
-          showActionsLess={false}
           rowKey={"id"}
+          modelName="Bản dịch"
+          dataSource={translationData?.list || []}
+          showActionsLess={false}
           columns={columns}
-          onEdit={(record) =>
-            setDrawerAction({
-              isShow: true,
-              action: "edit",
-              record: record,
-            })
-          }
-          onDelete={(record) => onDelete(record.id)}
           isLoading={isLoading}
-          size="small"
+          pagination={{
+            total: translationData?.totalItems,
+            pageSize: translationData?.pageSize,
+            current: translationData?.pageCurrent,
+            onChange: handleChangePage,
+            showQuickJumper: false,
+          }}
+          scroll={{ x: 1200 }}
+          onEdit={(record) => setEditTranslation(record)}
+          onDelete={(record) => deleteTranslation(record.id)}
         />
       </PageContainer>
-
-      <DrawerLanguage
-        isOpen={drawerAction.isShow}
-        onClose={() =>
-          setDrawerAction({
-            isShow: false,
-            record: undefined,
-            action: undefined,
-          })
-        }
-        initialValues={drawerAction.record}
-        actionType={drawerAction.action}
+      <TranslationFormDrawer
+        action={action}
+        isOpen={openDrawer}
+        onClose={setCancelForm}
+        initialValues={editRecord}
         onSubmit={handleSubmitForm}
       />
     </React.Fragment>

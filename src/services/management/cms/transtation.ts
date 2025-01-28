@@ -1,31 +1,26 @@
-import { getAgToken } from "@/utils/common";
 import { client } from "@/services/api";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { ITranslationListRs, ITranslationRs } from "@/models/management/cms/translations.interface";
-import { ITranslationPayload } from "@/models/management/cms/translations.interface";
+import {
+  TranslationListResponse,
+  ITranslationRs,
+  TranslationQueryParams,
+} from "@/models/management/cms/translations.interface";
+import { TranslationPayload } from "@/models/management/cms/translations.interface";
 export const translationAPIs = {
-  getList: async (queryString: string) => {
-    return await client.post<ITranslationListRs>("local/getCms_translation_frontend", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+  getList: async (queryParams?: TranslationQueryParams) => {
+    return await client.post<TranslationListResponse>("local/getCms_translation_frontend", {
+      isAuth: true,
       params: {
-        requestObject: {
-          name: queryString,
-        },
-        pageSize: 20,
-        orderBy: {
-          sortColumn: "id",
-          direction: "desc",
-        },
+        requestObject: queryParams?.requestObject,
+        pageSize: queryParams?.pageSize,
+        orderBy: queryParams?.orderBy,
+        pageCurrent: queryParams?.pageCurrent,
       },
     });
   },
   getAllByLang: async (lang: LangCode) => {
     return await client.post<any>("local/getCms_translation_frontend_Bylang", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           lang,
@@ -33,11 +28,9 @@ export const translationAPIs = {
       },
     });
   },
-  create: async (payload: ITranslationPayload) => {
+  create: async (payload: TranslationPayload) => {
     return await client.post<any>("local/Cms_translation_frontend_Addnew", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -45,11 +38,9 @@ export const translationAPIs = {
       },
     });
   },
-  update: async (payload: ITranslationPayload) => {
+  update: async (payload: TranslationPayload) => {
     return await client.post<any>("local/Cms_translation_frontend_Edit", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           ...payload,
@@ -59,9 +50,7 @@ export const translationAPIs = {
   },
   delete: async (id?: number) => {
     return await client.post<ITranslationRs>("local/Cms_Delete", {
-      headers: {
-        Authorization: `Bearer ${encodeURIComponent(getAgToken() || "")}`,
-      },
+      isAuth: true,
       params: {
         requestObject: {
           cat: "cms_translation_frontend",

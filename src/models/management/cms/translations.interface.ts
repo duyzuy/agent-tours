@@ -1,4 +1,4 @@
-import { BaseResponse } from "../../common.interface";
+import { BaseQueryParams, BaseResponse } from "../../common.interface";
 
 export interface ITransation {
   cat: string;
@@ -10,13 +10,13 @@ export interface ITransation {
   lang: string;
 }
 
-export interface ITranslationPayload {
+export interface TranslationPayload {
   id?: number;
   keyName?: string;
   languages: { name?: string; lang?: string }[];
   note?: string;
 }
-
-export interface ITranslationListRs extends BaseResponse<ITransation[]> {}
+export interface TranslationQueryParams extends BaseQueryParams<{ keyName?: string; name?: string }> {}
+export interface TranslationListResponse extends BaseResponse<ITransation[]> {}
 export interface ITranslationRs extends BaseResponse<ITransation> {}
 export interface ITranslationListFeRs extends BaseResponse<{ keyName: string; name: string }[]> {}
