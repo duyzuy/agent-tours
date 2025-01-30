@@ -2,7 +2,6 @@
 import { MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, FormItemProps, Input, InputProps } from "antd";
 import { useTranslations } from "next-intl";
-import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { customerRegisterSchema } from "../modules/customerAuth.schema";
 import { CustomerRegisterFormData } from "../modules/customerAuth.interface";
 import { removeVietnameseTones } from "@/utils/helper";
@@ -10,7 +9,6 @@ import { useForm, Controller } from "react-hook-form";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormItem from "@/components/base/FormItem";
-import { Link } from "@/utils/navigation";
 
 enum EFieldType {
   TEXT = "TEXT",

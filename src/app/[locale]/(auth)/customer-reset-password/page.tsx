@@ -9,14 +9,17 @@ import { isEmpty, isUndefined } from "lodash";
 import CreatePasswordForm, { CreatePasswordFormProps } from "../_components/CreatePasswordForm";
 import useBroadcastChannel from "@/hooks/fe/useBroadcastChanel";
 import { BroadcastMessageResetPassword } from "../customer-forgot-password/page";
-import { useCustomerSetNewPasswordMutation } from "@/mutations/auth";
+
 import { useRouter } from "@/utils/navigation";
 import useMessage from "@/hooks/useMessage";
+import { useCustomerSetNewPasswordMutation } from "@/mutations/auth";
+import { useSetNewPassword } from "@/modules/fe/auth/hooks/useSetNewPassword";
 const CustomerResetPasswordPage = () => {
   const t = useTranslations("String");
   const params = useSearchParams();
   const router = useRouter();
-  const { mutate: setNewPassword, isPending, isIdle } = useCustomerSetNewPasswordMutation();
+  // const { mutate: setNewPassword, isPending, isIdle } = useCustomerSetNewPasswordMutation();
+  const { mutate: setNewPassword, isPending } = useSetNewPassword();
   const message = useMessage();
   const secretKey = params.get("secretKey") || "";
   const userId = params.get("userId") || "";
@@ -29,9 +32,6 @@ const CustomerResetPasswordPage = () => {
     console.log(message);
   });
 
-  // const onFinishReset = () => {
-  //   postMessage({ message: "reset password success", status: "success" });
-  // };
   const createNewPassword: CreatePasswordFormProps["onSubmit"] = (data) => {
     console.log(data);
     setNewPassword(data, {

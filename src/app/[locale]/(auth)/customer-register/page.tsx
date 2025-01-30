@@ -13,12 +13,10 @@ const CustomerRegisterPage = () => {
   return (
     <AuthLayout title={t("register")}>
       <RegistrationForm onSubmit={signUp} loading={loading}>
-        <div className="content-form">
-          <p className="text-center text-xs">
-            <Link href={`/${CLIENT_LINKS.CustomerLogin}`}>
-              <span className="text-primary-default">{t("hasAccount")}</span>
-            </Link>
-          </p>
+        <div className="content-form text-center text-xs">
+          <Link href={`/${CLIENT_LINKS.CustomerLogin}`}>
+            <span className="text-primary-default">{t("hasAccount")}</span>
+          </Link>
         </div>
       </RegistrationForm>
     </AuthLayout>

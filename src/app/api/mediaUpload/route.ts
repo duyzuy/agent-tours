@@ -8,7 +8,7 @@ import { stringToSlug } from "@/utils/stringToSlug";
 import { mediaConfig } from "@/configs";
 import { isEmpty } from "lodash";
 import { ExtensionType, IMediaFile } from "@/models/management/media.interface";
-import { getMediaFileType, isInValidFileSize, isInvalidFile } from "@/helpers/mediaFiles";
+import { getMediaFileType, isInValidFileSize, isInvalidFile } from "@/utils/fileUpload";
 import { BaseResponse, Status } from "@/models/common.interface";
 import { MediaUploadFormData } from "@/modules/admin/manageMedia/media.interface";
 
