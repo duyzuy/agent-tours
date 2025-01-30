@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Locale, LangCode } from "@/models/management/cms/language.interface";
-import { useLanguageSelector } from "@/store/hooks";
+import { useLanguageSelector } from "@/store";
 import { locales, localeDefault } from "@/constants/locale.constant";
 
 enum PageContentType {

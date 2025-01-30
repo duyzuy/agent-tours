@@ -1,7 +1,7 @@
 "use client";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import useSummaryPricingSelect from "@/app/[locale]/(booking)/modules/useSummaryPricingSelect";
+import useSummaryPricingSelect from "@/modules/fe/booking/useSummaryPricingSelect";
 import { stringToDate } from "@/utils/date";
 import dayjs, { Dayjs } from "dayjs";
 

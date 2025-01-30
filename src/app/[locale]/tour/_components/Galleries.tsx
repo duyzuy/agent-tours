@@ -1,23 +1,20 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Swiper as SwiperType } from "swiper";
-
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-// import required modules
-
 import Image from "next/image";
 import { mediaConfig } from "@/configs";
 import { IconChevronLeft, IconChevronRight } from "@/assets/icons";
 import { IThumbnail } from "@/models/thumbnail.interface";
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperType } from "swiper";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import { Button } from "antd";
 import styled from "styled-components";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+
 interface GalleriesProps {
   images: IThumbnail[] | null;
 }
@@ -25,9 +22,8 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
   const swiperRef = useRef<SwiperType>();
-  if (!images || !images.length) {
-    return null;
-  }
+
+  if (!images || !images.length) return null;
   return (
     <>
       <div className="product-gallery relative bg-gray-50 rounded-md overflow-hidden w-full mb-3">
@@ -45,12 +41,12 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
           onBeforeInit={(swiper) => {
             swiperRef.current = swiper;
           }}
-          className="galleries"
           breakpoints={{
             1400: {
               navigation: true,
             },
           }}
+          className="galleries"
         >
           {images?.map(({ id, original, small }, _index) => (
             <SwiperSlide key={_index}>
@@ -63,26 +59,26 @@ const Galleries: React.FC<GalleriesProps> = ({ images = [] }) => {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="bg-slate-50 object-contain italic"
                 />
-                <span>{` ${mediaConfig.rootApiPath}/${original}`}</span>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-        <div className="gallery-pagination">
-          <div
-            className="gallery-prev absolute bg-gray-950/30 rounded-full p-1 opacity-30 hover:opacity-100 left-0 top-1/2 -translate-y-1/2 text-white z-10 cursor-pointer hidden lg:block"
-            onClick={() => swiperRef.current?.slidePrev()}
-          >
-            <IconChevronLeft className="w-8 h-8" />
-          </div>
-          <div
-            className="gallery-next absolute bg-gray-950/30 rounded-full p-1 opacity-30 hover:opacity-100 right-0 top-1/2 -translate-y-1/2 text-white z-10 cursor-pointer hidden lg:block"
-            onClick={() => swiperRef.current?.slideNext()}
-          >
-            <IconChevronRight className="w-8 h-8" />
-          </div>
-        </div>
+        <Button
+          type="text"
+          shape="circle"
+          className="!absolute left-0 top-1/2 !bg-gray-950/30 -translate-y-1/2 z-10"
+          icon={<IconChevronLeft className="text-white -mt-[1px]" />}
+          onClick={() => swiperRef.current?.slidePrev()}
+        />
+        <Button
+          type="text"
+          shape="circle"
+          className="!absolute right-0 !bg-gray-950/30 top-1/2 -translate-y-1/2 z-10"
+          icon={<IconChevronRight className="text-white -mt-[1px]" />}
+          onClick={() => swiperRef.current?.slideNext()}
+        />
       </div>
+
       <ProductSwiperThumbs className="product-gallery-thumbs">
         <Swiper
           onSwiper={setThumbsSwiper}

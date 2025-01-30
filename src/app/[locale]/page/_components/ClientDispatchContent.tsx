@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
-import { useLanguage } from "@/store/hooks";
-import { ELanguageActionType } from "@/store/actions/languageActions";
+import { useLanguage } from "@/store";
+
 import { LangCode } from "@/models/management/cms/language.interface";
 
 interface ClientDispatchContentProps {
@@ -13,7 +13,7 @@ const ClientDispatchContent: React.FC<ClientDispatchContentProps> = ({ languages
   useEffect(() => {
     if (languages && languages.length) {
       dispatch({
-        type: ELanguageActionType.SET_PAGE_CONTENT,
+        type: "SET_PAGE_CONTENT",
         payload: languages,
       });
     }

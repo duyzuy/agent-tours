@@ -3,12 +3,11 @@ import React, { memo, useState } from "react";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
-
-import { FeBookingInformation } from "../../../modules/booking.interface";
 import { IconPen, IconUser } from "@/assets/icons";
 import { getPassengerType } from "@/utils/common";
 import { Button, Space } from "antd";
 import DrawerPassengerInformationForm from "./DrawerPassengerInformationForm";
+import { FeBookingInformation } from "@/store/booking/booking.type";
 export type PassengerItemType = FeBookingInformation["bookingInfo"]["passengers"][number];
 
 export interface FePassengerInformationFormProps {

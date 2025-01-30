@@ -1,19 +1,18 @@
 "use client";
 import { useEffect } from "react";
-import { useLanguage } from "@/store/hooks";
-import { ELanguageActionType } from "@/store/actions/languageActions";
+import { useLanguage } from "@/store";
 import { LangCode } from "@/models/management/cms/language.interface";
 
 interface ClientDispatchContentProps {
   languages: { slug: string; lang: LangCode }[];
 }
 const ClientDispatchContent: React.FC<ClientDispatchContentProps> = ({ languages }) => {
-  const [langssss, dispatch] = useLanguage();
+  const [_, dispatch] = useLanguage();
 
   useEffect(() => {
     if (languages && languages.length) {
       dispatch({
-        type: ELanguageActionType.SET_CATEGORY_CONTENT,
+        type: "SET_CATEGORY_CONTENT",
         payload: languages,
       });
     }

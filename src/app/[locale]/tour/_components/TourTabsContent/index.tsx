@@ -103,10 +103,6 @@ export default async function TourTabsContent({ data, log, locale, templateId }:
   const pageContentDetailRule = await getPageContentDetail({ id: locale === LangCode.VI ? 1124 : 1125 });
 
   if (pageContentDetailRule) {
-    // const blockVisaItems = visaContent?.metaContent.reduce<BlockPanelsProps["items"]>((acc, item, _index) => {
-    //   return [...acc, { content: item.content, name: item.title, key: (_index + 1).toString() }];
-    // }, []);
-
     tabPanels = [
       ...tabPanels,
       {

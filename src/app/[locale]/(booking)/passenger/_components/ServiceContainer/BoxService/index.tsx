@@ -1,19 +1,22 @@
 import { useMemo, useState } from "react";
 import { FeProductService } from "@/models/fe/serviceItem.interface";
 import { moneyFormatVND } from "@/utils/helper";
+import { IconChevronRight } from "@/assets/icons";
 import { getLowestPriceService } from "@/utils/productService";
 import DrawerServiceItem, { DrawerServiceItemProps } from "./DrawerServiceItem";
-import { FeBookingInformation } from "@/app/[locale]/(booking)/modules/booking.interface";
-import { isUndefined } from "lodash";
-import { IBookingSsrItemWithPax } from "@/app/[locale]/(booking)/modules/booking.interface";
-import useBookingServices, { UseBookingServicesProps } from "@/app/[locale]/(booking)/modules/useBookingServices";
-import { IconChevronRight } from "@/assets/icons";
-import useBookingSummary from "@/app/[locale]/(booking)/modules/useBookingSummary";
+// import { FeBookingInformation } from "@/app/[locale]/(booking)/modules/booking.interface";
+// import { IBookingSsrItemWithPax } from "@/app/[locale]/(booking)/modules/booking.interface";
+// import useBookingServices, { UseBookingServicesProps } from "@/app/[locale]/(booking)/modules/useBookingServices";
+// import useBookingSummary from "@/app/[locale]/(booking)/modules/useBookingSummary";
+import { FeBookingInformation } from "@/store/booking/booking.type";
+import useBookingSummary from "@/modules/fe/booking/useBookingSummary";
+import useBookingServices from "@/modules/fe/booking/service/useBookingServices";
 import classNames from "classnames";
+
 interface BoxServiceProps {
   item: FeProductService;
   passengerList: FeBookingInformation["bookingInfo"]["passengers"];
-  selectedSSR?: IBookingSsrItemWithPax[];
+  selectedSSR?: FeBookingInformation["bookingInfo"]["bookingSsrWithPax"];
   className?: string;
   serviceId: number;
 }

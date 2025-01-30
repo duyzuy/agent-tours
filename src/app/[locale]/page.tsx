@@ -25,34 +25,6 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
   // const dataa = await getServerSession(authOptions);
   // console.log({ dataa });
 
-  const travelthaiAug = new FeSearchTourQueryParams({
-    byMonth: "Aug2024",
-    byProductType: [EProductType.TOUR],
-    byDest: [
-      {
-        regionKey: "ASIA",
-        subRegionKey: "SOUTHEASTERN_ASIA",
-        countryKey: "TH",
-        stateProvinceKey: "",
-        keyType: "COUNTRYLIST",
-      },
-    ],
-  });
-
-  const traveltaiwanAug = new FeSearchTourQueryParams({
-    byMonth: "Aug2024",
-    byProductType: [EProductType.TOUR],
-    byDest: [
-      {
-        regionKey: "ASIA",
-        subRegionKey: "EASTERN_ASIA",
-        countryKey: "TW",
-        stateProvinceKey: "",
-        keyType: "COUNTRYLIST",
-      },
-    ],
-  });
-
   const travelTour = new FeSearchTourQueryParams({
     // byMonth: "Aug2024",
     byProductType: [EProductType.TOUR],

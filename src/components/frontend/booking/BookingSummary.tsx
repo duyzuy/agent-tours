@@ -1,6 +1,6 @@
 "use client";
 import classNames from "classnames";
-import { useBookingSelector } from "@/store/hooks";
+
 import { useMemo } from "react";
 import { mediaConfig } from "@/configs";
 import Image from "next/image";
@@ -12,7 +12,9 @@ import { Divider, Space, Tag } from "antd";
 import { IconCalendarRange, IconCheckCircle, IconImage, IconPlane } from "@/assets/icons";
 import { useLocale } from "next-intl";
 import { LangCode } from "@/models/management/cms/language.interface";
-import useBookingSummary from "@/app/[locale]/(booking)/modules/useBookingSummary";
+// import useBookingSummary from "@/app/[locale]/(booking)/modules/useBookingSummary";
+import useBookingSummary from "@/modules/fe/booking/useBookingSummary";
+import { useBookingSelector } from "@/store";
 interface BookingSummaryProps {
   className?: string;
 }

@@ -2,7 +2,6 @@ import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { searchTourAPIs } from "@/services/fe/searchTour";
 import { useQuery } from "@tanstack/react-query";
 import { queryFE } from "../var";
-import { isUndefined } from "lodash";
 
 export const useGetTourListQuery = ({
   enable,

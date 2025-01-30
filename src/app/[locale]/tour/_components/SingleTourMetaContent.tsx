@@ -29,7 +29,7 @@ const SingleTourMetaContent: React.FC<SingleTourMetaContentProps> = ({ items }) 
 };
 export default SingleTourMetaContent;
 
-const renderIcon = (props?: (typeof ICON_LIST)[0]) => {
+const renderIcon = (props?: (typeof ICON_LIST)[number]) => {
   const Icon = props?.icon;
   return Icon ? <Icon width={18} height={18} /> : null;
 };

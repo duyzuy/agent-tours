@@ -9,7 +9,6 @@ interface ProductListProps {
   loading?: boolean;
 }
 const ProductList: React.FC<ProductListProps> = ({ items, onSelect, loading }) => {
-  console.log("render");
   const isValidPriceConfig = (priceConfigs: IProductTour["configs"]) => {
     let isValid = true;
 

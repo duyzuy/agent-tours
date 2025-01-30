@@ -1,20 +1,17 @@
 "use client";
 import { ICMSTemplateContent } from "@/models/management/cms/cmsTemplateContent.interface";
 import { useEffect } from "react";
-import { ELanguageActionType } from "@/store/actions/languageActions";
-import { useLanguage } from "@/store/hooks";
+import { useLanguage } from "@/store";
 interface ClientStoreDataProps {
-  data?: ICMSTemplateContent["languages"];
-  log: any;
+  data: ICMSTemplateContent["languages"];
 }
-const ClientStoreData: React.FC<ClientStoreDataProps> = ({ data, log }) => {
+const ClientStoreData: React.FC<ClientStoreDataProps> = ({ data }) => {
   const [langInfo, dispatch] = useLanguage();
 
-  console.log(log);
   useEffect(() => {
     if (data) {
       dispatch({
-        type: ELanguageActionType.SET_CMSCONTENT_TOUR,
+        type: "SET_CMSCONTENT_TOUR",
         payload: data,
       });
     }

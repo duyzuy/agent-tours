@@ -1,22 +1,20 @@
 "use client";
 import React, { useMemo } from "react";
 import { Space, Button, Tag } from "antd";
-import { useBookingSelector } from "@/store/hooks";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { Link, useRouter } from "@/utils/navigation";
-
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
-import { useLocale } from "next-intl";
 import { PaymentStatus } from "@/models/common.interface";
-
+import { useBookingSelector } from "@/store";
 const ReservationPage = () => {
   const reservation = useBookingSelector((state) => state.reservation);
   const cmsTemplate = useBookingSelector((state) => state.bookingInfo.cmsTemplate);
-  const locale = useLocale();
-  const { bookingOrder } = reservation || {};
-  console.log(reservation, locale);
+
   const router = useRouter();
+  const bookingOrder = useMemo(() => {
+    return reservation?.bookingOrder;
+  }, [reservation]);
 
   const templateProduct = useMemo(() => {
     return bookingOrder?.template;

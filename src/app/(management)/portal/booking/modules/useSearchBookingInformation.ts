@@ -6,6 +6,7 @@ import useMessage from "@/hooks/useMessage";
 import { MutateOptions } from "@tanstack/react-query";
 import { ProductTouListResponse } from "@/models/management/booking/product.interface";
 import { BaseResponse } from "@/models/common.interface";
+import { useMemo } from "react";
 
 export interface UseSearchBookingInformation {
   onSearch: (
@@ -14,7 +15,7 @@ export interface UseSearchBookingInformation {
   ) => void;
 }
 const useSearchBookingInformation = () => {
-  const { mutate: makeSearchBooking, isPending } = useSearchBookingMutation();
+  const { mutate: searchProduct, isPending } = useSearchBookingMutation();
   const [_, setBookingInformation] = useBooking();
 
   const message = useMessage();
@@ -40,7 +41,7 @@ const useSearchBookingInformation = () => {
       byDest: destinations,
     };
 
-    makeSearchBooking(searchBookingPayload, {
+    searchProduct(searchBookingPayload, {
       onSuccess: (response, variables, ctx) => {
         setBookingInformation((prev) => ({
           ...prev,

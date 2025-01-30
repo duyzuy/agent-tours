@@ -1,12 +1,11 @@
 import { useCallback } from "react";
-import useInitServiceList from "../../modules/useInitServiceList";
-import { useBookingSelector } from "@/store/hooks";
 import classNames from "classnames";
 import { Empty, Spin } from "antd";
-import { FeBookingInformation } from "../../../modules/booking.interface";
-import BoxService from "./BoxService";
 import IconEmptyBox from "@/assets/icons/IconEmptyBox";
-
+import BoxService from "./BoxService";
+import { useBookingSelector } from "@/store";
+import { FeBookingInformation } from "@/store/booking/booking.type";
+import useInitServiceList from "@/modules/fe/booking/passenger/useInitServiceList";
 interface ServiceContainerProps {
   className?: string;
   passengerList?: FeBookingInformation["bookingInfo"]["passengers"];

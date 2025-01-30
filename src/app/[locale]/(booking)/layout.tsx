@@ -1,14 +1,12 @@
 "use client";
-import { LangCode } from "@/models/management/cms/language.interface";
-
-import { usePathname } from "@/utils/navigation";
+import { useMemo } from "react";
+import { usePathname, redirect } from "@/utils/navigation";
 import { useSession } from "next-auth/react";
-import { useBookingSelector } from "@/store/hooks";
 import { isUndefined } from "lodash";
-import { redirect } from "@/utils/navigation";
-import { useEffect, useMemo } from "react";
+import { LangCode } from "@/models/management/cms/language.interface";
 import BookingSummary from "@/components/frontend/booking/BookingSummary";
 import BookingSteps from "@/components/frontend/booking/BookingSteps";
+import { useBookingSelector } from "@/store";
 interface Props {
   children: React.ReactNode;
   params: { locale: LangCode };

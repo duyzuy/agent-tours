@@ -16,15 +16,7 @@ export const feBookingAPIs = {
       },
     });
   },
-  checkCoupon: async (
-    payload:
-      | {
-          code: string;
-          type: DiscountType.COUPON; //COUPON POLICY
-          sellableId: number;
-        }
-      | undefined,
-  ) => {
+  checkCoupon: async (payload?: { code: string; type: DiscountType.COUPON; sellableId: number }) => {
     return await client.post<BaseResponse<IPromotion>>("localfront/Dc_CheckAvailability", {
       body: {
         requestObject: { ...payload },

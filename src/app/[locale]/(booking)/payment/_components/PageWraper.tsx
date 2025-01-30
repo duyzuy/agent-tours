@@ -1,19 +1,24 @@
 "use client";
 import { Button, Divider, Input, Space } from "antd";
-import { SubmitHandler, useForm } from "react-hook-form";
-import CustomerInformationForm from "./CustomerInformationForm";
-import InvoiceForm from "./InvoiceForm";
-import CouponForm from "./CouponForm";
-import { yupResolver } from "@hookform/resolvers/yup";
-
-import { FeCustomerInformationFormData, FeInvoiceFormData, IPaymentInformation } from "../modules/payment.interface";
-import { paymentSchema } from "../modules/payment.schema";
-import PaymentMethod from "./PaymentMethod";
-import useCreateBooking from "../../modules/useCreateBooking";
-import PolicyContent from "./PolicyContent";
+import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { useUserSelector } from "@/store/hooks";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+import PaymentMethod from "./PaymentMethod";
+import PolicyContent from "./PolicyContent";
+import { useUserSelector } from "@/store";
 import { useRouter } from "@/utils/navigation";
+import useCreateBooking from "@/modules/fe/booking/payment/useCreateBooking";
+import { paymentSchema } from "@/modules/fe/booking/payment/payment.schema";
+import InvoiceForm from "@/components/frontend/booking/InvoiceForm";
+import CustomerInformationForm from "@/components/frontend/booking/CustomerInformationForm";
+import CouponForm from "./CouponForm";
+import {
+  FeCustomerInformationFormData,
+  FeInvoiceFormData,
+  IPaymentInformation,
+} from "@/modules/fe/booking/payment/payment.interface";
 
 interface PageWraperProps {
   session: Session | null;
@@ -30,7 +35,7 @@ const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
     "",
   );
   const initInvoiceData = new FeInvoiceFormData("", "", "", "", "");
-
+  const session2 = useSession();
   const { handleSubmit, control } = useForm({
     resolver: yupResolver(paymentSchema),
     defaultValues: {

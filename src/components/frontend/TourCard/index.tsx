@@ -43,8 +43,8 @@ interface TourCardDataContext {
   recId?: number;
   name?: string;
   thumbnailUrl?: string;
-  href?: string;
-  tourCode?: string;
+  href: string;
+  tourCode: string;
   startDate?: string;
   endDate?: string;
   openAmount?: number;
@@ -93,6 +93,7 @@ const TourCard = ({
 }: TourCardProps) => {
   const locale = useLocale();
   const sellableItem = [...sellables].shift();
+
   const tourCardContentByLanguage = useMemo(() => {
     return cms.find((item) => item.lang === locale);
   }, [cms]);
@@ -318,7 +319,7 @@ const CardThumbnail: TourCardCompound["Thumbnail"] = () => {
 const CardTitle: TourCardCompound["Title"] = () => {
   const { href, name } = useTourCardContext();
   return (
-    <Link href={href ?? "/"} className="text-main-400 text-[15px]">
+    <Link href={href} className="text-main-400 text-[15px]">
       <h3 className="line-clamp-2 h-10 lg:h-12 leading-5 lg:leading-6 font-[500] text-main-400 text-sm lg:text-[16px]">
         {name}
       </h3>

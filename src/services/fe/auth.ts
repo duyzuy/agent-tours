@@ -1,4 +1,3 @@
-import { getAgToken } from "@/utils/common";
 import { client } from "@/services/api";
 import {
   CustomerForgotPasswordResponse,

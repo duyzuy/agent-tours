@@ -1,27 +1,21 @@
 import { unstable_setRequestLocale } from "next-intl/server";
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import { LangCode } from "@/models/management/cms/language.interface";
 import { set } from "lodash";
-
-import { LanguageProvider } from "@/store/providers/LanguageProvider";
-
-import LangContainer from "@/containers/LangContainer";
-import { NextAuthProvider } from "@/lib/NextAuthProvider";
+import { LangCode } from "@/models/management/cms/language.interface";
 import { locales } from "@/constants/locale.constant";
 import Header from "./_components/commons/Header";
 import Footer from "./_components/commons/Footer";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
-
-import { FeBookingProvider } from "@/store/providers/BookingProvider";
 import ModalAuth from "./(auth)/_components/ModalAuth";
-
-import { ModalManagerProvider } from "@/store/providers/ModalManagerProvider";
 import { getTranslationFe } from "../../actions/feTranslations";
 import { SITE_NAME } from "@/configs/site";
 import ThemeProvider from "@/lib/ThemeProvider";
 import { RQClientProvider } from "@/lib/RQClientProvider";
+import { NextAuthProvider } from "@/lib/NextAuthProvider";
+import { LanguageProvider, ModalManagerProvider, FeBookingProvider } from "@/store";
+import { AppProvider } from "@/store/appContext";
 
 const timeZone = "Asia/Bangkok";
 interface Props {
@@ -67,19 +61,20 @@ export default async function RootClientLayout({ children, params: { locale } }:
         <ThemeProvider>
           <RQClientProvider>
             <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
-              <NextAuthProvider session={session}>
-                <LanguageProvider>
-                  <FeBookingProvider>
-                    <ModalManagerProvider>
-                      <LangContainer />
-                      <Header />
-                      {children}
-                      <Footer />
-                      <ModalAuth />
-                    </ModalManagerProvider>
-                  </FeBookingProvider>
-                </LanguageProvider>
-              </NextAuthProvider>
+              <AppProvider>
+                <NextAuthProvider session={session}>
+                  <LanguageProvider>
+                    <FeBookingProvider>
+                      <ModalManagerProvider>
+                        <Header />
+                        {children}
+                        <Footer />
+                        <ModalAuth />
+                      </ModalManagerProvider>
+                    </FeBookingProvider>
+                  </LanguageProvider>
+                </NextAuthProvider>
+              </AppProvider>
             </NextIntlClientProvider>
           </RQClientProvider>
         </ThemeProvider>

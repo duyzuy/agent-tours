@@ -42,7 +42,6 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
     lang: locale,
   });
   const productList = await getProductListByTemplateId(Number(templateId));
-
   const productItem = productList?.find((item) => item.recId === Number(sellableId));
 
   if (
@@ -59,22 +58,20 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
   return (
     <div className="page-detail">
-      <div className="bg-gray-100">
-        <BreadCrumb
-          items={[{ title: "Tour" }, { title: cmsTemplateContent?.name }]}
-          classname="container mx-auto py-4 lg:px-8 md:px-6 px-4"
-        />
-      </div>
+      <BreadCrumb
+        items={[{ title: "Tour" }, { title: cmsTemplateContent?.name }]}
+        classname="container mx-auto py-4 lg:px-8 md:px-6 px-4"
+      />
 
       <div className="container mx-auto pt-3 lg:py-6 lg:px-8 md:px-6 px-3">
-        <ProductHeader name={cmsTemplateContent?.name} tourCode={productItem?.sellableTemplateCode}>
-          <h1 className="text-xl lg:text-2xl text-primary-default font-bold">{cmsTemplateContent?.name}</h1>
+        <ProductHeader name={cmsTemplateContent.name} tourCode={productItem.sellableTemplateCode}>
+          <h1 className="text-xl lg:text-2xl text-primary-default font-bold">{cmsTemplateContent.name}</h1>
         </ProductHeader>
         <div className="flex flex-wrap items-start">
           <div className="tour-contents w-full lg:w-8/12 lg:pr-8">
-            <DynamicGalleries images={cmsTemplateContent?.images} />
+            <DynamicGalleries images={cmsTemplateContent.images} />
 
-            <SingleTourMetaContent items={cmsTemplateContent?.metaData} />
+            <SingleTourMetaContent items={cmsTemplateContent.metaData} />
 
             <TourTabsContent data={cmsTemplateContent} locale={locale} templateId={Number(templateId)} />
 
@@ -85,14 +82,14 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
           </div>
 
           <DynamicProductSummary
-            tourName={cmsTemplateContent?.name}
+            tourName={cmsTemplateContent.name}
             cmsTemplate={cmsTemplateContent}
             defaultProductItem={productItem}
             productList={productList}
             isMobile={isMobile()}
             className="w-full lg:w-4/12 sticky top-4"
           />
-          <ClientStoreData data={cmsTemplateContent?.languages} log={{ productList, cmsTemplateContent }} />
+          <ClientStoreData data={cmsTemplateContent?.languages} />
         </div>
       </div>
     </div>

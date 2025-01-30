@@ -9,11 +9,11 @@ import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import { isUndefined } from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FePassengerInformationFormData } from "../../modules/passegner.interface";
-import { passengerSchema } from "../../modules/passenger.schema";
-import { FeBookingInformation } from "../../../modules/booking.interface";
+import { passengerSchema } from "@/modules/fe/booking/passenger/passenger.schema";
+import { FePassengerInformationFormData } from "@/modules/fe/booking/passenger/passegner.interface";
 import { useTranslations } from "next-intl";
 import { stringToDate } from "@/utils/date";
+import { FeBookingInformation } from "@/store/booking/booking.type";
 
 export interface DrawerPassengerInformationFormProps {
   open?: boolean;

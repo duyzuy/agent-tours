@@ -1,31 +1,26 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
-import PassengerFormWraper from "./_components/PassengerFormWraper";
+import React, { useMemo, useTransition } from "react";
 import { Space, Button } from "antd";
-
+import { isEmpty, isNull, isUndefined } from "lodash";
 import { useTranslations } from "next-intl";
 import ServiceContainer from "./_components/ServiceContainer";
-import usePassengerInformation from "./modules/usePassengerInformation";
-import { isEmpty, isNull, isUndefined } from "lodash";
-import { FeBookingInformation } from "../modules/booking.interface";
-import { useTransition } from "react";
+import PassengerFormWraper from "./_components/PassengerFormWraper";
 import { useRouter } from "@/utils/navigation";
-import { useBookingSelector } from "@/store/hooks";
+import { useBookingSelector } from "@/store";
+import { FeBookingFormData } from "@/store/booking/booking.type";
+import useAddPassengerInformation from "@/modules/fe/booking/passenger/useAddPassengerInformation";
 
-export type PassengerItemType = FeBookingInformation["bookingInfo"]["passengers"][0];
+export type PassengerItemType = FeBookingFormData["bookingInfo"]["passengers"][number];
 
 export type PassengerFormValues = {
   passengerItem: PassengerItemType[];
 };
 
 const PassengerPage = () => {
-  /**
-   * PassengerInfomation form data has been init from hook @useInitProductItemAndPassengersInformation
-   */
-  const { updatePassengerInformation, passengers } = usePassengerInformation();
+  const { updatePassengerInformation, passengers } = useAddPassengerInformation();
   const productInformation = useBookingSelector((state) => state.bookingInfo.product);
-
   const startDate = useBookingSelector((state) => state.bookingInfo.product?.startDate);
+
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

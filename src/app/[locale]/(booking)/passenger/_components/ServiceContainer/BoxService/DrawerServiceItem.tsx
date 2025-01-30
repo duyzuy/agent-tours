@@ -1,15 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { ServiceGroupItemType } from "@/utils/productService";
 import { Drawer, Space, Button, message, Spin } from "antd";
 import { moneyFormatVND } from "@/utils/helper";
 import classNames from "classnames";
-// import DrawerServiceItem from "@/app/portal/booking/tour-services/_components/DrawerServiceItem";
-
 import { PassengerType } from "@/models/common.interface";
 import { FeProductService } from "@/models/fe/serviceItem.interface";
-import { FeBookingInformation, IBookingSsrItemWithPax } from "@/app/[locale]/(booking)/modules/booking.interface";
 import QuantityInput from "@/components/frontend/QuantityInput";
 import { useTranslations } from "next-intl";
+import { FeBookingInformation } from "@/store/booking/booking.type";
 
 export interface DrawerServiceItemProps {
   serviceName: string;
@@ -19,7 +16,7 @@ export interface DrawerServiceItemProps {
   priceConfigs: FeProductService["configs"];
   defaultPriceConfig?: FeProductService["configs"][number];
   onConfirm?: (data?: PassengerConfigItem[]) => void;
-  selectedItems?: IBookingSsrItemWithPax[];
+  selectedItems?: FeBookingInformation["bookingInfo"]["bookingSsrWithPax"];
 }
 
 type PassengerConfigItem = {
