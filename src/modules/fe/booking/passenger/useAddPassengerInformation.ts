@@ -1,8 +1,9 @@
 import { FeBookingInformation } from "@/store/booking/booking.type";
-import { useBookingInformation } from "@/store";
+import { useBookingSelector, useAppDispatch } from "@/store";
 
 const useAddPassengerInformation = () => {
-  const [bookingInformation, dispatch] = useBookingInformation();
+  const bookingInformation = useBookingSelector();
+  const dispatch = useAppDispatch();
   const updatePassengersInformation = (passengers: FeBookingInformation["bookingInfo"]["passengers"]) => {
     dispatch({
       type: "SET_PASSENGERS_INFORMATION",

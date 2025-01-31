@@ -1,11 +1,12 @@
 "use client";
-import LoginForm from "../_components/LoginForm";
+
 import { useTranslations } from "next-intl";
 import { useSignIn } from "../modules/useAuth";
 import { Link } from "@/utils/navigation";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { useRouter } from "@/utils/navigation";
 import AuthLayout from "@/components/layouts/fe/AuthLayout";
+import LoginForm from "@/modules/fe/auth/components/LoginForm";
 
 const CustomerLogin = () => {
   const t = useTranslations("String");

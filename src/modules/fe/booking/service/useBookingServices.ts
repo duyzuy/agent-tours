@@ -1,5 +1,5 @@
 import { FeBookingFormData } from "@/store/booking/booking.type";
-import { useBookingInformation } from "@/store";
+import { useAppDispatch, useBookingSelector } from "@/store";
 
 type BookingServiceItem = Exclude<FeBookingFormData["bookingInfo"]["bookingSsrWithPax"], undefined>[number];
 type PassengerWithConfig = Omit<BookingServiceItem, "inventory" | "stock" | "amount">;
@@ -13,9 +13,10 @@ export interface UseBookingServicesProps {
 }
 
 const useBookingServices = (): UseBookingServicesProps => {
-  const [{ bookingInfo }, dispatch] = useBookingInformation();
+  const bookingInformation = useBookingSelector();
+  const dispatch = useAppDispatch();
 
-  const { bookingSsrWithPax } = bookingInfo;
+  const { bookingSsrWithPax } = bookingInformation.bookingInfo;
 
   const addService: UseBookingServicesProps["addService"] = (passengerWithConfig, inventory, stock) => {
     let newSsrWithPax = [...(bookingSsrWithPax || [])];

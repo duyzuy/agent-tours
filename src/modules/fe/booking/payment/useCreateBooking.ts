@@ -8,15 +8,17 @@ import dayjs from "dayjs";
 import { DATE_FORMAT } from "@/constants/common";
 import { Session } from "next-auth";
 import { useRouter } from "@/utils/navigation";
-import { useBookingInformation } from "@/store";
+import { useAppDispatch, useBookingSelector } from "@/store";
 import useMessage from "@/hooks/useMessage";
 import { useTranslations } from "next-intl";
 
 const useCreateBooking = () => {
   const { mutate: makeBooking, isPending, isIdle } = useCreateBookingOrderMutation();
   const router = useRouter();
-  const [{ bookingInfo }, dispatch] = useBookingInformation();
-  const { passengers, product, couponPolicy, coupons, bookingSsrWithPax } = bookingInfo;
+  // const [{ bookingInfo }, dispatch] = useBookingInformation();
+  const bookingInformation = useBookingSelector();
+  const dispatch = useAppDispatch();
+  const { passengers, product, couponPolicy, coupons, bookingSsrWithPax } = bookingInformation.bookingInfo;
   const message = useMessage();
   const t = useTranslations("String");
 

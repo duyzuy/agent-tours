@@ -29,4 +29,13 @@ const useAppSelector = <T,>(selector: (state: RootStateType) => T) => {
   return selector(state);
 };
 
-export { AppProvider, useAppManager, useAppSelector };
+const useAppDispatch = () => {
+  const context = useContext(AppManagerContext);
+  if (!context) {
+    throw new Error("Hook must use in AppProvider");
+  }
+  const [_, dispatch] = context;
+  return dispatch;
+};
+
+export { AppProvider, useAppManager, useAppSelector, useAppDispatch };

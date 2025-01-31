@@ -8,7 +8,7 @@ const useSummaryPricingSelect = () => {
   const {
     bookingPassenger,
     bookingInfo: { product, couponPolicy },
-  } = useBookingSelector((state) => state);
+  } = useBookingSelector();
 
   const flatAndSortConfigs = (configs: FeProductItem["configs"]) => {
     return configs

@@ -1,6 +1,4 @@
 "use client";
-
-import ForgotPasswordForm from "../_components/ForgotPasswordForm";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Link } from "@/utils/navigation";
@@ -11,6 +9,7 @@ import Counter from "./Counter";
 import { Button } from "antd";
 import useBroadcastChannel from "@/hooks/fe/useBroadcastChanel";
 import AuthLayout from "@/components/layouts/fe/AuthLayout";
+import ForgotPasswordForm from "@/modules/fe/auth/components/ForgotPasswordForm";
 
 export type BroadcastMessageResetPassword = {
   message: string;

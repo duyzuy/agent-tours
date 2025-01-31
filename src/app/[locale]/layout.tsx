@@ -8,14 +8,14 @@ import Header from "./_components/commons/Header";
 import Footer from "./_components/commons/Footer";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
-import ModalAuth from "./(auth)/_components/ModalAuth";
 import { getTranslationFe } from "../../actions/feTranslations";
 import { SITE_NAME } from "@/configs/site";
 import ThemeProvider from "@/lib/ThemeProvider";
 import { RQClientProvider } from "@/lib/RQClientProvider";
-import { NextAuthProvider } from "@/lib/NextAuthProvider";
-import { LanguageProvider, ModalManagerProvider, FeBookingProvider } from "@/store";
+import { NextSessionProvider } from "@/lib/NextSessionProvider";
 import { AppProvider } from "@/store/appContext";
+import AuthModal from "@/modules/fe/auth/components/AuthModal";
+import LocalizationContainer from "@/modules/fe/localization/LocalizationContainer";
 
 const timeZone = "Asia/Bangkok";
 interface Props {
@@ -62,18 +62,13 @@ export default async function RootClientLayout({ children, params: { locale } }:
           <RQClientProvider>
             <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
               <AppProvider>
-                <NextAuthProvider session={session}>
-                  <LanguageProvider>
-                    <FeBookingProvider>
-                      <ModalManagerProvider>
-                        <Header />
-                        {children}
-                        <Footer />
-                        <ModalAuth />
-                      </ModalManagerProvider>
-                    </FeBookingProvider>
-                  </LanguageProvider>
-                </NextAuthProvider>
+                <NextSessionProvider session={session}>
+                  <Header />
+                  {children}
+                  <Footer />
+                  <AuthModal />
+                  <LocalizationContainer />
+                </NextSessionProvider>
               </AppProvider>
             </NextIntlClientProvider>
           </RQClientProvider>

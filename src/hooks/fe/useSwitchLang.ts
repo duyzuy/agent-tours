@@ -12,7 +12,7 @@ enum PageContentType {
 }
 
 const useSwitchLanguage = () => {
-  const languageInformation = useLanguageSelector((state) => state);
+  const languageInformation = useLanguageSelector();
 
   const pathname = usePathname();
 

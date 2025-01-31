@@ -3,7 +3,7 @@ import { memo, useMemo } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { localeDefault, locales } from "@/constants/locale.constant";
 import { LangCode, Locale } from "@/models/management/cms/language.interface";
-import { useLanguageSelector } from "@/store";
+import { useLanguageSelector } from "@/store/language/hooks";
 import LanguageButton from "@/components/frontend/LanguageButton";
 
 import { useParams } from "next/navigation";
@@ -21,12 +21,7 @@ interface LanguageSwitcherProps {
   className?: string;
 }
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "" }) => {
-  const {
-    page: pageContent,
-    tour: tourContent,
-    category: categoryContent,
-    post: postContent,
-  } = useLanguageSelector((state) => state);
+  const { page: pageContent, tour: tourContent, category: categoryContent, post: postContent } = useLanguageSelector();
 
   const pathname = usePathname();
   const params = useParams();

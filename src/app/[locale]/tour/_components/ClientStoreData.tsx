@@ -1,12 +1,13 @@
 "use client";
 import { ICMSTemplateContent } from "@/models/management/cms/cmsTemplateContent.interface";
 import { useEffect } from "react";
-import { useLanguage } from "@/store";
+
+import { useAppDispatch } from "@/store";
 interface ClientStoreDataProps {
   data: ICMSTemplateContent["languages"];
 }
 const ClientStoreData: React.FC<ClientStoreDataProps> = ({ data }) => {
-  const [langInfo, dispatch] = useLanguage();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (data) {

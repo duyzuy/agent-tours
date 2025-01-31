@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Drawer, Space, Button, message, Spin } from "antd";
 import { moneyFormatVND } from "@/utils/helper";
-import classNames from "classnames";
 import { PassengerType } from "@/models/common.interface";
 import { FeProductService } from "@/models/fe/serviceItem.interface";
 import QuantityInput from "@/components/frontend/QuantityInput";
 import { useTranslations } from "next-intl";
 import { FeBookingInformation } from "@/store/booking/booking.type";
-
+import classNames from "classnames";
 export interface DrawerServiceItemProps {
   serviceName: string;
   open?: boolean;
@@ -43,7 +42,7 @@ const DrawerServiceItem: React.FC<DrawerServiceItemProps> = ({
   const [quantityService, setQuantityService] = useState<QuantityServiceItem[]>([]);
 
   const t = useTranslations("String");
-  console.log({ quantityService, bookingItems });
+
   const getPriceConfigsListSelector = () => {
     return priceConfigs.reduce<FeProductService["configs"]>((acc, item) => {
       Array.from({ length: item.open }, (v, k) => {

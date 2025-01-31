@@ -1,6 +1,7 @@
-import { useModalManager } from "@/store";
+import { useAppManager } from "@/store";
 const useAuthModal = () => {
-  const [_, dispatch] = useModalManager();
+  const [_, dispatch] = useAppManager();
+
   const showAuthModal = () => {
     dispatch({ type: "SHOW_AUTH_MODAL" });
   };

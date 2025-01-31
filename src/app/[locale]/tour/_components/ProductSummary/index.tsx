@@ -1,24 +1,17 @@
 "use client";
-import React, { useEffect, useMemo, useTransition, useState, useCallback } from "react";
-import { DatePickerProps } from "antd";
+import React, { useEffect, useTransition, useCallback, useState, memo } from "react";
+import { DatePickerProps, Input } from "antd";
 import classNames from "classnames";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import { useTranslations } from "next-intl";
 import HotlineBox from "@/components/frontend/HotlineBox";
-import useAuthModal from "@/app/[locale]/(auth)/hooks";
 import { stringToDate } from "@/utils/date";
-
 import ProductSummaryCard, { ProductSummaryCardProps } from "./ProductSummaryCard";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
-// import useCoupon from "@/app/[locale]/(booking)/modules/useCoupon";
-// import useSelectProduct from "@/app/[locale]/(booking)/modules/useSelectProduct";
-// import useSelectPassengerQuantity from "@/app/[locale]/(booking)/modules/useSelectPassengerQuantity";
-
 import useSelectProduct from "@/modules/fe/booking/product/useSelectProduct";
 import useCoupon from "@/modules/fe/booking/coupon/useCoupon";
 import useSelectPassengerQuantity from "@/modules/fe/booking/passenger/useSelectPassengerQuantity";
 import { useBookingSelector } from "@/store";
-import useAuth from "@/hooks/fe/useAuth";
 interface ProductSummaryProps {
   cmsTemplate: FeCMSTemplateContent;
   defaultProductItem: FeProductItem;
@@ -36,15 +29,13 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
   cmsTemplate,
 }) => {
   const t = useTranslations("String");
-  const productItem = useBookingSelector((state) => state.bookingInfo.product);
-  const passengers = useBookingSelector((state) => state.bookingPassenger);
+  const bookingInformation = useBookingSelector();
+  const productItem = bookingInformation.bookingInfo.product;
+  const passengerAmounts = bookingInformation.bookingPassenger;
 
   const { addCouponPolicy, removeCouponPolicy, couponPolicy } = useCoupon();
 
   const { initTemplateAndProduct, setProductItem } = useSelectProduct();
-  const { session } = useAuth();
-
-  const { showAuthModal } = useAuthModal();
   const { initPassengerFormDataThenGoToNext, setQuantityPassenger } = useSelectPassengerQuantity();
   const [isPendingInitBookingDetails, startTransitionInitBookingDetailItems] = useTransition();
 
@@ -59,12 +50,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     newProduct && setProductItem(newProduct);
   }, []);
 
-  const handleNextToPassengerInfo = () => {
-    if (session.status === "unauthenticated" || session.status === "loading") {
-      // message.info("Vui long Thuc hien dang nhap.");
-      showAuthModal();
-      return;
-    }
+  const handleGotoPassengerInformation = () => {
     startTransitionInitBookingDetailItems(() => {
       initPassengerFormDataThenGoToNext();
     });
@@ -78,13 +64,13 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
   }, [defaultProductItem]);
 
   const productCardProps: ProductSummaryCardProps = {
-    passenger: passengers,
+    passenger: passengerAmounts,
     productItem: productItem,
     productList: productList,
     coupon: couponPolicy,
     onChangeDepartDate: onChangeProduct,
     onChangePassenger: handleChangePassenger,
-    onNext: handleNextToPassengerInfo,
+    onNext: handleGotoPassengerInformation,
     onChangeCoupon: handleChangeCoupon,
     isLoading: isPendingInitBookingDetails,
     promotion: {
@@ -144,4 +130,4 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     </>
   );
 };
-export default ProductSummary;
+export default memo(ProductSummary);

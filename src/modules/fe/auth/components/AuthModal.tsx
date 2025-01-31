@@ -1,21 +1,23 @@
 "use client";
 import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import { useModalManagerSelector } from "@/store";
-import useAuthModal from "../../hooks";
+import { useModalSelector } from "@/store/modal/hooks";
+
 import { TabsProps, Tabs } from "antd";
-import LoginForm from "../LoginForm";
-import RegistrationForm from "../RegistrationForm";
-import { useSignUp } from "../../modules/useAuth";
+import LoginForm from "./LoginForm";
+import RegistrationForm from "./RegistrationForm";
+import { useSignUp } from "../modules/useAuth";
 import { signIn } from "next-auth/react";
-import { CustomerLoginFormData } from "../../modules/customerAuth.interface";
+import { CustomerLoginFormData } from "../customerAuth.interface";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/frontend/partials/Logo";
 import { usePathname } from "@/utils/navigation";
 import useMessage from "@/hooks/useMessage";
-const ModalAuth: React.FC = () => {
-  const authModal = useModalManagerSelector((state) => state.authModal);
+import useAuthModal from "../hooks/useAuthModal";
+
+const AuthModal: React.FC = () => {
+  const modals = useModalSelector();
   const message = useMessage();
   const [error, setError] = useState<string | undefined | null>();
   const [isLoading, setLoading] = useState(false);
@@ -63,15 +65,15 @@ const ModalAuth: React.FC = () => {
     },
   ];
   useEffect(() => {
-    if (authModal.open) {
+    if (modals.authModal.open) {
       hideAuthModal();
     }
   }, [pathname]);
   return (
-    <Modal centered open={authModal.open} onCancel={hideAuthModal} footer={null} width={420} destroyOnClose>
+    <Modal centered open={modals.authModal.open} onCancel={hideAuthModal} footer={null} width={420} destroyOnClose>
       <div className="px-4 py-2">
         <div className="modal__auth-head mb-3">
-          <Logo width={60} height={60} className="mb-3" />
+          <Logo width={120} height={60} className="mb-3" />
           <p>{t("modalAuth.slogan")}</p>
         </div>
         <div className="modal__auth-main mb-6">
@@ -84,4 +86,4 @@ const ModalAuth: React.FC = () => {
     </Modal>
   );
 };
-export default ModalAuth;
+export default AuthModal;

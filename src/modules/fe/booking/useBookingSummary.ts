@@ -54,10 +54,10 @@ type BreakdownCoupons = {
   subtotal: number;
 };
 const useBookingSummary = () => {
-  const bookingPassenger = useBookingSelector((state) => state.bookingPassenger);
-  const { product, bookingSsrWithPax, passengers, couponPolicy, coupons } = useBookingSelector(
-    (state) => state.bookingInfo,
-  );
+  const {
+    bookingInfo: { product, bookingSsrWithPax, passengers, couponPolicy, coupons },
+    bookingPassenger,
+  } = useBookingSelector();
 
   const getProductFlatPricings = useCallback(() => {
     let items: FeProductItem["configs"] = [];

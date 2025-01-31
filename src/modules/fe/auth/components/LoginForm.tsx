@@ -3,14 +3,17 @@ import { LockOutlined } from "@ant-design/icons";
 import { Button, Form, FormItemProps, Input, InputProps } from "antd";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { CustomerLoginFormData } from "../modules/customerAuth.interface";
-import { customerLoginSchema } from "../modules/customerAuth.schema";
+
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
 import FormItem from "@/components/base/FormItem";
 import { Link } from "@/utils/navigation";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
+import { CustomerLoginFormData } from "../customerAuth.interface";
+import { customerLoginSchema } from "../customerAuth.schema";
+import { PASSWORD_MIN_LENGTH } from "../customerAuth.schema";
+
 export interface LoginFormProps {
   onSubmit?: (data: CustomerLoginFormData) => void;
   onForgotPassword?: () => void;
@@ -32,7 +35,7 @@ type TFieldInputs = {
   placeholder: InputProps["placeholder"];
   type: EFieldType;
 };
-import { PASSWORD_MIN_LENGTH } from "../modules/customerAuth.schema";
+
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false, children, onForgotPassword }) => {
   const t = useTranslations("String");
   const er = useTranslations("Error");

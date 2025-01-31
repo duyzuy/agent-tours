@@ -1,11 +1,10 @@
-import { PassengerType } from "@/models/common.interface";
-import { moneyFormatVND } from "@/utils/helper";
-import { InfoCircleFilled } from "@ant-design/icons";
+import { useState } from "react";
 import { Modal } from "antd";
 import classNames from "classnames";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-
+import { PassengerType } from "@/models/common.interface";
+import { moneyFormatVND } from "@/utils/helper";
+import { InfoCircleFilled } from "@ant-design/icons";
 export interface ProductSummarySubtotalProps {
   label?: string;
   items?: { type: PassengerType; configClass: string; pricing: number; id: number }[];
@@ -17,13 +16,6 @@ const ProductSummarySubtotal = ({ label, items, coupon, subtotal, className = ""
   const t = useTranslations("String");
   const [isOpenModal, setOpenModal] = useState(false);
 
-  const closeBreakDown = () => {
-    setOpenModal(false);
-  };
-
-  const openBreakDown = () => {
-    setOpenModal(true);
-  };
   return (
     <>
       <div
@@ -32,16 +24,14 @@ const ProductSummarySubtotal = ({ label, items, coupon, subtotal, className = ""
         })}
       >
         <p className="flex items-center justify-between font-semibold">
-          <span className="text-gray-600 cursor-pointer" onClick={openBreakDown}>
-            {t("subtotal")}
-            <span className="ml-2  text-blue-600">
-              <InfoCircleFilled />
-            </span>
+          <span className="text-gray-600">{t("subtotal")}</span>
+          <span className="text-red-600 cursor-pointer" onClick={() => setOpenModal(true)}>
+            {moneyFormatVND(subtotal)}
+            <InfoCircleFilled className="ml-2 !text-blue-600" />
           </span>
-          <span className="text-red-600">{moneyFormatVND(subtotal)}</span>
         </p>
       </div>
-      <Modal open={isOpenModal} centered onCancel={closeBreakDown} width={420} footer={null}>
+      <Modal open={isOpenModal} centered onCancel={() => setOpenModal(false)} width={420} footer={null}>
         <div className="modal__breakdown-header mb-4">
           <p className="text-center text-lg">{t("modalBreakdown.title")}</p>
         </div>
@@ -70,7 +60,7 @@ const ProductSummarySubtotal = ({ label, items, coupon, subtotal, className = ""
                 </div>
               </div>
             ) : null}
-            <div className="subtotal justify-between flex">
+            <div className="subtotal justify-between items-center flex">
               <span>{t("subtotal")}</span>
               <span className="text-lg text-red-600 font-[500]">{moneyFormatVND(subtotal)}</span>
             </div>

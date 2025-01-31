@@ -1,13 +1,13 @@
 "use client";
 import { useEffect } from "react";
-import { useLanguage } from "@/store";
+import { useAppDispatch } from "@/store";
 import { LangCode } from "@/models/management/cms/language.interface";
 
 interface ClientDispatchContentProps {
   languages: { slug: string; lang: LangCode }[];
 }
 const ClientDispatchContent: React.FC<ClientDispatchContentProps> = ({ languages }) => {
-  const [_, dispatch] = useLanguage();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (languages && languages.length) {

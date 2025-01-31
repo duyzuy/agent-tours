@@ -14,7 +14,7 @@ interface Props {
 
 export default function FeBookingLayout({ children, params: { locale } }: Props) {
   const session = useSession();
-  const product = useBookingSelector((state) => state.bookingInfo.product);
+  const bookingInformation = useBookingSelector();
   const pathname = usePathname();
 
   const activeKey = useMemo(() => {
@@ -30,7 +30,7 @@ export default function FeBookingLayout({ children, params: { locale } }: Props)
     }
     return step;
   }, [pathname]);
-  if (isUndefined(product) || session.status !== "authenticated") {
+  if (isUndefined(bookingInformation.bookingInfo.product) || session.status !== "authenticated") {
     redirect("/");
   }
   return (

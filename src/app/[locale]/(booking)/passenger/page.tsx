@@ -18,8 +18,10 @@ export type PassengerFormValues = {
 
 const PassengerPage = () => {
   const { updatePassengerInformation, passengers } = useAddPassengerInformation();
-  const productInformation = useBookingSelector((state) => state.bookingInfo.product);
-  const startDate = useBookingSelector((state) => state.bookingInfo.product?.startDate);
+  const {
+    bookingInfo: { product },
+  } = useBookingSelector();
+  const startDate = product?.startDate;
 
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -42,7 +44,7 @@ const PassengerPage = () => {
     );
   }, [passengers]);
 
-  if (!passengers?.length || !passengers || !productInformation) {
+  if (!passengers?.length || !passengers || !product) {
     return null;
   }
 
@@ -58,7 +60,7 @@ const PassengerPage = () => {
             onUpdate={updatePassengerInformation}
           />
           <div className="h-6"></div>
-          <ServiceContainer productId={productInformation.recId} passengerList={passengers} />
+          <ServiceContainer productId={product.recId} passengerList={passengers} />
         </div>
         <div className="text-right mt-6">
           <Space align="end">

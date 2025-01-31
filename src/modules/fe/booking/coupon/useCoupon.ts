@@ -1,11 +1,12 @@
 import { DiscountType } from "@/models/management/core/discountPolicy.interface";
-import { useBookingInformation } from "@/store";
+import { useAppDispatch, useBookingSelector } from "@/store";
 import { useCheckCouponMutation } from "@/mutations/fe/booking";
 import useMessage from "@/hooks/useMessage";
 import { IPromotion } from "@/models/management/core/promotion.interface";
 
 const useCoupon = () => {
-  const [bookingInformation, dispatch] = useBookingInformation();
+  const bookingInformation = useBookingSelector();
+  const dispatch = useAppDispatch();
   const { mutate: checkCouponValid, isPending } = useCheckCouponMutation();
   const {
     bookingInfo: { couponPolicy, coupons },

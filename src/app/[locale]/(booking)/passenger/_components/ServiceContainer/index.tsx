@@ -17,7 +17,9 @@ interface ServiceContainerProps {
 const ServiceContainer: React.FC<ServiceContainerProps> = ({ className = "", passengerList, productId }) => {
   const { isPending, services } = useInitServiceList(productId);
 
-  const { bookingSsrWithPax } = useBookingSelector((state) => state.bookingInfo);
+  const {
+    bookingInfo: { bookingSsrWithPax },
+  } = useBookingSelector();
   const getSelectedSSRItem = useCallback(
     (serviceItem: Exclude<typeof services, undefined>[number]) => {
       return bookingSsrWithPax?.filter((item) => {

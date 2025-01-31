@@ -2,8 +2,8 @@
 import { MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, FormItemProps, Input, InputProps } from "antd";
 import { useTranslations } from "next-intl";
-import { customerRegisterSchema } from "../modules/customerAuth.schema";
-import { CustomerRegisterFormData } from "../modules/customerAuth.interface";
+import { customerRegisterSchema } from "../customerAuth.schema";
+import { CustomerRegisterFormData } from "../customerAuth.interface";
 import { removeVietnameseTones } from "@/utils/helper";
 import { useForm, Controller } from "react-hook-form";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";

@@ -1,13 +1,17 @@
-import { useBookingInformation } from "@/store";
+import { useAppDispatch, useAppSelector, useBookingSelector } from "@/store";
 import { PassengerType } from "@/models/common.interface";
 import useMessage from "@/hooks/useMessage";
 import { useRouter } from "@/utils/navigation";
 import { FePassengerInformationFormData } from "./passegner.interface";
 import { FeBookingInformation } from "@/store/booking/booking.type";
+import { useSession } from "next-auth/react";
+import useAuthModal from "../../auth/hooks/useAuthModal";
 
 const useSelectPassengerQuantity = () => {
-  const [bookingInformation, dispatch] = useBookingInformation();
-
+  const bookingInformation = useBookingSelector();
+  const dispatch = useAppDispatch();
+  const { showAuthModal } = useAuthModal();
+  const session = useSession();
   const message = useMessage();
   const router = useRouter();
 
@@ -88,8 +92,13 @@ const useSelectPassengerQuantity = () => {
   const initPassengerFormDataThenGoToNext = () => {
     const totalAmountPax = getTotalAmountPax();
 
+    if (session.status === "unauthenticated" || session.status === "loading") {
+      showAuthModal();
+      return;
+    }
+
     if (!product) {
-      throw new Error("Product invalid");
+      throw new Error("!Product invalid");
     }
     if (totalAmountPax > product.open || totalAmountPax <= 0) {
       message.error("Số lượng không hợp lệ.");

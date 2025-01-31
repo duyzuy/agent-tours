@@ -1,11 +1,11 @@
 import { useGetServiceListMutation } from "@/mutations/fe/booking";
 import useMessage from "@/hooks/useMessage";
-import { useBookingInformation, useBookingSelector } from "@/store";
+import { useAppDispatch, useBookingSelector } from "@/store";
 import { useEffect } from "react";
 
 const useInitServiceList = (sellableId: number) => {
-  const [_, dispatch] = useBookingInformation();
-  const services = useBookingSelector((state) => state.services);
+  const dispatch = useAppDispatch();
+  const bookingInformation = useBookingSelector();
   const { mutate: getServiceList, isPending, isIdle } = useGetServiceListMutation();
   const message = useMessage();
 
@@ -25,7 +25,7 @@ const useInitServiceList = (sellableId: number) => {
   }, [sellableId]);
 
   return {
-    services,
+    services: bookingInformation.services,
     isPending,
     isIdle,
   };

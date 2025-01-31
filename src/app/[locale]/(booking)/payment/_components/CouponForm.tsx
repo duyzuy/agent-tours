@@ -8,17 +8,16 @@ import useCoupon from "@/modules/fe/booking/coupon/useCoupon";
 interface CouponFormProps {
   className?: string;
 }
-const CouponForm = ({}: CouponFormProps) => {
-  const product = useBookingSelector((state) => state.bookingInfo.product);
-  const coupons = useBookingSelector((state) => state.bookingInfo.coupons);
-
+const CouponForm = ({ className }: CouponFormProps) => {
+  const bookingInformation = useBookingSelector();
+  const { product, coupons } = bookingInformation.bookingInfo;
+  // const coupons = useBookingSelector((state) => state.bookingInfo.coupons);
+  // const product = useBookingSelector((state) => state.bookingInfo.product);
   const [code, setCode] = useState("");
   const { addCoupon, removeCoupon, loading } = useCoupon();
 
   const onAddCoupon = () => {
-    if (!product) {
-      throw new Error("invalid Product");
-    }
+    if (!product) throw new Error("Invalid product");
     addCoupon({ sellableId: product.recId, code });
   };
   return (

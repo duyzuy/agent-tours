@@ -21,8 +21,10 @@ interface BookingSummaryProps {
 const BookingSummary: React.FC<BookingSummaryProps> = ({ className = "" }) => {
   const { productBreakdown, subTotal, subTotalProduct, lastTotalPayment, servicesBreakdown, discountBreakdown } =
     useBookingSummary();
-  const product = useBookingSelector((state) => state.bookingInfo.product);
-  const cmsTemplate = useBookingSelector((state) => state.bookingInfo.cmsTemplate);
+  const {
+    bookingInfo: { product, cmsTemplate },
+  } = useBookingSelector();
+
   const t = useTranslations("String");
   const lang = useLocale() as LangCode;
 

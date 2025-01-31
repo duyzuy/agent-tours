@@ -7,7 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import PaymentMethod from "./PaymentMethod";
 import PolicyContent from "./PolicyContent";
-import { useUserSelector } from "@/store";
+import { useBookingSelector, useUserSelector } from "@/store";
 import { useRouter } from "@/utils/navigation";
 import useCreateBooking from "@/modules/fe/booking/payment/useCreateBooking";
 import { paymentSchema } from "@/modules/fe/booking/payment/payment.schema";
@@ -24,13 +24,15 @@ interface PageWraperProps {
   session: Session | null;
 }
 const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
-  const userProfile = useUserSelector((state) => state.profile);
+  const userProfile = useUserSelector();
+  const bookingInformation = useBookingSelector();
+  const { product } = bookingInformation.bookingInfo;
   const router = useRouter();
   const initCustomerInformation = new FeCustomerInformationFormData(
-    userProfile?.fullname,
-    userProfile?.user.phoneNumber,
-    userProfile?.user.email,
-    userProfile?.address,
+    userProfile?.profile?.fullname,
+    userProfile?.profile?.user.phoneNumber,
+    userProfile?.profile?.user.email,
+    userProfile?.profile?.address,
     "",
     "",
   );
@@ -49,6 +51,7 @@ const PageWraper: React.FC<PageWraperProps> = ({ session }) => {
     createBooking(data, session);
   };
 
+  if (!product) return null;
   return (
     <>
       <div className="payment-page bg-white rounded-md mb-6">

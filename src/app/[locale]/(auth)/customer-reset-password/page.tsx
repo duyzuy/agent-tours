@@ -6,14 +6,13 @@ import AuthLayout from "@/components/layouts/fe/AuthLayout";
 import { useSearchParams } from "next/navigation";
 import { useGetResetPasswordQuery } from "@/queries/fe/auth";
 import { isEmpty, isUndefined } from "lodash";
-import CreatePasswordForm, { CreatePasswordFormProps } from "../_components/CreatePasswordForm";
 import useBroadcastChannel from "@/hooks/fe/useBroadcastChanel";
 import { BroadcastMessageResetPassword } from "../customer-forgot-password/page";
-
 import { useRouter } from "@/utils/navigation";
 import useMessage from "@/hooks/useMessage";
 import { useCustomerSetNewPasswordMutation } from "@/mutations/auth";
 import { useSetNewPassword } from "@/modules/fe/auth/hooks/useSetNewPassword";
+import CreatePasswordForm, { CreatePasswordFormProps } from "@/modules/fe/auth/components/CreatePasswordForm";
 const CustomerResetPasswordPage = () => {
   const t = useTranslations("String");
   const params = useSearchParams();

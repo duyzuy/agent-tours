@@ -1,10 +1,11 @@
 "use client";
-import RegistrationForm from "../_components/RegistrationForm";
+
 import { useTranslations } from "next-intl";
 import { useSignUp } from "../modules/useAuth";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { Link } from "@/utils/navigation";
 import AuthLayout from "@/components/layouts/fe/AuthLayout";
+import RegistrationForm from "@/modules/fe/auth/components/RegistrationForm";
 
 const CustomerRegisterPage = () => {
   const t = useTranslations("String");

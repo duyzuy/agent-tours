@@ -8,21 +8,26 @@ import { formatDate } from "@/utils/date";
 import { PaymentStatus } from "@/models/common.interface";
 import { useBookingSelector } from "@/store";
 const ReservationPage = () => {
-  const reservation = useBookingSelector((state) => state.reservation);
-  const cmsTemplate = useBookingSelector((state) => state.bookingInfo.cmsTemplate);
+  const bookingInformation = useBookingSelector();
+  // const reservation = useBookingSelector((state) => state.reservation);
+  // const cmsTemplate = useBookingSelector((state) => state.bookingInfo.cmsTemplate);
 
   const router = useRouter();
   const bookingOrder = useMemo(() => {
-    return reservation?.bookingOrder;
-  }, [reservation]);
+    return bookingInformation.reservation?.bookingOrder;
+  }, [bookingInformation]);
 
-  const templateProduct = useMemo(() => {
-    return bookingOrder?.template;
-  }, [bookingOrder]);
+  const reservation = useMemo(() => {
+    return bookingInformation.reservation;
+  }, [bookingInformation]);
 
   const sellableProduct = useMemo(() => {
     return bookingOrder?.sellable;
   }, [bookingOrder]);
+
+  const cmsTemplate = useMemo(() => {
+    return bookingInformation?.bookingInfo.cmsTemplate;
+  }, [bookingInformation]);
 
   const handleBackToHome = () => {
     router.push("/");
