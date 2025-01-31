@@ -1,23 +1,22 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import AuthLayout from "@/components/layouts/fe/AuthLayout";
 import { useSearchParams } from "next/navigation";
 import { useGetResetPasswordQuery } from "@/queries/fe/auth";
-import { isEmpty, isUndefined } from "lodash";
+import { isUndefined } from "lodash";
 import useBroadcastChannel from "@/hooks/fe/useBroadcastChanel";
 import { BroadcastMessageResetPassword } from "../customer-forgot-password/page";
 import { useRouter } from "@/utils/navigation";
 import useMessage from "@/hooks/useMessage";
-import { useCustomerSetNewPasswordMutation } from "@/mutations/auth";
+
 import { useSetNewPassword } from "@/modules/fe/auth/hooks/useSetNewPassword";
 import CreatePasswordForm, { CreatePasswordFormProps } from "@/modules/fe/auth/components/CreatePasswordForm";
 const CustomerResetPasswordPage = () => {
   const t = useTranslations("String");
   const params = useSearchParams();
   const router = useRouter();
-  // const { mutate: setNewPassword, isPending, isIdle } = useCustomerSetNewPasswordMutation();
   const { mutate: setNewPassword, isPending } = useSetNewPassword();
   const message = useMessage();
   const secretKey = params.get("secretKey") || "";
@@ -32,7 +31,6 @@ const CustomerResetPasswordPage = () => {
   });
 
   const createNewPassword: CreatePasswordFormProps["onSubmit"] = (data) => {
-    console.log(data);
     setNewPassword(data, {
       onSuccess(data, variables, context) {
         postMessage({ message: "reset password success", status: "success" });
@@ -54,7 +52,6 @@ const CustomerResetPasswordPage = () => {
   }, [data, isLoading]);
   return (
     <AuthLayout title={t("pageTitle.resetPassword")}>
-      {/* <Button onClick={onFinishReset}>finish</Button> */}
       <CreatePasswordForm onSubmit={createNewPassword} userId={Number(userId)} isLoading={isPending} />
     </AuthLayout>
   );

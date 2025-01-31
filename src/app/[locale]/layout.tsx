@@ -58,10 +58,10 @@ export default async function RootClientLayout({ children, params: { locale } }:
   return (
     <html lang={locale}>
       <body suppressHydrationWarning={true}>
-        <ThemeProvider>
-          <RQClientProvider>
-            <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
-              <AppProvider>
+        <AppProvider>
+          <ThemeProvider>
+            <RQClientProvider>
+              <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
                 <NextSessionProvider session={session}>
                   <Header />
                   {children}
@@ -69,10 +69,10 @@ export default async function RootClientLayout({ children, params: { locale } }:
                   <AuthModal />
                   <LocalizationContainer />
                 </NextSessionProvider>
-              </AppProvider>
-            </NextIntlClientProvider>
-          </RQClientProvider>
-        </ThemeProvider>
+              </NextIntlClientProvider>
+            </RQClientProvider>
+          </ThemeProvider>
+        </AppProvider>
       </body>
     </html>
   );

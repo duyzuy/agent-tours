@@ -1,62 +1,36 @@
 "use client";
-import { Modal } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { TabsProps, Tabs, Modal } from "antd";
+import { useTranslations } from "next-intl";
 import { useModalSelector } from "@/store/modal/hooks";
-
-import { TabsProps, Tabs } from "antd";
 import LoginForm from "./LoginForm";
 import RegistrationForm from "./RegistrationForm";
-import { useSignUp } from "../modules/useAuth";
-import { signIn } from "next-auth/react";
-import { CustomerLoginFormData } from "../customerAuth.interface";
-import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
 import Logo from "@/components/frontend/partials/Logo";
 import { usePathname } from "@/utils/navigation";
-import useMessage from "@/hooks/useMessage";
 import useAuthModal from "../hooks/useAuthModal";
+import { useSignUp } from "../hooks/useSignUp";
+import { useSignIn } from "../hooks/useSignIn";
 
 const AuthModal: React.FC = () => {
-  const modals = useModalSelector();
-  const message = useMessage();
-  const [error, setError] = useState<string | undefined | null>();
-  const [isLoading, setLoading] = useState(false);
-  const router = useRouter();
+  const { authModal } = useModalSelector();
+
   const t = useTranslations("String");
   const { hideAuthModal } = useAuthModal();
   const pathname = usePathname();
-  const { signUp, loading: isLoadingRegister } = useSignUp();
+  const { mutate: signUp, isPending: isLoadingRegister } = useSignUp();
 
-  const onSignIn = async (formData: CustomerLoginFormData) => {
-    setLoading(true);
-    try {
-      const response = await signIn("credentials", {
-        username: formData.username,
-        password: formData.password,
-        redirect: false,
-      });
-
-      if (response?.status === 200) {
-        router.refresh();
-        message.success("Đăng nhập thành công.");
-        setError(undefined);
-        hideAuthModal();
-      } else {
-        setError(response?.error);
-      }
-    } catch (error) {
-      message.error("Login failed!");
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { signIn, error, loading } = useSignIn({
+    redirect: false,
+    callback: () => {
+      hideAuthModal();
+    },
+  });
 
   const items: TabsProps["items"] = [
     {
       key: "signin",
       label: <span className="text-lg">{t("login")}</span>,
-      children: <LoginForm error={error} onSubmit={onSignIn} loading={isLoading} />,
+      children: <LoginForm error={error} onSubmit={signIn} loading={loading} />,
     },
     {
       key: "signup",
@@ -65,12 +39,12 @@ const AuthModal: React.FC = () => {
     },
   ];
   useEffect(() => {
-    if (modals.authModal.open) {
+    if (authModal.open) {
       hideAuthModal();
     }
   }, [pathname]);
   return (
-    <Modal centered open={modals.authModal.open} onCancel={hideAuthModal} footer={null} width={420} destroyOnClose>
+    <Modal centered open={authModal.open} onCancel={hideAuthModal} footer={null} width={420} destroyOnClose>
       <div className="px-4 py-2">
         <div className="modal__auth-head mb-3">
           <Logo width={120} height={60} className="mb-3" />

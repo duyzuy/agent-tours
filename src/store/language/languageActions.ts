@@ -1,4 +1,3 @@
-import { ICustomerProfile } from "@/models/customerAuth.interface";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { LanguageContentContainer } from "./language.type";
 

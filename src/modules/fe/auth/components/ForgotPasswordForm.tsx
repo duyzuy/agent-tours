@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { SubmitHandler } from "react-hook-form";
 import classNames from "classnames";
 
-interface ForgotPasswordFormProps {
+export interface ForgotPasswordFormProps {
   children?: React.ReactNode;
   onSubmit?: SubmitHandler<CustomerForgotPasswordFormData>;
   className?: string;

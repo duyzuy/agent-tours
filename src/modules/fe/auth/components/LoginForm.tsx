@@ -8,8 +8,6 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
 import FormItem from "@/components/base/FormItem";
-import { Link } from "@/utils/navigation";
-import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { CustomerLoginFormData } from "../customerAuth.interface";
 import { customerLoginSchema } from "../customerAuth.schema";
 import { PASSWORD_MIN_LENGTH } from "../customerAuth.schema";
