@@ -13,17 +13,20 @@ export const columns: ColumnsType<IOperationDeadline> = [
     width: 100,
   },
   {
-    title: "Loại dịch vụ",
+    title: "Ghi chú",
     key: "type",
     dataIndex: "type",
-    width: 100,
-  },
-  {
-    title: "Ghi chú",
-    key: "remark",
-    dataIndex: "remark",
     width: 400,
+    render: (value, { type, remark }, index) => {
+      return (
+        <>
+          <span className="font-semibold">{type}</span>
+          <div>{remark}</div>
+        </>
+      );
+    },
   },
+
   {
     title: "Ngày thanh toán 1",
     key: "preDeadline",
@@ -46,7 +49,7 @@ export const columns: ColumnsType<IOperationDeadline> = [
     title: "Trạng thái",
     key: "status",
     dataIndex: "status",
-    width: 100,
+    width: 150,
     render: (value, { status }, index) => {
       return (
         <Tag

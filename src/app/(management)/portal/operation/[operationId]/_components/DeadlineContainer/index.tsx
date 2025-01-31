@@ -56,6 +56,7 @@ const DeadlineContainer: React.FC<DeadlineContainerProps> = ({ operationId, isEd
         ...columns,
         {
           title: "",
+          width: 120,
           render: (record) => {
             return (
               <Button icon={<EditOutlined />} onClick={() => setEdit(record)} type="text" size="small">
@@ -83,6 +84,7 @@ const DeadlineContainer: React.FC<DeadlineContainerProps> = ({ operationId, isEd
           loading={loadingDeadline}
           columns={[...mergedColumns]}
           rowKey={"id"}
+          pagination={{ size: "small", simple: true }}
         />
       </div>
       <DrawerOperationDeadline

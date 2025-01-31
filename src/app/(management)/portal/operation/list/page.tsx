@@ -71,6 +71,7 @@ const CodeListPage = () => {
   const mergedColumns: ColumnsType<IOperation> = [
     ...columns,
     {
+      width: 200,
       render(value, record, index) {
         const { status, id } = record;
         //NEW - default sau khi tạo => ACCEPTED, CANCELED
