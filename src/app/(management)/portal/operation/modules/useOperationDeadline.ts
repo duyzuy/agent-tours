@@ -19,6 +19,7 @@ const useOperationDeadline = () => {
         cb?.();
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_DEADLINE_LIST] });
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_THING_TODO_LIST] });
+        queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_STATUS] });
         message.success("Tạo thành công");
       },
       onError(error, variables, context) {
@@ -33,6 +34,7 @@ const useOperationDeadline = () => {
         cb?.();
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_DEADLINE_LIST] });
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_THING_TODO_LIST] });
+        queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_STATUS] });
         message.success("Cập nhật thành công");
       },
       onError(error, variables, context) {
@@ -47,6 +49,7 @@ const useOperationDeadline = () => {
         cb?.();
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_DEADLINE_LIST] });
         queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_THING_TODO_LIST] });
+        queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_STATUS] });
         message.success("Cập nhật thành công");
       },
       onError(error, variables, context) {

@@ -18,6 +18,7 @@ import {
   OperationDeadlineQueryParams,
   OperationDeadlineResponse,
   OperationDeadlineUpdatePayload,
+  OperationReamarkResponse,
 } from "@/models/management/core/operation/operationDeadline.interface";
 import {
   OperationCostingListResponse,
@@ -107,7 +108,7 @@ export const operationDeadlineAPIs = {
     });
   },
   updateReamark: async (payload?: OperationDeadlinePassengerRemarkPayload) => {
-    return await coreApi.post<OperationResponse, BaseResponse<null>>(
+    return await coreApi.post<OperationReamarkResponse, BaseResponse<null>>(
       "core/OperationCode_UpdatePassengerDeadlineRemarks",
       {
         requestObject: { ...payload },

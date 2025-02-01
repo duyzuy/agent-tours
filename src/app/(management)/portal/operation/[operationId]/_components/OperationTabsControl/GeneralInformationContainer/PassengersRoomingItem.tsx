@@ -151,7 +151,18 @@ function PassengerDeadlineRemarkItem({ data, onSave, loading }: PassengerDeadlin
     setNote(data.remark);
   }, [data]);
   return (
-    <div className="item-deadline flex justify-between w-60" key={deadlineId}>
+    <div className="item-deadline border rounded-md justify-between w-60 px-3 py-2" key={deadlineId}>
+      <div className="flex justify-between">
+        <span className="text-xs font-semibold">{deadlineType}</span>
+        <Button
+          size="small"
+          type="text"
+          className="!text-blue-600 hover:!bg-blue-50"
+          icon={<EditOutlined />}
+          shape="circle"
+        />
+      </div>
+      <div className="">{remark || "--"}</div>
       <Popover
         trigger="click"
         open={open}
@@ -181,12 +192,7 @@ function PassengerDeadlineRemarkItem({ data, onSave, loading }: PassengerDeadlin
           </Form>
         }
         onOpenChange={handleOpenChange}
-      >
-        <Button size="small" type="text" className="!text-blue-600 hover:!bg-blue-50" icon={<EditOutlined />}>
-          <span>{deadlineType}</span>
-        </Button>
-      </Popover>
-      <div>{remark}</div>
+      ></Popover>
     </div>
   );
 }

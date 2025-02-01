@@ -53,8 +53,18 @@ export type OperationDeadlinePassengerRemarkPayload = {
   sellableId?: number;
   paxId?: number;
   deadlineId?: number;
-  deadlineType?: string;
+  deadlineType?: EInventoryType;
   remark?: string;
 };
 export interface OperationDeadlineListResponse extends BaseResponse<IOperationDeadline[]> {}
 export interface OperationDeadlineResponse extends BaseResponse<IOperationDeadline> {}
+
+export interface OperationReamarkResponse
+  extends BaseResponse<{
+    recId: number;
+    sellableId: number;
+    paxId: number;
+    deadlineId: number;
+    deadlineType: EInventoryType;
+    remark: string;
+  }> {}
