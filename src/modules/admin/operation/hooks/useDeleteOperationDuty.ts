@@ -4,20 +4,19 @@ import { useTMutation } from "@/lib/reactQueryHooks";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";
-
-const useUpdateOperationDuty = () => {
+const useDeleteOperationDuty = () => {
   const message = useMessage();
   const queryClient = useQueryClient();
   return useTMutation({
-    mutationFn: operationDutyAPIs.update,
+    mutationFn: operationDutyAPIs.delete,
     onSuccess(data, variables, context) {
-      message.success("Cập nhật thành công");
+      message.success("Xoá thành công");
       queryClient.invalidateQueries({ queryKey: [queryCore.GET_OPERATION_STATUS] });
     },
     onError(error, variables, context) {
-      message.error(error.message);
+      message.error("Cập nhật thất bại");
     },
   });
 };
 
-export default useUpdateOperationDuty;
+export default useDeleteOperationDuty;

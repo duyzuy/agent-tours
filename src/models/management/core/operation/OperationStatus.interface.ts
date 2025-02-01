@@ -1,6 +1,6 @@
 import { BaseResponse } from "@/models/common.interface";
 import { RoomingStatusType, RoomingType } from "../../booking/rooming.interface";
-import { IPersonInCharge } from "./PersonInCharge.interface";
+import { IPersonInCharge } from "./personInCharge.interface";
 import { IDocument } from "../document.interface";
 import { IOrderItem } from "../../booking/order.interface";
 import { IPassengerInformation } from "../../booking/passengerInformation.interface";
@@ -13,7 +13,17 @@ export interface OperationStatusDetail {
   totalSale: number;
   numberDutyBookingRequired: number;
   dutyBookingList:
-    | { dutyBookingId: number; sellableId: number; supplier: null; remark: string; status: string }[]
+    | {
+        dutyBookingId: number;
+        sellableId: number;
+        supplier: {
+          recId: number;
+          shortname: string;
+          fullname: string;
+        };
+        remark: string;
+        status: "OK" | "XX";
+      }[]
     | null;
   roomingList: {
     operationId: number;
@@ -52,11 +62,4 @@ export interface OperationStatusDetail {
 
 export interface OperationStatusResponse extends BaseResponse<OperationStatusDetail> {}
 
-export interface OperationStatusOperationIdPayload {
-  operationId?: number;
-}
-export interface OperationStatusSellableIdPayload {
-  sellableId?: number;
-}
-
-export type OperationStatusPayload = OperationStatusOperationIdPayload | OperationStatusSellableIdPayload;
+export type OperationStatusQueryParams = { operationId: number } | { sellableId: number };

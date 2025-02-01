@@ -109,7 +109,7 @@ export const airCostingDetailSchema: ObjectSchema<AirCostingDetailFormData> = ob
 
 export const updateOperationDutySchema: ObjectSchema<{
   sellableId: number;
-  suppliers: { supplierId: number; fullname?: string; shortname?: string; remark: string }[];
+  suppliers: { supplierId: number; fullname?: string; shortname?: string; remark: string; dutyBookingId?: number }[];
 }> = object({
   sellableId: number().required("Không bỏ trống"),
   suppliers: array()
@@ -118,6 +118,7 @@ export const updateOperationDutySchema: ObjectSchema<{
         supplierId: number().required("Thiếu Id supplier"),
         fullname: string(),
         shortname: string(),
+        dutyBookingId: number(),
         remark: string().default(""),
       }),
     )

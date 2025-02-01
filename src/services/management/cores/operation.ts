@@ -7,10 +7,11 @@ import {
   OperationQueryParams,
   OperationResponse,
 } from "@/models/management/core/operation/operation.interface";
+
 import {
-  OperationStatusPayload,
+  OperationStatusQueryParams,
   OperationStatusResponse,
-} from "@/models/management/core/operation/OperationStatus.interface";
+} from "@/models/management/core/operation/operationStatus.interface";
 import {
   OperationDeadlineListResponse,
   OperationDeadlinePassengerRemarkPayload,
@@ -74,9 +75,9 @@ export const operationAPIs = {
       orderBy: queryParams?.orderBy,
     });
   },
-  getStatus: async (payload: OperationStatusPayload) => {
+  getStatus: async (params: OperationStatusQueryParams) => {
     return await coreApi.post<OperationStatusResponse, BaseResponse<null>>("core/OperationCode_GetStatus", {
-      requestObject: { ...payload },
+      requestObject: { ...params },
     });
   },
 };
@@ -222,6 +223,20 @@ export const operationDutyAPIs = {
     return await coreApi.post<UpdateOperationDutyResponse>("core/OperationCode_UpdateDutySupplierList", {
       requestObject: {
         ...payload,
+      },
+    });
+  },
+  delete: async (payload: { dutyBookingId: number; sellableId: number; supplierId: number }) => {
+    return await coreApi.post<UpdateOperationDutyResponse>("core/OperationCode_UpdateDutySupplierList", {
+      requestObject: {
+        sellableId: payload.sellableId,
+        suppliers: [
+          {
+            supplierId: payload.supplierId,
+            dutyBookingId: payload.dutyBookingId,
+            status: "XX",
+          },
+        ],
       },
     });
   },

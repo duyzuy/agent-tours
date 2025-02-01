@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/es/table";
-import { OperationStatusResponse } from "@/models/management/core/operation/OperationStatus.interface";
+import { OperationStatusResponse } from "@/models/management/core/operation/operationStatus.interface";
 import { moneyFormatVND } from "@/utils/helper";
 import { Tag } from "antd";
 import { PaymentStatus } from "@/models/common.interface";
