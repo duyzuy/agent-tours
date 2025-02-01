@@ -1,7 +1,7 @@
 import { Form, Input, Row, Col, Space, Checkbox, InputNumber, Radio } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useForm, Controller } from "react-hook-form";
-import { AirCostingDetailFormData } from "../../../../modules/operation.interface";
+import { AirCostingDetailFormData } from "../../../../../modules/operation.interface";
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";

@@ -1,12 +1,9 @@
 import { useState } from "react";
-import OperationDutyList, { OperationDutyListProps } from "./OperationDutyList";
-import useUpdateOperationDuty from "../../../modules/useUpdateOperationDuty";
-import { TourLeader, UpdateOperationDutyPayload } from "@/models/management/core/operation/operationDuty.interface";
-import { Button, Col, Divider, Empty, Form, Input, Modal, Popconfirm, Row, Space, Table } from "antd";
+import { TourLeader } from "@/models/management/core/operation/operationDuty.interface";
+import { Button, Popconfirm, Row, Space, Table } from "antd";
 import useMessage from "@/hooks/useMessage";
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { useForm, Control } from "react-hook-form";
-import { updateOperationDutySchema } from "../../../schema/operation.schema";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import useUpdateOperationDuty from "@/modules/admin/operation/hooks/useUpdateOperationDuty";
 import TourLeaderFormDrawer from "./TourLeaderFormDrawer";
 
 interface TourLeaderContainerProps {
@@ -41,12 +38,7 @@ const TourLeaderContainer: React.FC<TourLeaderContainerProps> = ({
         </Button>
       </div>
       <p className="mb-6">{`Tối đa ${maximumDutyAmount} Tour leader có thể chọn.`}</p>
-      <TourLeaderFormDrawer
-        sellableId={sellableId}
-        maximumDutyAmount={maximumDutyAmount}
-        open={showFormDrawer}
-        onCancel={() => setShowFormDrawer(false)}
-      />
+
       <Table
         dataSource={dutyBookingList}
         columns={[
@@ -84,6 +76,12 @@ const TourLeaderContainer: React.FC<TourLeaderContainerProps> = ({
           },
         ]}
         pagination={{ hideOnSinglePage: true }}
+      />
+      <TourLeaderFormDrawer
+        sellableId={sellableId}
+        maximumDutyAmount={maximumDutyAmount}
+        open={showFormDrawer}
+        onCancel={() => setShowFormDrawer(false)}
       />
     </div>
   );

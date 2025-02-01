@@ -4,38 +4,33 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
 import { memo, useEffect, useState } from "react";
-import { LandPackageCostingDetailFormData } from "../../../../modules/operation.interface";
+import { VisaCostingDetailFormData } from "../../../../../modules/operation.interface";
 
-interface LandPackageDetailFormProps {
+interface VisaDetailFormProps {
   costingId?: number;
   stockTypes?: EStockType[];
-  onChangeForm?: (type: EInventoryType.LANDPACKAGE, data: LandPackageCostingDetailFormData) => void;
+  onChangeForm?: (type: EInventoryType.VISA, data: VisaCostingDetailFormData) => void;
 }
-const LandPackageDetailForm: React.FC<LandPackageDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
-  const initFormData = new LandPackageCostingDetailFormData(undefined, {
+const VisaDetailForm: React.FC<VisaDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
+  const initFormData = new VisaCostingDetailFormData(undefined, {
     remark: "",
     specialRequest: "",
   });
 
-  const { setValue, getValues, control, watch } = useForm<LandPackageCostingDetailFormData>({
+  const { setValue, getValues, control, watch } = useForm<VisaCostingDetailFormData>({
     // resolver: yupResolver(airCostingDetailSchema),
     defaultValues: { ...initFormData },
   });
 
   const onChangeType = (type: EStockType) => {
-    if (
-      type === EStockType.PACKAGE ||
-      type === EStockType.TOURPACKAGE ||
-      type === EStockType.GUIDE ||
-      type === EStockType.OTHER
-    ) {
+    if (type === EStockType.OTHER || type === EStockType.VISASERVICES) {
       setValue("type", type);
     }
   };
 
   useEffect(() => {
     const data = getValues();
-    onChangeForm?.(EInventoryType.LANDPACKAGE, data);
+    onChangeForm?.(EInventoryType.VISA, data);
   }, [watch()]);
 
   return (
@@ -74,4 +69,4 @@ const LandPackageDetailForm: React.FC<LandPackageDetailFormProps> = ({ costingId
     </>
   );
 };
-export default memo(LandPackageDetailForm);
+export default memo(VisaDetailForm);

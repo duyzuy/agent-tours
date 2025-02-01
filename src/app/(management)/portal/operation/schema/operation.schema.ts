@@ -1,4 +1,4 @@
-import { ObjectSchema, object, string, array, number, mixed } from "yup";
+import { ObjectSchema, object, string, array, number, mixed, boolean } from "yup";
 
 import {
   AirCostingDetailFormData,
@@ -56,6 +56,7 @@ export const operationCreateDeadlineSchema: ObjectSchema<OperationDeadlineFormDa
     )
     .required("Không bỏ trống"),
   preDeadline: string().required("PreDateline không bỏ trống"),
+  needRemarkEachPaxToFollow: boolean(),
   deadline: string().required("Deadline không bỏ trống"),
   remark: string(),
 });

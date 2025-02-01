@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/common.interface";
+import { BaseQueryParams, BaseResponse } from "@/models/common.interface";
 import { EInventoryType } from "../inventoryType.interface";
 
 export interface IOperationThingTodo {
@@ -8,30 +8,46 @@ export interface IOperationThingTodo {
   preDeadline: string;
   deadline: string;
   remark: string;
-  status: "NEW" | "DONE";
-}
-export interface OperationThingTodoParams {
-  operationId?: number;
-  type?: string;
-  status?: "NEW" | "DONE";
-  numberOfDayFromToday?: number;
+  status: "NEW" | "DONE" | "EXPIRED" | "PRE_DEADLINE";
 }
 
-export class OperationThingTodoQueryParams {
-  operationId?: number;
-  type?: string;
-  status?: "NEW" | "DONE";
-  numberOfDayFromToday?: number;
-
+export class OperationThingTodoQueryParams
+  implements
+    BaseQueryParams<{
+      operationId?: number;
+      type?: string;
+      status?: "NEW" | "DONE" | "EXPIRED" | "PRE_DEADLINE";
+      numberOfDayFromToday?: number;
+    }>
+{
+  requestObject?:
+    | {
+        operationId?: number;
+        type?: string;
+        status?: "NEW" | "DONE" | "EXPIRED" | "PRE_DEADLINE";
+        numberOfDayFromToday?: number;
+      }
+    | undefined;
+  pageCurrent?: number | undefined;
+  pageSize?: number | undefined;
+  orderBy?: { sortColumn?: string; direction?: "asc" | "desc" } | undefined;
   constructor(
-    type: string | undefined,
-    operationId: number | undefined,
-    status: "NEW" | "DONE",
-    numberOfDayFromToday: number | undefined,
+    requestObject:
+      | {
+          operationId?: number;
+          type?: string;
+          status?: "NEW" | "DONE" | "EXPIRED" | "PRE_DEADLINE";
+          numberOfDayFromToday?: number;
+        }
+      | undefined,
+    pageCurrent: number | undefined,
+    pageSize: number | undefined,
+    orderBy: { sortColumn?: string; direction?: "asc" | "desc" } | undefined,
   ) {
-    this.type = type;
-    this.status = status;
-    this.numberOfDayFromToday = numberOfDayFromToday ?? 3;
+    this.requestObject = requestObject;
+    this.pageCurrent = pageCurrent;
+    this.pageSize = pageSize;
+    this.orderBy = orderBy;
   }
 }
 

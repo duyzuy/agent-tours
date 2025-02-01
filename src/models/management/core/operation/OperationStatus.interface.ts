@@ -4,6 +4,7 @@ import { IPersonInCharge } from "./PersonInCharge.interface";
 import { IDocument } from "../document.interface";
 import { IOrderItem } from "../../booking/order.interface";
 import { IPassengerInformation } from "../../booking/passengerInformation.interface";
+import { EInventoryType } from "../inventoryType.interface";
 
 export interface OperationStatusDetail {
   operationId: number;
@@ -29,7 +30,17 @@ export interface OperationStatusDetail {
     paxId: number;
     roomingListType: RoomingType;
     roomingListNumber: number;
-    documents: null | IDocument[];
+    documents: IDocument[] | null;
+    passengerDeadlineRemarks:
+      | {
+          recId: number;
+          sellableId: number;
+          paxId: number;
+          deadlineId: number;
+          deadlineType: EInventoryType;
+          remark: string;
+        }[]
+      | null;
   })[];
   orderList: (Pick<
     IOrderItem,

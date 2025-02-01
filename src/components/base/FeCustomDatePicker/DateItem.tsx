@@ -27,8 +27,7 @@ const DateItem: React.FC<{
 
   return (
     <li
-      className={classNames({
-        date: true,
+      className={classNames("date relative", {
         "last-day-of-week": dayjs(date).day() === 0,
         "start-of-week": dayjs(date).day() === 1,
         weekend: dayjs(date).day() === 0,
@@ -42,12 +41,16 @@ const DateItem: React.FC<{
       onClick={() => (isDisable ? undefined : onClick?.(date))}
     >
       {date ? (
-        <span className="date-item-inner">
-          <span className="text-xs text-gray-500 absolute bottom-0 right-1 luna-date z-20">{lunaDate}</span>
-          <time dateTime={dayjs(date).format("yyyy-MM-dd")} className="relative z-20">
-            {dayjs(date).format("D")}
-          </time>
-        </span>
+        <>
+          <span className="date-item-inner">
+            <time dateTime={dayjs(date).format("yyyy-MM-dd")} className="date-item__value relative z-20">
+              {dayjs(date).format("D")}
+            </time>
+          </span>
+          <span className="luna-date text-xs text-gray-500 block text-center top-[2px] right-[2px] luna-date z-20">
+            {lunaDate}
+          </span>
+        </>
       ) : null}
     </li>
   );

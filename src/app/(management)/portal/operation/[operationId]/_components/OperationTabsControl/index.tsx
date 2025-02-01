@@ -1,14 +1,13 @@
-import { IOperationStatus } from "@/models/management/core/operation/operation.interface";
+import { useMemo } from "react";
 import { Tabs } from "antd";
+import { IOperationStatus } from "@/models/management/core/operation/operation.interface";
 
-import { useGetOperationStatus } from "../../modules/useGetOperationStatus";
+import { useGetOperationStatus } from "@/modules/admin/operation/hooks/useGetOperationStatus";
 import DeadlineContainer from "./DeadlineContainer";
 import CostingContainer from "./CostingContainer";
 import RoomingContainer from "./RoomingContainer";
-
-import { useMemo } from "react";
 import TourLeaderContainer from "./TourLeaderContainer";
-import OperationGeneralInformation from "@/components/admin/operation/OperationGeneralInformation";
+import GeneralInformationContainer from "./GeneralInformationContainer";
 
 interface OperationTabsControlProps {
   operationId: number;
@@ -44,7 +43,7 @@ const OperationTabsControl: React.FC<OperationTabsControlProps> = ({ operationId
           key: "information",
           label: "Thông tin chung",
           children: (
-            <OperationGeneralInformation
+            <GeneralInformationContainer
               passengerList={operationStatus?.passengerList}
               orderList={operationStatus?.orderList}
               totalCosting={operationStatus?.totalCosting}
@@ -56,7 +55,7 @@ const OperationTabsControl: React.FC<OperationTabsControlProps> = ({ operationId
         {
           key: "deadline",
           label: "Deadline",
-          children: <DeadlineContainer operationId={operationId} isEditAble={isEditDeadline} />,
+          children: <DeadlineContainer operationId={operationId} editAble={isEditDeadline} />,
         },
         {
           key: "costing",

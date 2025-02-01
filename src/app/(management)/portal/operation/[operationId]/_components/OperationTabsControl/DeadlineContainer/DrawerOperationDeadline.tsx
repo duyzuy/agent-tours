@@ -1,9 +1,9 @@
-import { Drawer, DrawerProps, Form, Input, Row, Col, Space, Button, Select, SelectProps, Checkbox, Radio } from "antd";
+import { Drawer, DrawerProps, Form, Input, Space, Button, Radio, Switch } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { OperationDeadlineFormData } from "../../../modules/operation.interface";
-import { operationCreateDeadlineSchema } from "../../../schema/operation.schema";
+import { OperationDeadlineFormData } from "../../../../modules/operation.interface";
+import { operationCreateDeadlineSchema } from "../../../../schema/operation.schema";
 import { useEffect, useMemo } from "react";
 
 import { isEqualObject } from "@/utils/compare";
@@ -40,7 +40,15 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
   onSubmit,
   initialValue,
 }) => {
-  const initFormData = new OperationDeadlineFormData(undefined, operationId, undefined, undefined, undefined, "");
+  const initFormData = new OperationDeadlineFormData(
+    undefined,
+    operationId,
+    undefined,
+    undefined,
+    undefined,
+    "",
+    false,
+  );
 
   const { setValue, getValues, handleSubmit, control, watch } = useForm<OperationDeadlineFormData>({
     resolver: yupResolver(operationCreateDeadlineSchema),
@@ -52,7 +60,16 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
   const isDisabledButton = useMemo(() => {
     const values = getValues();
 
-    return isEqualObject(["remark"], { remark: initialValue?.remark }, { remark: values.remark });
+    return isEqualObject<OperationDeadlineFormData>(
+      ["remark", "preDeadline", "deadline", "needRemarkEachPaxToFollow", "type"],
+      {
+        remark: initialValue?.remark,
+        type: initialValue?.type,
+        deadline: initialValue?.deadline ?? undefined,
+        preDeadline: initialValue?.preDeadline ?? undefined,
+      },
+      { remark: values.remark, type: values.type, deadline: values.deadline, preDeadline: values.preDeadline },
+    );
   }, [getValues(), initialValue, open, watch()]);
 
   const handleChangePreDeadline: FeCustomDatePickerProps["onChange"] = (value) => {
@@ -71,6 +88,7 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
           initialValue.preDeadline ?? undefined,
           initialValue.deadline ?? undefined,
           initialValue.remark,
+          initialValue.needRemarkEachPaxToFollow,
         )
       : initFormData;
 
@@ -81,16 +99,19 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
 
   return (
     <Drawer
-      title={action === "create" ? "Thêm mới" : "Chỉnh sửa"}
+      title={action === "create" ? "Thêm deadline mới" : "Chỉnh sửa"}
       destroyOnClose
       width={650}
       onClose={onClose}
       open={open}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <Space className="py-3">
+          <Button onClick={onClose}>Huỷ</Button>
+          <Button type="primary" onClick={handleSubmit((data) => onSubmit?.(data, action))} disabled={isDisabledButton}>
+            Lưu
+          </Button>
+        </Space>
+      }
     >
       <Form layout="vertical">
         <Controller
@@ -156,6 +177,15 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
         />
         <Controller
           control={control}
+          name="needRemarkEachPaxToFollow"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem label="Theo dõi từng khách" required validateStatus={error ? "error" : ""} help={error?.message}>
+              <Switch value={field.value} checkedChildren="Có" unCheckedChildren="Không" onChange={field.onChange} />
+            </FormItem>
+          )}
+        />
+        <Controller
+          control={control}
           name="remark"
           render={({ field, fieldState: { error } }) => (
             <FormItem label="Ghi chú" required validateStatus={error ? "error" : ""} help={error?.message}>
@@ -163,13 +193,6 @@ const DrawerOperationDeadline: React.FC<DrawerOperationDeadlineProps> = ({
             </FormItem>
           )}
         />
-
-        <Space>
-          <Button onClick={onClose}>Huỷ</Button>
-          <Button type="primary" onClick={handleSubmit((data) => onSubmit?.(data, action))} disabled={isDisabledButton}>
-            Lưu
-          </Button>
-        </Space>
       </Form>
     </Drawer>
   );

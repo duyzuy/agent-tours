@@ -7,14 +7,12 @@ import FormItem from "@/components/base/FormItem";
 import useMessage from "@/hooks/useMessage";
 import { useGetRoomingList } from "@/queries/core/operation";
 import { ROOM_TYPES } from "@/constants/rooming.constant";
-import RoomingList from "@/app/(management)/portal/operation/[operationId]/_components/RoomingContainer/RoomingList";
+import RoomingList from "@/app/(management)/portal/operation/[operationId]/_components/OperationTabsControl/RoomingContainer/RoomingList";
 import { isUndefined } from "lodash";
-import { useGetOperationStatus } from "@/app/(management)/portal/operation/modules/useGetOperationStatus";
-
 import HandOverRoomingForm from "../_components/HandOverRoomingForm";
 import useRooming from "@/app/(management)/portal/operation/modules/useRooming";
 import OperatorInformation from "../_components/OperatorInformation";
-
+import { useGetOperationStatus } from "@/modules/admin/operation/hooks/useGetOperationStatus";
 interface RoomingPageProps {
   params: { orderId: number; sellableId: number };
 }

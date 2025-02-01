@@ -3,41 +3,50 @@ import FormItem from "@/components/base/FormItem";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
+import CustomDatePicker from "@/components/admin/CustomDatePicker";
+import { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
+import dayjs from "dayjs";
+import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import { memo, useEffect, useState } from "react";
-import { GuideCostingDetailFormData } from "../../../../modules/operation.interface";
+import { RestauranceCostingDetailFormData } from "../../../../../modules/operation.interface";
+import { CAR_TYPES } from "@/constants/transport.constant";
 
-interface GuideDetailFormProps {
+interface RestauranceDetailFormProps {
   costingId?: number;
   stockTypes?: EStockType[];
-  onChangeForm?: (type: EInventoryType.GUIDE, data: GuideCostingDetailFormData) => void;
+  onChangeForm?: (type: EInventoryType.TRANSPORT, data: RestauranceCostingDetailFormData) => void;
 }
-const GuideDetailForm: React.FC<GuideDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
-  const initFormData = new GuideCostingDetailFormData(undefined, {
-    destination: "",
-    guideType: "DOMESTIC",
-    quantity: 1,
+const RestauranceDetailForm: React.FC<RestauranceDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
+  const initFormData = new RestauranceCostingDetailFormData(undefined, {
     remark: "",
     specialRequest: "",
   });
 
-  const { setValue, getValues, control, watch } = useForm<GuideCostingDetailFormData>({
+  const { setValue, getValues, control, watch } = useForm<RestauranceCostingDetailFormData>({
     // resolver: yupResolver(airCostingDetailSchema),
     defaultValues: { ...initFormData },
   });
 
+  const handleChangePickupDate: FeCustomDatePickerProps["onChange"] = (value, dateStr) => {
+    setValue("details.pickUpDate", value?.toISOString());
+  };
+
   const onChangeType = (type: EStockType) => {
-    if (type === EStockType.OTHER) {
+    if (type === EStockType.OTHER || type === EStockType.TABLE) {
       setValue("type", type);
     }
   };
 
+  const onChangeRoomType = (type: string) => {
+    setValue("details.carType", type);
+  };
   useEffect(() => {
     const data = getValues();
-    onChangeForm?.(EInventoryType.GUIDE, data);
+    onChangeForm?.(EInventoryType.TRANSPORT, data);
   }, [watch()]);
 
   return (
-    <Form layout="vertical" component="div">
+    <>
       <Controller
         control={control}
         name="type"
@@ -48,24 +57,6 @@ const GuideDetailForm: React.FC<GuideDetailFormProps> = ({ costingId, stockTypes
                 {item}
               </Checkbox>
             ))}
-          </FormItem>
-        )}
-      />
-      <Controller
-        control={control}
-        name="details.quantity"
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <FormItem label="Số lượng" required>
-            <InputNumber value={value} min={1} max={99} placeholder="Số lượng" className="w-full" onChange={onChange} />
-          </FormItem>
-        )}
-      />
-      <Controller
-        control={control}
-        name="details.destination"
-        render={({ field, fieldState: { error } }) => (
-          <FormItem label="Chặng" required>
-            <Input placeholder="Chặng" {...field} />
           </FormItem>
         )}
       />
@@ -87,7 +78,7 @@ const GuideDetailForm: React.FC<GuideDetailFormProps> = ({ costingId, stockTypes
           </FormItem>
         )}
       />
-    </Form>
+    </>
   );
 };
-export default memo(GuideDetailForm);
+export default memo(RestauranceDetailForm);

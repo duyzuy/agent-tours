@@ -2,9 +2,8 @@ import { Drawer, Row, Col, Form, Input, Space, Button, Divider, Empty } from "an
 import OperationDutyList, { OperationDutyListProps } from "./OperationDutyList";
 import { TourLeader, UpdateOperationDutyPayload } from "@/models/management/core/operation/operationDuty.interface";
 import { useState } from "react";
-import useUpdateOperationDuty from "../../../modules/useUpdateOperationDuty";
 import useMessage from "@/hooks/useMessage";
-import { updateOperationDutySchema } from "../../../schema/operation.schema";
+import { updateOperationDutySchema } from "../../../../schema/operation.schema";
 import { DeleteOutlined } from "@ant-design/icons";
 
 type OperationUpdateDutyFormData = { sellableId: number; suppliers: (TourLeader & { rmk: string })[] };

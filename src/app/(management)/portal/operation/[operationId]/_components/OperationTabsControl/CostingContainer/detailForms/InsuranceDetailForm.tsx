@@ -3,46 +3,34 @@ import FormItem from "@/components/base/FormItem";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
-import CustomDatePicker from "@/components/admin/CustomDatePicker";
-import { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
-import dayjs from "dayjs";
-import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import { memo, useEffect, useState } from "react";
-import { RestauranceCostingDetailFormData } from "../../../../modules/operation.interface";
-import { CAR_TYPES } from "@/constants/transport.constant";
+import { InsuranceCostingDetailFormData } from "../../../../../modules/operation.interface";
 
-interface RestauranceDetailFormProps {
+interface InsuranceDetailFormProps {
   costingId?: number;
   stockTypes?: EStockType[];
-  onChangeForm?: (type: EInventoryType.TRANSPORT, data: RestauranceCostingDetailFormData) => void;
+  onChangeForm?: (type: EInventoryType.INSURANCE, data: InsuranceCostingDetailFormData) => void;
 }
-const RestauranceDetailForm: React.FC<RestauranceDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
-  const initFormData = new RestauranceCostingDetailFormData(undefined, {
+const InsuranceDetailForm: React.FC<InsuranceDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
+  const initFormData = new InsuranceCostingDetailFormData(undefined, {
     remark: "",
     specialRequest: "",
   });
 
-  const { setValue, getValues, control, watch } = useForm<RestauranceCostingDetailFormData>({
+  const { setValue, getValues, control, watch } = useForm<InsuranceCostingDetailFormData>({
     // resolver: yupResolver(airCostingDetailSchema),
     defaultValues: { ...initFormData },
   });
 
-  const handleChangePickupDate: FeCustomDatePickerProps["onChange"] = (value, dateStr) => {
-    setValue("details.pickUpDate", value?.toISOString());
-  };
-
   const onChangeType = (type: EStockType) => {
-    if (type === EStockType.OTHER || type === EStockType.TABLE) {
+    if (type === EStockType.OTHER) {
       setValue("type", type);
     }
   };
 
-  const onChangeRoomType = (type: string) => {
-    setValue("details.carType", type);
-  };
   useEffect(() => {
     const data = getValues();
-    onChangeForm?.(EInventoryType.TRANSPORT, data);
+    onChangeForm?.(EInventoryType.INSURANCE, data);
   }, [watch()]);
 
   return (
@@ -81,4 +69,4 @@ const RestauranceDetailForm: React.FC<RestauranceDetailFormProps> = ({ costingId
     </>
   );
 };
-export default memo(RestauranceDetailForm);
+export default memo(InsuranceDetailForm);

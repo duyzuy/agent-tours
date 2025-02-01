@@ -39,6 +39,7 @@ export class OperationDeadlineFormData {
   preDeadline?: string;
   deadline?: string;
   remark?: string;
+  needRemarkEachPaxToFollow?: boolean;
 
   constructor(
     id: number | undefined,
@@ -47,6 +48,7 @@ export class OperationDeadlineFormData {
     preDeadline: string | undefined,
     deadline: string | undefined,
     remark: string | undefined,
+    needRemarkEachPaxToFollow: boolean | undefined,
   ) {
     this.id = id;
     this.operationId = operationId;
@@ -54,6 +56,7 @@ export class OperationDeadlineFormData {
     this.preDeadline = preDeadline;
     this.deadline = deadline;
     this.remark = remark;
+    this.needRemarkEachPaxToFollow = needRemarkEachPaxToFollow;
   }
 }
 

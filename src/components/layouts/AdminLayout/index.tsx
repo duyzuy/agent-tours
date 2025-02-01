@@ -12,6 +12,7 @@ import useAdminAuth from "@/modules/admin/auth/hooks/useAdminAuth";
 import ThemeModeToggle from "@/components/ThemeModeToggle";
 import { useThemeMode } from "@/context";
 import classNames from "classnames";
+import ThingTodoItemButton from "@/modules/admin/operation/components/ThingTodoItemButton";
 
 interface Props {
   children: React.ReactNode;
@@ -103,6 +104,7 @@ const AdminLayout = ({ children }: Props) => {
           <div className="flex justify-between items-center flex-1">
             <div className="font-semibold text-xl">Tour Management Platform</div>
             <div className="inline-flex items-center gap-x-3">
+              <ThingTodoItemButton />
               <ThemeModeToggle />
               <Dropdown
                 menu={{

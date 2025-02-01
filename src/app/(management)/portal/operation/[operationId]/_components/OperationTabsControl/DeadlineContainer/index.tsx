@@ -1,24 +1,18 @@
 "use client";
 import { IOperationDeadline } from "@/models/management/core/operation/operationDeadline.interface";
 import { useState } from "react";
-import useOperationDeadline from "../../../modules/useOperationDeadline";
-import { columns } from "./columns";
+import useOperationDeadline from "../../../../modules/useOperationDeadline";
 import DrawerOperationDeadline, { DrawerOperationDeadlineProps } from "./DrawerOperationDeadline";
-import { useGetOperationDeadlineListQuery } from "@/queries/core/operation";
-import { Button, Table, TableProps } from "antd";
-import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { ColumnsType } from "antd/es/table";
+import { Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
+import DeadlineList from "./DeadlineList";
 
 interface DeadlineContainerProps {
   operationId: number;
-  isEditAble?: boolean;
+  editAble?: boolean;
 }
-const DeadlineContainer: React.FC<DeadlineContainerProps> = ({ operationId, isEditAble = true }) => {
-  const { data: deadlineData, isLoading: loadingDeadline } = useGetOperationDeadlineListQuery({
-    operationId: operationId,
-    // enabled: !isLoading && !!data,
-  });
-
+const DeadlineContainer: React.FC<DeadlineContainerProps> = ({ operationId, editAble = true }) => {
   const [action, setAction] = useState<"create" | "edit">();
   const [editRecord, setEditRecord] = useState<IOperationDeadline>();
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -51,41 +45,19 @@ const DeadlineContainer: React.FC<DeadlineContainerProps> = ({ operationId, isEd
       });
   };
 
-  const mergedColumns: ColumnsType<IOperationDeadline> = isEditAble
-    ? [
-        ...columns,
-        {
-          title: "",
-          width: 120,
-          render: (record) => {
-            return (
-              <Button icon={<EditOutlined />} onClick={() => setEdit(record)} type="text" size="small">
-                Sửa
-              </Button>
-            );
-          },
-        },
-      ]
-    : [...columns];
   return (
     <>
       <div className="pt-6">
         <div className="mb-6 flex gap-x-4">
           <h3 className="text-lg font-semibold">Danh sách deadline</h3>
-          {isEditAble ? (
+          {editAble ? (
             <Button onClick={setCreate} type="primary" ghost size="small" icon={<PlusOutlined />}>
               Thêm
             </Button>
           ) : null}
         </div>
 
-        <Table<IOperationDeadline>
-          dataSource={deadlineData || []}
-          loading={loadingDeadline}
-          columns={[...mergedColumns]}
-          rowKey={"id"}
-          pagination={{ size: "small", simple: true }}
-        />
+        <DeadlineList operationId={operationId} onEdit={(record) => setEdit(record)} allowEdit={editAble} />
       </div>
       <DrawerOperationDeadline
         operationId={operationId}

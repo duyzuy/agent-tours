@@ -3,11 +3,10 @@ import {
   useDeleteOperationCostingMutation,
 } from "@/mutations/managements/operation";
 
-import { OperationCostingDetailFormData, OperationCostingFormData } from "./operation.interface";
+import { OperationCostingFormData } from "./operation.interface";
 import { useQueryClient } from "@tanstack/react-query";
 import useMessage from "@/hooks/useMessage";
 import { queryCore } from "@/queries/var";
-import { OperationDeadlineFormData } from "./operation.interface";
 
 const useOperationCosting = () => {
   const { mutate: createCosting } = useCreateOperationCostingMutation();

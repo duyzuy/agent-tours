@@ -4,33 +4,38 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
 import { memo, useEffect, useState } from "react";
-import { InsuranceCostingDetailFormData } from "../../../../modules/operation.interface";
+import { LandPackageCostingDetailFormData } from "../../../../../modules/operation.interface";
 
-interface InsuranceDetailFormProps {
+interface LandPackageDetailFormProps {
   costingId?: number;
   stockTypes?: EStockType[];
-  onChangeForm?: (type: EInventoryType.INSURANCE, data: InsuranceCostingDetailFormData) => void;
+  onChangeForm?: (type: EInventoryType.LANDPACKAGE, data: LandPackageCostingDetailFormData) => void;
 }
-const InsuranceDetailForm: React.FC<InsuranceDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
-  const initFormData = new InsuranceCostingDetailFormData(undefined, {
+const LandPackageDetailForm: React.FC<LandPackageDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
+  const initFormData = new LandPackageCostingDetailFormData(undefined, {
     remark: "",
     specialRequest: "",
   });
 
-  const { setValue, getValues, control, watch } = useForm<InsuranceCostingDetailFormData>({
+  const { setValue, getValues, control, watch } = useForm<LandPackageCostingDetailFormData>({
     // resolver: yupResolver(airCostingDetailSchema),
     defaultValues: { ...initFormData },
   });
 
   const onChangeType = (type: EStockType) => {
-    if (type === EStockType.OTHER) {
+    if (
+      type === EStockType.PACKAGE ||
+      type === EStockType.TOURPACKAGE ||
+      type === EStockType.GUIDE ||
+      type === EStockType.OTHER
+    ) {
       setValue("type", type);
     }
   };
 
   useEffect(() => {
     const data = getValues();
-    onChangeForm?.(EInventoryType.INSURANCE, data);
+    onChangeForm?.(EInventoryType.LANDPACKAGE, data);
   }, [watch()]);
 
   return (
@@ -69,4 +74,4 @@ const InsuranceDetailForm: React.FC<InsuranceDetailFormProps> = ({ costingId, st
     </>
   );
 };
-export default memo(InsuranceDetailForm);
+export default memo(LandPackageDetailForm);

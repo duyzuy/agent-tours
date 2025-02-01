@@ -26,8 +26,8 @@ import {
   RestauranceCostingDetailFormData,
   TransportCostingDetailFormData,
   VisaCostingDetailFormData,
-} from "../../../modules/operation.interface";
-import { operationCostingDetailSchema } from "../../../schema/operation.schema";
+} from "../../../../modules/operation.interface";
+import { operationCostingDetailSchema } from "../../../../schema/operation.schema";
 
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
 import { IOperationCosting } from "@/models/management/core/operation/operationCosting.interface";
@@ -68,7 +68,7 @@ import {
   RetweetOutlined,
   UnlockOutlined,
 } from "@ant-design/icons";
-import useOperationCostingDetail from "../../../modules/useOperationCostingDetail";
+import useOperationCostingDetail from "../../../../modules/useOperationCostingDetail";
 import { DATE_TIME_FORMAT } from "@/constants/common";
 
 interface AirDetailItemProps {

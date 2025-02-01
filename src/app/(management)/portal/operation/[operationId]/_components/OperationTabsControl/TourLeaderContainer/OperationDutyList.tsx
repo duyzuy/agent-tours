@@ -1,6 +1,6 @@
 import { Badge, Button, Space, Spin, Table, Tag } from "antd";
-import useGetOperationDutyList from "../../../modules/useGetOperationDutyList";
 import { OperationDutyFormQueryParams, TourLeader } from "@/models/management/core/operation/operationDuty.interface";
+import useGetOperationDutyList from "@/modules/admin/operation/hooks/useGetOperationDutyList";
 
 export interface OperationDutyListProps {
   onSelect?: (record: TourLeader) => void;

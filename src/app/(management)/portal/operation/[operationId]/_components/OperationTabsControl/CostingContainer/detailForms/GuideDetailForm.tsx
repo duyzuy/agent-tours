@@ -1,40 +1,42 @@
 import { Form, Input, Row, Col, Space, Checkbox, InputNumber, Radio } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
 import { memo, useEffect, useState } from "react";
-import { VisaCostingDetailFormData } from "../../../../modules/operation.interface";
+import { GuideCostingDetailFormData } from "../../../../../modules/operation.interface";
 
-interface VisaDetailFormProps {
+interface GuideDetailFormProps {
   costingId?: number;
   stockTypes?: EStockType[];
-  onChangeForm?: (type: EInventoryType.VISA, data: VisaCostingDetailFormData) => void;
+  onChangeForm?: (type: EInventoryType.GUIDE, data: GuideCostingDetailFormData) => void;
 }
-const VisaDetailForm: React.FC<VisaDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
-  const initFormData = new VisaCostingDetailFormData(undefined, {
+const GuideDetailForm: React.FC<GuideDetailFormProps> = ({ costingId, stockTypes, onChangeForm }) => {
+  const initFormData = new GuideCostingDetailFormData(undefined, {
+    destination: "",
+    guideType: "DOMESTIC",
+    quantity: 1,
     remark: "",
     specialRequest: "",
   });
 
-  const { setValue, getValues, control, watch } = useForm<VisaCostingDetailFormData>({
+  const { setValue, getValues, control, watch } = useForm<GuideCostingDetailFormData>({
     // resolver: yupResolver(airCostingDetailSchema),
     defaultValues: { ...initFormData },
   });
 
   const onChangeType = (type: EStockType) => {
-    if (type === EStockType.OTHER || type === EStockType.VISASERVICES) {
+    if (type === EStockType.OTHER) {
       setValue("type", type);
     }
   };
 
   useEffect(() => {
     const data = getValues();
-    onChangeForm?.(EInventoryType.VISA, data);
+    onChangeForm?.(EInventoryType.GUIDE, data);
   }, [watch()]);
 
   return (
-    <>
+    <Form layout="vertical" component="div">
       <Controller
         control={control}
         name="type"
@@ -45,6 +47,24 @@ const VisaDetailForm: React.FC<VisaDetailFormProps> = ({ costingId, stockTypes, 
                 {item}
               </Checkbox>
             ))}
+          </FormItem>
+        )}
+      />
+      <Controller
+        control={control}
+        name="details.quantity"
+        render={({ field: { value, onChange }, fieldState: { error } }) => (
+          <FormItem label="Số lượng" required>
+            <InputNumber value={value} min={1} max={99} placeholder="Số lượng" className="w-full" onChange={onChange} />
+          </FormItem>
+        )}
+      />
+      <Controller
+        control={control}
+        name="details.destination"
+        render={({ field, fieldState: { error } }) => (
+          <FormItem label="Chặng" required>
+            <Input placeholder="Chặng" {...field} />
           </FormItem>
         )}
       />
@@ -66,7 +86,7 @@ const VisaDetailForm: React.FC<VisaDetailFormProps> = ({ costingId, stockTypes, 
           </FormItem>
         )}
       />
-    </>
+    </Form>
   );
 };
-export default memo(VisaDetailForm);
+export default memo(GuideDetailForm);

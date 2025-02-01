@@ -16,6 +16,7 @@ import { OperationQueryParams } from "@/models/management/core/operation/operati
 import { OperationThingTodoQueryParams } from "@/models/management/core/operation/operationThingTodo.interface";
 import { supplierAPIs } from "@/services/management/cores/supplier";
 import { SupplierRs } from "@/models/management/supplier.interface";
+import { OperationDeadlineQueryParams } from "@/models/management/core/operation/operationDeadline.interface";
 
 export const useGetOperationListQuery = (queryParams?: OperationQueryParams) => {
   return useQuery({
@@ -44,20 +45,20 @@ export const useGetOperationDeadlineDetailQuery = ({ id }: { id?: number }) => {
   });
 };
 
-export const useGetOperationDeadlineListQuery = ({
-  operationId,
-  enabled = true,
-}: {
-  operationId?: number;
+export const useGetOperationDeadlineListQuery = (options: {
+  queryParams: OperationDeadlineQueryParams;
   enabled?: boolean;
 }) => {
   return useQuery({
-    queryKey: [queryCore.GET_OPERATION_DEADLINE_LIST, operationId],
-    queryFn: () => operationDeadlineAPIs.getList(operationId),
-    select: (data) => {
-      return data.result;
-    },
-    enabled: enabled,
+    queryKey: [queryCore.GET_OPERATION_DEADLINE_LIST, options.queryParams],
+    queryFn: () => operationDeadlineAPIs.getList(options.queryParams),
+    select: (data) => ({
+      list: data.result,
+      pageCurrent: data.pageCurrent,
+      pageSize: data.pageSize,
+      totalItems: data.totalItems,
+    }),
+    enabled: options.enabled,
   });
 };
 

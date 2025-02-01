@@ -3,7 +3,7 @@ import { Button } from "antd";
 import DrawerCosting, { DrawerCostingProps } from "./DrawerCosting";
 import { useState } from "react";
 import { IOperationCosting } from "@/models/management/core/operation/operationCosting.interface";
-import useOperationCosting from "../../../modules/useOperationCosting";
+import useOperationCosting from "../../../../modules/useOperationCosting";
 
 import CostingBoxList, { CostingBoxListProps } from "./CostingBoxList";
 import DrawerCostingDetail from "./DrawerCostingDetail";

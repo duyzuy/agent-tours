@@ -1,6 +1,6 @@
 import { useGetRoomingList } from "@/queries/core/operation";
 import RoomingList from "./RoomingList";
-import useRooming from "../../../modules/useRooming";
+import useRooming from "../../../../modules/useRooming";
 
 import { RoomingStatusType } from "@/models/management/booking/rooming.interface";
 

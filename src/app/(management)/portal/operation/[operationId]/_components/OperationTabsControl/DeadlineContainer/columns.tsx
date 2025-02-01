@@ -28,7 +28,7 @@ export const columns: ColumnsType<IOperationDeadline> = [
   },
 
   {
-    title: "Ngày thanh toán 1",
+    title: "Hạn hoàn thành 1",
     key: "preDeadline",
     dataIndex: "preDeadline",
     width: 180,
@@ -37,7 +37,7 @@ export const columns: ColumnsType<IOperationDeadline> = [
     },
   },
   {
-    title: "Ngày thanh toán 2",
+    title: "Hạn hoàn thành 2",
     key: "sellableCode",
     dataIndex: "sellableCode",
     width: 180,
@@ -53,10 +53,26 @@ export const columns: ColumnsType<IOperationDeadline> = [
     render: (value, { status }, index) => {
       return (
         <Tag
-          color={status === "NEW" ? "blue" : status === "DONE" ? "green" : status === "EXPIRED" ? "red" : "default"}
+          color={
+            status === "NEW"
+              ? "blue"
+              : status === "DONE"
+              ? "green"
+              : status === "EXPIRED"
+              ? "red"
+              : status === "PRE_DEADLINE"
+              ? "orange"
+              : "default"
+          }
           bordered={false}
         >
-          {status === "NEW" ? "Mới" : status === "DONE" ? "Hoàn thành" : "Không xác định"}
+          {status === "NEW"
+            ? "Mới"
+            : status === "DONE"
+            ? "Hoàn thành"
+            : status === "PRE_DEADLINE"
+            ? "Quá hạn đợt 1"
+            : "Không xác định"}
         </Tag>
       );
     },

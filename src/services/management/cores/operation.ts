@@ -13,7 +13,9 @@ import {
 } from "@/models/management/core/operation/OperationStatus.interface";
 import {
   OperationDeadlineListResponse,
+  OperationDeadlinePassengerRemarkPayload,
   OperationDeadlinePayload,
+  OperationDeadlineQueryParams,
   OperationDeadlineResponse,
   OperationDeadlineUpdatePayload,
 } from "@/models/management/core/operation/operationDeadline.interface";
@@ -33,7 +35,7 @@ import {
 } from "@/models/management/booking/rooming.interface";
 import {
   OperationThingTodoListResponse,
-  OperationThingTodoParams,
+  OperationThingTodoQueryParams,
 } from "@/models/management/core/operation/operationThingTodo.interface";
 import {
   OperationDutyListResponse,
@@ -94,10 +96,23 @@ export const operationDeadlineAPIs = {
       requestObject: { ...payload },
     });
   },
-  getList: async (operationId?: number) => {
+  getList: async (queryParams: OperationDeadlineQueryParams) => {
     return await coreApi.post<OperationDeadlineListResponse, BaseResponse<null>>("core/OperationDeadline_List", {
-      requestObject: { operationId },
+      requestObject: {
+        ...queryParams.requestObject,
+      },
+      pageCurrent: queryParams.pageCurrent,
+      pageSize: queryParams.pageSize,
+      orderBy: queryParams.orderBy,
     });
+  },
+  updateReamark: async (payload?: OperationDeadlinePassengerRemarkPayload) => {
+    return await coreApi.post<OperationResponse, BaseResponse<null>>(
+      "core/OperationCode_UpdatePassengerDeadlineRemarks",
+      {
+        requestObject: { ...payload },
+      },
+    );
   },
 };
 
@@ -182,11 +197,14 @@ export const operationRoomingAPIs = {
 };
 
 export const operationThingTodoAPIs = {
-  getList: async (params: OperationThingTodoParams) => {
+  getList: async (params?: OperationThingTodoQueryParams) => {
     return await coreApi.post<OperationThingTodoListResponse>("core/OperationThingToDo_List", {
       requestObject: {
-        ...params,
+        ...params?.requestObject,
       },
+      orderBy: params?.orderBy,
+      pageCurrent: params?.pageCurrent,
+      pageSize: params?.pageSize,
     });
   },
 };

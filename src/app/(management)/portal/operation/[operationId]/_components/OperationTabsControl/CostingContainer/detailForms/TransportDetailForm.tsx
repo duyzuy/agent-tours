@@ -8,7 +8,7 @@ import { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import dayjs from "dayjs";
 import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import { memo, useEffect, useState } from "react";
-import { TransportCostingDetailFormData } from "../../../../modules/operation.interface";
+import { TransportCostingDetailFormData } from "../../../../../modules/operation.interface";
 import { CAR_TYPES } from "@/constants/transport.constant";
 import { RoomingType } from "@/models/management/booking/rooming.interface";
 

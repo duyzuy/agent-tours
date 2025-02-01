@@ -54,8 +54,30 @@ const OperationThingTodoList: React.FC<OperationThingTodoListProps> = ({ classNa
                         ) : null}
                       </div>
                     </Space>
-                    <Tag color={status === "NEW" ? "blue" : "green"} bordered={false} className="!mr-0">
-                      {status === "NEW" ? "Mới" : status === "DONE" ? "Hoàn thành" : "Không xác định"}
+                    <Tag
+                      color={
+                        status === "NEW"
+                          ? "blue"
+                          : status === "DONE"
+                          ? "green"
+                          : status === "PRE_DEADLINE"
+                          ? "orange"
+                          : status === "EXPIRED"
+                          ? "red"
+                          : undefined
+                      }
+                      bordered={false}
+                      className="!mr-0 font-normal"
+                    >
+                      {status === "NEW"
+                        ? "Mới"
+                        : status === "DONE"
+                        ? "Hoàn thành"
+                        : status === "PRE_DEADLINE"
+                        ? "Hết hạn đợt 1"
+                        : status === "EXPIRED"
+                        ? "Hết hạn"
+                        : "Không xác định"}
                     </Tag>
                   </div>
                 }
@@ -76,7 +98,7 @@ const OperationThingTodoList: React.FC<OperationThingTodoListProps> = ({ classNa
         [className]: className,
       })}
     >
-      <h3 className="font-semibold text-lg">Công việc cần làm</h3>
+      <h3 className="font-semibold text-lg">Lời nhắc</h3>
       <Divider style={{ margin: "12px 0" }} />
       <Tabs items={tabItems} />
     </Card>

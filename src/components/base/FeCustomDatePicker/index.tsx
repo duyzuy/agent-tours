@@ -1,25 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-// import {
-//   format,
-//   endOfMonth,
-//   endOfWeek,
-//   startOfWeek,
-//   getWeeksInMonth,
-//   isSameMonth,
-//   isBefore,
-//   sub,
-//   isSameDay,
-//   isAfter,
-//   startOfToday,
-//   add,
-//   eachDayOfInterval,
-//   differenceInMonths,
-//   startOfMonth,
-//   startOfDay,
-// } from "date-fns";
 import dayjs from "dayjs";
-// import vi from "date-fns/locale/vi";
-// import en from "date-fns/locale/en-US";
 import { NextCalendarButton, PrevCalendarButton, ButtonConfirm, ButtonReset } from "./ButtonActions";
 import DayNameOfWeek from "./DaysNameOfWeek";
 import styles from "./datepicker.module.scss";
@@ -258,7 +238,7 @@ const FeCustomDatePicker: React.FC<FeCustomDatePickerProps> = ({
   console.log(datePicker);
   return (
     <div
-      className={classNames(`${styles["datepicker-wraper"]} py-6 rounded-lg`, {
+      className={classNames(`${styles["datepicker-wraper"]} py-3 rounded-lg`, {
         [className]: className,
       })}
     >

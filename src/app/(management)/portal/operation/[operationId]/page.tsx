@@ -6,7 +6,7 @@ import PageContainer from "@/components/admin/PageContainer";
 import { useGetOperationDetailQuery } from "@/queries/core/operation";
 import OperationStatus from "@/components/admin/operation/OperationStatus";
 import OperationSellableDetail from "@/components/admin/operation/OperationSellableDetail";
-import OperationThingTodoItemListContainer from "./_components/OperationThingTodoItemListContainer";
+import OperationThingTodoItemListContainer from "@/modules/admin/operation/components/OperationThingTodoItemListContainer";
 import OperationPersonInformation from "@/components/admin/operation/OperationPersonInformation";
 import OperationActions from "./_components/OperationActions";
 import OperationTabsControl from "./_components/OperationTabsControl";
