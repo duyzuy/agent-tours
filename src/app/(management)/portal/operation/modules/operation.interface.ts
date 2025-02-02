@@ -1,5 +1,5 @@
 import { IOperation, OperationPayload } from "@/models/management/core/operation/operation.interface";
-import { IPersonInCharge } from "@/models/management/core/operation/personInCharge.interface";
+import { IPersonInCharge } from "@/models/management/core/personInCharge.interface";
 import { EInventoryType, EStockType } from "@/models/management/core/inventoryType.interface";
 import { RoomingType } from "@/models/management/booking/rooming.interface";
 import {

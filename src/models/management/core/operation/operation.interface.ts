@@ -2,7 +2,7 @@ import { BaseResponse, PassengerType, PaymentStatus } from "@/models/common.inte
 import { ISellable } from "../sellable.interface";
 import { ITemplateSellableDetail } from "../templateSellable.interface";
 import { BaseQueryParams } from "@/models/common.interface";
-import { IPersonInCharge } from "./personInCharge.interface";
+import { IPersonInCharge } from "../personInCharge.interface";
 
 export type IOperationStatus = "NEW" | "DONE" | "ACCEPTED" | "HANDOVERED" | "LOCKED" | "PENDINGCANCELED" | "CANCELED";
 
