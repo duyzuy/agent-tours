@@ -159,45 +159,46 @@ function PassengerDeadlineRemarkItem({ data, onSave, loading }: PassengerDeadlin
     <div className="item-deadline border rounded-md justify-between w-80 px-3 py-2" key={deadlineId}>
       <div className="flex justify-between">
         <span className="text-xs font-semibold">{deadlineType}</span>
-        <Button
-          size="small"
-          type="text"
-          className="!text-blue-600 hover:!bg-blue-50"
-          icon={<EditOutlined />}
-          shape="circle"
-        />
+        <Popover
+          trigger="click"
+          open={open}
+          content={
+            <Form disabled={loading} className="w-80">
+              <FormItem>
+                <Input.TextArea
+                  rows={3}
+                  placeholder={`Thông tin ${deadlineType}`}
+                  value={note}
+                  onChange={(evt) => setNote(evt.target.value)}
+                />
+              </FormItem>
+              <Space>
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={() => onSave?.({ sellableId, deadlineId, paxId, remark: note, deadlineType, recId }, hide)}
+                  loading={loading}
+                >
+                  Lưu
+                </Button>
+                <Button size="small" onClick={hide}>
+                  Đóng
+                </Button>
+              </Space>
+            </Form>
+          }
+          onOpenChange={handleOpenChange}
+        >
+          <Button
+            size="small"
+            type="text"
+            className="!text-blue-600 hover:!bg-blue-50"
+            icon={<EditOutlined />}
+            shape="circle"
+          />
+        </Popover>
       </div>
       <div className="text-xs">{remark || "--"}</div>
-      <Popover
-        trigger="click"
-        open={open}
-        content={
-          <Form disabled={loading} className="w-80">
-            <FormItem>
-              <Input.TextArea
-                rows={3}
-                placeholder={`Thông tin ${deadlineType}`}
-                value={note}
-                onChange={(evt) => setNote(evt.target.value)}
-              />
-            </FormItem>
-            <Space>
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => onSave?.({ sellableId, deadlineId, paxId, remark: note, deadlineType, recId }, hide)}
-                loading={loading}
-              >
-                Lưu
-              </Button>
-              <Button size="small" onClick={hide}>
-                Đóng
-              </Button>
-            </Space>
-          </Form>
-        }
-        onOpenChange={handleOpenChange}
-      ></Popover>
     </div>
   );
 }
