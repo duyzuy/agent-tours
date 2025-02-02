@@ -9,7 +9,6 @@ const config = {
 };
 
 export const mediaConfig = {
-  depth: 3,
   accept: ".jpg, .jpeg, .png, .pdf, .svg, .docx, .xlsx, .gif",
   rootPath: "/uploads",
   rootApiPath: `${
