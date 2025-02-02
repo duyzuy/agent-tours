@@ -1,60 +1,49 @@
 "use client";
+import { Status } from "@/models/common.interface";
 import { FeOrderDetailResponse } from "@/models/fe/order.interface";
 import { moneyFormatVND } from "@/utils/helper";
-import { Table } from "antd";
+import { Table, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 
 type FormOfPaymentType = FeOrderDetailResponse["result"]["fops"][number];
-interface FormOfPaymentsProps {
+interface FormOfPaymentListProps {
   title?: string;
   items: FeOrderDetailResponse["result"]["fops"];
 }
-const FormOfPayments = ({ title, items }: FormOfPaymentsProps) => {
+const FormOfPaymentList = ({ title, items }: FormOfPaymentListProps) => {
   const columns: ColumnsType<FormOfPaymentType> = [
     {
-      title: "document",
-      dataIndex: "fopDocument",
+      title: "#ID",
+      dataIndex: "recId",
     },
     {
-      title: "Loại fop",
+      title: "Hình thức thanh toán",
       dataIndex: "fopType",
-      render: (_, record) => {
-        return <>{record.fopType}</>;
+      render: (_, { fopType, fopDocument }) => {
+        return (
+          <>
+            <div className="text-xs">{fopType}</div>
+            <div>{fopDocument}</div>
+          </>
+        );
       },
     },
+
     {
-      title: "Ghi chú",
-      dataIndex: "infoNote",
-      render: (_, record) => {
-        return <>{record.infoNote}</>;
-      },
-    },
-    {
-      title: "infoNumber",
-      dataIndex: "infoNumber",
-      render: (_, record) => {
-        return <>{record.infoNumber}</>;
-      },
-    },
-    {
-      title: "infoTId",
-      dataIndex: "infoTId",
-      render: (_, record) => {
-        return <>{record.infoTId}</>;
-      },
-    },
-    {
-      title: "infoTrace",
-      dataIndex: "infoTrace",
-      render: (_, record) => {
-        return <>{record.infoTrace}</>;
-      },
-    },
-    {
-      title: "infoTrace",
-      dataIndex: "infoTnxId",
-      render: (_, record) => {
-        return <>{record.infoTnxId}</>;
+      title: "Thông tin thanh toán",
+      render(value, record, index) {
+        return (
+          <>
+            <div>{record.infoNumber}</div>
+            <div>{record.infoTId}</div>
+            <div>{record.infoTrace}</div>
+            <div>{record.infoNumber}</div>
+            <div>
+              <div className="text-xs">Ghi chú</div>
+              <div>{record.infoNote || "--"}</div>
+            </div>
+          </>
+        );
       },
     },
     {
@@ -74,17 +63,42 @@ const FormOfPayments = ({ title, items }: FormOfPaymentsProps) => {
     {
       title: "Tình trạng",
       dataIndex: "amount",
-      render: (_, record) => {
-        return <>{record.status}</>;
+      render: (_, { status }) => {
+        return (
+          <Tag
+            color={
+              status === Status.OK
+                ? "green"
+                : status === Status.QQ
+                ? "orange"
+                : status === Status.XX
+                ? "red"
+                : "default"
+            }
+            bordered={false}
+          >
+            {status === Status.OK
+              ? "Đã duyệt"
+              : status === Status.QQ
+              ? "Chờ duyệt"
+              : status === Status.XX
+              ? "Đã huỷ"
+              : "Unknown"}
+          </Tag>
+        );
       },
     },
   ];
   return (
     <div className="form-of-payment-list">
       {title && <h3 className="font-[500] text-[16px] mb-3 lg:mb-6">{title}</h3>}
-
-      <Table<FormOfPaymentType> dataSource={items} columns={columns} />
+      <Table
+        rowKey="recId"
+        dataSource={items}
+        columns={columns}
+        pagination={{ pageSize: 10, hideOnSinglePage: true }}
+      />
     </div>
   );
 };
-export default FormOfPayments;
+export default FormOfPaymentList;

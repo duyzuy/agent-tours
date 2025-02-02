@@ -10,7 +10,10 @@ import { formatDate } from "@/utils/date";
 import { notFound } from "next/navigation";
 
 import PassengerOrderInformation from "../../_components/PassengerOrderInformation";
-import FormOfPayments from "../../_components/FormOfPaymentList";
+import DepositeTimeLine from "./_components/DepositeTimeLine";
+import ContactInformationBox from "./_components/ContactInformationBox";
+import FormOfPaymentList from "../../_components/FormOfPaymentList";
+import InvoiceBox from "./_components/InvoiceBox";
 
 export async function generateMetadata(
   { params }: { params: { locale: LangCode; orderId: number } },
@@ -46,7 +49,7 @@ export default async function CustomerOrderDetailPage({ params }: { params: { lo
     <>
       <div className="box-info mb-6">
         <h1 className="text-xl flex items-center font-[500] mb-6">{`#${bookingOrderId} - ${bookingOrder.template.name}`}</h1>
-        <div className="customer-info border-b mb-3 pb-3">
+        <div className="customer-info mb-3">
           <h3 className="font-[500] text-[16px] mb-3">Thông tin tour</h3>
           <div className="grid grid-cols-3 gap-3">
             <div>
@@ -97,30 +100,41 @@ export default async function CustomerOrderDetailPage({ params }: { params: { lo
             </div>
           </div>
         </div>
-        <div className="customer-info border-b mb-3 pb-3">
-          <h3 className="font-[500] text-[16px] mb-3">Thông tin người đặt</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <div className="text-xs">Họ và tên</div>
-              <div>{bookingOrder.custName}</div>
-            </div>
-            <div>
-              <div className="text-xs">Email</div>
-              <div>{bookingOrder.custEmail}</div>
-            </div>
-            <div>
-              <div className="text-xs">Số điện thoại</div>
-              <div>{bookingOrder.custPhoneNumber}</div>
-            </div>
-            <div>
-              <div className="text-xs">Địa chỉ liên hệ</div>
-              <div>{bookingOrder.custAddress || "--"}</div>
-            </div>
-          </div>
-        </div>
-        <PassengerOrderInformation title="Thông tin khách" items={passengers} className="mb-6" />
+        <DepositeTimeLine
+          title="Các giai đoạn cần thực hiện thanh toán"
+          items={orderDetail.rulesAndPolicies.depositTimelimits}
+          paymentStatus={orderDetail.bookingOrder.paymentStatus}
+        />
+
+        <ContactInformationBox
+          bookingOrderId={bookingOrder.recId}
+          custAddress={bookingOrder.custAddress}
+          custEmail={bookingOrder.custEmail}
+          custPhoneNumber={bookingOrder.custPhoneNumber}
+          custName={bookingOrder.custName}
+          rmk={bookingOrder.rmk}
+          className="border-b mb-3 pb-3"
+        />
+
+        <InvoiceBox
+          title="Thông tin xuất hoá đơn"
+          bookingOrderId={bookingOrder.recId}
+          invoiceName={bookingOrder.invoiceName}
+          invoiceCompanyName={bookingOrder.invoiceCompanyName}
+          invoiceAddress={bookingOrder.invoiceAddress}
+          invoiceTaxCode={bookingOrder.invoiceTaxCode}
+          invoiceEmail={bookingOrder.invoiceEmail}
+          className="border-b mb-3 pb-3"
+        />
+        <PassengerOrderInformation
+          bookingOrderId={bookingOrder.recId}
+          title="Thông tin khách"
+          items={passengers}
+          className="mb-6"
+          startDate={bookingOrder.sellable.startDate}
+        />
         {/* <OrderServiceList title="Thông tin dịch vụ" items={ssrBookings} className="mb-6" /> */}
-        <FormOfPayments title="Thông tin thanh toán" items={orderDetail.fops} />
+        <FormOfPaymentList title="Thông tin thanh toán" items={orderDetail.fops} />
       </div>
     </>
   );

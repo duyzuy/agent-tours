@@ -5,12 +5,12 @@ import { Space } from "antd";
 import { Link } from "@/utils/navigation";
 import { Button } from "antd";
 import { IconAccount } from "@/assets/icons";
-import { signOut } from "next-auth/react";
 import { LogoutOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 import { useClickOutSide } from "@/hooks/fe/useClickOutSide";
 import { useEffect } from "react";
 import { usePathname } from "@/utils/navigation";
+import { useSignOut } from "@/modules/fe/auth/hooks/useSignOut";
 
 interface UserCardDropdownProps {
   isAuth?: boolean;
@@ -23,6 +23,8 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ isAuth, username, c
 
   const pathname = usePathname();
   const [showDropdown, setShowDropdown] = useState(false);
+  const { signOut } = useSignOut();
+
   const toggleDropdown = () => {
     setShowDropdown((prev) => !prev);
   };
@@ -43,7 +45,7 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ isAuth, username, c
             type="text"
             icon={<IconAccount className="w-5 h-5" />}
             onClick={toggleDropdown}
-            className="!inline-flex items-center !px-3"
+            className="!inline-flex items-center !px-2"
           >
             {username}
           </Button>

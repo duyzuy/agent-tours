@@ -3,10 +3,12 @@ import ProfileInformationBox from "./_components/ProfileInformationBox";
 import { getTranslations } from "next-intl/server";
 export default async function CustomerPage() {
   const userProfile = await getUserCustomerProfile();
-
   const t = await getTranslations("String");
   const c = await getTranslations("Customer");
 
+  if (!userProfile) {
+    return null;
+  }
   return (
     <>
       <div className="box-info mb-6">
@@ -32,7 +34,20 @@ export default async function CustomerPage() {
         </div>
       </div>
 
-      <ProfileInformationBox data={userProfile} />
+      <ProfileInformationBox
+        fullname={userProfile.fullname}
+        dob={userProfile.dob}
+        address={userProfile.address}
+        district={userProfile.district}
+        city={userProfile.city}
+        country={userProfile.country}
+        idNumber={userProfile.idNumber}
+        idDoi={userProfile.idDoi}
+        idDoe={userProfile.idDoe}
+        passportNumber={userProfile.passportNumber}
+        passportDoi={userProfile.passportDoi}
+        passportDoe={userProfile.passportDoe}
+      />
     </>
   );
 }

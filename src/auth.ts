@@ -1,7 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { CustomerLoginResponse, ICustomerAuthInformation } from "@/models/customerAuth.interface";
-import { Status } from "@/models/common.interface";
+import { BaseResponse, Status } from "@/models/common.interface";
 import { parseJWT } from "@/utils/jwt";
 
 export const authOptions: NextAuthOptions = {
@@ -21,8 +21,6 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        console.log({ credentials, req });
-
         const { username, password } = credentials || {};
 
         const response = await fetch(`${process.env.API_ROOT}/localfront/Login`, {
@@ -34,7 +32,7 @@ export const authOptions: NextAuthOptions = {
             "Content-Type": "application/json",
           },
         });
-        const data = (await response.json()) as CustomerLoginResponse;
+        const data = (await response.json()) as BaseResponse<string>;
 
         if (data.status === Status.OK) {
           const dataParse = parseJWT<{
@@ -45,7 +43,7 @@ export const authOptions: NextAuthOptions = {
           }>(data.result);
 
           const userInfo = JSON.parse(dataParse.result) as ICustomerAuthInformation;
-
+          console.log({ data });
           return {
             id: userInfo.recId.toString(),
             email: userInfo.email,
@@ -85,10 +83,10 @@ export const authOptions: NextAuthOptions = {
     // },
     async session({ session, token, user }) {
       session.user.accessToken = token.accessToken;
+
       return session;
     },
     async jwt({ token, user, trigger, session, account }) {
-      // console.log({ token, user, account, profile });
       if (user) {
         token.accessToken = user.accessToken;
       }

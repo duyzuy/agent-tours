@@ -16,6 +16,7 @@ import { NextSessionProvider } from "@/lib/NextSessionProvider";
 import { AppProvider } from "@/store/appContext";
 import AuthModal from "@/modules/fe/auth/components/AuthModal";
 import LocalizationContainer from "@/modules/fe/localization/LocalizationContainer";
+import ServiceWorker from "./_components/ServiceWorker";
 
 const timeZone = "Asia/Bangkok";
 interface Props {
@@ -68,6 +69,7 @@ export default async function RootClientLayout({ children, params: { locale } }:
                   <Footer />
                   <AuthModal />
                   <LocalizationContainer />
+                  <ServiceWorker />
                 </NextSessionProvider>
               </NextIntlClientProvider>
             </RQClientProvider>

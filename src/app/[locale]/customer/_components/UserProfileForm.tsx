@@ -2,18 +2,31 @@
 import { useEffect } from "react";
 import { Form, Input, Button, Space, Row, Col, DatePickerProps } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { CustomerProfileFormData, ICustomerProfile } from "@/models/fe/profile.interface";
+import { CustomerProfileFormData } from "@/models/fe/profile.interface";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import { HandleSubmit } from "@/hooks/useFormSubmit";
-import { customerProfileSchema } from "../modules/customerSchema";
+import { customerProfileSchema } from "@/modules/fe/manageBooking/validate.schema";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "@/constants/common";
 
 export interface UserProfileFormProps {
   onCancel?: () => void;
-  values?: ICustomerProfile;
+  values?: {
+    fullname: string;
+    dob: string;
+    address: string;
+    district: string;
+    city: string;
+    country: string;
+    idNumber: string;
+    idDoi: string;
+    idDoe: string;
+    passportNumber: string;
+    passportDoi: string;
+    passportDoe: string;
+  };
   onSubmit?: (data: CustomerProfileFormData, cb?: () => void) => void;
   isloading?: boolean;
 }
@@ -62,14 +75,13 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSubmit, values, onC
         values.passportDoe,
       );
       Object.keys(data).forEach((key) => {
-        console.log({ key, value: values[key as keyof CustomerProfileFormData] });
         setValue(key as keyof CustomerProfileFormData, values[key as keyof CustomerProfileFormData]);
       });
     }
   }, [values]);
   return (
     <>
-      <Form layout="vertical">
+      <Form layout="vertical" disabled={isloading}>
         <div className="mb-3">
           <span className="text-base font-[500]">Thông tin cơ bản</span>
         </div>

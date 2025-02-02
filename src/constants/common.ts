@@ -2,6 +2,7 @@ export enum LOCAL_STORAGE_KEY {
   AG_AUTH_TOKEN = "_ag_auth_token",
   LOGIN_USERNAME = "_login_username",
   LOCAL_USER_INFORMATION = "_local_user_information",
+  ACCESS_TOKEN = "_access_token",
 }
 /**
  * Date format when create Stock, Sellable

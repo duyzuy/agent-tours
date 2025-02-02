@@ -1,11 +1,16 @@
-import { getAgToken } from "@/utils/common";
 import { client } from "@/services/api";
-import { CustomerProfilePayload, CustomerProfileResponse } from "@/models/fe/profile.interface";
+import {
+  CustomerProfilePayload,
+  CustomerProfileResponse,
+  CustomerUpdateProfileResponse,
+} from "@/models/fe/profile.interface";
+import { getAccessToken } from "@/utils/common";
 export const customerAPIs = {
-  updateProfile: async ({ payload, token = "" }: { payload?: CustomerProfilePayload; token?: string }) => {
-    return await client.post<CustomerProfileResponse>("localfront/editProfile", {
+  updateProfile: async (payload?: CustomerProfilePayload) => {
+    const accessToken = getAccessToken();
+    return await client.post<CustomerUpdateProfileResponse>("localfront/editProfile", {
       headers: {
-        Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
+        Authorization: accessToken ? `Bearer ${encodeURIComponent(accessToken)}` : "",
       },
       body: {
         requestObject: {
@@ -14,10 +19,11 @@ export const customerAPIs = {
       },
     });
   },
-  getProfile: async (token?: string) => {
+  getProfile: async () => {
+    const accessToken = getAccessToken();
     return await client.post<CustomerProfileResponse>("localfront/getProfile", {
       headers: {
-        Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
+        Authorization: accessToken ? `Bearer ${encodeURIComponent(accessToken)}` : "",
       },
       body: {
         requestObject: {},

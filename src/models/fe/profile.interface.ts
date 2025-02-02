@@ -15,10 +15,6 @@ export interface ICustomerProfile {
   passportNumber: string;
   passportDoi: string;
   passportDoe: string;
-  status: Status;
-  sysFstUser: string;
-  sysFstUpdate: string;
-  sysBelongTo: string;
   user: {
     recId: number;
     faceBookId: string;
@@ -31,6 +27,22 @@ export interface ICustomerProfile {
 }
 
 export interface CustomerProfileResponse extends BaseResponse<ICustomerProfile> {}
+export interface CustomerUpdateProfileResponse
+  extends BaseResponse<{
+    fullname: string;
+    dob: string;
+    address: string;
+    district: string;
+    city: string;
+    country: string;
+    idNumber: string;
+    idDoi: string;
+    idDoe: string;
+    passportNumber: string;
+    passportDoi: string;
+    passportDoe: string;
+    user: null;
+  }> {}
 
 export interface CustomerProfilePayload {
   fullname?: string;

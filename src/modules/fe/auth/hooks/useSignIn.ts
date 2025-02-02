@@ -31,14 +31,13 @@ export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string; 
       { prompt: "login" },
     )
       .then((response) => {
-        console.log(response);
         if (response?.status === 200) {
-          router.refresh();
-          callback?.();
           if (redirect && redirect === true) {
             router.push(callbackUrl ? `/${callbackUrl}` : `/`);
           }
+          router.refresh();
           message.success("Đăng nhập thành công.");
+          callback?.();
         } else {
           setError(response?.error);
           message.error(response?.error);

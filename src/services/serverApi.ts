@@ -59,10 +59,10 @@ const request = async <TSuccess, TError>(
 };
 
 export const serverRequest = {
-  get: <TSuccess, TError>(url: string, options?: Options) => {
+  get: <TSuccess, TError extends object = {}>(url: string, options?: Options) => {
     return request<TSuccess, TError>(url, "GET", options);
   },
-  post: <TSuccess, TError>(url: string, options?: Options) => {
+  post: <TSuccess, TError extends object = {}>(url: string, options?: Options) => {
     return request<TSuccess, TError>(url, "POST", options);
   },
 };

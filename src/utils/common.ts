@@ -40,6 +40,16 @@ export const removeAdminUsername = () => {
   !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.LOGIN_USERNAME);
 };
 
+export const setAccessToken = (accessToken: string) => {
+  !isSSR() && localStorage.setItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, accessToken);
+};
+export const removeAccessToken = () => {
+  !isSSR() && localStorage.removeItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
+};
+export const getAccessToken = () => {
+  return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
+};
+
 // export const moneyFormat = (money: number) =>
 //   new Intl.NumberFormat("vi", {
 //     style: "currency",
