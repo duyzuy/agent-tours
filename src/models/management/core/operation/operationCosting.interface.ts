@@ -4,7 +4,7 @@ import { ISellable } from "../sellable.interface";
 import { ITemplateSellableDetail } from "../templateSellable.interface";
 
 export interface OperationCostingPayload {
-  type?: EInventoryType; //INVENTORYTYPE: AIR VISA HOTEL GUIDE TRANSPORT RESTAURANT LANDPACKAGE INSURANCE
+  type?: EInventoryType;
   supplierId?: number;
   operationId?: number;
 }
@@ -12,7 +12,7 @@ export interface OperationCostingPayload {
 export class OperationCostingParams {
   operationId?: number;
   supplierId?: number;
-  type?: EInventoryType; //INVENTORYTYPE: AIR VISA HOTEL GUIDE TRANSPORT RESTAURANT LANDPACKAGE INSURANCE
+  type?: EInventoryType;
 
   constructor(operationId: number | undefined, supplierId: number | undefined, type: EInventoryType | undefined) {
     this.operationId = operationId;

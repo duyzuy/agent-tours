@@ -25,6 +25,7 @@ import {
   OperationCostingListResponse,
   OperationCostingParams,
   OperationCostingPayload,
+  OperationCostingResponse,
 } from "@/models/management/core/operation/operationCosting.interface";
 import {
   OperationCostingDetailPayload,
@@ -120,7 +121,7 @@ export const operationDeadlineAPIs = {
 
 export const operationCostingAPIs = {
   create: async (payload?: OperationCostingPayload) => {
-    return await coreApi.post<any, BaseResponse<null>>("core/OperationCosting_Addnew", {
+    return await coreApi.post<OperationCostingResponse, BaseResponse<null>>("core/OperationCosting_Addnew", {
       requestObject: { ...payload },
     });
   },
