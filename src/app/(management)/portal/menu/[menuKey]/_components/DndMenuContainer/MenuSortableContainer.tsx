@@ -33,10 +33,6 @@ const MenuSortableContainer: React.FC<MenuSortableContainerProps> = ({
   return (
     <MenuItemSortable
       data={item}
-      // name={name}
-      // itemId={itemId}
-      // objectType={objectType}
-
       className={depth !== 0 ? "ml-[60px]" : ""}
       isContainer={isContainer}
       depth={depth}
@@ -51,8 +47,6 @@ const MenuSortableContainer: React.FC<MenuSortableContainerProps> = ({
                 <MenuSortableContainer
                   key={item.id}
                   item={item}
-                  // name={item.name}
-                  // itemId={item.id}
                   getItemList={getItemList}
                   depth={depth + 1}
                   isContainer={true}
@@ -65,10 +59,6 @@ const MenuSortableContainer: React.FC<MenuSortableContainerProps> = ({
                 <MenuItemSortable
                   key={item.id}
                   data={item}
-                  // name={item.name}
-                  // itemId={item.id}
-                  // objectType={item.objectType}
-
                   className="ml-[60px]"
                   isContainer={false}
                   depth={depth + 1}

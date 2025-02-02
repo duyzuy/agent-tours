@@ -1,4 +1,4 @@
-import React, { useCallback, useState, memo, useMemo, useEffect, useLayoutEffect } from "react";
+import React, { useCallback, useState, memo, useMemo, useEffect } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -13,7 +13,6 @@ import {
   DragOverEvent,
   UniqueIdentifier,
   pointerWithin,
-  DragMoveEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -26,8 +25,8 @@ import { IMenuItem, MenuPositionType } from "@/models/management/cms/menu.interf
 import { LangCode } from "@/models/management/cms/language.interface";
 import MenuSortableContainer from "./MenuSortableContainer";
 import MenuItemSortable, { MenuItemSortableProps } from "./MenuItemSortable";
-import DrawerMenuItem from "../../../_components/DrawerMenuItem";
 import { Button } from "antd";
+import MenuItemFormDrawer from "../../../_components/MenuItemFormDrawer";
 
 export interface DndMenuContainerProps {
   items: IMenuItem[];
@@ -197,16 +196,12 @@ const DndMenuContainer: React.FC<DndMenuContainerProps> = ({
     }
   };
 
-  const onUpdateList = () => {
-    let sortedItemList = [...itemList];
-    sortedItemList.forEach((item, _index) => {
-      sortedItemList.splice(_index, 1, {
-        ...sortedItemList[_index],
-        order: _index + 1,
-      });
-    });
+  const handleSaveSortList = () => {
+    const newSortedList = [...itemList].reduce<IMenuItem[]>((sums, item, _index) => {
+      return [...sums, { ...item, order: _index + 1 }];
+    }, []);
 
-    onUpdateSortList?.(sortedItemList);
+    onUpdateSortList?.(newSortedList);
   };
 
   const enableSubmitButton = useMemo(() => {
@@ -229,7 +224,6 @@ const DndMenuContainer: React.FC<DndMenuContainerProps> = ({
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
-
         // measuring={{
         //   droppable: {
         //     strategy: MeasuringStrategy.Always,
@@ -270,7 +264,7 @@ const DndMenuContainer: React.FC<DndMenuContainerProps> = ({
         </SortableContext>
         <DragOverlay adjustScale={false}>{activeItem ? renderDragOver(activeItem) : null}</DragOverlay>
       </DndContext>
-      <DrawerMenuItem
+      <MenuItemFormDrawer
         initialValues={editItem}
         onClose={onCancelEditMenuItem}
         isOpen={!isUndefined(editItem)}
@@ -282,7 +276,7 @@ const DndMenuContainer: React.FC<DndMenuContainerProps> = ({
           type="primary"
           htmlType="button"
           className="bg-primary-default"
-          onClick={onUpdateList}
+          onClick={handleSaveSortList}
           disabled={!enableSubmitButton}
           loading={loading}
         >

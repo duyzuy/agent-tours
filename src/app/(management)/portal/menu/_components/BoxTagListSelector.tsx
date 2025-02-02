@@ -3,17 +3,16 @@ import { PageContentStatus } from "@/models/management/cms/pageContent.interface
 import { Locale } from "@/models/management/cms/language.interface";
 import MenuBoxListSelect, { MenuBoxListSelectProps } from "@/components/admin/MenuBoxListSelect";
 import { MenuPositionType } from "@/models/management/cms/menu.interface";
-
-import { TagQueryParamsData } from "../../../contents/tag/module/tag.interface";
+import { TagQueryParamsData } from "../../contents/tag/module/tag.interface";
 import { useGetTagListLangQuery } from "@/queries/cms/tag";
 import { ITagMinimal } from "@/models/management/tag.interface";
 
-export interface MenuTagSelectorProps {
+export interface BoxTagListSelectorProps {
   locale: Locale;
   menuPosition: MenuPositionType;
   onAdd?: MenuBoxListSelectProps<number, ITagMinimal>["onAdd"];
 }
-const MenuTagSelector: React.FC<MenuTagSelectorProps> = ({ locale, menuPosition, onAdd }) => {
+const BoxTagListSelector: React.FC<BoxTagListSelectorProps> = ({ locale, menuPosition, onAdd }) => {
   const initQueryParams = new TagQueryParamsData({ lang: locale.key, status: PageContentStatus.PUBLISH }, 1, 10);
   const [queryParams, setQueryParams] = useState(initQueryParams);
 
@@ -49,4 +48,4 @@ const MenuTagSelector: React.FC<MenuTagSelectorProps> = ({ locale, menuPosition,
     />
   );
 };
-export default MenuTagSelector;
+export default BoxTagListSelector;

@@ -1,7 +1,7 @@
-import { Checkbox, Button, Select, Pagination, Space, PaginationProps, Spin } from "antd";
+import { memo, useEffect, useRef, useState } from "react";
+import { Checkbox, Button, Pagination, PaginationProps, Spin } from "antd";
 import classNames from "classnames";
 import { isUndefined } from "lodash";
-import { memo, useEffect, useRef, useState } from "react";
 
 type BaseOptionType = { id: string | number; [key: string]: any };
 
@@ -70,6 +70,7 @@ const MenuBoxListSelect = <ValueType extends number | string, OptionType extends
       overLayRef.current = items;
     }
   }, [loading]);
+
   return (
     <div
       className={classNames("menu-items", {
@@ -80,33 +81,23 @@ const MenuBoxListSelect = <ValueType extends number | string, OptionType extends
         <Spin tip="Loading...">
           <div className="items h-60 overflow-y-auto">
             {overLayRef.current?.map((item, _index) => (
-              <div className="menu-item-picker page-content overlay-item" key={_index}>
-                <p className="mb-3">
-                  <Checkbox checked={isItemSelected(item)} onChange={(ev) => selectItem(item)}>
-                    {item.name ? item.name : item.title ? item.title : ""}
-                  </Checkbox>
-                </p>
+              <div className="menu-item-picker page-content overlay-item mb-3" key={_index}>
+                <Checkbox checked={isItemSelected(item)} onChange={(ev) => selectItem(item)}>
+                  {item.name ? item.name : item.title ? item.title : ""}
+                </Checkbox>
               </div>
             ))}
           </div>
         </Spin>
       ) : (
-        // <div className="items h-56 overflow-y-auto mb-4">
-        //   {items?.map((item) => (
-        //     <div className={classNames("menu-item-picker page-content", {})} key={item.id}>
-        //       <p className="mb-3">
-        //         <Checkbox checked={isItemSelected(item)} onChange={(ev) => selectItem(item)}>
-        //           {item.name ? item.name : item.title ? item.title : ""}
-        //         </Checkbox>
-        //       </p>
-        //     </div>
-        //   ))}
-        // </div>
-        <div className="h-56 overflow-y-auto mb-4">
+        <div className="h-60 overflow-y-auto mb-4">
           <MenuBoxListSelect.Items items={items} isItemSelected={isItemSelected} onSelect={selectItem} depth={0} />
         </div>
       )}
-      <div className="actions pt-4 -ml-4 -mr-4 px-4 border-t flex justify-between items-center">
+      <div className="actions pt-4 -ml-4 -mr-4 px-4 border-t flex justify-between">
+        <Button type="primary" size="small" ghost onClick={handleAdd} disabled={loading}>
+          Thêm vào menu
+        </Button>
         <Pagination
           simple
           defaultCurrent={1}
@@ -115,12 +106,10 @@ const MenuBoxListSelect = <ValueType extends number | string, OptionType extends
           size="small"
           total={pagination?.totalItem}
           hideOnSinglePage
+          showSizeChanger={false}
           onChange={pagination?.onChange}
           disabled={loading}
         />
-        <Button type="primary" size="small" ghost onClick={handleAdd} disabled={loading}>
-          Thêm vào menu
-        </Button>
       </div>
     </div>
   );

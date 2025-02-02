@@ -11,12 +11,12 @@ import {
   IVisaTemplateContentMinimal,
 } from "@/models/management/cms/visaTemplateContent.interface";
 
-export interface MenuVisaTemplateSelectorProps {
+export interface BoxVisaListSelectorProps {
   locale: Locale;
   menuPosition: MenuPositionType;
   onAdd?: MenuBoxListSelectProps<number, IVisaTemplateContentMinimal>["onAdd"];
 }
-const MenuVisaTemplateSelector: React.FC<MenuVisaTemplateSelectorProps> = ({ locale, menuPosition, onAdd }) => {
+const BoxVisaListSelector: React.FC<BoxVisaListSelectorProps> = ({ locale, menuPosition, onAdd }) => {
   const initPageQueryParams = new VisaTemplateContentMinimalQueryParams(
     { lang: locale.key, status: PageContentStatus.PUBLISH },
     1,
@@ -55,4 +55,4 @@ const MenuVisaTemplateSelector: React.FC<MenuVisaTemplateSelectorProps> = ({ loc
     />
   );
 };
-export default MenuVisaTemplateSelector;
+export default BoxVisaListSelector;

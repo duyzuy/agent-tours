@@ -1,15 +1,16 @@
 "use client";
 import React from "react";
 import { Row, Col } from "antd";
-import MenuTypeContainer from "../_components/MenuTypeContainer";
+
 import LocaleContainer, { LocaleContainerProps } from "@/components/admin/LocaleContainer";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { locales } from "@/constants/locale.constant";
 
 import { localeDefault } from "@/constants/locale.constant";
 
-import useMenuManager from "../hooks/useMenuManager";
+import { useMenuManager } from "../store/manageMenuContext";
 import { MenuPositionType } from "@/models/management/cms/menu.interface";
+import MenuBoxTypeContainer from "./_components/MenuBoxTypeContainer";
 
 interface Props {
   children: React.ReactNode;
@@ -41,7 +42,7 @@ const LayoutMenuPage: React.FC<Props> = ({ children, params: { menuKey } }) => {
       />
       <Row className="page-body flex flex-wrap">
         <Col className="links-type w-80">
-          <MenuTypeContainer locale={locale} menuPosition={menuKey} />
+          <MenuBoxTypeContainer locale={locale} menuPosition={menuKey} />
         </Col>
         <Col className="menus-container ml-8 flex-1">{children}</Col>
       </Row>

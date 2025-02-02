@@ -1,30 +1,24 @@
 "use client";
-import FormItem from "@/components/base/FormItem";
 import { Locale } from "@/models/management/cms/language.interface";
 import { MenuPositionType } from "@/models/management/cms/menu.interface";
 import { Form, Input, Button, Space, FormProps } from "antd";
 import { isEmpty } from "lodash";
-import { useMemo, useState } from "react";
+
 import useMessage from "@/hooks/useMessage";
 
 type FieldType = {
   name?: string;
   slug?: string;
 };
-export interface MenuCustomLinkProps {
+export interface BoxCustomLinkProps {
   locale?: Locale;
   menuPosition: MenuPositionType;
   onAdd?: (data: FieldType, cb?: () => void) => void;
 }
 
-const MenuCustomLink: React.FC<MenuCustomLinkProps> = ({ locale, menuPosition, onAdd }) => {
-  const [formData, setFormData] = useState<FieldType>({ name: "", slug: "" });
+const BoxCustomLink: React.FC<BoxCustomLinkProps> = ({ locale, menuPosition, onAdd }) => {
   const [form] = Form.useForm();
   const message = useMessage();
-
-  // const isDisable = useMemo(() => {
-  //   return isEmpty(formData.name) || isEmpty(formData.slug);
-  // }, [formData]);
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     if (isEmpty(values.name) || isEmpty(values.slug)) {
@@ -36,9 +30,6 @@ const MenuCustomLink: React.FC<MenuCustomLinkProps> = ({ locale, menuPosition, o
     });
   };
 
-  // const onChange: FormProps<FieldType>["onValuesChange"] = (changedValues, values) => {
-  //   // console.log(changedValues, values);
-  // };
   return (
     <div className="form">
       <Form<FieldType>
@@ -47,12 +38,21 @@ const MenuCustomLink: React.FC<MenuCustomLinkProps> = ({ locale, menuPosition, o
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         onFinish={onFinish}
-        // onValuesChange={onChange}
       >
-        <Form.Item<FieldType> label="Tên menu" name="name">
+        <Form.Item<FieldType>
+          label="Tên menu"
+          name="name"
+          required
+          rules={[{ required: true, message: "Không bỏ trống" }]}
+        >
           <Input placeholder="Tên menu" />
         </Form.Item>
-        <Form.Item<FieldType> label="Đường dẫn" name="slug">
+        <Form.Item<FieldType>
+          label="Đường dẫn"
+          name="slug"
+          required
+          rules={[{ required: true, message: "Không bỏ trống" }]}
+        >
           <Input placeholder="ex: http://example.com" />
         </Form.Item>
         <div className="text-right">
@@ -64,4 +64,4 @@ const MenuCustomLink: React.FC<MenuCustomLinkProps> = ({ locale, menuPosition, o
     </div>
   );
 };
-export default MenuCustomLink;
+export default BoxCustomLink;

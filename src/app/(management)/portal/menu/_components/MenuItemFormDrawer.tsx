@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Drawer, Space, Button, Form, Input, Checkbox, Select, CheckboxProps } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { IMenuItem, MenuItemFormData, MenuPositionType } from "@/models/management/cms/menu.interface";
-import { updateMenuItemSchema } from "../../schema/menu.schema";
+import { updateMenuItemSchema } from "../modules/menu.schema";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import useCRUDMenu from "../../modules/useCRUDMenu";
+import useCRUDMenu from "../modules/useCRUDMenu";
 import { LangCode } from "@/models/management/cms/language.interface";
 import IconSelector from "@/components/base/IconSelector";
+import { isEqual } from "lodash";
 
-interface DrawerMenuItemProps {
+interface MenuItemFormDrawerProps {
   isOpen?: boolean;
   onClose: () => void;
   menuPosition: MenuPositionType;
@@ -18,7 +19,13 @@ interface DrawerMenuItemProps {
     depth?: number;
   };
 }
-const DrawerMenuItem: React.FC<DrawerMenuItemProps> = ({ isOpen, onClose, initialValues, menuPosition, lang }) => {
+const MenuItemFormDrawer: React.FC<MenuItemFormDrawerProps> = ({
+  isOpen,
+  onClose,
+  initialValues,
+  menuPosition,
+  lang,
+}) => {
   const { data, depth } = initialValues || {};
   const [formData, setFormData] = useState<MenuItemFormData>();
 
@@ -39,6 +46,17 @@ const DrawerMenuItem: React.FC<DrawerMenuItemProps> = ({ isOpen, onClose, initia
     }));
   };
 
+  const disabledButton = useMemo(() => {
+    return isEqual(
+      {
+        isMega: initialValues?.data.isMega,
+        description: initialValues?.data.description,
+        name: initialValues?.data.name,
+        icon: initialValues?.data.icon,
+      },
+      { isMega: formData?.isMega, description: formData?.description, name: formData?.name, icon: formData?.icon },
+    );
+  }, [formData]);
   const onSubmitForm: HandleSubmit<MenuItemFormData> = (data) => {
     initialValues &&
       onUpdate({ data: { ...data, id: initialValues.data.id }, menuPosition: menuPosition, lang: lang }, () => {
@@ -59,23 +77,29 @@ const DrawerMenuItem: React.FC<DrawerMenuItemProps> = ({ isOpen, onClose, initia
       onClose={onClose}
       open={isOpen}
       destroyOnClose={true}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <Space className="py-3">
+          <Button
+            onClick={() => formData && handlerSubmit(formData, onSubmitForm)}
+            type="primary"
+            loading={isPendingUpdate}
+            className="w-24"
+            disabled={disabledButton}
+          >
+            Lưu
+          </Button>
+          <Button onClick={onClose} className="w-24">
+            Huỷ
+          </Button>
+        </Space>
+      }
     >
       <Form layout="vertical">
         <FormItem label="Tên menu" validateStatus={errors?.name ? "error" : ""} required help={errors?.name || ""}>
           <Input placeholder="Tên menu" value={formData?.name} onChange={(e) => onChange("name", e.target.value)} />
         </FormItem>
         {formData?.objectType === "custom" ? (
-          <FormItem
-            label="Đường dẫn"
-            validateStatus={errors?.slug ? "error" : ""}
-            // required
-            help={errors?.slug || ""}
-          >
+          <FormItem label="Đường dẫn" validateStatus={errors?.slug ? "error" : ""} required help={errors?.slug || ""}>
             <Input
               placeholder="Đường dẫn"
               value={formData?.slug}
@@ -95,17 +119,6 @@ const DrawerMenuItem: React.FC<DrawerMenuItemProps> = ({ isOpen, onClose, initia
         )}
         <FormItem label="Icon">
           <IconSelector value={formData?.icon} onChange={(value) => onChange("icon", value)} />
-          {/* <Select
-            fieldNames={{ label: "name", value: "key" }}
-            optionLabelProp="name"
-            options={[
-              { name: "-- None --", key: "" },
-              ...ICON_LIST.map((item) => ({ name: item.name, key: item.key })),
-            ]}
-            value={formData?.icon}
-            onChange={(value) => onChange("icon", value)}
-            className="w-full"
-          /> */}
         </FormItem>
         <FormItem>
           <Checkbox checked={formData?.isMega} onChange={handleChangeMegamenu}>
@@ -127,20 +140,7 @@ const DrawerMenuItem: React.FC<DrawerMenuItemProps> = ({ isOpen, onClose, initia
           />
         </FormItem>
       </Form>
-      <Space>
-        <Button onClick={onClose} className="w-32">
-          Huỷ
-        </Button>
-        <Button
-          onClick={() => formData && handlerSubmit(formData, onSubmitForm)}
-          type="primary"
-          loading={isPendingUpdate}
-          className="w-32"
-        >
-          Cập nhật
-        </Button>
-      </Space>
     </Drawer>
   );
 };
-export default DrawerMenuItem;
+export default MenuItemFormDrawer;

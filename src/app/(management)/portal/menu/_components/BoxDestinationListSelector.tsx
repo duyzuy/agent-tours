@@ -8,12 +8,12 @@ import { useGetDestinationMinimalListQuery } from "@/queries/cms/destination";
 
 import { DestinationMinimalQueryParams, IDestinationMinimal } from "@/models/management/region.interface";
 
-export interface MenuDestinationSelectorProps {
+export interface BoxDestinationListSelectorProps {
   locale: Locale;
   menuPosition: MenuPositionType;
   onAdd?: MenuBoxListSelectProps<number, IDestinationMinimal>["onAdd"];
 }
-const MenuDestinationSelector: React.FC<MenuDestinationSelectorProps> = ({ locale, menuPosition, onAdd }) => {
+const BoxDestinationListSelector: React.FC<BoxDestinationListSelectorProps> = ({ locale, menuPosition, onAdd }) => {
   const initQueryParams = new DestinationMinimalQueryParams({ lang: locale.key }, 1, 10, {
     sortColumn: "id",
     direction: "desc",
@@ -51,4 +51,4 @@ const MenuDestinationSelector: React.FC<MenuDestinationSelectorProps> = ({ local
     />
   );
 };
-export default MenuDestinationSelector;
+export default BoxDestinationListSelector;

@@ -4,7 +4,7 @@ import { Empty } from "antd";
 import { MENU_POSITION_LIST } from "@/constants/menu.constant";
 import MenuPageWraper from "@/components/admin/menu/MenuPageWrapper";
 import { IMenuItem, MenuPositionType } from "@/models/management/cms/menu.interface";
-import { useMenuManagerSelector } from "../hooks/useMenuManager";
+import { useMenuManagerSelector } from "../store/manageMenuContext";
 import useCRUDMenu from "../modules/useCRUDMenu";
 import useUpdateList from "../modules/useUpdateList";
 import { MenuItemSortableProps } from "./_components/DndMenuContainer/MenuItemSortable";
@@ -30,19 +30,15 @@ const MenuPageType = ({ params }: Props) => {
   }, []);
 
   /**
-   *
    * Api update list after sort list
-   *
    */
   const handleUpdateList: Required<DndMenuContainerProps>["onUpdateSortList"] = useCallback((items) => {
     onUpdateListSortable({ items: items, position: menuKey, lang: locale.key });
   }, []);
 
   /**
-   *
    * @param itemId
    * Delete Menu item
-   *
    */
   const handleDeleteItem: Required<MenuItemSortableProps>["onDelete"] = useCallback((recId) => {
     onDelete({ id: recId, position: menuKey, lang: locale.key });

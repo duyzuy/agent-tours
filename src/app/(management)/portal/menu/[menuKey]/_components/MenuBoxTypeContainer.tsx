@@ -3,23 +3,24 @@ import React, { useState } from "react";
 import { Collapse, CollapseProps } from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import MenuCustomLink, { MenuCustomLinkProps } from "../MenuCustomLink";
-import MenuPageContentSelector, { MenuPageContentSelectorProps } from "../MenuPageContentSelector";
+
 import { Locale } from "@/models/management/cms/language.interface";
 import { MenuItemFormData, MenuItemPayload, MenuPositionType } from "@/models/management/cms/menu.interface";
-import MenuDestinationSelector, { MenuDestinationSelectorProps } from "../MenuDestinationSelector";
-import MenuVisaTemplateSelector from "../MenuVisaTemplateSelector";
-import MenuTemplateContentSelector, { MenuTemplateContentSelectorProps } from "../MenuTemplateContentSelector";
-import { useCreateMenuItemMutation } from "@/mutations/managements/menu";
+import BoxCategoriesSelector, { BoxCategoriesSelectorProps } from "../../_components/BoxCategoriesSelector";
+import BoxVisaListSelector, { BoxVisaListSelectorProps } from "../../_components/BoxVisaListSelector";
+import BoxCustomLink, { BoxCustomLinkProps } from "../../_components/BoxCustomLink";
+import BoxTagListSelector, { BoxTagListSelectorProps } from "../../_components/BoxTagListSelector";
+import BoxDestinationListSelector, {
+  BoxDestinationListSelectorProps,
+} from "../../_components/BoxDestinationListSelector";
+import BoxPageListSelector, { BoxPageListSelectorProps } from "../../_components/BoxPageListSelector";
 import useCRUDMenu from "../../modules/useCRUDMenu";
-import MenuCategorySelector, { MenuCategorySelectorProps } from "../MenuCategorySelector";
-import MenuTagSelector, { MenuTagSelectorProps } from "../MenuTagSelector";
 
-interface MenuTypeContainerProps {
+interface MenuBoxTypeContainerProps {
   locale: Locale;
   menuPosition: MenuPositionType;
 }
-const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosition }) => {
+const MenuBoxTypeContainer: React.FC<MenuBoxTypeContainerProps> = ({ locale, menuPosition }) => {
   const { onCreate } = useCRUDMenu();
   const initItem = new MenuItemFormData(
     0,
@@ -45,7 +46,7 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
    *
    */
 
-  const handleAddMenuDestination: MenuDestinationSelectorProps["onAdd"] = (value, options) => {
+  const handleAddMenuDestination: BoxDestinationListSelectorProps["onAdd"] = (value, options) => {
     const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
       return [
         ...acc,
@@ -63,7 +64,7 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
     onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
   };
 
-  const handleAddMenuPage: MenuPageContentSelectorProps["onAdd"] = (value, options) => {
+  const handleAddMenuPage: BoxPageListSelectorProps["onAdd"] = (value, options) => {
     const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
       return [
         ...acc,
@@ -99,7 +100,7 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
   //   onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
   // };
 
-  const handleAddMenuVisaTemplate: MenuTemplateContentSelectorProps["onAdd"] = (value, options) => {
+  const handleAddMenuVisaTemplate: BoxVisaListSelectorProps["onAdd"] = (value, options) => {
     const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
       return [
         ...acc,
@@ -117,7 +118,7 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
     onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
   };
 
-  const handleAddMenuCustomLink: MenuCustomLinkProps["onAdd"] = (values, cb) => {
+  const handleAddMenuCustomLink: BoxCustomLinkProps["onAdd"] = (values, cb) => {
     const payloadList: MenuItemPayload[] = [
       {
         ...initItem,
@@ -131,7 +132,7 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
     onCreate({ data: payloadList, position: menuPosition, lang: locale.key }, cb);
   };
 
-  const handleAddMenuCategory: MenuCategorySelectorProps["onAdd"] = (values, options) => {
+  const handleAddMenuCategory: BoxCategoriesSelectorProps["onAdd"] = (values, options) => {
     const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
       return [
         ...acc,
@@ -150,7 +151,7 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
     onCreate({ data: payloadList, position: menuPosition, lang: locale.key });
   };
 
-  const handleAddMenuTag: MenuTagSelectorProps["onAdd"] = (values, options) => {
+  const handleAddMenuTag: BoxTagListSelectorProps["onAdd"] = (values, options) => {
     const payloadList = options.reduce<MenuItemPayload[]>((acc, opt) => {
       return [
         ...acc,
@@ -172,31 +173,35 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
     {
       key: "page",
       label: "Trang",
-      children: <MenuPageContentSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuPage} />,
+      children: <BoxPageListSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuPage} />,
     },
     {
       key: "destination",
       label: "Điểm đến",
       children: (
-        <MenuDestinationSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuDestination} />
+        <BoxDestinationListSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuDestination} />
       ),
     },
     {
       key: "visaTemplate",
       label: "Visa template",
-      children: (
-        <MenuVisaTemplateSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuVisaTemplate} />
-      ),
+      children: <BoxVisaListSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuVisaTemplate} />,
     },
     {
       key: "category",
       label: "Danh mục",
-      children: <MenuCategorySelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuCategory} />,
+      children: <BoxCategoriesSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuCategory} />,
     },
     {
       key: "tag",
       label: "Thẻ bài viết",
-      children: <MenuTagSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuTag} />,
+      children: <BoxTagListSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuTag} />,
+    },
+
+    {
+      key: "custom",
+      label: "Liên kết tự tạo",
+      children: <BoxCustomLink locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuCustomLink} />,
     },
     // {
     //   key: "cmsTemplate",
@@ -205,11 +210,6 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
     //     <MenuTemplateContentSelector locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuCMSTemplate} />
     //   ),
     // },
-    {
-      key: "custom",
-      label: "Liên kết tự tạo",
-      children: <MenuCustomLink locale={locale} menuPosition={menuPosition} onAdd={handleAddMenuCustomLink} />,
-    },
   ];
   return (
     <div className="menu-list-type col-left links-type w-80">
@@ -225,7 +225,7 @@ const MenuTypeContainer: React.FC<MenuTypeContainerProps> = ({ locale, menuPosit
     </div>
   );
 };
-export default MenuTypeContainer;
+export default MenuBoxTypeContainer;
 
 const MenuTypeListCollapseStyled = styled(Collapse)`
   &&.travel-collapse {

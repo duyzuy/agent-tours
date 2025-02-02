@@ -1,6 +1,6 @@
 import { Locale } from "@/models/management/cms/language.interface";
-
 import { IMenuItem, MenuPositionType } from "@/models/management/cms/menu.interface";
+
 type MenuPositionTypeList = Record<MenuPositionType, IMenuItem[]>;
 export interface IMenuManager {
   locale: Locale;

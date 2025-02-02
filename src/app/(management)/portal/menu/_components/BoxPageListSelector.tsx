@@ -10,12 +10,12 @@ import { Locale } from "@/models/management/cms/language.interface";
 import MenuBoxListSelect, { MenuBoxListSelectProps } from "@/components/admin/MenuBoxListSelect";
 import { MenuPositionType } from "@/models/management/cms/menu.interface";
 
-export interface MenuPageContentSelectorProps {
+export interface BoxPageListSelectorProps {
   locale: Locale;
   menuPosition: MenuPositionType;
   onAdd?: MenuBoxListSelectProps<number, IPageContentItemMinimal>["onAdd"];
 }
-const MenuPageContentSelector: React.FC<MenuPageContentSelectorProps> = ({ locale, menuPosition, onAdd }) => {
+const BoxPageListSelector: React.FC<BoxPageListSelectorProps> = ({ locale, menuPosition, onAdd }) => {
   const initQueryParams = new PageContentMinimalQueryParams(
     { lang: locale.key, status: PageContentStatus.PUBLISH },
     1,
@@ -56,4 +56,4 @@ const MenuPageContentSelector: React.FC<MenuPageContentSelectorProps> = ({ local
     />
   );
 };
-export default MenuPageContentSelector;
+export default BoxPageListSelector;

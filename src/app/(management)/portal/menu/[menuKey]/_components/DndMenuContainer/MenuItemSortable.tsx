@@ -13,9 +13,6 @@ export interface MenuItemSortableProps {
   isContainer?: Boolean;
   depth?: number;
   onEdit?: (data: IMenuItem, depth?: number) => void;
-  // name: string;
-  // itemId: number;
-  // objectType: MenuObjectType;
 }
 const MenuItemSortable: React.FC<MenuItemSortableProps> = (
   { onDelete, onEdit, children, className = "", isContainer, data, depth }, // objectType,
@@ -37,8 +34,6 @@ const MenuItemSortable: React.FC<MenuItemSortableProps> = (
     <MenuItem
       attributes={attributes}
       data={data}
-      // itemId={itemId}
-      // name={name}
       depth={depth}
       listeners={listeners}
       dragging={isDragging}
