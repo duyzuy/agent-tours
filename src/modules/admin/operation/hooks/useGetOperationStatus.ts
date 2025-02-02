@@ -1,5 +1,5 @@
 import { useTQuery } from "@/lib/reactQueryHooks";
-import { OperationStatusQueryParams } from "@/models/management/core/operation/operationStatus.interface";
+import { OperationStatusQueryParams } from "@/models/management/core/operationStatus.interface";
 import { queryCore } from "@/queries/var";
 import { operationAPIs } from "@/services/management/cores/operation";
 

@@ -11,7 +11,7 @@ import {
 import {
   OperationStatusQueryParams,
   OperationStatusResponse,
-} from "@/models/management/core/operation/operationStatus.interface";
+} from "@/models/management/core/operationStatus.interface";
 import {
   OperationDeadlineListResponse,
   OperationDeadlinePassengerRemarkPayload,

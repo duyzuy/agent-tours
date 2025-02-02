@@ -1,10 +1,10 @@
 import { BaseResponse } from "@/models/common.interface";
-import { RoomingStatusType, RoomingType } from "../../booking/rooming.interface";
-import { IPersonInCharge } from "./personInCharge.interface";
-import { IDocument } from "../document.interface";
-import { IOrderItem } from "../../booking/order.interface";
-import { IPassengerInformation } from "../../booking/passengerInformation.interface";
-import { EInventoryType } from "../inventoryType.interface";
+import { RoomingStatusType, RoomingType } from "../booking/rooming.interface";
+import { IPersonInCharge } from "./operation/personInCharge.interface";
+import { IDocument } from "./document.interface";
+import { IOrderItem } from "../booking/order.interface";
+import { IPassengerInformation } from "../booking/passengerInformation.interface";
+import { EInventoryType } from "./inventoryType.interface";
 
 export interface OperationStatusDetail {
   operationId: number;

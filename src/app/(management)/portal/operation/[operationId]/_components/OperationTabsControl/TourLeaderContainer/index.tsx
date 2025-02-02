@@ -4,7 +4,7 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import useUpdateOperationDuty from "@/modules/admin/operation/hooks/useUpdateOperationDuty";
 import useDeleteOperationDuty from "@/modules/admin/operation/hooks/useDeleteOperationDuty";
 import TourLeaderSelectDrawer, { TourLeaderSelectDrawerProps } from "./TourLeaderSelectDrawer";
-import { OperationStatusDetail } from "@/models/management/core/operation/operationStatus.interface";
+import { OperationStatusDetail } from "@/models/management/core/operationStatus.interface";
 import FormItem from "@/components/base/FormItem";
 import { updateOperationDutySchema } from "../../../../schema/operation.schema";
 

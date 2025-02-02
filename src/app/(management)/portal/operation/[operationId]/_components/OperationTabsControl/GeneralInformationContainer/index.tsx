@@ -1,5 +1,5 @@
 import { RoomingType } from "@/models/management/booking/rooming.interface";
-import { OperationStatusResponse } from "@/models/management/core/operation/operationStatus.interface";
+import { OperationStatusResponse } from "@/models/management/core/operationStatus.interface";
 import { Table } from "antd";
 
 import React, { useEffect, useMemo, useState } from "react";

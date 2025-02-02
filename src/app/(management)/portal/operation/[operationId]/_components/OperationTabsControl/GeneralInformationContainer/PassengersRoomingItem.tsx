@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { getPassengerType } from "@/utils/common";
 import { getPassengerTitle } from "@/constants/common";
 import { getPassengerGender } from "@/constants/common";
-import { OperationStatusResponse } from "@/models/management/core/operation/operationStatus.interface";
+import { OperationStatusResponse } from "@/models/management/core/operationStatus.interface";
 import FormItem from "@/components/base/FormItem";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 
