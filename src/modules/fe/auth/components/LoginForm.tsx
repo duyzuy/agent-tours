@@ -2,8 +2,6 @@
 import { LockOutlined } from "@ant-design/icons";
 import { Button, Form, FormItemProps, Input, InputProps } from "antd";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
@@ -28,7 +26,6 @@ type TFieldInputs = {
   label: string;
   help: FormItemInputProps["help"];
   validateStatus: FormItemProps["validateStatus"];
-  size: InputProps["size"];
   suffix?: InputProps["suffix"];
   placeholder: InputProps["placeholder"];
   type: EFieldType;
@@ -37,7 +34,6 @@ type TFieldInputs = {
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false, children, onForgotPassword }) => {
   const t = useTranslations("String");
   const er = useTranslations("Error");
-  const params = useParams();
 
   const {
     handleSubmit,
@@ -53,18 +49,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
       type: EFieldType.TEXT,
       label: t("username.label"),
       placeholder: t("username.placeholder"),
-      validateStatus: errors?.username ? "error" : "",
-      help: errors?.username?.message ? er(errors?.username?.message) : "",
-      size: "large",
+      validateStatus: errors?.username ? "error" : undefined,
+      help: errors?.username?.message ? er(errors?.username?.message) : undefined,
       suffix: <LockOutlined className="site-form-item-icon" />,
     },
     {
       name: "password",
       type: EFieldType.PASSWORD,
       label: t("password.label"),
-      validateStatus: errors?.password ? "error" : "",
-      help: errors?.password?.message ? er(errors?.password?.message, { length: PASSWORD_MIN_LENGTH }) : "",
-      size: "large",
+      validateStatus: errors?.password ? "error" : undefined,
+      help: errors?.password?.message ? er(errors?.password?.message, { length: PASSWORD_MIN_LENGTH }) : undefined,
       placeholder: t("password.placeholder"),
     },
   ];
@@ -72,19 +66,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
   return (
     <Form layout="vertical">
       {error ? <p className="text-red-500 text-center">{error}</p> : null}
-      {FIELDS_INPUT.map(({ name, label, placeholder, size, suffix, help, validateStatus, type }) => (
+      {FIELDS_INPUT.map(({ name, label, placeholder, suffix, help, validateStatus, type }) => (
         <Controller
           key={name}
           name={name}
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <Form.Item label={label} help={help} validateStatus={validateStatus}>
               {type === EFieldType.PASSWORD ? (
                 <Input.Password
                   {...field}
                   name={name}
                   placeholder={placeholder}
-                  size={size}
+                  size="large"
                   disabled={loading}
                   suffix={suffix}
                 />
@@ -94,7 +88,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
                   name={name}
                   disabled={loading}
                   placeholder={placeholder}
-                  size={size}
+                  size="large"
                   suffix={suffix}
                 />
               )}

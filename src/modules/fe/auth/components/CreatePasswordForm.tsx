@@ -43,11 +43,11 @@ const CreatePasswordForm: React.FC<CreatePasswordFormProps> = ({
           <Controller
             name="password"
             control={control}
-            render={({ field, formState: { errors } }) => (
+            render={({ field, fieldState: { error } }) => (
               <FormItem
                 label={t("password.label")}
-                validateStatus={errors.password ? "error" : ""}
-                help={errors.password?.message ? er(errors.password.message, { length: PASSWORD_MIN_LENGTH }) : ""}
+                validateStatus={error ? "error" : ""}
+                help={error?.message ? er(error.message, { length: PASSWORD_MIN_LENGTH }) : ""}
               >
                 <Input.Password {...field} placeholder={t("password.placeholder")} size="large" disabled={isLoading} />
               </FormItem>
@@ -56,11 +56,11 @@ const CreatePasswordForm: React.FC<CreatePasswordFormProps> = ({
           <Controller
             name="passwordConfirm"
             control={control}
-            render={({ field, formState: { errors } }) => (
+            render={({ field, fieldState: { error } }) => (
               <FormItem
                 label={t("passwordConfirm.label")}
-                validateStatus={errors.passwordConfirm ? "error" : ""}
-                help={errors.passwordConfirm?.message ? er(errors.passwordConfirm.message) : ""}
+                validateStatus={error ? "error" : ""}
+                help={error?.message ? er(error.message) : ""}
               >
                 <Input.Password
                   {...field}

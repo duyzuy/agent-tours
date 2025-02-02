@@ -36,11 +36,11 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ children, onSub
           <Controller
             name="username"
             control={control}
-            render={({ field, formState: { errors } }) => (
+            render={({ field, fieldState: { error } }) => (
               <FormItem
                 label={t("username.label")}
-                validateStatus={errors.username ? "error" : ""}
-                help={errors.username?.message ? er(errors.username.message) : ""}
+                validateStatus={error ? "error" : ""}
+                help={error?.message ? er(error.message) : ""}
               >
                 <Input {...field} placeholder={t("username.placeholder")} size="large" disabled={isLoading} />
               </FormItem>
@@ -49,11 +49,11 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ children, onSub
           <Controller
             name="email"
             control={control}
-            render={({ field, formState: { errors } }) => (
+            render={({ field, fieldState: { error } }) => (
               <FormItem
                 label={t("email.label")}
-                validateStatus={errors.email ? "error" : ""}
-                help={errors.email?.message ? er(errors.email.message) : ""}
+                validateStatus={error ? "error" : ""}
+                help={error?.message ? er(error.message) : ""}
               >
                 <Input {...field} placeholder={t("email.placeholder")} size="large" disabled={isLoading} />
               </FormItem>

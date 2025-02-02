@@ -19,7 +19,6 @@ type TFieldInputs = {
   label: string;
   help: FormItemInputProps["help"];
   validateStatus: FormItemProps["validateStatus"];
-  size: InputProps["size"];
   suffix?: InputProps["suffix"];
   placeholder: InputProps["placeholder"];
   type: EFieldType;
@@ -45,9 +44,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
       type: EFieldType.TEXT,
       label: t("username.label"),
       placeholder: t("username.placeholder"),
-      validateStatus: errors?.username ? "error" : "",
-      help: errors?.username?.message ? er(errors?.username?.message) : "",
-      size: "large",
+      validateStatus: errors?.username ? "error" : undefined,
+      help: errors?.username?.message ? er(errors?.username?.message) : undefined,
       suffix: <UserOutlined className="site-form-item-icon" />,
     },
     {
@@ -55,39 +53,36 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
       type: EFieldType.TEXT,
       label: t("email.label"),
       placeholder: t("email.placeholder"),
-      validateStatus: errors?.email ? "error" : "",
-      help: errors?.email?.message ? er(errors?.email?.message) : "",
-      size: "large",
+      validateStatus: errors?.email ? "error" : undefined,
+      help: errors?.email?.message ? er(errors?.email?.message) : undefined,
       suffix: <MailOutlined className="site-form-item-icon" />,
     },
     {
       name: "password",
       type: EFieldType.PASSWORD,
       label: t("password.label"),
-      validateStatus: errors?.password ? "error" : "",
-      help: errors?.password?.message ? er(errors?.password?.message) : "",
-      size: "large",
+      validateStatus: errors?.password ? "error" : undefined,
+      help: errors?.password?.message ? er(errors?.password?.message) : undefined,
       placeholder: t("password.placeholder"),
     },
     {
       name: "passwordConfirm",
       type: EFieldType.PASSWORD,
       label: t("passwordConfirm.label"),
-      validateStatus: errors?.passwordConfirm ? "error" : "",
-      help: errors?.passwordConfirm?.message ? er(errors?.passwordConfirm?.message) : "",
-      size: "large",
+      validateStatus: errors?.passwordConfirm ? "error" : undefined,
+      help: errors?.passwordConfirm?.message ? er(errors?.passwordConfirm?.message) : undefined,
       placeholder: t("passwordConfirm.placeholder"),
     },
   ];
 
   return (
     <Form layout="vertical">
-      {FIELDS_INPUT.map(({ name, label, placeholder, size, suffix, help, validateStatus, type }) => (
+      {FIELDS_INPUT.map(({ name, label, placeholder, suffix, help, validateStatus, type }) => (
         <Controller
           key={name}
           name={name}
           control={control}
-          render={({ field: { value, onChange, onBlur } }) => (
+          render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
             <FormItem label={label} help={help} validateStatus={validateStatus}>
               {type === EFieldType.PASSWORD ? (
                 <Input.Password
@@ -96,7 +91,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
                   onBlur={onBlur}
                   name={name}
                   placeholder={placeholder}
-                  size={size}
+                  size="large"
                   disabled={loading}
                   suffix={suffix}
                 />
@@ -108,7 +103,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
                   name={name}
                   disabled={loading}
                   placeholder={placeholder}
-                  size={size}
+                  size="large"
                   suffix={suffix}
                 />
               )}

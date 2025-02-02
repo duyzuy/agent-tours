@@ -4,12 +4,12 @@ import { useTranslations } from "next-intl";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import AuthLayout from "@/components/layouts/fe/AuthLayout";
 import { useSearchParams } from "next/navigation";
-import { useGetResetPasswordQuery } from "@/queries/fe/auth";
 import { isUndefined } from "lodash";
 import useBroadcastChannel from "@/hooks/fe/useBroadcastChanel";
 import { BroadcastMessageResetPassword } from "../customer-forgot-password/page";
 import { useRouter } from "@/utils/navigation";
 import useMessage from "@/hooks/useMessage";
+import { useGetResetPassword } from "@/modules/fe/auth/hooks/useGetResetPassword";
 
 import { useSetNewPassword } from "@/modules/fe/auth/hooks/useSetNewPassword";
 import CreatePasswordForm, { CreatePasswordFormProps } from "@/modules/fe/auth/components/CreatePasswordForm";
@@ -24,7 +24,7 @@ const CustomerResetPasswordPage = () => {
 
   const enabled = !isUndefined(secretKey) && !isUndefined(userId);
 
-  const { data, isLoading } = useGetResetPasswordQuery({ enable: enabled, secretKey: secretKey });
+  const { data, isLoading } = useGetResetPassword({ enable: enabled, secretKey: secretKey });
 
   const { postMessage } = useBroadcastChannel<BroadcastMessageResetPassword>("channelResetPassword", (message) => {
     console.log(message);

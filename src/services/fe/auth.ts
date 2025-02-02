@@ -11,27 +11,21 @@ export const authAPIs = {
   login: async (payload?: ICustomerLoginPayload) => {
     return await client.post<any>("localfront/Login", {
       body: {
-        requestObject: {
-          ...payload,
-        },
+        requestObject: payload,
       },
     });
   },
   register: async (payload?: ICusTomerRegisterPayload) => {
     return await client.post<CustomerInformationResponse>("localfront/Register", {
       body: {
-        requestObject: {
-          ...payload,
-        },
+        requestObject: payload,
       },
     });
   },
   resetPassword: async (payload?: ICustomerForgotPasswordPayload) => {
     return await client.post<CustomerForgotPasswordResponse>("localfront/resetPassword", {
       body: {
-        requestObject: {
-          ...payload,
-        },
+        requestObject: payload,
       },
     });
   },
