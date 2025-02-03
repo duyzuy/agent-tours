@@ -20,18 +20,14 @@ const createColumns = () => {
       key: "name",
       dataIndex: "name",
       width: 320,
-      render: (_, { originId, name }) => {
-        return (
-          <>
-            <div>
-              <span>{name}</span>
-            </div>
-            <Link href={`/portal/destination/notice-information/${originId}`} className="text-xs">
-              Tạo nội dung
-            </Link>
-          </>
-        );
-      },
+      render: (_, { originId, name }) => (
+        <>
+          <div>{name}</div>
+          <Link href={`/portal/destination/notice-information/${originId}`} className="text-xs">
+            Tạo nội dung
+          </Link>
+        </>
+      ),
     },
     {
       title: "Điểm đến",
@@ -67,13 +63,11 @@ const createColumns = () => {
         render(value, { languages }, index) {
           const item = languages.find((lang) => lang.lang === locale.key);
           return item ? (
-            <span
+            <GlobalOutlined
               className={classNames({
-                "text-emerald-500": item.status === PageContentStatus.PUBLISH,
+                "!text-emerald-600": item.status === PageContentStatus.PUBLISH,
               })}
-            >
-              <GlobalOutlined />
-            </span>
+            />
           ) : (
             "-"
           );

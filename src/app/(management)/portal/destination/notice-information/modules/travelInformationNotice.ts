@@ -1,6 +1,5 @@
 import { LangCode } from "@/models/management/cms/language.interface";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
-import { IStateProvince } from "@/models/management/region.interface";
 import { TravelInformationNoticePayload } from "@/models/management/cms/cmsStateProvinceNotice";
 
 export class TravelInformationNoticeData implements TravelInformationNoticePayload {

@@ -10,10 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { queryCMS } from "@/queries/var";
 import { useRouter } from "next/navigation";
 import { PageContentStatus } from "@/models/management/cms/pageContent.interface";
-import {
-  TravelInformationNoticeListResponse,
-  TravelInformationNoticeResponse,
-} from "@/models/management/cms/cmsStateProvinceNotice";
+import { TravelInformationNoticeListResponse } from "@/models/management/cms/cmsStateProvinceNotice";
 const useCRUDTravelInformationNotice = () => {
   const { mutate: makeCreate, isPending: isPendingCreate } = useCreateTravelNoticeMutation();
   const { mutate: makeUpdate, isPending: isPendingUpdate } = useUpdateTravelNoticeMutation();

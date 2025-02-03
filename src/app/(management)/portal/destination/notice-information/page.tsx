@@ -9,7 +9,7 @@ import { TravelInformationNoticeQueryParams } from "@/models/management/cms/cmsS
 import { useGetTravelInformationNoticeListQuery } from "@/queries/cms/cmsTravelInfo";
 import { ITravelInformationNotice } from "@/models/management/cms/cmsStateProvinceNotice";
 import { useTransition } from "react";
-import { Spin } from "antd";
+
 const PageManagement = () => {
   const router = useRouter();
 

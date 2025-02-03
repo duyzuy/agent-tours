@@ -9,38 +9,36 @@ import {
   LocalSearchDestinationListRs,
 } from "@/models/management/localSearchDestination.interface";
 import { localSearchSchema } from "../../../hooks/validate";
-export enum EActionType {
-  CREATE = "create",
-  EDIT = "edit",
-}
-export type TDrawerCreateAction = {
-  action: EActionType.CREATE;
-};
-export type TDrawerEditAction = {
-  action: EActionType.EDIT;
-  record: LocalSearchDestinationListRs["result"][0];
-};
-export type TDrawerSearch = TDrawerEditAction | TDrawerCreateAction;
+import { useGetRegionList } from "@/queries/core/region";
 
-type TStateProvinceGrouping = IStateProvinceListRs["result"][0] & {
+type TStateProvinceGrouping = IStateProvinceListRs["result"][number] & {
   label: string;
   value: string;
   children: TStateProvinceGrouping[];
 };
+
+export type TDrawerSearch =
+  | {
+      action: "CREATE";
+    }
+  | {
+      action: "EDIT";
+      record: LocalSearchDestinationListRs["result"][number];
+    };
+
 export interface DrawerGroupSearchProps {
   isOpen?: boolean;
   onClose: () => void;
-  actionType?: EActionType;
+  actionType?: "CREATE" | "EDIT";
   initialValues?: LocalSearchDestinationListRs["result"][0];
-  onSubmit?: (actionType: EActionType, data: LocalSearchFormData) => void;
-  regionList: IStateProvinceListRs["result"];
+  onSubmit?: (actionType: "CREATE" | "EDIT", data: LocalSearchFormData) => void;
 }
 const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
   isOpen,
   onClose,
-  actionType = EActionType.CREATE,
+  actionType = "CREATE",
   onSubmit,
-  regionList,
+
   initialValues,
 }) => {
   const initFormData = new LocalSearchFormData(
@@ -54,13 +52,14 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
     undefined,
     "OX",
   );
+  const { data: regionList, isLoading } = useGetRegionList();
   const { handlerSubmit, errors } = useFormSubmit<LocalSearchFormData>({
     schema: localSearchSchema,
   });
   const [formData, setFormData] = useState<LocalSearchFormData>(initFormData);
 
   const provincesGrouping = useMemo(() => {
-    const itemMap = regionList.reduce<{
+    const itemMap = [...(regionList || [])].reduce<{
       [key: string]: IStateProvinceListRs["result"];
     }>((acc, item) => {
       acc = {
@@ -172,7 +171,7 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
   };
 
   useEffect(() => {
-    if (initialValues && actionType === EActionType.EDIT) {
+    if (initialValues && actionType === "EDIT") {
       setFormData((prev) => ({
         ...prev,
         name: initialValues.name,
@@ -214,15 +213,25 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
 
   return (
     <Drawer
-      title={actionType === EActionType.CREATE ? "Thêm nhóm điểm đến" : `Sửa nhóm điểm đến`}
-      width={850}
+      title={actionType === "CREATE" ? "Thêm nhóm điểm đến" : `Sửa nhóm điểm đến`}
+      width={550}
       onClose={onClose}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <Space className="py-3">
+          <Button
+            onClick={() => handlerSubmit(formData, onSubmitFormData)}
+            type="primary"
+            disabled={isButtonDisabled}
+            className="w-24"
+          >
+            Lưu
+          </Button>
+          <Button onClick={onClose} className="w-24">
+            Huỷ
+          </Button>
+        </Space>
+      }
     >
       <Form layout="vertical">
         <FormItem label="Tên nhóm (Vi)" validateStatus={errors?.name ? "error" : ""} required help={errors?.name || ""}>
@@ -251,7 +260,7 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
             style={{ width: "100%" }}
             dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
             placeholder="Chọn điểm đến"
-            value={actionType === EActionType.EDIT ? selectedDestinationValue : undefined}
+            value={actionType === "EDIT" ? selectedDestinationValue : undefined}
             allowClear
             treeDefaultExpandAll
             onSelect={onSelectDestination}
@@ -274,14 +283,6 @@ const DrawerGroupSearch: React.FC<DrawerGroupSearchProps> = ({
           <Switch checked={formData.status === "OK" ? true : false} onChange={onChangeStatus} />
         </FormItem>
       </Form>
-      <div className="drawler-action absolute px-4 py-4 border-t left-0 right-0 bg-white bottom-0">
-        <Space>
-          <Button onClick={onClose}>Huỷ</Button>
-          <Button onClick={() => handlerSubmit(formData, onSubmitFormData)} type="primary" disabled={isButtonDisabled}>
-            {actionType === EActionType.CREATE ? "Thêm mới" : "Cập nhật"}
-          </Button>
-        </Space>
-      </div>
     </Drawer>
   );
 };

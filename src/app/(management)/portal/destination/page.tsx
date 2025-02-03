@@ -64,7 +64,7 @@ const GroupDestinationPage = () => {
         onClick={() => onHandleDrawlerDestination({ action: EActionType.CREATE })}
         breadCrumItems={[{ title: "Nhóm điểm đến" }]}
       >
-        <TableListPage<IDestinationListRs["result"][0]>
+        <TableListPage<IDestinationListRs["result"][number]>
           scroll={{ x: 1000 }}
           rowKey={"id"}
           modelName="nhóm điểm đến"

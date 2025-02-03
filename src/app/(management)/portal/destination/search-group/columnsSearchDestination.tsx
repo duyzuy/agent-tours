@@ -2,7 +2,7 @@ import { ColumnsType } from "antd/es/table";
 import { Tag } from "antd";
 import { LocalSearchDestinationListRs } from "@/models/management/localSearchDestination.interface";
 import { Status } from "@/models/common.interface";
-export const columnsSearchDestination: ColumnsType<LocalSearchDestinationListRs["result"][0]> = [
+export const columnsSearchDestination: ColumnsType<LocalSearchDestinationListRs["result"][number]> = [
   {
     title: "#ID",
     key: "id",

@@ -1,44 +1,44 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import TableListPage from "@/components/admin/TableListPage";
-
-import { useGetRegionList } from "@/queries/core/region";
 
 import { useGetLocalSearchListMISCQuery } from "@/queries/cms/destination";
 
 import { LocalSearchDestinationListRs } from "@/models/management/localSearchDestination.interface";
-import DrawerGroupSearch, { DrawerGroupSearchProps, EActionType, TDrawerSearch } from "./_components/DrawerGroupSearch";
+import DrawerGroupSearch, { DrawerGroupSearchProps, TDrawerSearch } from "./_components/DrawerGroupSearch";
 import useCRUDLocalSearch from "../hooks/useCRUDLocalSearch";
 import { columnsSearchDestination } from "./columnsSearchDestination";
-import { Status } from "@/models/common.interface";
+import { LocalSearchQueryParams } from "@/models/management/localSearchDestination.interface";
 
 const GroupDestinationPage = () => {
   const [editRecord, setEditRecord] = useState<LocalSearchDestinationListRs["result"][0]>();
 
-  const { data: regionList, isLoading } = useGetRegionList();
-
-  const { data: localSearchList, isLoading: isLoadingSearchDesList } = useGetLocalSearchListMISCQuery();
+  const initSearchQueryParams = new LocalSearchQueryParams({}, 1, 20, { sortColumn: "id", direction: "desc" });
+  const { data: localSearchList, isLoading: isLoadingSearchDesList } = useGetLocalSearchListMISCQuery({
+    enabled: true,
+    queryParams: initSearchQueryParams,
+  });
 
   const { onCreate, onUpdate, onDelete } = useCRUDLocalSearch();
 
-  const [actionType, setActionType] = useState<EActionType>(EActionType.CREATE);
+  const [actionType, setActionType] = useState<DrawerGroupSearchProps["actionType"]>();
   const [isOpenDrawler, setOpenDrawler] = useState(false);
 
   const onHandleDrawer = (drawer: TDrawerSearch) => {
-    setEditRecord(() => (drawer.action === EActionType.EDIT ? drawer.record : undefined));
+    setEditRecord(() => (drawer.action === "EDIT" ? drawer.record : undefined));
     setOpenDrawler(true);
     setActionType(() => drawer.action);
   };
 
   const handleSubmitFormData: DrawerGroupSearchProps["onSubmit"] = (actionType, data) => {
-    if (actionType === EActionType.CREATE) {
+    if (actionType === "CREATE") {
       onCreate(data, () => {
         onCloseDrawlerAndReset();
       });
     }
 
-    if (actionType === EActionType.EDIT && editRecord) {
+    if (actionType === "EDIT" && editRecord) {
       onUpdate(editRecord.id, data, () => {
         onCloseDrawlerAndReset();
       });
@@ -55,7 +55,7 @@ const GroupDestinationPage = () => {
       <PageContainer
         name="Nhóm search"
         modelName="Nhóm search"
-        onClick={() => onHandleDrawer({ action: EActionType.CREATE })}
+        onClick={() => onHandleDrawer({ action: "CREATE" })}
         breadCrumItems={[{ title: "Nhóm search" }]}
       >
         <TableListPage<LocalSearchDestinationListRs["result"][0]>
@@ -67,7 +67,7 @@ const GroupDestinationPage = () => {
           showActionsLess={false}
           onEdit={(record) =>
             onHandleDrawer({
-              action: EActionType.EDIT,
+              action: "EDIT",
               record: record,
             })
           }
@@ -81,7 +81,6 @@ const GroupDestinationPage = () => {
         actionType={actionType}
         onClose={onCloseDrawlerAndReset}
         initialValues={editRecord}
-        regionList={regionList || []}
         onSubmit={handleSubmitFormData}
       />
     </React.Fragment>
