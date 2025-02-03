@@ -4,7 +4,7 @@ import { Space } from "antd";
 interface Props {
   children: React.ReactNode;
 }
-const LayoutAgAuth = ({ children }: Props) => {
+const AdminAuthLayout = ({ children }: Props) => {
   return (
     <AdminAuth>
       <div className="login-page h-screen flex flex-wrap">
@@ -28,4 +28,4 @@ const LayoutAgAuth = ({ children }: Props) => {
     </AdminAuth>
   );
 };
-export default LayoutAgAuth;
+export default AdminAuthLayout;

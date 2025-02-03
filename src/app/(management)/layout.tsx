@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ManagementLayout({ children }: { children: React.ReactNode }) {
+export default function PortalLayout({ children }: { children: React.ReactNode }) {
   return (
     <html>
       <body suppressHydrationWarning={true}>

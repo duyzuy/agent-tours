@@ -1,5 +1,4 @@
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   removeAdminUserToken,
   removeAdminUsername,
@@ -12,15 +11,13 @@ import {
 
 const useAdminAuth = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const isAuth = !!getAgToken();
 
   const onLogout = () => {
     removeAdminUserToken();
     removeAdminUsername();
     removeAdminUserInformationStorage();
-    queryClient.clear();
-    router.push("/ag/login");
+    router.push("/admin-auth/login");
   };
 
   const setToken = (newToken: string) => {

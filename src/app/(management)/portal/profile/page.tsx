@@ -1,6 +1,6 @@
 "use client";
 import PageContainer from "@/components/admin/PageContainer";
-import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
+import { useAdminProfile } from "@/modules/admin/auth/store/AdminProfileContext";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { Row, Col, Button } from "antd";
 

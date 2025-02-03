@@ -1,8 +1,6 @@
 "use client";
 import { originalLogo } from "@/assets";
 import Image from "next/image";
-
-import { LINKS } from "@/constants/links.constant";
 import AdminForgotPasswordForm from "@/modules/admin/auth/components/AdminForgotPasswordForm";
 
 const PageForgotPassword = () => {

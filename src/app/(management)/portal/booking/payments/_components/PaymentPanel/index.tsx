@@ -13,13 +13,10 @@ import { usePortalBookingManager } from "../../../context";
 import { customerInformationSchema } from "../../../modules/validate.schema";
 import InvoiceForm from "./InvoiceForm";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
-import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
+import { useAdminProfile } from "@/modules/admin/auth/store/AdminProfileContext";
 import { ILocalUserMinimal } from "@/models/management/localUser.interface";
 
 const PaymentPanel = () => {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
-
   const [bookingInformation, _] = usePortalBookingManager();
   const { createBooking } = useCreateBooking();
   const userProfile = useAdminProfile();

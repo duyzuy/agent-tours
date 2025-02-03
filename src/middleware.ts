@@ -37,9 +37,9 @@ export default function middleware(request: NextRequest) {
 
   // const isAuth = !!session;
   /**
-   * IF IS PORTAL NO NEED TO CONFIG LANGUAGE
+   * ignore if is Admin portal
    */
-  const isAdminPortal = pathname.startsWith("/portal/") || pathname.startsWith("/ag/");
+  const isAdminPortal = pathname.startsWith("/portal/") || pathname.startsWith("/admin-auth/");
 
   if (isAdminPortal) {
     return NextResponse.next();
@@ -54,9 +54,7 @@ export default function middleware(request: NextRequest) {
   );
 
   if (!pathnameHasLocale) {
-    // const locale = getLocale(request);
-    const pathnameWithLocale = `${request.nextUrl.origin}/${localeDefault.key}`;
-    return NextResponse.redirect(pathnameWithLocale);
+    return NextResponse.redirect(`${request.nextUrl.origin}/${localeDefault.key}`);
   }
 
   return intlMiddleware(request);

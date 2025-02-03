@@ -1,12 +1,12 @@
 import { getAdminProfile } from "@/services/management/auth";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { ADMIN_AUTH } from "@/constants/query-var.constant";
 import { ILocalUserProfileRs } from "@/models/management/localAuth.interface";
 import { ErrorResponse } from "@/models/common.interface";
 import { setAdminUserInformationStorage, setAdminUsername } from "@/utils/common";
+import { useTQuery } from "@/lib/reactQueryHooks";
 
-const useAdminGetProfile = () => {
-  return useQuery<ILocalUserProfileRs, ErrorResponse, ILocalUserProfileRs["result"]>({
+const useAdminGetProfile = ({ enabled }: { enabled: boolean }) => {
+  return useTQuery({
     queryKey: [ADMIN_AUTH.GET_ADMIN_PROFILE],
     queryFn: getAdminProfile,
     select: (data) => {
@@ -18,6 +18,7 @@ const useAdminGetProfile = () => {
       return data.result;
     },
     retry: false,
+    enabled: enabled,
   });
 };
 export default useAdminGetProfile;

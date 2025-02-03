@@ -12,8 +12,8 @@ import { passengerInformationSchema } from "../../schema/passengerInformation.sc
 import { isEqualObject } from "@/utils/compare";
 import ModalConfirmation from "./ModalConfirmation";
 
-import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
 import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
+import { useAdminProfile } from "@/modules/admin/auth/store/AdminProfileContext";
 
 type BookingTourItem = PortalBookingManagerFormData["bookingInfo"]["bookingItems"][number];
 export type PassengerListFormData = {

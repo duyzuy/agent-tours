@@ -8,7 +8,7 @@ import DrawerPassengerInformationForm, { DrawerPassengerInformationFormProps } f
 import { ArrowRightOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
 import { getPassengerType } from "@/utils/common";
 import { formatDate } from "@/utils/date";
-import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
+import { useAdminProfile } from "@/modules/admin/auth/store/AdminProfileContext";
 import { getPassengerTitle } from "@/constants/common";
 import classNames from "classnames";
 

@@ -7,12 +7,12 @@ import { originalLogo } from "@/assets";
 import Image from "next/image";
 import { LINKS } from "@/constants/links.constant";
 import AdminMenuLink from "./AdminMenuLink";
-import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
-import useAdminAuth from "@/modules/admin/auth/hooks/useAdminAuth";
 import ThemeModeToggle from "@/components/ThemeModeToggle";
 import { useThemeMode } from "@/context";
 import classNames from "classnames";
+import useAdminAuth from "@/modules/admin/auth/hooks/useAdminAuth";
 import ThingTodoItemButton from "@/modules/admin/operation/components/ThingTodoItemButton";
+import { useAdminProfile } from "@/modules/admin/auth/store/AdminProfileContext";
 
 interface Props {
   children: React.ReactNode;
@@ -76,11 +76,7 @@ const AdminLayout = ({ children }: Props) => {
           theme={mode}
           className="h-screen"
         >
-          <div
-            className={classNames("h-16 flex items-center px-4", {
-              // "w-60": collapsed,
-            })}
-          >
+          <div className={classNames("h-16 flex items-center px-4")}>
             <Image src={originalLogo} alt="logo" priority className="w-full max-w-[120px] mx-auto" />
           </div>
           <div className="flex-1 overflow-y-auto" style={{ height: "calc(100% - 64px)" }}>
