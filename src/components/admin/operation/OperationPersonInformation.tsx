@@ -20,7 +20,7 @@ const OperationPersonInformation: React.FC<OperationPersonInformationProps> = ({
         [className]: className,
       })}
     >
-      <h3 className="font-semibold text-lg">Người phụ trách</h3>
+      <h3 className="text-[16px]">Người phụ trách</h3>
       <Divider style={{ margin: "12px 0" }} />
       <div>
         <span className="w-28 inline-block">Họ và tên</span>

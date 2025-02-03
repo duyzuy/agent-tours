@@ -1,6 +1,5 @@
 import { ColumnsType } from "antd/es/table";
-import { Leading } from "@/models/management/leading.interface";
-import { Tag, Popover, Space, TagProps } from "antd";
+import { Tag, Popover, TagProps } from "antd";
 import { formatDate, stringToDate } from "@/utils/date";
 import { IOperation } from "@/models/management/core/operation/operation.interface";
 import { InfoCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
@@ -53,7 +52,6 @@ export const columns: ColumnsType<IOperation> = [
     render: (value, { pic }, index) => {
       return pic ? (
         <Popover
-          title="Thông tin"
           content={
             <div className="flex gap-y-1 flex-col">
               <span className="flex gap-x-2 text-xs">
@@ -71,7 +69,7 @@ export const columns: ColumnsType<IOperation> = [
             </div>
           }
         >
-          <span className="flex items-center gap-x-2 cursor-pointer">
+          <span className="inline-flex items-center gap-x-2 cursor-pointer">
             <InfoCircleOutlined />
             {pic.username}
           </span>
@@ -109,7 +107,7 @@ export const columns: ColumnsType<IOperation> = [
           : status === "HANDOVERED"
           ? "magenta"
           : status === "DONE"
-          ? "success"
+          ? "green"
           : status === "NEW"
           ? "blue"
           : status === "LOCKED"

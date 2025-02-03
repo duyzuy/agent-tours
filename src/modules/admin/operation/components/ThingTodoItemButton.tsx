@@ -1,16 +1,17 @@
-import { BellOutlined, ClockCircleOutlined } from "@ant-design/icons";
-import { Badge, Button, Popover, Space, Spin, Tag } from "antd";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Badge, Button, Popover, Space, Spin, Tag, Divider } from "antd";
+import { BellOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { OperationThingTodoQueryParams } from "@/models/management/core/operation/operationThingTodo.interface";
 import { useGetOperationThingTodoList } from "@/queries/core/operation";
-import { Card, Divider, Tabs } from "antd";
 import { formatDate } from "@/utils/date";
-import Link from "next/link";
+import { useThemeMode } from "@/context";
 import styled from "styled-components";
-import { usePathname } from "next/navigation";
-
+import classNames from "classnames";
 const ThingTodoItemButton = () => {
   const [open, setOpen] = useState(false);
+  const [themeMode, setThemeMode] = useThemeMode();
   const pathname = usePathname();
   const thingsQueryParams = new OperationThingTodoQueryParams(
     {
@@ -62,7 +63,13 @@ const ThingTodoItemButton = () => {
                   <React.Fragment key={_index}>
                     {_index !== 0 ? <Divider style={{ margin: "1px 0" }} /> : null}
                     <div className="px-3 py-2 hover:bg-gray-100 rounded-md" key={_index}>
-                      <Link href={`/portal/operation/${item.operationId}`} className="!text-gray-800">
+                      <Link
+                        href={`/portal/operation/${item.operationId}`}
+                        className={classNames("", {
+                          "!text-gray-400": themeMode === "dark",
+                          "!text-gray-800": themeMode === "light",
+                        })}
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-semibold">{item.type}</span>
                           <Tag
@@ -110,7 +117,15 @@ const ThingTodoItemButton = () => {
         }
       >
         <Badge dot={true} className="!rounded-full" size="small">
-          <Button icon={<BellOutlined />} type="text" className="!bg-gray-100" shape="circle" />
+          <Button
+            icon={<BellOutlined />}
+            type="text"
+            className={classNames({
+              "!text-gray-900 !bg-gray-100": themeMode === "light",
+              "!text-gray-100 !bg-gray-800": themeMode === "dark",
+            })}
+            shape="circle"
+          />
         </Badge>
       </Popover>
     </div>

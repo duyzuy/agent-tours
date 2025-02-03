@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Dropdown, MenuProps, Space, Table, TableProps } from "antd";
+import { Button, Dropdown, MenuProps, Space, Table } from "antd";
 import PageContainer from "@/components/admin/PageContainer";
 import DrawerOperation, { DrawerOperationProps } from "../_components/DrawerOperation";
 import useOperation from "../modules/useOperation";
@@ -133,30 +133,28 @@ const CodeListPage = () => {
         }
 
         return (
-          <>
-            <Space>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => router.push(`/portal/operation/${id}`)}
-                icon={<EyeOutlined />}
+          <Space>
+            <Button
+              type="text"
+              size="small"
+              onClick={() => router.push(`/portal/operation/${id}`)}
+              icon={<EyeOutlined />}
+            >
+              Xem
+            </Button>
+            <Button type="text" size="small" onClick={() => setEditOperation(record)} icon={<EditOutlined />}>
+              Sửa
+            </Button>
+            {status !== "DONE" && status !== "CANCELED" ? (
+              <Dropdown
+                menu={{
+                  items: menuItems,
+                }}
               >
-                Xem
-              </Button>
-              <Button type="text" size="small" onClick={() => setEditOperation(record)} icon={<EditOutlined />}>
-                Sửa
-              </Button>
-              {status !== "DONE" && status !== "CANCELED" ? (
-                <Dropdown
-                  menu={{
-                    items: menuItems,
-                  }}
-                >
-                  <Button icon={<EllipsisOutlined />} shape="circle" type="text" className="!bg-gray-100" />
-                </Dropdown>
-              ) : null}
-            </Space>
-          </>
+                <Button icon={<EllipsisOutlined />} shape="circle" type="text" className="!bg-gray-100" />
+              </Dropdown>
+            ) : null}
+          </Space>
         );
       },
     },

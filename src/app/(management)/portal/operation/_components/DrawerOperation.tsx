@@ -1,15 +1,15 @@
-import { Drawer, DrawerProps, Form, Input, Row, Col, Space, Button } from "antd";
+import { memo, useEffect, useMemo, useState } from "react";
+import { Drawer, DrawerProps, Form, Input, Space, Button } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { OperationFormData } from "../modules/operation.interface";
 import { operationSchema } from "../schema/operation.schema";
-import SellableCodeListSelector, { SellableCodeListSelectorProps } from "./SellableCodeListSelector";
 import PicListSelector, { PicListSelectorProps } from "./PicListSelector";
-import { IOperation } from "@/models/management/core/operation/operation.interface";
-import { memo, Suspense, useDeferredValue, useEffect, useMemo, useState } from "react";
+import SellableCodeListSelector, { SellableCodeListSelectorProps } from "./SellableCodeListSelector";
 import { isEqualObject } from "@/utils/compare";
-import SellableCodeListSelector2 from "./SellableCodeListSelector2";
+import { useDebounce } from "@/hooks/useDebounce";
+import { IOperation } from "@/models/management/core/operation/operation.interface";
 
 export type DrawerOperationProps = DrawerProps & {
   action?: "create" | "edit";
@@ -18,6 +18,7 @@ export type DrawerOperationProps = DrawerProps & {
   isSubmiting?: boolean;
   initialValue?: IOperation;
 };
+
 const DrawerOperation: React.FC<DrawerOperationProps> = ({
   action,
   onClose,
@@ -27,7 +28,7 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
   isSubmiting,
 }) => {
   const [querySearch, setQuerySearch] = useState("");
-  const deferedQuerySearch = useDeferredValue(querySearch);
+  const deferedQuerySearch = useDebounce(querySearch, 800);
   const initFormData = new OperationFormData(undefined, undefined, undefined, undefined);
 
   const { setValue, getValues, handleSubmit, control, watch } = useForm<OperationFormData>({
@@ -48,7 +49,6 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
     setValue("sellableCode", option.code);
     setValue("sellableId", option.recId);
   };
-
   const isDisabledButton = useMemo(() => {
     const values = getValues();
     return isEqualObject(
@@ -80,67 +80,8 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
       width={550}
       onClose={onClose}
       open={open}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
-    >
-      <Form layout="vertical">
-        <Controller
-          control={control}
-          name="pic"
-          render={({ field, fieldState: { error } }) => (
-            <FormItem label="Người phụ trách" required validateStatus={error ? "error" : ""} help={error?.message}>
-              <PicListSelector value={field?.value?.recId} onChange={handleChangePic} />
-            </FormItem>
-          )}
-        />
-        {/* <Controller
-          control={control}
-          name="sellableCode"
-          render={({ field, fieldState: { error } }) => (
-            <FormItem label="Sản phẩm" required validateStatus={error ? "error" : ""} help={error?.message}>
-              <SellableCodeListSelector value={field?.value} onChange={handleChangeCode} disabled={action === "edit"} />
-            </FormItem>
-          )}
-        /> */}
-        <Controller
-          control={control}
-          name="sellableCode"
-          render={({ field, fieldState: { error } }) => (
-            <>
-              {action === "edit" ? (
-                <div>
-                  <div>Sản phẩm</div>
-                  <div>{field.value}</div>
-                </div>
-              ) : (
-                <FormItem label="Chọn sản phẩm" required validateStatus={error ? "error" : ""} help={error?.message}>
-                  <Input
-                    value={querySearch}
-                    onChange={(evt) => setQuerySearch(evt.target.value)}
-                    placeholder="Nhập mã sản phẩm..."
-                  />
-                  <div className="mb-3"></div>
-                  <Suspense fallback="loading...">
-                    <SellableCodeListSelector2
-                      value={field?.value}
-                      onChange={handleChangeCode}
-                      query={deferedQuerySearch}
-                    />
-                  </Suspense>
-                </FormItem>
-              )}
-            </>
-          )}
-        />
-      </Form>
-      <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-        <Space>
-          <Button disabled={isSubmiting} onClick={onClose}>
-            Huỷ
-          </Button>
+      footer={
+        <Space className="py-3">
           <Button
             type="primary"
             onClick={handleSubmit((data) => onSubmit?.(data, action))}
@@ -149,8 +90,38 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
           >
             Lưu
           </Button>
+          <Button disabled={isSubmiting} onClick={onClose}>
+            Huỷ
+          </Button>
         </Space>
-      </div>
+      }
+    >
+      <Form layout="vertical">
+        <Controller
+          control={control}
+          name="pic"
+          render={({ field: { value }, fieldState: { error } }) => (
+            <FormItem label="Người phụ trách" required validateStatus={error ? "error" : ""} help={error?.message}>
+              <PicListSelector value={value?.recId} onChange={handleChangePic} />
+            </FormItem>
+          )}
+        />
+        <Controller
+          control={control}
+          name="sellableCode"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem label="Chọn sản phẩm" required validateStatus={error ? "error" : ""} help={error?.message}>
+              <Input
+                value={querySearch}
+                onChange={(evt) => setQuerySearch(evt.target.value)}
+                placeholder="Nhập mã sản phẩm..."
+              />
+              <div className="mb-3"></div>
+              <SellableCodeListSelector value={field?.value} onChange={handleChangeCode} query={deferedQuerySearch} />
+            </FormItem>
+          )}
+        />
+      </Form>
     </Drawer>
   );
 };

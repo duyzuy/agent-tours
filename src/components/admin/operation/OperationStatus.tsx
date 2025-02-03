@@ -15,14 +15,14 @@ const OperationStatus: React.FC<OperationStatusProps> = ({ status }) => {
         : status === "HANDOVERED"
         ? "magenta"
         : status === "DONE"
-        ? "success"
+        ? "green"
         : status === "NEW"
         ? "blue"
         : status === "LOCKED"
         ? "default"
         : status === "PENDINGCANCELED"
         ? "gold"
-        : "";
+        : "default";
 
     let label: string;
     label =
@@ -40,7 +40,7 @@ const OperationStatus: React.FC<OperationStatusProps> = ({ status }) => {
         ? "Đang khoá"
         : status === "PENDINGCANCELED"
         ? "Chờ huỷ"
-        : "";
+        : "Unknown";
     return { label, color };
   };
   return (

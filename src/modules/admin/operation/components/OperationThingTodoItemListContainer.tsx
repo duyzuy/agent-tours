@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import classNames from "classnames";
 import { isUndefined } from "lodash";
-import { Button, Card, Checkbox, Divider, Form, Popover, Select, Space, Tabs, Tag } from "antd";
+import { Button, Card, Checkbox, Divider, Empty, Form, Popover, Select, Space, Tabs, Tag } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import {
@@ -58,7 +58,7 @@ const OperationThingTodoItemListContainer: React.FC<OperationThingTodoItemListCo
   return (
     <Card size="small" className={classNames("info border w-full rounded-md p-4")}>
       <div className="flex justify-between">
-        <h3 className="font-semibold text-lg">Lời nhắc</h3>
+        <h3 className="text-[16px]">Task công việc</h3>
         <ButtonFilterThingTodo
           status={queryParams.requestObject?.status}
           numberOfDayFromToday={queryParams.requestObject?.numberOfDayFromToday}
@@ -67,23 +67,27 @@ const OperationThingTodoItemListContainer: React.FC<OperationThingTodoItemListCo
         />
       </div>
       <Divider style={{ margin: "12px 0" }} />
-      <Tabs
-        items={
-          thingTodoListGroupByType &&
-          Object.entries(thingTodoListGroupByType)?.map(([key, items]) => ({
-            label: <span className="text-xs">{key}</span>,
-            key: key,
-            children: (
-              <div className="max-h-96 overflow-y-auto -mx-3 p-3 flex flex-col gap-y-3">
-                {items?.map((item, _index) => (
-                  <ThingTodoCardItem key={_index} {...item} loading={isLoading} />
-                ))}
-              </div>
-            ),
-          }))
-        }
-        size="small"
-      />
+      {!todoList || !todoList.length ? (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Đang trống." />
+      ) : (
+        <Tabs
+          size="small"
+          items={
+            thingTodoListGroupByType &&
+            Object.entries(thingTodoListGroupByType)?.map(([key, items]) => ({
+              label: <span className="text-xs">{key}</span>,
+              key: key,
+              children: (
+                <div className="max-h-96 overflow-y-auto -mx-3 p-3 flex flex-col gap-y-3">
+                  {items?.map((item, _index) => (
+                    <ThingTodoCardItem key={_index} {...item} loading={isLoading} />
+                  ))}
+                </div>
+              ),
+            }))
+          }
+        />
+      )}
     </Card>
   );
 };

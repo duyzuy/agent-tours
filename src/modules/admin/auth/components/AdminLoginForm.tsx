@@ -1,31 +1,33 @@
+import React from "react";
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
 import useAdminLogin from "../hooks/useAdminLogin";
 
 type AdminLoginFields = {
-  userId: string;
-  username: string;
-  password: string;
+  userId?: string;
+  username?: string;
+  password?: string;
 };
 
-const FORGOT_PASSWORD_LINK = "/ag/forgot-password";
+const FORGOT_PASSWORD_LINK = "/admin-auth/forgot-password";
 
-const AdminLoginForm = () => {
+const AdminLoginForm: React.FC = () => {
   const { mutate: signIn, isPending } = useAdminLogin();
-  const initalFormData = {
-    userId: "99",
-    password: "123123123",
-    username: "99",
-  };
+
   return (
     <Form
-      name="adminLogin"
+      name="admin-login"
       labelCol={{ span: 24 }}
       wrapperCol={{ span: 24 }}
       onFinish={signIn}
       disabled={isPending}
       layout="vertical"
-      initialValues={initalFormData}
+      autoComplete="off"
+      initialValues={{
+        userId: "99",
+        password: "123123123",
+        username: "99",
+      }}
     >
       <Form.Item<AdminLoginFields>
         label="ID"
@@ -37,7 +39,7 @@ const AdminLoginForm = () => {
           },
         ]}
       >
-        <Input placeholder="Tên tài khoản/Mã đại lý" />
+        <Input placeholder="Tên tài khoản/Mã đại lý" size="large" />
       </Form.Item>
       <Form.Item<AdminLoginFields>
         label="Tên tài khoản/Mã đại lý"
@@ -49,7 +51,7 @@ const AdminLoginForm = () => {
           },
         ]}
       >
-        <Input placeholder="Tên tài khoản/Mã đại lý" />
+        <Input placeholder="Tên tài khoản/Mã đại lý" size="large" />
       </Form.Item>
       <Form.Item<AdminLoginFields>
         label="Mật khẩu"
@@ -61,7 +63,7 @@ const AdminLoginForm = () => {
           },
         ]}
       >
-        <Input.Password placeholder="Mật khẩu" autoComplete="current_password" />
+        <Input.Password placeholder="Mật khẩu" autoComplete="current_password" size="large" />
       </Form.Item>
       <p className="text-right py-2 mb-4">
         <Link href={FORGOT_PASSWORD_LINK} className="text-blue-600">

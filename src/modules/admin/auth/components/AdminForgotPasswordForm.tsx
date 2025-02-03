@@ -1,7 +1,8 @@
+import React from "react";
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
 const ADMIN_LOGIN_LINK = "/ag/login";
-const AdminForgotPasswordForm = () => {
+const AdminForgotPasswordForm: React.FC = () => {
   return (
     <Form
       name="adminForgotPassword"
@@ -22,7 +23,7 @@ const AdminForgotPasswordForm = () => {
           },
         ]}
       >
-        <Input placeholder="Tên tài khoản" />
+        <Input placeholder="Tên tài khoản" size="large" />
       </Form.Item>
       <p className="text-right py-2 mb-4">
         <Link href={ADMIN_LOGIN_LINK} className="text-blue-600">

@@ -1,10 +1,4 @@
-import {
-  RoomingItem,
-  RoomingPayload,
-  RoomingType,
-  RoomingHandOverPayload,
-  RoomingStatusType,
-} from "@/models/management/booking/rooming.interface";
+import { RoomingItem, RoomingType, RoomingStatusType } from "@/models/management/booking/rooming.interface";
 
 export class RoomingFormData {
   roomingType?: RoomingType;

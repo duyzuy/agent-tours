@@ -2,10 +2,10 @@ import { useUpdateRoomingMutation, useHandOverRoomingMutation } from "@/mutation
 import { useState } from "react";
 import { RoomingFormData, RoomingHandOverFormData } from "./rooming.interface";
 import { RoomingItem, RoomingPayload, RoomingType } from "@/models/management/booking/rooming.interface";
+import { PassengerType } from "@/models/common.interface";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";
-import { PassengerType } from "@/models/common.interface";
 
 const useRooming = (roomingItems: RoomingItem[]) => {
   const { mutate: updateRoom } = useUpdateRoomingMutation();
@@ -13,8 +13,8 @@ const useRooming = (roomingItems: RoomingItem[]) => {
 
   const initFormData = new RoomingFormData(undefined, 0, []);
   const [formData, setFormdata] = useState(initFormData);
-  const queryClient = useQueryClient();
 
+  const queryClient = useQueryClient();
   const message = useMessage();
 
   const onChangeRooming = (item: RoomingItem) => {
@@ -52,7 +52,6 @@ const useRooming = (roomingItems: RoomingItem[]) => {
 
         newRoomingItems = [...newRoomingItems, item];
       }
-
       return { ...oldData, roomingItems: [...newRoomingItems] };
     });
   };
@@ -91,7 +90,7 @@ const useRooming = (roomingItems: RoomingItem[]) => {
     let payload: RoomingPayload = { roomingList: [] };
 
     const roomingItems = formData.roomingItems.reduce<RoomingPayload["roomingList"]>((acc, item) => {
-      acc = [
+      return [
         ...acc,
         {
           bookingPaxId: item.bookingPaxId,
@@ -99,8 +98,6 @@ const useRooming = (roomingItems: RoomingItem[]) => {
           roomingListType: formData.roomingType,
         },
       ];
-
-      return acc;
     }, []);
 
     payload = {
