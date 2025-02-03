@@ -27,7 +27,7 @@ export const localSearchAPIs = {
   getList: async (queryParams?: LocalSearchQueryParams) => {
     return await client.post<LocalSearchDestinationListRs>("local/LocalMisc_SearchConfig_Get", {
       body: {
-        requestObject: queryParams,
+        ...queryParams,
       },
       isAuth: true,
     });

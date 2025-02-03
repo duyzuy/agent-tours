@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState, useTransition } from "react";
 import { Button, Space, Switch } from "antd";
 import usePassenger from "../../../modules/usePassenger";
-import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
+// import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
 import { PassengerType } from "@/models/common.interface";
 import DrawerPassengerInformationForm, { DrawerPassengerInformationFormProps } from "./DrawerPassengerInformationForm";
 import { ArrowRightOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
@@ -12,13 +12,16 @@ import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
 import { getPassengerTitle } from "@/constants/common";
 import classNames from "classnames";
 
+import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
+type BookingItem = PortalBookingManagerFormData["bookingInfo"]["bookingItems"][number];
+
 type PassengerBookingItem = {
   bookingIndex: number;
-  passengerInfo: IProductTourBookingItem["passengerInformation"];
+  passengerInfo: BookingItem["passengerInformation"];
   type: PassengerType;
 };
 type PassengerInformationPanelProps = {
-  bookingItems: IProductTourBookingItem[];
+  bookingItems: BookingItem[];
   onNext?: () => void;
 };
 const PassengerInformationPanel: React.FC<PassengerInformationPanelProps> = ({ bookingItems, onNext }) => {
@@ -45,7 +48,7 @@ const PassengerInformationPanel: React.FC<PassengerInformationPanelProps> = ({ b
 
   const handleSetUserProfileForFirstPassenger = (
     checked: boolean,
-    passengerInfo: IProductTourBookingItem["passengerInformation"],
+    passengerInfo: BookingItem["passengerInformation"],
   ) => {
     setUseProfileInformation(checked);
     onSetPassengerInformation({ index: 0, data: { ...passengerInfo, paxPhoneNumber: userProfile?.phoneNumber } });
@@ -87,25 +90,27 @@ const PassengerInformationPanel: React.FC<PassengerInformationPanelProps> = ({ b
           >
             <div className="">
               <span className="block text-xs text-gray-600">Danh xưng</span>
-              <span>{passengerInformation.paxTitle ? getPassengerTitle(passengerInformation.paxTitle) : "--"}</span>
+              <span>{passengerInformation?.paxTitle ? getPassengerTitle(passengerInformation.paxTitle) : "--"}</span>
             </div>
             <div className="">
               <span className="block text-xs text-gray-600">Họ</span>
-              <span>{passengerInformation.paxLastname || "--"}</span>
+              <span>{passengerInformation?.paxLastname || "--"}</span>
             </div>
             <div className="">
               <span className="block text-xs text-gray-600">Tên đệm và tên</span>
-              <span>{passengerInformation.paxMiddleFirstName || "--"}</span>
+              <span>{passengerInformation?.paxMiddleFirstName || "--"}</span>
             </div>
             <div className="">
               <span className="block text-xs text-gray-600">Ngày sinh</span>
               <span>
-                {passengerInformation.paxBirthDate ? formatDate(passengerInformation.paxBirthDate, "DD/MM/YYYY") : "--"}
+                {passengerInformation?.paxBirthDate
+                  ? formatDate(passengerInformation.paxBirthDate, "DD/MM/YYYY")
+                  : "--"}
               </span>
             </div>
             <div className="">
               <span className="block text-xs text-gray-600">Số điện thoại</span>
-              <span>{passengerInformation.paxPhoneNumber || "--"}</span>
+              <span>{passengerInformation?.paxPhoneNumber || "--"}</span>
             </div>
           </div>
           {index === 0 ? (

@@ -3,8 +3,9 @@ import { PassengerType } from "@/models/common.interface";
 import { moneyFormatVND } from "@/utils/helper";
 import { Divider } from "antd";
 import { useMemo } from "react";
-import { useBookingSelector } from "../../hooks/useBooking";
-import useBreakDownSummary from "../../modules/useBreakDownSummary";
+
+import { usePortalBookingManagerSelector } from "../context";
+import useBreakDownSummary from "../modules/useBreakDownSummary";
 interface BookingBreakDownSummaryProps {
   label?: string;
 }
@@ -15,8 +16,8 @@ type BreakdownTourSummaryItem = {
   class: string;
   subTotal: number;
 };
-const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
-  const bookingInfo = useBookingSelector((state) => state);
+const PortalBookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
+  const bookingInfo = usePortalBookingManagerSelector((state) => state);
 
   const productItem = useMemo(() => {
     return bookingInfo.bookingInfo?.product;
@@ -265,4 +266,4 @@ const BookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label }) => {
     </div>
   );
 };
-export default memo(BookingSummary);
+export default memo(PortalBookingSummary);

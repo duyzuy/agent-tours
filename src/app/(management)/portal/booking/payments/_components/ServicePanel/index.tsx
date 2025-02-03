@@ -3,9 +3,8 @@ import { Button, Empty, Space, Spin, Tabs } from "antd";
 import { isUndefined } from "lodash";
 import styled from "styled-components";
 
-import useBooking from "../../../hooks/useBooking";
+import { usePortalBookingManager } from "../../../context";
 import { useGetBookingTourServicesCoreQuery } from "@/queries/core/bookingOrder";
-import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
 import useAddOnService from "../../../modules/servies/useAddOnService";
 import BoxServiceItemByPax, { BoxServiceItemByPaxProps } from "./BoxServiceItemByPax";
 import BoxServiceItemNoPax, { BoxServiceItemNoPaxProps } from "./BoxServiceItemNoPax";
@@ -13,13 +12,14 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { ESellChannel } from "@/constants/channel.constant";
 import { IProductService } from "@/models/management/booking/service.interface";
 
+import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
 interface ServicePanelProps {
   sellableId?: number;
-  bookingItems: IProductTourBookingItem[];
+  bookingItems: PortalBookingManagerFormData["bookingInfo"]["bookingItems"];
   onNext?: () => void;
 }
 const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, onNext }) => {
-  const [bookingInformation, _] = useBooking();
+  const [bookingInformation, _] = usePortalBookingManager();
   const { channel } = bookingInformation;
   const [isTransition, startTransition] = useTransition();
   const { onAddServiceByPax, onAddServiceNoPax } = useAddOnService();

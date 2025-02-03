@@ -1,26 +1,28 @@
 import classNames from "classnames";
-import {
-  IProductServiceBookingItemWithoutPax,
-  IProductTourBookingItem,
-} from "../../../modules/bookingInformation.interface";
+// import {
+//   IProductServiceBookingItemWithoutPax,
+//   IProductTourBookingItem,
+// } from "../../../modules/bookingInformation.interface";
 import Quantity from "@/components/base/Quantity";
 import { moneyFormatVND } from "@/utils/helper";
 import { PassengerType } from "@/models/common.interface";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 
+import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
+type BookingSSRItem = PortalBookingManagerFormData["bookingInfo"]["bookingSsr"][number];
 export interface BoxServiceItemNoPaxProps {
   serviceName: string;
-  consfigItems: IProductServiceBookingItemWithoutPax["configItem"][];
-  serviceItem: IProductServiceBookingItemWithoutPax["serviceItem"];
+  consfigItems: BookingSSRItem["configItem"][];
+  serviceItem: BookingSSRItem["serviceItem"];
   onChangeQuantity?: (data: {
     action: "minus" | "plus";
     qty: number;
     type: PassengerType.ADULT;
-    configItem: IProductServiceBookingItemWithoutPax["configItem"];
-    serviceItem: IProductServiceBookingItemWithoutPax["serviceItem"];
+    configItem: BookingSSRItem["configItem"];
+    serviceItem: BookingSSRItem["serviceItem"];
   }) => void;
-  selectedItems?: IProductServiceBookingItemWithoutPax[];
+  selectedItems?: BookingSSRItem[];
 }
 const BoxServiceItemNoPax: React.FC<BoxServiceItemNoPaxProps> = ({
   serviceName,
@@ -29,7 +31,7 @@ const BoxServiceItemNoPax: React.FC<BoxServiceItemNoPaxProps> = ({
   selectedItems,
   onChangeQuantity,
 }) => {
-  const getQuantityValueItem = (configItem: IProductServiceBookingItemWithoutPax["configItem"]) => {
+  const getQuantityValueItem = (configItem: BookingSSRItem["configItem"]) => {
     const item = selectedItems?.find((item) => item.configItem.recId === configItem.recId);
     return item?.qty || 0;
   };

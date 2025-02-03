@@ -1,9 +1,12 @@
-import { useBookingSelector } from "../hooks/useBooking";
+import { usePortalBookingManagerSelector } from "../context";
 import { PassengerType } from "@/models/common.interface";
-import { IProductServiceBookingItem, IProductTourBookingItem } from "./bookingInformation.interface";
+import { PortalBookingInformation } from "./bookingInformation.interface";
 import { useCallback } from "react";
+
+type BookingServiceItem = Exclude<PortalBookingInformation["bookingSsrWithPax"], undefined>[number];
+
 const useBreakDownSummary = () => {
-  const { bookingInfo } = useBookingSelector((state) => state);
+  const { bookingInfo } = usePortalBookingManagerSelector((state) => state);
 
   const bookingItemList = bookingInfo?.bookingItems || [];
 
@@ -52,14 +55,14 @@ const useBreakDownSummary = () => {
     const bookingSSRhasStock = bookingSsrWithPax.filter((item) => item.serviceItem.stock);
     const ssrStockGroupByService = bookingSSRhasStock.reduce<{
       [key: string]: {
-        serviceItem: IProductServiceBookingItem["serviceItem"];
+        serviceItem: BookingServiceItem["serviceItem"];
         subTotal: number;
         totalQty: number;
         items: {
           bookingIndex: number;
-          qty: IProductServiceBookingItem["qty"];
-          type: IProductServiceBookingItem["type"];
-          item: IProductServiceBookingItem["configItem"];
+          qty: BookingServiceItem["qty"];
+          type: BookingServiceItem["type"];
+          item: BookingServiceItem["configItem"];
         }[];
       };
     }>((acc, bkItem) => {
@@ -109,14 +112,14 @@ const useBreakDownSummary = () => {
     const bookingSSRNoStock = bookingSsrWithPax.filter((item) => !item.serviceItem.stock);
     const ssrNoStockGroupByService = bookingSSRNoStock.reduce<{
       [key: string]: {
-        serviceItem: IProductServiceBookingItem["serviceItem"];
+        serviceItem: BookingServiceItem["serviceItem"];
         subTotal: number;
         totalQty: number;
         items: {
           bookingIndex: number;
-          qty: IProductServiceBookingItem["qty"];
-          type: IProductServiceBookingItem["type"];
-          item: IProductServiceBookingItem["configItem"];
+          qty: BookingServiceItem["qty"];
+          type: BookingServiceItem["type"];
+          item: BookingServiceItem["configItem"];
         }[];
       };
     }>((acc, bkItem) => {
@@ -170,13 +173,13 @@ const useBreakDownSummary = () => {
     const bookingSSRhasStock = bookingSsr.filter((item) => item.serviceItem.stock);
     const ssrStockGroupByService = bookingSSRhasStock.reduce<{
       [key: string]: {
-        serviceItem: IProductServiceBookingItem["serviceItem"];
+        serviceItem: BookingServiceItem["serviceItem"];
         subTotal: number;
         totalQty: number;
         items: {
-          qty: IProductServiceBookingItem["qty"];
-          type: IProductServiceBookingItem["type"];
-          item: IProductServiceBookingItem["configItem"];
+          qty: BookingServiceItem["qty"];
+          type: BookingServiceItem["type"];
+          item: BookingServiceItem["configItem"];
         }[];
       };
     }>((acc, bkItem) => {
@@ -224,13 +227,13 @@ const useBreakDownSummary = () => {
     const bookingSSRNoStock = bookingSsr.filter((item) => !item.serviceItem.stock);
     const ssrNoStockGroupByService = bookingSSRNoStock.reduce<{
       [key: string]: {
-        serviceItem: IProductServiceBookingItem["serviceItem"];
+        serviceItem: BookingServiceItem["serviceItem"];
         subTotal: number;
         totalQty: number;
         items: {
-          qty: IProductServiceBookingItem["qty"];
-          type: IProductServiceBookingItem["type"];
-          item: IProductServiceBookingItem["configItem"];
+          qty: BookingServiceItem["qty"];
+          type: BookingServiceItem["type"];
+          item: BookingServiceItem["configItem"];
         }[];
       };
     }>((acc, bkItem) => {

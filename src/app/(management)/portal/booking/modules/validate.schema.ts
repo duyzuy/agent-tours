@@ -2,6 +2,13 @@ import { ObjectSchema, object, string, array, number, mixed } from "yup";
 import { IBookingTourPayload } from "../modules/bookingInformation.interface";
 import { PassengerType } from "@/models/common.interface";
 import { ESellChannel } from "@/constants/channel.constant";
+import { CustomerInformation } from "@/models/management/booking/customer.interface";
+import { SearchBookingFormData } from "../modules/searchBooking.interface";
+import { EProductType } from "@/models/management/core/productType.interface";
+import { EInventoryType } from "@/models/management/core/inventoryType.interface";
+import { MONTH_FORMAT } from "@/constants/common";
+import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
+import dayjs from "dayjs";
 
 export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> = object({
   sellableId: number().required("Thiếu ID sản phẩm"),
@@ -48,4 +55,48 @@ export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> = objec
   invoiceAddress: string().default(""),
   invoiceTaxCode: string().default(""),
   invoiceEmail: string().default(""),
+});
+
+export const customerInformationSchema: ObjectSchema<CustomerInformation> = object({
+  custName: string().required("Họ tên không bỏ trống."),
+  referenceId: string(),
+  custPhoneNumber: string()
+    .required("Số điện thoại không bỏ trống.")
+    .matches(/^[0-9]+$/, "Số điện thoại không hợp lệ.")
+    .min(10, "Số điện thoại tối thiểu 10 số.")
+    .max(11, "Số điện thoại không quá 11 số."),
+  custEmail: string().required("Email không bỏ trống.").email("Email không hợp lệ."),
+  custAddress: string(),
+  rmk: string(),
+});
+
+const isValidDateFormat = (value: string) => {
+  return dayjs(value, { format: MONTH_FORMAT }, true).isValid(); // Adjust the format as needed
+};
+
+export const searchPortalBookingSchema: ObjectSchema<SearchBookingFormData> = object({
+  byMonth: string().required("Chọn thời gian đi").test("is-valid-date", "Ngày đi không hợp lệ", isValidDateFormat),
+  byDest: array<ILocalSeachDestination>(
+    object({
+      regionKey: string(),
+      countryKey: string(),
+      stateProvinceKey: string(),
+      subRegionKey: string(),
+      keyType: string(),
+    }),
+  )
+    .required("Chọn điểm đến")
+    .default([]),
+  byCode: string().default(""),
+  byProductType: array(
+    mixed<EProductType>().oneOf(Object.values(EProductType)).required("Không bỏ trống type."),
+  ).default([EProductType.EXTRA]),
+  byInventoryType: array(mixed<EInventoryType>().oneOf(Object.values(EInventoryType)).required()).default([
+    EInventoryType.AIR,
+  ]),
+  passengers: object({
+    [PassengerType.ADULT]: number().default(1),
+    [PassengerType.CHILD]: number().default(0),
+    [PassengerType.INFANT]: number().default(0),
+  }),
 });

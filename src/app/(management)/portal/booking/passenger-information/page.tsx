@@ -1,17 +1,22 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
 import { Breadcrumb, Col, Row } from "antd";
-import useBooking from "../hooks/useBooking";
+
+import { usePortalBookingManager } from "../context";
 import { useRouter } from "next/navigation";
-import BookingSummary from "../_components/BookingSummary";
+
+import PortalBookingSummary from "../_components/PortalBookingSummary";
 import PassengersInformationForm from "./_components/PassengersInformationForm";
 import usePassenger from "../modules/usePassenger";
-import { IProductTourBookingItem } from "../modules/bookingInformation.interface";
+import { PortalBookingManagerFormData } from "../modules/bookingInformation.interface";
 import { PassengerType } from "@/models/common.interface";
 import { isUndefined } from "lodash";
 
+export type PassengerInformation =
+  PortalBookingManagerFormData["bookingInfo"]["bookingItems"][number]["passengerInformation"];
+
 const CustomerInformationPage = () => {
-  const [bookingInformation, _] = useBooking();
+  const [bookingInformation, _] = usePortalBookingManager();
   const router = useRouter();
 
   const { onSetPassengerInformationBooking } = usePassenger();
@@ -21,7 +26,7 @@ const CustomerInformationPage = () => {
       bookingInformation.bookingInfo?.bookingItems?.reduce<
         {
           bookingIndex: number;
-          passengerInfo: IProductTourBookingItem["passengerInformation"];
+          passengerInfo: PassengerInformation;
           type: PassengerType;
         }[]
       >((acc, bkItem) => {
@@ -73,7 +78,7 @@ const CustomerInformationPage = () => {
               />
             </Col>
             <Col span={9}>
-              <BookingSummary label="Chi tiết giá tour" />
+              <PortalBookingSummary label="Chi tiết giá tour" />
             </Col>
           </Row>
         </div>

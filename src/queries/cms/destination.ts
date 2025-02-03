@@ -58,22 +58,14 @@ export const useGetDestinationDetailCMSQuery = (codekey: string) => {
   });
 };
 
-export const useGetLocalSearchListMISCQuery = (options?: { enabled: boolean; queryParams: LocalSearchQueryParams }) => {
-  const { enabled, queryParams } = options || {};
-  const token = getAgToken() || "";
-
-  let localSearchParams = new LocalSearchQueryParams(
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    1,
-    20,
-    Status.OK,
-  );
+export const useGetLocalSearchListMISCQuery = (options?: {
+  enabled?: boolean;
+  queryParams?: LocalSearchQueryParams;
+}) => {
+  const { enabled = true, queryParams } = options || {};
+  let sortedSearchParams = { ...queryParams };
   if (!isUndefined(queryParams)) {
-    localSearchParams = Object.keys(queryParams)
+    sortedSearchParams = Object.keys(queryParams)
       .sort()
       .reduce<LocalSearchQueryParams>((acc, key) => {
         if (queryParams[key as keyof LocalSearchQueryParams]) {
@@ -83,15 +75,13 @@ export const useGetLocalSearchListMISCQuery = (options?: { enabled: boolean; que
           };
         }
         return acc;
-      }, localSearchParams);
+      }, sortedSearchParams);
   }
 
   return useQuery({
-    queryKey: [queryCMS.GET_LOCAL_SEACH_DESTINATION, localSearchParams],
+    queryKey: [queryCMS.GET_LOCAL_SEACH_DESTINATION, sortedSearchParams],
     queryFn: () => localSearchAPIs.getList(queryParams),
-    enabled: Boolean(token) && enabled,
-    select: (data) => {
-      return data.result;
-    },
+    enabled: enabled,
+    select: (data) => data.result,
   });
 };

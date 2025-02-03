@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
 import { Space, Button, Tag } from "antd";
-import { useBookingSelector } from "../hooks/useBooking";
+import { usePortalBookingManagerSelector } from "../context";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
@@ -9,24 +9,17 @@ import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 
 const ReservationPage = () => {
-  const bookingInformation = useBookingSelector((state) => state);
+  const { reservation } = usePortalBookingManagerSelector((state) => state);
   const router = useRouter();
-  const bookingOrder = useMemo(() => {
-    return bookingInformation.reservation?.bookingOrder;
-  }, [bookingInformation]);
-
-  const templateProduct = useMemo(() => {
-    return bookingInformation.reservation?.bookingOrder.template;
-  }, [bookingInformation]);
-  const sellableProduct = useMemo(() => {
-    return bookingInformation.reservation?.bookingOrder.sellable;
-  }, [bookingInformation]);
+  const bookingOrder = useMemo(() => reservation?.bookingOrder, [reservation]);
+  const templateProduct = useMemo(() => reservation?.bookingOrder.template, [reservation]);
+  const sellableProduct = useMemo(() => reservation?.bookingOrder.sellable, [reservation]);
 
   useEffect(() => {
-    if (isUndefined(bookingOrder)) {
+    if (isUndefined(reservation)) {
       router.push("/portal/booking");
     }
-  }, [bookingOrder]);
+  }, [reservation]);
 
   return (
     <div className="page bg-slate-50 -mx-6 -my-6 p-6 min-h-full">

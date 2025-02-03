@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Col, DatePickerProps, Drawer, Form, Input, Row, Select, Space } from "antd";
 import { PassengerType } from "@/models/common.interface";
-
-import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";
-
 import FormItem from "@/components/base/FormItem";
 import { DATE_FORMAT, PASSENGER_AGES, PASSENGER_GENDER, PASSENGER_TITLES } from "@/constants/common";
 import { getPassengerType } from "@/utils/common";
@@ -15,12 +11,14 @@ import dayjs from "dayjs";
 import { isUndefined } from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { passengerInformationSchema } from "./passengerInformation.schema";
+import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
 
+type BookingItem = PortalBookingManagerFormData["bookingInfo"]["bookingItems"][number];
 export interface DrawerPassengerInformationFormProps {
   open?: boolean;
   onClose?: () => void;
-  onOk?: (bookingIndex: number, paxType: PassengerType, data: IProductTourBookingItem["passengerInformation"]) => void;
-  data?: IProductTourBookingItem["passengerInformation"];
+  onOk?: (bookingIndex: number, paxType: PassengerType, data: BookingItem["passengerInformation"]) => void;
+  data?: BookingItem["passengerInformation"];
   paxType?: PassengerType;
   bookingIndex?: number;
   startDate?: string;

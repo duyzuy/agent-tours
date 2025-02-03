@@ -1,23 +1,23 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Row, Col, Button, DatePickerProps } from "antd";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { SearchOutlined } from "@ant-design/icons";
-import styled from "styled-components";
-import classNames from "classnames";
 import { SearchBookingFormData } from "../../modules/searchBooking.interface";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
-import { searchBookingSchema } from "../../schema/searchBooking.schema";
 import { EProductType } from "@/models/management/core/productType.interface";
 import FormItem from "@/components/base/FormItem";
 import { MONTH_FORMAT } from "@/constants/common";
-import dayjs from "dayjs";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import ProductTypeSelector, { ProductTypeSelectorProps } from "./ProductTypeSelector";
-
 import DestinationSelector, { DestinationSelectorProps } from "./DestinationSelector";
 import InventoryTypeListSelector, { InventoryTypeListSelectorProps } from "./InventoryTypeListSelector";
-import { useSearchParams, useRouter, useParams, usePathname } from "next/navigation";
 import { UseSearchBookingInformation } from "../../modules/useSearchBookingInformation";
+import { searchPortalBookingSchema } from "../../modules/validate.schema";
+import classNames from "classnames";
+import styled from "styled-components";
+import dayjs from "dayjs";
+
 export interface SearchBookingBoxProps {
   departLocation?: string;
   departDate?: string;
@@ -41,7 +41,7 @@ const SearchBookingBox: React.FC<SearchBookingBoxProps> = ({ className = "", loa
   const router = useRouter();
 
   const { handlerSubmit, errors } = useFormSubmit({
-    schema: searchBookingSchema,
+    schema: searchPortalBookingSchema,
   });
 
   const handleSelectDate: DatePickerProps["onChange"] = (date, dateStr) => {
@@ -94,7 +94,6 @@ const SearchBookingBox: React.FC<SearchBookingBoxProps> = ({ className = "", loa
       url = url.concat("?byMonth=", byMonth);
       data = { ...data, byMonth: byMonth };
     }
-
     handlerSubmit(data, onSubmit);
     setFormData(data);
   }, []);

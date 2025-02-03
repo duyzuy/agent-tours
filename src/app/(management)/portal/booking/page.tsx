@@ -1,15 +1,15 @@
 "use client";
 import React, { useCallback, useMemo, useState } from "react";
 import SearchBookingBox from "./_components/SearchBookingBox";
-import useBooking from "./hooks/useBooking";
+import { usePortalBookingManager } from "./context";
 import ProductList from "./_components/ProductList";
-import DrawerSelectProduct from "./_components/DrawerSelectProduct";
+import ProductFareClassDrawer from "./_components/ProductFareClassDrawer";
 import { IProductTour } from "@/models/management/booking/product.interface";
 import useSearchBookingInformation from "./modules/useSearchBookingInformation";
 import useSelectProductTour from "./modules/useSelectProductTour";
 
 const BookingPage = () => {
-  const [bookingInformation, _] = useBooking();
+  const [bookingInformation, _] = usePortalBookingManager();
 
   const { onSearchBooking, isPending } = useSearchBookingInformation();
   const [selectedProduct, setSelectedProduct] = useState<IProductTour>();
@@ -43,7 +43,7 @@ const BookingPage = () => {
       </div>
       <div className="font-[500] text-lg mb-3">Danh sách tour</div>
       <ProductList items={productList || []} onSelect={onSelectProduct} loading={isPending} />
-      <DrawerSelectProduct open={showDrawer} data={selectedProduct} onClose={onCloseDrawer} onOk={onNext} />
+      <ProductFareClassDrawer open={showDrawer} data={selectedProduct} onClose={onCloseDrawer} onOk={onNext} />
     </div>
   );
 };

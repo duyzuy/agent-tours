@@ -1,6 +1,6 @@
 import { SearchBookingPayload, SearchBookingFormData } from "./searchBooking.interface";
 import { useSearchBookingMutation } from "@/mutations/managements/booking";
-import useBooking from "../hooks/useBooking";
+import { usePortalBookingManager } from "../context";
 
 import useMessage from "@/hooks/useMessage";
 import { MutateOptions } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ export interface UseSearchBookingInformation {
 }
 const useSearchBookingInformation = () => {
   const { mutate: searchProduct, isPending } = useSearchBookingMutation();
-  const [_, setBookingInformation] = useBooking();
+  const [_, setBookingInformation] = usePortalBookingManager();
 
   const message = useMessage();
 

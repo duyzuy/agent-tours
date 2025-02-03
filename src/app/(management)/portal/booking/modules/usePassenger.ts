@@ -1,16 +1,13 @@
-import useBooking from "../hooks/useBooking";
 import { PassengerListFormData } from "../passenger-information/_components/PassengersInformationForm";
-import { IProductTourBookingItem } from "./bookingInformation.interface";
-const usePassenger = () => {
-  const [_, setBookingInformation] = useBooking();
+import { usePortalBookingManager } from "../context";
+import { PortalBookingManagerFormData } from "./bookingInformation.interface";
 
-  const onSetPassengerInformation = ({
-    index,
-    data,
-  }: {
-    index: number;
-    data: IProductTourBookingItem["passengerInformation"];
-  }) => {
+type BookingItem = PortalBookingManagerFormData["bookingInfo"]["bookingItems"][number];
+
+const usePassenger = () => {
+  const [_, setBookingInformation] = usePortalBookingManager();
+
+  const onSetPassengerInformation = ({ index, data }: { index: number; data: BookingItem["passengerInformation"] }) => {
     setBookingInformation((prev) => {
       let newBookingItems = prev.bookingInfo?.bookingItems || [];
 
@@ -37,7 +34,7 @@ const usePassenger = () => {
     setBookingInformation((prev) => {
       let newBookingItems = prev.bookingInfo?.bookingItems || [];
 
-      newBookingItems = newBookingItems.reduce<IProductTourBookingItem[]>((acc, item) => {
+      newBookingItems = newBookingItems.reduce<BookingItem[]>((acc, item) => {
         const paxFormItem = passengerFormsData.find(
           (paxForm) => paxForm.index === item.index && paxForm.type === item.type,
         );

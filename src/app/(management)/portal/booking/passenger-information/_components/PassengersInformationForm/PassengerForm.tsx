@@ -4,7 +4,7 @@ import { Col, Form, Input, Row, Select, DatePickerProps } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";
 import { DATE_FORMAT, PASSENGER_AGES, PASSENGER_GENDER, PASSENGER_TITLES } from "@/constants/common";
-import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
+import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
 import { getPassengerType } from "@/utils/common";
 import classNames from "classnames";
 import dayjs from "dayjs";
@@ -12,12 +12,14 @@ import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import useMessage from "@/hooks/useMessage";
 
 type RequiredPaxFormData = Required<PassengerInformationFormData>;
+
+type BookingItem = PortalBookingManagerFormData["bookingInfo"]["bookingItems"][number];
 export interface PassengerFormProps {
   index: number;
   type: PassengerType;
-  initialValues?: IProductTourBookingItem["passengerInformation"];
+  initialValues: BookingItem["passengerInformation"];
   errors?: Partial<Record<keyof RequiredPaxFormData, string>>;
-  onChangeForm: ({ index, data }: { index: number; data: IProductTourBookingItem["passengerInformation"] }) => void;
+  onChangeForm: ({ index, data }: { index: number; data: BookingItem["passengerInformation"] }) => void;
   startDate?: string;
   className?: string;
 }
@@ -81,7 +83,6 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
     onChangeForm({ index, data: newPaxInfo });
   };
 
-  console.log(initialValues);
   return (
     <div
       className={classNames("passenger__information-box-item", {

@@ -2,24 +2,24 @@ import { ESellChannel, SELL_CHANNEL } from "@/constants/channel.constant";
 import { IProductTour } from "@/models/management/booking/product.interface";
 import { Button, Drawer, Empty, Segmented, Space } from "antd";
 import useSelectProductTour from "../../modules/useSelectProductTour";
-import PassengerTourClassItem from "../PassengerTourClassItem";
+import PassengerTourClassItem from "./PassengerTourClassItem";
 import { moneyFormatVND } from "@/utils/helper";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { memo, useCallback, useMemo, useTransition } from "react";
 import { PassengerType } from "@/models/common.interface";
 import { CheckCircleOutlined, SwapOutlined } from "@ant-design/icons";
-import useBooking from "../../hooks/useBooking";
+import { usePortalBookingManager } from "../../context";
 import useMessage from "@/hooks/useMessage";
 import { formatDate } from "@/utils/date";
 
-export interface DrawerSelectProduct {
+export interface ProductFareClassDrawerProps {
   open: boolean;
   onClose: () => void;
   onOk?: () => void;
   data?: IProductTour;
 }
-const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onOk, data }) => {
-  const [bookingInformation, _] = useBooking();
+const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, onClose, onOk, data }) => {
+  const [bookingInformation, _] = usePortalBookingManager();
   const stocks = useMemo(() => data?.sellableDetails.stocks, [data]);
   const inventories = useMemo(() => data?.sellableDetails.inventories, [data]);
   const promotions = useMemo(() => data?.promotions, [data]);
@@ -123,15 +123,11 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onO
       title={data?.template.name}
       width={650}
       open={open}
-      // onClose={onClose}
       destroyOnClose
       maskClosable={false}
       closeIcon={null}
       footer={
         <Space className="py-2">
-          <Button size="large" type="text" className="!bg-gray-200 !text-gray-600 w-36" onClick={onCancelSelection}>
-            Huỷ bỏ
-          </Button>
           <Button
             type="primary"
             size="large"
@@ -141,6 +137,9 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onO
             disabled={isDisableNextButton}
           >
             Mua dịch vụ
+          </Button>
+          <Button size="large" type="text" className="!bg-gray-200 !text-gray-600 w-36" onClick={onCancelSelection}>
+            Huỷ bỏ
           </Button>
         </Space>
       }
@@ -225,4 +224,4 @@ const DrawerSelectProduct: React.FC<DrawerSelectProduct> = ({ open, onClose, onO
     </Drawer>
   );
 };
-export default memo(DrawerSelectProduct);
+export default memo(ProductFareClassDrawer);

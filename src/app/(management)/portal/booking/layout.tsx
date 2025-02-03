@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
-import BookingProvider from "./BookingProvider";
 
+import { PortalBookingProvider } from "./context";
 interface BookingLayoutProps {
   children: React.ReactNode;
 }
-const BookingLayout = ({ children }: BookingLayoutProps) => {
-  return <BookingProvider>{children}</BookingProvider>;
-};
-export default BookingLayout;
+export default function BookingLayout({ children }: BookingLayoutProps) {
+  return <PortalBookingProvider>{children}</PortalBookingProvider>;
+}

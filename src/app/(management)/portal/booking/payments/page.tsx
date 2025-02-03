@@ -2,9 +2,10 @@
 import React, { useMemo, useState } from "react";
 import { Col, Divider, Row, Tabs } from "antd";
 import styled from "styled-components";
-import useBooking, { useBookingSelector } from "../hooks/useBooking";
 
-import BookingSummary from "../_components/BookingSummary";
+import { usePortalBookingManager } from "../context";
+
+import PortalBookingSummary from "../_components/PortalBookingSummary";
 import { ContentDetailList } from "@/components/admin/ContentDetailList";
 import { formatDate } from "@/utils/date";
 import { CheckCircleOutlined } from "@ant-design/icons";
@@ -15,7 +16,7 @@ import ServicePanel from "./_components/ServicePanel";
 import PaymentPanel from "./_components/PaymentPanel";
 
 const ServicePage = () => {
-  const [bookingInformation, _] = useBooking();
+  const [bookingInformation, _] = usePortalBookingManager();
 
   const [tabKey, setTabsKeys] = useState<"PASSENGER" | "SERVICE" | "PAYMENT">("PASSENGER");
   const bookingItems = useMemo(() => {
@@ -110,7 +111,7 @@ const ServicePage = () => {
         </Col>
         <Col span={9}>
           <div className="h-10"></div>
-          <BookingSummary label="Chi tiết đặt chỗ" />
+          <PortalBookingSummary label="Chi tiết đặt chỗ" />
         </Col>
       </Row>
     </div>

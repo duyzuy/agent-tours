@@ -1,11 +1,10 @@
 import React, { memo, useCallback, useState } from "react";
 
 import classNames from "classnames";
-import { IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
 import PassengerForm, { PassengerFormProps } from "./PassengerForm";
 import { PassengerType } from "@/models/common.interface";
 import { PassengerInformationFormData } from "../../../modules/passenger.interface";
-import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
+import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { Space, Button, Checkbox } from "antd";
 import { useRouter } from "next/navigation";
 import { passengerInformationSchema } from "../../schema/passengerInformation.schema";
@@ -14,6 +13,9 @@ import { isEqualObject } from "@/utils/compare";
 import ModalConfirmation from "./ModalConfirmation";
 
 import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
+import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
+
+type BookingTourItem = PortalBookingManagerFormData["bookingInfo"]["bookingItems"][number];
 export type PassengerListFormData = {
   index: number;
   type: PassengerType;
@@ -24,16 +26,10 @@ export interface PassengersInformationFormProps {
   startDate?: string;
   passengerList: {
     bookingIndex: number;
-    passengerInfo: IProductTourBookingItem["passengerInformation"];
+    passengerInfo: BookingTourItem["passengerInformation"];
     type: PassengerType;
   }[];
-  onSetPassengerInfo?: ({
-    index,
-    data,
-  }: {
-    index: number;
-    data: IProductTourBookingItem["passengerInformation"];
-  }) => void;
+  onSetPassengerInfo?: ({ index, data }: { index: number; data: BookingTourItem["passengerInformation"] }) => void;
   onSetPassengerInformationBooking?: (data: PassengerListFormData) => void;
 }
 
@@ -54,22 +50,9 @@ const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
         {
           index: pax.bookingIndex,
           type: pax.type,
-          data:
-            Object.keys(pax.passengerInfo).length !== 0
-              ? pax.passengerInfo
-              : new PassengerInformationFormData(
-                  undefined,
-                  undefined,
-                  "",
-                  "",
-                  undefined,
-                  "",
-                  "",
-                  "",
-                  "",
-                  "",
-                  undefined,
-                ),
+          data: pax.passengerInfo
+            ? pax.passengerInfo
+            : new PassengerInformationFormData(undefined, undefined, "", "", undefined, "", "", "", "", "", undefined),
         },
       ];
       return acc;

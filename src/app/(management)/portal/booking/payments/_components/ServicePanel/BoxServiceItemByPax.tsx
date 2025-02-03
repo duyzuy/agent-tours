@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { IProductServiceBookingItem, IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
+// import { IProductServiceBookingItem, IProductTourBookingItem } from "../../../modules/bookingInformation.interface";
 import { getPassengerType } from "@/utils/common";
 import { moneyFormatVND } from "@/utils/helper";
 import { PassengerType } from "@/models/common.interface";
@@ -8,20 +8,24 @@ import Quantity from "@/components/base/Quantity";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 
+import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
+type BookingSSRWithPaxItem = PortalBookingManagerFormData["bookingInfo"]["bookingSsrWithPax"][number];
+type BookingItem = PortalBookingManagerFormData["bookingInfo"]["bookingItems"][number];
+
 export interface BoxServiceItemByPaxProps {
   serviceName?: string;
-  consfigItems: IProductServiceBookingItem["configItem"][];
+  consfigItems: BookingSSRWithPaxItem["configItem"][];
   onChangeQuantity?: (data: {
     action: "minus" | "plus";
     qty: number;
     bookingIndex: number;
     type: PassengerType;
-    configItem: IProductServiceBookingItem["configItem"];
-    serviceItem: IProductServiceBookingItem["serviceItem"];
+    configItem: BookingSSRWithPaxItem["configItem"];
+    serviceItem: BookingSSRWithPaxItem["serviceItem"];
   }) => void;
-  bookingItems: IProductTourBookingItem[];
-  serviceItem: IProductServiceBookingItem["serviceItem"];
-  selectedItems?: IProductServiceBookingItem[];
+  bookingItems: BookingItem[];
+  serviceItem: BookingSSRWithPaxItem["serviceItem"];
+  selectedItems?: BookingSSRWithPaxItem[];
 }
 const BoxServiceItemByPax: React.FC<BoxServiceItemByPaxProps> = ({
   serviceName,
@@ -36,7 +40,7 @@ const BoxServiceItemByPax: React.FC<BoxServiceItemByPaxProps> = ({
     configItem,
   }: {
     bookingIndex: number;
-    configItem: IProductServiceBookingItem["configItem"];
+    configItem: BookingSSRWithPaxItem["configItem"];
   }) => {
     const bookingSSRItem = selectedItems?.find(
       (item) => item.bookingIndex === bookingIndex && item.configItem.recId === configItem.recId,
@@ -44,7 +48,7 @@ const BoxServiceItemByPax: React.FC<BoxServiceItemByPaxProps> = ({
     return bookingSSRItem?.qty || 0;
   };
 
-  const getColumns = (configItem: (typeof consfigItems)[number]): ColumnsType<IProductTourBookingItem> => {
+  const getColumns = (configItem: (typeof consfigItems)[number]): ColumnsType<BookingItem> => {
     return [
       {
         title: "Hành khách",
@@ -56,7 +60,7 @@ const BoxServiceItemByPax: React.FC<BoxServiceItemByPaxProps> = ({
             <div>
               <span className="text-xs text-gray-500 block">{getPassengerType(type)}</span>
               <span>
-                {passengerInformation.paxLastname && passengerInformation.paxMiddleFirstName
+                {passengerInformation?.paxLastname && passengerInformation?.paxMiddleFirstName
                   ? getPassengerFullname({
                       middleAndFirstName: passengerInformation.paxMiddleFirstName,
                       lastName: passengerInformation.paxLastname,
@@ -107,7 +111,7 @@ const BoxServiceItemByPax: React.FC<BoxServiceItemByPaxProps> = ({
         <span className="text-[16px] font-semibold">{serviceName}</span>
       </div>
       {consfigItems.map((configItem, _indexConfig) => (
-        <Table<IProductTourBookingItem>
+        <Table<BookingItem>
           key={configItem.recId}
           rowKey={"index"}
           pagination={{

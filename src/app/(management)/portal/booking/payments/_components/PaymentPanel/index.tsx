@@ -8,8 +8,9 @@ import CustomerInformationForm, { CustomerInformationFormProps } from "./Custome
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
 import useCreateBooking from "../../../modules/useCreateBooking";
-import useBooking from "../../../hooks/useBooking";
-import { customerInformationSchema } from "../../../schema/customerInformation.schema";
+
+import { usePortalBookingManager } from "../../../context";
+import { customerInformationSchema } from "../../../modules/validate.schema";
 import InvoiceForm from "./InvoiceForm";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
@@ -19,7 +20,7 @@ const PaymentPanel = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const [bookingInformation, _] = useBooking();
+  const [bookingInformation, _] = usePortalBookingManager();
   const { createBooking } = useCreateBooking();
   const userProfile = useAdminProfile();
 

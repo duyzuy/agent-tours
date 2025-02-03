@@ -1,19 +1,22 @@
 import useMessage from "@/hooks/useMessage";
-import useBooking from "../hooks/useBooking";
+
+import { usePortalBookingManager } from "../context";
 import { PassengerType } from "@/models/common.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
-import { AppBookingManager, IProductTourBookingItem } from "./bookingInformation.interface";
+import { PortalBookingManagerFormData } from "./bookingInformation.interface";
 import { useRouter } from "next/navigation";
 import { ESellChannel } from "@/constants/channel.constant";
 import { IProductTour } from "@/models/management/booking/product.interface";
-import { initBookingDataAppManager } from "../BookingProvider";
+import { initPortalBookingManagerState } from "../reducer";
+
+type ProductItem = Exclude<PortalBookingManagerFormData["bookingInfo"], undefined>["bookingItems"][number];
 const useSelectProductTour = () => {
   const message = useMessage();
-  const [bookingInformation, setBookingInformation] = useBooking();
+  const [portalBookingManagerInfo, setBookingInformation] = usePortalBookingManager();
   const router = useRouter();
 
   const onNext = () => {
-    const { passengerPriceConfigs } = bookingInformation;
+    const { passengerPriceConfigs } = portalBookingManagerInfo;
 
     if (passengerPriceConfigs["adult"].length === 0 && passengerPriceConfigs["child"].length === 0) {
       message.error("Chưa chọn số lượng hành khách.");
@@ -42,14 +45,14 @@ const useSelectProductTour = () => {
       [],
     );
 
-    const bookingItems = allBookingItems.reduce<IProductTourBookingItem[]>((acc, paxItem, _index) => {
+    const bookingItems = allBookingItems.reduce<ProductItem[]>((acc, paxItem, _index) => {
       acc = [
         ...acc,
         {
           index: _index,
           configItem: paxItem.item,
           type: paxItem.type,
-          passengerInformation: {},
+          passengerInformation: undefined,
         },
       ];
 
@@ -76,7 +79,7 @@ const useSelectProductTour = () => {
       },
     }));
   };
-  const onSetQuantityPassenger = (passengers: AppBookingManager["searchBooking"]["passengers"]) => {
+  const onSetQuantityPassenger = (passengers: PortalBookingManagerFormData["searchBooking"]["passengers"]) => {
     setBookingInformation((prev) => ({
       ...prev,
       searchBooking: {
@@ -89,7 +92,7 @@ const useSelectProductTour = () => {
   };
   const onChangeSellChannel = (newChannel: ESellChannel) => {
     setBookingInformation((prev) => ({
-      ...initBookingDataAppManager,
+      ...initPortalBookingManagerState,
       productList: prev.productList,
       searchBooking: prev.searchBooking,
       channel: newChannel,
@@ -144,7 +147,7 @@ const useSelectProductTour = () => {
 
   const onReselectProduct = () => {
     setBookingInformation((prev) => ({
-      ...initBookingDataAppManager,
+      ...initPortalBookingManagerState,
       productList: prev.productList,
       searchBooking: prev.searchBooking,
       channel: prev.channel,

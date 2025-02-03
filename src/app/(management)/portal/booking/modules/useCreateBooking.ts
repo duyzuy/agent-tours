@@ -1,15 +1,17 @@
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
 import { useCreateBookingMutation } from "@/mutations/managements/booking";
-import { IProductTourBookingItem, IBookingTourPayload } from "./bookingInformation.interface";
-import useBooking from "../hooks/useBooking";
+import { IBookingTourPayload } from "./bookingInformation.interface";
 import useMessage from "@/hooks/useMessage";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 
+import { usePortalBookingManager } from "../context";
+import { PortalBookingManagerFormData } from "./bookingInformation.interface";
+
 const useCreateBooking = () => {
   const { mutate: makeCreateBooking } = useCreateBookingMutation();
-  const [bookingInformation, setBookingInformation] = useBooking();
+  const [bookingInformation, setBookingInformation] = usePortalBookingManager();
 
   const bookingSSRWithPax = bookingInformation.bookingInfo?.bookingSsrWithPax;
   const bookingSsr = bookingInformation.bookingInfo?.bookingSsr;
@@ -43,13 +45,6 @@ const useCreateBooking = () => {
       return acc;
     }, []);
 
-    // setBookingInformation((prev) => ({
-    //   ...prev,
-    //   bookingInfo: {
-    //     ...prev.bookingInfo,
-    //     customerInformation: { ...customerInfo },
-    //   },
-    // }));
     bookingPayload = {
       bookingDetails: bookingDetails,
       sellableId: bookingInformation.bookingInfo?.product?.sellableId,
@@ -133,7 +128,9 @@ const useCreateBooking = () => {
     return ssrItemCanculateQuantity;
   };
 
-  const getBookingDetailsItems = (items?: IProductTourBookingItem[]): IBookingTourPayload["bookingDetails"] => {
+  const getBookingDetailsItems = (
+    items?: PortalBookingManagerFormData["bookingInfo"]["bookingItems"],
+  ): IBookingTourPayload["bookingDetails"] => {
     if (isUndefined(items)) {
       throw new Error("Missing booking information bookingItems");
     }

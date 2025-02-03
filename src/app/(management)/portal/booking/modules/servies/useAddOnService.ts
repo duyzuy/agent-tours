@@ -1,33 +1,35 @@
-import useBooking from "../../hooks/useBooking";
+import { usePortalBookingManager } from "../../context";
 
 import useMessage from "@/hooks/useMessage";
 import { PassengerType } from "@/models/common.interface";
-import { IProductServiceBookingItem } from "../bookingInformation.interface";
+// import { IProductServiceBookingItem } from "../bookingInformation.interface";
+import { PortalBookingManagerFormData } from "../bookingInformation.interface";
 import { isUndefined } from "lodash";
 
+type BookingSSRItem = PortalBookingManagerFormData["bookingInfo"]["bookingSsr"][number];
 export type UseAddOnServiceType = {
   onAddServiceByPax: (
     action: "minus" | "plus",
     qty: number,
     bookingIndex: number,
-    configItem: IProductServiceBookingItem["configItem"],
-    serviceItem: IProductServiceBookingItem["serviceItem"],
+    configItem: BookingSSRItem["configItem"],
+    serviceItem: BookingSSRItem["serviceItem"],
     type: PassengerType,
   ) => void;
   onAddServiceNoPax: (
     action: "minus" | "plus",
     qty: number,
-    configItem: IProductServiceBookingItem["configItem"],
-    serviceItem: IProductServiceBookingItem["serviceItem"],
+    configItem: BookingSSRItem["configItem"],
+    serviceItem: BookingSSRItem["serviceItem"],
   ) => void;
 };
 const useAddOnService = () => {
-  const [bookingInformation, setBookingInformation] = useBooking();
+  const [bookingInformation, setBookingInformation] = usePortalBookingManager();
   const bookingSsrWithPax = bookingInformation.bookingInfo?.bookingSsrWithPax;
   const bookingSsr = bookingInformation.bookingInfo?.bookingSsr;
   const message = useMessage();
 
-  const getTotalQuantityConfigItem = (configItem: IProductServiceBookingItem["configItem"]) => {
+  const getTotalQuantityConfigItem = (configItem: BookingSSRItem["configItem"]) => {
     const qtyWithPax =
       [...(bookingSsrWithPax || []), ...(bookingSsr || [])]
         ?.filter((item) => item.configItem.recId === configItem.recId)
