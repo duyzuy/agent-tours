@@ -1,6 +1,6 @@
 "use client";
 import PageContainer from "@/components/admin/PageContainer";
-import useLocalUserProfile from "@/hooks/useLocalProfile";
+import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { Row, Col, Button } from "antd";
 
@@ -12,7 +12,7 @@ import ProfileAddressContactForm from "@/modules/admin/profile/components/Profil
 import AdminChangePasswordButton from "@/modules/admin/profile/components/AdminChangePasswordButton";
 
 const ProfilePage = () => {
-  const localProfile = useLocalUserProfile();
+  const localProfile = useAdminProfile();
 
   if (!localProfile) {
     return null;

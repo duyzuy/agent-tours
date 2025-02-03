@@ -7,7 +7,7 @@ import { originalLogo } from "@/assets";
 import Image from "next/image";
 import { LINKS } from "@/constants/links.constant";
 import AdminMenuLink from "./AdminMenuLink";
-import useLocalUserProfile from "@/hooks/useLocalProfile";
+import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
 import useAdminAuth from "@/modules/admin/auth/hooks/useAdminAuth";
 import ThemeModeToggle from "@/components/ThemeModeToggle";
 import { useThemeMode } from "@/context";
@@ -23,7 +23,7 @@ const AdminLayout = ({ children }: Props) => {
 
   const router = useRouter();
   const pathname = usePathname();
-  const userProfile = useLocalUserProfile();
+  const userProfile = useAdminProfile();
   const [collapsed, setCollapsed] = useState(false);
   const [mode, _] = useThemeMode();
 

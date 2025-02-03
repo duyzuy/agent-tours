@@ -13,7 +13,7 @@ import { passengerInformationSchema } from "../../schema/passengerInformation.sc
 import { isEqualObject } from "@/utils/compare";
 import ModalConfirmation from "./ModalConfirmation";
 
-import useLocalUserProfile from "@/hooks/useLocalProfile";
+import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
 export type PassengerListFormData = {
   index: number;
   type: PassengerType;
@@ -45,7 +45,7 @@ const PassengersInformationForm: React.FC<PassengersInformationFormProps> = ({
   onSetPassengerInformationBooking,
 }) => {
   const router = useRouter();
-  const userProfile = useLocalUserProfile();
+  const userProfile = useAdminProfile();
   const [firstPaxCheck, setFirstPaxCheck] = useState(false);
   const [passengerListForm, setPassengerListForm] = useState<PassengerListFormData>(() =>
     passengerList.reduce<PassengerListFormData>((acc, pax) => {

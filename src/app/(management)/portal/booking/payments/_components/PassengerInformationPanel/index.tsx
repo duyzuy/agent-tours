@@ -8,7 +8,7 @@ import DrawerPassengerInformationForm, { DrawerPassengerInformationFormProps } f
 import { ArrowRightOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
 import { getPassengerType } from "@/utils/common";
 import { formatDate } from "@/utils/date";
-import useLocalUserProfile from "@/hooks/useLocalProfile";
+import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
 import { getPassengerTitle } from "@/constants/common";
 import classNames from "classnames";
 
@@ -22,7 +22,7 @@ type PassengerInformationPanelProps = {
   onNext?: () => void;
 };
 const PassengerInformationPanel: React.FC<PassengerInformationPanelProps> = ({ bookingItems, onNext }) => {
-  const userProfile = useLocalUserProfile();
+  const userProfile = useAdminProfile();
   const { onSetPassengerInformation } = usePassenger();
   const [showDrawer, setShowDrawer] = useState(false);
   const [isUseProfileInformation, setUseProfileInformation] = useState(false);

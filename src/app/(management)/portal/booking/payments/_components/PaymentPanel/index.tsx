@@ -12,7 +12,7 @@ import useBooking from "../../../hooks/useBooking";
 import { customerInformationSchema } from "../../../schema/customerInformation.schema";
 import InvoiceForm from "./InvoiceForm";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
-import useLocalUserProfile from "@/hooks/useLocalProfile";
+import useAdminProfile from "@/modules/admin/auth/hooks/useAdminProfile";
 import { ILocalUserMinimal } from "@/models/management/localUser.interface";
 
 const PaymentPanel = () => {
@@ -21,7 +21,7 @@ const PaymentPanel = () => {
 
   const [bookingInformation, _] = useBooking();
   const { createBooking } = useCreateBooking();
-  const userProfile = useLocalUserProfile();
+  const userProfile = useAdminProfile();
 
   const sellChannel = useMemo(() => {
     return bookingInformation.channel;

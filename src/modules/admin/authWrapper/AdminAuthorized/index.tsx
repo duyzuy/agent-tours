@@ -7,10 +7,11 @@ import PermissionWrapper from "./PermissionWrapper";
 // import { useLocalUserGetRolesQuery } from "@/queries/localUser";
 import useAdminGetProfile from "../../auth/hooks/useAdminGetProfile";
 import useAdminGetRoles from "../../auth/hooks/useAdminGetRoles";
-import { LocalUserProfileProvider } from "@/context/localUserProfileContext";
+// import { LocalUserProfileProvider } from "@/context/localUserProfileContext";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import useMessage from "@/hooks/useMessage";
+import { AdminProfileProvider } from "../../auth/store/AdminProfileContext";
 
 interface Props {
   children: React.ReactNode;
@@ -50,9 +51,9 @@ const AdminAuthorized: React.FC<Props> = ({ children }) => {
   }
   if (!userProfile || !rolesPers) return null;
   return (
-    <LocalUserProfileProvider value={userProfile}>
+    <AdminProfileProvider profile={userProfile}>
       <PermissionWrapper rolePers={rolesPers.roleList[0].localUser_RolePermissionList}>{children}</PermissionWrapper>
-    </LocalUserProfileProvider>
+    </AdminProfileProvider>
   );
 };
 export default AdminAuthorized;
