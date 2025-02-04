@@ -14,7 +14,7 @@ export default async function MobileHeaderMainWraper({ children, locale }: Mobil
   const itemsList = menuItems ? getMenuListFomatedTypes(menuItems) : [];
 
   return (
-    <div className="flex items-center gap-x-2">
+    <div className="flex items-center gap-x-1">
       <UserButton isMobile={true} />
 
       <LanguageSwitcher hideLabel={true} mode="drawer" />
