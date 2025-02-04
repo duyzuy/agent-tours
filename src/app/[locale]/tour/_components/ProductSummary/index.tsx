@@ -56,8 +56,12 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     });
   };
 
-  const handleChangePassenger: ProductSummaryCardProps["onChangePassenger"] = (type, quantity, action) =>
-    setQuantityPassenger({ type, quantity, action });
+  const handleChangePassenger: Exclude<ProductSummaryCardProps["onChangePassenger"], undefined> = useCallback(
+    (type, quantity, action) => {
+      setQuantityPassenger({ type, quantity, action });
+    },
+    [productItem],
+  );
 
   useEffect(() => {
     initTemplateAndProduct(defaultProductItem, cmsTemplate);

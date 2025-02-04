@@ -1,8 +1,6 @@
 import Image from "next/image";
-
 import dynamic from "next/dynamic";
 import { SITE_NAME } from "@/configs/site";
-
 import NavbarSecondary from "./commons/NavbarSecondary";
 import { BoxSearchBookingSkeleton } from "./BoxSearchBookingContainer";
 const DynamicBoxSearchContainer = dynamic(() => import("./BoxSearchBookingContainer"), {

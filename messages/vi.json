@@ -22,6 +22,8 @@
     }
   },
   "String": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
     "edit": "Chỉnh sửa",
     "label": {
       "phoneNumber": "Số điện thoại",

@@ -38,14 +38,12 @@ const contentStyle: React.CSSProperties = {
 export default function FeSearchPage({ params, searchParams }: PageProps) {
   // const { locale } = params;
 
-  const { mutate: onSearch, isPending, isIdle } = useSearchTemplateTourMutation();
+  const { mutate: searchProduct, isPending } = useSearchTemplateTourMutation();
 
   const [productList, setProductList] = useState<IFeTemplateProductItem[]>([]);
-  const handleSubmitSearch: BoxSearchBookingContainerProps["onSubmit"] = (data) => {
-    console.log("submit search");
-    console.log(data);
 
-    onSearch(data, {
+  const handleSubmitSearch: BoxSearchBookingContainerProps["onSubmit"] = (data) => {
+    searchProduct(data, {
       onSuccess(data, variables, context) {
         setProductList(data.result);
       },
@@ -73,7 +71,7 @@ export default function FeSearchPage({ params, searchParams }: PageProps) {
         />
       </div>
       <div className="page-bottom py-12 container mx-auto px-4 md:px-6 lg:px-8 md:pt-8 pt-[150px]">
-        {isIdle ? null : (
+        {
           <>
             {isPending ? (
               <div className="loading flex items-center justify-center py-8">
@@ -100,7 +98,7 @@ export default function FeSearchPage({ params, searchParams }: PageProps) {
               </>
             )}
           </>
-        )}
+        }
         {/* <FlashSale /> */}
         {/* <LineSpacing spaceY={12} className="lg:px-0 px-4" /> */}
       </div>

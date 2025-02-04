@@ -16,9 +16,7 @@ export default async function MobileHeaderMainWraper({ children, locale }: Mobil
   return (
     <div className="flex items-center gap-x-1">
       <UserButton isMobile={true} />
-
       <LanguageSwitcher hideLabel={true} mode="drawer" />
-
       <HamburgerMenuButton items={itemsList} />
     </div>
   );

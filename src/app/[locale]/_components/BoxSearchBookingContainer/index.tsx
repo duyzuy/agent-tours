@@ -1,24 +1,23 @@
 "use client";
+import { useEffect, useMemo, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { Button, DatePickerProps, Form, Select, SelectProps } from "antd";
+import classNames from "classnames";
+import dayjs from "dayjs";
 import styled from "styled-components";
-import { Button, DatePickerProps, Form, Select } from "antd";
 import IconMapPin from "@/assets/icons/IconMapPin";
 import IconCalendar from "@/assets/icons/IconCalendar";
 import IconSearch from "@/assets/icons/IconSearch";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
-import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
-import dayjs from "dayjs";
 import { useGetDestinationsSearchConfigQuery } from "@/queries/fe/searchTour";
 import { FeDestinationSearchConfig } from "@/models/fe/destination.interface";
 import { FeSearchProductFormData } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import { SelectProps } from "antd";
 import { MONTH_FORMAT } from "@/constants/common";
 import { isArray } from "lodash";
 import { useRouter } from "@/utils/navigation";
 import useMessage from "@/hooks/useMessage";
 import { useSearchParams } from "next/navigation";
-import classNames from "classnames";
 
 export interface BoxSearchBookingContainerProps {
   className?: string;
@@ -27,6 +26,7 @@ export interface BoxSearchBookingContainerProps {
 }
 
 const BoxSearchBookingContainer = ({ className = "", onSubmit, isLoading }: BoxSearchBookingContainerProps) => {
+  const [isSearchching, startSearchChing] = useTransition();
   const { data: destinationsSearchConfig, isLoading: isLoadingGetList } = useGetDestinationsSearchConfigQuery();
 
   const initSearchFormData = new FeSearchProductFormData(
@@ -44,6 +44,8 @@ const BoxSearchBookingContainer = ({ className = "", onSubmit, isLoading }: BoxS
   const departDate = searchParams.get("departDate");
   const destName = searchParams.get("destination");
   const destType = searchParams.get("destinationType");
+  const [formData, setFormData] = useState(initSearchFormData);
+  const t = useTranslations("String");
 
   const destination = useMemo(() => {
     return destinationsSearchConfig?.find((item) => {
@@ -55,10 +57,6 @@ const BoxSearchBookingContainer = ({ className = "", onSubmit, isLoading }: BoxS
       }
     });
   }, [destName, destType, destinationsSearchConfig]);
-
-  const [formData, setFormData] = useState(initSearchFormData);
-
-  const t = useTranslations("String");
 
   const onChangeDestination: SelectProps<number, FeDestinationSearchConfig>["onChange"] = (value, option) => {
     setFormData((prev) => ({
@@ -75,31 +73,33 @@ const BoxSearchBookingContainer = ({ className = "", onSubmit, isLoading }: BoxS
     }));
   };
   const handleSubmit = () => {
-    if (!formData.byDest || !formData.byDest.length) {
-      message.info("Vui long Chon diem den");
-      return;
-    }
-    if (!formData.byMonth) {
-      message.info("Vui long chon thoi gian di");
-      return;
-    }
-    let destinationKey = formData.byDest[0].stateProvinceKey;
+    startSearchChing(() => {
+      if (!formData.byDest || !formData.byDest.length) {
+        message.info("Vui long Chon diem den");
+        return;
+      }
+      if (!formData.byMonth) {
+        message.info("Vui long chon thoi gian di");
+        return;
+      }
+      let destinationKey = formData.byDest[0].stateProvinceKey;
 
-    if (formData.byDest[0].keyType?.toLocaleLowerCase() === "STATEPROVINCELIST".toLocaleLowerCase()) {
-      destinationKey = formData.byDest[0].stateProvinceKey;
-    }
-    if (formData.byDest[0].keyType?.toLocaleLowerCase() === "COUNTRYLIST".toLocaleLowerCase()) {
-      destinationKey = formData.byDest[0].countryKey;
-    }
+      if (formData.byDest[0].keyType?.toLocaleLowerCase() === "STATEPROVINCELIST".toLocaleLowerCase()) {
+        destinationKey = formData.byDest[0].stateProvinceKey;
+      }
+      if (formData.byDest[0].keyType?.toLocaleLowerCase() === "COUNTRYLIST".toLocaleLowerCase()) {
+        destinationKey = formData.byDest[0].countryKey;
+      }
 
-    const queryString = objectToQueryString({
-      departDate: formData.byMonth,
-      destination: destinationKey,
-      destinationType: formData.byDest[0].keyType,
+      const queryString = objectToQueryString({
+        departDate: formData.byMonth,
+        destination: destinationKey,
+        destinationType: formData.byDest[0].keyType,
+      });
+
+      router.push(`/search?${queryString}`);
+      onSubmit?.(formData);
     });
-
-    router.push(`/search?${queryString}`);
-    onSubmit?.(formData);
   };
 
   useEffect(() => {
@@ -173,7 +173,7 @@ const BoxSearchBookingContainer = ({ className = "", onSubmit, isLoading }: BoxS
               type="primary"
               icon={<IconSearch />}
               onClick={handleSubmit}
-              loading={isLoading}
+              loading={isSearchching || isLoading}
               className="w-full md:w-auto"
             >
               <span>{t("button.search")}</span>

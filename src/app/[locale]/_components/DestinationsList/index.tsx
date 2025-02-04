@@ -40,7 +40,7 @@ export default async function DestinationsList({ label }: DestinationsListProps)
 
   return (
     <div className="page-destination mb-12">
-      <div className="container mx-auto lg:px-8 md:px-6 px-4">
+      <div className="container mx-auto lg:px-8 md:px-6 px-3">
         <div className="section__head pt-3 pb-3 lg:pb-6">
           <Title as="h3" className="uppercase">
             {label}

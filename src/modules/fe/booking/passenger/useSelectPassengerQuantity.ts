@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector, useBookingSelector } from "@/store";
+import { useAppDispatch, useBookingSelector } from "@/store";
 import { PassengerType } from "@/models/common.interface";
 import useMessage from "@/hooks/useMessage";
 import { useRouter } from "@/utils/navigation";
@@ -6,6 +6,7 @@ import { FePassengerInformationFormData } from "./passegner.interface";
 import { FeBookingInformation } from "@/store/booking/booking.type";
 import { useSession } from "next-auth/react";
 import useAuthModal from "../../auth/hooks/useAuthModal";
+import { useCallback } from "react";
 
 const useSelectPassengerQuantity = () => {
   const bookingInformation = useBookingSelector();
@@ -31,63 +32,66 @@ const useSelectPassengerQuantity = () => {
     });
   };
 
-  const setQuantityPassenger = (passenger: { type: PassengerType; quantity: number; action: "plus" | "minus" }) => {
-    const { type, quantity, action } = passenger;
-    let newPassengers = { ...bookingPassenger };
+  const setQuantityPassenger = useCallback(
+    (passenger: { type: PassengerType; quantity: number; action: "plus" | "minus" }) => {
+      const { type, quantity, action } = passenger;
+      let newPassengers = { ...bookingPassenger };
 
-    if (!product) {
-      throw new Error("Product invalid");
-    }
-    const totalAmountPax = getTotalAmountPax();
+      if (!product) {
+        throw new Error("Product invalid");
+      }
+      const totalAmountPax = getTotalAmountPax();
 
-    if (totalAmountPax === product.open && action === "plus") {
-      message.error("Số lượng vé không đủ.");
-      return;
-    }
+      if (totalAmountPax === product.open && action === "plus") {
+        message.error("Số lượng vé không đủ.");
+        return;
+      }
 
-    switch (type) {
-      case PassengerType.ADULT: {
-        if ((action === "plus" && quantity > 9) || (action === "plus" && quantity + bookingPassenger["child"] > 9)) {
-          message.error("Số lượng hành khách tối đa là 9");
-          return;
-        } else {
-          newPassengers = {
-            ...newPassengers,
-            [PassengerType.ADULT]: quantity,
-          };
+      switch (type) {
+        case PassengerType.ADULT: {
+          if ((action === "plus" && quantity > 9) || (action === "plus" && quantity + bookingPassenger["child"] > 9)) {
+            message.error("Số lượng hành khách tối đa là 9");
+            return;
+          } else {
+            newPassengers = {
+              ...newPassengers,
+              [PassengerType.ADULT]: quantity,
+            };
+          }
+          break;
         }
-        break;
-      }
-      case PassengerType.CHILD: {
-        if ((action === "plus" && quantity > 9) || (action === "plus" && quantity + bookingPassenger["adult"] > 9)) {
-          message.error("Số lượng hành khách tối đa là 9");
-          return;
-        } else {
-          newPassengers = {
-            ...newPassengers,
-            [PassengerType.CHILD]: quantity,
-          };
+        case PassengerType.CHILD: {
+          if ((action === "plus" && quantity > 9) || (action === "plus" && quantity + bookingPassenger["adult"] > 9)) {
+            message.error("Số lượng hành khách tối đa là 9");
+            return;
+          } else {
+            newPassengers = {
+              ...newPassengers,
+              [PassengerType.CHILD]: quantity,
+            };
+          }
+          break;
         }
-        break;
-      }
-      case PassengerType.INFANT: {
-        if (action === "plus" && quantity > bookingPassenger["adult"]) {
-          message.error("Số lượng trẻ em tối đa bằng người lớn");
-          return;
-        } else {
-          newPassengers = {
-            ...newPassengers,
-            [PassengerType.INFANT]: quantity,
-          };
+        case PassengerType.INFANT: {
+          if (action === "plus" && quantity > bookingPassenger["adult"]) {
+            message.error("Số lượng trẻ em tối đa bằng người lớn");
+            return;
+          } else {
+            newPassengers = {
+              ...newPassengers,
+              [PassengerType.INFANT]: quantity,
+            };
+          }
+          break;
         }
-        break;
       }
-    }
-    dispatch({
-      type: "SET_PASSENGER_QUANTITY",
-      payload: newPassengers,
-    });
-  };
+      dispatch({
+        type: "SET_PASSENGER_QUANTITY",
+        payload: newPassengers,
+      });
+    },
+    [product],
+  );
 
   const initPassengerFormDataThenGoToNext = () => {
     const totalAmountPax = getTotalAmountPax();

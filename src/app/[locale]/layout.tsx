@@ -4,8 +4,7 @@ import { notFound } from "next/navigation";
 import { set } from "lodash";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { locales } from "@/constants/locale.constant";
-import Header from "./_components/commons/Header";
-import Footer from "./_components/commons/Footer";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { getTranslationFe } from "../../actions/feTranslations";
@@ -16,7 +15,8 @@ import { NextSessionProvider } from "@/lib/NextSessionProvider";
 import { AppProvider } from "@/store/appContext";
 import AuthModal from "@/modules/fe/auth/components/AuthModal";
 import LocalizationContainer from "@/modules/fe/localization/LocalizationContainer";
-import ServiceWorker from "./_components/ServiceWorker";
+import Header from "./_components/commons/Header";
+import Footer from "./_components/commons/Footer";
 
 const timeZone = "Asia/Bangkok";
 interface Props {
