@@ -19,11 +19,10 @@ export const customerAPIs = {
       },
     });
   },
-  getProfile: async () => {
-    const accessToken = getAccessToken();
+  getProfile: async (token?: string) => {
     return await client.post<CustomerProfileResponse>("localfront/getProfile", {
       headers: {
-        Authorization: accessToken ? `Bearer ${encodeURIComponent(accessToken)}` : "",
+        Authorization: token ? `Bearer ${encodeURIComponent(token)}` : "",
       },
       body: {
         requestObject: {},

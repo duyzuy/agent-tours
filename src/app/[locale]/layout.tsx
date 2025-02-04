@@ -69,7 +69,7 @@ export default async function RootClientLayout({ children, params: { locale } }:
                   <Footer />
                   <AuthModal />
                   <LocalizationContainer />
-                  <ServiceWorker />
+                  {/* <ServiceWorker /> */}
                 </NextSessionProvider>
               </NextIntlClientProvider>
             </RQClientProvider>

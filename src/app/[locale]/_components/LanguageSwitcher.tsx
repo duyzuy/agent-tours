@@ -4,7 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { localeDefault, locales } from "@/constants/locale.constant";
 import { LangCode, Locale } from "@/models/management/cms/language.interface";
 import { useLanguageSelector } from "@/store/language/hooks";
-import LanguageButton from "@/components/frontend/LanguageButton";
+import LanguageButton, { LanguageButtonProps } from "@/components/frontend/LanguageButton";
 
 import { useParams } from "next/navigation";
 import { isArray } from "lodash";
@@ -19,8 +19,10 @@ enum PageContentType {
 }
 interface LanguageSwitcherProps {
   className?: string;
+  mode?: LanguageButtonProps["mode"];
+  hideLabel?: LanguageButtonProps["hideLabel"];
 }
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "" }) => {
+const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "", mode = "dropdown", hideLabel }) => {
   const { page: pageContent, tour: tourContent, category: categoryContent, post: postContent } = useLanguageSelector();
 
   const pathname = usePathname();
@@ -32,7 +34,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "" }) =
     return locales.find((lc) => lc.key === langCode) || localeDefault;
   }, [locales]);
 
-  const handleSelectLanguage = (locale: Locale) => {
+  const handleChangeLanguage = (locale: Locale) => {
     const langCode = locale.key;
 
     if (currentLocale.key === langCode) return;
@@ -82,7 +84,9 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "" }) =
       className={className}
       locales={locales}
       currentLocale={currentLocale}
-      onSelectLanguage={handleSelectLanguage}
+      onSelectLanguage={handleChangeLanguage}
+      mode={mode}
+      hideLabel={hideLabel}
     />
   );
 };

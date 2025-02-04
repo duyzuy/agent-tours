@@ -39,7 +39,7 @@ export default async function Header() {
               <Suspense fallback={<SkeletonAccountItem />}>
                 <UserButton />
               </Suspense>
-              <LanguageSwitcher />
+              <LanguageSwitcher mode="dropdown" />
             </TopMenuHeader>
             <PrimaryMenuHeader items={menuItems} />
           </div>

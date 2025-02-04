@@ -20,41 +20,18 @@ const bookingRoutes = ["passenger", "payment", "reservation"];
 const TopMenuHeader: React.FC<TopMenuHeaderProps> = ({ children, navitationItems, className = "" }) => {
   const t = useTranslations("String");
   const pathname = usePathname();
-  const isBookingProcess = useMemo(() => {
+  const isBookingRoute = useMemo(() => {
     return bookingRoutes.some((rKey) => pathname.includes(rKey));
   }, [pathname]);
 
-  if (isBookingProcess) {
-    return null;
-  }
-
-  const items = [
-    {
-      title: t("contact"),
-      href: "/page/lien-he",
-      prefix: <IconMail className="w-5 h-5 mr-2 stroke-gray-600" />,
-    },
-    {
-      title: t("support"),
-      href: "/",
-      prefix: <IconSupport className="w-5 h-5 mr-2 stroke-gray-600" />,
-    },
-  ];
-
+  if (isBookingRoute) return null;
   return (
     <div
       className={classNames("top-menu text-right mb-2", {
         [className]: className,
       })}
     >
-      <div className="flex items-center gap-x-2 justify-end">
-        {/* {items.map((item, _index) => (
-          <div className="px-3 py-2" key={_index}>
-            <NavLink title={item.title} href={item.href} prefix={item.prefix} />
-          </div>
-        ))} */}
-        {children ?? null}
-      </div>
+      <div className="flex items-center gap-x-2 justify-end">{children ?? null}</div>
     </div>
   );
 };

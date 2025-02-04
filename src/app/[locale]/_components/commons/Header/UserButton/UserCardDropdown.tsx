@@ -45,7 +45,7 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ isAuth, username, c
             type="text"
             icon={<IconAccount className="w-5 h-5" />}
             onClick={toggleDropdown}
-            className="!inline-flex items-center !px-2"
+            className="!inline-flex items-center justify-center"
           >
             {username}
           </Button>

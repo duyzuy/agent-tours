@@ -2,7 +2,8 @@ import IconFlagEN from "@/assets/icons/IconFlagEN";
 import IconFlagVN from "@/assets/icons/IconFlagVN";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { Locale } from "@/models/management/cms/language.interface";
-
+import IconFlagENCircle from "@/assets/icons/IconFlagENCircle";
+import IconFlagVNCircle from "@/assets/icons/IconFlagVNCircle";
 import { defaultLocale } from "@/configs/locale";
 export const locales: Locale[] = [
   {
@@ -10,14 +11,14 @@ export const locales: Locale[] = [
     name: "Tiếng Việt",
     nativeName: "Tiếng Việt",
     shortName: "VN",
-    icon: IconFlagVN,
+    icon: IconFlagVNCircle,
   },
   {
     key: LangCode.EN,
     name: "Tiếng Anh",
     nativeName: "English",
     shortName: "EN",
-    icon: IconFlagEN,
+    icon: IconFlagENCircle,
   },
 ];
 

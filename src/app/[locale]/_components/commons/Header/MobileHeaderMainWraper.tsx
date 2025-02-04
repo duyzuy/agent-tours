@@ -3,6 +3,7 @@ import UserButton from "./UserButton";
 import HamburgerMenuButton from "./HamburgerMenuButton";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getMenuListFomatedTypes } from "@/utils/menu";
+import LanguageSwitcher from "../../LanguageSwitcher";
 export interface MobileHeaderMainWraperProps {
   children?: React.ReactNode;
   locale: LangCode;
@@ -13,9 +14,11 @@ export default async function MobileHeaderMainWraper({ children, locale }: Mobil
   const itemsList = menuItems ? getMenuListFomatedTypes(menuItems) : [];
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-x-2">
       <UserButton isMobile={true} />
-      <div className="space mx-2 text-xs text-gray-400">|</div>
+
+      <LanguageSwitcher hideLabel={true} mode="drawer" />
+
       <HamburgerMenuButton items={itemsList} />
     </div>
   );

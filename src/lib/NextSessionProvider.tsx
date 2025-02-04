@@ -12,12 +12,10 @@ type Props = {
 };
 
 export const NextSessionProvider = ({ children, session }: Props) => {
-  const dispatch = useAppDispatch();
-
-  const { data, isLoading } = useGetUserProfile({ enable: !!session, token: session?.user.accessToken });
   const message = useMessage();
+  const dispatch = useAppDispatch();
+  const { data, isLoading } = useGetUserProfile({ enable: !!session, token: session?.user.accessToken });
 
-  // console.log(session);
   useEffect(() => {
     if (!session || !session.user) return;
 
