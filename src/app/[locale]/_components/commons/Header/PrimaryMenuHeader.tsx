@@ -1,26 +1,26 @@
 "use client";
-import NavItem, { NavItemProps } from "@/components/frontend/base/NavItem";
-import { IconSearch } from "@/assets/icons";
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { isUndefined } from "lodash";
+import NavItem, { NavItemProps } from "@/components/frontend/base/NavItem";
+import { IconSearch } from "@/assets/icons";
 import { Link, usePathname } from "@/utils/navigation";
 import { MenuItemType } from "@/utils/menu";
-const bookingRoutes = ["passenger", "payment", "reservation"];
-export interface HeaderMainWraperProps {
+
+const BOOKING_ROUTES = ["passenger", "payment", "reservation"];
+
+export interface PrimaryMenuHeaderProps {
   className?: string;
   children?: React.ReactNode;
   items?: MenuItemType[];
 }
-const HeaderMainWraper: React.FC<HeaderMainWraperProps> = ({ children, className = "", items }) => {
+
+const PrimaryMenuHeader: React.FC<PrimaryMenuHeaderProps> = ({ children, className = "", items }) => {
   const pathname = usePathname();
   const isBookingProcess = useMemo(() => {
-    return bookingRoutes.some((rKey) => pathname.includes(rKey));
+    return BOOKING_ROUTES.some((rKey) => pathname.includes(rKey));
   }, [pathname]);
 
-  if (isBookingProcess) {
-    return null;
-  }
+  if (isBookingProcess) return null;
 
   return (
     <div
@@ -46,9 +46,7 @@ const HeaderMainWraper: React.FC<HeaderMainWraperProps> = ({ children, className
       <ul className="flex items-center">
         <li className="relative px-3 py-2">
           <Link href="/search">
-            <span className="text-gray-800">
-              <IconSearch />
-            </span>
+            <IconSearch className="text-gray-800" />
           </Link>
         </li>
         {/* <li className="relative px-3 py-2">
@@ -65,4 +63,4 @@ const HeaderMainWraper: React.FC<HeaderMainWraperProps> = ({ children, className
     </div>
   );
 };
-export default HeaderMainWraper;
+export default PrimaryMenuHeader;

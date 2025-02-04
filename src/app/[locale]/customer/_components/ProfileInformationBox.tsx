@@ -10,6 +10,7 @@ import { DATE_FORMAT } from "@/constants/common";
 import UserProfileForm, { UserProfileFormProps } from "./UserProfileForm";
 import { useUpdateProfileInfo } from "@/modules/fe/manageBooking/hooks/useUpdateProfile";
 import { EditOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 type ProfileInformationBoxProps = ProfileBoxItemProps & {
   fullname: string;
   dob: string;
@@ -39,6 +40,7 @@ const ProfileInformationBox: React.FC<ProfileInformationBoxProps> = ({
   passportDoe,
 }) => {
   const { mutate: updateProfile, isPending } = useUpdateProfileInfo();
+  const router = useRouter();
   const [isEdit, setEdit] = useState(false);
 
   const editProfile = () => {
@@ -52,6 +54,7 @@ const ProfileInformationBox: React.FC<ProfileInformationBoxProps> = ({
     updateProfile(data, {
       onSuccess(data, variables, context) {
         setEdit(false);
+        router.refresh();
       },
     });
   };

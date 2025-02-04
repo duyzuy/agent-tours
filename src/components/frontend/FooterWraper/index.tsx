@@ -1,10 +1,9 @@
-"use client";
 import IconChevronRight from "@/assets/icons/IconChevronRight";
-import IconChevronUp from "@/assets/icons/IconChevronUp";
 import { MenuObjectType } from "@/models/management/cms/menu.interface";
 import classNames from "classnames";
 import Image from "next/image";
 import { Link } from "@/utils/navigation";
+import ScrollToTopButton from "./ScrollToTopButton";
 const PAYS = [
   {
     id: 123,
@@ -54,12 +53,12 @@ const PAYS = [
 ];
 
 const SOCIALS = [
-  { id: 123, name: "facebook", icon: "/assets/images/icon-fb.svg" },
-  { id: 1234, name: "facebook", icon: "/assets/images/icon-insta.svg" },
-  { id: 12355, name: "facebook", icon: "/assets/images/icon-line.svg" },
-  { id: 12366, name: "facebook", icon: "/assets/images/icon-tw.svg" },
-  { id: 12377, name: "facebook", icon: "/assets/images/icon-youtube.svg" },
-  { id: 12388, name: "facebook", icon: "/assets/images/icon-zlo.svg" },
+  { id: 1, name: "facebook", icon: "/assets/images/icon-fb.svg", link: "/" },
+  { id: 2, name: "Instagram", icon: "/assets/images/icon-insta.svg", link: "/" },
+  { id: 3, name: "Line", icon: "/assets/images/icon-line.svg", link: "/" },
+  { id: 4, name: "Twitter", icon: "/assets/images/icon-tw.svg", link: "/" },
+  { id: 5, name: "Youtube", icon: "/assets/images/icon-youtube.svg", link: "/" },
+  { id: 6, name: "Zalo", icon: "/assets/images/icon-zlo.svg", link: "/" },
 ];
 
 export type MenuFooterItem = {
@@ -148,9 +147,9 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
         </div>
       </div>
       <div className="footer-bottom">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
-          <div className="inner flex flex-wrap items-center -mx-4 lg:-mx-6">
-            <div className="w-full lg:w-1/2 px-4 md:px-6 lg:px-6 mb-6 lg:mb-0">
+        <div className="container mx-auto px-3 md:px-6 lg:px-8 py-6">
+          <div className="inner flex flex-wrap items-center -mx-3 lg:-mx-6">
+            <div className="w-full lg:w-1/2 px-3 md:px-6 lg:px-6 mb-6 lg:mb-0">
               <div className="cotnent text-xs">
                 <h6 className="text-base lg:text-lg font-semibold text-main-400 mb-4">
                   CÔNG TY DU LỊCH AN THÁI - MAKE OUR WORLD JOYFUL !
@@ -187,18 +186,13 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                     <p className="font-semibold text-[15px]">Kết nối với chúng tôi</p>
                   </div>
                   <div className="w-full h-[1px] bg-gray-200 mb-3 opacity-50"></div>
-                  <ul className="flex items-center mb-3">
-                    {SOCIALS.map((sc, _index) => (
-                      <li
-                        className={classNames("", {
-                          "ml-2": _index !== 0,
-                        })}
-                        key={_index}
-                      >
-                        <Image src={sc.icon} alt={sc.name} width={24} height={24} />
-                      </li>
+                  <div className="flex gap-x-2">
+                    {SOCIALS.map((item, _index) => (
+                      <Link key={_index} href={item.link} className="">
+                        <Image src={item.icon} alt={item.name} width={24} height={24} />
+                      </Link>
                     ))}
-                  </ul>
+                  </div>
                   <div className="policy">
                     <div className="flex items-center py-2">
                       <Image src="/assets/images/icon-bct.png" alt="bct" width={80} height={30} />
@@ -218,10 +212,8 @@ const FooterWraper: React.FC<FooterWraperProps> = ({ children, menuItems, inform
                 </div>
                 <div className="sc-top px-3">
                   <div className="btn text-center w-fit">
-                    <span className="w-9 h-9 bg-red-600 rounded-full flex items-center justify-center mb-2">
-                      <IconChevronUp className="stroke-white" />
-                    </span>
-                    <p className="text-sm">TOP</p>
+                    <ScrollToTopButton />
+                    <div>TOP</div>
                   </div>
                 </div>
               </div>

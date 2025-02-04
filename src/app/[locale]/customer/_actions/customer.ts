@@ -11,7 +11,7 @@ export const getUserCustomerProfile = async (): Promise<CustomerProfileResponse[
   const session = await getServerSession(authOptions);
 
   const data = await serverRequest.post<CustomerProfileResponse, BaseResponse<null>>("localfront/getProfile", {
-    next: { tags: ["customerProfile"], revalidate: false },
+    next: { tags: ["customerProfile"] },
     headers: {
       Authorization: `Bearer ${encodeURIComponent(session?.user.accessToken || "")}`,
     },

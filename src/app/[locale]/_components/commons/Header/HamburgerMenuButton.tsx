@@ -9,17 +9,16 @@ import classNames from "classnames";
 import { ICON_LIST } from "@/constants/icons.constant";
 import styled from "styled-components";
 import { usePathname } from "@/utils/navigation";
-export interface MobileMenuItemsProps {
+export interface HamburgerMenuButtonProps {
   className?: string;
   items: MenuItemType[];
 }
-const MobileMenuItems: React.FC<MobileMenuItemsProps> = ({ className, items }) => {
+const HamburgerMenuButton: React.FC<HamburgerMenuButtonProps> = ({ className, items }) => {
   const [showMenu, setShowMenu] = useState(false);
   const pathname = usePathname();
+
   useEffect(() => {
-    if (showMenu) {
-      setShowMenu(false);
-    }
+    setShowMenu(false);
   }, [pathname]);
 
   return (
@@ -30,7 +29,7 @@ const MobileMenuItems: React.FC<MobileMenuItemsProps> = ({ className, items }) =
         open={showMenu}
         onClose={() => setShowMenu(false)}
         placement="bottom"
-        height={"calc(80vh - env(safe-area-inset-bottom))"}
+        height={"calc(85vh - env(safe-area-inset-bottom))"}
         afterOpenChange={(open) => {
           const body = document.getElementsByTagName("body")[0];
           const scrollY = window.scrollY;
@@ -62,7 +61,7 @@ const MobileMenuItems: React.FC<MobileMenuItemsProps> = ({ className, items }) =
     </>
   );
 };
-export default MobileMenuItems;
+export default HamburgerMenuButton;
 
 interface NavItemProps {
   icon: string;

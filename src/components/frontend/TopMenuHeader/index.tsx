@@ -6,7 +6,7 @@ import IconMail from "@/assets/icons/IconMail";
 import IconSupport from "@/assets/icons/IconSupport";
 import { usePathname } from "@/utils/navigation";
 import { useMemo } from "react";
-interface HeaderNavitationTopProps {
+interface TopMenuHeaderProps {
   children?: React.ReactNode;
   navitationItems?: {
     title: string;
@@ -17,7 +17,7 @@ interface HeaderNavitationTopProps {
 }
 const bookingRoutes = ["passenger", "payment", "reservation"];
 
-const HeaderNavitationTop: React.FC<HeaderNavitationTopProps> = ({ children, navitationItems, className = "" }) => {
+const TopMenuHeader: React.FC<TopMenuHeaderProps> = ({ children, navitationItems, className = "" }) => {
   const t = useTranslations("String");
   const pathname = usePathname();
   const isBookingProcess = useMemo(() => {
@@ -58,4 +58,4 @@ const HeaderNavitationTop: React.FC<HeaderNavitationTopProps> = ({ children, nav
     </div>
   );
 };
-export default HeaderNavitationTop;
+export default TopMenuHeader;

@@ -1,26 +1,22 @@
 import { getMobileMenu } from "@/actions/menu";
 import UserButton from "./UserButton";
-import MobileMenuItems from "./MobileMenuItems";
+import HamburgerMenuButton from "./HamburgerMenuButton";
 import { LangCode } from "@/models/management/cms/language.interface";
-import { getLocale } from "next-intl/server";
 import { getMenuListFomatedTypes } from "@/utils/menu";
 export interface MobileHeaderMainWraperProps {
   children?: React.ReactNode;
+  locale: LangCode;
 }
-export default async function MobileHeaderMainWraper({ children }: MobileHeaderMainWraperProps) {
-  const locale = await getLocale();
-
-  const mobileMenuResult = await getMobileMenu(locale as LangCode);
-
+export default async function MobileHeaderMainWraper({ children, locale }: MobileHeaderMainWraperProps) {
+  const mobileMenuResult = await getMobileMenu(locale);
   const { menuItems } = mobileMenuResult || {};
-
-  const mobileMenuItems = menuItems ? getMenuListFomatedTypes(menuItems) : [];
+  const itemsList = menuItems ? getMenuListFomatedTypes(menuItems) : [];
 
   return (
-    <>
+    <div className="flex items-center">
       <UserButton isMobile={true} />
       <div className="space mx-2 text-xs text-gray-400">|</div>
-      <MobileMenuItems items={mobileMenuItems} />
-    </>
+      <HamburgerMenuButton items={itemsList} />
+    </div>
   );
 }
