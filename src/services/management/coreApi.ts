@@ -23,13 +23,6 @@ export const coreApi = {
         const hasCheck = createHash256(JSON.stringify(soredRequestObject) + key + coreAccountConfig.privateKey);
         const userInfo = getAdminUserInformationStorage();
 
-        const localUserInfo = userInfo
-          ? (JSON.parse(userInfo) as {
-              localUserType: "ADMIN" | "AGENT" | "STAFF" | "AGENT_STAFF";
-              localChildrendUsername: string[];
-            })
-          : undefined;
-
         const bodyParams = {
           requestObject: soredRequestObject,
           orderby: queryParams?.orderBy,
@@ -38,8 +31,8 @@ export const coreApi = {
           userId: coreAccountConfig.userId,
           userName: coreAccountConfig.userName,
           localUsername: getAdminUserName(),
-          localChildrendUsername: localUserInfo?.localChildrendUsername,
-          localUserType: localUserInfo?.localUserType,
+          localChildrendUsername: userInfo?.localChildrendUsername,
+          localUserType: userInfo?.localUserType,
           hashCheck: hasCheck,
         };
         return await client.post<TSuccess>(endpoint, {

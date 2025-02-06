@@ -1,31 +1,21 @@
 import React, { memo } from "react";
-import { Form, Row, Col, Input, Select, SelectProps } from "antd";
+import { Form, Row, Col, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
-
 import classNames from "classnames";
-import { useGetUserAgentList } from "@/queries/localUser";
-import { ILocalUserMinimal, LocalUserAgentListResponse } from "@/models/management/localUser.interface";
-import { ESellChannel } from "@/constants/channel.constant";
+
 export interface CustomerInformationFormProps {
   className?: string;
   customerInformation: CustomerInformation;
   setCustomerInformation: React.Dispatch<React.SetStateAction<CustomerInformation>>;
   errors?: Partial<Record<keyof CustomerInformation, string>> | undefined;
-  sellChannel?: ESellChannel;
-  userAgentId?: number;
-  onSelectAgent?: SelectProps<number, ILocalUserMinimal>["onChange"];
 }
 const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
   className = "",
   customerInformation,
   setCustomerInformation,
   errors,
-  sellChannel,
-  userAgentId,
-  onSelectAgent,
 }) => {
-  const { data: agentList, isLoading } = useGetUserAgentList();
   const onChangeCustomerInformation = (
     key: keyof CustomerInformation,
     value: CustomerInformation[keyof CustomerInformation],
@@ -48,19 +38,7 @@ const CustomerInformationForm: React.FC<CustomerInformationFormProps> = ({
       <div className="customer__information-head mb-3">
         <h3 className="font-[500] text-lg">Thông tin người đặt</h3>
       </div>
-      <Form layout="vertical">
-        {sellChannel === ESellChannel.B2B ? (
-          <FormItem label="Danh sách Agent" required>
-            <Select<number, LocalUserAgentListResponse["result"][number]>
-              value={userAgentId}
-              fieldNames={{ label: "fullname", value: "recId" }}
-              options={agentList}
-              loading={isLoading}
-              onChange={onSelectAgent}
-              placeholder="Chọn Agent"
-            />
-          </FormItem>
-        ) : null}
+      <Form layout="vertical" component="div">
         <Row gutter={16}>
           <Col span={12}>
             <FormItem

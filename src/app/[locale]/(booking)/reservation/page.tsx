@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo } from "react";
-import { Space, Button, Tag } from "antd";
+import { Space, Button, Tag, Result } from "antd";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { Link, useRouter } from "@/utils/navigation";
 import { moneyFormatVND } from "@/utils/helper";
@@ -35,13 +35,23 @@ const ReservationPage = () => {
   return (
     <div className="page-reservation mx-auto min-h-full">
       <div className="customer__information bg-white rounded-md mb-6">
-        <div className="text-center pt-8 mb-6">
-          <IconSuccess width={60} height={60} className="mx-auto mb-2" />
-          <div className="text-center">
-            <span className="block font-[500] text-green-600 text-lg mb-2 uppercase">Đặt chỗ thành công</span>
-            <span className="block">Thông tin đã được ghi nhận và giữ chỗ.</span>
-          </div>
-        </div>
+        <Result
+          status="success"
+          title="Đặt chỗ thành công"
+          subTitle={`Mã đơn hàng #${bookingOrder?.recId} đã được ghi nhận và giữ chỗ.`}
+          // extra={[
+          //   <Button key="backHome" type="primary" size="large" onClick={handleBackToHome}>
+          //     Về trang chủ
+          //   </Button>,
+          //   <Link
+          //     key="orderDetail"
+          //     href={`/customer/order/${reservation?.bookingOrder.recId}`}
+          //     className="!bg-emerald-600 !border-emerald-700 !text-white !h-10 px-3 inline-flex items-center justify-center rounded-md"
+          //   >
+          //     Chi tiết đặt chỗ
+          //   </Link>,
+          // ]}
+        />
         <div className="customer__information-body px-6 pt-6 pb-3">
           <DetailItem title="Mã đơn hàng" value={`#${bookingOrder?.recId}`} />
           <DetailItem title="Tên tour" value={cmsTemplate?.name} />

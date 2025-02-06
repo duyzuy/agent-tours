@@ -6,7 +6,7 @@ import { ITransation } from "@/models/management/cms/translations.interface";
 import { useGetTranslations } from "@/modules/admin/languageManager";
 
 import { columns } from "./columns";
-import { Form, Input } from "antd";
+import { Form, Input, Space, Switch } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { TranslationFormDataQeryParams } from "@/modules/admin/languageManager/translation.interface";
 import { useCreateTranslation, useUpdateTranslation, useDeleteTranslation } from "@/modules/admin/languageManager";
@@ -26,7 +26,7 @@ const LanguagePage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const [action, setAction] = useState<TranslationFormDrawerProps["action"]>();
-
+  const [searchKey, setSearchKey] = useState<"keyName" | "name">("name");
   const setCreateTranslation = () => {
     setAction("create");
     setOpenDrawer(true);
@@ -44,10 +44,17 @@ const LanguagePage = () => {
   const handleChangePage = (page: number, pageSize: number) => {
     setQueryParams((prev) => ({ ...prev, pageCurrent: page, pageSize }));
   };
-  const handleSearchName = (value: string) => {
-    setQueryParams((prev) => ({ ...prev, requestObject: { ...prev.requestObject, name: value } }));
+
+  const handleSearchLanguage = (value: string) => {
+    setQueryParams((prev) => ({ ...prev, requestObject: { ...prev.requestObject, [searchKey]: value } }));
   };
 
+  const handleSwitchFindValue = (value: any) => {
+    setSearchKey(() => {
+      return value === true ? "keyName" : "name";
+    });
+    setQueryParams((prev) => ({ ...prev, requestObject: { ...prev.requestObject, keyName: "", name: "" } }));
+  };
   const handleSubmitForm: TranslationFormDrawerProps["onSubmit"] = (action, formData, cb) => {
     if (action === "create") {
       createTranslation(formData, {
@@ -73,11 +80,26 @@ const LanguagePage = () => {
         breadCrumItems={[{ title: "Bản dịch" }]}
       >
         <Form>
-          <div className="lg:w-3/6 md:w-4/6 xl:w-2/6">
-            <FormItem>
-              <Input.Search placeholder="Nhập từ cần tìm" enterButton="Tìm kiếm" onSearch={handleSearchName} />
-            </FormItem>
-          </div>
+          <FormItem>
+            <div className="flex items-center gap-x-2">
+              <Space>
+                Tìm theo
+                <Switch
+                  checked={searchKey === "keyName"}
+                  checkedChildren={"Key"}
+                  unCheckedChildren={"Tên"}
+                  onChange={handleSwitchFindValue}
+                />
+              </Space>
+              <Input.Search
+                allowClear
+                placeholder={`Nhập ${searchKey === "keyName" ? "Key" : "Tên"} cần tìm`}
+                enterButton="Tìm kiếm"
+                onSearch={handleSearchLanguage}
+                className="!w-80"
+              />
+            </div>
+          </FormItem>
         </Form>
         <TableListPage<ITransation>
           rowKey={"id"}

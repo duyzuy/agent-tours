@@ -6,6 +6,9 @@ import { columns } from "./columns";
 import { MemberQueryParamsFormData } from "@/modules/admin/manageMember/member.interface";
 import MemberFormDrawer, { MemberFormDrawerProps } from "@/modules/admin/manageMember/components/MemberFormDrawer";
 import { useUpdateMember, useGetMemberList, useResetPasswordMember } from "@/modules/admin/manageMember";
+import { ColumnsType } from "antd/es/table";
+import { Button, Popconfirm } from "antd";
+
 const UserPage: React.FC = () => {
   const [queryParams, setQueryParams] = useState(
     () => new MemberQueryParamsFormData({ username: "", email: "", phoneNumber: "" }, 1, 10),
@@ -14,6 +17,7 @@ const UserPage: React.FC = () => {
 
   const { mutate: updateMember, isPending: loadingUpdate } = useUpdateMember();
   const { mutate: resetPassword, isPending: loadingResetPassword } = useResetPasswordMember();
+
   type MemberItem = Exclude<typeof memberData, undefined>["list"][number];
 
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -38,6 +42,31 @@ const UserPage: React.FC = () => {
     });
   };
 
+  const handleSendResetPassword = (userId: number) => {
+    resetPassword(userId);
+  };
+  const mergedColumns: ColumnsType<Exclude<typeof memberData, undefined>["list"][number]> = [
+    ...columns,
+    {
+      title: "Reset mật khẩu",
+      render(value, record, index) {
+        return (
+          <Popconfirm
+            trigger={"click"}
+            title="Lây lại mật khẩu mới!"
+            description="Gửi mật khẩu mới đến email của tài khoản đăng ký."
+            okText="Đồng ý"
+            cancelText="Huỷ bỏ"
+            onConfirm={() => handleSendResetPassword(record.recId)}
+          >
+            <Button type="text" className="!bg-amber-50 !text-amber-600" size="small" loading={loadingResetPassword}>
+              Reset mật khẩu
+            </Button>
+          </Popconfirm>
+        );
+      },
+    },
+  ];
   return (
     <PageContainer
       name="Thành viên đăng ký"
@@ -48,7 +77,7 @@ const UserPage: React.FC = () => {
       <TableListPage<MemberItem>
         scroll={{ x: 1200 }}
         modelName="Tài khoản"
-        columns={columns}
+        columns={mergedColumns}
         rowKey={"recId"}
         dataSource={memberData?.list || []}
         isLoading={isLoading}
@@ -59,6 +88,7 @@ const UserPage: React.FC = () => {
         initialValue={editRecord}
         onCancel={handleCancel}
         onSubmit={handleSubmitFormData}
+        loading={loadingUpdate}
       />
     </PageContainer>
   );

@@ -1,13 +1,9 @@
 import { Button } from "antd";
-import useToken from "antd/es/theme/useToken";
-import { App } from "antd";
 import { useContext } from "react";
 import { ThemeModeContext } from "@/context/ThemeModeContext";
 import classNames from "classnames";
 
 const ThemeModeToggle = () => {
-  const token = useToken();
-  const staticFunction = App.useApp();
   const [themeMode, setThemeMode] = useContext(ThemeModeContext);
 
   const toggleThemeMode = () => {

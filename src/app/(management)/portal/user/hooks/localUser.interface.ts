@@ -27,7 +27,7 @@ export class LocalUserFormData implements ILocalUserPayload {
 
   constructor(
     username: string | undefined,
-    userType: ELocalUserType,
+    userType: ELocalUserType | undefined,
     fullname: string | undefined,
     infoEmail: string | undefined,
     password: string | undefined,

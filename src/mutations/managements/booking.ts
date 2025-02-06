@@ -9,7 +9,7 @@ import {
   IBookingOrderCancelPayload,
   IBookingOrderCustomerPayload,
   IBookingOrderInvoiceInfoPayload,
-  IOrderPassengerEditPayload,
+  OrderPassengerUpdatePayload,
 } from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
 
 import { ISplitBookingPayload } from "@/app/(management)/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
@@ -46,16 +46,16 @@ export const useGetBookingTourServicesMutation = () => {
 /**
  * manage booking APIS
  */
-export const useUpdateCustomerInformationMutation = () => {
-  return useCustomMutation({
-    mutationFn: (payload: IBookingOrderCustomerPayload) => manageBookingAPIs.updateCustomer(payload),
-  });
-};
-export const useUpdatePassengersInformationMutation = () => {
-  return useCustomMutation({
-    mutationFn: (payload: IOrderPassengerEditPayload) => manageBookingAPIs.updatePassengers(payload),
-  });
-};
+// export const useUpdateCustomerInformationMutation = () => {
+//   return useCustomMutation({
+//     mutationFn: (payload: IBookingOrderCustomerPayload) => manageBookingAPIs.updateCustomer(payload),
+//   });
+// };
+// export const useUpdatePassengersInformationMutation = () => {
+//   return useCustomMutation({
+//     mutationFn: (payload: OrderPassengerUpdatePayload) => manageBookingAPIs.updatePassengers(payload),
+//   });
+// };
 
 export const useCancelBookingOrderMutation = () => {
   return useCustomMutation({

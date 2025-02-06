@@ -5,25 +5,33 @@ import { EditBookingSSRNoPassenger } from "../../modules/manageBooking.interface
 import classNames from "classnames";
 import { WarningOutlined } from "@ant-design/icons";
 
+import Quantity from "@/components/base/Quantity";
+
+import { IProductService } from "@/models/management/booking/service.interface";
+import { PassengerType } from "@/models/common.interface";
+import { ESellChannel } from "@/constants/channel.constant";
 import { moneyFormatVND } from "@/utils/helper";
 import useMessage from "@/hooks/useMessage";
 
 export interface DrawerServiceContainerNoPaxProps {
   label?: string;
   isOpen?: boolean;
-  onClose?: () => void;
   sellableId: number;
   orderId: number;
+  channel: ESellChannel;
   onSubmit: (data: EditBookingSSRNoPassenger) => void;
+  onClose?: () => void;
 }
 
 const DrawerServiceContainerNoPax: React.FC<DrawerServiceContainerNoPaxProps> = ({
   label,
   isOpen = false,
-  onClose,
+
   sellableId,
   orderId,
+  channel,
   onSubmit,
+  onClose,
 }) => {
   const { data: serviceList, isLoading } = useGetBookingTourServicesCoreQuery({
     enabled: isOpen,
@@ -88,10 +96,6 @@ const DrawerServiceContainerNoPax: React.FC<DrawerServiceContainerNoPaxProps> = 
     });
   };
 
-  const isDisabledButton = useMemo(() => {
-    return ssrFormData.ssrList.length === 0;
-  }, [ssrFormData]);
-
   const handleSubmitServiceList = () => {
     onSubmit?.(ssrFormData);
   };
@@ -114,6 +118,28 @@ const DrawerServiceContainerNoPax: React.FC<DrawerServiceContainerNoPaxProps> = 
     }
   };
 
+  /**
+   *
+   * @param items
+   * @returns newItems mapping with sellchannel
+   * @type {ESellChannel}
+   *
+   */
+  const filterServiceListBySellChannel = (items: Exclude<typeof serviceList, undefined>) => {
+    return items.reduce<Exclude<typeof serviceList, undefined>>((acc, item) => {
+      let newconfigItems = [...item.configs];
+      if (channel === ESellChannel.B2C) {
+        newconfigItems = newconfigItems.filter((configIt) => configIt.channel === "CUSTOMER");
+      }
+      if (channel === ESellChannel.B2B) {
+        newconfigItems = newconfigItems.filter((configIt) => configIt.channel === "CUSTOMER");
+      }
+      return [...acc, { ...item, configs: newconfigItems }];
+    }, []);
+  };
+  const isDisabledButton = useMemo(() => {
+    return ssrFormData.ssrList.length === 0;
+  }, [ssrFormData]);
   useEffect(() => {
     setSSRFormData(initFormData);
   }, [isOpen]);
@@ -126,48 +152,13 @@ const DrawerServiceContainerNoPax: React.FC<DrawerServiceContainerNoPaxProps> = 
       closeIcon={null}
       destroyOnClose={true}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
-    >
-      {isLoading && (
-        <Spin tip="Đang tải dịch vụ">
-          <div className="py-12">{null}</div>
-        </Spin>
-      )}
-
-      {!isLoading && !serviceList && (
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description={<Typography.Text>Không có dịch vụ nào khả dụng</Typography.Text>}
-        />
-      )}
-
-      {!isLoading &&
-        serviceList &&
-        serviceList.map((svItem) => (
-          <ServiceBoxItem
-            key={svItem.inventory.recId}
-            serviceName={svItem.inventory.name}
-            consfigItems={svItem.configs}
-            passengerType={PassengerType.ADULT}
-            selectedItems={ssrFormData.ssrList}
-            onChangeQuantity={onChangeQuantity}
-          />
-        ))}
-
-      <div className="drawler-action absolute px-4 py-4 border-t left-0 right-0 bg-white bottom-0">
-        <div className="flex justify-between">
+      footer={
+        <div className="flex justify-between py-3">
           <div className="price-subtotal">
             <span className="text-gray-500">Tạm tính</span>
             <div className="text-lg text-red-600 font-[500]">{moneyFormatVND(subtotal)}</div>
           </div>
           <Space>
-            <Button size="large" className="w-[120px]" onClick={handleCloseDrawer}>
-              Huỷ
-            </Button>
             <Button
               type="primary"
               size="large"
@@ -177,9 +168,34 @@ const DrawerServiceContainerNoPax: React.FC<DrawerServiceContainerNoPaxProps> = 
             >
               Xác nhận
             </Button>
+            <Button size="large" className="w-[120px]" onClick={handleCloseDrawer}>
+              Huỷ
+            </Button>
           </Space>
         </div>
-      </div>
+      }
+    >
+      {isLoading ? (
+        <Spin tip="Đang tải dịch vụ">
+          <div className="py-12">{null}</div>
+        </Spin>
+      ) : !serviceList ? (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={<Typography.Text>Không có dịch vụ nào khả dụng</Typography.Text>}
+        />
+      ) : (
+        filterServiceListBySellChannel(serviceList).map((svItem) => (
+          <ServiceBoxItem
+            key={svItem.inventory.recId}
+            serviceName={svItem.inventory.name}
+            consfigItems={svItem.configs}
+            passengerType={PassengerType.ADULT}
+            selectedItems={ssrFormData.ssrList}
+            onChangeQuantity={onChangeQuantity}
+          />
+        ))
+      )}
       <ModalCancelService open={openModalConfirm} onCancel={modalOnCancel} onOk={modalOnConfirm} />
     </Drawer>
   );
@@ -203,22 +219,17 @@ const ModalCancelService: React.FC<ModalCancelServiceProps> = ({ open, onCancel,
       </div>
       <div className="text-center">
         <Space>
-          <Button className="!text-red-600 !bg-red-100 w-[90px]" type="text" onClick={onCancel}>
-            Đóng
-          </Button>
           <Button className="!text-emerald-600 !bg-emerald-100 w-[90px]" type="text" onClick={onOk}>
             Đồng ý
+          </Button>
+          <Button className="!text-red-600 !bg-red-100 w-[90px]" type="text" onClick={onCancel}>
+            Đóng
           </Button>
         </Space>
       </div>
     </Modal>
   );
 };
-
-import Quantity from "@/components/base/Quantity";
-
-import { IProductService } from "@/models/management/booking/service.interface";
-import { PassengerType } from "@/models/common.interface";
 
 interface ServiceBoxItemProps {
   serviceName?: string;

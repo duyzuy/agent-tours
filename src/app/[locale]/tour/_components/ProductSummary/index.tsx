@@ -28,6 +28,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
   tourName,
   cmsTemplate,
 }) => {
+  console.log(productList);
   const t = useTranslations("String");
   const bookingInformation = useBookingSelector();
   const productItem = bookingInformation.bookingInfo.product;
@@ -44,9 +45,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
   };
 
   const onChangeProduct = useCallback<Required<DatePickerProps>["onChange"]>((date) => {
-    const newProduct = productList?.find((prd) => {
-      return stringToDate(prd.startDate)?.isSame(date, "date");
-    });
+    const newProduct = productList?.find((prd) => stringToDate(prd.startDate)?.isSame(date, "date"));
     newProduct && setProductItem(newProduct);
   }, []);
 
@@ -56,12 +55,13 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     });
   };
 
-  const handleChangePassenger: Exclude<ProductSummaryCardProps["onChangePassenger"], undefined> = useCallback(
-    (type, quantity, action) => {
-      setQuantityPassenger({ type, quantity, action });
-    },
-    [productItem],
-  );
+  const handleChangePassenger: Exclude<ProductSummaryCardProps["onChangePassenger"], undefined> = (
+    type,
+    quantity,
+    action,
+  ) => {
+    setQuantityPassenger({ type, quantity, action });
+  };
 
   useEffect(() => {
     initTemplateAndProduct(defaultProductItem, cmsTemplate);

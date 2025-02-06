@@ -1,30 +1,30 @@
 import React, { memo } from "react";
-import { Tag } from "antd";
+import { Divider, Tag } from "antd";
 import classNames from "classnames";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { PaymentStatus } from "@/models/common.interface";
 import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
-import { isUndefined } from "lodash";
 
-type DataType = Pick<
-  IOrderDetail["bookingOrder"],
-  | "tourPrice"
-  | "extraPrice"
-  | "charge"
-  | "sysFstUpdate"
-  | "totalAmount"
-  | "totalFop"
-  | "totalPaid"
-  | "totalRefunded"
-  | "paymentStatus"
->;
 interface OrderDetailProps {
   orderId?: number;
   name?: string;
   code?: string;
-  data: Partial<DataType>;
+  data: Partial<
+    Pick<
+      IOrderDetail["bookingOrder"],
+      | "tourPrice"
+      | "extraPrice"
+      | "charge"
+      | "sysFstUpdate"
+      | "totalAmount"
+      | "totalFop"
+      | "totalPaid"
+      | "totalRefunded"
+      | "paymentStatus"
+    >
+  >;
   rulesAndPolicies?: IOrderDetail["rulesAndPolicies"];
   className?: string;
   coupons?: IFormOfPayment[];
@@ -32,6 +32,7 @@ interface OrderDetailProps {
 const OrderSummary = ({ orderId, data, code, rulesAndPolicies, name, className = "", coupons }: OrderDetailProps) => {
   const totalAmount = data?.totalAmount || 0;
   const totalPaid = data.totalPaid || 0;
+  const totalRefunded = data.totalRefunded || 0;
   return (
     <>
       <div
@@ -46,7 +47,7 @@ const OrderSummary = ({ orderId, data, code, rulesAndPolicies, name, className =
           extraPrice={moneyFormatVND(data?.extraPrice)}
           charge={moneyFormatVND(data?.charge)}
           totalAmount={moneyFormatVND(totalAmount)}
-          totalRemainTopay={moneyFormatVND(totalAmount - totalPaid)}
+          totalRemainTopay={moneyFormatVND(totalAmount + totalRefunded - totalPaid)}
           totalPaid={moneyFormatVND(data?.totalPaid)}
           totalRefunded={moneyFormatVND(data?.totalRefunded)}
           sysFstUpdate={data?.sysFstUpdate && formatDate(data?.sysFstUpdate)}
@@ -92,20 +93,23 @@ OrderSummary.Pricings = function OrderSummaryPricings({
 }: OrderSummaryPricings) {
   return (
     <>
-      <div className="order__detail--subtotal mb-6 border-b pb-6">
-        <div className="flex">
-          <div className="w-48 border-r mr-6">
+      <div className="order__detail--subtotal">
+        <div className="flex items-center flex-wrap">
+          <div className="w-48">
             <span className="block">Giá tour</span>
             <span className="block text-[16px] font-semibold text-primary-default">{tourPrice}</span>
           </div>
-          <div className="w-48 border-r mr-6">
+          <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
+          <div className="w-48">
             <span className="block">Phí bổ sung</span>
             <span className="block text-[16px] font-semibold text-primary-default">{extraPrice}</span>
           </div>
-          <div className="w-48 border-r mr-6">
+          <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
+          <div className="w-48">
             <span className="block">Thuế phí</span>
             <span className="block text-[16px] font-semibold text-primary-default">{charge}</span>
           </div>
+          <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
           <div className="w-60 mr-6 border-r">
             <span className="block">Áp dụng mã giảm</span>
             <span className="block">
@@ -122,21 +126,24 @@ OrderSummary.Pricings = function OrderSummaryPricings({
             </span>
           </div>
           <div className="w-48 mr-6">
-            <span className="block">Tổng tiền</span>
+            <span className="block">Tổng tiền phải thanh toán</span>
             <span className="block text-[16px] font-semibold text-primary-default">{totalAmount}</span>
           </div>
         </div>
       </div>
-      <div className="order__detail--payment-detail mb-6 border-b pb-6">
-        <div className="flex items-center">
-          <div className="w-48 border-r mr-6">
+      <Divider style={{ margin: "12px 0" }} />
+      <div className="order__detail--payment-detail">
+        <div className="flex items-center flex-wrap">
+          <div className="w-48">
             <span className="block">Đã thanh toán</span>
             <span className="block text-[16px] font-semibold text-green-600">{totalPaid}</span>
           </div>
-          <div className="w-48 border-r mr-6">
+          <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
+          <div className="w-48">
             <span className="block">Đã hoàn</span>
             <span className="block text-[16px] font-semibold text-amber-400">{totalRefunded}</span>
           </div>
+          <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
           <div className="w-48">
             <span className="block">Số tiền còn lại phải thanh toán</span>
             <span className="block text-[16px] font-semibold text-red-600">{totalRemainTopay}</span>

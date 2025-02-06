@@ -388,8 +388,8 @@ const DrawerCostingDetail: React.FC<DrawerCostingDetailProps> = ({
           control={control}
           name="amount"
           render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <FormItem label="Giá tiền" required>
-              <Input placeholder="Giá tiền" value={value} onChange={onChange} />
+            <FormItem label="Đơn giá" required>
+              <Input placeholder="Đơn giá" value={value} onChange={onChange} />
             </FormItem>
           )}
         />
@@ -418,7 +418,7 @@ const DrawerCostingDetail: React.FC<DrawerCostingDetailProps> = ({
   const columns: TableColumnsType<IOperationCostingDetail["details"][0]> = [
     { title: "Dịch vụ", dataIndex: "type", key: "type" },
     {
-      title: "Giá tiền",
+      title: "Đơn giá",
       dataIndex: "amount",
       key: "amount",
       render(value, { amount }, index) {

@@ -80,7 +80,7 @@ export interface IOrderDetail {
     paxMiddleFirstName: string;
     paxGender: EPassengerGender;
     paxBirthDate: string;
-    paxBirthYear: 0;
+    paxBirthYear: number;
     paxPhoneNumber: string;
     paxAddress: string;
     paxIdNumber: string;
@@ -218,3 +218,5 @@ export interface DeleteSSRPayload {
 
 export interface IOrderListRs extends BaseResponse<IOrderItem[]> {}
 export interface IOrderDetailRs extends BaseResponse<IOrderDetail> {}
+export interface OrderOperationStatusResponse
+  extends BaseResponse<"ACCEPTED" | "HANDOVERED" | "NEW" | "LOCKED" | "PENDINGCANCELED" | "CANCELED" | "DONE"> {}

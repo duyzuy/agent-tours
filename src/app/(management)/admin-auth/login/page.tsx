@@ -8,17 +8,24 @@ import useAdminLogin from "@/modules/admin/auth/hooks/useAdminLogin";
 const AdminLoginPage = () => {
   const { mutate: onLogin, isPending } = useAdminLogin();
 
-  const onStaffLogin = () => {
+  const staffLogin = () => {
     onLogin({
       userId: "12",
       username: "nguyenhoanglong",
       password: "123123123",
     });
   };
-  const onAgLogin = () => {
+  const agentStaffLogin = () => {
     onLogin({
       userId: "16",
       username: "duonghaianh",
+      password: "123123123",
+    });
+  };
+  const agentLogin = () => {
+    onLogin({
+      userId: "18",
+      username: "agent01",
       password: "123123123",
     });
   };
@@ -36,7 +43,7 @@ const AdminLoginPage = () => {
         size="large"
         block
         className="!border-orange-600 !text-orange-600 mb-3"
-        onClick={onAgLogin}
+        onClick={agentLogin}
         loading={isPending}
       >
         Đăng nhập bằng Agent
@@ -45,8 +52,18 @@ const AdminLoginPage = () => {
         type="text"
         size="large"
         block
+        className="!border-blue-600 !text-blue-600 mb-3"
+        onClick={agentStaffLogin}
+        loading={isPending}
+      >
+        Đăng nhập bằng Agent Staff
+      </Button>
+      <Button
+        type="text"
+        size="large"
+        block
         className="!border-emerald-600 !text-emerald-600"
-        onClick={onStaffLogin}
+        onClick={staffLogin}
         loading={isPending}
       >
         Đăng nhập bằng staff

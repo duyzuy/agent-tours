@@ -125,6 +125,7 @@ export enum ERolesFunctions {
   BOOKING_SERVICE_CREATE = "BOOKING_SERVICE_CREATE",
 
   PAYMENT_RULES = "PAYMENT_RULES",
+  MANAGE_MEMBER = "MANAGE_MEMBER",
 }
 
 export type TRoleCondition = (ERolesFunctions | { $or: TRoleCondition })[];
@@ -234,6 +235,9 @@ export const roleConfigs = {
   operation: {
     list: [ERolesFunctions.OPERATION_LIST],
   },
+  member: {
+    list: [ERolesFunctions.MANAGE_MEMBER],
+  },
 };
 
 export const PATH_WITH_PERMISSION = {
@@ -293,4 +297,5 @@ export const PATH_WITH_PERMISSION = {
   tag: roleConfigs.tag.list,
   category: roleConfigs.category.list,
   media: roleConfigs.media.list,
+  member: roleConfigs.member.list,
 };

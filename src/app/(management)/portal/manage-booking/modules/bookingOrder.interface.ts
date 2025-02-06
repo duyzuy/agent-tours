@@ -2,7 +2,6 @@ import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { Status } from "@/models/common.interface";
 
 export class BookingOrderCustomerFormData {
-  recId?: number;
   custName?: string;
   custPhoneNumber?: string;
   custEmail?: string;
@@ -10,14 +9,12 @@ export class BookingOrderCustomerFormData {
   rmk?: string;
 
   constructor(
-    recId: number | undefined,
-    custName: string,
-    custPhoneNumber: string,
-    custEmail: string,
-    custAddress: string,
-    rmk: string,
+    custName: string | undefined,
+    custPhoneNumber: string | undefined,
+    custEmail: string | undefined,
+    custAddress: string | undefined,
+    rmk: string | undefined,
   ) {
-    this.recId = recId;
     this.custName = custName;
     this.custPhoneNumber = custPhoneNumber;
     this.custEmail = custEmail;
@@ -51,7 +48,7 @@ export class BookingOrderInvoiceFormData implements Partial<IInvoice> {
   }
 }
 
-export interface IOrderPassengerEditPayload {
+export interface OrderPassengerUpdatePayload {
   bookingOrderId?: number;
   pax?: {
     recId?: number;
@@ -78,7 +75,7 @@ export class BookingOrderPassengerFormData {
   paxGender?: string;
   paxBirthDate?: string;
   paxBirthYear?: number;
-  paxPhoneNumber?: string;
+  paxPhoneNumber?: string | null;
   paxAddress?: string;
   paxIdNumber?: string;
   paxNationality?: string;
@@ -93,7 +90,7 @@ export class BookingOrderPassengerFormData {
     paxGender: string | undefined,
     paxBirthDate: string | undefined,
     paxBirthYear: number | undefined,
-    paxPhoneNumber: string | undefined,
+    paxPhoneNumber: string | undefined | null,
     paxAddress: string | undefined,
     paxIdNumber: string | undefined,
     paxNationality: string | undefined,

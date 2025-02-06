@@ -30,6 +30,11 @@ export default function FeBookingLayout({ children, params: { locale } }: Props)
     }
     return step;
   }, [pathname]);
+
+  const isReservationPage = useMemo(() => {
+    return pathname.startsWith("/reservation");
+  }, [pathname]);
+
   if (isUndefined(bookingInformation.bookingInfo.product) || session.status !== "authenticated") {
     redirect("/");
   }
@@ -38,7 +43,7 @@ export default function FeBookingLayout({ children, params: { locale } }: Props)
       <BookingSteps activeKey={activeKey} />
       <div className="container lg:px-8 md:px-6 px-3 mx-auto py-6 lg:py-12 flex flex-wrap justify-center">
         <div className="booking-content w-full lg:w-7/12 lg:mb-0 mb-6">{children}</div>
-        <BookingSummary className="w-full lg:w-5/12 lg:pl-8" />
+        {isReservationPage ? null : <BookingSummary className="w-full lg:w-5/12 lg:pl-8" />}
       </div>
     </div>
   );

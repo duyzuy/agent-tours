@@ -29,7 +29,7 @@ export const columns: ColumnsType<MemberListResponse["result"][number]> = [
     key: "fullname",
     width: 250,
     render: (_, { faceBookId }) => {
-      return <div>{faceBookId}</div>;
+      return <div>{faceBookId || "--"}</div>;
     },
   },
   {
@@ -38,7 +38,7 @@ export const columns: ColumnsType<MemberListResponse["result"][number]> = [
     key: "fullname",
     width: 250,
     render: (_, { googleId }) => {
-      return <div>{googleId}</div>;
+      return <div>{googleId || "--"}</div>;
     },
   },
 ];

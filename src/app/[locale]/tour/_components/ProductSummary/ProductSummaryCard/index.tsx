@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Quantity from "@/components/base/Quantity";
 import { PassengerType } from "@/models/common.interface";
 import { FeProductItem } from "@/models/fe/productItem.interface";
-import dayjs from "dayjs";
+
 import { useTranslations } from "next-intl";
 import React, { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import PromotionSelector from "./PromotionSelector";
@@ -17,6 +17,8 @@ import { moneyFormatVND } from "@/utils/helper";
 import { FeCMSTemplateContent } from "@/models/fe/templateContent.interface";
 import { getLabelHotDealIcon } from "@/constants/icons.constant";
 import { usePathname } from "@/utils/navigation";
+import SoleOut from "./SoleOut";
+import dayjs from "dayjs";
 
 type ProductSummaryContextType = {
   productItem?: FeProductItem;
@@ -36,7 +38,7 @@ type ProductSummaryContextType = {
     | "promotionValidFrom"
     | "promotionValidTo"
   >;
-  onChangeCoupon?: (value: string, item: FeProductItem["promotions"][0]) => void;
+  onChangeCoupon?: (value: string, item: FeProductItem["promotions"][number]) => void;
   onChangePassenger?: (type: PassengerType, quantity: number, action: "minus" | "plus") => void;
   onChangeDepartDate?: (value: dayjs.Dayjs | null, dateString: string) => void;
   onNext?: () => void;
@@ -187,21 +189,21 @@ const CardPassengerSelector: ProductSummaryCardCompound["PassengerSelector"] = (
 
 const CardPrice: ProductSummaryCardCompound["Price"] = ({ className }) => {
   const { productItem, promotion } = useProductSummaryCard();
-
+  const t = useTranslations("String");
   const isOnPromotion = useMemo(() => {
     const now = dayjs();
-    if (!promotion || !promotion.promotionValidFrom || !promotion.promotionValidTo) return false;
-
     if (
+      !promotion ||
+      !promotion.promotionValidFrom ||
+      !promotion.promotionValidTo ||
       now.isBefore(stringToDate(promotion.promotionValidFrom)) ||
       now.isAfter(stringToDate(promotion.promotionValidTo))
-    ) {
+    )
       return false;
-    }
+
     return true;
   }, [promotion]);
 
-  const t = useTranslations("String");
   const lowestConfig = useMemo(() => {
     if (!productItem || !productItem.configs || !productItem.configs.length) return;
 
@@ -210,6 +212,9 @@ const CardPrice: ProductSummaryCardCompound["Price"] = ({ className }) => {
     let lowestItem = configs[0];
 
     configs.forEach((item) => {
+      if (lowestItem.open <= 0) {
+        lowestItem = item;
+      }
       if (lowestItem.open <= 0 && item.open > 0) {
         lowestItem = item;
       }
@@ -540,18 +545,19 @@ const DrawerBookingSummary = styled(Drawer)`
 
 const CheckCanBooking: ProductSummaryCardCompound["CanBooking"] = ({ children }) => {
   const { productItem } = useProductSummaryCard();
+
   const t = useTranslations("String");
-  const isNotBooking =
-    !productItem || !productItem?.configs.length || productItem?.configs.every((item) => item.open === 0);
-  return isNotBooking ? (
-    <ProductSummaryCardNoPrice
-      label={t("card.contact")}
-      description={t("productSummary.emptyPrices")}
-      className="mb-3"
-    />
-  ) : (
-    children
-  );
+
+  const isSoleOut = productItem?.open === 0 || productItem?.configs.every((item) => item.open === 0);
+
+  const isNotConfigPrice = !productItem?.configs.length;
+
+  if (isSoleOut) return <SoleOut label="Đã bán hết" description="Vui lòng chọn ngày khởi hành khác." />;
+
+  if (isNotConfigPrice)
+    return <ProductSummaryCardNoPrice label={t("card.contact")} description={t("productSummary.emptyPrices")} />;
+
+  return children;
 };
 
 const Badget: ProductSummaryCardCompound["Badget"] = ({ className }) => {

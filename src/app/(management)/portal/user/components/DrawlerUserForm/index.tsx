@@ -11,7 +11,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { localUserSchema } from "../../hooks/validate";
 import { LocalUserFormData } from "../../hooks/localUser.interface";
 import RoleSelector, { RoleSelectorProps } from "./RoleSelector";
-
+import { getAdminUserInformationStorage } from "@/utils/common";
 export type DrawerAction = "CREATE" | "EDIT";
 export type TDrawlerCreateAction = {
   type: "CREATE";
@@ -22,6 +22,10 @@ export type TDrawlerEditAction = {
 };
 export type TDrawlerAction = TDrawlerCreateAction | TDrawlerEditAction;
 
+export const AGENT_STAFF_ROLE = {
+  mainRole: "AGENTSTAFF964779",
+  mainRoleName: "Agent Staff",
+};
 export interface DrawlerUserFormProps {
   isOpen?: boolean;
   onCancel: () => void;
@@ -41,7 +45,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
 }) => {
   const initFormData = new LocalUserFormData(
     "",
-    ELocalUserType.ADMIN,
+    undefined,
     "",
     "",
     "",
@@ -67,8 +71,8 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
     defaultValues: { ...initFormData, isRequirePassword: actionType === "CREATE", isCreate: actionType === "CREATE" },
     resolver: yupResolver(localUserSchema),
   });
+  const userInfo = getAdminUserInformationStorage();
 
-  console.log(formState.errors);
   const [isEditPassword, setEditPassword] = useState(false);
 
   const onChangeStatus = (checked: boolean) => {
@@ -85,6 +89,13 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
     { value: ELocalUserType.AGENT_STAFF, label: "Agent staff" },
   ];
 
+  const filterUserTypeByAdminAccount = (items: typeof OPTIONS_USER_TYPE_LIST) => {
+    return items.filter((item) => {
+      if (userInfo?.localUserType === "AGENT") {
+        return item.value === ELocalUserType.AGENT_STAFF;
+      }
+    });
+  };
   const generatePassword = () => {
     const password = generateStrings(10);
     setValue("password", password);
@@ -130,6 +141,12 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
     setValue("isCreate", actionType === "CREATE");
   }, [initialValues, isOpen, actionType]);
 
+  useEffect(() => {
+    if (userInfo?.localUserType === "AGENT") {
+      setValue("mainRole", AGENT_STAFF_ROLE.mainRole);
+      setValue("mainRoleName", AGENT_STAFF_ROLE.mainRoleName);
+    }
+  }, [userInfo, isOpen]);
   return (
     <>
       <Drawer
@@ -221,7 +238,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
                     <Select
                       value={field.value}
                       placeholder="Loại tài khoản"
-                      options={OPTIONS_USER_TYPE_LIST}
+                      options={filterUserTypeByAdminAccount(OPTIONS_USER_TYPE_LIST)}
                       onChange={(value) => onChangeUserType(value)}
                     />
                   </FormItem>
@@ -286,7 +303,11 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
                 name="mainRole"
                 render={({ field, fieldState: { error } }) => (
                   <FormItem label="Quyền" required validateStatus={error?.message ? "error" : ""} help={error?.message}>
-                    <RoleSelector value={field.value} onChange={onChangeRole} />
+                    <RoleSelector
+                      value={field.value}
+                      onChange={onChangeRole}
+                      disabled={userInfo?.localUserType === "AGENT_STAFF" || userInfo?.localUserType === "AGENT"}
+                    />
                   </FormItem>
                 )}
               />

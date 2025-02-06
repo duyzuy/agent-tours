@@ -1,77 +1,92 @@
 import React, { memo, useState } from "react";
-import { Button, Row, Col } from "antd";
 import classNames from "classnames";
 import { EditOutlined } from "@ant-design/icons";
-import { IBookingOrderCustomerPayload } from "../../../modules/bookingOrder.interface";
-import DrawerCustomerInformation, { DrawerCustomerInformationProps } from "./DrawerCustomerInformation";
+import CustomerFormDrawer, { CustomerFormDrawerProps } from "./CustomerFormDrawer";
 import { ICustomerInformation } from "@/models/management/booking/customer.interface";
 import { ButtonSecondary } from "@/components/base/buttons";
 import { ContentDetailList } from "@/components/admin/ContentDetailList";
+import useUpdateCustomerInfo from "../../../modules/useUpdateCustomerInfo";
+import { Button, Card } from "antd";
 
 interface CustomerInformationProps {
   className?: string;
   cusInfo?: ICustomerInformation;
   orderId?: number;
-  onSave?: (payload: IBookingOrderCustomerPayload, cb?: () => void) => void;
+  allowEdit?: boolean;
 }
-const CustomerInformation: React.FC<CustomerInformationProps> = ({ orderId, cusInfo, className = "", onSave }) => {
+const CustomerInformation: React.FC<CustomerInformationProps> = ({ orderId, cusInfo, allowEdit, className = "" }) => {
+  const { mutate: updateCustomerInfo, isPending } = useUpdateCustomerInfo();
   const [showDrawer, setShowDrawer] = useState(false);
   const onCloseDrawer = () => setShowDrawer(false);
   const onOpenDrawer = () => setShowDrawer(true);
 
-  const handleUpdate: DrawerCustomerInformationProps["onSubmit"] = (data) => {
-    orderId &&
-      onSave?.({ bookingOrder: { ...data, recId: orderId } }, () => {
-        setShowDrawer(false);
-      });
+  const handleUpdateCustomerInformation: CustomerFormDrawerProps["onSubmit"] = (data) => {
+    updateCustomerInfo?.(
+      { bookingOrder: { ...data, recId: orderId } },
+      {
+        onSuccess(data, variables, context) {
+          setShowDrawer(false);
+        },
+      },
+    );
   };
-
   return (
-    <div
+    <Card
       className={classNames("order__detail-customer-info", {
         [className]: className,
       })}
     >
       <div className="order__detail-customer-info-head mb-2">
         <span className="font-semibold text-[16px] mr-3">Thông tin người đặt</span>
-        <ButtonSecondary
-          buttonProps={{
-            icon: <EditOutlined />,
-            size: "small",
-            shape: "circle",
-          }}
-          color="primary"
-          onClick={onOpenDrawer}
-        ></ButtonSecondary>
+        {allowEdit ? (
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            size="small"
+            className="!text-blue-600 hover:!bg-blue-50"
+            onClick={onOpenDrawer}
+          >
+            Sửa
+          </Button>
+        ) : null}
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <ContentDetailList.Item
-          label="Họ và tên"
-          value={<span className="font-[500]">{cusInfo?.custName || "--"}</span>}
-        />
-        <ContentDetailList.Item
-          label="Email"
-          value={<span className="font-[500]">{cusInfo?.custEmail || "--"}</span>}
-        />
-        <ContentDetailList.Item
-          label="Số điện thoại"
-          value={<span className="font-[500]">{cusInfo?.custPhoneNumber || "--"}</span>}
-        />
-        <ContentDetailList.Item
-          label="Địa chỉ"
-          value={<span className="font-[500]">{cusInfo?.custAddress || "--"}</span>}
-        />
-        <ContentDetailList.Item label="Ghi chú" value={<span className="font-[500]">{cusInfo?.rmk || "--"}</span>} />
-      </div>
-
-      <DrawerCustomerInformation
+      <CustomerInformationBox
+        custName={cusInfo?.custName}
+        custEmail={cusInfo?.custEmail}
+        custPhoneNumber={cusInfo?.custPhoneNumber}
+        custAddress={cusInfo?.custAddress}
+        rmk={cusInfo?.rmk}
+      />
+      <CustomerFormDrawer
         isOpen={showDrawer}
-        orderId={orderId}
         initialValues={cusInfo}
         onClose={onCloseDrawer}
-        onSubmit={handleUpdate}
+        onSubmit={handleUpdateCustomerInformation}
+        loading={isPending}
       />
-    </div>
+    </Card>
   );
 };
 export default memo(CustomerInformation);
+
+interface CustomerInformationBoxProps {
+  custName?: string;
+  custPhoneNumber?: string;
+  custAddress?: string;
+  rmk?: string;
+  custEmail?: string;
+}
+function CustomerInformationBox(data: CustomerInformationBoxProps) {
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <ContentDetailList.Item label="Họ và tên" value={<span className="font-[500]">{data.custName || "--"}</span>} />
+      <ContentDetailList.Item label="Email" value={<span className="font-[500]">{data.custEmail || "--"}</span>} />
+      <ContentDetailList.Item
+        label="Số điện thoại"
+        value={<span className="font-[500]">{data.custPhoneNumber || "--"}</span>}
+      />
+      <ContentDetailList.Item label="Địa chỉ" value={<span className="font-[500]">{data.custAddress || "--"}</span>} />
+      <ContentDetailList.Item label="Ghi chú" value={<span className="font-[500]">{data.rmk || "--"}</span>} />
+    </div>
+  );
+}

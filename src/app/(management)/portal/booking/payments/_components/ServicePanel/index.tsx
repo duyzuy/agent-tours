@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useTransition } from "react";
-import { Button, Empty, Space, Spin, Tabs } from "antd";
+import { Button, Empty, Spin, Tabs } from "antd";
 import { isUndefined } from "lodash";
 import styled from "styled-components";
 
@@ -35,14 +35,13 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, o
     return bookingInformation.bookingInfo?.bookingSsr;
   }, [bookingInformation]);
 
-  const getPriceConfigListByChannel = useCallback(
+  const filterPriceConfigListByChannel = useCallback(
     (configs: IProductService["configs"]) => {
-      return configs?.filter((item) => {
-        return (
+      return configs?.filter(
+        (item) =>
           (channel === ESellChannel.B2B && item.channel === "AGENT") ||
-          (channel === ESellChannel.B2C && item.channel === "CUSTOMER")
-        );
-      });
+          (channel === ESellChannel.B2C && item.channel === "CUSTOMER"),
+      );
     },
     [channel, serviceList],
   );
@@ -82,7 +81,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, o
                   }`}
                   serviceItem={serviceItem}
                   bookingItems={bookingItems}
-                  consfigItems={getPriceConfigListByChannel(serviceItem.configs)}
+                  consfigItems={filterPriceConfigListByChannel(serviceItem.configs)}
                   selectedItems={bookingSsrWithPax}
                   onChangeQuantity={onChangeQuantity}
                 />
@@ -98,7 +97,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, o
                     serviceItem.stock ? ` - ${serviceItem.stock.code}` : ""
                   }`}
                   serviceItem={serviceItem}
-                  consfigItems={getPriceConfigListByChannel(serviceItem.configs)}
+                  consfigItems={filterPriceConfigListByChannel(serviceItem.configs)}
                   selectedItems={bookingSsr}
                   onChangeQuantity={onChangeQuantityWithoutPax}
                 />

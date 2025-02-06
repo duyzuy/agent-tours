@@ -1,31 +1,28 @@
 "use client";
-import React, { memo, useEffect, useMemo, useState, useTransition } from "react";
-import { Space, Button } from "antd";
-import { useRouter } from "next/navigation";
-import { isArray, isUndefined } from "lodash";
-import CustomerInformationForm, { CustomerInformationFormProps } from "./CustomerInformationForm";
-
+import React, { memo, useEffect, useMemo, useState } from "react";
+import { Button, Form } from "antd";
+import { isUndefined } from "lodash";
+import CustomerInformationForm from "./CustomerInformationForm";
 import { HandleSubmit, useFormSubmit } from "@/hooks/useFormSubmit";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
-import useCreateBooking from "../../../modules/useCreateBooking";
-
-import { usePortalBookingManager } from "../../../context";
-import { customerInformationSchema } from "../../../modules/validate.schema";
-import InvoiceForm from "./InvoiceForm";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 import { useAdminProfile } from "@/modules/admin/auth/store/AdminProfileContext";
-import { ILocalUserMinimal } from "@/models/management/localUser.interface";
+import useCreateBooking from "../../../modules/useCreateBooking";
+import { usePortalBookingManagerSelector } from "../../../context";
+import { customerInformationSchema } from "../../../modules/validate.schema";
+import InvoiceForm from "./InvoiceForm";
+
+import AgentListSelector, { AgentListSelectorProps } from "./AgentListSelector";
+import FormItem from "@/components/base/FormItem";
+import { ESellChannel } from "@/constants/channel.constant";
+import { useTransition } from "react";
 
 const PaymentPanel = () => {
-  const [bookingInformation, _] = usePortalBookingManager();
+  const { bookingInfo, channel: sellChannel } = usePortalBookingManagerSelector((state) => state);
   const { createBooking } = useCreateBooking();
   const userProfile = useAdminProfile();
-
-  const sellChannel = useMemo(() => {
-    return bookingInformation.channel;
-  }, []);
-
-  const [customerInformation, setCustomerInformation] = useState<CustomerInformation>(
+  const [submitting, startSubmitting] = useTransition();
+  const [customerFormData, setCustomerFormData] = useState<CustomerInformation>(
     () =>
       new CustomerInformation(
         userProfile?.infoLegalRepresentative,
@@ -36,64 +33,87 @@ const PaymentPanel = () => {
         "",
       ),
   );
-  const [invoiceInformation, setInvoiceInformation] = useState(new InvoiceFormData("", "", "", "", ""));
-  const [agentInfo, setAgentInfo] = useState<ILocalUserMinimal>();
+  const [invoiceForm, setInvoiceForm] = useState(new InvoiceFormData("", "", "", "", ""));
+  const [agentId, setAgentId] = useState<number>();
 
   const { handlerSubmit, errors } = useFormSubmit<CustomerInformation>({
     schema: customerInformationSchema,
   });
 
   const handleSubmitBooking: HandleSubmit<CustomerInformation> = (customerInfo) => {
-    createBooking({ customerInfo, invoiceInfo: invoiceInformation, agentUserId: agentInfo?.recId });
+    startSubmitting(() => {
+      createBooking({ customerInfo, invoiceInfo: invoiceForm, agentUserId: agentId });
+    });
   };
 
-  const isDisableSubmitButton = useMemo(() => {
-    return isUndefined(customerInformation) || isUndefined(customerInformation.custEmail);
-  }, [bookingInformation]);
-
-  const handleSelectAgent: CustomerInformationFormProps["onSelectAgent"] = (value, data) => {
-    const userInfo = isArray(data) ? data[0] : data;
-    setAgentInfo(userInfo);
-    setCustomerInformation((prev) => ({
+  const handleSelectAgent: AgentListSelectorProps["onSelect"] = (newAgent) => {
+    setAgentId(newAgent.recId);
+    setCustomerFormData((prev) => ({
       ...prev,
       custAddress: "",
-      custEmail: userInfo.email,
-      custName: userInfo.fullname,
-      custPhoneNumber: userInfo.phoneNumber,
+      custEmail: newAgent.email,
+      custName: newAgent.fullname,
+      custPhoneNumber: newAgent.phoneNumber,
     }));
   };
+  const isDisableSubmitButton = useMemo(() => {
+    return isUndefined(customerFormData) || isUndefined(customerFormData.custEmail);
+  }, [bookingInfo]);
+
+  // useEffect(() => {
+  //   if (bookingInfo?.customerInformation) {
+  //     const customerInfo = bookingInfo?.customerInformation;
+
+  //     setCustomerFormData((prev) => ({
+  //       ...prev,
+  //       custAddress: customerInfo.custAddress,
+  //       custEmail: customerInfo.custEmail,
+  //       custName: customerInfo.custName,
+  //       custPhoneNumber: customerInfo.custPhoneNumber,
+  //     }));
+  //   }
+  // }, [bookingInfo]);
+
+  console.log(userProfile);
+  useEffect(() => {
+    setCustomerFormData((prev) => ({
+      ...prev,
+      custEmail: userProfile?.email,
+      custName: userProfile?.fullname,
+      custPhoneNumber: userProfile?.phoneNumber,
+    }));
+  }, [userProfile]);
 
   useEffect(() => {
-    if (bookingInformation.bookingInfo?.customerInformation) {
-      const customerInfo = bookingInformation.bookingInfo?.customerInformation;
-
-      setCustomerInformation((prev) => ({
-        ...prev,
-        custAddress: customerInfo.custAddress,
-        custEmail: customerInfo.custEmail,
-        custName: customerInfo.custName,
-        custPhoneNumber: customerInfo.custPhoneNumber,
-      }));
-    }
-  }, [bookingInformation]);
+    setAgentId(userProfile?.recId);
+  }, [userProfile]);
   return (
     <>
+      {sellChannel === ESellChannel.B2B ? (
+        <Form layout="vertical">
+          <FormItem label="Chọn Agent">
+            <AgentListSelector
+              value={agentId}
+              onSelect={handleSelectAgent}
+              disabled={userProfile?.userType === "AGENT" || userProfile?.userType === "AGENT_STAFF"}
+            />
+          </FormItem>
+        </Form>
+      ) : null}
       <CustomerInformationForm
-        customerInformation={customerInformation}
-        setCustomerInformation={setCustomerInformation}
-        onSelectAgent={handleSelectAgent}
-        sellChannel={sellChannel}
-        userAgentId={agentInfo?.recId}
+        customerInformation={customerFormData}
+        setCustomerInformation={setCustomerFormData}
         errors={errors}
       />
-      <InvoiceForm values={invoiceInformation} onSetValues={setInvoiceInformation} />
+      <InvoiceForm values={invoiceForm} onSetValues={setInvoiceForm} />
       <div className="text-right">
         <Button
           size="large"
           type="primary"
           disabled={isDisableSubmitButton}
-          onClick={() => handlerSubmit(customerInformation, handleSubmitBooking)}
+          onClick={() => handlerSubmit(customerFormData, handleSubmitBooking)}
           className="w-48"
+          loading={submitting}
         >
           Đặt và giữ chỗ
         </Button>

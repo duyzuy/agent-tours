@@ -1,9 +1,9 @@
 export const LINKS = {
   Home: "/",
-  PortalLogin: "/ag/login",
-  PortalForgotPassword: "/ag/forgot-password",
+  PortalLogin: "/admin-auth/login",
+  PortalForgotPassword: "/admin-auth/forgot-password",
   DashBoard: "/portal/dashboard",
-  MyAccount: "/portal/my-account",
+  MyAccount: "/portal/profile",
   DestinationList: "/portal/destination",
   NoticeCreate: "/portal/destination/notice-information/create",
   NoticeList: "/portal/destination/notice-information",

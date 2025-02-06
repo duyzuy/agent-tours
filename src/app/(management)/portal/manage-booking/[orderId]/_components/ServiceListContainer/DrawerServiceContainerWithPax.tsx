@@ -11,31 +11,30 @@ import { UserOutlined, WarningOutlined } from "@ant-design/icons";
 
 import { moneyFormatVND } from "@/utils/helper";
 import useMessage from "@/hooks/useMessage";
+import { ESellChannel } from "@/constants/channel.constant";
 
 export interface DrawerServiceContainerWithPaxProps {
   label?: string;
   isOpen?: boolean;
-  onClose?: () => void;
   sellableId: number;
   passengerList: IOrderDetail["passengers"];
   orderId: number;
+  channel: ESellChannel;
   onSubmit: (data: EditBookingSSRByPassenger) => void;
+  onClose?: () => void;
 }
 
 const DrawerServiceContainerWithPax: React.FC<DrawerServiceContainerWithPaxProps> = ({
   label,
   isOpen = false,
-  onClose,
   sellableId,
   passengerList,
   orderId,
+  channel,
   onSubmit,
+  onClose,
 }) => {
-  const {
-    data: serviceList,
-    isLoading,
-    isFetching,
-  } = useGetBookingTourServicesCoreQuery({
+  const { data: serviceList, isLoading } = useGetBookingTourServicesCoreQuery({
     enabled: isOpen,
     sellableId: sellableId,
   });
@@ -118,9 +117,6 @@ const DrawerServiceContainerWithPax: React.FC<DrawerServiceContainerWithPaxProps
     });
   };
 
-  const isDisabledButton = useMemo(() => {
-    return ssrFormData.ssrList.length === 0;
-  }, [ssrFormData]);
   const handleSelectPassenger = (pax: IOrderDetail["passengers"][number]) => {
     setCurrentPassenter(pax);
   };
@@ -146,6 +142,22 @@ const DrawerServiceContainerWithPax: React.FC<DrawerServiceContainerWithPaxProps
       setOpenModalConfirm(true);
     }
   };
+  const filterServiceListBySellChannel = (items: Exclude<typeof serviceList, undefined>) => {
+    return items.reduce<Exclude<typeof serviceList, undefined>>((acc, item) => {
+      let newconfigItems = [...item.configs];
+      if (channel === ESellChannel.B2C) {
+        newconfigItems = newconfigItems.filter((configIt) => configIt.channel === "CUSTOMER");
+      }
+      if (channel === ESellChannel.B2B) {
+        newconfigItems = newconfigItems.filter((configIt) => configIt.channel === "CUSTOMER");
+      }
+      return [...acc, { ...item, configs: newconfigItems }];
+    }, []);
+  };
+
+  const isDisabledButton = useMemo(() => {
+    return ssrFormData.ssrList.length === 0;
+  }, [ssrFormData]);
 
   useEffect(() => {
     setCurrentPassenter(() => passengerListSortedByType[0]);
@@ -160,11 +172,28 @@ const DrawerServiceContainerWithPax: React.FC<DrawerServiceContainerWithPaxProps
       closeIcon={null}
       destroyOnClose={true}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <div className="flex justify-between py-3">
+          <div className="price-subtotal">
+            <span className="text-gray-500">Tạm tính</span>
+            <div className="text-lg text-red-600 font-[500]">{moneyFormatVND(subtotal)}</div>
+          </div>
+          <Space>
+            <Button
+              type="primary"
+              size="large"
+              className="w-[120px]"
+              onClick={handleSubmitServiceList}
+              disabled={isDisabledButton}
+            >
+              Xác nhận
+            </Button>
+            <Button size="large" className="w-[120px]" onClick={handleCloseDrawer}>
+              Huỷ
+            </Button>
+          </Space>
+        </div>
+      }
     >
       <div className="passenger-container overflow-x-auto -mx-6 -mt-6 bg-slate-50 p-6">
         <div className="passenger-list flex whitespace-nowrap gap-x-4">
@@ -185,22 +214,17 @@ const DrawerServiceContainerWithPax: React.FC<DrawerServiceContainerWithPaxProps
         </div>
       </div>
       <div className="h-12"></div>
-      {isLoading && (
+      {isLoading ? (
         <Spin tip="Đang tải dịch vụ">
           <div className="py-12">{null}</div>
         </Spin>
-      )}
-
-      {!isLoading && !serviceList && (
+      ) : !serviceList ? (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description={<Typography.Text>Không có dịch vụ nào khả dụng</Typography.Text>}
         />
-      )}
-
-      {!isLoading &&
-        serviceList &&
-        serviceList.map((svItem) => (
+      ) : (
+        filterServiceListBySellChannel(serviceList).map((svItem) => (
           <ServiceBoxItem
             key={svItem.inventory.recId}
             serviceName={svItem.inventory.name}
@@ -209,30 +233,8 @@ const DrawerServiceContainerWithPax: React.FC<DrawerServiceContainerWithPaxProps
             selectedItems={selectedItems}
             onChangeQuantity={onChangeQuantity}
           />
-        ))}
-
-      <div className="drawler-action absolute px-4 py-4 border-t left-0 right-0 bg-white bottom-0">
-        <div className="flex justify-between">
-          <div className="price-subtotal">
-            <span className="text-gray-500">Tạm tính</span>
-            <div className="text-lg text-red-600 font-[500]">{moneyFormatVND(subtotal)}</div>
-          </div>
-          <Space>
-            <Button size="large" className="w-[120px]" onClick={handleCloseDrawer}>
-              Huỷ
-            </Button>
-            <Button
-              type="primary"
-              size="large"
-              className="w-[120px]"
-              onClick={handleSubmitServiceList}
-              disabled={isDisabledButton}
-            >
-              Xác nhận
-            </Button>
-          </Space>
-        </div>
-      </div>
+        ))
+      )}
       <ModalCancelService open={openModalConfirm} onCancel={modalOnCancel} onOk={modalOnConfirm} />
     </Drawer>
   );

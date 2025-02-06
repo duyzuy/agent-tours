@@ -79,7 +79,15 @@ const AdminLayout = ({ children }: Props) => {
           <div className={classNames("h-16 flex items-center px-4")}>
             <Image src={originalLogo} alt="logo" priority className="w-full max-w-[120px] mx-auto" />
           </div>
-          <div className="flex-1 overflow-y-auto" style={{ height: "calc(100% - 64px)" }}>
+          <div
+            className="flex-1 overflow-y-auto"
+            style={{
+              height: "calc(100% - 64px)",
+              scrollbarWidth: "thin",
+              scrollbarGutter: "inherit",
+              insetInlineStart: 0,
+            }}
+          >
             <AdminMenuLink
               onNavigation={(menuInfo) => onMenuNavigation(menuInfo)}
               onOpenChange={onOpenChange}

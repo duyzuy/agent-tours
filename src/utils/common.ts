@@ -24,7 +24,15 @@ export const getAdminUserName = () => {
 };
 
 export const getAdminUserInformationStorage = () => {
-  return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.LOCAL_USER_INFORMATION);
+  if (isSSR()) return;
+  const data = localStorage.getItem(LOCAL_STORAGE_KEY.LOCAL_USER_INFORMATION);
+
+  return data
+    ? (JSON.parse(data) as {
+        localUserType: "ADMIN" | "AGENT" | "STAFF" | "AGENT_STAFF";
+        localChildrendUsername: string[];
+      })
+    : undefined;
 };
 export const setAdminUserInformationStorage = (userInfo: {
   localUserType: "ADMIN" | "AGENT" | "STAFF" | "AGENT_STAFF";

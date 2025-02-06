@@ -14,9 +14,10 @@ export interface MemberFormDrawerProps {
   onCancel: () => void;
   initialValue?: Member;
   onSubmit?: (formData: MemberUpdateFormData) => void;
+  loading?: boolean;
 }
 
-const MemberFormDrawer: React.FC<MemberFormDrawerProps> = ({ isOpen, onCancel, onSubmit, initialValue }) => {
+const MemberFormDrawer: React.FC<MemberFormDrawerProps> = ({ isOpen, onCancel, onSubmit, initialValue, loading }) => {
   const initFormData = new MemberUpdateFormData(
     initialValue?.recId,
     initialValue?.username,
@@ -29,7 +30,6 @@ const MemberFormDrawer: React.FC<MemberFormDrawerProps> = ({ isOpen, onCancel, o
     resolver: yupResolver(memberUpdateSchema),
   });
 
-  console.log(formState.errors);
   const [isEditPassword, setEditPassword] = useState(false);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const MemberFormDrawer: React.FC<MemberFormDrawerProps> = ({ isOpen, onCancel, o
         open={isOpen}
         footer={
           <Space>
-            <Button onClick={onSubmit && handleSubmit(onSubmit)} type="primary" className="w-28">
+            <Button onClick={onSubmit && handleSubmit(onSubmit)} type="primary" className="w-28" loading={loading}>
               Lưu
             </Button>
             <Button onClick={onCancel} className="w-28">
@@ -66,7 +66,7 @@ const MemberFormDrawer: React.FC<MemberFormDrawerProps> = ({ isOpen, onCancel, o
           </Space>
         }
       >
-        <Form layout="vertical">
+        <Form layout="vertical" disabled={loading}>
           <h3 className="font-semibold text-lg mb-6">Thông tin tài khoản</h3>
           <Row gutter={16}>
             <Col span={12}>

@@ -11,6 +11,7 @@ import { CheckCircleOutlined, SwapOutlined } from "@ant-design/icons";
 import { usePortalBookingManager } from "../../context";
 import useMessage from "@/hooks/useMessage";
 import { formatDate } from "@/utils/date";
+import { getAdminUserInformationStorage } from "@/utils/common";
 
 export interface ProductFareClassDrawerProps {
   open: boolean;
@@ -19,6 +20,8 @@ export interface ProductFareClassDrawerProps {
   data?: IProductTour;
 }
 const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, onClose, onOk, data }) => {
+  const adminInfo = getAdminUserInformationStorage();
+
   const [bookingInformation, _] = usePortalBookingManager();
   const stocks = useMemo(() => data?.sellableDetails.stocks, [data]);
   const inventories = useMemo(() => data?.sellableDetails.inventories, [data]);
@@ -103,6 +106,13 @@ const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, o
     onSetPassengerConfig(type, quantity, priceConfig);
   };
 
+  const mapRuleUserTypeSellChannel = (items: typeof SELL_CHANNEL) => {
+    if (adminInfo?.localUserType === "ADMIN" || adminInfo?.localUserType === "STAFF") {
+      return SELL_CHANNEL;
+    }
+
+    return SELL_CHANNEL.filter((item) => item.value === ESellChannel.B2B);
+  };
   const onCancelSelection = () => {
     onReselectProduct();
     onClose?.();
@@ -191,7 +201,7 @@ const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, o
         <h3 className="text-lg font-[500] mb-3">Kênh bán</h3>
         <Segmented
           value={bookingInformation.channel}
-          options={SELL_CHANNEL}
+          options={mapRuleUserTypeSellChannel(SELL_CHANNEL)}
           onChange={(value) => {
             onChangeSellChannel(value as ESellChannel);
           }}

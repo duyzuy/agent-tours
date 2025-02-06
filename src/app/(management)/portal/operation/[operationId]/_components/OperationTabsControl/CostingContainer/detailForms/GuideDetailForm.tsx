@@ -36,7 +36,7 @@ const GuideDetailForm: React.FC<GuideDetailFormProps> = ({ costingId, stockTypes
   }, [watch()]);
 
   return (
-    <Form layout="vertical" component="div">
+    <>
       <Controller
         control={control}
         name="type"
@@ -86,7 +86,7 @@ const GuideDetailForm: React.FC<GuideDetailFormProps> = ({ costingId, stockTypes
           </FormItem>
         )}
       />
-    </Form>
+    </>
   );
 };
 export default memo(GuideDetailForm);

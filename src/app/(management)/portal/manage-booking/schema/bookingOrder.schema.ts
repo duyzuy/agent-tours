@@ -7,7 +7,7 @@ import {
 } from "../modules/bookingOrder.interface";
 import { EPassengerGender } from "@/constants/common";
 
-export const bookingPassengerInfoSchema: ObjectSchema<BookingOrderPassengerFormData> = object({
+export const orderPassengerInfoSchema: ObjectSchema<BookingOrderPassengerFormData> = object({
   recId: number().required("Thiếu ID sản phẩm."),
   paxTitle: string().required("Danh xưng không bỏ trống."),
   paxLastname: string().required("Họ không bỏ trống."),
@@ -20,10 +20,16 @@ export const bookingPassengerInfoSchema: ObjectSchema<BookingOrderPassengerFormD
     .required("Chọn giới tính."),
   paxBirthDate: string().required("Ngày sinh không bỏ trống."),
   paxBirthYear: number().default(1900),
+  // paxPhoneNumber: string()
+  //   .required("Số điện thoại ko bỏ trống.")
+  //   .matches(/^[0-9]+$/, "Số điện thoại không hợp lệ.")
+  //   .min(10, "Số điện thoại tối thiểu 10 số.")
+  //   .max(11, "Số điện thoại không quá 11 số."),
   paxPhoneNumber: string()
-    .required("Số điện thoại ko bỏ trống.")
+    .nullable()
+    .transform((v, o) => (o === "" ? null : v))
     .matches(/^[0-9]+$/, "Số điện thoại không hợp lệ.")
-    .min(10, "Số điện thoại tối thiểu 10 số.")
+    .min(8, "Password must be at least 8 characters")
     .max(11, "Số điện thoại không quá 11 số."),
   paxAddress: string().default(""),
   paxIdNumber: string().default(""),
@@ -33,8 +39,7 @@ export const bookingPassengerInfoSchema: ObjectSchema<BookingOrderPassengerFormD
   paxInfoJson: string().default(""),
 });
 
-export const bookingCustomerInfoSchema: ObjectSchema<BookingOrderCustomerFormData> = object({
-  recId: number().required("Thiếu ID order sản phẩm."),
+export const orderCustomerSchema: ObjectSchema<BookingOrderCustomerFormData> = object({
   custName: string().required("Họ tên không bỏ trống."),
   custPhoneNumber: string().required("Số điện thoại không bỏ trống."),
   custEmail: string().email("Email không đúng").required("Email không bỏ trống."),

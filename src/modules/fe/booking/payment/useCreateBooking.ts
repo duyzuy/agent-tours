@@ -95,8 +95,8 @@ const useCreateBooking = () => {
 
     return bookingDetailsItem;
   };
-  const onCreateBooking = async (paymentInformation: IPaymentInformation, session: Session | null) => {
-    if (!session || !session.user.accessToken) {
+  const onCreateBooking = async (paymentInformation: IPaymentInformation, token: string | null) => {
+    if (!token) {
       throw new Error("Invalid token or session");
     }
 
@@ -115,7 +115,7 @@ const useCreateBooking = () => {
     };
 
     makeBooking(
-      { payload, token: session.user.accessToken },
+      { payload, token: token },
       {
         onSuccess(data, variables, context) {
           console.log(data, variables, context);

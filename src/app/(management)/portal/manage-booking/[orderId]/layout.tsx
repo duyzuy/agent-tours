@@ -1,28 +1,12 @@
 "use client";
-import React, { useReducer } from "react";
-import { ManageBookingDetailContext } from "@/context";
+import React from "react";
+import { PortalManageBookingProvider } from "./context";
 
-import { manageBookingReducer } from "./reducer";
-import { initManageBookingState } from "./state";
-import OrderDetailContainer from "./OrderDetailContainer";
-
-const ManageBookingDetailProvider = ({ children }: { children: React.ReactNode }) => {
-  const [state, dispatch] = useReducer(manageBookingReducer, initManageBookingState);
-
-  return (
-    <ManageBookingDetailContext.Provider value={[state, dispatch]}>{children}</ManageBookingDetailContext.Provider>
-  );
-};
-
-interface ManageBookingServiceAddonLayoutProps {
+interface ManageBookingLayoutProps {
   children: React.ReactNode;
   params: { orderId: string };
 }
-const ManageBookingServiceAddonLayout = ({ children, params }: ManageBookingServiceAddonLayoutProps) => {
-  return (
-    <ManageBookingDetailProvider>
-      <OrderDetailContainer orderId={Number(params.orderId)}>{children}</OrderDetailContainer>
-    </ManageBookingDetailProvider>
-  );
+const ManageBookingLayout = ({ children, params }: ManageBookingLayoutProps) => {
+  return <PortalManageBookingProvider orderId={Number(params.orderId)}>{children}</PortalManageBookingProvider>;
 };
-export default ManageBookingServiceAddonLayout;
+export default ManageBookingLayout;

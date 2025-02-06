@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
+import { useTransition } from "react";
 
 const ReservationPage = () => {
   const { reservation } = usePortalBookingManagerSelector((state) => state);
@@ -15,6 +16,14 @@ const ReservationPage = () => {
   const templateProduct = useMemo(() => reservation?.bookingOrder.template, [reservation]);
   const sellableProduct = useMemo(() => reservation?.bookingOrder.sellable, [reservation]);
 
+  const [isPending, startTransition] = useTransition();
+
+  const handleGotoBookingDetail = (orderId?: number) => {
+    if (!orderId) return;
+    startTransition(() => {
+      router.push(`/portal/manage-booking/${orderId}`);
+    });
+  };
   useEffect(() => {
     if (isUndefined(reservation)) {
       router.push("/portal/booking");
@@ -30,7 +39,7 @@ const ReservationPage = () => {
             <span className="block font-[500] text-lg mb-2 uppercase">Đặt chỗ thành công</span>
             <span className="block">Thông tin đã được ghi nhận và giữ chỗ.</span>
           </div>
-          <Button type="primary" ghost onClick={() => router.push(`/portal/manage-booking/${bookingOrder?.recId}`)}>
+          <Button type="primary" ghost onClick={() => handleGotoBookingDetail(bookingOrder?.recId)} loading={isPending}>
             Chi tiết đặt chỗ
           </Button>
         </div>
@@ -89,7 +98,8 @@ const ReservationPage = () => {
               type="primary"
               size="large"
               ghost
-              onClick={() => router.push(`/portal/manage-booking/${bookingOrder?.recId}`)}
+              onClick={() => handleGotoBookingDetail(bookingOrder?.recId)}
+              loading={isPending}
             >
               Chi tiết đặt chỗ
             </Button>

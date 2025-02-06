@@ -25,12 +25,12 @@ export const membersAPIs = {
       },
     });
   },
-  resetPassword: async (id?: number) => {
+  resetPassword: async (recId?: number) => {
     return await client.post<MemberResponse>("local/B2cUser_ResetPassword", {
       isAuth: true,
       body: {
         requestObject: {
-          id,
+          recId,
         },
       },
     });

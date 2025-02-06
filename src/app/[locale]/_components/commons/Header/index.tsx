@@ -1,29 +1,16 @@
-import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
-import Logo from "@/components/frontend/partials/Logo";
-import TopMenuHeader from "@/components/frontend/TopMenuHeader";
-import UserButton from "./UserButton";
-import LanguageSwitcher from "../../LanguageSwitcher";
-import MobileHeaderMainWraper from "./MobileHeaderMainWraper";
-import PrimaryMenuHeader from "./PrimaryMenuHeader";
-import { getPrimaryMenu } from "@/actions/menu";
-
+import { getPrimaryMenu, getMobileMenu } from "@/actions/menu";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getMenuListFomatedTypes } from "@/utils/menu";
 import { isMobile } from "@/utils/detectMobile";
-// import { headers } from "next/headers";
+import Logo from "@/components/frontend/partials/Logo";
+import HamburgerMenuButton from "./HamburgerMenuButton";
+import UserButton from "./UserButton";
+import LanguageSwitcher from "../../LanguageSwitcher";
+import PrimaryMenuHeader from "./PrimaryMenuHeader";
 
 export default async function Header() {
   const locale = (await getLocale()) as LangCode;
-  // const headersList = headers();
-  // const pathname = headersList.get("x-pathname");
-  // const [_, curLang, contentType] = pathname?.split("/") || [];
-
-  const primaryMenuResult = await getPrimaryMenu(locale);
-
-  const { menuPosition, menuItems: primaryItems, lang } = primaryMenuResult || {};
-
-  const menuItems = primaryItems ? getMenuListFomatedTypes(primaryItems) : [];
 
   return (
     <header className="bg-white drop-shadow-sm relative z-40">
@@ -31,18 +18,44 @@ export default async function Header() {
         <div className="flex lg:flex-1">
           <Logo alt="Logo An Thai" width={240} height={80} className="w-32 lg:w-52" />
         </div>
-        {isMobile() ? (
-          <MobileHeaderMainWraper locale={locale} />
-        ) : (
-          <div className="hidden lg:block lg:gap-x-12">
-            <TopMenuHeader>
-              <UserButton />
-              <LanguageSwitcher mode="dropdown" />
-            </TopMenuHeader>
-            <PrimaryMenuHeader items={menuItems} />
-          </div>
-        )}
+        {isMobile() ? <MobileHeaderMainWraper locale={locale} /> : <DesktopHeaderMainWraper locale={locale} />}
       </nav>
     </header>
+  );
+}
+
+async function DesktopHeaderMainWraper({ locale, className }: { locale: LangCode; className?: string }) {
+  const primaryMenuResult = await getPrimaryMenu(locale);
+
+  const { menuItems: primaryItems } = primaryMenuResult || {};
+
+  const menuItems = primaryItems ? getMenuListFomatedTypes(primaryItems) : [];
+
+  return (
+    <div className="hidden lg:block lg:gap-x-12">
+      <div className="flex items-center gap-x-1 justify-end">
+        <UserButton isMobile={false} />
+        <LanguageSwitcher mode="dropdown" />
+      </div>
+      <PrimaryMenuHeader items={menuItems} className="mt-2" />
+    </div>
+  );
+}
+
+export interface MobileHeaderMainWraperProps {
+  children?: React.ReactNode;
+  locale: LangCode;
+}
+async function MobileHeaderMainWraper({ children, locale }: MobileHeaderMainWraperProps) {
+  const mobileMenuResult = await getMobileMenu(locale);
+  const { menuItems } = mobileMenuResult || {};
+  const itemsList = menuItems ? getMenuListFomatedTypes(menuItems) : [];
+
+  return (
+    <div className="flex items-center gap-x-1">
+      <UserButton isMobile={true} />
+      <LanguageSwitcher hideLabel={true} mode="drawer" />
+      <HamburgerMenuButton items={itemsList} />
+    </div>
   );
 }

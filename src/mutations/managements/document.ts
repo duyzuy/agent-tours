@@ -1,21 +1,6 @@
 import { useCustomMutation } from "../useCustomMutation";
-import { documentAPIs } from "@/services/management/cores/document";
 import { miscDocumentAPIs } from "@/services/management/cms/miscDocument";
-import { DocumentPayload } from "@/models/management/core/document.interface";
 import { MiscDocumentPayload } from "@/models/management/cms/miscDocument.interface";
-
-export const useCreateDocumentMutation = () => {
-  return useCustomMutation({
-    mutationFn: (payload: DocumentPayload) => documentAPIs.create(payload),
-  });
-};
-
-export const useUpdateDocumentMutation = () => {
-  return useCustomMutation({
-    mutationFn: (payload: { documentCheckListId: number } & Pick<DocumentPayload, "status">) =>
-      documentAPIs.update(payload),
-  });
-};
 
 /**
  * Misc document

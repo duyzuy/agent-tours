@@ -1,7 +1,7 @@
 import React, { memo, useMemo, useState } from "react";
 import { useExtendBookingTimeLimit } from "../../modules/useExtendBookingTimeLimit";
 import { IBookingTimeLitmit } from "@/models/management/core/bookingTimeLimit.interface";
-import { Button, Modal, Steps, StepProps, InputNumber, Form, Space } from "antd";
+import { Button, Modal, Steps, StepProps, InputNumber, Form, Space, Popover } from "antd";
 import { formatDate } from "@/utils/date";
 import FormItem from "@/components/base/FormItem";
 import {
@@ -54,9 +54,11 @@ const BookingTimeLimitation: React.FC<BookingTimeLimitationProps> = ({ items = [
     <div className="mb-6">
       <Space className="mb-3">
         <h4 className="font-[500] text-[16px]">Thời gian thực hiện thanh toán</h4>
-        <Button size="small" type="primary" ghost onClick={() => setShowModal(true)}>
-          Thêm hạn
-        </Button>
+        <Popover title="Gia hạn thanh toán" trigger="click" content={<>ádf ádfa </>}>
+          <Button size="small" type="primary" ghost onClick={() => setShowModal(true)}>
+            Gia hạn
+          </Button>
+        </Popover>
       </Space>
       <Steps
         status="finish"

@@ -1,6 +1,5 @@
 "use client";
 import { useTranslations } from "next-intl";
-import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 import { Link } from "@/utils/navigation";
 import { Button } from "antd";
 import { IconAccount } from "@/assets/icons";
@@ -23,6 +22,10 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ children }) => {
   const { signOut } = useSignOut();
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const MENU_ITEMS = [
+    { id: 1, label: t("myAccount"), link: "/customer" },
+    { id: 2, label: t("order"), link: "/customer/order" },
+  ];
   useClickOutSide(dropdownRef, () => {
     setShowDropdown(false);
   });
@@ -30,7 +33,7 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ children }) => {
   useEffect(() => {
     setShowDropdown(false);
   }, [pathname]);
-  console.log("UserCardDropdown render");
+
   return (
     <div className="item-account relative">
       <Button
@@ -43,26 +46,17 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ children }) => {
       </Button>
       {showDropdown ? (
         <div
-          className="account__item-dropdown absolute z-10 bg-white px-4 py-3 w-48 drop-shadow-lg rounded-md text-left"
+          className="item-account__dropdown absolute z-10 bg-white px-4 py-3 w-48 drop-shadow-lg rounded-md text-left"
           ref={dropdownRef}
         >
           <ul className="menu-list">
-            <li>
-              <Link
-                href={`/${CLIENT_LINKS.Customer}`}
-                className="block py-2 px-3 hover:bg-gray-100 rounded-md !text-gray-800"
-              >
-                {t("myAccount")}
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={`/${CLIENT_LINKS.Customer}`}
-                className="block py-2 px-3 hover:bg-gray-100 rounded-md !text-gray-800"
-              >
-                {t("order")}
-              </Link>
-            </li>
+            {MENU_ITEMS.map((item) => (
+              <li key={item.id}>
+                <Link href={item.link} className="block py-2 px-3 hover:bg-gray-100 rounded-md !text-gray-800">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
           </ul>
           <div className="border-t pt-3 mt-3">
             <Button

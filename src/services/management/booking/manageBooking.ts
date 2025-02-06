@@ -1,8 +1,12 @@
 import { coreApi } from "../coreApi";
-import { IOrderListRs, IOrderDetailRs } from "@/models/management/booking/order.interface";
+import {
+  IOrderListRs,
+  IOrderDetailRs,
+  OrderOperationStatusResponse,
+} from "@/models/management/booking/order.interface";
 import {
   IBookingOrderCustomerPayload,
-  IOrderPassengerEditPayload,
+  OrderPassengerUpdatePayload,
   IBookingOrderCancelPayload,
   IBookingOrderInvoiceInfoPayload,
 } from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
@@ -50,7 +54,7 @@ export const manageBookingAPIs = {
     });
   },
 
-  updatePassengers: async (payload?: IOrderPassengerEditPayload) => {
+  updatePassengerInformation: async (payload?: OrderPassengerUpdatePayload) => {
     return await coreApi.post<IOrderDetailRs>("core/BookingOrder_EditBookingPaxInfo", {
       requestObject: {
         ...payload,
@@ -108,6 +112,13 @@ export const manageBookingAPIs = {
   },
   extendBookingTimeLimit: async (payload?: { orderId: number; postponeHours: number }) => {
     return await coreApi.post<IOrderDetailRs>("core/BookingOrder_PostponeBookingTimelimit", {
+      requestObject: {
+        ...payload,
+      },
+    });
+  },
+  getOperationStatus: async (payload?: { orderId: number }) => {
+    return await coreApi.post<OrderOperationStatusResponse>("core/BookingOrder_GetOperationStatus", {
       requestObject: {
         ...payload,
       },

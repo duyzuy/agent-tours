@@ -1,3 +1,4 @@
+import { ELocalUserType } from "@/models/management/localUser.interface";
 import { IRole } from "@/models/management/role.interface";
 import { useGetRoles } from "@/modules/admin/role";
 import { Select, SelectProps } from "antd";
@@ -5,9 +6,11 @@ import { Select, SelectProps } from "antd";
 export interface RoleSelectorProps {
   value?: string;
   onChange?: SelectProps<string, IRole>["onChange"];
+  disabled?: boolean;
 }
-const RoleSelector: React.FC<RoleSelectorProps> = ({ onChange, value }) => {
+const RoleSelector: React.FC<RoleSelectorProps> = ({ onChange, value, disabled }) => {
   const { data: roles, isLoading } = useGetRoles();
+
   return (
     <Select<string, IRole>
       placeholder="Chọn quyền"
@@ -16,6 +19,7 @@ const RoleSelector: React.FC<RoleSelectorProps> = ({ onChange, value }) => {
       value={value}
       loading={isLoading}
       onChange={onChange}
+      disabled={disabled}
     />
   );
 };

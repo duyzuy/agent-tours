@@ -1,5 +1,10 @@
 import { ManageBookingAction } from "./actions";
-import { initManageBookingState } from "./state";
+import { ManageBookingDetail } from "./modules/manageBooking.interface";
+
+export const initManageBookingState = new ManageBookingDetail(undefined, {
+  bookingDetails: undefined,
+  bookingSsrDelete: [],
+});
 
 export const manageBookingReducer = (state = initManageBookingState, action: ManageBookingAction) => {
   switch (action.type) {

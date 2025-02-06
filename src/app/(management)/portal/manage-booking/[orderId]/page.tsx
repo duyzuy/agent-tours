@@ -1,18 +1,13 @@
 "use client";
-import React, { useCallback, useMemo, useState, useTransition } from "react";
-import { Row, Col, Divider, Space, Button, Form, Input } from "antd";
+import React, { useMemo } from "react";
+import { Row, Col, Divider, Space, Card } from "antd";
 import { useRouter } from "next/navigation";
 import PageContainer from "@/components/admin/PageContainer";
-import useUpdateCustomerAndPassenger from "../modules/useUpdateCustomerAndPassenger";
 import { formatDate } from "@/utils/date";
 import { PaymentStatus } from "@/models/common.interface";
 
-import { EFopPaymentType, EFopType } from "@/models/management/core/formOfPayment.interface";
-
-import { IOrderDetail } from "@/models/management/booking/order.interface";
-import { useSelectorManageBooking } from "./hooks/useManageBooking";
-import FormItem from "@/components/base/FormItem";
-import ModalCancelBookingConfirmation from "./_components/BookingOrderActions/ModalCanelBookingConfirmation";
+import { EFopType } from "@/models/management/core/formOfPayment.interface";
+import { useSelectorManageBooking } from "./context";
 import ServiceListContainer from "./_components/ServiceListContainer";
 import CustomerInformation from "./_components/CustomerInformation";
 import PassengerListContainer from "./_components/PassengerListContainer";
@@ -22,60 +17,39 @@ import InvoiceInformation from "./_components/InvoiceInformation";
 import BookingOrderActions from "./_components/BookingOrderActions";
 import DepositTimeline from "./_components/DepositTimeline";
 import OrderInformation from "./_components/OrderInformation";
-
 import BookingTimeLimitation from "./_components/BookingTimeLimitation";
-import DrawerCommentContainer from "./_components/DrawerCommentContainer";
-import { useThemeMode } from "@/context";
-import classNames from "classnames";
+import SplitBookingButton from "./_components/SplitBookingButton";
+import CancelBookingButton from "./_components/CancelBookingButton";
+import NoteBookingButton from "./_components/NoteBookingButton";
+import { getAdminUserInformationStorage } from "@/utils/common";
+import { useGetOperationOrderStatusQuery } from "../modules/useGetOperationOrderStatusQuery";
 
 interface ReservationDetailPageProps {
   params: { orderId: number };
 }
 
 const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params }) => {
-  const [themeMode, _] = useThemeMode();
-  const [isShowModalConfirm, setShowModalConfirm] = useState(false);
-  const [showComment, setShowComment] = useState(false);
+  const { data: operationStatus } = useGetOperationOrderStatusQuery({ enabled: true, orderId: Number(params.orderId) });
   const router = useRouter();
   const orderInformation = useSelectorManageBooking((state) => state.order);
-
-  const [isStartSplitBooking, startSplitBookingTransition] = useTransition();
-  const { onUpdateCustomerInfo, onUpdatePassengerInfo } = useUpdateCustomerAndPassenger();
+  const adminInfo = getAdminUserInformationStorage();
 
   const bookingOrder = useMemo(() => orderInformation?.bookingOrder, [orderInformation]);
-  const passengerList = useMemo(() => {
-    const { passengers, tourBookings } = orderInformation || {};
-
-    return passengers?.reduce<
-      (IOrderDetail["passengers"][number] & { tourItem?: IOrderDetail["tourBookings"][number] })[]
-    >((acc, pax) => {
-      const bookingItem = tourBookings?.find((item) => item.paxId === pax.recId);
-      acc = [...acc, { ...pax, tourItem: bookingItem }];
-
-      return acc;
-    }, []);
-  }, [orderInformation]);
-
-  const fopListCoupon = useMemo(() => {
+  const couponAppliedList = useMemo(() => {
     return orderInformation?.fops.filter(
       (item) => item.type === EFopType.DISCOUNT_COUPON || item.type === EFopType.DISCOUNT_POLICY,
     );
   }, [orderInformation]);
 
-  const onShowModalCancelBooking = useCallback(() => setShowModalConfirm(true), []);
-  const onCloseModalCancelBooking = useCallback(() => setShowModalConfirm(false), []);
-
-  // const bookingSSRList = useMemo(() => {
-  //   return orderInformation?.ssrBookings.reduce<IOrderDetail["ssr"][0]["booking"][]>((acc, item) => {
-  //     return (acc = [...acc, item.booking]);
-  //   }, []);
-  // }, [orderInformation]);
-
-  const onSplitBooking = () => {
-    startSplitBookingTransition(() => router.push(`/portal/manage-booking/${params.orderId}/split-booking`));
-  };
+  const isAllowEdit = useMemo(() => {
+    if (adminInfo?.localUserType === "AGENT" || adminInfo?.localUserType === "AGENT_STAFF") {
+      return operationStatus !== "HANDOVERED";
+    }
+    return true;
+  }, [operationStatus]);
 
   if (!orderInformation || !bookingOrder) return null;
+
   return (
     <PageContainer
       name={`Chi tiết đặt chỗ #${params.orderId}`}
@@ -85,32 +59,12 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         { title: `Chi tiết đặt chỗ #${params.orderId}` },
       ]}
       onBack={router.back}
-      // className="bg-slate-50 -m-6 p-6 pb-10 h-auto"
       hideAddButton
     >
       <Space>
-        <Button
-          type="text"
-          className="!text-orange-600 !bg-orange-100 hover:!bg-orange-200"
-          onClick={() => setShowComment(true)}
-        >
-          Ghi chú
-        </Button>
-        <Button
-          type="text"
-          className="!text-blue-600 !bg-blue-100 hover:!bg-blue-200"
-          loading={isStartSplitBooking}
-          onClick={onSplitBooking}
-        >
-          Tách đặt chỗ
-        </Button>
-        <Button
-          type="text"
-          className="!text-rose-700 !bg-rose-100 hover:!bg-rose-200"
-          onClick={onShowModalCancelBooking}
-        >
-          Huỷ đặt chỗ
-        </Button>
+        <NoteBookingButton orderId={params.orderId} comments={orderInformation.comments} />
+        <SplitBookingButton orderId={params.orderId} />
+        {adminInfo?.localUserType === "ADMIN" ? <CancelBookingButton orderId={params.orderId} /> : null}
       </Space>
       <Divider />
       <OrderInformation
@@ -123,12 +77,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         sellableCode={bookingOrder.sellable.code}
         className="mb-6"
       />
-      <div
-        className={classNames("p-6 rounded-md mb-6", {
-          "bg-slate-50": themeMode === "light",
-          "bg-[#1d1d1d]": themeMode === "dark",
-        })}
-      >
+      <div className="bg-gray-400/5 p-6 rounded-md">
         <TourBookingInfo
           startDate={formatDate(bookingOrder.sellable.startDate)}
           endDate={formatDate(bookingOrder.sellable.endDate)}
@@ -136,14 +85,11 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
           name={bookingOrder.template.name}
           code={bookingOrder.template.code}
           sellableCode={bookingOrder.sellable.code}
-          // className="mb-6"
-          className={classNames("border px-6 py-4 h-full rounded-md mb-6", {
-            "bg-white border-gray-100": themeMode === "light",
-            "bg-[#141414] border-[#303030]": themeMode === "dark",
-          })}
+          className="bg-gray-300/10  px-6 py-4 rounded-md mb-6"
         />
+        <div className="h-6"></div>
         <Row gutter={[24, 24]}>
-          <Col span={24} md={12}>
+          <Col span={24} lg={12}>
             <CustomerInformation
               orderId={bookingOrder.recId}
               cusInfo={{
@@ -153,14 +99,10 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
                 custAddress: bookingOrder.custAddress,
                 rmk: bookingOrder.rmk,
               }}
-              onSave={onUpdateCustomerInfo}
-              className={classNames("border px-6 py-4 h-full rounded-md", {
-                "bg-white border-gray-100": themeMode === "light",
-                "bg-[#141414] border-[#303030]": themeMode === "dark",
-              })}
+              allowEdit={isAllowEdit}
             />
           </Col>
-          <Col span={24} md={12}>
+          <Col span={24} lg={12}>
             <InvoiceInformation
               orderId={bookingOrder?.recId}
               invoiceInfo={{
@@ -170,24 +112,21 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
                 invoiceName: bookingOrder?.invoiceName,
                 invoiceTaxCode: bookingOrder?.invoiceTaxCode,
               }}
-              className={classNames("border px-6 py-4 h-full rounded-md", {
-                "bg-white border-gray-100": themeMode === "light",
-                "bg-[#141414] border-[#303030]": themeMode === "dark",
-              })}
+              allowEdit={isAllowEdit}
             />
           </Col>
         </Row>
       </div>
-
+      <div className="h-12"></div>
       {bookingOrder?.paymentStatus === PaymentStatus.NOTPAID ? (
         <BookingTimeLimitation orderId={params.orderId} items={orderInformation?.rulesAndPolicies?.bookingTimelimits} />
       ) : null}
+
       <DepositTimeline
         depositTimelimits={orderInformation?.rulesAndPolicies?.depositTimelimits}
         paymentStatus={bookingOrder?.paymentStatus}
         className="mb-6"
       />
-
       <BookingOrderActions
         orderId={bookingOrder?.recId}
         sellableId={bookingOrder?.sellableId}
@@ -195,6 +134,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         totalPaid={bookingOrder?.totalPaid}
         paymentStatus={bookingOrder?.paymentStatus}
       />
+      <Divider style={{ margin: "16px 0" }} />
       <OrderSummary
         orderId={bookingOrder?.recId}
         data={{
@@ -208,20 +148,16 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
           totalRefunded: bookingOrder?.totalRefunded,
           paymentStatus: bookingOrder?.paymentStatus,
         }}
-        coupons={fopListCoupon}
+        coupons={couponAppliedList}
         rulesAndPolicies={orderInformation?.rulesAndPolicies}
-        // code={bookingOrder?.sellable.code}
-        // name={bookingOrder?.template.name}
-        // startDate={bookingOrder?.sellable.startDate}
-        // endDate={bookingOrder?.sellable.endDate}
-        className="mb-6"
       />
-
+      <Divider style={{ margin: "16px 0" }} />
+      <div className="h-12"></div>
       <PassengerListContainer
         orderId={bookingOrder.recId}
         sellableId={bookingOrder.sellableId}
-        items={passengerList || []}
-        onSave={onUpdatePassengerInfo}
+        passengers={orderInformation.passengers}
+        tourBookings={orderInformation.tourBookings}
       />
       <Divider />
       <ServiceListContainer
@@ -230,20 +166,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         sellableId={orderInformation?.bookingOrder.sellableId}
         passengerList={orderInformation?.passengers || []}
         orderId={params.orderId}
-        className="mb-6"
-      />
-      <DrawerCommentContainer
-        orderId={bookingOrder.recId}
-        items={orderInformation.comments}
-        isOpen={showComment}
-        onClose={() => setShowComment(false)}
-      />
-      <ModalCancelBookingConfirmation
-        orderId={bookingOrder.recId}
-        isShowModal={isShowModalConfirm}
-        title="Huỷ đặt chỗ!"
-        descriptions="Bạn chắc chắn muốn huỷ đặt chỗ?"
-        onCancel={onCloseModalCancelBooking}
+        channel={bookingOrder.channel}
       />
     </PageContainer>
   );

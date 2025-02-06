@@ -32,64 +32,40 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
   agentId,
   sellableCode,
 }) => {
-  const [isShowModalConfirm, setShowModalConfirm] = useState(false);
-  const { onCancelBookingOrder } = useCancelBookingOrder();
-  const [cancelBookingData, setCancelBookingData] = useState<IBookingOrderCancelPayload>({
-    bookingOrder: { recId: orderId, rmk4: "" },
-  });
-  const router = useRouter();
-
-  const onConfirmCancelBookingOrder = () =>
-    onCancelBookingOrder?.(cancelBookingData, () => {
-      setShowModalConfirm(false);
-      router.push("/portal/manage-booking/order-list");
-    });
-  const onShowModalCancelConfirm = useCallback(() => setShowModalConfirm(true), []);
-  const onCloseModalCancelConfirm = useCallback(() => setShowModalConfirm(false), []);
-
   return (
     <>
       <div
-        className={classNames("flex items-center", {
+        className={classNames("flex flex-wrap items-center", {
           [className]: className,
         })}
       >
-        <div className="w-20 border-r mr-6 pr-6">
+        <div className="w-20">
           <span className="block">ID</span>
           <span className="block text-[15px] font-[500] ">{`#${orderId}`}</span>
         </div>
-        {name ? (
-          <div className="w-40 border-r mr-6 pr-6">
-            <span className="block">Tên</span>
-            <span className="block text-[15px] font-[500] ">{name}</span>
-          </div>
-        ) : null}
-        {code ? (
-          <div className="border-r mr-6 pr-6 w-fit">
-            <span className="block">Mã Tour</span>
-            <span className="block text-[15px] font-[500] ">{code}</span>
-          </div>
-        ) : null}
-
-        <div className="border-r mr-6 pr-6 w-fit">
+        <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
+        <div className="w-fit">
           <span className="block">Ngày đặt</span>
           <span className="block text-[15px] font-[500] ">{sysFstUpdate}</span>
         </div>
-        <div className="border-r mr-6 pr-6 w-fit">
+        <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
+        <div className="w-fit">
           <span className="block">Kênh bán</span>
           <span className="block text-[15px] font-[500] ">{channel ?? "--"}</span>
         </div>
-        <div className="border-r mr-6 pr-6 w-fit">
+        <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
+        <div className="w-fit">
           <span className="block">Mã đại lý</span>
           <span className="block text-[15px] font-[500] ">{agentId ?? "--"}</span>
         </div>
-
-        <div className="border-r mr-6 pr-6 w-fit">
+        <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
+        <div className="w-fit">
           <span className="block">Mã giới thiệu</span>
           <span className="block text-[15px] font-[500] ">
             {referenceId && isEmpty(referenceId) ? referenceId : "--"}
           </span>
         </div>
+        <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
         <div className="">
           <span className="block">Trạng thái</span>
           <span className="block text-[15px] font-[500] ">
@@ -110,28 +86,7 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
             </Tag>
           </span>
         </div>
-        {/* <div className="ml-auto">
-          <Space>
-            <Button
-              size="small"
-              type="primary"
-              onClick={() => router.push(`/portal/manage-booking/${orderId}/split-booking`)}
-            >
-              Tách đặt chỗ
-            </Button>
-            <Button type="primary" danger size="small" ghost onClick={onShowModalCancelConfirm}>
-              Huỷ đặt chỗ
-            </Button>
-          </Space>
-        </div> */}
       </div>
-      <ModalCancelBookingConfirmation
-        orderId={orderId}
-        isShowModal={isShowModalConfirm}
-        title="Huỷ đặt chỗ!"
-        descriptions="Bạn chắc chắn muốn huỷ đặt chỗ?"
-        onCancel={onConfirmCancelBookingOrder}
-      />
     </>
   );
 };

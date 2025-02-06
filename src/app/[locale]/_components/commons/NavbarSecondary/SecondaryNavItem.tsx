@@ -4,14 +4,18 @@ import NavLink from "@/components/frontend/base/NavItem/NavLink";
 import { Link } from "@/utils/navigation";
 import classNames from "classnames";
 interface SecondaryNavItemProps {
-  name?: string;
-  iconName?: string;
-  descriptions?: string;
-  items?: MenuItemType[];
-  isMega?: boolean;
+  name: string;
+  iconName: string;
+  descriptions: string;
+  items: MenuItemType[];
+  isMega: boolean;
+  slug: string;
   className?: string;
-  slug?: string;
 }
+
+const getMenuIcon = (name: string) => {
+  return ICON_LIST.find((ic) => ic.key === name);
+};
 export default function SecondaryNavItem({
   name,
   iconName,
@@ -21,7 +25,7 @@ export default function SecondaryNavItem({
   descriptions,
   slug,
 }: SecondaryNavItemProps) {
-  const icItem = ICON_LIST.find((ic) => ic.key === iconName);
+  const icItem = getMenuIcon(iconName);
   return (
     <div
       className={classNames("menu-secondary-item group/item", {
@@ -55,12 +59,11 @@ export default function SecondaryNavItem({
 
 interface MenuDropdownItemProps {
   name?: string;
-  items?: MenuItemType[];
+  items?: SecondaryNavItemProps["items"];
   className?: string;
 }
 function Dropdown({ name, items, className = "" }: MenuDropdownItemProps) {
-  if (!items || !items.length) return null;
-  return (
+  return items && items.length ? (
     <div
       className={classNames("dropdown", {
         [className]: className,
@@ -76,17 +79,16 @@ function Dropdown({ name, items, className = "" }: MenuDropdownItemProps) {
         </ul>
       </div>
     </div>
-  );
+  ) : null;
 }
 interface MegaMenuDropdownProps {
   name?: string;
   descriptions?: string;
-  items?: MenuItemType[];
+  items?: SecondaryNavItemProps["items"];
   className?: string;
 }
 function MegaMenuDropdown({ name, items, className = "", descriptions }: MegaMenuDropdownProps) {
-  if (!items || !items.length) return null;
-  return (
+  return items && items.length ? (
     <div
       className={classNames("mega-dropdown", {
         [className]: className,
@@ -118,7 +120,7 @@ function MegaMenuDropdown({ name, items, className = "", descriptions }: MegaMen
         </div>
       </div>
     </div>
-  );
+  ) : null;
 }
 SecondaryNavItem.Dropdown = Dropdown;
 SecondaryNavItem.MegaDropdown = MegaMenuDropdown;

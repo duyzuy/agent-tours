@@ -8,6 +8,10 @@ import { isEmpty } from "lodash";
 import { useRouter } from "next/navigation";
 import { ColumnsType } from "antd/es/table";
 import { serviceColumns } from "./columns";
+import useEditSSR from "../../modules/useEditSSR";
+import DrawerServiceContainerWithPax, { DrawerServiceContainerWithPaxProps } from "./DrawerServiceContainerWithPax";
+import DrawerServiceContainerNoPax, { DrawerServiceContainerNoPaxProps } from "./DrawerServiceContainerNoPax";
+import { ESellChannel } from "@/constants/channel.constant";
 
 interface ServiceListContainerProps {
   orderId: number;
@@ -16,12 +20,10 @@ interface ServiceListContainerProps {
   serviceList: IOrderDetail["ssrBookings"];
   passengerList: IOrderDetail["passengers"];
   className?: string;
+  channel: ESellChannel;
 }
 export type ServiceItem = Exclude<IOrderDetail["ssrBookings"], null>[number];
 export type PassengerItem = Exclude<IOrderDetail["passengers"], null>[number];
-import useEditSSR from "../../modules/useEditSSR";
-import DrawerServiceContainerWithPax, { DrawerServiceContainerWithPaxProps } from "./DrawerServiceContainerWithPax";
-import DrawerServiceContainerNoPax, { DrawerServiceContainerNoPaxProps } from "./DrawerServiceContainerNoPax";
 
 const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
   orderId,
@@ -29,6 +31,7 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
   includedItems,
   serviceList,
   passengerList,
+  channel,
   className = "",
 }) => {
   const [isStartingBuyService, startBuyServiceTransition] = useTransition();
@@ -80,7 +83,6 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
       ?.filter((item) => item.paxId !== 0)
       .reduce<(ServiceItem & { pax?: PassengerItem })[]>((acc, item) => {
         const paxItem = passengerList?.find((pax) => pax.recId === item.paxId);
-
         return [...acc, { ...item, pax: paxItem }];
       }, []);
   }, [serviceList, passengerList]);
@@ -260,6 +262,7 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
         isOpen={showDrawer && drawerType === "SSRWithPax"}
         onClose={onCancelBuyService}
         onSubmit={handleSubmitSSRByPax}
+        channel={channel}
       />
       <DrawerServiceContainerNoPax
         label="Mua dịch vụ"
@@ -268,6 +271,7 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
         isOpen={showDrawer && drawerType === "SSRNoPax"}
         onClose={onCancelBuyService}
         onSubmit={handleSubmitSSRNoPax}
+        channel={channel}
       />
     </div>
   );

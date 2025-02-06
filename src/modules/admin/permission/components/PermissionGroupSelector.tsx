@@ -32,6 +32,7 @@ const GROUP_PERMISSION_LIST = [
   { label: "Leading", value: "LEADING" },
   { label: "Payment", value: "PAYMENT" },
   { label: "Operation", value: "OPERATION" },
+  { label: "Member", value: "MEMBER" },
 ];
 
 type PermissionGroupOption = (typeof GROUP_PERMISSION_LIST)[number];

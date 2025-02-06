@@ -90,16 +90,15 @@ const useSelectPassengerQuantity = () => {
         payload: newPassengers,
       });
     },
-    [product],
+    [product, bookingPassenger],
   );
 
   const initPassengerFormDataThenGoToNext = () => {
-    const totalAmountPax = getTotalAmountPax();
-
     if (session.status === "unauthenticated" || session.status === "loading") {
       showAuthModal();
       return;
     }
+    const totalAmountPax = getTotalAmountPax();
 
     if (!product) {
       throw new Error("!Product invalid");
