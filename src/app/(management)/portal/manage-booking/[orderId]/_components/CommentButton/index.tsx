@@ -1,14 +1,13 @@
 import { Button } from "antd";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import DrawerCommentContainer from "./DrawerCommentContainer";
+import CommentContainerDrawer from "./CommentContainerDrawer";
 
-interface NoteBookingButtonProps {
+interface CommentButtonProps {
   orderId: number;
   comments: any[];
 }
-const NoteBookingButton = ({ orderId, comments }: NoteBookingButtonProps) => {
-  const router = useRouter();
+const CommentButton = ({ orderId, comments }: CommentButtonProps) => {
   const [showComment, setShowComment] = useState(false);
 
   return (
@@ -20,7 +19,7 @@ const NoteBookingButton = ({ orderId, comments }: NoteBookingButtonProps) => {
       >
         Ghi chú
       </Button>
-      <DrawerCommentContainer
+      <CommentContainerDrawer
         orderId={orderId}
         items={comments}
         isOpen={showComment}
@@ -29,4 +28,4 @@ const NoteBookingButton = ({ orderId, comments }: NoteBookingButtonProps) => {
     </>
   );
 };
-export default NoteBookingButton;
+export default CommentButton;

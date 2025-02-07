@@ -5,19 +5,10 @@ import { ProductTouListResponse } from "@/models/management/booking/product.inte
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { formOfPaymentAPIs } from "@/services/management/cores/formOfPayment";
-import {
-  IBookingOrderCancelPayload,
-  IBookingOrderCustomerPayload,
-  IBookingOrderInvoiceInfoPayload,
-  OrderPassengerUpdatePayload,
-} from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
-
+import { IBookingOrderInvoiceInfoPayload } from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
 import { ISplitBookingPayload } from "@/app/(management)/portal/manage-booking/[orderId]/split-booking/modules/splitBooking.interface";
 import { FormOfPaymentPayload } from "@/models/management/core/formOfPayment.interface";
-
-import { IOrderDetailRs } from "@/models/management/booking/order.interface";
 import { useCustomMutation } from "../useCustomMutation";
-import { RoomingPayload } from "@/models/management/booking/rooming.interface";
 import {
   AddNewSSRByPaxPayload,
   AddNewSSRNoPaxPayload,
@@ -46,22 +37,6 @@ export const useGetBookingTourServicesMutation = () => {
 /**
  * manage booking APIS
  */
-// export const useUpdateCustomerInformationMutation = () => {
-//   return useCustomMutation({
-//     mutationFn: (payload: IBookingOrderCustomerPayload) => manageBookingAPIs.updateCustomer(payload),
-//   });
-// };
-// export const useUpdatePassengersInformationMutation = () => {
-//   return useCustomMutation({
-//     mutationFn: (payload: OrderPassengerUpdatePayload) => manageBookingAPIs.updatePassengers(payload),
-//   });
-// };
-
-export const useCancelBookingOrderMutation = () => {
-  return useCustomMutation({
-    mutationFn: (payload: IBookingOrderCancelPayload) => manageBookingAPIs.cancelBookingOrder(payload),
-  });
-};
 
 export const useSplitBookingInTwoOrderMutation = () => {
   return useCustomMutation({
@@ -104,11 +79,6 @@ export const useDeleteFormOfPaymentMutation = () => {
   });
 };
 
-// export const useUpdateSSRByPassengerMutation = () => {
-//   return useCustomMutation({
-//     mutationFn: (payload: IEditOrderSSRPayload) => manageBookingAPIs.updateSSRByPassenger(payload),
-//   });
-// };
 export const useAddSSRByPassengerMutation = () => {
   return useCustomMutation({
     mutationFn: (payload: AddNewSSRByPaxPayload) => manageBookingAPIs.addNewSSRByPax(payload),
@@ -123,11 +93,5 @@ export const useAddSSRNoPassengerMutation = () => {
 export const useDeleteSSRMutation = () => {
   return useCustomMutation({
     mutationFn: (payload: DeleteSSRPayload) => manageBookingAPIs.deleteSSR(payload),
-  });
-};
-
-export const useExtendBookingTimeLimitMutation = () => {
-  return useCustomMutation<IOrderDetailRs, { orderId: number; postponeHours: number }>({
-    mutationFn: (payload) => manageBookingAPIs.extendBookingTimeLimit(payload),
   });
 };

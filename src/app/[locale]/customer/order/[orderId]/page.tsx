@@ -6,7 +6,7 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { PaymentStatus } from "@/models/common.interface";
 import { Tag } from "antd";
 import { moneyFormatVND } from "@/utils/helper";
-import { formatDate } from "@/utils/date";
+import { formatDate, stringToDate } from "@/utils/date";
 import { notFound } from "next/navigation";
 
 import PassengerOrderInformation from "../../_components/PassengerOrderInformation";
@@ -14,6 +14,7 @@ import DepositeTimeLine from "./_components/DepositeTimeLine";
 import ContactInformationBox from "./_components/ContactInformationBox";
 import FormOfPaymentList from "../../_components/FormOfPaymentList";
 import InvoiceBox from "./_components/InvoiceBox";
+import dayjs from "dayjs";
 
 export async function generateMetadata(
   { params }: { params: { locale: LangCode; orderId: number } },
@@ -44,6 +45,10 @@ export default async function CustomerOrderDetailPage({ params }: { params: { lo
   }
 
   const { bookingOrder, passengers, bookingOrderId, ssrBookings } = orderDetail;
+
+  const allowEdit =
+    orderDetail.bookingOrder.paymentStatus === PaymentStatus.NOTPAID &&
+    dayjs(stringToDate(orderDetail.bookingOrder.sellable.startDate)).isAfter(dayjs());
 
   return (
     <>
@@ -113,6 +118,7 @@ export default async function CustomerOrderDetailPage({ params }: { params: { lo
           custPhoneNumber={bookingOrder.custPhoneNumber}
           custName={bookingOrder.custName}
           rmk={bookingOrder.rmk}
+          allowEdit={allowEdit}
           className="border-b mb-3 pb-3"
         />
 
@@ -124,14 +130,16 @@ export default async function CustomerOrderDetailPage({ params }: { params: { lo
           invoiceAddress={bookingOrder.invoiceAddress}
           invoiceTaxCode={bookingOrder.invoiceTaxCode}
           invoiceEmail={bookingOrder.invoiceEmail}
+          allowEdit={allowEdit}
           className="border-b mb-3 pb-3"
         />
         <PassengerOrderInformation
           bookingOrderId={bookingOrder.recId}
           title="Thông tin khách"
           items={passengers}
-          className="mb-6"
+          allowEdit={allowEdit}
           startDate={bookingOrder.sellable.startDate}
+          className="mb-6"
         />
         {/* <OrderServiceList title="Thông tin dịch vụ" items={ssrBookings} className="mb-6" /> */}
         <FormOfPaymentList title="Thông tin thanh toán" items={orderDetail.fops} />

@@ -21,6 +21,7 @@ interface ServiceListContainerProps {
   passengerList: IOrderDetail["passengers"];
   className?: string;
   channel: ESellChannel;
+  isBookingCanceled?: boolean;
 }
 export type ServiceItem = Exclude<IOrderDetail["ssrBookings"], null>[number];
 export type PassengerItem = Exclude<IOrderDetail["passengers"], null>[number];
@@ -32,9 +33,9 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
   serviceList,
   passengerList,
   channel,
+  isBookingCanceled,
   className = "",
 }) => {
-  const [isStartingBuyService, startBuyServiceTransition] = useTransition();
   const [showDrawer, setShowDrawer] = useState(false);
   const [drawerType, setDrawerType] = useState<"SSRWithPax" | "SSRNoPax">();
   const [openPopConfirm, setOpenPopconfirm] = useState(false);
@@ -189,41 +190,42 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
       </div>
       <div className="flex items-center gap-x-3 mb-6">
         <h3 className="text-[16px]">Dịch vụ mua thêm</h3>
-        <Popover
-          open={openPopConfirm}
-          placement="bottom"
-          content={
-            <>
-              <h3 className="mb-3 font-semibold">Mua dịch vụ</h3>
-              <div className="flex flex-col gap-3">
-                <Button
-                  className="!text-rose-600 !bg-rose-100 hover:!bg-rose-200 !block w-[180px]"
-                  type="text"
-                  onClick={() => onClickBuyService("SSRWithPax")}
-                >
-                  Theo hành khách
-                </Button>
-                <Button
-                  className="!text-orange-600 !bg-orange-100 hover:!bg-orange-200 !block w-[180px]"
-                  type="text"
-                  onClick={() => onClickBuyService("SSRNoPax")}
-                >
-                  Không theo hành khách
-                </Button>
-              </div>
-            </>
-          }
-        >
-          <Button
-            // icon={<PlusOutlined />}
-            type="text"
-            className="!bg-cyan-100 !text-cyan-600 hover:!bg-cyan-200"
-            onClick={() => setOpenPopconfirm((prev) => !prev)}
-            loading={isStartingBuyService}
+        {isBookingCanceled ? null : (
+          <Popover
+            open={openPopConfirm}
+            placement="bottom"
+            content={
+              <>
+                <h3 className="mb-3 font-semibold">Mua dịch vụ</h3>
+                <div className="flex flex-col gap-3">
+                  <Button
+                    className="!text-rose-600 !bg-rose-100 hover:!bg-rose-200 !block w-[180px]"
+                    type="text"
+                    onClick={() => onClickBuyService("SSRWithPax")}
+                  >
+                    Theo hành khách
+                  </Button>
+                  <Button
+                    className="!text-orange-600 !bg-orange-100 hover:!bg-orange-200 !block w-[180px]"
+                    type="text"
+                    onClick={() => onClickBuyService("SSRNoPax")}
+                  >
+                    Không theo hành khách
+                  </Button>
+                </div>
+              </>
+            }
           >
-            Mua dịch vụ
-          </Button>
-        </Popover>
+            <Button
+              // icon={<PlusOutlined />}
+              type="text"
+              className="!bg-cyan-100 !text-cyan-600 hover:!bg-cyan-200"
+              onClick={() => setOpenPopconfirm((prev) => !prev)}
+            >
+              Mua dịch vụ
+            </Button>
+          </Popover>
+        )}
       </div>
       <Tabs
         type="card"

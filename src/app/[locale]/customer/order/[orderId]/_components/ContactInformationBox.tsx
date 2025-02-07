@@ -19,6 +19,7 @@ export interface ContactInformationBoxProps {
   custAddress: BoxContactInformationProps["custAddress"];
   rmk: BoxContactInformationProps["rmk"];
   className?: string;
+  allowEdit?: boolean;
 }
 
 const ContactInformationBox: React.FC<ContactInformationBoxProps> = ({
@@ -28,6 +29,7 @@ const ContactInformationBox: React.FC<ContactInformationBoxProps> = ({
   custPhoneNumber,
   custAddress,
   rmk,
+  allowEdit,
   className = "",
 }) => {
   const initFormData = new CustomerContactInformationFormData(
@@ -39,7 +41,7 @@ const ContactInformationBox: React.FC<ContactInformationBoxProps> = ({
     rmk,
   );
   const { mutate: updateContact, isPending } = useUpdateContactInformation();
-  const [edit, setEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const router = useRouter();
   const { handleSubmit, control, reset, getValues, watch } = useForm<CustomerContactInformationFormData>({
     defaultValues: { ...initFormData },
@@ -47,7 +49,7 @@ const ContactInformationBox: React.FC<ContactInformationBoxProps> = ({
   });
 
   const handleCancelEdit = () => {
-    setEdit(false);
+    setIsEdit(false);
     reset();
   };
 
@@ -58,7 +60,7 @@ const ContactInformationBox: React.FC<ContactInformationBoxProps> = ({
       },
       {
         onSuccess(data, variables, context) {
-          setEdit(false);
+          setIsEdit(false);
           reset();
           router.refresh();
         },
@@ -93,15 +95,17 @@ const ContactInformationBox: React.FC<ContactInformationBoxProps> = ({
     >
       <div className="flex gap-x-2">
         <h3 className="font-[500] text-[16px] mb-3">Thông tin người đặt</h3>
-        <Button
-          type="text"
-          shape="circle"
-          size="small"
-          icon={<EditOutlined />}
-          onClick={() => setEdit((prev) => !prev)}
-        />
+        {allowEdit ? (
+          <Button
+            type="text"
+            shape="circle"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => setIsEdit((prev) => !prev)}
+          />
+        ) : null}
       </div>
-      {edit ? (
+      {isEdit && allowEdit ? (
         <Form layout="vertical" disabled={isPending}>
           <div className="grid grid-cols-2 gap-x-3 lg:gap-x-6">
             <Controller

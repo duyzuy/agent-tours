@@ -18,6 +18,7 @@ export interface PassengerOrderInformationProps {
   className?: string;
   startDate: string;
   bookingOrderId: number;
+  allowEdit?: boolean;
 }
 const PassengerOrderInformation = ({
   items,
@@ -26,6 +27,7 @@ const PassengerOrderInformation = ({
   children,
   className = "",
   bookingOrderId,
+  allowEdit,
 }: PassengerOrderInformationProps) => {
   const { mutate: updatePassengerInfo, isPending } = useUpdatePassengerInformation();
   const [open, setOpen] = useState(false);
@@ -64,21 +66,23 @@ const PassengerOrderInformation = ({
         })}
       >
         {title && <h3 className="font-[500] text-[16px] mb-3 lg:mb-6">{title}</h3>}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid lg:grid-cols-2 gap-3">
           {items.map((pax) => (
             <div className="border rounded-md" key={pax.recId}>
-              <div className="flex items-center justify-between px-4 py-3">
+              <div className="flex justify-between px-4 py-3">
                 <div className="flex items-center gap-x-2">
                   <IconUser className="w-8 h-8 bg-slate-100 rounded-full p-2" />
                   <div className="font-[500] text-[16px]">{`${pax.paxLastname}, ${pax.paxMiddleFirstName}`}</div>
                   <span className="text-xs">{pax.type}</span>
-                  <Button
-                    type="text"
-                    icon={<EditOutlined />}
-                    size="small"
-                    shape="circle"
-                    onClick={() => handleEdit(pax)}
-                  />
+                  {allowEdit ? (
+                    <Button
+                      type="text"
+                      icon={<EditOutlined />}
+                      size="small"
+                      shape="circle"
+                      onClick={() => handleEdit(pax)}
+                    />
+                  ) : null}
                 </div>
                 <Button
                   icon={<IconChevronDown className="w-5 h-5" />}
@@ -200,12 +204,12 @@ function PassengerInformation(pax: PassengerInformationProps) {
     </div>
   );
 }
-interface PassengerOrderInformationRoomingProps {
+interface RoomingInformationProps {
   roomingType: RoomingType;
   roomNumber: number;
   label?: string;
 }
-function PassengerOrderInformationRooming({ roomingType, roomNumber, label }: PassengerOrderInformationRoomingProps) {
+function RoomingInformation({ roomingType, roomNumber, label }: RoomingInformationProps) {
   return (
     <div className="passenger-room-information">
       {label ? <div className="mb-3 font-[500]">Thông tin phòng</div> : null}
@@ -222,11 +226,11 @@ function PassengerOrderInformationRooming({ roomingType, roomNumber, label }: Pa
     </div>
   );
 }
-interface PassengerOrderInformationDocumentProps {
+interface DocumentCheckListProps {
   label?: string;
   documents: FeOrderDetailResponse["result"]["passengers"][number]["documents"];
 }
-function PassengerOrderInformationDocument({ documents, label }: PassengerOrderInformationDocumentProps) {
+function DocumentCheckList({ documents, label }: DocumentCheckListProps) {
   return (
     <div className="passenger-document">
       {label ? <div className="mb-3 font-[500]">Loại giấy tờ phải nộp</div> : null}
@@ -271,6 +275,6 @@ function PassengerOrderInformationDocument({ documents, label }: PassengerOrderI
     </div>
   );
 }
-PassengerOrderInformation.Document = PassengerOrderInformationDocument;
-PassengerOrderInformation.RoomInformation = PassengerOrderInformationRooming;
+PassengerOrderInformation.Document = DocumentCheckList;
+PassengerOrderInformation.RoomInformation = RoomingInformation;
 PassengerOrderInformation.Detail = PassengerInformation;

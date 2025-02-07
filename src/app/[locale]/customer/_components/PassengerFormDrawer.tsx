@@ -173,7 +173,7 @@ const PassengerFormDrawer: React.FC<PassengerFormDrawerProps> = ({
     Object.keys(formData).forEach((key) => {
       setValue(key as keyof PassengerInformationFormData, formData[key as keyof PassengerInformationFormData]);
     });
-  }, [open]);
+  }, [values]);
 
   return (
     <Drawer

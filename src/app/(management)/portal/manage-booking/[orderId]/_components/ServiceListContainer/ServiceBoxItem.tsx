@@ -1,9 +1,6 @@
-import React, { useMemo, useState } from "react";
-import { getPassengerType } from "@/utils/common";
+import React from "react";
 import { moneyFormatVND } from "@/utils/helper";
-import { PassengerType } from "@/models/common.interface";
 import classNames from "classnames";
-import { UserOutlined } from "@ant-design/icons";
 import Quantity from "@/components/base/Quantity";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { EditBookingSSRByPassenger } from "../../modules/manageBooking.interface";

@@ -2,12 +2,12 @@
 import React, { useMemo } from "react";
 import { Row, Col, Divider, Space, Card } from "antd";
 import { useRouter } from "next/navigation";
-import PageContainer from "@/components/admin/PageContainer";
-import { formatDate } from "@/utils/date";
-import { PaymentStatus } from "@/models/common.interface";
 
+import { formatDate } from "@/utils/date";
+import { PaymentStatus, Status } from "@/models/common.interface";
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
 import { useSelectorManageBooking } from "./context";
+import PageContainer from "@/components/admin/PageContainer";
 import ServiceListContainer from "./_components/ServiceListContainer";
 import CustomerInformation from "./_components/CustomerInformation";
 import PassengerListContainer from "./_components/PassengerListContainer";
@@ -20,7 +20,7 @@ import OrderInformation from "./_components/OrderInformation";
 import BookingTimeLimitation from "./_components/BookingTimeLimitation";
 import SplitBookingButton from "./_components/SplitBookingButton";
 import CancelBookingButton from "./_components/CancelBookingButton";
-import NoteBookingButton from "./_components/NoteBookingButton";
+import CommentButton from "./_components/CommentButton";
 import { getAdminUserInformationStorage } from "@/utils/common";
 import { useGetOperationOrderStatusQuery } from "../modules/useGetOperationOrderStatusQuery";
 
@@ -43,10 +43,16 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
 
   const isAllowEdit = useMemo(() => {
     if (adminInfo?.localUserType === "AGENT" || adminInfo?.localUserType === "AGENT_STAFF") {
-      return operationStatus !== "HANDOVERED";
+      return operationStatus !== "HANDOVERED" && bookingOrder?.status === Status.OK;
     }
-    return true;
+    return bookingOrder?.status === Status.OK;
   }, [operationStatus]);
+
+  const allowDeleteOrder = useMemo(() => {
+    return adminInfo?.localUserType === "ADMIN" && bookingOrder?.status === Status.OK;
+  }, [adminInfo, bookingOrder]);
+
+  const isBookingCanceled = bookingOrder?.status === Status.XX;
 
   if (!orderInformation || !bookingOrder) return null;
 
@@ -58,19 +64,22 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         { title: "Danh sách đặt chỗ", href: "/portal/manage-booking" },
         { title: `Chi tiết đặt chỗ #${params.orderId}` },
       ]}
-      onBack={router.back}
+      onBack={() => router.push("/portal/manage-booking")}
       hideAddButton
     >
-      <Space>
-        <NoteBookingButton orderId={params.orderId} comments={orderInformation.comments} />
-        <SplitBookingButton orderId={params.orderId} />
-        {adminInfo?.localUserType === "ADMIN" ? <CancelBookingButton orderId={params.orderId} /> : null}
-      </Space>
+      {isBookingCanceled ? null : (
+        <Space>
+          <CommentButton orderId={params.orderId} comments={orderInformation.comments} />
+          <SplitBookingButton orderId={params.orderId} />
+          {allowDeleteOrder ? <CancelBookingButton orderId={params.orderId} /> : null}
+        </Space>
+      )}
       <Divider />
       <OrderInformation
         sysFstUpdate={formatDate(bookingOrder.sysFstUpdate)}
         orderId={bookingOrder.recId}
         paymentStatus={bookingOrder.paymentStatus}
+        orderStatus={bookingOrder.status}
         referenceId={bookingOrder.referenceId}
         agentId={bookingOrder.agentUserId}
         channel={bookingOrder.channel}
@@ -119,7 +128,11 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
       </div>
       <div className="h-12"></div>
       {bookingOrder?.paymentStatus === PaymentStatus.NOTPAID ? (
-        <BookingTimeLimitation orderId={params.orderId} items={orderInformation?.rulesAndPolicies?.bookingTimelimits} />
+        <BookingTimeLimitation
+          orderId={params.orderId}
+          items={orderInformation?.rulesAndPolicies?.bookingTimelimits}
+          isBookingCanceled={isBookingCanceled}
+        />
       ) : null}
 
       <DepositTimeline
@@ -127,13 +140,15 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         paymentStatus={bookingOrder?.paymentStatus}
         className="mb-6"
       />
-      <BookingOrderActions
-        orderId={bookingOrder?.recId}
-        sellableId={bookingOrder?.sellableId}
-        totalAmount={bookingOrder?.totalAmount}
-        totalPaid={bookingOrder?.totalPaid}
-        paymentStatus={bookingOrder?.paymentStatus}
-      />
+      {isBookingCanceled ? null : (
+        <BookingOrderActions
+          orderId={bookingOrder?.recId}
+          sellableId={bookingOrder?.sellableId}
+          totalAmount={bookingOrder?.totalAmount}
+          totalPaid={bookingOrder?.totalPaid}
+          paymentStatus={bookingOrder?.paymentStatus}
+        />
+      )}
       <Divider style={{ margin: "16px 0" }} />
       <OrderSummary
         orderId={bookingOrder?.recId}
@@ -158,6 +173,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         sellableId={bookingOrder.sellableId}
         passengers={orderInformation.passengers}
         tourBookings={orderInformation.tourBookings}
+        isBookingCanceled={isBookingCanceled}
       />
       <Divider />
       <ServiceListContainer
@@ -167,6 +183,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
         passengerList={orderInformation?.passengers || []}
         orderId={params.orderId}
         channel={bookingOrder.channel}
+        isBookingCanceled={isBookingCanceled}
       />
     </PageContainer>
   );

@@ -1,40 +1,17 @@
 import React, { memo, useMemo, useState } from "react";
 import { useExtendBookingTimeLimit } from "../../modules/useExtendBookingTimeLimit";
 import { IBookingTimeLitmit } from "@/models/management/core/bookingTimeLimit.interface";
-import { Button, Modal, Steps, StepProps, InputNumber, Form, Space, Popover } from "antd";
+import { Button, Steps, StepProps, InputNumber, Form, Space, Popover, PopoverProps, FormProps } from "antd";
 import { formatDate } from "@/utils/date";
-import FormItem from "@/components/base/FormItem";
-import {
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { ClockCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 interface BookingTimeLimitationProps {
   items?: IBookingTimeLitmit[];
   orderId?: number;
+  isBookingCanceled?: boolean;
 }
-const BookingTimeLimitation: React.FC<BookingTimeLimitationProps> = ({ items = [], orderId }) => {
-  const { onExtendBookingTimeLimit } = useExtendBookingTimeLimit();
-  const [showModal, setShowModal] = useState(false);
-  const [isLoading, setLoading] = useState(false);
-  const [hours, setHours] = useState(0);
 
-  const submitExtendBookingTimeLimit = async () => {
-    if (!orderId) {
-      throw new Error("OrderId in valid.");
-    }
-    setLoading(true);
-    onExtendBookingTimeLimit({ orderId: orderId, postponeHours: hours }, () => {
-      setLoading(false);
-    });
-  };
-
-  const changeHours = (value: number | null) => {
-    value !== null && setHours(value);
-  };
-
+const BookingTimeLimitation: React.FC<BookingTimeLimitationProps> = ({ items = [], orderId, isBookingCanceled }) => {
   const currentStep = useMemo(() => {
     let current = 0;
     if (!items) return current;
@@ -54,11 +31,7 @@ const BookingTimeLimitation: React.FC<BookingTimeLimitationProps> = ({ items = [
     <div className="mb-6">
       <Space className="mb-3">
         <h4 className="font-[500] text-[16px]">Thời gian thực hiện thanh toán</h4>
-        <Popover title="Gia hạn thanh toán" trigger="click" content={<>ádf ádfa </>}>
-          <Button size="small" type="primary" ghost onClick={() => setShowModal(true)}>
-            Gia hạn
-          </Button>
-        </Popover>
+        {isBookingCanceled ? null : <ExtendBookingTimeLimitButton orderId={orderId} />}
       </Space>
       <Steps
         status="finish"
@@ -77,23 +50,75 @@ const BookingTimeLimitation: React.FC<BookingTimeLimitationProps> = ({ items = [
           };
         })}
       />
-      <Modal
-        title="Thêm thời gian gia hạn thanh toán"
-        centered
-        open={showModal}
-        onOk={submitExtendBookingTimeLimit}
-        onCancel={() => setShowModal(false)}
-        okText="Lưu"
-        cancelText="Huỷ"
-        confirmLoading={isLoading}
-      >
-        <Form layout="vertical">
-          <FormItem label="Thời gian thêm (Giờ)">
-            <InputNumber value={hours} min={0} max={99} onChange={changeHours} style={{ width: "100%" }} />
-          </FormItem>
-        </Form>
-      </Modal>
     </div>
   );
 };
 export default memo(BookingTimeLimitation);
+
+type ExtendBookingTimeFormFields = {
+  hours: number;
+};
+const ExtendBookingTimeLimitButton = ({ orderId }: { orderId?: number }) => {
+  const [form] = Form.useForm<ExtendBookingTimeFormFields>();
+  const { mutate: extendBookingTime, isPending } = useExtendBookingTimeLimit();
+  const [open, setOpen] = useState(false);
+
+  const handleSubmit: FormProps["onFinish"] = (data) => {
+    if (!orderId) return;
+
+    extendBookingTime(
+      { orderId: orderId, postponeHours: data.hours },
+      {
+        onSuccess(data, variables, context) {
+          form.resetFields();
+          setOpen(false);
+        },
+      },
+    );
+  };
+
+  const onOpenChange: PopoverProps["onOpenChange"] = (newOpen) => {
+    setOpen(newOpen);
+  };
+
+  const closePopOver = () => {
+    setOpen(false);
+    form.resetFields();
+  };
+  const hours = Form.useWatch("hours", form);
+  const isDisabledButton = hours === 0 || !hours;
+
+  return (
+    <Popover
+      open={open}
+      title="Gia hạn thanh toán"
+      trigger="click"
+      onOpenChange={onOpenChange}
+      content={
+        <>
+          <Form<ExtendBookingTimeFormFields>
+            form={form}
+            initialValues={{ hours: 0 }}
+            layout="vertical"
+            onFinish={handleSubmit}
+            disabled={isPending}
+          >
+            <Form.Item<ExtendBookingTimeFormFields> name="hours" label="Thời gian thêm (Giờ)">
+              <InputNumber min={0} max={99} style={{ width: "100%" }} />
+            </Form.Item>
+            <Space>
+              <Button type="primary" loading={isPending} htmlType="submit" disabled={isDisabledButton}>
+                Lưu
+              </Button>
+              <Button onClick={closePopOver}>Huỷ</Button>
+            </Space>
+          </Form>
+        </>
+      }
+    >
+      <Button size="small" type="dashed" icon={<PlusOutlined />}>
+        Thêm hạn thanh toán
+      </Button>
+    </Popover>
+  );
+};

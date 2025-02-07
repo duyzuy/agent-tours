@@ -1,13 +1,9 @@
-import React, { memo, useState, useCallback } from "react";
+import React, { memo } from "react";
 import classNames from "classnames";
-import { PaymentStatus } from "@/models/common.interface";
-import { Button, Tag, Form, Input, Space } from "antd";
+import { PaymentStatus, Status } from "@/models/common.interface";
+import { Tag } from "antd";
 import { isEmpty } from "lodash";
-import ModalCancelBookingConfirmation from "./BookingOrderActions/ModalCanelBookingConfirmation";
-import FormItem from "@/components/base/FormItem";
-import { useRouter } from "next/navigation";
-import { IBookingOrderCancelPayload } from "../../modules/bookingOrder.interface";
-import useCancelBookingOrder from "../../modules/useCancelBookingOrder";
+import { IOrderDetail } from "@/models/management/booking/order.interface";
 interface OrderInformationProps {
   name?: string;
   code?: string;
@@ -19,6 +15,7 @@ interface OrderInformationProps {
   channel?: string;
   agentId?: number;
   sellableCode?: string;
+  orderStatus: IOrderDetail["bookingOrder"]["status"];
 }
 const OrderInformation: React.FC<OrderInformationProps> = ({
   className = "",
@@ -31,6 +28,7 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
   channel,
   agentId,
   sellableCode,
+  orderStatus,
 }) => {
   return (
     <>
@@ -67,7 +65,7 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
         </div>
         <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
         <div className="">
-          <span className="block">Trạng thái</span>
+          <span className="block">Trạng thái thanh toán</span>
           <span className="block text-[15px] font-[500] ">
             <Tag
               color={
@@ -83,6 +81,31 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
                 : paymentStatus === PaymentStatus.DEPOSITED
                 ? "Thanh toán 1 phần"
                 : " Chưa thanh toán"}
+            </Tag>
+          </span>
+        </div>
+        <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
+        <div className="">
+          <span className="block">Trạng thái đặt chỗ</span>
+          <span className="block text-[15px] font-[500] ">
+            <Tag
+              color={
+                orderStatus === Status.XX
+                  ? "red"
+                  : orderStatus === Status.OK
+                  ? "green"
+                  : orderStatus === Status.QQ
+                  ? "orange"
+                  : "default"
+              }
+            >
+              {orderStatus === Status.XX
+                ? "Đã Huỷ"
+                : orderStatus === Status.OK
+                ? "Xác nhận"
+                : orderStatus === Status.QQ
+                ? "Chờ duyệt"
+                : "Không xác định"}
             </Tag>
           </span>
         </div>

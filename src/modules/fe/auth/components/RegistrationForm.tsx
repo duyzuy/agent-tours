@@ -24,8 +24,8 @@ type TFieldInputs = {
   type: EFieldType;
 };
 
-interface RegistrationFormProps {
-  onSubmit?: (data: CustomerRegisterFormData) => void;
+export interface RegistrationFormProps {
+  onSubmit?: (data: CustomerRegisterFormData, resetForm?: () => void) => void;
   loading?: boolean;
   children?: React.ReactNode;
 }
@@ -36,6 +36,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
     control,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm({ resolver: yupResolver(customerRegisterSchema) });
 
   const FIELDS_INPUT: TFieldInputs[] = [
@@ -76,7 +77,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
   ];
 
   return (
-    <Form layout="vertical">
+    <Form layout="vertical" disabled={loading}>
       {FIELDS_INPUT.map(({ name, label, placeholder, suffix, help, validateStatus, type }) => (
         <Controller
           key={name}
@@ -112,7 +113,13 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
         />
       ))}
       <FormItem>
-        <Button type="primary" block size="large" onClick={handleSubmit((data) => onSubmit?.(data))}>
+        <Button
+          type="primary"
+          block
+          size="large"
+          onClick={handleSubmit((data) => onSubmit?.(data, reset))}
+          loading={loading}
+        >
           {t("button.register")}
         </Button>
       </FormItem>

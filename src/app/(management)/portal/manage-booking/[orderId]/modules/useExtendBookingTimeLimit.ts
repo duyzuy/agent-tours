@@ -1,46 +1,26 @@
-import { useExtendBookingTimeLimitMutation } from "@/mutations/managements/booking";
-import { FOPFormData } from "./formOfPayment.interface";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";
-export const useExtendBookingTimeLimit = () => {
-  const { mutate: doExtendBookingTimeLimit } = useExtendBookingTimeLimitMutation();
+import { useTMutation } from "@/lib/reactQueryHooks";
+import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 
+export const useExtendBookingTimeLimit = () => {
   const message = useMessage();
   const queryClient = useQueryClient();
 
-  const onExtendBookingTimeLimit = (
-    {
-      orderId,
-      postponeHours,
-    }: {
-      orderId: number;
-      postponeHours: number;
+  return useTMutation({
+    mutationFn: manageBookingAPIs.extendBookingTimeLimit,
+    onSuccess(data, variables, context) {
+      message.success("Gia hạn thanh toán thành công.");
+      queryClient.invalidateQueries({
+        queryKey: [queryCore.GET_BOOKING_ORDER_DETAIL],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [queryCore.GET_FORM_OF_PAYMENT_LIST],
+      });
     },
-    cb?: () => void,
-  ) => {
-    doExtendBookingTimeLimit(
-      { orderId, postponeHours },
-      {
-        onSuccess(data, variables, context) {
-          message.success("Gia hạn thanh toán thành công.");
-          queryClient.invalidateQueries({
-            queryKey: [queryCore.GET_BOOKING_ORDER_DETAIL],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [queryCore.GET_FORM_OF_PAYMENT_LIST],
-          });
-          cb?.();
-        },
-        onError(error, variables, context) {
-          message.error(error.message);
-          cb?.();
-        },
-      },
-    );
-  };
-
-  return {
-    onExtendBookingTimeLimit,
-  };
+    onError(error, variables, context) {
+      message.error(error.message);
+    },
+  });
 };

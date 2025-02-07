@@ -1,12 +1,11 @@
+import { memo } from "react";
+import { Button, Divider, Drawer, Form, FormProps, Input, Space, Timeline } from "antd";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { formatDate } from "@/utils/date";
-import { Button, Divider, Drawer, Form, FormProps, Input, Timeline } from "antd";
 import { useAddComment } from "../../modules/useAddComment";
-
 import { isEmpty } from "lodash";
-import { memo } from "react";
 
-export interface DrawerCommentContainerProps {
+export interface CommentContainerDrawerProps {
   items: IOrderDetail["comments"];
   isOpen?: boolean;
   onClose?: () => void;
@@ -14,7 +13,7 @@ export interface DrawerCommentContainerProps {
 }
 
 type FieldType = { comment: string };
-const DrawerCommentContainer: React.FC<DrawerCommentContainerProps> = ({ items, isOpen, onClose, orderId }) => {
+const CommentContainerDrawer: React.FC<CommentContainerDrawerProps> = ({ items, isOpen, onClose, orderId }) => {
   const { onAddComment, isPending } = useAddComment();
   const [form] = Form.useForm<FieldType>();
 
@@ -43,11 +42,13 @@ const DrawerCommentContainer: React.FC<DrawerCommentContainerProps> = ({ items, 
       closeIcon={null}
       destroyOnClose={true}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <Space className="py-3">
+          <Button type="primary" htmlType="submit" className="w-[80px]" loading={isPending} disabled={isDisabledButton}>
+            Lưu
+          </Button>
+        </Space>
+      }
     >
       <Form<FieldType> layout="vertical" onFinish={onSubmitForm} form={form}>
         <Form.Item<FieldType>
@@ -63,9 +64,6 @@ const DrawerCommentContainer: React.FC<DrawerCommentContainerProps> = ({ items, 
             onChange={(evt) => onComment(evt.target.value)}
           />
         </Form.Item>
-        <Button type="primary" htmlType="submit" className="w-[80px]" loading={isPending} disabled={isDisabledButton}>
-          Lưu
-        </Button>
       </Form>
       <Divider />
       <Timeline
@@ -85,4 +83,4 @@ const DrawerCommentContainer: React.FC<DrawerCommentContainerProps> = ({ items, 
     </Drawer>
   );
 };
-export default memo(DrawerCommentContainer);
+export default memo(CommentContainerDrawer);

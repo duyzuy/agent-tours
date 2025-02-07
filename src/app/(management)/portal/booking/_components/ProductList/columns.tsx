@@ -45,7 +45,7 @@ export const columns: ColumnsType<IProductTour> = [
         <>
           {!configs.length ? (
             <span className="opacity-60">
-              <DollarCircleOutlined /> Chưa có giá bán
+              <DollarCircleOutlined /> Không có giá bán
             </span>
           ) : lowestPriceItem ? (
             <span className="text-red-600 text-lg">{moneyFormatVND(lowestPriceItem.adult)}</span>
@@ -70,7 +70,7 @@ export const columns: ColumnsType<IProductTour> = [
           {!configs.length ? (
             <Space className="opacity-60">
               <DollarCircleOutlined />
-              Chưa có giá bán
+              Không có giá bán
             </Space>
           ) : lowestPriceItem ? (
             <span className="text-red-600 text-lg">{moneyFormatVND(lowestPriceItem.adult)}</span>

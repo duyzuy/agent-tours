@@ -20,6 +20,7 @@ export interface InvoiceBoxProps {
   invoiceTaxCode: BoxInvoiceInfoProps["invoiceTaxCode"];
   invoiceEmail: BoxInvoiceInfoProps["invoiceEmail"];
   className?: string;
+  allowEdit?: boolean;
 }
 
 const InvoiceBox: React.FC<InvoiceBoxProps> = ({
@@ -30,6 +31,7 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({
   invoiceAddress,
   invoiceTaxCode,
   invoiceEmail,
+  allowEdit,
   className = "",
 }) => {
   const initFormData = new InvoinceFormData(
@@ -41,7 +43,7 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({
     invoiceEmail,
   );
   const { mutate: updateContact, isPending } = useUpdateInvoice();
-  const [edit, setEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const router = useRouter();
   const { handleSubmit, control, reset, getValues, watch } = useForm<InvoinceFormData>({
     defaultValues: { ...initFormData },
@@ -49,7 +51,7 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({
   });
 
   const handleCancelEdit = () => {
-    setEdit(false);
+    setIsEdit(false);
     reset();
   };
 
@@ -58,7 +60,7 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({
       { bookingOrder: { ...data, recId: bookingOrderId } },
       {
         onSuccess(data, variables, context) {
-          setEdit(false);
+          setIsEdit(false);
           reset();
           router.refresh();
         },
@@ -93,15 +95,17 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({
     >
       <div className="flex gap-x-2">
         <h3 className="font-[500] text-[16px] mb-3">{title}</h3>
-        <Button
-          type="text"
-          shape="circle"
-          size="small"
-          icon={<EditOutlined />}
-          onClick={() => setEdit((prev) => !prev)}
-        />
+        {allowEdit ? (
+          <Button
+            type="text"
+            shape="circle"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => setIsEdit((prev) => !prev)}
+          />
+        ) : null}
       </div>
-      {edit ? (
+      {isEdit && allowEdit ? (
         <Form layout="vertical" disabled={isPending}>
           <div className="grid grid-cols-2 gap-x-3 lg:gap-x-6">
             <Controller

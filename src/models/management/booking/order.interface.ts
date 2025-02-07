@@ -147,6 +147,7 @@ export type IOrderItem = Pick<
   | "referenceName"
   | "sellable"
   | "template"
+  | "status"
 > & {};
 
 export class BookingOrderListQueryParams

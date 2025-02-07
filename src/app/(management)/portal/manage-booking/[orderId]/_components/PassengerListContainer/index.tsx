@@ -29,6 +29,7 @@ interface PassengerListContainerPropsProps {
   sellableId: number;
   passengers?: IOrderDetail["passengers"];
   tourBookings: IOrderDetail["tourBookings"];
+  isBookingCanceled?: boolean;
 }
 
 const PassengerListContainer: React.FC<PassengerListContainerPropsProps> = ({
@@ -36,6 +37,7 @@ const PassengerListContainer: React.FC<PassengerListContainerPropsProps> = ({
   tourBookings,
   orderId,
   sellableId,
+  isBookingCanceled,
 }) => {
   const [editRecord, setEditRecord] = useState<IOrderDetail["passengers"][number]>();
   const [showDrawer, setShowDrawer] = useState(false);
@@ -97,14 +99,16 @@ const PassengerListContainer: React.FC<PassengerListContainerPropsProps> = ({
     <>
       <div className="booking__detail-head flex gap-x-2 mb-3">
         <span className="text-lg font-[500]">Thông tin hành khách</span>
-        <Button
-          type="text"
-          className="!text-pink-600 !bg-pink-50 hover:!bg-pink-100"
-          loading={isStartRooming}
-          onClick={onGotoRooming}
-        >
-          Xếp phòng
-        </Button>
+        {isBookingCanceled ? null : (
+          <Button
+            type="text"
+            className="!text-pink-600 !bg-pink-50 hover:!bg-pink-100"
+            loading={isStartRooming}
+            onClick={onGotoRooming}
+          >
+            Xếp phòng
+          </Button>
+        )}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {passengerMapingTourList?.map((paxInfo, _index) => (

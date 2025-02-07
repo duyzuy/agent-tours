@@ -3,7 +3,7 @@ import { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
 import { Space, Tag } from "antd";
 import { IOrderListRs } from "@/models/management/booking/order.interface";
-import { PaymentStatus } from "@/models/common.interface";
+import { PaymentStatus, Status } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
 import Link from "next/link";
 import { ArrowRightOutlined, RightOutlined } from "@ant-design/icons";
@@ -103,6 +103,28 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
             : paymentStatus === PaymentStatus.DEPOSITED
             ? "Thanh toán 1 phần"
             : " Chưa thanh toán"}
+        </Tag>
+      );
+    },
+  },
+  {
+    title: "Trạng thái đặt chỗ",
+    width: 200,
+    render(value, { status }, index) {
+      return (
+        <Tag
+          bordered={false}
+          color={
+            status === Status.XX ? "red" : status === Status.OK ? "green" : status === Status.QQ ? "orange" : "default"
+          }
+        >
+          {status === Status.XX
+            ? "Đã Huỷ"
+            : status === Status.OK
+            ? "Xác nhận"
+            : status === Status.QQ
+            ? "Chờ duyệt"
+            : "Không xác định"}
         </Tag>
       );
     },
