@@ -1,11 +1,10 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { Divider, Tag } from "antd";
 import classNames from "classnames";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { PaymentStatus } from "@/models/common.interface";
-import { IFormOfPayment } from "@/models/management/core/formOfPayment.interface";
 
 interface OrderDetailProps {
   orderId?: number;
@@ -27,12 +26,14 @@ interface OrderDetailProps {
   >;
   rulesAndPolicies?: IOrderDetail["rulesAndPolicies"];
   className?: string;
-  coupons?: IFormOfPayment[];
+  coupons?: IOrderDetail["fops"];
 }
 const OrderSummary = ({ orderId, data, code, rulesAndPolicies, name, className = "", coupons }: OrderDetailProps) => {
-  const totalAmount = data?.totalAmount || 0;
-  const totalPaid = data.totalPaid || 0;
-  const totalRefunded = data.totalRefunded || 0;
+  const { tourPrice, extraPrice, charge, totalPaid = 0, totalRefunded = 0, totalAmount = 0, sysFstUpdate } = data;
+
+  const totalRemainTopay = useMemo(() => {
+    return totalAmount + totalRefunded - totalPaid;
+  }, [totalAmount, totalPaid, totalRefunded]);
   return (
     <>
       <div
@@ -40,23 +41,16 @@ const OrderSummary = ({ orderId, data, code, rulesAndPolicies, name, className =
           [className]: className,
         })}
       >
-        {/* <OrderSummary.Title name={name} code={code} className="mb-6" /> */}
+        <OrderSummary.Title name="Thông tin thanh toán" code={code} className="mb-6" />
 
         <OrderSummary.Pricings
-          tourPrice={moneyFormatVND(data?.tourPrice)}
-          extraPrice={moneyFormatVND(data?.extraPrice)}
-          charge={moneyFormatVND(data?.charge)}
+          tourPrice={moneyFormatVND(tourPrice)}
+          extraPrice={moneyFormatVND(extraPrice)}
+          charge={moneyFormatVND(charge)}
           totalAmount={moneyFormatVND(totalAmount)}
-          totalRemainTopay={moneyFormatVND(totalAmount + totalRefunded - totalPaid)}
-          totalPaid={moneyFormatVND(data?.totalPaid)}
-          totalRefunded={moneyFormatVND(data?.totalRefunded)}
-          sysFstUpdate={data?.sysFstUpdate && formatDate(data?.sysFstUpdate)}
-          paymentStatus={
-            (data?.paymentStatus === PaymentStatus.PAID && <Tag color="green">Đã thanh toán</Tag>) ||
-            (data?.paymentStatus === PaymentStatus.DEPOSITED && <Tag color="blue">Thanh toán 1 phần</Tag>) || (
-              <Tag color="red">Chưa thanh toán</Tag>
-            )
-          }
+          totalRemainTopay={moneyFormatVND(totalRemainTopay)}
+          totalPaid={moneyFormatVND(totalPaid)}
+          totalRefunded={moneyFormatVND(totalRefunded)}
           coupons={coupons}
         />
       </div>
@@ -70,21 +64,17 @@ interface OrderSummaryPricings {
   charge?: string;
   extraPrice?: string;
   totalAmount?: string;
-  sysFstUpdate?: string;
-  paymentStatus?: React.ReactNode;
   totalFop?: string;
   totalRemainTopay?: string;
   totalRefunded?: string;
   totalPaid?: string;
-  coupons?: IFormOfPayment[];
+  coupons?: OrderDetailProps["coupons"];
 }
 OrderSummary.Pricings = function OrderSummaryPricings({
   tourPrice,
   extraPrice,
-  sysFstUpdate,
   totalAmount,
   charge,
-  paymentStatus,
   totalRemainTopay,
   totalFop,
   totalRefunded,
@@ -166,11 +156,7 @@ OrderSummary.Title = function OrderSummaryTitle({ name, code, className = "" }: 
         [className]: className,
       })}
     >
-      <span className="flex items-center">
-        <span className="text-[16px] font-[500]">{name}</span>
-        <span className="mx-3">-</span>
-        <span className=" inline-block">{code}</span>
-      </span>
+      <span className="text-lg font-[500]">{name}</span>
     </div>
   );
 };

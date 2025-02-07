@@ -143,7 +143,6 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
       {isBookingCanceled ? null : (
         <BookingOrderActions
           orderId={bookingOrder?.recId}
-          sellableId={bookingOrder?.sellableId}
           totalAmount={bookingOrder?.totalAmount}
           totalPaid={bookingOrder?.totalPaid}
           paymentStatus={bookingOrder?.paymentStatus}

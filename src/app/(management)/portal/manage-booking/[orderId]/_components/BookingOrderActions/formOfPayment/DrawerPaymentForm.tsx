@@ -1,12 +1,9 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Drawer } from "antd";
-
 import { useFormOfPayment } from "../../../modules/useFormOfPayment";
-
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
-
 import { FOPFormData } from "../../../modules/formOfPayment.interface";
-import FOPForm from "../FOPForm";
+import FOPForm, { FOPFormProps } from "../FOPForm";
 
 export interface DrawerPaymentFormProps {
   orderId?: number;
@@ -17,6 +14,12 @@ export interface DrawerPaymentFormProps {
 
 const DrawerPaymentForm: React.FC<DrawerPaymentFormProps> = ({ isOpen, onClose, orderId, formOfPaymentType }) => {
   const { onCreateFormOfPayment } = useFormOfPayment();
+
+  const handleCreateFOP: FOPFormProps["onSubmit"] = (data) => {
+    onCreateFormOfPayment(data, () => {
+      onClose?.();
+    });
+  };
   return (
     <Drawer
       title={
@@ -30,13 +33,8 @@ const DrawerPaymentForm: React.FC<DrawerPaymentFormProps> = ({ isOpen, onClose, 
       onClose={onClose}
       destroyOnClose={true}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
     >
-      <FOPForm orderId={orderId} formOfPaymentType={formOfPaymentType} onSubmitForm={onCreateFormOfPayment} />
+      <FOPForm orderId={orderId} formOfPaymentType={formOfPaymentType} onSubmit={handleCreateFOP} />
     </Drawer>
   );
 };

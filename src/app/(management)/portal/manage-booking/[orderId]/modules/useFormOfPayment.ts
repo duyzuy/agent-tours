@@ -7,6 +7,7 @@ import { FOPFormData } from "./formOfPayment.interface";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";
+
 export const useFormOfPayment = () => {
   const { mutate: createFormOfPayment } = useCreateFormOfPaymentMutation();
   const { mutate: approvalFormOfpayment } = useApprovalFormOfPaymentMutation();

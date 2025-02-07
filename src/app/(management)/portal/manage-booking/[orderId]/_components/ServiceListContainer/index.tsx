@@ -1,11 +1,10 @@
-import React, { useMemo, useState, useTransition } from "react";
+import React, { useMemo, useState } from "react";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
-import { Button, Table, Tabs, Popconfirm, Popover } from "antd";
+import { Button, Table, Tabs, Popconfirm, Popover, PopoverProps } from "antd";
 import { getPassengerType } from "@/utils/common";
 import classNames from "classnames";
-import { CheckCircleOutlined, DeleteOutlined, WarningOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, DeleteOutlined, PlusOutlined, WarningOutlined } from "@ant-design/icons";
 import { isEmpty } from "lodash";
-import { useRouter } from "next/navigation";
 import { ColumnsType } from "antd/es/table";
 import { serviceColumns } from "./columns";
 import useEditSSR from "../../modules/useEditSSR";
@@ -40,7 +39,6 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
   const [drawerType, setDrawerType] = useState<"SSRWithPax" | "SSRNoPax">();
   const [openPopConfirm, setOpenPopconfirm] = useState(false);
 
-  const router = useRouter();
   const { onAddSSRByPax, onAddSSRNoPax, onDeleteSSR, loadingDelete } = useEditSSR();
 
   const onClickBuyService = (type: "SSRWithPax" | "SSRNoPax") => {
@@ -75,6 +73,9 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
     });
   };
 
+  const onPopOverChange: PopoverProps["onOpenChange"] = (newOpen) => {
+    setOpenPopconfirm(newOpen);
+  };
   const serviceListWithoutPax = useMemo(() => {
     return serviceList?.filter((item) => item.paxId === 0);
   }, [serviceList]);
@@ -173,9 +174,42 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
     >
       <div className="booking__detail-head mb-6 flex items-center gap-x-4">
         <h3 className="text-lg font-[500] mr-2">Thông tin dịch vụ</h3>
+        {isBookingCanceled ? null : (
+          <Popover
+            trigger="click"
+            open={openPopConfirm}
+            placement="bottom"
+            onOpenChange={onPopOverChange}
+            content={
+              <>
+                <h3 className="mb-3 font-semibold">Mua dịch vụ</h3>
+                <div className="flex flex-col gap-3">
+                  <Button
+                    className="!text-cyan-600 !bg-cyan-50 hover:!bg-cyan-100 !block w-[180px]"
+                    type="text"
+                    onClick={() => onClickBuyService("SSRWithPax")}
+                  >
+                    Theo hành khách
+                  </Button>
+                  <Button
+                    className="!text-emerald-600 !bg-emerald-50 hover:!bg-emerald-100 !block w-[180px]"
+                    type="text"
+                    onClick={() => onClickBuyService("SSRNoPax")}
+                  >
+                    Không theo hành khách
+                  </Button>
+                </div>
+              </>
+            }
+          >
+            <Button type="text" className="!bg-blue-50 !text-blue-600 hover:!bg-blue-100" icon={<PlusOutlined />}>
+              Mua thêm
+            </Button>
+          </Popover>
+        )}
       </div>
 
-      <h3 className="text-[16px] mb-3">Dịch vụ đi kèm</h3>
+      <h3 className="text-[16px] mb-3">Dịch vụ kèm trong tour</h3>
       <div className="flex gap-6 flex-wrap mb-6">
         {includedItems?.inventories.map((item) => (
           <div className="item" key={item.recId}>
@@ -188,50 +222,11 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-x-3 mb-6">
-        <h3 className="text-[16px]">Dịch vụ mua thêm</h3>
-        {isBookingCanceled ? null : (
-          <Popover
-            open={openPopConfirm}
-            placement="bottom"
-            content={
-              <>
-                <h3 className="mb-3 font-semibold">Mua dịch vụ</h3>
-                <div className="flex flex-col gap-3">
-                  <Button
-                    className="!text-rose-600 !bg-rose-100 hover:!bg-rose-200 !block w-[180px]"
-                    type="text"
-                    onClick={() => onClickBuyService("SSRWithPax")}
-                  >
-                    Theo hành khách
-                  </Button>
-                  <Button
-                    className="!text-orange-600 !bg-orange-100 hover:!bg-orange-200 !block w-[180px]"
-                    type="text"
-                    onClick={() => onClickBuyService("SSRNoPax")}
-                  >
-                    Không theo hành khách
-                  </Button>
-                </div>
-              </>
-            }
-          >
-            <Button
-              // icon={<PlusOutlined />}
-              type="text"
-              className="!bg-cyan-100 !text-cyan-600 hover:!bg-cyan-200"
-              onClick={() => setOpenPopconfirm((prev) => !prev)}
-            >
-              Mua dịch vụ
-            </Button>
-          </Popover>
-        )}
-      </div>
       <Tabs
         type="card"
         items={[
           {
-            label: "Dịch vụ theo khách",
+            label: "Dịch vụ mua thêm theo khách",
             key: "serviceByPax",
             children: (
               <Table
@@ -243,7 +238,7 @@ const ServiceListContainer: React.FC<ServiceListContainerProps> = ({
             ),
           },
           {
-            label: "Dịch vụ không theo khách",
+            label: "Dịch vụ mua thêm không theo khách",
             key: "serviceNoPax",
             children: (
               <Table

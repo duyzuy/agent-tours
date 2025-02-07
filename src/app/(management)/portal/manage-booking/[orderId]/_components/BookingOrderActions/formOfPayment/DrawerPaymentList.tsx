@@ -3,7 +3,6 @@ import { Drawer } from "antd";
 import { useFormOfPayment } from "../../../modules/useFormOfPayment";
 import FOPList, { FOPListProps } from "../FOPList";
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
-
 import { useGetFormOfPaymentListCoreQuery } from "@/queries/core/formOfPayment";
 import { FormOfPaymmentQueryParams } from "@/models/management/core/formOfPayment.interface";
 import { isUndefined } from "lodash";
@@ -54,18 +53,7 @@ const DrawerPaymentList: React.FC<DrawerPaymentListProps> = ({
   };
 
   return (
-    <Drawer
-      title="Lịch sử giao dịch"
-      width={850}
-      onClose={onClose}
-      destroyOnClose={true}
-      open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
-    >
+    <Drawer title="Lịch sử giao dịch" width={850} onClose={onClose} destroyOnClose={true} open={isOpen}>
       <FOPList
         items={fopList || []}
         onApproval={handleApproval}

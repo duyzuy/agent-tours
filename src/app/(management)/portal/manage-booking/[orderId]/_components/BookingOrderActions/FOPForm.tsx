@@ -10,13 +10,13 @@ import { isEmpty, isUndefined } from "lodash";
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
 
 type TFormData = Required<FOPFormData>;
-interface FOPFormProps {
+export interface FOPFormProps {
   orderId?: number;
-  onSubmitForm?: (data: FOPFormData, cb?: () => void) => void;
+  onSubmit?: (data: FOPFormData) => void;
   formOfPaymentType: FOPFormData["type"];
+  loading?: boolean;
 }
-const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmitForm, formOfPaymentType }) => {
-  const [isLoading, setLoading] = useState(false);
+const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmit, formOfPaymentType, loading }) => {
   const initialValue = new FOPFormData(orderId, formOfPaymentType, undefined, "", 0, "", "", "", "", "", "", "", "");
   const [formData, setFormData] = useState(initialValue);
 
@@ -27,12 +27,8 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmitForm, formOfPaym
   const onChange = (key: keyof FOPFormData, value: FOPFormData[keyof TFormData]) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
-  const onSubmit: HandleSubmit<FOPFormData> = (data) => {
-    setLoading(true);
-    onSubmitForm?.(data, () => {
-      setFormData(initialValue);
-      setLoading(false);
-    });
+  const submitForm: HandleSubmit<FOPFormData> = (data) => {
+    onSubmit?.(data);
   };
   const isDisableButton = useMemo(() => {
     return (
@@ -45,7 +41,7 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmitForm, formOfPaym
   }, [formData.amount, formData.payer, formData.fopType]);
   return (
     <>
-      <Form layout="vertical">
+      <Form layout="vertical" disabled={loading}>
         <Row gutter={16}>
           <Col span={12}>
             <FormItem
@@ -166,7 +162,6 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmitForm, formOfPaym
               />
             </FormItem>
           </Col>
-
           <Col span={24}>
             <FormItem label="Ghi chú" validateStatus={errors?.rmk ? "error" : ""} help={errors?.rmk || ""}>
               <Input.TextArea
@@ -180,10 +175,10 @@ const FOPForm: React.FC<FOPFormProps> = ({ orderId = 0, onSubmitForm, formOfPaym
       </Form>
       <Space>
         <Button
-          onClick={() => handlerSubmit(formData, () => onSubmit(formData))}
+          onClick={() => handlerSubmit(formData, () => submitForm(formData))}
           type="primary"
           className="w-[120px]"
-          loading={isLoading}
+          loading={loading}
           disabled={isDisableButton}
         >
           Xác nhận

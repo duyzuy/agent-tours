@@ -68,9 +68,9 @@ const DepositTimeline: React.FC<DepositTimelineProps> = ({ depositTimelimits, pa
               subTitle: (
                 <div className="text-xs pt-2">
                   {item.isCompleted ? (
-                    <span className="text-emerald-600">Đã thanh toán</span>
+                    <span className="text-emerald-600">Đã hoàn thành</span>
                   ) : (
-                    <span>Chưa thanh toán</span>
+                    <span>Chưa hoàn thành</span>
                   )}
                 </div>
               ),

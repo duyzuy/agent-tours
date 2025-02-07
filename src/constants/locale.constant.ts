@@ -1,5 +1,3 @@
-import IconFlagEN from "@/assets/icons/IconFlagEN";
-import IconFlagVN from "@/assets/icons/IconFlagVN";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { Locale } from "@/models/management/cms/language.interface";
 import IconFlagENCircle from "@/assets/icons/IconFlagENCircle";

@@ -6,6 +6,7 @@ import { CLIENT_LINKS } from "./constants/client/clientRouter.constant";
 const intlMiddleware = createMiddleware({
   locales: ["vi", "en"],
   defaultLocale: "vi",
+  // localePrefix: "as-needed",
 });
 
 export default function middleware(request: NextRequest) {
@@ -33,7 +34,7 @@ export default function middleware(request: NextRequest) {
 
   const [_, locale, pathStr] = pathname.split("/");
 
-  const isAuthPage = pathStr === CLIENT_LINKS.CustomerLogin || pathStr === CLIENT_LINKS.CustomerRegister;
+  const isAuthRoute = pathStr === CLIENT_LINKS.CustomerLogin || pathStr === CLIENT_LINKS.CustomerRegister;
 
   // const isAuth = !!session;
   /**
@@ -45,16 +46,8 @@ export default function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (isAuthPage && isAuth) {
+  if (isAuthRoute && isAuth) {
     return NextResponse.redirect(new URL("/customer", request.url));
-  }
-
-  const pathnameHasLocale = locales.some(
-    (locale) => pathname.startsWith(`/${locale.key}/`) || pathname === `/${locale.key}`,
-  );
-
-  if (!pathnameHasLocale) {
-    return NextResponse.redirect(`${request.nextUrl.origin}/${localeDefault.key}`);
   }
 
   return intlMiddleware(request);

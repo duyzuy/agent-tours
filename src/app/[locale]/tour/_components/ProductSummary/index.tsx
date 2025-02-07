@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useTransition, useCallback, useState, memo } from "react";
-import { DatePickerProps, Input } from "antd";
+import { DatePickerProps } from "antd";
 import classNames from "classnames";
 import { FeProductItem } from "@/models/fe/productItem.interface";
 import { useTranslations } from "next-intl";
@@ -28,7 +28,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
   tourName,
   cmsTemplate,
 }) => {
-  console.log(productList);
+  console.log({ cmsTemplate, defaultProductItem });
   const t = useTranslations("String");
   const bookingInformation = useBookingSelector();
   const productItem = bookingInformation.bookingInfo.product;
@@ -44,7 +44,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     couponPolicy?.code === value ? removeCouponPolicy() : addCouponPolicy(coupon);
   };
 
-  const onChangeProduct = useCallback<Required<DatePickerProps>["onChange"]>((date) => {
+  const handleChangeDepartDate = useCallback<Required<DatePickerProps>["onChange"]>((date) => {
     const newProduct = productList?.find((prd) => stringToDate(prd.startDate)?.isSame(date, "date"));
     newProduct && setProductItem(newProduct);
   }, []);
@@ -72,7 +72,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     productItem: productItem,
     productList: productList,
     coupon: couponPolicy,
-    onChangeDepartDate: onChangeProduct,
+    onChangeDepartDate: handleChangeDepartDate,
     onChangePassenger: handleChangePassenger,
     onNext: handleGotoPassengerInformation,
     onChangeCoupon: handleChangeCoupon,

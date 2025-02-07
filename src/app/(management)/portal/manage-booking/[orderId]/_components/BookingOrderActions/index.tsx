@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
 import { Button, Space } from "antd";
-import { useRouter } from "next/navigation";
 import { PaymentStatus } from "@/models/common.interface";
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
 import { FOPFormData } from "../../modules/formOfPayment.interface";
@@ -10,20 +9,16 @@ import DrawerPaymentForm from "./formOfPayment/DrawerPaymentForm";
 
 interface BookingOrderActionsProps {
   orderId?: number;
-  sellableId?: number;
   totalAmount?: number;
   totalPaid?: number;
   paymentStatus?: PaymentStatus;
 }
 const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
   orderId,
-  sellableId,
   totalAmount,
   totalPaid,
   paymentStatus,
 }) => {
-  const router = useRouter();
-
   const [openFOPList, setOpenFOPList] = useState(false);
 
   const [drawerForm, showDrawerForm] = useState<{
@@ -41,47 +36,45 @@ const BookingOrderActions: React.FC<BookingOrderActionsProps> = ({
 
   return (
     <>
-      <div className="booking__order__Detail-actions">
-        <Space>
-          {paymentStatus !== PaymentStatus.PAID ? (
-            <Button
-              type="text"
-              className="!text-emerald-700 !bg-emerald-100 hover:!bg-emerald-200"
-              onClick={() => onShowDrawerForm(EFopType.PAYMENT)}
-            >
-              Thanh toán
-            </Button>
-          ) : null}
+      <Space>
+        {paymentStatus !== PaymentStatus.PAID ? (
           <Button
             type="text"
-            className="!text-rose-700 !bg-rose-100 hover:!bg-rose-200"
-            onClick={() => onShowDrawerForm(EFopType.REFUND)}
+            className="!text-emerald-700 !bg-emerald-100 hover:!bg-emerald-200"
+            onClick={() => onShowDrawerForm(EFopType.PAYMENT)}
           >
-            Hoàn tiền
+            Thanh toán
           </Button>
-          <Button
-            type="text"
-            className="!text-cyan-600 !bg-cyan-100 hover:!bg-cyan-200"
-            onClick={() => onShowDrawerForm(EFopType.DISCOUNT)}
-          >
-            Giảm giá
-          </Button>
-          <Button
-            type="text"
-            className="!text-pink-600 !bg-pink-100 hover:!bg-pink-200"
-            onClick={() => onShowDrawerForm(EFopType.CHARGE)}
-          >
-            Thêm phí
-          </Button>
-          <Button
-            type="text"
-            className="!text-orange-700 !bg-orange-100 hover:!bg-orange-200"
-            onClick={() => setOpenFOPList(true)}
-          >
-            Lịch sử giao dịch
-          </Button>
-        </Space>
-      </div>
+        ) : null}
+        <Button
+          type="text"
+          className="!text-rose-700 !bg-rose-100 hover:!bg-rose-200"
+          onClick={() => onShowDrawerForm(EFopType.REFUND)}
+        >
+          Hoàn tiền
+        </Button>
+        <Button
+          type="text"
+          className="!text-cyan-600 !bg-cyan-100 hover:!bg-cyan-200"
+          onClick={() => onShowDrawerForm(EFopType.DISCOUNT)}
+        >
+          Giảm giá
+        </Button>
+        <Button
+          type="text"
+          className="!text-pink-600 !bg-pink-100 hover:!bg-pink-200"
+          onClick={() => onShowDrawerForm(EFopType.CHARGE)}
+        >
+          Thêm phí
+        </Button>
+        <Button
+          type="text"
+          className="!text-orange-700 !bg-orange-100 hover:!bg-orange-200"
+          onClick={() => setOpenFOPList(true)}
+        >
+          Lịch sử giao dịch
+        </Button>
+      </Space>
       <DrawerPaymentList
         orderId={orderId}
         totalAmount={totalAmount}
