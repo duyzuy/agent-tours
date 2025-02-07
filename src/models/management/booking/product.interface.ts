@@ -44,7 +44,7 @@ export type IProductTour = Pick<
     })[];
   };
   configs: PriceConfig[];
-  promotions: IPromotion[];
+  promotions: IPromotion[] | null;
 };
 
 export interface ProductTouListResponse extends BaseResponse<IProductTour[]> {}

@@ -64,7 +64,7 @@ const ServicePage = () => {
         </div>
         <div className="h-4"></div>
         <h4 className="font-semibold mb-3">Các giảm giá có thể áp dụng</h4>
-        {product?.promotions.map((promo) => (
+        {product?.promotions?.map((promo) => (
           <div className="promo-item flex mb-1 items-start" key={promo.code}>
             <CheckCircleOutlined className="!text-emerald-600 mr-1 mt-[3px]" />
             <span>{moneyFormatVND(promo.discountAmount)}</span>
