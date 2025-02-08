@@ -59,3 +59,7 @@
 ## handle logic booking channel cho tài khoản agent. chỉ cho nhìn vé b2b. => oke
 
 ## Email...
+
+## Meeting presentation 08/02/2025
+
+lỗi nhập leading => lỗi APIs
