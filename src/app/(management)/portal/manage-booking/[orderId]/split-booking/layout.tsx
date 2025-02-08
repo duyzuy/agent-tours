@@ -1,6 +1,6 @@
 "use client";
 
-import SplitBookingProvider from "./SplitBookingProvider";
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { SplitBookingProvider } from "./context";
+export default function SplitBookingLayout({ children }: { children: React.ReactNode }) {
   return <SplitBookingProvider>{children}</SplitBookingProvider>;
 }

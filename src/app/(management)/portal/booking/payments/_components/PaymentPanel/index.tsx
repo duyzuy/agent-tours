@@ -60,20 +60,6 @@ const PaymentPanel = () => {
     return isUndefined(customerFormData) || isUndefined(customerFormData.custEmail);
   }, [bookingInfo]);
 
-  // useEffect(() => {
-  //   if (bookingInfo?.customerInformation) {
-  //     const customerInfo = bookingInfo?.customerInformation;
-
-  //     setCustomerFormData((prev) => ({
-  //       ...prev,
-  //       custAddress: customerInfo.custAddress,
-  //       custEmail: customerInfo.custEmail,
-  //       custName: customerInfo.custName,
-  //       custPhoneNumber: customerInfo.custPhoneNumber,
-  //     }));
-  //   }
-  // }, [bookingInfo]);
-
   console.log(userProfile);
   useEffect(() => {
     setCustomerFormData((prev) => ({
@@ -85,7 +71,9 @@ const PaymentPanel = () => {
   }, [userProfile]);
 
   useEffect(() => {
-    setAgentId(userProfile?.recId);
+    if (userProfile?.userType === "AGENT" || userProfile?.userType === "AGENT_STAFF") {
+      setAgentId(userProfile?.recId);
+    }
   }, [userProfile]);
   return (
     <>

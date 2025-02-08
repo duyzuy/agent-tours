@@ -2,15 +2,15 @@ import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
 
-export type TourBookingItemType = IOrderDetail["tourBookings"][number] & { pax: IOrderDetail["passengers"][number] };
-export interface ISplitBookingBase {
+export type TourBookingDetailItem = IOrderDetail["tourBookings"][number] & { pax: IOrderDetail["passengers"][number] };
+export interface ISplitBookingPayload {
   bookingDetails: {
     booking?: {
       recId?: number;
     };
   }[];
-  custName?: string; //name + phone bắt buộc
-  custPhoneNumber?: string; //name + phone bắt buộc
+  custName?: string;
+  custPhoneNumber?: string;
   custEmail?: string;
   custAddress?: string;
   invoiceName?: string;
@@ -18,24 +18,29 @@ export interface ISplitBookingBase {
   invoiceAddress?: string;
   invoiceTaxCode?: string;
   invoiceEmail?: string;
-  rmk?: string; //ghi chu.
-}
-export interface SplitBookingOrder {
-  recId?: number;
-  rmk3?: string;
-  fop: {
-    type: EFopType.CHARGE_SPLIT | EFopType.SPLIT; //important
-    amount: number;
-    rmk: string;
-  }[];
-}
-export interface ISplitBookingPayload extends ISplitBookingBase {
-  bookingOrder: SplitBookingOrder;
+  rmk?: string;
+  bookingOrder: {
+    recId?: number;
+    rmk3?: string;
+    fops: {
+      type: EFopType.CHARGE_SPLIT | EFopType.SPLIT;
+      amount: number;
+      rmk: string;
+    }[];
+  };
 }
 
 export class SplitBookingFormData {
-  bookingOrder: SplitBookingOrder;
-  bookingDetails: TourBookingItemType[];
+  bookingOrder: {
+    recId?: number;
+    rmk3?: string;
+    fops: {
+      type: EFopType.CHARGE_SPLIT | EFopType.SPLIT;
+      amount: number;
+      rmk: string;
+    }[];
+  };
+  bookingDetails: TourBookingDetailItem[];
   customerInfo: {
     custName?: string;
     custPhoneNumber?: string;
@@ -45,7 +50,15 @@ export class SplitBookingFormData {
   };
   invoiceInfo: Partial<IInvoice>;
   constructor(
-    bookingOrder: SplitBookingOrder,
+    bookingOrder: {
+      recId?: number;
+      rmk3?: string;
+      fops: {
+        type: EFopType.CHARGE_SPLIT | EFopType.SPLIT;
+        amount: number;
+        rmk: string;
+      }[];
+    },
     customerInfo: {
       custName?: string;
       custPhoneNumber?: string;

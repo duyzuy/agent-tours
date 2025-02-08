@@ -53,11 +53,6 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
         </div>
         <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
         <div className="w-fit">
-          <span className="block">Mã đại lý</span>
-          <span className="block text-[15px] font-[500] ">{agentId ?? "--"}</span>
-        </div>
-        <div className="h-[36px] bg-gray-300/40 w-[1px] mx-6"></div>
-        <div className="w-fit">
           <span className="block">Mã giới thiệu</span>
           <span className="block text-[15px] font-[500] ">
             {referenceId && isEmpty(referenceId) ? referenceId : "--"}

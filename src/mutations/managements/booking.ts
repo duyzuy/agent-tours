@@ -38,17 +38,18 @@ export const useGetBookingTourServicesMutation = () => {
  * manage booking APIS
  */
 
-export const useSplitBookingInTwoOrderMutation = () => {
-  return useCustomMutation({
-    mutationFn: (payload: ISplitBookingPayload) => manageBookingAPIs.splitBooking(payload),
-  });
-};
+// export const useSplitBookingInTwoOrderMutation = () => {
+//   return useCustomMutation({
+//     mutationFn: (payload: ISplitBookingPayload) => manageBookingAPIs.splitBooking(payload),
+//   });
+// };
 
-export const useSplitBookingToOnceOrderMutation = () => {
-  return useCustomMutation({
-    mutationFn: (payload: ISplitBookingPayload) => manageBookingAPIs.splitBookingAndCancel(payload),
-  });
-};
+// export const useSplitBookingToOnceOrderMutation = () => {
+//   return useCustomMutation({
+//     mutationFn: (payload: ISplitBookingPayload) => manageBookingAPIs.splitBookingAndCancel(payload),
+//   });
+// };
+
 export const useUpdateBookingOrderInvoiceInfoMutation = () => {
   return useCustomMutation({
     mutationFn: (payload: IBookingOrderInvoiceInfoPayload) => manageBookingAPIs.updateInvoiceInfo(payload),

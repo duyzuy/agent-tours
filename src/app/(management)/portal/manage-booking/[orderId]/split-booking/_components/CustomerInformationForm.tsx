@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState, memo, useCallback } from "react";
 import { Form, Row, Col, Input } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { SplitBookingFormData } from "../modules/splitBooking.interface";
-import { isUndefined } from "lodash";
 import classNames from "classnames";
 
 type TCustomerInfoType = Required<Required<SplitBookingFormData>["customerInfo"]>;
