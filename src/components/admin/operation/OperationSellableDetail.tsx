@@ -31,8 +31,8 @@ const OperationSellableDetail: React.FC<OperationSellableDetailProps> = ({
   return (
     <>
       <div className="mb-3">
-        <h3 className="text-lg font-semibold flex items-center mb-1">{`${templateName} | ${templateCode}`}</h3>
-        <Tag color="blue">{sellableCode}</Tag>
+        <h3 className="text-lg font-semibold flex items-center mb-1">{sellableCode}</h3>
+        {templateName ? <div>{templateName}</div> : null}
       </div>
       <div className="box-content py-3  mb-6">
         <div className="flex gap-x-8 mb-6">

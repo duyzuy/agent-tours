@@ -4,23 +4,15 @@ import { Table } from "antd";
 
 import React, { useEffect, useMemo, useState } from "react";
 import PassengersRoomingItem, { PassengersRoomingItemProps } from "./PassengersRoomingItem";
-import { columns } from "./columns";
+import { columns } from "../OrderList/columns";
 import { moneyFormatVND } from "@/utils/helper";
 import useUpdateOperationDeadlineRemark from "@/modules/admin/operation/hooks/useUpdatePassengerRemark";
 export interface GeneralInformationContainerProps {
   passengerList?: OperationStatusResponse["result"]["passengerList"];
-  orderList?: OperationStatusResponse["result"]["orderList"];
   roomingList?: OperationStatusResponse["result"]["roomingList"];
-  totalCosting?: OperationStatusResponse["result"]["totalCosting"];
-  totalSale?: OperationStatusResponse["result"]["totalSale"];
 }
 
-const GeneralInformationContainer: React.FC<GeneralInformationContainerProps> = ({
-  passengerList,
-  orderList,
-  totalCosting,
-  totalSale,
-}) => {
+const GeneralInformationContainer: React.FC<GeneralInformationContainerProps> = ({ passengerList, roomingList }) => {
   const { mutate: updateRemark, isPending: isLoadingUpdate } = useUpdateOperationDeadlineRemark();
 
   const handleUpdateRemark: PassengersRoomingItemProps["onSave"] = (data, cb) => {
@@ -65,21 +57,6 @@ const GeneralInformationContainer: React.FC<GeneralInformationContainerProps> = 
 
   return (
     <div className="pt-6">
-      <div className="order-list-container mb-6">
-        <h3 className="text-lg font-semibold mb-6">Danh sách đơn hàng</h3>
-        <Table rowKey={"id"} dataSource={orderList} columns={columns} pagination={{ hideOnSinglePage: true }} />
-        <div className="h-8"></div>
-        <div className="subtotal text-right">
-          <div className="flex text-lg gap-x-3">
-            <span className="inline-block">Tổng chi</span>
-            <span className="inline-block text-red-600">{moneyFormatVND(totalCosting)}</span>
-          </div>
-          <div className="flex text-lg gap-x-3">
-            <span className="inline-block">Tổng thu</span>
-            <span className="inline-block text-emerald-600">{moneyFormatVND(totalSale)}</span>
-          </div>
-        </div>
-      </div>
       <div className="passenger-container">
         <h3 className="text-lg font-semibold mb-6">Danh sách hành khách</h3>
         <div className="passenger-list flex flex-col gap-y-3">

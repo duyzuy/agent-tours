@@ -134,14 +134,6 @@ const CodeListPage = () => {
 
         return (
           <Space>
-            <Button
-              type="text"
-              size="small"
-              onClick={() => router.push(`/portal/operation/${id}`)}
-              icon={<EyeOutlined />}
-            >
-              Xem
-            </Button>
             <Button type="text" size="small" onClick={() => setEditOperation(record)} icon={<EditOutlined />}>
               Sửa
             </Button>

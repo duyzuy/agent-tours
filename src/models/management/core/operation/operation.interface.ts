@@ -14,6 +14,7 @@ export interface IOperation {
   totalSale: number;
   pic: IPersonInCharge | null;
   status: IOperationStatus;
+  sellableType: "MICE" | "TOUR" | "EXTRA";
   sellable: Pick<
     ISellable,
     | "recId"
@@ -35,11 +36,13 @@ export interface IOperation {
     promotions: null;
     sellableTemplateCode: null;
   };
-  template: Pick<ITemplateSellableDetail, "recId" | "cmsIdentity" | "type" | "code" | "name" | "inventoryTypeList"> & {
-    cms: null;
-    sellables: null;
-    cmsMustKnow: null;
-  };
+  template:
+    | (Pick<ITemplateSellableDetail, "recId" | "cmsIdentity" | "type" | "code" | "name" | "inventoryTypeList"> & {
+        cms: null;
+        sellables: null;
+        cmsMustKnow: null;
+      })
+    | null;
 }
 
 export interface OperationPayload {

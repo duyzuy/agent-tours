@@ -56,11 +56,16 @@ const OperationDetailPage: React.FC<OperationDetailPage> = ({ params }) => {
             open={data.sellable.open}
             used={data.sellable.used}
             available={data.sellable.available}
-            templateCode={data.template.code}
-            templateName={data.template.name}
+            templateCode={data.template?.code}
+            templateName={data.template?.name}
           />
           <OperationActions operationId={data.id} status={data.status} />
-          <OperationTabsControl operationId={data.id} status={data.status} sellableId={data.sellableId} />
+          <OperationTabsControl
+            operationId={data.id}
+            status={data.status}
+            sellableId={data.sellableId}
+            sellableType={data.sellableType}
+          />
         </Col>
         <Col span={24} xxl={8} className="!max-w-md">
           <OperationPersonInformation

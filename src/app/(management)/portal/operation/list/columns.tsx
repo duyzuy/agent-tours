@@ -2,10 +2,11 @@ import { ColumnsType } from "antd/es/table";
 import { Tag, Popover, TagProps } from "antd";
 import { formatDate, stringToDate } from "@/utils/date";
 import { IOperation } from "@/models/management/core/operation/operation.interface";
-import { InfoCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined, InfoCircleOutlined, QuestionCircleOutlined, RightOutlined } from "@ant-design/icons";
 import { moneyFormatVND } from "@/utils/helper";
 import dayjs from "dayjs";
 import classNames from "classnames";
+import Link from "next/link";
 
 export const columns: ColumnsType<IOperation> = [
   {
@@ -19,11 +20,16 @@ export const columns: ColumnsType<IOperation> = [
     key: "sellableCode",
     dataIndex: "sellableCode",
     width: 350,
-    render(value, { sellable, template }, index) {
+    render(value, { sellable, template, id }, index) {
       return (
         <div className="">
-          <span className="block text-xs mb-1">{sellable.code}</span>
-          <span className="block font-semibold">{template?.name}</span>
+          <div className="mb-2">
+            <span className="block text-xs mb-1">{sellable.code}</span>
+            <span className="block font-semibold">{template?.name}</span>
+          </div>
+          <Link href={`/portal/operation/${id}`} className="text-xs">
+            Xem chi tiết <RightOutlined className="!text-[10px]" />
+          </Link>
         </div>
       );
     },
