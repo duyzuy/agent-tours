@@ -1,11 +1,11 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetBookingDetailCoreQuery } from "@/queries/core/bookingOrder";
-import { Button, Spin, Input, Form, Radio, Space, Divider } from "antd";
-import { ISplitBookingPayload, SplitBookingFormData, TourBookingDetailItem } from "./modules/splitBooking.interface";
+import { Button, Spin, Input, Form, Divider } from "antd";
+import { ISplitBookingPayload, SplitBookingFormData } from "./modules/splitBooking.interface";
 import CustomerInformationForm, { CustomerInformationFormProps } from "./_components/CustomerInformationForm";
 import FormItem from "@/components/base/FormItem";
 
@@ -32,7 +32,6 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
 
   const [bookingSplit, setBookingSplit] = useSplitBooking();
 
-  console.log(bookingSplit);
   const router = useRouter();
   const message = useMessage();
 
@@ -71,16 +70,6 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
       invoiceInfo: {
         ...oldData.invoiceInfo,
         [key]: value,
-      },
-    }));
-  }, []);
-
-  useEffect(() => {
-    setBookingSplit((oldData) => ({
-      ...oldData,
-      bookingOrder: {
-        ...oldData.bookingOrder,
-        recId: params.orderId,
       },
     }));
   }, []);
@@ -133,6 +122,15 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
     });
   };
 
+  useEffect(() => {
+    setBookingSplit((oldData) => ({
+      ...oldData,
+      bookingOrder: {
+        ...oldData.bookingOrder,
+        recId: params.orderId,
+      },
+    }));
+  }, []);
   useEffect(() => {
     if (isUndefined(bookingOrderDetail) && !isLoading) {
       router.push("/portal/manage-booking/order-list");
@@ -194,17 +192,16 @@ const SplitBookingPage: React.FC<SplitBookingPageProps> = ({ params }) => {
           </FormItem>
         </Form>
       </div>
-      <div className="split__booking-actions py-6  mt-6 sticky bottom-0 bg-white">
-        <Button
-          type="primary"
-          size="large"
-          className="w-40"
-          onClick={() => handlerSubmit(bookingSplit["customerInfo"], onSubmit)}
-          loading={isPending}
-        >
-          Xác nhận
-        </Button>
-      </div>
+
+      <Button
+        type="primary"
+        size="large"
+        className="w-40"
+        onClick={() => handlerSubmit(bookingSplit["customerInfo"], onSubmit)}
+        loading={isPending}
+      >
+        Xác nhận
+      </Button>
     </PageContainer>
   );
 };

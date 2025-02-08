@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Space, Radio, Input } from "antd";
+import { Form, Space, Radio, Input, Divider } from "antd";
 import FormItem from "@/components/base/FormItem";
 import classNames from "classnames";
 import { SplitBookingFormData } from "../modules/splitBooking.interface";
@@ -30,6 +30,7 @@ const FeeForm: React.FC<FeeFormProps> = ({ className = "" }) => {
         [className]: className,
       })}
     >
+      <h3 className="font-[500] text-[16px] mb-6">Phí và số tiền cần tách</h3>
       <Form layout="vertical" component="div">
         <FormItem label="Phí tách mã đặt chỗ">
           <Input
@@ -44,7 +45,7 @@ const FeeForm: React.FC<FeeFormProps> = ({ className = "" }) => {
             }
           />
         </FormItem>
-        <FormItem label="Ghi chú">
+        <FormItem>
           <Input.TextArea
             value={getValue(EFopType.CHARGE_SPLIT, "rmk")}
             placeholder="Ghi chú"
@@ -56,6 +57,7 @@ const FeeForm: React.FC<FeeFormProps> = ({ className = "" }) => {
             }
           />
         </FormItem>
+        <Divider />
         <FormItem label="Số tiền cần tách sang mã đặt chỗ mới">
           <Input
             value={getValue(EFopType.SPLIT, "amount")}
@@ -68,7 +70,7 @@ const FeeForm: React.FC<FeeFormProps> = ({ className = "" }) => {
             }
           />
         </FormItem>
-        <FormItem label="Ghi chú">
+        <FormItem>
           <Input.TextArea
             value={getValue(EFopType.SPLIT, "rmk")}
             placeholder="Ghi chú"
