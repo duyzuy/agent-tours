@@ -71,6 +71,7 @@ const useCRUDLeading = () => {
     onCreate,
     onUpdate,
     onCreateMultiple,
+    loading: isPendingCreateOne || isPendingUpdate || isPendingCreateMultiple,
   };
 };
 export default useCRUDLeading;

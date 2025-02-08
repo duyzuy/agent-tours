@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Form, Input, Modal, Space } from "antd";
 import FormItem from "@/components/base/FormItem";
 import { LocalUserChangePasswordFormData } from "../hooks/localUser.interface";
@@ -15,7 +15,7 @@ interface Props {
 const ModalChangePassword: React.FC<Props> = ({ isOpen, onCancel, userName }) => {
   const initData = new LocalUserChangePasswordFormData(userName, "", "");
 
-  const { control, handleSubmit } = useForm<LocalUserChangePasswordFormData>({
+  const { control, handleSubmit, watch } = useForm<LocalUserChangePasswordFormData>({
     defaultValues: { ...initData },
     resolver: yupResolver(localUserChangePasswordSchema),
   });
@@ -29,8 +29,32 @@ const ModalChangePassword: React.FC<Props> = ({ isOpen, onCancel, userName }) =>
     });
   };
 
+  const isDisabledButton = !watch("newPassword")?.length || !watch("confirmPassword")?.length;
   return (
-    <Modal open={isOpen} onCancel={onCancel} footer={false} destroyOnClose={true} width={380}>
+    <Modal
+      open={isOpen}
+      onCancel={onCancel}
+      destroyOnClose={true}
+      maskClosable={false}
+      closeIcon={null}
+      width={380}
+      footer={
+        <Space align="center">
+          <Button className="w-24" onClick={onCancel}>
+            Huỷ bỏ
+          </Button>
+          <Button
+            type="primary"
+            className="w-24"
+            onClick={handleSubmit(onSubmitForm)}
+            loading={isPending}
+            disabled={isDisabledButton}
+          >
+            Lưu
+          </Button>
+        </Space>
+      }
+    >
       <div className="header py-3 mb-3">
         <h4 className="text-center font-bold text-lg">Thay đổi mật khẩu</h4>
       </div>
@@ -59,17 +83,6 @@ const ModalChangePassword: React.FC<Props> = ({ isOpen, onCancel, userName }) =>
             </FormItem>
           )}
         />
-
-        <div className="flex items-center justify-center">
-          <Space align="center">
-            <Button className="w-24" onClick={onCancel}>
-              Huỷ bỏ
-            </Button>
-            <Button type="primary" className="w-24" onClick={handleSubmit(onSubmitForm)} loading={isPending}>
-              Cập nhật
-            </Button>
-          </Space>
-        </div>
       </Form>
     </Modal>
   );

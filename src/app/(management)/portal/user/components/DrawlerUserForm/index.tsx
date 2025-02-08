@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 import { Drawer, Space, Button, Form, Row, Col, Input, Select, Switch, Divider } from "antd";
 import { ELocalUserType, ILocalUser } from "@/models/management/localUser.interface";
-import ModalChangePassword from "../ModalChangePassword";
 import FormItem from "@/components/base/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import { generateStrings } from "@/utils/helper";
@@ -12,6 +11,7 @@ import { localUserSchema } from "../../hooks/validate";
 import { LocalUserFormData } from "../../hooks/localUser.interface";
 import RoleSelector, { RoleSelectorProps } from "./RoleSelector";
 import { getAdminUserInformationStorage } from "@/utils/common";
+import ChangePasswordButton from "./ChangePasswordButton";
 export type DrawerAction = "CREATE" | "EDIT";
 export type TDrawlerCreateAction = {
   type: "CREATE";
@@ -73,8 +73,6 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
   });
   const userInfo = getAdminUserInformationStorage();
 
-  const [isEditPassword, setEditPassword] = useState(false);
-
   const onChangeStatus = (checked: boolean) => {
     setValue("status", checked ? "OK" : "OX");
     if (actionType === "EDIT") {
@@ -90,11 +88,10 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
   ];
 
   const filterUserTypeByAdminAccount = (items: typeof OPTIONS_USER_TYPE_LIST) => {
-    return items.filter((item) => {
-      if (userInfo?.localUserType === "AGENT") {
-        return item.value === ELocalUserType.AGENT_STAFF;
-      }
-    });
+    if (userInfo?.localUserType === "AGENT") {
+      return items.filter((item) => item.value === ELocalUserType.AGENT_STAFF);
+    }
+    return items;
   };
   const generatePassword = () => {
     const password = generateStrings(10);
@@ -148,327 +145,303 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
     }
   }, [userInfo, isOpen]);
   return (
-    <>
-      <Drawer
-        title={actionType === "CREATE" ? "Thêm mới" : "Chỉnh sửa"}
-        destroyOnClose
-        width={550}
-        onClose={onCancel}
-        open={isOpen}
-        styles={{
-          body: {
-            paddingBottom: 80,
-          },
-        }}
-      >
-        <Form layout="vertical">
-          <h3 className="font-semibold text-lg mb-6">Thông tin tài khoản</h3>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="fullname"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem
-                    label="Họ và tên"
-                    required
-                    validateStatus={error?.message ? "error" : ""}
-                    help={error?.message}
-                  >
-                    <Input placeholder="Họ và tên" {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="email"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Email" required validateStatus={error?.message ? "error" : ""} help={error?.message}>
-                    <Input placeholder="Email" autoComplete="email" disabled={actionType === "EDIT"} {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="phoneNumber"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem
-                    label="Số điện thoại"
-                    required
-                    validateStatus={error?.message ? "error" : ""}
-                    help={error?.message}
-                  >
-                    <Input placeholder="Số điện thoại" disabled={actionType === "EDIT"} {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="username"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem
-                    label="Tên tài khoản"
-                    required
-                    validateStatus={error?.message ? "error" : ""}
-                    help={error?.message}
-                  >
-                    <Input placeholder="Tên tài khoản" disabled={actionType === "EDIT"} {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="userType"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem
-                    label="Loại tài khoản"
-                    required
-                    validateStatus={error?.message ? "error" : ""}
-                    help={error?.message}
-                  >
-                    <Select
-                      value={field.value}
-                      placeholder="Loại tài khoản"
-                      options={filterUserTypeByAdminAccount(OPTIONS_USER_TYPE_LIST)}
-                      onChange={(value) => onChangeUserType(value)}
-                    />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              {(actionType === "CREATE" && (
-                <React.Fragment>
-                  <Controller
-                    control={control}
-                    name="password"
-                    render={({ field, fieldState: { error } }) => (
-                      <FormItem
-                        label="Mật khẩu"
-                        required
-                        validateStatus={error?.message ? "error" : ""}
-                        help={error?.message}
-                      >
-                        <React.Fragment>
-                          <Input.Password
-                            placeholder="Mật khẩu"
-                            autoComplete="password"
-                            // disabled={actionType === "edit" ?? false}
-                            {...field}
-                          />
-                        </React.Fragment>
-                        <p className="text-right pt-2 cursor-pointer">
-                          <span
-                            className="text-xs text-gray-500 hover:text-primary-default cursor-pointer block"
-                            onClick={generatePassword}
-                          >
-                            Tạo ngẫu nhiên
-                          </span>
-                        </p>
-                      </FormItem>
-                    )}
-                  />
-                </React.Fragment>
-              )) || (
-                <React.Fragment>
-                  <div className="change-password mb-4">
-                    <div className="label pb-2">Mật khẩu</div>
-                    <div className="password-form pt-2">
-                      <div className="password no-edit flex items-center">
-                        <span className="flex items-center text-xs">********</span>
-                        <span
-                          className="text-xs ml-3 text-blue-600 cursor-pointer"
-                          onClick={() => setEditPassword((prev) => !prev)}
-                        >
-                          Đổi mật khẩu
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </React.Fragment>
+    <Drawer
+      title={actionType === "CREATE" ? "Tạo tài khoản" : initialValues?.username}
+      destroyOnClose
+      width={650}
+      closeIcon={null}
+      maskClosable={false}
+      onClose={onCancel}
+      open={isOpen}
+      footer={
+        <Space className="py-3">
+          <Button
+            onClick={handleSubmit((data) => onSubmit && onSubmit(actionType, data))}
+            type="primary"
+            className="w-28"
+          >
+            Lưu
+          </Button>
+          <Button onClick={onCancel} className="w-28">
+            Huỷ
+          </Button>
+        </Space>
+      }
+    >
+      <Form layout="vertical">
+        <h3 className="font-semibold text-lg mb-6">Thông tin tài khoản</h3>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="fullname"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem
+                  label="Họ và tên"
+                  required
+                  validateStatus={error?.message ? "error" : ""}
+                  help={error?.message}
+                >
+                  <Input placeholder="Họ và tên" {...field} />
+                </FormItem>
               )}
-            </Col>
-            <Col span={24}>
-              <Controller
-                control={control}
-                name="mainRole"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Quyền" required validateStatus={error?.message ? "error" : ""} help={error?.message}>
-                    <RoleSelector
-                      value={field.value}
-                      onChange={onChangeRole}
-                      disabled={userInfo?.localUserType === "AGENT_STAFF" || userInfo?.localUserType === "AGENT"}
-                    />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={24}>
-              <Controller
-                control={control}
-                name="descriptions"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Mô tả">
-                    <TextArea placeholder="Mô tả" autoSize={{ minRows: 3, maxRows: 5 }} {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-          </Row>
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Email" required validateStatus={error?.message ? "error" : ""} help={error?.message}>
+                  <Input placeholder="Email" autoComplete="email" disabled={actionType === "EDIT"} {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="phoneNumber"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem
+                  label="Số điện thoại"
+                  required
+                  validateStatus={error?.message ? "error" : ""}
+                  help={error?.message}
+                >
+                  <Input placeholder="Số điện thoại" disabled={actionType === "EDIT"} {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
 
-          <Controller
-            control={control}
-            name="status"
-            render={({ field, fieldState: { error } }) => (
-              <FormItem label="Trạng thái">
-                <div className="flex items-center">
-                  <Switch checked={field.value === "OK"} onChange={onChangeStatus} />
-                  <span className="ml-2">Kích hoạt</span>
-                </div>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="username"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem
+                  label="Tên tài khoản"
+                  required
+                  validateStatus={error?.message ? "error" : ""}
+                  help={error?.message}
+                >
+                  <Input placeholder="Tên tài khoản" disabled={actionType === "EDIT"} {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="userType"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem
+                  label="Loại tài khoản"
+                  required
+                  validateStatus={error?.message ? "error" : ""}
+                  help={error?.message}
+                >
+                  <Select
+                    value={field.value}
+                    placeholder="Loại tài khoản"
+                    options={filterUserTypeByAdminAccount(OPTIONS_USER_TYPE_LIST)}
+                    onChange={(value) => onChangeUserType(value)}
+                  />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            {(actionType === "CREATE" && (
+              <Controller
+                control={control}
+                name="password"
+                render={({ field, fieldState: { error } }) => (
+                  <FormItem
+                    label="Mật khẩu"
+                    required
+                    validateStatus={error?.message ? "error" : ""}
+                    help={error?.message}
+                  >
+                    <Space>
+                      <Input.Password
+                        placeholder="Mật khẩu"
+                        autoComplete="password"
+                        // disabled={actionType === "edit" ?? false}
+                        {...field}
+                      />
+                      <p className="text-right pt-2 cursor-pointer">
+                        <span
+                          className="text-xs text-gray-500 hover:text-primary-default cursor-pointer block"
+                          onClick={generatePassword}
+                        >
+                          Tạo ngẫu nhiên
+                        </span>
+                      </p>
+                    </Space>
+                  </FormItem>
+                )}
+              />
+            )) || (
+              <FormItem label="Mật khẩu" required>
+                <Space>
+                  <Input type="password" value="******" disabled />
+                  {initialValues?.username && <ChangePasswordButton username={initialValues?.username} />}
+                </Space>
               </FormItem>
             )}
-          />
+          </Col>
+          <Col span={24}>
+            <Controller
+              control={control}
+              name="mainRole"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Quyền" required validateStatus={error?.message ? "error" : ""} help={error?.message}>
+                  <RoleSelector
+                    value={field.value}
+                    onChange={onChangeRole}
+                    disabled={userInfo?.localUserType === "AGENT_STAFF" || userInfo?.localUserType === "AGENT"}
+                  />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={24}>
+            <Controller
+              control={control}
+              name="descriptions"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Mô tả">
+                  <TextArea placeholder="Mô tả" autoSize={{ minRows: 3, maxRows: 5 }} {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+        </Row>
 
-          <Divider />
-          <h3 className="font-semibold text-lg mb-6">Thông tin thêm</h3>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="infoCompanyName"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Tên công ty" validateStatus={error?.message ? "error" : ""} help={error?.message}>
-                    <Input placeholder="Tên công ty" {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="infoLegalRepresentative"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem
-                    label="Tên người đại diện"
-                    validateStatus={error?.message ? "error" : ""}
-                    help={error?.message}
-                  >
-                    <Input placeholder="Tên người đại diện" {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="infoPhoneNumber"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Số điện thoại" validateStatus={error?.message ? "error" : ""} help={error?.message}>
-                    <Input placeholder="Số điện thoại" value={field.value ?? undefined} onChange={field.onChange} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="infoEmail"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Email" validateStatus={error?.message ? "error" : ""} help={error?.message}>
-                    <Input placeholder="Email" {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="infoPosition"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Chức danh">
-                    <Input placeholder="Chức danh" {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="infoAddress"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Địa chỉ">
-                    <Input placeholder="Địa chỉ" {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="infoTaxcode"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Mã số thuế">
-                    <Input placeholder="Mã số thuế" {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={12}>
-              <Controller
-                control={control}
-                name="infoBanking"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Thông tin ngân hàng">
-                    <Input placeholder="Thông tin ngân hàng" {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-            <Col span={24}>
-              <Controller
-                control={control}
-                name="infoSpecialNote"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem label="Ghi chú">
-                    <TextArea placeholder="Ghi chú" autoSize={{ minRows: 3, maxRows: 5 }} {...field} />
-                  </FormItem>
-                )}
-              />
-            </Col>
-          </Row>
-        </Form>
-        <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-          <Space>
-            <Button onClick={onCancel} className="w-28">
-              Huỷ
-            </Button>
-            <Button
-              onClick={handleSubmit((data) => onSubmit && onSubmit(actionType, data))}
-              type="primary"
-              className="w-28"
-            >
-              Lưu
-            </Button>
-          </Space>
-        </div>
-      </Drawer>
-      {initialValues ? (
-        <ModalChangePassword
-          isOpen={isEditPassword}
-          onCancel={() => setEditPassword(false)}
-          userName={initialValues.username}
+        <Controller
+          control={control}
+          name="status"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem label="Trạng thái">
+              <div className="flex items-center">
+                <Switch checked={field.value === "OK"} onChange={onChangeStatus} />
+                <span className="ml-2">Kích hoạt</span>
+              </div>
+            </FormItem>
+          )}
         />
-      ) : null}
-    </>
+
+        <Divider />
+        <h3 className="font-semibold text-lg mb-6">Thông tin thêm</h3>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="infoCompanyName"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Tên công ty" validateStatus={error?.message ? "error" : ""} help={error?.message}>
+                  <Input placeholder="Tên công ty" {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="infoLegalRepresentative"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem
+                  label="Tên người đại diện"
+                  validateStatus={error?.message ? "error" : ""}
+                  help={error?.message}
+                >
+                  <Input placeholder="Tên người đại diện" {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="infoPhoneNumber"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Số điện thoại" validateStatus={error?.message ? "error" : ""} help={error?.message}>
+                  <Input placeholder="Số điện thoại" value={field.value ?? undefined} onChange={field.onChange} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="infoEmail"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Email" validateStatus={error?.message ? "error" : ""} help={error?.message}>
+                  <Input placeholder="Email" {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="infoPosition"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Chức danh">
+                  <Input placeholder="Chức danh" {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="infoAddress"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Địa chỉ">
+                  <Input placeholder="Địa chỉ" {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="infoTaxcode"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Mã số thuế">
+                  <Input placeholder="Mã số thuế" {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="infoBanking"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Thông tin ngân hàng">
+                  <Input placeholder="Thông tin ngân hàng" {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={24}>
+            <Controller
+              control={control}
+              name="infoSpecialNote"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem label="Ghi chú">
+                  <TextArea placeholder="Ghi chú" autoSize={{ minRows: 3, maxRows: 5 }} {...field} />
+                </FormItem>
+              )}
+            />
+          </Col>
+        </Row>
+      </Form>
+    </Drawer>
   );
 };
 export default DrawlerUserForm;

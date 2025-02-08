@@ -63,3 +63,7 @@
 ## Meeting presentation 08/02/2025
 
 lỗi nhập leading => lỗi APIs
+
+Phần thanh toán trong MMB bổ sung thêm field add document.
+Bỏ nút bàn giao trong rooming
+sửa lại giao diện trạng thái document trong từng pax ở điều hành.

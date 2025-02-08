@@ -33,7 +33,7 @@ const MemberPage: React.FC = () => {
   const [editRecord, setEditRecord] = useState<Leading>();
   const [searchText, setSearchText] = useState("");
 
-  const { onCreate, onUpdate, onCreateMultiple } = useCRUDLeading();
+  const { onCreate, onUpdate, onCreateMultiple, loading } = useCRUDLeading();
   const setCreateLeading = () => {
     setAction("create");
     setOpen(true);
@@ -182,6 +182,7 @@ const MemberPage: React.FC = () => {
         action={action}
         initialValue={editRecord}
         onSubmit={handleSubmitForm}
+        loading={loading}
       />
       <DrawerImportLead open={openDrawerImport} onClose={() => setOpenDrawerImport(false)} onSubmit={handleImport} />
     </PageContainer>

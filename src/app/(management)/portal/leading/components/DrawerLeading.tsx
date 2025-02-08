@@ -8,7 +8,6 @@ import { leadingSchema } from "../schema/leading.schema";
 import { Leading, LeadingSource, LeadingStatus } from "@/models/management/leading.interface";
 import { LeadingFormData } from "../modules/leading.interface";
 import FormItem from "@/components/base/FormItem";
-import { read, writeFileXLSX } from "xlsx";
 
 export const LEADING_SOURCE_LIST: LeadingSource[] = [
   "NEW",
@@ -29,31 +28,18 @@ export type DrawerLeadingProps = DrawerProps & {
   action?: "create" | "edit";
   onClose?: () => void;
   onSubmit?: (data: LeadingFormData) => void;
+  loading?: boolean;
 };
 
 export const initFormData = new LeadingFormData(undefined, "", "", "", "OTHER", "NEW");
 
-const DrawerLeading: React.FC<DrawerLeadingProps> = ({
-  initialValue,
-  action,
-  onClose,
-  open,
-  onSubmit,
-  ...restprops
-}) => {
-  const { getValues, setValue, clearErrors, handleSubmit, control, watch } = useForm<LeadingFormData>({
+const DrawerLeading: React.FC<DrawerLeadingProps> = ({ initialValue, action, onClose, open, onSubmit, loading }) => {
+  const { setValue, clearErrors, handleSubmit, control, watch } = useForm<LeadingFormData>({
     resolver: yupResolver(leadingSchema),
     defaultValues: { ...initFormData },
   });
 
-  const onChangeSource = (source: LeadingSource) => {
-    setValue("source", source);
-  };
-
-  const onChangeStatus = (status: LeadingStatus) => {
-    setValue("status", status);
-  };
-
+  const isDisabledSubmitButton = !watch("paxName")?.length || !watch("remark") || !watch("source");
   useEffect(() => {
     const initValues = initialValue
       ? new LeadingFormData(
@@ -79,13 +65,21 @@ const DrawerLeading: React.FC<DrawerLeadingProps> = ({
       width={550}
       onClose={onClose}
       open={open}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <Space className="py-3">
+          <Button onClick={onClose}>Huỷ</Button>
+          <Button
+            onClick={onSubmit ? handleSubmit(onSubmit) : undefined}
+            type="primary"
+            disabled={isDisabledSubmitButton}
+            loading={loading}
+          >
+            Lưu
+          </Button>
+        </Space>
+      }
     >
-      <Form layout="vertical">
+      <Form layout="vertical" disabled={loading}>
         <Controller
           control={control}
           name="paxName"
@@ -122,11 +116,7 @@ const DrawerLeading: React.FC<DrawerLeadingProps> = ({
               <Row gutter={[12, 12]}>
                 {LEADING_SOURCE_LIST.map((sourceItem) => (
                   <Col span="6" key={sourceItem}>
-                    <Radio
-                      checked={value === sourceItem}
-                      onChange={() => onChangeSource(sourceItem)}
-                      value={sourceItem}
-                    >
+                    <Radio checked={value === sourceItem} onChange={onChange} value={sourceItem}>
                       {sourceItem}
                     </Radio>
                   </Col>
@@ -138,16 +128,12 @@ const DrawerLeading: React.FC<DrawerLeadingProps> = ({
         <Controller
           control={control}
           name="status"
-          render={({ field: { value }, fieldState: { error } }) => (
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
             <FormItem label="Trạng thái" required validateStatus={error ? "error" : ""} help={error?.message}>
               <Row gutter={[12, 12]}>
                 {LEADING_STATUS_LIST.map((statusItem) => (
                   <Col span="8" key={statusItem}>
-                    <Radio
-                      checked={value === statusItem}
-                      onChange={() => onChangeStatus(statusItem)}
-                      value={statusItem}
-                    >
+                    <Radio checked={value === statusItem} onChange={onChange} value={statusItem}>
                       {statusItem}
                     </Radio>
                   </Col>
@@ -156,15 +142,6 @@ const DrawerLeading: React.FC<DrawerLeadingProps> = ({
             </FormItem>
           )}
         />
-
-        <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-          <Space>
-            <Button onClick={onClose}>Huỷ</Button>
-            <Button onClick={onSubmit ? handleSubmit(onSubmit) : undefined} type="primary">
-              {action === "create" ? "Thêm mới" : "Cập nhật"}
-            </Button>
-          </Space>
-        </div>
       </Form>
     </Drawer>
   );

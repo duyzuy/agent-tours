@@ -1,4 +1,3 @@
-import { ELocalUserType } from "@/models/management/localUser.interface";
 import { IRole } from "@/models/management/role.interface";
 import { useGetRoles } from "@/modules/admin/role";
 import { Select, SelectProps } from "antd";

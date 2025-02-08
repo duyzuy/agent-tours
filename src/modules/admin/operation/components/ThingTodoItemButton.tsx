@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Badge, Button, Popover, Space, Spin, Tag, Divider } from "antd";
+import { Badge, Button, Popover, Space, Spin, Tag, Divider, Empty } from "antd";
 import { BellOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { OperationThingTodoQueryParams } from "@/models/management/core/operation/operationThingTodo.interface";
 import { useGetOperationThingTodoList } from "@/queries/core/operation";
@@ -31,35 +31,36 @@ const ThingTodoItemButton = () => {
     enabled: open,
   });
 
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-  };
-
-  useEffect(() => {
-    open === true && setOpen(false);
-  }, [pathname]);
   return (
     <div>
       <Popover
         open={open}
         trigger="click"
-        onOpenChange={handleOpenChange}
+        onOpenChange={setOpen}
         content={
           <div className="thing-todo-reminder relative">
-            <div className="flex justify-between">
-              <h3 className="flex gap-x-2">
-                <BellOutlined />
-                <span className="text-[16px]">Lời nhắc</span>
-              </h3>
-            </div>
+            <h3 className="flex gap-x-2">
+              <BellOutlined />
+              <span className="text-[16px]">Lời nhắc</span>
+            </h3>
+
             <Divider style={{ margin: "12px 0" }} />
             {isLoading ? (
-              <Spin tip="...loading">
-                <div style={{ width: 320, height: 160, background: "rgba(0, 0, 0, 0.05)", borderRadius: 4 }}></div>
+              <Spin tip="Đang tải...">
+                <div style={{ width: 320, height: 120, background: "rgba(0, 0, 0, 0.05)", borderRadius: 4 }}></div>
               </Spin>
+            ) : !todoList ? (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                style={{
+                  width: 320,
+                  height: 120,
+                }}
+                description="Đang trống."
+              />
             ) : (
               <ReminderListWraper className="flex flex-col gap-y-3">
-                {todoList?.map((item, _index) => (
+                {todoList.map((item, _index) => (
                   <React.Fragment key={_index}>
                     {_index !== 0 ? <Divider style={{ margin: "1px 0" }} /> : null}
                     <div className="px-3 py-2 hover:bg-gray-100 rounded-md" key={_index}>
