@@ -76,17 +76,17 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
     ],
   },
   {
-    key: "operation",
+    label: "Phân công điều hành",
+    key: "operation/list",
     icon: React.createElement(ControlOutlined),
-    label: "Điều hành",
-    rolepers: PATH_WITH_PERMISSION["operation"],
-    children: [
-      {
-        key: "operation/list",
-        label: "Phân công điều hành",
-        rolepers: PATH_WITH_PERMISSION["operation/list"],
-      },
-    ],
+    rolepers: PATH_WITH_PERMISSION["operation/list"],
+    // children: [
+    //   {
+    //     key: "operation/list",
+    //     label: "operation/list",
+    //     rolepers: PATH_WITH_PERMISSION["operation/list"],
+    //   },
+    // ],
   },
   {
     key: "product",

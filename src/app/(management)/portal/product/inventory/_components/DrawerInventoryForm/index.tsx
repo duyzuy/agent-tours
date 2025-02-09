@@ -61,7 +61,6 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
     resolver: yupResolver(inventorySchema),
     defaultValues: { ...initFormData },
   });
-
   const [currentInventoriesTypeList, setCurrentInventoriesTypeList] = useState<EInventoryType[]>();
 
   const onClose = useCallback(() => {
@@ -104,11 +103,12 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
   }, [initialValues, actionType, isOpen]);
 
   useEffect(() => {
-    setValue("productType", productType);
-  }, [productType, isOpen]);
+    productType && setValue("productType", productType);
+  }, [productType]);
+
   useEffect(() => {
-    setValue("supplierId", supplierId);
-  }, [supplierId, isOpen]);
+    supplierId && setValue("supplierId", supplierId);
+  }, [supplierId]);
   useEffect(() => {
     setCurrentInventoriesTypeList(inventoriesType);
   }, [inventoriesType, isOpen]);
