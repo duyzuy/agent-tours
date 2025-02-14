@@ -52,18 +52,7 @@ const DrawerCosting: React.FC<DrawerCostingProps> = ({ operationId, onClose, ope
   }, [initialValue, open]);
 
   return (
-    <Drawer
-      title="Thêm loại dịch vụ"
-      destroyOnClose
-      width={650}
-      onClose={onClose}
-      open={open}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
-    >
+    <Drawer title="Thêm loại dịch vụ" destroyOnClose width={650} onClose={onClose} open={open} maskClosable={false}>
       <Form layout="vertical">
         <Controller
           control={control}
@@ -98,10 +87,10 @@ const DrawerCosting: React.FC<DrawerCostingProps> = ({ operationId, onClose, ope
           )}
         />
         <Space>
-          <Button onClick={onClose}>Huỷ</Button>
           <Button type="primary" onClick={onSubmit && handleSubmit(onSubmit)} disabled={isDisabledButton}>
             Lưu
           </Button>
+          <Button onClick={onClose}>Huỷ</Button>
         </Space>
       </Form>
     </Drawer>

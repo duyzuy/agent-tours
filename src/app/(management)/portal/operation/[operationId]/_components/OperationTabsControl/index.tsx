@@ -1,7 +1,6 @@
 import { useMemo } from "react";
-import { TabPaneProps, Tabs, TabsProps } from "antd";
+import { Tabs, TabsProps } from "antd";
 import { IOperationStatus } from "@/models/management/core/operation/operation.interface";
-
 import { useGetOperationStatus } from "@/modules/admin/operation/hooks/useGetOperationStatus";
 import DeadlineContainer from "./DeadlineContainer";
 import CostingContainer from "./CostingContainer";

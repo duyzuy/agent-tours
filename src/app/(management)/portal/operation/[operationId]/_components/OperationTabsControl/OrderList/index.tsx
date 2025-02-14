@@ -10,7 +10,7 @@ export interface OrderListProps {
 }
 const OrderList: React.FC<OrderListProps> = ({ orderList, totalCosting, totalSale }) => {
   return (
-    <div className="order-list-container mb-6">
+    <div className="order-list-container pt-6">
       <h3 className="text-lg font-semibold mb-6">Danh sách đơn hàng</h3>
       <Table rowKey={"id"} dataSource={orderList} columns={columns} pagination={{ hideOnSinglePage: true }} />
       <div className="h-8"></div>

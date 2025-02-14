@@ -151,7 +151,12 @@ const PassengerListContainer: React.FC<PassengerListContainerPropsProps> = ({
                 }}
               />
               <Divider style={{ margin: "12px 0" }} />
-              <DocumentCheckList documents={paxInfo.documents} paxId={paxInfo.recId} />
+              <DocumentCheckList
+                documents={paxInfo.documents}
+                paxId={paxInfo.recId}
+                paxLastname={paxInfo.paxLastname}
+                paxMiddleFirstName={paxInfo.paxMiddleFirstName}
+              />
             </div>
           </Card>
         ))}

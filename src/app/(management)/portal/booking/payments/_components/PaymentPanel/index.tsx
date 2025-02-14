@@ -15,13 +15,11 @@ import InvoiceForm from "./InvoiceForm";
 import AgentListSelector, { AgentListSelectorProps } from "./AgentListSelector";
 import FormItem from "@/components/base/FormItem";
 import { ESellChannel } from "@/constants/channel.constant";
-import { useTransition } from "react";
 
 const PaymentPanel = () => {
   const { bookingInfo, channel: sellChannel } = usePortalBookingManagerSelector((state) => state);
-  const { createBooking } = useCreateBooking();
+  const { createBooking, loading } = useCreateBooking();
   const userProfile = useAdminProfile();
-  const [submitting, startSubmitting] = useTransition();
   const [customerFormData, setCustomerFormData] = useState<CustomerInformation>(
     () =>
       new CustomerInformation(
@@ -41,9 +39,7 @@ const PaymentPanel = () => {
   });
 
   const handleSubmitBooking: HandleSubmit<CustomerInformation> = (customerInfo) => {
-    startSubmitting(() => {
-      createBooking({ customerInfo, invoiceInfo: invoiceForm, agentUserId: agentId });
-    });
+    createBooking({ customerInfo, invoiceInfo: invoiceForm, agentUserId: agentId });
   };
 
   const handleSelectAgent: AgentListSelectorProps["onSelect"] = (newAgent) => {
@@ -60,7 +56,6 @@ const PaymentPanel = () => {
     return isUndefined(customerFormData) || isUndefined(customerFormData.custEmail);
   }, [bookingInfo]);
 
-  console.log(userProfile);
   useEffect(() => {
     setCustomerFormData((prev) => ({
       ...prev,
@@ -101,7 +96,7 @@ const PaymentPanel = () => {
           disabled={isDisableSubmitButton}
           onClick={() => handlerSubmit(customerFormData, handleSubmitBooking)}
           className="w-48"
-          loading={submitting}
+          loading={loading}
         >
           Đặt và giữ chỗ
         </Button>

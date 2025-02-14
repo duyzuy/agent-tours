@@ -13,6 +13,11 @@ export interface CommentContainerDrawerProps {
 }
 
 type FieldType = { comment: string };
+
+const breakLine = (text = "", revert = false) => {
+  return revert === false ? text.replace(/(?:\r\n|\r|\n)/g, "<br>") : text.replace(/<br>/g, "\n");
+};
+
 const CommentContainerDrawer: React.FC<CommentContainerDrawerProps> = ({ items, isOpen, onClose, orderId }) => {
   const { onAddComment, isPending } = useAddComment();
   const [form] = Form.useForm<FieldType>();
@@ -22,8 +27,9 @@ const CommentContainerDrawer: React.FC<CommentContainerDrawerProps> = ({ items, 
   };
 
   const onSubmitForm: FormProps<FieldType>["onFinish"] = (data) => {
+    console.log(data);
     onAddComment(
-      { orderId: orderId, comment: data.comment },
+      { orderId: orderId, comment: breakLine(data.comment) },
       {
         onSuccess(data, variables, context) {
           form.resetFields();
@@ -35,21 +41,7 @@ const CommentContainerDrawer: React.FC<CommentContainerDrawerProps> = ({ items, 
   const isDisabledButton = isEmpty(Form.useWatch((values) => values.comment, form));
 
   return (
-    <Drawer
-      title="Ghi chú"
-      width={550}
-      onClose={onClose}
-      closeIcon={null}
-      destroyOnClose={true}
-      open={isOpen}
-      footer={
-        <Space className="py-3">
-          <Button type="primary" htmlType="submit" className="w-[80px]" loading={isPending} disabled={isDisabledButton}>
-            Lưu
-          </Button>
-        </Space>
-      }
-    >
+    <Drawer title="Ghi chú" width={550} onClose={onClose} destroyOnClose={true} maskClosable={false} open={isOpen}>
       <Form<FieldType> layout="vertical" onFinish={onSubmitForm} form={form}>
         <Form.Item<FieldType>
           label="Nội dung ghi chú"
@@ -64,21 +56,26 @@ const CommentContainerDrawer: React.FC<CommentContainerDrawerProps> = ({ items, 
             onChange={(evt) => onComment(evt.target.value)}
           />
         </Form.Item>
+        <Button type="primary" htmlType="submit" className="w-[80px]" loading={isPending} disabled={isDisabledButton}>
+          Lưu
+        </Button>
       </Form>
       <Divider />
       <Timeline
         mode="alternate"
-        items={items.map((item) => {
-          return {
-            label: <div className="text-gray-500">{item.sysFstUser}</div>,
-            children: (
-              <div key={item.recId}>
-                <div className="text-gray-500">{formatDate(item.sysFstUpdate)}</div>
-                <div>{item.comment}</div>
-              </div>
-            ),
-          };
-        })}
+        items={items
+          .sort((a, b) => b.recId - a.recId)
+          .map((item) => {
+            return {
+              label: <div className="text-gray-500">{item.sysFstUser}</div>,
+              children: (
+                <div key={item.recId}>
+                  <div className="text-gray-500">{formatDate(item.sysFstUpdate)}</div>
+                  <div dangerouslySetInnerHTML={{ __html: item.comment }}></div>
+                </div>
+              ),
+            };
+          })}
       />
     </Drawer>
   );

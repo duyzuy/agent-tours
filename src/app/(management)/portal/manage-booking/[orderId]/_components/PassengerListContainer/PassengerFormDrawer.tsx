@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Drawer, Space, Button, Form, Row, Col, Input, Select, DatePickerProps } from "antd";
+import dayjs from "dayjs";
 import FormItem from "@/components/base/FormItem";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { BookingOrderPassengerFormData } from "../../../modules/bookingOrder.interface";
-import dayjs from "dayjs";
 import { PASSENGER_GENDER, PASSENGER_TITLES } from "@/constants/common";
 import { orderPassengerInfoSchema } from "../../../schema/bookingOrder.schema";
 import { getPassengerType } from "@/utils/common";
@@ -98,6 +98,8 @@ const PassengerFormDrawer: React.FC<PassengerFormDrawerProps> = ({
       width={650}
       onClose={onClose}
       open={isOpen}
+      maskClosable={false}
+      closeIcon={null}
       afterOpenChange={(open) => {
         if (open === false) {
           reset();

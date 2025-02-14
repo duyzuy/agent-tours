@@ -13,6 +13,7 @@ import {
   TabsProps,
   Popconfirm,
   Tag,
+  Divider,
 } from "antd";
 
 import { useForm, Controller } from "react-hook-form";
@@ -70,6 +71,7 @@ import {
 } from "@ant-design/icons";
 import useOperationCostingDetail from "../../../../modules/useOperationCostingDetail";
 import { DATE_TIME_FORMAT } from "@/constants/common";
+import { isEqualObject } from "@/utils/compare";
 
 interface AirDetailItemProps {
   data?: ICostingDetailItem<AirDetailType>["details"];
@@ -344,10 +346,18 @@ const DrawerCostingDetail: React.FC<DrawerCostingDetailProps> = ({
     [],
   );
   editRecord?.type === EStockType.AIRTICKET;
+  const handleSubmitForm = (data: OperationCostingDetailFormData) => {
+    editRecord
+      ? onUpdate({ ...data, costingDetailsId: editRecord.id }, () => {
+          setTabKey("VIEWLIST");
+        })
+      : onCreate(data, () => {
+          setTabKey("VIEWLIST");
+        });
+  };
   const isDisabledButton = useMemo(() => {
-    const newData = getValues();
-    // return isEqualObject(["costingDataType", "paymentQuantity", "amount"], initFormData, newData);
-    return false;
+    const data = getValues();
+    return isEqualObject(["costingDataType", "paymentQuantity", "amount"], initFormData, data);
   }, [watch()]);
 
   const renderForm = () => {
@@ -374,7 +384,8 @@ const DrawerCostingDetail: React.FC<DrawerCostingDetailProps> = ({
         ) : type === EInventoryType.TRANSPORT ? (
           <TransportDetailForm stockTypes={stockTypes} onChangeForm={handleChangeForm} />
         ) : null}
-        <div className="line bg-gray-200 h-[1px] mb-3 mt-3"></div>
+
+        <Divider />
         <Controller
           control={control}
           name="paymentQuantity"
@@ -398,12 +409,13 @@ const DrawerCostingDetail: React.FC<DrawerCostingDetailProps> = ({
           <Space>
             <Button
               type="primary"
-              onClick={
-                onCreate &&
-                handleSubmit((data) =>
-                  editRecord ? onUpdate({ ...data, costingDetailsId: editRecord.id }) : onCreate(data),
-                )
-              }
+              // onClick={
+              //   onCreate &&
+              //   handleSubmit((data) =>
+              //     editRecord ? onUpdate({ ...data, costingDetailsId: editRecord.id }) : onCreate(data),
+              //   )
+              // }
+              onClick={handleSubmit(handleSubmitForm)}
               disabled={isDisabledButton}
             >
               Lưu
@@ -530,6 +542,7 @@ const DrawerCostingDetail: React.FC<DrawerCostingDetailProps> = ({
       width={650}
       height={"90vh"}
       onClose={onClose}
+      maskClosable={false}
       open={open}
       styles={{
         body: {

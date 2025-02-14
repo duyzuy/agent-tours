@@ -71,6 +71,7 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
     Object.keys(initData).forEach((key) => {
       setValue(key as keyof OperationFormData, initData[key as keyof OperationFormData]);
     });
+    setQuerySearch(initialValue?.sellableCode || "");
   }, [initialValue, open]);
 
   return (
@@ -106,18 +107,29 @@ const DrawerOperation: React.FC<DrawerOperationProps> = ({
             </FormItem>
           )}
         />
+
         <Controller
           control={control}
           name="sellableCode"
           render={({ field, fieldState: { error } }) => (
             <FormItem label="Chọn sản phẩm" required validateStatus={error ? "error" : ""} help={error?.message}>
-              <Input
-                value={querySearch}
-                onChange={(evt) => setQuerySearch(evt.target.value)}
-                placeholder="Nhập mã sản phẩm..."
-              />
-              <div className="mb-3"></div>
-              <SellableCodeListSelector value={field?.value} onChange={handleChangeCode} query={deferedQuerySearch} />
+              {action === "edit" ? (
+                field.value
+              ) : (
+                <>
+                  <Input
+                    value={querySearch}
+                    onChange={(evt) => setQuerySearch(evt.target.value)}
+                    placeholder="Nhập mã sản phẩm..."
+                  />
+                  <div className="mb-3"></div>
+                  <SellableCodeListSelector
+                    value={field?.value}
+                    onChange={handleChangeCode}
+                    query={deferedQuerySearch}
+                  />
+                </>
+              )}
             </FormItem>
           )}
         />

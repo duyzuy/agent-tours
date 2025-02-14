@@ -1,15 +1,20 @@
-import { DocumentListResponse, DocumentPayload, DocumentResponse } from "@/models/management/core/document.interface";
+import {
+  DocumentListResponse,
+  CreateDocumentPayload,
+  UpdateDocumentPayload,
+  DocumentResponse,
+} from "@/models/management/core/document.interface";
 import { coreApi } from "../coreApi";
 
 export const documentAPIs = {
-  create: async (payload: DocumentPayload) => {
+  create: async (payload: CreateDocumentPayload) => {
     return await coreApi.post<DocumentResponse>("core/PassengerDocumentCheckList_Addnew", {
       requestObject: {
         ...payload,
       },
     });
   },
-  update: async (payload: { documentCheckListId: number } & Pick<DocumentPayload, "status">) => {
+  update: async (payload: UpdateDocumentPayload) => {
     return await coreApi.post<DocumentResponse>("core/PassengerDocumentCheckList_Update", {
       requestObject: {
         ...payload,

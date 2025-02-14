@@ -5,12 +5,11 @@ import { IBookingTourPayload } from "./bookingInformation.interface";
 import useMessage from "@/hooks/useMessage";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
-
 import { usePortalBookingManager } from "../context";
 import { PortalBookingManagerFormData } from "./bookingInformation.interface";
 
 const useCreateBooking = () => {
-  const { mutate: makeCreateBooking } = useCreateBookingMutation();
+  const { mutate: makeCreateBooking, isPending } = useCreateBookingMutation();
   const [bookingInformation, setBookingInformation] = usePortalBookingManager();
 
   const bookingSSRWithPax = bookingInformation.bookingInfo?.bookingSsrWithPax;
@@ -63,7 +62,7 @@ const useCreateBooking = () => {
       channel: bookingInformation.channel,
       bookingSsr: bookingSSRNoPax,
     };
-    console.log(bookingPayload);
+
     makeCreateBooking(bookingPayload, {
       onSuccess: (response) => {
         setBookingInformation((prev) => ({
@@ -84,48 +83,33 @@ const useCreateBooking = () => {
     });
   };
 
-  const getServiceListByPax = (
+  const getServiceItemsByPassenger = (
     bookingIndex: number,
   ): IBookingTourPayload["bookingDetails"][number]["ssr"] | undefined => {
-    const serviceItemByPax = bookingSSRWithPax?.filter((item) => item.bookingIndex === bookingIndex);
-    const ssrItemCanculateQuantity = serviceItemByPax?.reduce<IBookingTourPayload["bookingDetails"][number]["ssr"]>(
-      (acc, item) => {
-        if (!acc) {
+    const serviceItemByPassenger = bookingSSRWithPax?.filter((item) => item.bookingIndex === bookingIndex);
+    return serviceItemByPassenger?.reduce<Exclude<IBookingTourPayload["bookingDetails"][number]["ssr"], undefined>>(
+      (acc, { configItem, type, qty }) => {
+        const indexConfigItem = acc.findIndex((ssrItem) => ssrItem.sellableConfigId === configItem.recId);
+        if (indexConfigItem !== -1) {
+          acc.splice(indexConfigItem, 1, {
+            ...acc[indexConfigItem],
+            qty: acc[indexConfigItem].qty + qty,
+          });
+        } else {
           acc = [
+            ...acc,
             {
-              sellableConfigId: item.configItem.recId,
-              qty: item.qty,
-              amount: item.configItem[item.type],
-              type: item.type,
+              sellableConfigId: configItem.recId,
+              qty: qty,
+              amount: configItem[type],
+              type: type,
             },
           ];
         }
-        if (acc) {
-          const indexConfigItem = acc.findIndex((ssrItem) => ssrItem.sellableConfigId === item.configItem.recId);
-
-          if (indexConfigItem !== -1) {
-            acc.splice(indexConfigItem, 1, {
-              ...acc[indexConfigItem],
-              qty: acc[indexConfigItem].qty + item.qty,
-            });
-          } else {
-            acc = [
-              ...acc,
-              {
-                sellableConfigId: item.configItem.recId,
-                qty: item.qty,
-                amount: item.configItem[item.type],
-                type: item.type,
-              },
-            ];
-          }
-        }
-
         return acc;
       },
       [],
     );
-    return ssrItemCanculateQuantity;
   };
 
   const getBookingDetailsItems = (
@@ -138,7 +122,7 @@ const useCreateBooking = () => {
     let bookingDetails: IBookingTourPayload["bookingDetails"] = [];
 
     bookingDetails = items?.reduce<IBookingTourPayload["bookingDetails"]>((acc, bkItem) => {
-      const ssrItems = getServiceListByPax(bkItem.index);
+      const ssrItems = getServiceItemsByPassenger(bkItem.index);
 
       acc = [
         ...acc,
@@ -155,6 +139,6 @@ const useCreateBooking = () => {
     }, []);
     return bookingDetails;
   };
-  return { createBooking };
+  return { createBooking, loading: isPending };
 };
 export default useCreateBooking;

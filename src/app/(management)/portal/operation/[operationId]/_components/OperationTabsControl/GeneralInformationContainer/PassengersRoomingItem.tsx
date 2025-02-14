@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Form, Input, Popover, Space, Tag, TagProps } from "antd";
+import { Button, Card, Divider, Form, Input, Popover, Progress, Space, Tag, TagProps } from "antd";
 import { getRoomingName } from "@/constants/rooming.constant";
 import { RoomingType } from "@/models/management/booking/rooming.interface";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { getPassengerGender } from "@/constants/common";
 import { OperationStatusResponse } from "@/models/management/core/operationStatus.interface";
 import FormItem from "@/components/base/FormItem";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
+import DocumentCheckListInfo from "./DocumentCheckListInfo";
 
 type PassengerRoomingInfo = OperationStatusResponse["result"]["passengerList"][number];
 export interface PassengersRoomingItemProps {
@@ -40,74 +41,36 @@ const PassengersRoomingItem: React.FC<PassengersRoomingItemProps> = ({ roomType,
           {_paxIndex !== 0 ? <Divider style={{ margin: "12px 0" }} /> : null}
           <div className="flex gap-x-3 items-start">
             <UserOutlined className="w-12 h-12 text-lg bg-gray-100 rounded-full flex items-center justify-center" />
-            <div>
-              <div className="grid grid-cols-2 gap-6 mb-3">
-                <div className="grid grid-cols-4 gap-3">
-                  <div className="">
-                    <div className="text-xs text-gray-500 mb-1">Hành khách</div>
-                    {getPassengerType(pax.type)}
-                  </div>
-                  <div className="">
-                    <div className="text-xs text-gray-500 mb-1">Danh xưng</div>
-                    {getPassengerTitle(pax.paxTitle)}
-                  </div>
-                  <div className="">
-                    <div className="text-xs text-gray-500 mb-1">Họ</div>
-                    {pax.paxLastname ? pax.paxLastname : "--"}
-                  </div>
-                  <div className="">
-                    <div className="text-xs text-gray-500 mb-1">Tên đệm và tên</div>
-                    {pax.paxMiddleFirstName ? pax.paxMiddleFirstName : "--"}
-                  </div>
-                  <div className="">
-                    <div className="text-xs text-gray-500 mb-1">Giới tính</div>
-                    {getPassengerGender(pax.paxGender)}
-                  </div>
+            <div className="flex flex-col gap-y-6 flex-1">
+              <div className="grid grid-cols-3 lg:grid-cols-5 gap-3">
+                <div className="">
+                  <div className="text-xs text-gray-500 mb-1">Hành khách</div>
+                  {getPassengerType(pax.type)}
                 </div>
-                <div className="flex-1 max-w-xs">
-                  <div className="text-xs text-gray-500 mb-1">Hồ sơ giấy tờ yêu cầu</div>
-                  <ul className="flex flex-col gap-y-1">
-                    {pax.documents?.map(({ documentName, status, documentCheckListId }, _index) => (
-                      <li key={documentCheckListId}>
-                        <div className="flex gap-x-1 justify-between items-start">
-                          <div className="w-20 text-right">
-                            <Tag
-                              className="text-xs !mr-0"
-                              color={
-                                status === "FINISHED"
-                                  ? "green"
-                                  : status === "NOT_FINISHED"
-                                  ? "red"
-                                  : status === "NEW"
-                                  ? "blue"
-                                  : "default"
-                              }
-                              bordered={false}
-                            >
-                              {status === "FINISHED"
-                                ? "Đã nộp"
-                                : status === "HANDOVERED"
-                                ? "Đã bàn giao"
-                                : status === "NEW"
-                                ? "Mới"
-                                : status === "NOT_FINISHED"
-                                ? "Chưa nộp"
-                                : "Unknown"}
-                            </Tag>
-                          </div>
-                          <div className="flex-1">
-                            <span className="w-6 inline-block text-center">{`${_index + 1}.`}</span>
-                            <span>{documentName}</span>
-                          </div>
-                        </div>
-                      </li>
-                    )) || "--"}
-                  </ul>
+                <div className="">
+                  <div className="text-xs text-gray-500 mb-1">Danh xưng</div>
+                  {getPassengerTitle(pax.paxTitle)}
+                </div>
+                <div className="">
+                  <div className="text-xs text-gray-500 mb-1">Họ</div>
+                  {pax.paxLastname ? pax.paxLastname : "--"}
+                </div>
+                <div className="">
+                  <div className="text-xs text-gray-500 mb-1">Tên đệm và tên</div>
+                  {pax.paxMiddleFirstName ? pax.paxMiddleFirstName : "--"}
+                </div>
+                <div className="">
+                  <div className="text-xs text-gray-500 mb-1">Giới tính</div>
+                  {getPassengerGender(pax.paxGender)}
                 </div>
               </div>
+              <div className="flex-1 max-w-lg">
+                <div className="text-xs text-gray-500 mb-1">Hồ sơ giấy tờ yêu cầu</div>
+                <DocumentCheckListInfo items={pax.documents || []} />
+              </div>
               <div>
-                <div className="text-xs text-gray-500 mb-1">Thông tin</div>
-                <div className="flex flex-row flex-wrap gap-2">
+                <div className="text-xs text-gray-500 mb-2">Thông tin</div>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                   {pax.passengerDeadlineRemarks
                     ? pax.passengerDeadlineRemarks?.map((item, _index) => (
                         <PassengerDeadlineRemarkItem key={_index} data={item} onSave={onSave} loading={loading} />
@@ -156,7 +119,7 @@ function PassengerDeadlineRemarkItem({ data, onSave, loading }: PassengerDeadlin
     setNote(data.remark);
   }, [data]);
   return (
-    <div className="item-deadline border rounded-md justify-between w-80 px-3 py-2" key={deadlineId}>
+    <div className="item-deadline border rounded-md justify-between px-3 py-2" key={deadlineId}>
       <div className="flex justify-between">
         <span className="text-xs font-semibold">{deadlineType}</span>
         <Popover

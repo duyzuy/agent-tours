@@ -109,11 +109,11 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
         label: "Loại dịch vụ",
         rolepers: PATH_WITH_PERMISSION["product/inventory"],
       },
-      {
-        key: "product/stock",
-        label: "Kho dịch vụ",
-        rolepers: PATH_WITH_PERMISSION["product/stock"],
-      },
+      // {
+      //   key: "product/stock",
+      //   label: "Kho dịch vụ",
+      //   rolepers: PATH_WITH_PERMISSION["product/stock"],
+      // },
       {
         key: "product/template-sellable",
         label: "Sản phẩm",

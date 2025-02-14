@@ -6,8 +6,8 @@ import { EInventoryType, EStockType } from "@/models/management/core/inventoryTy
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import { FeCustomDatePickerProps } from "@/components/base/FeCustomDatePicker";
 import dayjs from "dayjs";
-import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
-import { memo, useEffect, useState } from "react";
+import { DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
+import { memo, useEffect } from "react";
 import { AirDetailType, ICostingDetailItem } from "@/models/management/core/operation/operationCostingDetail.interface";
 import { stringToDate } from "@/utils/date";
 
