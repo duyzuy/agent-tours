@@ -42,7 +42,7 @@ const TitleRow: React.FC<Props> = ({
             className={`mr-2 ${mode === "light" ? "text-gray-900 !bg-gray-100" : "!text-gray-400 !bg-gray-800"}`}
           />
         )}
-        <div className="font-semibold text-lg">{title}</div>
+        <div className={`font-semibold text-lg ${mode === "light" ? "text-gray-900" : "text-gray-300"}`}>{title}</div>
       </div>
       {!hideAddButton && (
         <Button type="primary" size="small" ghost icon={<PlusOutlined />} onClick={onClickAdd}>

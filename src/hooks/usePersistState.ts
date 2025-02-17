@@ -9,12 +9,12 @@ export const usePersistState = <T>({
   initialValue: T;
 }): [T, Dispatch<SetStateAction<T>>] => {
   const [state, setState] = useState(() => {
-    if (isSSR()) return initialValue;
+    if (!isSSR()) {
+      const data = localStorage.getItem(key);
 
-    const data = localStorage.getItem(key);
-
-    if (data) {
-      return data as T;
+      if (data) {
+        return data as T;
+      }
     }
     return initialValue;
   });
