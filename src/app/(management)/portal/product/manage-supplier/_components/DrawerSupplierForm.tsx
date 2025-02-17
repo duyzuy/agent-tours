@@ -175,35 +175,63 @@ const DrawerSupplierForm: React.FC<DrawerSupplierFormProps> = ({
   return (
     <Drawer
       title={actionType === "CREATE" ? "Thêm mới" : "Chỉnh sửa"}
-      // extra={
-      //   actionType === "EDIT" ? (
-      //     <>
-      //       {getValues("status") === Status.QQ ? (
-      //         <Button type="primary" onClick={() => recordId && onApproval?.(recordId)}>
-      //           Duyệt
-      //         </Button>
-      //       ) : (
-      //         <Space>
-      //           <span className="font-normal text-sm">Kích hoạt:</span>
-      //           <Switch
-      //             value={getValues("status") === Status.OK ? true : false}
-      //             loading={isLoadingStatus}
-      //             onChange={handleUpdateStatus}
-      //           />
-      //         </Space>
-      //       )}
-      //     </>
-      //   ) : null
-      // }
       destroyOnClose
       width={550}
       onClose={onCancel}
+      maskClosable={false}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <Space className="py-3">
+          {getValues("status") === Status.QQ ? (
+            <Button type="primary" onClick={() => recordId && onApproval?.(recordId)}>
+              Duyệt
+            </Button>
+          ) : (
+            <>
+              {actionType === "EDIT" && getValues("status") === Status.OK ? (
+                <Button
+                  type="primary"
+                  onClick={handleSubmit((data) => onSubmit?.(actionType, data))}
+                  disabled={isDisableSubmitButton}
+                >
+                  Cập nhật
+                </Button>
+              ) : null}
+              {actionType === "CREATE" ? (
+                <>
+                  <Button
+                    type="primary"
+                    onClick={handleSubmit((data) =>
+                      onSubmit?.(actionType, {
+                        ...data,
+                        status: Status.QQ,
+                      }),
+                    )}
+                    disabled={isDisableSubmitButton}
+                  >
+                    Lưu và chờ duyệt
+                  </Button>
+                  <Button
+                    type="primary"
+                    onClick={handleSubmit((data) =>
+                      onSubmit?.(actionType, {
+                        ...data,
+                        status: Status.OK,
+                      }),
+                    )}
+                    disabled={isDisableSubmitButton}
+                  >
+                    Lưu và duyệt
+                  </Button>
+                </>
+              ) : null}
+            </>
+          )}
+          <Button onClick={onCancel} className="w-28">
+            Huỷ bỏ
+          </Button>
+        </Space>
+      }
     >
       <Form layout="vertical" colon={false} labelWrap className="max-w-4xl">
         {disabledVendorField ? null : (
@@ -414,56 +442,6 @@ const DrawerSupplierForm: React.FC<DrawerSupplierFormProps> = ({
           </Col>
         </Row>
       </Form>
-      <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-        <Space>
-          <Button onClick={onCancel}>Huỷ bỏ</Button>
-          {getValues("status") === Status.QQ ? (
-            <Button type="primary" onClick={() => recordId && onApproval?.(recordId)}>
-              Duyệt
-            </Button>
-          ) : (
-            <>
-              {actionType === "EDIT" && getValues("status") === Status.OK ? (
-                <Button
-                  type="primary"
-                  onClick={handleSubmit((data) => onSubmit?.(actionType, data))}
-                  disabled={isDisableSubmitButton}
-                >
-                  Cập nhật
-                </Button>
-              ) : null}
-              {actionType === "CREATE" ? (
-                <>
-                  <Button
-                    type="primary"
-                    onClick={handleSubmit((data) =>
-                      onSubmit?.(actionType, {
-                        ...data,
-                        status: Status.QQ,
-                      }),
-                    )}
-                    disabled={isDisableSubmitButton}
-                  >
-                    Lưu và chờ duyệt
-                  </Button>
-                  <Button
-                    type="primary"
-                    onClick={handleSubmit((data) =>
-                      onSubmit?.(actionType, {
-                        ...data,
-                        status: Status.OK,
-                      }),
-                    )}
-                    disabled={isDisableSubmitButton}
-                  >
-                    Lưu và duyệt
-                  </Button>
-                </>
-              ) : null}
-            </>
-          )}
-        </Space>
-      </div>
     </Drawer>
   );
 };

@@ -50,19 +50,18 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
         />
       </div>
     ) : (
-      <Link href={filePath} target="__blank">
-        <span className="font-4xl text-6xl text-gray-600">
-          {(fileType === "xlsx" && <FileExcelOutlined />) ||
-            (fileType === "docx" && <FileWordOutlined />) ||
-            (fileType === "pdf" && <FilePdfOutlined />) || <FileUnknownOutlined />}
-        </span>
-      </Link>
+      <span className="font-4xl text-6xl text-gray-600">
+        {(fileType === "xlsx" && <FileExcelOutlined />) ||
+          (fileType === "docx" && <FileWordOutlined />) ||
+          (fileType === "pdf" && <FilePdfOutlined />) || <FileUnknownOutlined />}
+      </span>
     );
   };
   return (
     <div
       className={classNames("w-48 border rounded-lg p-2 relative overflow-hidden", {
         "border-primary-default drop-shadow-md": isSelected,
+        "border-gray-400/30": !isSelected,
       })}
     >
       <div
@@ -88,7 +87,17 @@ const MediaFileItem: React.FC<IMediaFileItemProps> = ({
                 onClick={() => onPreview?.(filePath)}
               />
             </Tooltip>
-          ) : null}
+          ) : (
+            <Link href={filePath} target="__blank">
+              <Button
+                type="text"
+                icon={<EyeOutlined />}
+                size="small"
+                className="!inline-flex items-center justify-center"
+                shape="circle"
+              />
+            </Link>
+          )}
           <Tooltip title="Sao chép">
             <Button
               type="text"

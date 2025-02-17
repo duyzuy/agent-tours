@@ -62,6 +62,8 @@ const DrawerCustomerInformation: React.FC<CustomerFormDrawerProps> = ({
       width={650}
       onClose={onClose}
       open={isOpen}
+      maskClosable={false}
+      closeIcon={null}
       footer={
         <Space className="py-3">
           <Button

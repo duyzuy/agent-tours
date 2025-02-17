@@ -1,6 +1,6 @@
 import { ESellChannel, SELL_CHANNEL } from "@/constants/channel.constant";
 import { IProductTour } from "@/models/management/booking/product.interface";
-import { Button, Drawer, Empty, Segmented, Space } from "antd";
+import { Button, Divider, Drawer, Empty, Segmented, Space } from "antd";
 import useSelectProductTour from "../../modules/useSelectProductTour";
 import PassengerTourClassItem from "./PassengerTourClassItem";
 import { moneyFormatVND } from "@/utils/helper";
@@ -148,7 +148,7 @@ const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, o
           >
             Mua dịch vụ
           </Button>
-          <Button size="large" type="text" className="!bg-gray-200 !text-gray-600 w-36" onClick={onCancelSelection}>
+          <Button size="large" className=" w-36" onClick={onCancelSelection}>
             Huỷ bỏ
           </Button>
         </Space>
@@ -169,7 +169,8 @@ const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, o
           <span className="">{data ? formatDate(data?.endDate) : null}</span>
         </div>
       </div>
-      <div className="tour__box__item-dropdown border-t pt-4 mt-4">
+      <Divider />
+      <div className="tour__box__item-dropdown">
         {inventories || stocks ? <h4 className="font-semibold mb-3">Dịch vụ đi kèm</h4> : null}
         <div className="flex flex-wrap gap-3 mb-3">
           {inventories?.map((item) => (
@@ -197,7 +198,8 @@ const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, o
           </>
         ) : null}
       </div>
-      <div className="section-sell-channel mt-3 pt-3 border-t">
+      <Divider />
+      <div className="section-sell-channel">
         <h3 className="text-lg font-[500] mb-3">Kênh bán</h3>
         <Segmented
           value={bookingInformation.channel}

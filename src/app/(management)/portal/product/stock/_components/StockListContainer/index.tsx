@@ -17,7 +17,6 @@ export interface StockListContainerProps {
     data: StockConfirmFormData,
     cb?: (response: BaseResponse<IStock>, variables?: IStockConfirmPayload) => void,
   ) => void;
-  onAdjustQuantity: (data: StockAdjustFormData, cb?: () => void) => void;
   render?: () => React.ReactNode;
   onChangeStockPage?: PaginationProps["onChange"];
 }
@@ -29,7 +28,7 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
   pageCurrent,
   totalItems,
   onConfirm,
-  onAdjustQuantity,
+
   onChangeStockPage,
   render,
 }) => {
@@ -55,11 +54,6 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
     });
   };
 
-  const onAddjust: DrawerStockDetailProps["onAdjust"] = (formData) => {
-    onAdjustQuantity(formData, () => {
-      setShowDrawler(false);
-    });
-  };
   return (
     <React.Fragment>
       {render?.()}
@@ -89,7 +83,6 @@ const StockListContainer: React.FC<StockListContainerProps> = ({
         initialValues={stockRecord}
         onApproval={onApproval}
         actionType={actionType}
-        onAdjust={onAddjust}
       />
     </React.Fragment>
   );

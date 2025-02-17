@@ -1,13 +1,9 @@
-import { IStock, IStockConfirmPayload, IStockPayload } from "@/models/management/core/stock.interface";
-import { StockAdjustFormData, StockConfirmFormData, StockFormData } from "./stock.interface";
+import { IStock, IStockConfirmPayload } from "@/models/management/core/stock.interface";
+import { StockConfirmFormData, StockFormData } from "./stock.interface";
 import useMessage from "@/hooks/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCore } from "@/queries/var";
-import {
-  useCreateStockMutation,
-  useConfirmStockMutation,
-  useAdjustStockQuantityMutation,
-} from "@/mutations/managements/stock";
+import { useCreateStockMutation, useConfirmStockMutation } from "@/mutations/managements/stock";
 import { BaseResponse } from "@/models/common.interface";
 import dayjs from "dayjs";
 import { DATE_TIME_FORMAT } from "@/constants/common";
@@ -15,7 +11,7 @@ import { DATE_TIME_FORMAT } from "@/constants/common";
 const useCRUDStockInventory = () => {
   const { mutate: makeCreateStock, isPending: isPendingCreate } = useCreateStockMutation();
   const { mutate: makeConfirmStock, isPending: isPendingConfirm } = useConfirmStockMutation();
-  const { mutate: makeAdjustStockQuantity, isPending: isPendingAdjust } = useAdjustStockQuantityMutation();
+
   const message = useMessage();
   const queryClient = useQueryClient();
 
@@ -82,30 +78,13 @@ const useCRUDStockInventory = () => {
       },
     });
   };
-  const onAdjustQuantity = (formData: StockAdjustFormData, cb?: () => void) => {
-    makeAdjustStockQuantity(formData, {
-      onSuccess: (data, variables) => {
-        message.success(`Thêm số lượng stock thành công`);
-        queryClient.invalidateQueries({
-          queryKey: [queryCore.GET_STOCK_LIST_INVENTORY],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [queryCore.GET_STOCK_DETAIL_INVENTORY, formData.inventoryStockId],
-        });
-        cb?.();
-      },
-      onError: (error, variables) => {
-        message.error(error.message);
-      },
-    });
-  };
+
   const convertDateFormat = (dateStr: string) => {
     return dayjs(dateStr).locale("en").format(DATE_TIME_FORMAT);
   };
   return {
     onCreate: onCreateStock,
     onConfirm: onConfirmStock,
-    onAdjustQuantity,
     loading: isPendingCreate,
   };
 };

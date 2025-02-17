@@ -20,16 +20,21 @@ const BookingRequestPageList = () => {
   const { data, isLoading } = useGetBookingRequestListCoreQuery({ enabled: true, queryParams: initqueryParams });
   const [openDrawer, setOpenDrawer] = useState(false);
   const { onCreate } = useCRUDBookingRequest();
-
   const router = useRouter();
+
   const handleCreate: DrawerBookingRequestFormProps["onSubmit"] = (action, data) => {
-    action === "CREATE" && onCreate(data);
+    action === "CREATE" &&
+      onCreate(data, {
+        onSuccess(data, variables, context) {
+          setOpenDrawer(false);
+        },
+      });
   };
   return (
     <PageContainer
-      name="Danh sách yêu cầu dịch vụ"
-      modelName="yêu cầu dịch vụ"
-      breadCrumItems={[{ title: "Danh sách yêu cầu dịch vụ" }]}
+      name="Danh sách dịch vụ yêu cầu"
+      // modelName="dịch vụ yêu cầu"
+      breadCrumItems={[{ title: "Danh sách dịch vụ yêu cầu" }]}
       onClick={() => setOpenDrawer(true)}
     >
       <TableListPage<IBookingRequest>
@@ -38,8 +43,6 @@ const BookingRequestPageList = () => {
         columns={columns}
         dataSource={data?.list || []}
         loading={isLoading}
-        size="small"
-        onView={(record) => router.push(`/portal/booking-request/${record.requestId}`)}
         showActionsLess={false}
         pagination={{
           size: "small",

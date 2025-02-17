@@ -56,9 +56,14 @@ const CommentContainerDrawer: React.FC<CommentContainerDrawerProps> = ({ items, 
             onChange={(evt) => onComment(evt.target.value)}
           />
         </Form.Item>
-        <Button type="primary" htmlType="submit" className="w-[80px]" loading={isPending} disabled={isDisabledButton}>
-          Lưu
-        </Button>
+        <Space>
+          <Button type="primary" htmlType="submit" className="w-[80px]" loading={isPending} disabled={isDisabledButton}>
+            Lưu
+          </Button>
+          <Button className="w-[80px]" onClick={onClose}>
+            Huỷ
+          </Button>
+        </Space>
       </Form>
       <Divider />
       <Timeline

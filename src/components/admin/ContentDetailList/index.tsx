@@ -4,20 +4,29 @@ export interface ContentDetailListProps {
   items: { label?: string; value?: React.ReactNode | string }[];
   className?: string;
   column?: number;
+  direction?: ContentDetailItemProps["direction"];
 }
-export const ContentDetailList = ({ items, className = "", column = 4 }: ContentDetailListProps) => {
+export const ContentDetailList = ({
+  items,
+  className = "",
+  column = 4,
+  direction = "vertical",
+}: ContentDetailListProps) => {
   return (
     <div
-      className={classNames("grid grid-cols-2 gap-3", {
+      className={classNames({
+        "grid gap-3": direction === "vertical",
+        "flex flex-col gap-y-2": direction === "horizontal",
+        "lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2": column === 2 && direction === "vertical",
+        "lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6": column === 3 && direction === "vertical",
+        "lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8": column === 4 && direction === "vertical",
+        "lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8": column === 5 && direction === "vertical",
+        "lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-8": column === 6 && direction === "vertical",
         [className]: className,
-        "lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6": column === 3,
-        "lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8": column === 4,
-        "lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8": column === 5,
-        "lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-8": column === 6,
       })}
     >
       {items.map((item, _index) => (
-        <ContentDetailItem key={_index} {...item} />
+        <ContentDetailItem key={_index} {...item} direction={direction} />
       ))}
     </div>
   );
@@ -38,8 +47,9 @@ function ContentDetailItem({ label, value, className = "", direction = "vertical
       })}
     >
       <div
-        className={classNames("block text-xs text-gray-600", {
+        className={classNames("block text-gray-600", {
           "w-[160px]": direction === "horizontal",
+          "text-xs": direction === "vertical",
         })}
       >
         {label}

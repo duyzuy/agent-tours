@@ -5,7 +5,6 @@ import { BookingOrderInvoiceFormData } from "../../../modules/bookingOrder.inter
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { bookingInvoiceInfoSchema } from "../../../schema/bookingOrder.schema";
 import { isEqualObject } from "@/utils/compare";
-import { isEqual } from "lodash";
 
 export interface DrawerInvoiceInformationProps {
   isOpen?: boolean;
@@ -69,11 +68,23 @@ const DrawerInvoiceInformation: React.FC<DrawerInvoiceInformationProps> = ({
       width={650}
       onClose={onClose}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      maskClosable={false}
+      closeIcon={null}
+      footer={
+        <Space className="py-3">
+          <Button
+            onClick={() => handlerSubmit(formData, onSubmit)}
+            type="primary"
+            disabled={isDisableButton}
+            className="w-24"
+          >
+            Lưu
+          </Button>
+          <Button onClick={onClose} className="w-24">
+            Huỷ
+          </Button>
+        </Space>
+      }
     >
       <Form layout="vertical">
         <Row gutter={16}>
@@ -148,14 +159,6 @@ const DrawerInvoiceInformation: React.FC<DrawerInvoiceInformationProps> = ({
           </Col>
         </Row>
       </Form>
-      <div className="drawler-action absolute px-4 py-4 border-t left-0 right-0 bg-white bottom-0">
-        <Space>
-          <Button onClick={onClose}>Huỷ</Button>
-          <Button onClick={() => handlerSubmit(formData, onSubmit)} type="primary" disabled={isDisableButton}>
-            Cập nhật
-          </Button>
-        </Space>
-      </div>
     </Drawer>
   );
 };

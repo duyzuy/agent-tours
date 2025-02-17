@@ -75,6 +75,7 @@ const AdminLayout = ({ children }: Props) => {
           width={240}
           theme={mode}
           className="h-screen"
+          style={{ background: colorBgContainer }}
         >
           <div className={classNames("h-16 flex items-center px-4")}>
             <Image src={originalLogo} alt="logo" priority className="w-full max-w-[120px] mx-auto" />

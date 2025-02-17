@@ -40,7 +40,7 @@ const StockPage = () => {
     enabled: !isUndefined(stockQueryParams.requestObject?.inventoryId),
   });
   const { list: stockList, pageSize, pageCurrent, totalItems } = stockResponse || {};
-  const { onCreate, onConfirm, onAdjustQuantity, loading } = useCRUDStockInventory();
+  const { onCreate, onConfirm, loading } = useCRUDStockInventory();
 
   const onChangeValidDate: RangePickerProps["onChange"] = (dates) => {
     setStockQueryParams((prev) => ({
@@ -180,7 +180,6 @@ const StockPage = () => {
           totalItems={totalItems || 0}
           isLoading={isLoadingStockList}
           onConfirm={onConfirm}
-          onAdjustQuantity={onAdjustQuantity}
           onChangeStockPage={onChangePage}
           render={renderSearchStockList}
         />

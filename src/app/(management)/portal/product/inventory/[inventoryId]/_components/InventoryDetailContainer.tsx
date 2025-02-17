@@ -28,7 +28,7 @@ const InventoryDetailContainer: React.FC<{ data: IInventoryDetail }> = ({ data }
   });
   const { list: stockList, pageSize, pageCurrent, totalItems } = stockResponse || {};
 
-  const { onCreate, onConfirm, onAdjustQuantity } = useCRUDStockInventory();
+  const { onCreate, onConfirm } = useCRUDStockInventory();
 
   const onChangeStatus = (value: string) => {
     if (value === "All") {
@@ -77,7 +77,6 @@ const InventoryDetailContainer: React.FC<{ data: IInventoryDetail }> = ({ data }
           totalItems={totalItems || 0}
           isLoading={isLoadingStockList}
           onConfirm={onConfirm}
-          onAdjustQuantity={onAdjustQuantity}
           onChangeStockPage={(page) =>
             setStockFilterFormdata((prev) => ({
               ...prev,

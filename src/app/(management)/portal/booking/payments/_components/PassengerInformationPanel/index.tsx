@@ -125,7 +125,7 @@ const PassengerInformationPanel: React.FC<PassengerInformationPanelProps> = ({ b
         </div>
       ))}
       <div className="text-right">
-        <Button type="primary" ghost size="large" onClick={handleGoNext} loading={isStartTransition} className="w-48">
+        <Button type="primary" ghost size="large" onClick={handleGoNext} loading={isStartTransition} className="w-36">
           <span>
             Đi tiếp <ArrowRightOutlined className="ml-2" />
           </span>

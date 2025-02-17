@@ -1,11 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Button, Drawer, Progress, Space, Tag } from "antd";
+import { Button, Divider, Drawer, Progress, Space, Tag } from "antd";
 import { IDocument } from "@/models/management/core/document.interface";
 import { LinkOutlined, RightOutlined } from "@ant-design/icons";
 import { mediaConfig } from "@/configs";
 import UpdateDocumentButton from "./UpdateDocumentButton";
 import CreateDocumentButton from "./CreateDocumentButton";
+import { useThemeMode } from "@/context";
 
 interface DocumentCheckListProps {
   documents?: IDocument[];
@@ -15,6 +16,7 @@ interface DocumentCheckListProps {
 }
 
 const DocumentCheckList = ({ documents, paxId, paxLastname, paxMiddleFirstName }: DocumentCheckListProps) => {
+  const [themeMode] = useThemeMode();
   const finishedDocumentCount = documents?.filter((doc) => doc.status === "FINISHED").length || 0;
   const totalDocumentCount = documents?.length || 0;
   const [showDrawer, setShowDrawer] = useState(false);
@@ -47,13 +49,17 @@ const DocumentCheckList = ({ documents, paxId, paxLastname, paxMiddleFirstName }
         push={false}
         maskClosable={false}
         onClose={() => setShowDrawer(false)}
+        className={themeMode === "dark" ? "text-gray-100" : "text-gray-900"}
       >
         <div
-          className="document__list flex flex-col gap-y-3"
+          className="document-list flex flex-col gap-y-3"
           style={{ scrollbarGutter: "stable", scrollbarWidth: "thin" }}
         >
           {documents?.map((data, _index) => (
-            <DocumentCardItem key={data.documentCheckListId} data={data} />
+            <React.Fragment key={data.documentCheckListId}>
+              {_index !== 0 ? <Divider /> : null}
+              <DocumentCardItem data={data} />
+            </React.Fragment>
           ))}
         </div>
       </Drawer>
@@ -69,7 +75,7 @@ function DocumentCardItem({ data }: DocumentCardItemProps) {
   const { status, documentDescription, documentName, attachedMedias, remark } = data;
 
   return (
-    <div className="border-b pb-3 mb-3">
+    <div className="document-item">
       <div className="head-title mb-2">
         <div className="font-semibold inline-block">{documentName}</div>
         <Tag
@@ -108,18 +114,20 @@ function DocumentCardItem({ data }: DocumentCardItemProps) {
       </div>
       <div className="mb-3">
         <div className="text-xs text-gray-500">File đính kèm</div>
-        {attachedMedias?.map((item) => (
-          <div key={item.id}>
-            <Link
-              href={`${mediaConfig.rootApiPath}/${item.fullPath}`}
-              target="_blank"
-              className="inline-flex gap-x-1 items-start"
-            >
-              <LinkOutlined className="mt-1" />
-              <span>{item.path}</span>
-            </Link>
-          </div>
-        )) || "--"}
+        {attachedMedias && attachedMedias.length
+          ? attachedMedias.map((item) => (
+              <div key={item.id}>
+                <Link
+                  href={`${mediaConfig.rootApiPath}/${item.fullPath}`}
+                  target="_blank"
+                  className="inline-flex gap-x-1 items-start"
+                >
+                  <LinkOutlined className="mt-1" />
+                  <span>{item.path}</span>
+                </Link>
+              </div>
+            ))
+          : "--"}
       </div>
       <UpdateDocumentButton data={data} />
     </div>

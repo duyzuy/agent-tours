@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Input, Space, Radio, Button, Drawer, Row, Col } from "antd";
+import { Form, Input, Space, Radio, Button, Drawer, Row, Col, InputNumber } from "antd";
 import { isEqual } from "lodash";
 import FormItem from "@/components/base/FormItem";
 
@@ -11,9 +11,11 @@ import { EInventoryType } from "@/models/management/core/inventoryType.interface
 import { IBookingRequestDetail } from "@/models/management/bookingRequest/bookingRequest.interface";
 import { RangePickerProps } from "antd/es/date-picker";
 import CustomRangePicker from "@/components/admin/CustomRangePicker";
-import { TIME_FORMAT } from "@/constants/common";
+import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
 import dayjs from "dayjs";
 import { stringToDate } from "@/utils/date";
+import { moneyFormatVND } from "@/utils/helper";
+import { isEqualObject } from "@/utils/compare";
 
 type DrawerAction = "CREATE" | "EDIT";
 export type TDrawlerCreateAction = {
@@ -79,7 +81,35 @@ const DrawerBookingRequestForm: React.FC<DrawerBookingRequestFormProps> = ({
   }, []);
 
   const isDisableUpdateButton = useMemo(() => {
-    return isEqual(initialValues?.custName, getValues("custName"));
+    let formValues = getValues();
+
+    formValues = {
+      ...formValues,
+      startDate: dayjs(formValues.startDate).locale("en").format(DATE_TIME_FORMAT),
+      endDate: dayjs(formValues.endDate).locale("en").format(DATE_TIME_FORMAT),
+    };
+
+    console.log({ formValues, initialValues });
+    return isEqualObject(
+      [
+        "custAddress",
+        "custEmail",
+        "custName",
+        "custPhoneNumber",
+        "endDate",
+        "extraPrice",
+        "invoiceAddress",
+        "invoiceCompanyName",
+        "tourPrice",
+        "startDate",
+        "rmk",
+        "requestName",
+        "referenceName",
+        "invoiceTaxCode",
+      ],
+      formValues,
+      initialValues,
+    );
   }, [watch()]);
 
   useEffect(() => {
@@ -122,11 +152,37 @@ const DrawerBookingRequestForm: React.FC<DrawerBookingRequestFormProps> = ({
       width={550}
       onClose={onClose}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      maskClosable={false}
+      footer={
+        <Space className="py-3">
+          {actionType === "CREATE" ? (
+            <>
+              <Button
+                type="primary"
+                onClick={handleSubmit((data) => onSubmit?.(actionType, data))}
+                disabled={false}
+                className="w-24"
+              >
+                Lưu
+              </Button>
+            </>
+          ) : actionType === "EDIT" ? (
+            <>
+              <Button
+                type="primary"
+                onClick={handleSubmit((data) => onSubmit?.(actionType, data))}
+                disabled={isDisableUpdateButton}
+                className="w-24"
+              >
+                Cập nhật
+              </Button>
+            </>
+          ) : null}
+          <Button type="default" className="w-24" onClick={onCancel}>
+            Huỷ bỏ
+          </Button>
+        </Space>
+      }
     >
       <Form layout="vertical" className=" max-w-4xl">
         <Controller
@@ -164,24 +220,42 @@ const DrawerBookingRequestForm: React.FC<DrawerBookingRequestFormProps> = ({
             </FormItem>
           )}
         />
-        <Controller
-          control={control}
-          name="tourPrice"
-          render={({ field, fieldState: { error } }) => (
-            <FormItem label="Giá tour" validateStatus={error ? "error" : ""} help={error?.message}>
-              <Input {...field} placeholder="Giá tour" />
-            </FormItem>
-          )}
-        />
-        <Controller
-          control={control}
-          name="extraPrice"
-          render={({ field, fieldState: { error } }) => (
-            <FormItem label="Giá dịch vụ" validateStatus={error ? "error" : ""} help={error?.message}>
-              <Input {...field} placeholder="Giá dịch vụ" />
-            </FormItem>
-          )}
-        />
+        <Row gutter={24}>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="tourPrice"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem
+                  label="Giá tour"
+                  validateStatus={error ? "error" : ""}
+                  help={error?.message}
+                  className="!w-full"
+                >
+                  <InputNumber {...field} placeholder="Giá tour" className="!w-full" controls={false} />
+                  <p className="text-xs text-red-600">{moneyFormatVND(field.value)}</p>
+                </FormItem>
+              )}
+            />
+          </Col>
+          <Col span={12}>
+            <Controller
+              control={control}
+              name="extraPrice"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem
+                  label="Giá dịch vụ"
+                  validateStatus={error ? "error" : ""}
+                  help={error?.message}
+                  className="!w-full"
+                >
+                  <InputNumber {...field} placeholder="Giá dịch vụ" className="!w-full" controls={false} />
+                  <p className="text-xs text-red-600">{moneyFormatVND(field.value)}</p>
+                </FormItem>
+              )}
+            />
+          </Col>
+        </Row>
         <h3 className="text-lg font-[500] mb-6">Thông tin khách hàng</h3>
         <Controller
           control={control}
@@ -318,30 +392,6 @@ const DrawerBookingRequestForm: React.FC<DrawerBookingRequestFormProps> = ({
           )}
         />
       </Form>
-      <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-        <Space>
-          <Button type="default" onClick={onCancel}>
-            Huỷ bỏ
-          </Button>
-          {actionType === "CREATE" ? (
-            <>
-              <Button type="primary" onClick={handleSubmit((data) => onSubmit?.(actionType, data))} disabled={false}>
-                Lưu
-              </Button>
-            </>
-          ) : actionType === "EDIT" ? (
-            <>
-              <Button
-                type="primary"
-                onClick={handleSubmit((data) => onSubmit?.(actionType, data))}
-                disabled={isDisableUpdateButton}
-              >
-                Cập nhật
-              </Button>
-            </>
-          ) : null}
-        </Space>
-      </div>
     </Drawer>
   );
 };

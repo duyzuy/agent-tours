@@ -214,7 +214,7 @@ MediaFolderWraper.FolderList = function MediaFolderList({
     <ul
       className={classNames(`folder-list depth-${depth}`, {
         [className]: className,
-        "border-l ml-3": depth > 0,
+        "border-l border-l-gray-400/30 ml-3": depth > 0,
       })}
     >
       {items.map((item) => (

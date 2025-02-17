@@ -1,4 +1,5 @@
 import { BaseQueryParams, BaseResponse, Status } from "../../common.interface";
+import { IMediaFile } from "../media.interface";
 
 export interface IFormOfPayment {
   recId: number;
@@ -22,6 +23,17 @@ export interface IFormOfPayment {
   infoTrace: string;
   infoNote: string;
   infoNumber: string;
+  attachedMedias:
+    | {
+        id: number;
+        objectType: "MEDIA";
+        path: string;
+        slug: string;
+        mediaType: IMediaFile["mediaType"];
+        extension: IMediaFile["extension"];
+        fullPath: string;
+      }[]
+    | null;
 }
 
 export enum EFopType {
@@ -45,15 +57,50 @@ export enum EFopPaymentType {
   SYSTEM = "SYSTEM", // từ hệ thống sinh ra
 }
 
-export interface FormOfPaymentPayload {
+/**
+ * payload for create form of payment
+ * @orderId: number;
+ * @type: EFopType; "PAYMENT(IN)"; REFUND(OUT), CHARGE(IN-KOTRAKHACH), DISCOUNT(OUT-KOTRAKHACH)
+ * @FopType: EFopPaymentType; "CASH"; BANKTRANSFER, CREDITCARD, COUPON
+ */
+export interface CreateFormOfPaymentPayload {
   orderId?: number;
-  type?: EFopType; //"PAYMENT(IN)"; REFUND(OUT), CHARGE(IN-KOTRAKHACH), DISCOUNT(OUT-KOTRAKHACH)
-  fopType?: EFopPaymentType; //"CASH"; BANKTRANSFER, CREDITCARD, COUPON
+  requestId?: number;
+  type?: EFopType;
+  fopType?: EFopPaymentType;
   fopDocument?: string;
   amount?: number;
   payer?: string;
+  infoTId?: string;
+  infoMId?: string;
+  infoTnxId?: string;
+  infoTrace?: string;
+  infoNote?: string;
+  infoNumber?: string;
+
+  attachedMedias: {
+    id: number;
+    objectType: "MEDIA";
+    path: string;
+    slug: string;
+    mediaType: IMediaFile["mediaType"];
+    extension: IMediaFile["extension"];
+    fullPath: string;
+  }[];
   rmk?: string;
   status?: Status; //OK không được xoá - chỉ QQ mới được xoá
+}
+export interface ApprovalFormOfPaymentPayload {
+  recId?: number;
+  attachedMedias: {
+    id: number;
+    objectType: "MEDIA";
+    path: string;
+    slug: string;
+    mediaType: IMediaFile["mediaType"];
+    extension: IMediaFile["extension"];
+    fullPath: string;
+  }[];
 }
 
 export class FormOfPaymmentQueryParams

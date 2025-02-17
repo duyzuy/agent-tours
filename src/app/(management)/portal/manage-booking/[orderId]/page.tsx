@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/date";
 import { PaymentStatus, Status } from "@/models/common.interface";
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
-import { useSelectorManageBooking } from "./context";
+import useManageBooking, { useSelectorManageBooking } from "./context";
 import PageContainer from "@/components/admin/PageContainer";
 import ServiceListContainer from "./_components/ServiceListContainer";
 import CustomerInformation from "./_components/CustomerInformation";
@@ -32,6 +32,7 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
   const { data: operationStatus } = useGetOperationOrderStatusQuery({ enabled: true, orderId: Number(params.orderId) });
   const router = useRouter();
   const orderInformation = useSelectorManageBooking((state) => state.order);
+
   const adminInfo = getAdminUserInformationStorage();
 
   const bookingOrder = useMemo(() => orderInformation?.bookingOrder, [orderInformation]);
@@ -142,10 +143,10 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
       />
       {isBookingCanceled ? null : (
         <BookingOrderActions
-          orderId={bookingOrder?.recId}
-          totalAmount={bookingOrder?.totalAmount}
-          totalPaid={bookingOrder?.totalPaid}
-          paymentStatus={bookingOrder?.paymentStatus}
+          orderId={bookingOrder.recId}
+          totalAmount={bookingOrder.totalAmount}
+          totalPaid={bookingOrder.totalPaid}
+          paymentStatus={bookingOrder.paymentStatus}
         />
       )}
       <Divider style={{ margin: "16px 0" }} />

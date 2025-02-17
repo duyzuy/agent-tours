@@ -1,11 +1,10 @@
 import { ColumnsType } from "antd/es/table";
-import { Leading } from "@/models/management/leading.interface";
-import { Tag, Popover, Space, TagProps } from "antd";
+import { Tag, TagProps } from "antd";
 import { formatDate } from "@/utils/date";
-import { IOperation } from "@/models/management/core/operation/operation.interface";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { RightOutlined } from "@ant-design/icons";
 import { moneyFormatVND } from "@/utils/helper";
 import { IBookingRequest } from "@/models/management/bookingRequest/bookingRequest.interface";
+import Link from "next/link";
 
 export const columns: ColumnsType<IBookingRequest> = [
   {
@@ -28,11 +27,19 @@ export const columns: ColumnsType<IBookingRequest> = [
     key: "requestName",
     dataIndex: "requestName",
     width: 200,
-    render(value, { requestName }, index) {
-      return requestName;
+    render(value, { requestName, requestId }, index) {
+      return (
+        <div>
+          <div>{requestName}</div>
+          <Link href={`/portal/booking-request/${requestId}`}>
+            <span className="inline-flex items-center gap-2">
+              Chi tiết <RightOutlined className="text-[10px]" />
+            </span>
+          </Link>
+        </div>
+      );
     },
   },
-
   {
     title: "Khởi hành",
     key: "startDate",
@@ -60,7 +67,7 @@ export const columns: ColumnsType<IBookingRequest> = [
     dataIndex: "totalAmount",
     width: 180,
     render: (value, { totalAmount }, index) => {
-      return <span>{moneyFormatVND(totalAmount)}</span>;
+      return <span className="text-red-600">{moneyFormatVND(totalAmount)}</span>;
     },
   },
   {
@@ -80,7 +87,7 @@ export const columns: ColumnsType<IBookingRequest> = [
           : status === "NEW"
           ? "blue"
           : status === "WIN"
-          ? "success"
+          ? "green"
           : "";
 
       let label: string;

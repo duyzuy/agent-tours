@@ -1,4 +1,4 @@
-import { ThemeConfig, theme } from "antd";
+import { Select, ThemeConfig, theme } from "antd";
 
 const baseTheme: ThemeConfig = {
   hashed: true,
@@ -32,8 +32,6 @@ const baseTheme: ThemeConfig = {
       // colorText: "red",
     },
     Input: {
-      // paddingLG: 14,
-      // fontSize: 16,
       fontSizeSM: 12,
       paddingInlineSM: 11,
       paddingBlockSM: 4,
@@ -54,10 +52,7 @@ const baseTheme: ThemeConfig = {
       borderRadiusLG: 6,
     },
     Select: {
-      // selectorBg: "red",
-      // colorBgTextActive: "blue",
       paddingSM: 8,
-      optionSelectedBg: "#e7f3ff",
     },
     Form: {
       colorTextHeading: "#23262F",
@@ -65,11 +60,32 @@ const baseTheme: ThemeConfig = {
     Checkbox: {
       paddingXS: 12,
     },
+    Menu: {
+      darkItemBg: "rgb(20, 20, 20)",
+      darkSubMenuItemBg: "rgb(33 33 33)",
+    },
+    Layout: {
+      triggerBg: "rgb(20, 20, 20)",
+    },
   },
 };
 
-const lightTheme = { ...baseTheme, algorithm: theme.defaultAlgorithm };
-const darkTheme = { ...baseTheme, algorithm: theme.darkAlgorithm };
+const lightTheme = {
+  ...baseTheme,
+  components: {
+    ...baseTheme.components,
+    Select: { ...baseTheme.components?.Select, optionSelectedBg: "#e7f3ff" },
+  },
+  algorithm: theme.defaultAlgorithm,
+};
+const darkTheme = {
+  ...baseTheme,
+  components: {
+    ...baseTheme.components,
+    Form: { ...baseTheme.components?.Form, labelColor: "rgba(255, 255, 255, 0.85)" },
+  },
+  algorithm: theme.darkAlgorithm,
+};
 
 export { lightTheme, darkTheme };
 // export default mainTheme;

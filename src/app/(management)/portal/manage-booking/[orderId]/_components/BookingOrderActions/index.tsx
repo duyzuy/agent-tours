@@ -3,12 +3,12 @@ import React, { useState, useCallback } from "react";
 import { Button, Space } from "antd";
 import { PaymentStatus } from "@/models/common.interface";
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
-import { FOPFormData } from "../../modules/formOfPayment.interface";
 import DrawerPaymentList from "./formOfPayment/DrawerPaymentList";
 import DrawerPaymentForm from "./formOfPayment/DrawerPaymentForm";
+import { FOPFormData } from "@/modules/admin/form-of-payment/fop.interface";
 
 interface BookingOrderActionsProps {
-  orderId?: number;
+  orderId: number;
   totalAmount?: number;
   totalPaid?: number;
   paymentStatus?: PaymentStatus;

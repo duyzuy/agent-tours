@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Form, Input, Row, Col, Button, DatePickerProps } from "antd";
+import { Form, Input, Row, Col, Button, DatePickerProps, Card, Divider } from "antd";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { SearchOutlined } from "@ant-design/icons";
 import { SearchBookingFormData } from "../../modules/searchBooking.interface";
@@ -76,7 +76,7 @@ const SearchBookingBox: React.FC<SearchBookingBoxProps> = ({ className = "", loa
     setFormData((prev) => ({ ...prev, byProductType: [type] }));
   };
 
-  const onSubmitFormData: HandleSubmit<SearchBookingFormData> = (data) => {
+  const handleSubmitForm: HandleSubmit<SearchBookingFormData> = (data) => {
     let url = `${pathname}`;
     url = url.concat("?byMonth=", data.byMonth || "");
 
@@ -100,86 +100,88 @@ const SearchBookingBox: React.FC<SearchBookingBoxProps> = ({ className = "", loa
 
   return (
     <SearchBookingWrapper className={classNames({ [className]: className })}>
-      <div className="booking-tab bg-white px-3 py-3 rounded-tr-md rounded-tl-md border-b">
+      <Card size="small">
         <ProductTypeSelector
           value={formData.byProductType ? formData?.byProductType[0] : undefined}
           onChange={onChangeProductType}
         />
-      </div>
-      <div className="booking-form px-6 py-4 bg-white rounded-br-md rounded-bl-md">
-        <Form layout="vertical" size="large">
-          <Row align="bottom" gutter={16}>
-            <Col span={6}>
-              <FormItem
-                label="Điểm đến"
-                className="departure-location"
-                validateStatus={errors?.byDest ? "error" : ""}
-                help={errors?.byDest || ""}
-              >
-                <DestinationSelector
-                  value={formData.byDest ? formData.byDest[0] : undefined}
-                  onChange={onChangeDestination}
-                />
-              </FormItem>
-            </Col>
-            <Col span={4}>
-              <FormItem
-                label="Thời gian đi"
-                validateStatus={errors?.byMonth ? "error" : ""}
-                help={errors?.byMonth || ""}
-              >
-                <CustomDatePicker
-                  placeholder="Thời gian đi"
-                  value={
-                    formData.byMonth
-                      ? dayjs(formData.byMonth, {
-                          format: MONTH_FORMAT,
-                        })
-                      : undefined
-                  }
-                  format={"MMMM/YYYY"}
-                  picker="month"
-                  className="w-full"
-                  bordered={false}
-                  disabledDate={(date) => {
-                    return dayjs().isAfter(date, "month");
-                  }}
-                  style={{ padding: 0 }}
-                  onChange={handleSelectDate}
-                />
-              </FormItem>
-            </Col>
-            <Col span={4}>
-              <FormItem label="Code">
-                <Input
-                  placeholder="Nhập code"
-                  value={formData.byCode}
-                  bordered={false}
-                  style={{ padding: 0 }}
-                  onChange={(ev) => onChangeCode(ev.target.value)}
-                />
-              </FormItem>
-            </Col>
-            <Col span={6}>
-              <FormItem label="Loại Inventory">
-                <InventoryTypeListSelector values={formData.byInventoryType} onChange={onChangeInventoryType} />
-              </FormItem>
-            </Col>
-            <Col flex={1} className="text-right">
-              <FormItem>
-                <Button
-                  type="primary"
-                  icon={<SearchOutlined />}
-                  loading={loading}
-                  onClick={() => handlerSubmit(formData, onSubmitFormData)}
+
+        <Divider style={{ margin: "8px 0" }} />
+        <div className="booking-form pt-3 rounded-br-md rounded-bl-md">
+          <Form layout="vertical" size="large" disabled={loading}>
+            <Row align="bottom" gutter={16}>
+              <Col span={6}>
+                <FormItem
+                  label="Điểm đến"
+                  className="departure-location"
+                  validateStatus={errors?.byDest ? "error" : ""}
+                  help={errors?.byDest || ""}
                 >
-                  Tìm kiếm
-                </Button>
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
-      </div>
+                  <DestinationSelector
+                    value={formData.byDest ? formData.byDest[0] : undefined}
+                    onChange={onChangeDestination}
+                  />
+                </FormItem>
+              </Col>
+              <Col span={4}>
+                <FormItem
+                  label="Thời gian đi"
+                  validateStatus={errors?.byMonth ? "error" : ""}
+                  help={errors?.byMonth || ""}
+                >
+                  <CustomDatePicker
+                    placeholder="Thời gian đi"
+                    value={
+                      formData.byMonth
+                        ? dayjs(formData.byMonth, {
+                            format: MONTH_FORMAT,
+                          })
+                        : undefined
+                    }
+                    format={"MMMM/YYYY"}
+                    picker="month"
+                    className="w-full"
+                    bordered={false}
+                    disabledDate={(date) => {
+                      return dayjs().isAfter(date, "month");
+                    }}
+                    style={{ padding: 0 }}
+                    onChange={handleSelectDate}
+                  />
+                </FormItem>
+              </Col>
+              <Col span={4}>
+                <FormItem label="Code">
+                  <Input
+                    placeholder="Nhập code"
+                    value={formData.byCode}
+                    bordered={false}
+                    style={{ padding: 0 }}
+                    onChange={(ev) => onChangeCode(ev.target.value)}
+                  />
+                </FormItem>
+              </Col>
+              <Col span={6}>
+                <FormItem label="Loại Inventory">
+                  <InventoryTypeListSelector values={formData.byInventoryType} onChange={onChangeInventoryType} />
+                </FormItem>
+              </Col>
+              <Col flex={1} className="text-right">
+                <FormItem>
+                  <Button
+                    type="primary"
+                    icon={<SearchOutlined />}
+                    loading={loading}
+                    onClick={() => handlerSubmit(formData, handleSubmitForm)}
+                  >
+                    Tìm kiếm
+                  </Button>
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+        </div>
+      </Card>
     </SearchBookingWrapper>
   );
 };

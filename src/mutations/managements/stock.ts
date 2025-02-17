@@ -21,9 +21,3 @@ export const useConfirmStockMutation = () => {
     mutationFn: (payload) => stockInventoryAPIs.confirm(payload),
   });
 };
-
-export const useAdjustStockQuantityMutation = () => {
-  return useCustomMutation<BaseResponse<IStock>, IStockAdjustPayload>({
-    mutationFn: (payload) => stockInventoryAPIs.adjustQuantity(payload),
-  });
-};

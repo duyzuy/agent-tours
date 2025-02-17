@@ -1,4 +1,4 @@
-import { ColumnsType } from "antd/es/table";
+import Table, { ColumnsType } from "antd/es/table";
 import { moneyFormatVND } from "@/utils/helper";
 import { Tag } from "antd";
 import { PaymentStatus, Status } from "@/models/common.interface";
@@ -19,6 +19,20 @@ export const columnsFOPs: ColumnsType<FormOfPaymentListRs["result"][number]> = [
     key: "orderId",
     width: 80,
   },
+  Table.EXPAND_COLUMN,
+  {
+    title: "Người thanh toán",
+    dataIndex: "fopDocument",
+    key: "fopDocument",
+    width: 160,
+    render(value, record, index) {
+      return (
+        <div>
+          <span className="block">{record.payer}</span>
+        </div>
+      );
+    },
+  },
   {
     title: "Loại",
     dataIndex: "type",
@@ -32,19 +46,6 @@ export const columnsFOPs: ColumnsType<FormOfPaymentListRs["result"][number]> = [
           <Link href={`/portal/manage-booking/${orderId}`} className="block text-xs">
             <span>Xem đặt chỗ</span>
           </Link>
-        </div>
-      );
-    },
-  },
-  {
-    title: "Người thanh toán",
-    dataIndex: "fopDocument",
-    key: "fopDocument",
-    width: 160,
-    render(value, record, index) {
-      return (
-        <div>
-          <span className="block">{record.payer}</span>
         </div>
       );
     },

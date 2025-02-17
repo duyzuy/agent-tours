@@ -186,7 +186,6 @@ const StockConfirmationForm: React.FC<StockConfirmationFormProps> = ({
           />
         </FormItem>
       </Form>
-
       {!isDisabled ? (
         <Space>
           <Button type="primary" onClick={() => handlerSubmit(stockConfirmFormData, onSubmitForm)} disabled={false}>

@@ -15,6 +15,7 @@ export const bookingRequestAPIs = {
       },
       pageCurrent: queryParams?.pageCurrent,
       pageSize: queryParams?.pageSize,
+      orderBy: queryParams?.orderBy,
     });
   },
   getOne: async (requestId?: number) => {

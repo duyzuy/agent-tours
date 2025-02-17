@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { PassengerType } from "@/models/common.interface";
 import { moneyFormatVND } from "@/utils/helper";
-import { Divider } from "antd";
+import { Card, Divider } from "antd";
 import { useMemo } from "react";
 
 import { usePortalBookingManagerSelector } from "../context";
@@ -65,12 +65,11 @@ const PortalBookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label })
   }, []);
 
   return (
-    <div className="booking__summary bg-white rounded-md">
-      <div className="booking__summary-head px-6 pt-6">
+    <div className="booking-summary rounded-md">
+      <Card>
         <h3 className="text-lg font-[500]">{label}</h3>
-      </div>
-      <Divider />
-      <div className="booking__summary-body px-6 pb-4">
+        <Divider />
+
         <div className="product__item mb-3">
           <div className="product__item-label mb-3">
             <span className="font-[500]">Sản phẩm</span>
@@ -258,11 +257,11 @@ const PortalBookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label })
         ) : null}
 
         <Divider />
-        <div className="booking__summary-total flex justify-between">
+        <div className="booking-summary__total flex justify-between">
           <span>Tổng tiền</span>
           <span className="font-[500] text-primary-default text-lg">{moneyFormatVND(total)}</span>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

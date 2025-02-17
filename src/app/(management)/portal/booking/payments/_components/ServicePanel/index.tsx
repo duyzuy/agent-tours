@@ -107,7 +107,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, o
         />
       )}
       <div className="text-right">
-        <Button type="primary" ghost size="large" onClick={handleGoNext} loading={isTransition} className="w-48">
+        <Button type="primary" ghost size="large" onClick={handleGoNext} loading={isTransition} className="w-36">
           <span>
             Đi tiếp <ArrowRightOutlined classID="ml-2" />
           </span>

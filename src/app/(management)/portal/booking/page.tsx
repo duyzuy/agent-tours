@@ -31,7 +31,7 @@ const BookingPage = () => {
   return (
     <div className="page">
       <div
-        className="header-page p-6 bg-gray-200 rounded-lg mb-8"
+        className="header-page p-6 bg-gray-200/30 rounded-lg mb-8"
         style={{
           background: "url('/assets/images/admin/bg-header.png')",
           backgroundSize: "cover",

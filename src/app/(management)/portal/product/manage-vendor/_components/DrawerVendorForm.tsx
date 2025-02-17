@@ -22,8 +22,6 @@ export interface DrawerVendorFormProps {
   initialValues?: IVendorDetail;
   onSubmit?: (actionType: DrawerActions, formData: VendorFormData, cb?: () => void) => void;
   onApproval?: UseManageVendor["onApproval"];
-  onDeactive?: UseManageVendor["onDeactive"];
-  onActive?: UseManageVendor["onActive"];
 }
 
 const DrawerVendorForm: React.FC<DrawerVendorFormProps> = ({
@@ -33,8 +31,6 @@ const DrawerVendorForm: React.FC<DrawerVendorFormProps> = ({
   onSubmit,
   initialValues,
   onApproval,
-  onDeactive,
-  onActive,
 }) => {
   const initVendorFormData = new VendorFormData(
     undefined,
@@ -64,37 +60,37 @@ const DrawerVendorForm: React.FC<DrawerVendorFormProps> = ({
   const selectInventoryType: InventoryTypeSelectorProps["onChange"] = (value) => {
     setValue("typeList", value);
   };
-  const recordId = getValues("recId");
+
+  const toggleCreateSupplier = (checked: boolean) => {
+    setValue("createDefaultSupplier", checked);
+  };
 
   useEffect(() => {
-    if (initialValues && actionType === "EDIT") {
-      const updateFormData = new VendorFormData(
-        initialValues.recId,
-        initialValues.shortName,
-        initialValues.typeList,
-        initialValues.fullName,
-        initialValues.contact,
-        initialValues.address,
-        initialValues.email,
-        initialValues.taxCode,
-        initialValues.rmk,
-        initialValues.bankName,
-        initialValues.bankAccountNumber,
-        initialValues.bankAddress,
-        initialValues.paymentType,
-        initialValues.bankSwiftcode,
-        initialValues.paymentTerm,
-        false,
-        initialValues.status,
-      );
-      Object.entries(updateFormData).forEach(([key, value]) => {
-        setValue(key as keyof VendorFormData, value);
-      });
-    } else {
-      Object.entries(initVendorFormData).forEach(([key, value]) => {
-        setValue(key as keyof VendorFormData, value);
-      });
-    }
+    const updateFormData = initialValues
+      ? new VendorFormData(
+          initialValues.recId,
+          initialValues.shortName,
+          initialValues.typeList,
+          initialValues.fullName,
+          initialValues.contact,
+          initialValues.address,
+          initialValues.email,
+          initialValues.taxCode,
+          initialValues.rmk,
+          initialValues.bankName,
+          initialValues.bankAccountNumber,
+          initialValues.bankAddress,
+          initialValues.paymentType,
+          initialValues.bankSwiftcode,
+          initialValues.paymentTerm,
+          false,
+          initialValues.status,
+        )
+      : initVendorFormData;
+    Object.entries(updateFormData).forEach(([key, value]) => {
+      setValue(key as keyof VendorFormData, value);
+    });
+
     clearErrors();
   }, [initialValues, actionType]);
 
@@ -121,55 +117,69 @@ const DrawerVendorForm: React.FC<DrawerVendorFormProps> = ({
     );
   }, [isOpen, actionType, initialValues, watch()]);
 
-  // const handleUpdateStatus: SwitchProps["onChange"] = (checked) => {
-  //   if (!recordId) {
-  //     throw new Error("Recid in-valid");
-  //   }
-  //   setLoadingStatus(true);
-  //   if (checked === true) {
-  //     onActive?.(recordId, (data) => {
-  //       setValue("status", data.status);
-  //       setLoadingStatus(false);
-  //     });
-  //   } else {
-  //     onDeactive?.(recordId, (data) => {
-  //       setValue("status", data.status);
-  //       setLoadingStatus(false);
-  //     });
-  //   }
-  // };
-
-  // const renderExtraDrawer = () => {
-  //   return actionType === "EDIT" ? (
-  //     getValues("status") !== Status.QQ ? (
-  //       <Space>
-  //         <span className="font-normal text-sm">Kích hoạt:</span>
-  //         <Switch
-  //           value={getValues("status") === Status.OK ? true : false}
-  //           onChange={handleUpdateStatus}
-  //           loading={isLoadingStatus}
-  //         />
-  //       </Space>
-  //     ) : null
-  //   ) : null;
-  // };
-
-  const toggleCreateSupplier = (checked: boolean) => {
-    setValue("createDefaultSupplier", checked);
-  };
   return (
     <Drawer
       title={actionType === "CREATE" ? "Thêm mới" : "Chỉnh sửa"}
-      // extra={renderExtraDrawer()}
       destroyOnClose
       width={550}
       onClose={onCancel}
+      maskClosable={false}
       open={isOpen}
-      styles={{
-        body: {
-          paddingBottom: 80,
-        },
-      }}
+      footer={
+        <Space className="py-3">
+          {initialValues ? (
+            <>
+              {initialValues.status === Status.QQ ? (
+                <Button
+                  type="primary"
+                  className="w-28"
+                  onClick={() => initialValues?.recId && onApproval?.(initialValues.recId)}
+                >
+                  Duyệt
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  onClick={handleSubmit((data) => onSubmit?.("EDIT", data))}
+                  disabled={isDisableSubmitButton}
+                >
+                  Cập nhật
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <Button
+                type="primary"
+                onClick={handleSubmit((data) =>
+                  onSubmit?.("CREATE", {
+                    ...data,
+                    status: Status.QQ,
+                  }),
+                )}
+                disabled={isDisableSubmitButton}
+              >
+                Lưu và chờ duyệt
+              </Button>
+              <Button
+                type="primary"
+                onClick={handleSubmit((data) =>
+                  onSubmit?.("CREATE", {
+                    ...data,
+                    status: Status.OK,
+                  }),
+                )}
+                disabled={isDisableSubmitButton}
+              >
+                Lưu và duyệt
+              </Button>
+            </>
+          )}
+          <Button onClick={onCancel} className="w-28">
+            Huỷ bỏ
+          </Button>
+        </Space>
+      }
     >
       <Form layout="vertical" colon={false} labelWrap className="max-w-4xl">
         <Row gutter={[24, 24]}>
@@ -377,56 +387,6 @@ const DrawerVendorForm: React.FC<DrawerVendorFormProps> = ({
           />
         ) : null}
       </Form>
-      <div className="bottom py-4 absolute bottom-0 left-0 right-0 border-t px-6 bg-white">
-        <Space>
-          <Button onClick={onCancel}>Huỷ bỏ</Button>
-          {getValues("status") === Status.QQ ? (
-            <Button type="primary" onClick={() => recordId && onApproval?.(recordId)}>
-              Duyệt
-            </Button>
-          ) : (
-            <>
-              {actionType === "EDIT" && getValues("status") === Status.OK ? (
-                <Button
-                  type="primary"
-                  onClick={handleSubmit((data) => onSubmit?.(actionType, data))}
-                  disabled={isDisableSubmitButton}
-                >
-                  Cập nhật
-                </Button>
-              ) : null}
-              {actionType === "CREATE" ? (
-                <>
-                  <Button
-                    type="primary"
-                    onClick={handleSubmit((data) =>
-                      onSubmit?.(actionType, {
-                        ...data,
-                        status: Status.QQ,
-                      }),
-                    )}
-                    disabled={isDisableSubmitButton}
-                  >
-                    Lưu và chờ duyệt
-                  </Button>
-                  <Button
-                    type="primary"
-                    onClick={handleSubmit((data) =>
-                      onSubmit?.(actionType, {
-                        ...data,
-                        status: Status.OK,
-                      }),
-                    )}
-                    disabled={isDisableSubmitButton}
-                  >
-                    Lưu và duyệt
-                  </Button>
-                </>
-              ) : null}
-            </>
-          )}
-        </Space>
-      </div>
     </Drawer>
   );
 };

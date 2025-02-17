@@ -1,48 +1,32 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import classNames from "classnames";
-import { Form, Input, Button, Space } from "antd";
-import { isEmpty } from "lodash";
-import FormItem from "@/components/base/FormItem";
-import { useFormSubmit, HandleSubmit } from "@/hooks/useFormSubmit";
-import { stockAdjustSchema } from "../../schema/stock.schema";
+import { Form, Input, Button, Space, InputNumber, FormProps } from "antd";
 import { StockAdjustFormData } from "../../modules/stock.interface";
-interface StockAdjustmentFormProps {
-  inventoryStockId?: number;
-  onSubmit?: (formData: StockAdjustFormData) => void;
+export interface StockAdjustmentFormProps {
+  inventoryStockId: number;
   className?: string;
+  loading?: boolean;
   onCancel?: () => void;
+  onSubmit?: (formData: StockAdjustFormData) => void;
 }
 
+type StockAdjustmentFormKeys = {
+  quantity?: number;
+  rmk?: string;
+};
 const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
   inventoryStockId,
-  onSubmit,
+  loading,
   className = "",
   onCancel,
+  onSubmit,
 }) => {
-  const initFormData = new StockAdjustFormData(inventoryStockId, "", 0);
-  const [formData, setFormData] = useState(initFormData);
+  const [form] = Form.useForm<StockAdjustmentFormKeys>();
 
-  const { handlerSubmit, errors } = useFormSubmit({
-    schema: stockAdjustSchema,
-  });
-  const onChangeFormData = (key: keyof StockAdjustFormData, value: string | number) => {
-    if (key === "quantity") {
-      if (!isNaN(value as number)) {
-        value = Number(value);
-      }
-    }
-    setFormData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
+  const isDisableButton = Form.useWatch("quantity", form) === 0;
 
-  const isDisableButton = useMemo(() => {
-    return Number(formData.quantity) === 0 || isEmpty(formData.rmk);
-  }, [formData]);
-
-  const onSubmitForm: HandleSubmit<StockAdjustFormData> = (data) => {
-    onSubmit?.(data);
+  const handleFinishForm: FormProps<StockAdjustmentFormKeys>["onFinish"] = (data) => {
+    onSubmit?.({ ...data, inventoryStockId: inventoryStockId });
   };
 
   return (
@@ -51,34 +35,38 @@ const StockAdjustmentForm: React.FC<StockAdjustmentFormProps> = ({
         [className]: className,
       })}
     >
-      <h3 className="font-semibold text-[16px] mb-6">Cập nhật số lượng kho sản phẩm</h3>
-      <Form layout="vertical">
-        <FormItem
+      <h3 className="font-semibold text-[16px] mb-6">Điều chỉnh số lượng kho dịch vụ</h3>
+      <Form<StockAdjustmentFormKeys>
+        form={form}
+        layout="vertical"
+        onFinish={handleFinishForm}
+        initialValues={{ quantity: 0, rmk: "" }}
+        disabled={loading}
+      >
+        <Form.Item<StockAdjustmentFormKeys>
           label="Số lượng cần thêm/giảm"
           required
-          tooltip="Sử dụng '-' để giảm số lượng"
-          validateStatus={errors?.quantity ? "error" : ""}
-          help={errors?.quantity || ""}
+          tooltip="Giảm nếu số lượng < 0."
+          name="quantity"
+          rules={[{ required: true, message: "Không bỏ trống." }]}
+          className="!w-full"
         >
-          <Input
-            type="number"
-            placeholder="Số lượng"
-            value={formData.quantity}
-            onChange={(ev) => onChangeFormData("quantity", ev.target.value)}
-          />
-        </FormItem>
-        <FormItem label="Mô tả" required validateStatus={errors?.rmk ? "error" : ""} help={errors?.rmk || ""}>
-          <Input.TextArea
-            placeholder="Mô tả"
-            value={formData.rmk}
-            spellCheck={true}
-            onChange={(ev) => onChangeFormData("rmk", ev.target.value)}
-          />
-        </FormItem>
+          <InputNumber type="number" placeholder="Số lượng" className="!w-full" />
+        </Form.Item>
+        <Form.Item<StockAdjustmentFormKeys>
+          label="Mô tả"
+          required
+          rules={[{ required: true, message: "Không bỏ trống." }]}
+          name="rmk"
+        >
+          <Input.TextArea placeholder="Mô tả" spellCheck={true} />
+        </Form.Item>
         <Space>
-          <Button onClick={onCancel}>Huỷ</Button>
-          <Button type="primary" onClick={() => handlerSubmit(formData, onSubmitForm)} disabled={isDisableButton}>
-            Thêm
+          <Button type="primary" disabled={isDisableButton} className="w-28" htmlType="submit" loading={loading}>
+            Lưu
+          </Button>
+          <Button onClick={onCancel} className="w-28">
+            Huỷ
           </Button>
         </Space>
       </Form>

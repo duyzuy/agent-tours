@@ -118,12 +118,10 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
       destroyOnClose
       width={550}
       onClose={onClose}
+      maskClosable={false}
       open={isOpen}
       footer={
         <Space className="py-2">
-          <Button type="default" onClick={onCancel}>
-            Huỷ bỏ
-          </Button>
           {actionType === "CREATE" ? (
             <>
               <Button
@@ -152,6 +150,9 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
               </Button>
             </>
           ) : null}
+          <Button type="default" onClick={onCancel}>
+            Huỷ bỏ
+          </Button>
         </Space>
       }
     >
@@ -176,8 +177,8 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
                 value={vietnameseTonesToUnderscoreKeyname(value)}
                 disabled={actionType === "EDIT"}
               />
-              <div className="bg-red-50 p-3 rounded-md mt-3">
-                <ul className="list-disc pl-4 text-gray-600">
+              <div className="bg-red-200/20 p-3 rounded-md mt-3">
+                <ul className="list-disc pl-4">
                   <li>Không dấu và không chứa ký tự đặc biệt.</li>
                   <li>Ngăn cách bởi dấu gạch dưới &quot;_&ldquo;.</li>
                 </ul>
@@ -239,8 +240,8 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
                   ))}
                 </Space>
               </Radio.Group>
-              <div className="bg-red-50 p-3 rounded-md mt-3">
-                <ul className="list-disc pl-4 text-gray-600">
+              <div className="bg-red-200/20 p-3 rounded-md mt-3">
+                <ul className="list-disc pl-4">
                   <li>TOUR: Dịch vụ sẽ chỉ áp dụng cho sản phẩm là tour.</li>
                   <li>EXTRA: Dịch vụ áp dụng cho sản phẩm là tour hoặc sản phẩm bán không phải là tour.</li>
                 </ul>

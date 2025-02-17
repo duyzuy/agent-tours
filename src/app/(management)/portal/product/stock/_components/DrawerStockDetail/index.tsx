@@ -9,6 +9,7 @@ import { useGetStockDetailInventoryCoreQuery } from "@/queries/core/stockInvento
 import StockConfirmationForm from "./StockConfirmationForm";
 import StockAdjustmentForm from "./StockAdjustmentForm";
 import { ContentDetailList } from "@/components/admin/ContentDetailList";
+import StockHistoryList from "./StockHistoryList";
 
 export enum EActionType {
   EDIT = "edit",
@@ -36,16 +37,6 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
   isOpen,
   initialValues,
 }) => {
-  /**
-   * Get all Stock detail history adjustment
-   * only fetch if stock with status OK (Approval)
-   */
-
-  const { data: stockDetailList, isLoading } = useGetStockDetailInventoryCoreQuery({
-    inventoryStockId: initialValues?.recId || 0,
-    enabled: initialValues?.status === Status.OK,
-  });
-
   return (
     <Drawer
       title={initialValues?.code ?? null}
@@ -59,14 +50,14 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
         },
       }}
     >
-      {initialValues?.status === Status.QQ && (
+      {initialValues && initialValues.status === Status.QQ && (
         <StockConfirmationForm
           initialValues={initialValues}
           isDisabled={actionType !== EActionType.APPROVAL}
           onSubmit={onApproval}
         />
       )}
-      {initialValues && initialValues?.status !== Status.QQ && (
+      {initialValues && initialValues.status !== Status.QQ && (
         <>
           <div className="grid grid-cols-3 gap-4 mb-4">
             <ContentDetailList.Item label="#ID" value={initialValues?.recId} />
@@ -82,7 +73,6 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
               value={<span className="text-red-600">{initialValues?.used}</span>}
             />
           </div>
-
           <Divider />
           <div className="grid grid-cols-2 gap-4">
             <ContentDetailList.Item
@@ -159,45 +149,8 @@ const DrawerStockDetail: React.FC<DrawerStockDetailProps> = ({
           </div>
 
           <Divider />
-          <div className="stock-adjustment-wrapper">
-            <StockAdjustmentForm
-              inventoryStockId={initialValues?.recId}
-              onSubmit={onAdjust}
-              onCancel={onCancel}
-              className="mb-6"
-            />
-            <div className="py-3 border-b">
-              <p className="font-semibold">Lịch sử điều chỉnh</p>
-            </div>
-            <List
-              itemLayout="horizontal"
-              dataSource={stockDetailList || []}
-              loading={isLoading}
-              renderItem={(item, index) => (
-                <List.Item key={index}>
-                  <List.Item.Meta
-                    title={<Tag color="blue">{item.cat}</Tag>}
-                    description={
-                      <div className="description pt-2 text-gray-800">
-                        <div className="flex gap-x-2">
-                          <p className="w-32">{`Số lượng`}</p>
-                          <p className="flex-1">{`: ${item.quantity ? item.quantity : "--"}`}</p>
-                        </div>
-                        <div className="flex gap-x-2">
-                          <p className="w-32">{`Ngày cập nhật`}</p>
-                          <p>{`: ${formatDate(item.sysFstUpdate)}`}</p>
-                        </div>
-                        <div className="flex gap-x-2">
-                          <p className="w-32">{`Mô tả`}</p>
-                          <p className="flex-1">{`: ${item.rmk ? item.rmk : "--"}`}</p>
-                        </div>
-                      </div>
-                    }
-                  />
-                </List.Item>
-              )}
-            />
-          </div>
+
+          <StockHistoryList inventoryStockId={initialValues.recId} enabled={initialValues.status === Status.OK} />
         </>
       )}
     </Drawer>

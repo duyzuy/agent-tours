@@ -79,8 +79,8 @@ export const stockConfirmSchema: ObjectSchema<StockConfirmFormData> = object({
   end: string().required("Không bỏ trống").defined(),
 });
 
-export const stockAdjustSchema: ObjectSchema<StockAdjustFormData> = object({
-  inventoryStockId: number().required("inventoryStockId Bị thiếu."),
-  quantity: number().required("Số lượng không bỏ trống."),
-  rmk: string().required("Mô tả không bỏ trống"),
-});
+// export const stockAdjustSchema: ObjectSchema<StockAdjustFormData> = object({
+//   inventoryStockId: number().required("inventoryStockId Bị thiếu."),
+//   quantity: number().required("Số lượng không bỏ trống."),
+//   rmk: string().required("Mô tả không bỏ trống"),
+// });

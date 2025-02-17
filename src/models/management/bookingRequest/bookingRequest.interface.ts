@@ -1,4 +1,4 @@
-import { BaseResponse } from "@/models/common.interface";
+import { BaseQueryParams, BaseResponse } from "@/models/common.interface";
 
 export interface IBookingRequestDetail {
   requestId: number;
@@ -45,12 +45,13 @@ export type IBookingRequest = Pick<
 
 export interface BookingRequestListResponse extends BaseResponse<IBookingRequest[]> {}
 export interface BookingRequestResponse extends BaseResponse<IBookingRequestDetail> {}
-export class BookingRequestQueryParams {
-  requestObject: {
-    status: ("NEW" | "CONFIRMED" | "WIN" | "LOST" | "CANCELLED")[];
-  };
-  pageCurrent: number;
-  pageSize: number;
+export class BookingRequestQueryParams
+  implements BaseQueryParams<{ status: ("NEW" | "CONFIRMED" | "WIN" | "LOST" | "CANCELLED")[] }>
+{
+  requestObject?: { status: ("NEW" | "CONFIRMED" | "WIN" | "LOST" | "CANCELLED")[] } | undefined;
+  pageCurrent?: number | undefined;
+  pageSize?: number | undefined;
+  orderBy?: { sortColumn?: string; direction?: "asc" | "desc" } | undefined;
 
   constructor(
     requestObject: {
@@ -62,6 +63,7 @@ export class BookingRequestQueryParams {
     this.pageCurrent = pageCurrent;
     this.pageSize = pageSize;
     this.requestObject = requestObject;
+    this.orderBy = { sortColumn: "requestId", direction: "desc" };
   }
 }
 

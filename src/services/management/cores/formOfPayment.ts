@@ -5,20 +5,21 @@ import {
   FormOfPaymmentQueryParams,
   FormOfPaymentListRs,
   FormOfPaymentRs,
-  FormOfPaymentPayload,
+  CreateFormOfPaymentPayload,
+  ApprovalFormOfPaymentPayload,
 } from "@/models/management/core/formOfPayment.interface";
 export const formOfPaymentAPIs = {
-  createFormOfPayment: async (payload?: FormOfPaymentPayload) => {
+  create: async (payload?: CreateFormOfPaymentPayload) => {
     return await coreApi.post<FormOfPaymentRs, BaseResponse<null>>("core/BookingOrder_Fop_Addnew", {
       requestObject: {
         ...payload,
       },
     });
   },
-  approvalFOP: async (recId?: number) => {
+  approval: async (payload?: ApprovalFormOfPaymentPayload) => {
     return await coreApi.post<FormOfPaymentRs, BaseResponse<null>>("core/FOP_Confirm", {
       requestObject: {
-        recId,
+        ...payload,
       },
     });
   },

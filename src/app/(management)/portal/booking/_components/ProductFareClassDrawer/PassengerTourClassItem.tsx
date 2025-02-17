@@ -2,6 +2,7 @@ import React from "react";
 import Quantity, { QuantityProps } from "@/components/admin/Quantity";
 import { PassengerType } from "@/models/common.interface";
 import classNames from "classnames";
+import { Card } from "antd";
 
 export interface PassengerTourClassItemProps {
   channel: string;
@@ -32,14 +33,14 @@ const PassengerTourClassItem = ({
   variant = "horizontal",
 }: PassengerTourClassItemProps) => {
   return (
-    <div className="tour__class-item border rounded-md mb-4 bg-white overflow-hidden">
+    <Card className="tour__class-item" size="small">
       <div
         className={classNames("flex gap-3", {
           "flex-row items-center": variant === "horizontal",
           "flex-col": variant === "vertical",
         })}
       >
-        <div className="tour__item-info flex items-center gap-3 pl-6 py-3 bg-gray-50">
+        <div className="tour__item-info flex items-center gap-3 pl-6 py-3 rounded-md bg-gray-400/10">
           <span className="tour__item-class w-16">
             <span className="block text-xs text-gray-600">Class</span>
             <span className="font-[500]">{classChannel}</span>
@@ -56,7 +57,7 @@ const PassengerTourClassItem = ({
         <div
           className={classNames("tour__item-passenger-types flex", {
             "flex-row items-center gap-6": variant === "horizontal",
-            "flex-col gap-3 px-6 pb-3": variant === "vertical",
+            "flex-col gap-3 pb-3": variant === "vertical",
           })}
         >
           <PassengerTourClassItem.Pax
@@ -87,7 +88,7 @@ const PassengerTourClassItem = ({
           />
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 export default PassengerTourClassItem;

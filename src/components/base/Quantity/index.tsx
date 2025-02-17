@@ -53,9 +53,9 @@ const Quantity: React.FC<QuantityProps> = ({
           "w-10 h-10 rounded-[6px]": size === "lg",
           "w-8 h-8 rounded-[6px]": size === "md",
           "w-6 h-6 rounded-[3px] text-xs": size === "sm",
-          "bg-white hover:drop-shadow-sm border hover:bg-primary-default hover:border-primary-default hover:text-white":
+          "bg-gray-400/10 hover:drop-shadow-sm border hover:bg-primary-default hover:border-primary-default hover:text-white":
             shape === "outline",
-          "bg-slate-100  hover:drop-shadow-sm hover:bg-primary-default hover:text-white": shape === "default",
+          "bg-gray-400/10  hover:drop-shadow-sm hover:bg-primary-default hover:text-white": shape === "default",
         })}
         onClick={() => onChangeQuantity("minus")}
       >
@@ -75,9 +75,9 @@ const Quantity: React.FC<QuantityProps> = ({
           "w-10 h-10 rounded-[6px]": size === "lg",
           "w-8 h-8 rounded-[6px]": size === "md",
           "w-6 h-6 rounded-[3px] text-xs": size === "sm",
-          "bg-white hover:drop-shadow-sm border hover:bg-primary-default hover:border-primary-default hover:text-white":
+          "bg-white/10 hover:drop-shadow-sm border hover:bg-primary-default hover:border-primary-default hover:text-white":
             shape === "outline",
-          "bg-slate-100  hover:drop-shadow-sm hover:bg-primary-default hover:text-white": shape === "default",
+          "bg-gray-400/10  hover:drop-shadow-sm hover:bg-primary-default hover:text-white": shape === "default",
         })}
         onClick={() => onChangeQuantity("plus")}
       >

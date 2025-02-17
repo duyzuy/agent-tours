@@ -2,7 +2,7 @@ import { Status } from "@/models/common.interface";
 import { EFopType, EFopPaymentType } from "@/models/management/core/formOfPayment.interface";
 
 export class FOPFormData {
-  orderId: number;
+  orderId?: number;
   type?: EFopType;
   fopType?: EFopPaymentType;
   fopDocument?: string;
@@ -17,7 +17,7 @@ export class FOPFormData {
   infoNumber?: string;
   status?: Status;
   constructor(
-    orderId: number,
+    orderId: number | undefined,
     type: EFopType | undefined,
     fopType: EFopPaymentType | undefined,
     fopDocument: string,

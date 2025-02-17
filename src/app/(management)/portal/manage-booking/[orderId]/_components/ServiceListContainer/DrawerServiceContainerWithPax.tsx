@@ -171,6 +171,7 @@ const DrawerServiceContainerWithPax: React.FC<DrawerServiceContainerWithPaxProps
       onClose={handleCloseDrawer}
       closeIcon={null}
       destroyOnClose={true}
+      maskClosable={false}
       open={isOpen}
       footer={
         <div className="flex justify-between py-3">
@@ -218,7 +219,7 @@ const DrawerServiceContainerWithPax: React.FC<DrawerServiceContainerWithPaxProps
         <Spin tip="Đang tải dịch vụ">
           <div className="py-12">{null}</div>
         </Spin>
-      ) : !serviceList ? (
+      ) : !serviceList || !serviceList.length ? (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description={<Typography.Text>Không có dịch vụ nào khả dụng</Typography.Text>}

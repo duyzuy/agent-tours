@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Col, Divider, Row, Tabs } from "antd";
+import { Card, Col, Divider, Row, Tabs } from "antd";
 import styled from "styled-components";
 
 import { usePortalBookingManagerSelector } from "../context";
@@ -31,8 +31,8 @@ const ServicePage = () => {
     router.push("/portal/booking");
   }
   return (
-    <div className="services__page bg-slate-50 -mx-6 -my-6 p-6 h-full mb-8">
-      <div className="bg-white p-6 rounded-md mb-6">
+    <div className="services__page bg-slate-400/10 -mx-6 -my-6 p-6 min-h-full">
+      <Card>
         <ContentDetailList
           items={[
             { label: "Mã sản phẩm", value: product?.template.code },
@@ -70,7 +70,8 @@ const ServicePage = () => {
             <span>{moneyFormatVND(promo.discountAmount)}</span>
           </div>
         ))}
-      </div>
+      </Card>
+      <div className="h-8"></div>
       <Row gutter={32} className="max-w-7xl">
         <Col span={15}>
           <ServiceContainerTabStyled
