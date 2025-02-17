@@ -57,6 +57,14 @@ export const removeAccessToken = () => {
 export const getAccessToken = () => {
   return isSSR() ? "" : localStorage.getItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
 };
+export const getThemeMode = () => {
+  if (!isSSR()) {
+    return localStorage.getItem(LOCAL_STORAGE_KEY.THEME_MODE) as "dark" | "light" | null;
+  }
+};
+export const setThemeMode = (mode: "dark" | "light") => {
+  return !isSSR() && localStorage.setItem(LOCAL_STORAGE_KEY.THEME_MODE, mode);
+};
 
 // export const moneyFormat = (money: number) =>
 //   new Intl.NumberFormat("vi", {

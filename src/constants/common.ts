@@ -3,6 +3,7 @@ export enum LOCAL_STORAGE_KEY {
   LOGIN_USERNAME = "_login_username",
   LOCAL_USER_INFORMATION = "_local_user_information",
   ACCESS_TOKEN = "_access_token",
+  THEME_MODE = "theme-mode",
 }
 /**
  * Date format when create Stock, Sellable
