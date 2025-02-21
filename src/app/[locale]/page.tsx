@@ -21,8 +21,6 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
 
   unstable_setRequestLocale(locale);
 
-  // const t = useTranslations("home");
-
   const travelTour = new FeSearchTourQueryParams({
     // byMonth: "Aug2024",
     byProductType: [EProductType.TOUR],
