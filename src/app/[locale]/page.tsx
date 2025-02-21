@@ -23,7 +23,6 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
 
   // const t = useTranslations("home");
   // const dataa = await getServerSession(authOptions);
-  // console.log({ dataa });
 
   const travelTour = new FeSearchTourQueryParams({
     // byMonth: "Aug2024",
