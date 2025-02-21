@@ -34,7 +34,7 @@ const TourCardListContainer: React.FC<TourCardListContainerProps> = async ({ que
                 depart={tourItem.depart}
                 cms={tourItem.cms}
                 bordered={false}
-                className={isMobile() ? "min-w-[240px]" : ""}
+                className={isMobile() ? "w-[280px] min-w-[280px]" : ""}
               />
             ))}
           </WraperDynamicDevice>
