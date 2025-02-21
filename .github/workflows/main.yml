@@ -3,7 +3,7 @@ name: Deploy to server
 on:
   push:
     branches:
-      - main
+      - anthai
 jobs:
   web-deploy:
     name: 🎉 Deploy
