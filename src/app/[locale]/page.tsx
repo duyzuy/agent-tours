@@ -22,7 +22,6 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
   unstable_setRequestLocale(locale);
 
   // const t = useTranslations("home");
-  // const dataa = await getServerSession(authOptions);
 
   const travelTour = new FeSearchTourQueryParams({
     // byMonth: "Aug2024",
