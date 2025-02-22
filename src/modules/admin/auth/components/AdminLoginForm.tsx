@@ -1,10 +1,9 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, FormProps } from "antd";
 import Link from "next/link";
 import useAdminLogin from "../hooks/useAdminLogin";
 
 type AdminLoginFields = {
-  userId?: string;
   username?: string;
   password?: string;
 };
@@ -12,35 +11,29 @@ type AdminLoginFields = {
 const FORGOT_PASSWORD_LINK = "/admin-auth/forgot-password";
 
 const AdminLoginForm: React.FC = () => {
+  const [form] = Form.useForm<AdminLoginFields>();
   const { mutate: signIn, isPending } = useAdminLogin();
 
+  const handleLogin: FormProps<AdminLoginFields>["onFinish"] = (data) => {
+    signIn(data);
+  };
+
   return (
-    <Form
+    <Form<AdminLoginFields>
       name="admin-login"
+      form={form}
       labelCol={{ span: 24 }}
       wrapperCol={{ span: 24 }}
-      onFinish={signIn}
+      onFinish={handleLogin}
       disabled={isPending}
       layout="vertical"
       autoComplete="off"
       initialValues={{
         userId: "99",
-        password: "123123123",
+        password: "123123",
         username: "99",
       }}
     >
-      <Form.Item<AdminLoginFields>
-        label="ID"
-        name="userId"
-        rules={[
-          {
-            required: true,
-            message: "Vui lòng nhập ID",
-          },
-        ]}
-      >
-        <Input placeholder="Tên tài khoản/Mã đại lý" size="large" />
-      </Form.Item>
       <Form.Item<AdminLoginFields>
         label="Tên tài khoản/Mã đại lý"
         name="username"

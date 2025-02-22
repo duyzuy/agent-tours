@@ -10,21 +10,18 @@ const AdminLoginPage = () => {
 
   const staffLogin = () => {
     onLogin({
-      userId: "12",
       username: "nguyenhoanglong",
       password: "123123123",
     });
   };
   const agentStaffLogin = () => {
     onLogin({
-      userId: "16",
       username: "duonghaianh",
       password: "123123123",
     });
   };
   const agentLogin = () => {
     onLogin({
-      userId: "18",
       username: "agent01",
       password: "123123123",
     });

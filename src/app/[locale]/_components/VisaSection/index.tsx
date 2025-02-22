@@ -2,6 +2,25 @@
 import React from "react";
 import Image from "next/image";
 import classNames from "classnames";
+import {
+  flagVi,
+  flagVn,
+  flagKr,
+  flagJp,
+  flagGbEng,
+  flagFr,
+  flagGe,
+  flagCa,
+  flagUs,
+  flagEg,
+  flagCu,
+  flagMr,
+  flagSa,
+  flagSd,
+  flagNe,
+  flagAu,
+  flagMl,
+} from "@/assets/flags";
 
 const DATA = [
   {
@@ -11,17 +30,17 @@ const DATA = [
       {
         key: "vietnam",
         name: "Visa Việt Nam",
-        thumbnail: "/assets/images/flag-vietnam.png",
+        thumbnail: flagVn,
       },
       {
         key: "korean",
         name: "Visa Hàn Quốc",
-        thumbnail: "/assets/images/flag-korean.png",
+        thumbnail: flagKr,
       },
       {
         key: "japan",
         name: "Visa Nhật Bản",
-        thumbnail: "/assets/images/flag-japan.png",
+        thumbnail: flagJp,
       },
     ],
   },
@@ -32,17 +51,17 @@ const DATA = [
       {
         key: "anhquoc",
         name: "Visa Anh Quốc",
-        thumbnail: "/assets/images/flag-anhquoc.png",
+        thumbnail: flagGbEng,
       },
       {
         key: "phap",
         name: "Visa Pháp",
-        thumbnail: "/assets/images/flag-phap.png",
+        thumbnail: flagFr,
       },
       {
         key: "duc",
         name: "Visa Đức",
-        thumbnail: "/assets/images/flag-duc.png",
+        thumbnail: flagGe,
       },
     ],
   },
@@ -53,17 +72,17 @@ const DATA = [
       {
         key: "anhquoc",
         name: "Visa Mỹ",
-        thumbnail: "/assets/images/flag-anhquoc.png",
+        thumbnail: flagEg,
       },
       {
         key: "canada",
         name: "Visa Canada",
-        thumbnail: "/assets/images/flag-canada.png",
+        thumbnail: flagCa,
       },
       {
         key: "cuba",
         name: "Visa Cuba",
-        thumbnail: "/assets/images/flag-cuba.png",
+        thumbnail: flagCu,
       },
     ],
   },
@@ -74,17 +93,17 @@ const DATA = [
       {
         key: "maroc",
         name: "Visa Maroc",
-        thumbnail: "/assets/images/flag-maroc.png",
+        thumbnail: flagMr,
       },
       {
         key: "namphi",
         name: "Visa Nam Phi",
-        thumbnail: "/assets/images/flag-namphi.png",
+        thumbnail: flagSa,
       },
       {
         key: "sudan",
         name: "Visa Sudan",
-        thumbnail: "/assets/images/flag-sudan.png",
+        thumbnail: flagSd,
       },
     ],
   },
@@ -95,17 +114,17 @@ const DATA = [
       {
         key: "newzeland",
         name: "Visa Newzealand",
-        thumbnail: "/assets/images/flag-newzeland.png",
+        thumbnail: flagNe,
       },
       {
         key: "ucc",
         name: "Visa Úc",
-        thumbnail: "/assets/images/flag-uc.png",
+        thumbnail: flagAu,
       },
       {
         key: "marryland",
         name: "Visa Marryland",
-        thumbnail: "/assets/images/flag-marryland.png",
+        thumbnail: flagMl,
       },
     ],
   },
@@ -140,7 +159,13 @@ const VisaSection = ({ label }: VisaSectionProps) => {
                     })}
                     key={_index}
                   >
-                    <Image src={item.thumbnail} alt={item.name} width={30} height={30} className="w-6 h-6 mr-2 roun" />
+                    <Image
+                      src={item.thumbnail}
+                      alt={item.name}
+                      width={30}
+                      height={30}
+                      className="w-6 h-6 mr-2 rounded-full"
+                    />
                     <span className="font-[500]">{item.name}</span>
                   </li>
                 ))}

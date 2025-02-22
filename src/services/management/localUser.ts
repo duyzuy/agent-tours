@@ -6,7 +6,9 @@ import {
   LocalUserListResponse,
   LocalUserResponse,
   LocalUserAgentListResponse,
-  ILocalUserPayload,
+  LocalUserUpdatePayload,
+  LocalUserCreatePayload,
+  LocalUserUpdateStatusPayload,
 } from "@/models/management/localUser.interface";
 export const localUserAPIs = {
   getUserList: async (userTypeList?: ELocalUserType[]) => {
@@ -24,27 +26,27 @@ export const localUserAPIs = {
       isAuth: true,
     });
   },
-  create: async (payload: ILocalUserPayload) => {
+  create: async (payload: LocalUserCreatePayload) => {
     return await client.post<LocalUserResponse>("local/LocalUser_Addnew", {
       isAuth: true,
       body: {
-        requestObject: { ...payload },
+        requestObject: payload,
       },
     });
   },
-  update: async (recId: number, payload: ILocalUserPayload) => {
+  update: async (payload: LocalUserUpdatePayload) => {
     return await client.post<LocalUserResponse>("local/LocalUser_Edit", {
       isAuth: true,
       body: {
-        requestObject: { recId, ...payload },
+        requestObject: payload,
       },
     });
   },
-  updateStatus: async (recId: number, payload: ILocalUserPayload["status"]) => {
+  updateStatus: async (payload: LocalUserUpdateStatusPayload) => {
     return await client.post<LocalUserResponse>("local/LocalUser_Edit", {
       isAuth: true,
       body: {
-        requestObject: { recId, status: payload },
+        requestObject: payload,
       },
     });
   },

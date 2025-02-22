@@ -1,9 +1,10 @@
+"use client";
 import { App } from "antd";
 const useMessage = () => {
-    const { useApp } = App;
+  const { useApp } = App;
 
-    const { message } = useApp();
+  const { message } = useApp();
 
-    return message;
+  return message;
 };
 export default useMessage;

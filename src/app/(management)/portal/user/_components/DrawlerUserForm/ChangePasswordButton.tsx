@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Form, Input, Popover, Button, PopoverProps, Space } from "antd";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import FormItem from "@/components/base/FormItem";
-import useChangePasswordLocalUser from "../../hooks/useChangePasswordLocalUser";
-import { LocalUserChangePasswordFormData } from "../../hooks/localUser.interface";
+import useChangePasswordLocalUser from "@/modules/admin/user/hooks/useChangePasswordLocalUser";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { localUserChangePasswordSchema } from "../../hooks/validate";
+import { localUserChangePasswordSchema } from "@/modules/admin/user/validate";
+import { LocalUserChangePasswordFormData } from "@/modules/admin/user/user.interface";
 
 interface ChangePasswordButtonProps {
   username: string;
@@ -19,14 +19,14 @@ const ChangePasswordButton: React.FC<ChangePasswordButtonProps> = ({ username })
     defaultValues: { ...initData },
     resolver: yupResolver(localUserChangePasswordSchema),
   });
-  const { onUpdatePassword, isPending } = useChangePasswordLocalUser();
+  const { mutate: changePassword, isPending } = useChangePasswordLocalUser();
 
   const onOpenChange: PopoverProps["onOpenChange"] = (newOpen) => {
     setOpen(newOpen);
   };
 
   const onSubmitForm: SubmitHandler<LocalUserChangePasswordFormData> = (data) => {
-    onUpdatePassword(data, {
+    changePassword(data, {
       onSuccess(data, variables, context) {
         setOpen(false);
       },

@@ -2,11 +2,10 @@
 import React, { useMemo } from "react";
 import { Row, Col, Divider, Space, Card } from "antd";
 import { useRouter } from "next/navigation";
-
 import { formatDate } from "@/utils/date";
 import { PaymentStatus, Status } from "@/models/common.interface";
 import { EFopType } from "@/models/management/core/formOfPayment.interface";
-import useManageBooking, { useSelectorManageBooking } from "./context";
+import { useSelectorManageBooking } from "./context";
 import PageContainer from "@/components/admin/PageContainer";
 import ServiceListContainer from "./_components/ServiceListContainer";
 import CustomerInformation from "./_components/CustomerInformation";
@@ -24,11 +23,11 @@ import CommentButton from "./_components/CommentButton";
 import { getAdminUserInformationStorage } from "@/utils/common";
 import { useGetOperationOrderStatusQuery } from "../modules/useGetOperationOrderStatusQuery";
 
-interface ReservationDetailPageProps {
+interface OrderDetailPageProps {
   params: { orderId: number };
 }
 
-const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params }) => {
+const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ params }) => {
   const { data: operationStatus } = useGetOperationOrderStatusQuery({ enabled: true, orderId: Number(params.orderId) });
   const router = useRouter();
   const orderInformation = useSelectorManageBooking((state) => state.order);
@@ -188,4 +187,4 @@ const ReservationDetailPage: React.FC<ReservationDetailPageProps> = ({ params })
     </PageContainer>
   );
 };
-export default ReservationDetailPage;
+export default OrderDetailPage;

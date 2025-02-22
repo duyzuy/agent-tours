@@ -7,11 +7,12 @@ import { generateStrings } from "@/utils/helper";
 import { isArray } from "lodash";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { localUserSchema } from "../../hooks/validate";
-import { LocalUserFormData } from "../../hooks/localUser.interface";
+import { LocalUserFormData } from "@/modules/admin/user/user.interface";
+import { localUserSchema } from "@/modules/admin/user/validate";
 import RoleSelector, { RoleSelectorProps } from "./RoleSelector";
 import { getAdminUserInformationStorage } from "@/utils/common";
 import ChangePasswordButton from "./ChangePasswordButton";
+import useUpdateUserStatus from "@/modules/admin/user/hooks/useUpdateUserStatus";
 export type DrawerAction = "CREATE" | "EDIT";
 export type TDrawlerCreateAction = {
   type: "CREATE";
@@ -31,9 +32,16 @@ export interface DrawlerUserFormProps {
   onCancel: () => void;
   actionType?: DrawerAction;
   initialValues?: ILocalUser;
+  isLoading?: boolean;
   onSubmit?: (action: DrawerAction, formData: LocalUserFormData) => void;
-  onUpdateStatus: (recordId: number, status: LocalUserFormData["status"]) => void;
 }
+
+const OPTIONS_USER_TYPE_LIST = [
+  { value: ELocalUserType.ADMIN, label: "Admin" },
+  { value: ELocalUserType.STAFF, label: "Staff" },
+  { value: ELocalUserType.AGENT, label: "Agent" },
+  { value: ELocalUserType.AGENT_STAFF, label: "Agent staff" },
+];
 
 const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
   isOpen,
@@ -41,8 +49,10 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
   actionType = "CREATE",
   onSubmit,
   initialValues,
-  onUpdateStatus,
+
+  isLoading,
 }) => {
+  const { mutate: updateUserStatus, isPending: loadingStatus } = useUpdateUserStatus();
   const initFormData = new LocalUserFormData(
     "",
     undefined,
@@ -73,19 +83,15 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
   });
   const userInfo = getAdminUserInformationStorage();
 
-  const onChangeStatus = (checked: boolean) => {
+  const handleChangeStatus = (checked: boolean) => {
     setValue("status", checked ? "OK" : "OX");
+    /**
+     * Only call Change Status when user is Editting
+     */
     if (actionType === "EDIT") {
-      initialValues && onUpdateStatus(initialValues.recId, checked ? "OK" : "OX");
+      initialValues && updateUserStatus({ recId: initialValues.recId, status: checked ? "OK" : "OX" });
     }
   };
-
-  const OPTIONS_USER_TYPE_LIST = [
-    { value: ELocalUserType.ADMIN, label: "Admin" },
-    { value: ELocalUserType.STAFF, label: "Staff" },
-    { value: ELocalUserType.AGENT, label: "Agent" },
-    { value: ELocalUserType.AGENT_STAFF, label: "Agent staff" },
-  ];
 
   const filterUserTypeByAdminAccount = (items: typeof OPTIONS_USER_TYPE_LIST) => {
     if (userInfo?.localUserType === "AGENT") {
@@ -136,14 +142,14 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
     });
     setValue("isRequirePassword", actionType === "CREATE");
     setValue("isCreate", actionType === "CREATE");
-  }, [initialValues, isOpen, actionType]);
+  }, [initialValues, actionType]);
 
   useEffect(() => {
     if (userInfo?.localUserType === "AGENT") {
       setValue("mainRole", AGENT_STAFF_ROLE.mainRole);
       setValue("mainRoleName", AGENT_STAFF_ROLE.mainRoleName);
     }
-  }, [userInfo, isOpen]);
+  }, [userInfo]);
   return (
     <Drawer
       title={actionType === "CREATE" ? "Tạo tài khoản" : initialValues?.username}
@@ -159,6 +165,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
             onClick={handleSubmit((data) => onSubmit && onSubmit(actionType, data))}
             type="primary"
             className="w-28"
+            loading={isLoading}
           >
             Lưu
           </Button>
@@ -168,7 +175,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
         </Space>
       }
     >
-      <Form layout="vertical">
+      <Form layout="vertical" disabled={isLoading}>
         <h3 className="font-semibold text-lg mb-6">Thông tin tài khoản</h3>
         <Row gutter={16}>
           <Col span={12}>
@@ -326,7 +333,7 @@ const DrawlerUserForm: React.FC<DrawlerUserFormProps> = ({
           render={({ field, fieldState: { error } }) => (
             <FormItem label="Trạng thái">
               <div className="flex items-center">
-                <Switch checked={field.value === "OK"} onChange={onChangeStatus} />
+                <Switch checked={field.value === "OK"} onChange={handleChangeStatus} />
                 <span className="ml-2">Kích hoạt</span>
               </div>
             </FormItem>

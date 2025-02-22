@@ -1,7 +1,7 @@
 import { object, string, ObjectSchema, boolean, ref } from "yup";
 
 import { ELocalUserType } from "@/models/management/localUser.interface";
-import { LocalUserFormData, LocalUserChangePasswordFormData } from "./localUser.interface";
+import { LocalUserFormData, LocalUserChangePasswordFormData } from "./user.interface";
 
 type TLocalUserObjectSchema = LocalUserFormData & {
   isRequirePassword?: boolean;
