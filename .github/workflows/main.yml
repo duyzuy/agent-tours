@@ -29,9 +29,13 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.ANTHAI_SERVER }}
-          username: ${{ secrets.ANTHAI_FTP_USERNAME }}
-          password: ${{ secrets.ANTHAI_FTP_PASSWORD }}
+          # server: ${{ secrets.ANTHAI_SERVER }}
+          # username: ${{ secrets.ANTHAI_FTP_USERNAME }}
+          # password: ${{ secrets.ANTHAI_FTP_PASSWORD }}
+          server: 116.118.49.209
+          username: flexisftp
+          password: flexisftp1118
+          protocol: ftps
           exclude: |
             **/.git*
             **/.git*/**
