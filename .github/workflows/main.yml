@@ -38,6 +38,6 @@ jobs:
             **/.git*/**
             **/node_modules/**
           server-dir:
-            "httpdocs/"
+            "flexis/httpdocs/"
             # timeout: 300000
             #exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
