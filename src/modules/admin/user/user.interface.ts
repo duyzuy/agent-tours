@@ -1,10 +1,6 @@
-import {
-  ELocalUserType,
-  ILocalUserPayload,
-  LocalUserNewPasswordPayload,
-} from "@/models/management/localUser.interface";
+import { ELocalUserType, LocalUserNewPasswordPayload } from "@/models/management/localUser.interface";
 
-export class LocalUserFormData implements ILocalUserPayload {
+export class LocalUserFormData {
   username?: string;
   fullname?: string;
   infoEmail?: string;

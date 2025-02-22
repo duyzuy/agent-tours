@@ -40,7 +40,7 @@ export interface LocalUserResponse extends BaseResponse<ILocalUser> {}
 export type ILocalUserMinimal = Pick<ILocalUser, "recId" | "userType" | "fullname" | "email" | "phoneNumber">;
 export interface LocalUserAgentListResponse extends BaseResponse<ILocalUserMinimal[]> {}
 
-export interface ILocalUserPayload {
+export interface LocalUserCreatePayload {
   username?: string;
   fullname?: string;
   infoEmail?: string;
@@ -61,6 +61,15 @@ export interface ILocalUserPayload {
   infoSpecialNote?: string;
   status?: "OK" | "XX" | "OX";
 }
+
+export type LocalUserUpdatePayload = {
+  recId: number;
+} & LocalUserCreatePayload;
+
+export type LocalUserUpdateStatusPayload = {
+  recId: number;
+  status: "OK" | "XX" | "OX";
+};
 
 export interface LocalUserNewPasswordPayload {
   username?: string;

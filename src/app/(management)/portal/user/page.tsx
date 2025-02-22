@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import PageContainer from "@/components/admin/PageContainer";
 import { useGetLocalUserList } from "@/queries/localUser";
-import DrawlerUserForm, { DrawlerUserFormProps } from "./components/DrawlerUserForm";
+import DrawlerUserForm, { DrawlerUserFormProps, TDrawlerAction } from "./_components/DrawlerUserForm";
 import TableListPage from "@/components/admin/TableListPage";
 import { userColumns } from "./userColumns";
-import { TDrawlerAction } from "./components/DrawlerUserForm";
-import useCRUDLocalUser from "./hooks/useCRUDLocalUser";
 import { ILocalUser, LocalUserListResponse } from "@/models/management/localUser.interface";
+import useCreateUser from "@/modules/admin/user/hooks/useCreatUser";
+import useUpdateUserStatus from "@/modules/admin/user/hooks/useUpdateUserStatus";
+import useUpdateUser from "@/modules/admin/user/hooks/useUpdateUser";
 
 const UserPage: React.FC = () => {
   const { data: localUsersList, isLoading } = useGetLocalUserList();
@@ -16,7 +17,9 @@ const UserPage: React.FC = () => {
   const [actionType, setActionType] = useState<DrawlerUserFormProps["actionType"]>();
   const [editRecord, setEditRecord] = useState<ILocalUser>();
 
-  const { onUpdate, onCreate, onUpdateStatus } = useCRUDLocalUser();
+  const { mutate: updateUser, isPending: isLoadingUpdate } = useUpdateUser();
+  const { mutate: createUser, isPending: isLoadingCreate } = useCreateUser();
+  const { mutate: updateStatus, isPending: isLoadingUpdateStatus } = useUpdateUserStatus();
 
   const onHandleDrawler = (drawler: TDrawlerAction) => {
     setEditRecord(() => (drawler.type === "EDIT" ? drawler.record : undefined));
@@ -28,13 +31,13 @@ const UserPage: React.FC = () => {
     setActionType("CREATE");
     setEditRecord(undefined);
   };
-  const onDeleteUser = (recordId: number) => {
-    onUpdateStatus({ recordId: recordId, status: "XX" });
+  const handleDeleteUser = (recId: number) => {
+    updateStatus({ recId, status: "XX" });
   };
 
   const handleSubmitFormData: DrawlerUserFormProps["onSubmit"] = (action, formData) => {
     if (action === "CREATE") {
-      onCreate(formData, {
+      createUser(formData, {
         onSuccess(data, variables, context) {
           setOpenDrawer(false);
         },
@@ -42,7 +45,7 @@ const UserPage: React.FC = () => {
     }
 
     if (action === "EDIT" && editRecord) {
-      onUpdate(
+      updateUser(
         { ...formData, recId: editRecord.recId },
         {
           onSuccess(data, variables, context) {
@@ -63,15 +66,15 @@ const UserPage: React.FC = () => {
         dataSource={localUsersList || []}
         isLoading={isLoading}
         onEdit={(record) => onHandleDrawler({ type: "EDIT", record })}
-        onDelete={(record) => onDeleteUser(record.recId)}
+        onDelete={(record) => handleDeleteUser(record.recId)}
       />
       <DrawlerUserForm
         isOpen={openDrawer}
         onCancel={onCancel}
         actionType={actionType}
         initialValues={editRecord}
+        isLoading={isLoadingCreate || isLoadingUpdate}
         onSubmit={handleSubmitFormData}
-        onUpdateStatus={(recordId, status) => onUpdateStatus({ recordId, status })}
       />
     </PageContainer>
   );

@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { Button, Form, Input, Modal, Space } from "antd";
 import FormItem from "@/components/base/FormItem";
-import { LocalUserChangePasswordFormData } from "../hooks/localUser.interface";
-import useChangePasswordLocalUser from "../hooks/useChangePasswordLocalUser";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { localUserChangePasswordSchema } from "../hooks/validate";
+import { localUserChangePasswordSchema } from "@/modules/admin/user/validate";
+import useChangePasswordLocalUser from "@/modules/admin/user/hooks/useChangePasswordLocalUser";
+import { LocalUserChangePasswordFormData } from "@/modules/admin/user/user.interface";
 interface Props {
   isOpen: boolean;
   onCancel: () => void;
@@ -19,10 +19,10 @@ const ModalChangePassword: React.FC<Props> = ({ isOpen, onCancel, userName }) =>
     defaultValues: { ...initData },
     resolver: yupResolver(localUserChangePasswordSchema),
   });
-  const { onUpdatePassword, isPending } = useChangePasswordLocalUser();
+  const { mutate: updatePassword, isPending } = useChangePasswordLocalUser();
 
   const onSubmitForm: SubmitHandler<LocalUserChangePasswordFormData> = (data) => {
-    onUpdatePassword(data, {
+    updatePassword(data, {
       onSuccess(data, variables, context) {
         onCancel?.();
       },
