@@ -32,7 +32,6 @@ jobs:
           server: ${{ secrets.ANTHAI_SERVER }}
           username: ${{ secrets.ANTHAI_FTP_USERNAME }}
           password: ${{ secrets.ANTHAI_FTP_PASSWORD }}
-          protocol: ftps
           exclude: |
             **/.git*
             **/.git*/**
