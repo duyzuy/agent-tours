@@ -1,3 +1,4 @@
+"use client";
 import { useClickOutSide } from "@/hooks/fe/useClickOutSide";
 import { localeDefault } from "@/constants/locale.constant";
 import { LangCode, Locale } from "@/models/management/cms/language.interface";

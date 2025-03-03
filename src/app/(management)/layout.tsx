@@ -22,9 +22,9 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   return (
     <html>
       <body suppressHydrationWarning={true}>
-        <ThemeProviderDynamic>
+        <ThemeProvider>
           <RQClientProvider>{children}</RQClientProvider>
-        </ThemeProviderDynamic>
+        </ThemeProvider>
       </body>
     </html>
   );

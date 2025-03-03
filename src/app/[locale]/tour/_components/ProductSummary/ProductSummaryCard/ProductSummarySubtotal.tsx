@@ -23,7 +23,7 @@ const ProductSummarySubtotal = ({ label, items, coupon, subtotal, className = ""
           [className]: className,
         })}
       >
-        <p className="flex items-center justify-between font-semibold">
+        <div className="flex items-center justify-between font-semibold">
           <Button
             type="text"
             className="inline-flex items-center !px-0 !py-0 hover:!bg-transparent !font-semibold"
@@ -32,8 +32,8 @@ const ProductSummarySubtotal = ({ label, items, coupon, subtotal, className = ""
           >
             <span className="text-gray-600">{t("subtotal")}</span>
           </Button>
-          <div className="text-red-600">{moneyFormatVND(subtotal)}</div>
-        </p>
+          <span className="text-red-600">{moneyFormatVND(subtotal)}</span>
+        </div>
       </div>
       <Modal open={isOpenModal} centered onCancel={() => setOpenModal(false)} width={420} footer={null}>
         <div className="modal__breakdown-header mb-4">
