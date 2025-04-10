@@ -4,14 +4,14 @@ import { usePortalBookingManager } from "../context";
 
 import useMessage from "@/hooks/useMessage";
 import { MutateOptions } from "@tanstack/react-query";
-import { ProductTouListResponse } from "@/models/management/booking/product.interface";
+import { ProductTourListResponse } from "@/models/management/booking/product.interface";
 import { BaseResponse } from "@/models/common.interface";
 import { useMemo } from "react";
 
 export interface UseSearchBookingInformation {
   onSearch: (
     formData: SearchBookingFormData,
-    options?: MutateOptions<ProductTouListResponse, BaseResponse<null>, SearchBookingPayload, unknown>,
+    options?: MutateOptions<ProductTourListResponse, BaseResponse<null>, SearchBookingPayload, unknown>,
   ) => void;
 }
 const useSearchBookingInformation = () => {

@@ -8,7 +8,7 @@ import {
   IDestinationPayload,
   IDestinationRs,
 } from "@/models/management/region.interface";
-import { ILocalSeachDestination, LocalSearchPayload } from "@/models/management/localSearchDestination.interface";
+import { ILocalSearchDestination, LocalSearchPayload } from "@/models/management/localSearchDestination.interface";
 import { useCustomMutation } from "../useCustomMutation";
 //create folder in public/uploads folder.
 
@@ -37,13 +37,13 @@ export const useUpdateDestinationCMSContentMutation = () => {
 };
 
 export const useCreateLocalSearchMutation = () => {
-  return useCustomMutation<BaseResponse<ILocalSeachDestination>, LocalSearchPayload>({
+  return useCustomMutation<BaseResponse<ILocalSearchDestination>, LocalSearchPayload>({
     mutationFn: (payload) => localSearchAPIs.create(payload),
   });
 };
 
 export const useUpdateLocalSearchMutation = () => {
-  return useCustomMutation<BaseResponse<ILocalSeachDestination>, LocalSearchPayload & { id: number }>({
+  return useCustomMutation<BaseResponse<ILocalSearchDestination>, LocalSearchPayload & { id: number }>({
     mutationFn: (payload) => localSearchAPIs.update({ ...payload }),
   });
 };

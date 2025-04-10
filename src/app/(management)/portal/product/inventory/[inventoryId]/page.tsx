@@ -9,36 +9,19 @@ import useCRUDInventory from "../modules/useCRUDInventory";
 import { LINKS } from "@/constants/links.constant";
 import InventoryDetailContainer from "./_components/InventoryDetailContainer";
 import { formatDate } from "@/utils/date";
-import { EProductType } from "@/models/management/core/productType.interface";
 import { ContentDetailList } from "@/components/admin/ContentDetailList";
 import { Status } from "@/models/common.interface";
-import DrawerInventoryForm, { DrawerInventoryFormProps } from "../_components/DrawerInventoryForm";
-import { isUndefined } from "lodash";
 import Link from "next/link";
+import EditInventoryButton from "./_components/EditInventoryButton";
 
 const InventoryDetailPage = ({ params }: { params: { inventoryId: number } }) => {
-  const [showDrawer, setShowDrawer] = useState(false);
   const router = useRouter();
-
   const { data: inventoryDetail, isLoading } = useGetInventoryDetailCoreQuery({
     recId: params.inventoryId,
     enabled: true,
   });
 
-  const { onApprovalInventory, onUpdateInventory, onDeleteInventory } = useCRUDInventory();
-
-  const setEditInventory = () => {
-    setShowDrawer(true);
-  };
-
-  const handleUpdateInventory: DrawerInventoryFormProps["onSubmit"] = (action, formData) => {
-    const inventoryId = formData.recId;
-    if (isUndefined(inventoryId)) throw new Error("Missing ID Inventory.");
-    if (action === "EDIT")
-      onUpdateInventory(inventoryId, formData, () => {
-        setShowDrawer(false);
-      });
-  };
+  const { onApprovalInventory, onDeleteInventory } = useCRUDInventory();
 
   const handleDelete = (recId: number) => {
     onDeleteInventory(recId, () => {
@@ -82,17 +65,8 @@ const InventoryDetailPage = ({ params }: { params: { inventoryId: number } }) =>
               Duyệt
             </Button>
           ) : (
-            <Button
-              className="!bg-blue-100 !text-blue-600"
-              type="text"
-              icon={<EditOutlined />}
-              size="small"
-              onClick={setEditInventory}
-            >
-              Sửa
-            </Button>
+            <EditInventoryButton initialValues={inventoryDetail} />
           )}
-
           <Popconfirm
             placement="topLeft"
             title="Xoá"
@@ -145,7 +119,6 @@ const InventoryDetailPage = ({ params }: { params: { inventoryId: number } }) =>
         ]}
       />
       <Divider />
-
       {inventoryDetail.isStock ? (
         <div>
           {inventoryDetail.status === Status.QQ ? (
@@ -157,17 +130,6 @@ const InventoryDetailPage = ({ params }: { params: { inventoryId: number } }) =>
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Dịch vụ không quản lý số lượng kho." />
       )}
-      <DrawerInventoryForm
-        isOpen={showDrawer}
-        initialValues={inventoryDetail}
-        inventoriesType={inventoryDetail.supplier.typeList}
-        supplierId={inventoryDetail.supplier.recId}
-        productType={inventoryDetail.productType}
-        disableSupplierField={true}
-        actionType="EDIT"
-        onSubmit={handleUpdateInventory}
-        onCancel={() => setShowDrawer(false)}
-      />
     </PageContainer>
   );
 };
