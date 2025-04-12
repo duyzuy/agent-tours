@@ -41,10 +41,10 @@ export const columnsSearchDestination: ColumnsType<LocalSearchDestinationListRs[
           {record.status === Status.OK
             ? "Đang kích hoạt"
             : record.status === Status.OX
-            ? "Chờ kích hoạt"
-            : record.status === Status.XX
-            ? "Đã xoá"
-            : "Unknown"}
+              ? "Chờ kích hoạt"
+              : record.status === Status.XX
+                ? "Đã xoá"
+                : "Unknown"}
         </Tag>
       );
     },

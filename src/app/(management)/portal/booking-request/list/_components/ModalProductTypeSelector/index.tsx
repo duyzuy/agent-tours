@@ -29,8 +29,8 @@ const ModalProductTypeSelector: React.FC<ModalProductTypeSelectorProps> = ({ ope
               {item === EProductType.TOUR
                 ? "Dịch vụ trong tour"
                 : item === EProductType.EXTRA
-                ? "Dịch vụ trong và ngoài tour"
-                : item}
+                  ? "Dịch vụ trong và ngoài tour"
+                  : item}
             </span>
           </div>
         ))}

@@ -79,9 +79,7 @@ const OperationThingTodoItemListContainer: React.FC<OperationThingTodoItemListCo
               key: key,
               children: (
                 <div className="max-h-96 overflow-y-auto -mx-3 p-3 flex flex-col gap-y-3">
-                  {items?.map((item, _index) => (
-                    <ThingTodoCardItem key={_index} {...item} loading={isLoading} />
-                  ))}
+                  {items?.map((item, _index) => <ThingTodoCardItem key={_index} {...item} loading={isLoading} />)}
                 </div>
               ),
             }))
@@ -130,12 +128,12 @@ const ButtonFilterThingTodo = ({
                       {item === "NEW"
                         ? "Mới"
                         : item === "DONE"
-                        ? "Hoàn thành"
-                        : item === "PRE_DEADLINE"
-                        ? "Hết hạn đợt 1"
-                        : item === "EXPIRED"
-                        ? "Hết hạn"
-                        : "Không xác định"}
+                          ? "Hoàn thành"
+                          : item === "PRE_DEADLINE"
+                            ? "Hết hạn đợt 1"
+                            : item === "EXPIRED"
+                              ? "Hết hạn"
+                              : "Không xác định"}
                     </Checkbox>
                   </div>
                 ))}
@@ -197,12 +195,12 @@ const ThingTodoCardItem = ({ deadline, deadlineId, preDeadline, remark, status, 
               status === "NEW"
                 ? "blue"
                 : status === "DONE"
-                ? "green"
-                : status === "PRE_DEADLINE"
-                ? "orange"
-                : status === "EXPIRED"
-                ? "red"
-                : undefined
+                  ? "green"
+                  : status === "PRE_DEADLINE"
+                    ? "orange"
+                    : status === "EXPIRED"
+                      ? "red"
+                      : undefined
             }
             bordered={false}
             className="!mr-0 font-normal"
@@ -210,12 +208,12 @@ const ThingTodoCardItem = ({ deadline, deadlineId, preDeadline, remark, status, 
             {status === "NEW"
               ? "Mới"
               : status === "DONE"
-              ? "Hoàn thành"
-              : status === "PRE_DEADLINE"
-              ? "Hết hạn đợt 1"
-              : status === "EXPIRED"
-              ? "Hết hạn"
-              : "Không xác định"}
+                ? "Hoàn thành"
+                : status === "PRE_DEADLINE"
+                  ? "Hết hạn đợt 1"
+                  : status === "EXPIRED"
+                    ? "Hết hạn"
+                    : "Không xác định"}
           </Tag>
         </div>
       }

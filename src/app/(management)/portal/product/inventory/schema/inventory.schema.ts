@@ -10,16 +10,9 @@ export const inventorySchema: ObjectSchema<InventoryFormData> = object({
   cmsIdentity: string().default(""),
   supplierId: number().required("Chưa chọn Supplier."),
   type: string()
-    .oneOf<IInventoryPayload["type"]>([
-      EInventoryType.AIR,
-      EInventoryType.GUIDE,
-      EInventoryType.HOTEL,
-      EInventoryType.INSURANCE,
-      EInventoryType.LANDPACKAGE,
-      EInventoryType.RESTAURANT,
-      EInventoryType.TRANSPORT,
-      EInventoryType.VISA,
-    ])
+    .oneOf<
+      IInventoryPayload["type"]
+    >([EInventoryType.AIR, EInventoryType.GUIDE, EInventoryType.HOTEL, EInventoryType.INSURANCE, EInventoryType.LANDPACKAGE, EInventoryType.RESTAURANT, EInventoryType.TRANSPORT, EInventoryType.VISA])
     .required("Type không bỏ trống."),
   code: string().required("Code không bỏ trống."),
   name: string().required("Tên không bỏ trống."),

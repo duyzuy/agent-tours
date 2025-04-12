@@ -4,12 +4,12 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const ProductPage = () => {
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-        router.push("./portal/product/inventory");
-    }, []);
+  useEffect(() => {
+    router.push("./portal/product/inventory");
+  }, []);
 
-    return null;
+  return null;
 };
 export default ProductPage;

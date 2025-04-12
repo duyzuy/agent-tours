@@ -78,12 +78,12 @@ const ThingTodoItemButton = () => {
                               item.status === "NEW"
                                 ? "blue"
                                 : item.status === "DONE"
-                                ? "green"
-                                : item.status === "PRE_DEADLINE"
-                                ? "orange"
-                                : item.status === "EXPIRED"
-                                ? "red"
-                                : undefined
+                                  ? "green"
+                                  : item.status === "PRE_DEADLINE"
+                                    ? "orange"
+                                    : item.status === "EXPIRED"
+                                      ? "red"
+                                      : undefined
                             }
                             bordered={false}
                             className="!mr-0 font-normal"
@@ -91,12 +91,12 @@ const ThingTodoItemButton = () => {
                             {item.status === "NEW"
                               ? "Mới"
                               : item.status === "DONE"
-                              ? "Hoàn thành"
-                              : item.status === "PRE_DEADLINE"
-                              ? "Hết hạn đợt 1"
-                              : item.status === "EXPIRED"
-                              ? "Hết hạn"
-                              : "Không xác định"}
+                                ? "Hoàn thành"
+                                : item.status === "PRE_DEADLINE"
+                                  ? "Hết hạn đợt 1"
+                                  : item.status === "EXPIRED"
+                                    ? "Hết hạn"
+                                    : "Không xác định"}
                           </Tag>
                         </div>
                         <div className="mb-2">{item.remark || "--"}</div>

@@ -101,8 +101,8 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
           {paymentStatus === PaymentStatus.PAID
             ? "Đã thanh toán"
             : paymentStatus === PaymentStatus.DEPOSITED
-            ? "Thanh toán 1 phần"
-            : " Chưa thanh toán"}
+              ? "Thanh toán 1 phần"
+              : " Chưa thanh toán"}
         </Tag>
       );
     },
@@ -121,10 +121,10 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
           {status === Status.XX
             ? "Đã Huỷ"
             : status === Status.OK
-            ? "Xác nhận"
-            : status === Status.QQ
-            ? "Chờ duyệt"
-            : "Không xác định"}
+              ? "Xác nhận"
+              : status === Status.QQ
+                ? "Chờ duyệt"
+                : "Không xác định"}
         </Tag>
       );
     },

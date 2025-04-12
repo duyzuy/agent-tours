@@ -165,11 +165,7 @@ const SellableDetailPage: React.FC<{ params: { sellableId: string } }> = ({ para
         direction="horizontal"
         label="Dịch vụ"
         value={
-          <Space wrap>
-            {data.sellable.template?.inventoryTypeList.map((item) => (
-              <Tag key={item}>{item}</Tag>
-            ))}
-          </Space>
+          <Space wrap>{data.sellable.template?.inventoryTypeList.map((item) => <Tag key={item}>{item}</Tag>)}</Space>
         }
       />
       <Divider />

@@ -54,14 +54,14 @@ const MenuPageType = ({ params }: Props) => {
         menuKey === "primary"
           ? "Menu Chính"
           : menuKey === "secondary"
-          ? "Menu secondary"
-          : menuKey === "footer"
-          ? "Menu footer"
-          : menuKey === "footer-info"
-          ? "Footer information"
-          : menuKey === "mobile"
-          ? "Mobile"
-          : ""
+            ? "Menu secondary"
+            : menuKey === "footer"
+              ? "Menu footer"
+              : menuKey === "footer-info"
+                ? "Footer information"
+                : menuKey === "mobile"
+                  ? "Mobile"
+                  : ""
       }
       loading={isLoading}
       // onSave={handleUpdateList}

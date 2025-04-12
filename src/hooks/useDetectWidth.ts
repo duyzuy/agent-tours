@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const useDetectWidth = (
-  elementRef: React.RefObject<HTMLDivElement | HTMLButtonElement | null>
-) => {
+const useDetectWidth = (elementRef: React.RefObject<HTMLDivElement | HTMLButtonElement | null>) => {
   const [width, setWidth] = useState(0);
   const handleResizeScreen = (el: HTMLDivElement | HTMLButtonElement) => {
     const elWidth = el.clientWidth;
@@ -20,8 +18,7 @@ const useDetectWidth = (
 
     window.addEventListener("resize", () => handleResizeScreen(element));
     setWidth(containerWidth);
-    return () =>
-      window.removeEventListener("resize", () => handleResizeScreen(element));
+    return () => window.removeEventListener("resize", () => handleResizeScreen(element));
   }, [elementRef]);
 
   return width;

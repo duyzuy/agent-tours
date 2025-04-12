@@ -70,20 +70,20 @@ const FormOfPaymentList = ({ title, items }: FormOfPaymentListProps) => {
               status === Status.OK
                 ? "green"
                 : status === Status.QQ
-                ? "orange"
-                : status === Status.XX
-                ? "red"
-                : "default"
+                  ? "orange"
+                  : status === Status.XX
+                    ? "red"
+                    : "default"
             }
             bordered={false}
           >
             {status === Status.OK
               ? "Đã duyệt"
               : status === Status.QQ
-              ? "Chờ duyệt"
-              : status === Status.XX
-              ? "Đã huỷ"
-              : "Unknown"}
+                ? "Chờ duyệt"
+                : status === Status.XX
+                  ? "Đã huỷ"
+                  : "Unknown"}
           </Tag>
         );
       },

@@ -84,24 +84,24 @@ function DocumentCardItem({ data }: DocumentCardItemProps) {
             status === "NEW"
               ? "blue"
               : status === "FINISHED"
-              ? "green"
-              : status === "HANDOVERED"
-              ? "lime"
-              : status === "NOT_FINISHED"
-              ? "red"
-              : "default"
+                ? "green"
+                : status === "HANDOVERED"
+                  ? "lime"
+                  : status === "NOT_FINISHED"
+                    ? "red"
+                    : "default"
           }
           className="float-right"
         >
           {status === "NEW"
             ? "Mới"
             : status === "FINISHED"
-            ? "Đã nộp"
-            : status === "HANDOVERED"
-            ? "Đã bàn giao"
-            : status === "NOT_FINISHED"
-            ? "Chưa nộp"
-            : "Unknown"}
+              ? "Đã nộp"
+              : status === "HANDOVERED"
+                ? "Đã bàn giao"
+                : status === "NOT_FINISHED"
+                  ? "Chưa nộp"
+                  : "Unknown"}
         </Tag>
       </div>
       <div className="mb-3">

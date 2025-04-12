@@ -3,10 +3,10 @@ import { queryCore } from "../var";
 import { productTypeAPIs } from "@/services/management/cores/productType";
 
 export const useGetProductTypeListCoreQuery = ({ enabled = false }) => {
-    return useQuery({
-        queryKey: [queryCore.GET_PRODUCT_TYPE_LIST],
-        queryFn: () => productTypeAPIs.getAll(),
-        select: (data) => data.result,
-        enabled,
-    });
+  return useQuery({
+    queryKey: [queryCore.GET_PRODUCT_TYPE_LIST],
+    queryFn: () => productTypeAPIs.getAll(),
+    select: (data) => data.result,
+    enabled,
+  });
 };
