@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo, useState } from "react";
+
 // import SearchBookingBox from "./_components/SearchBookingBox";
 import ServiceListSelector, { ServiceListSelectorProps } from "./_components/ServiceListSelector";
 import useSearchProduct from "@/modules/admin/booking/hooks/useSearchProduct";
@@ -10,6 +10,7 @@ import useSelectProductTour from "./modules/useSelectProductService";
 import SearchBookingBox, {
   SearchBookingBoxProps,
 } from "@/modules/admin/booking/_components/BoxSearchProduct/SearchBookingBox";
+import React, { useCallback, useMemo, useState } from "react";
 import { EProductType } from "@/models/management/core/productType.interface";
 
 const BookingPage = () => {

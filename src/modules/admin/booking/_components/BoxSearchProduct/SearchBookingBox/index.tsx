@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
 import { Form, Input, Row, Col, Button, DatePickerProps, Card, Divider } from "antd";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { SearchOutlined } from "@ant-design/icons";
@@ -12,34 +12,41 @@ import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import ProductTypeSelector, { ProductTypeSelectorProps } from "./ProductTypeSelector";
 import DestinationSelector, { DestinationSelectorProps } from "./DestinationSelector";
 import InventoryTypeListSelector, { InventoryTypeListSelectorProps } from "./InventoryTypeListSelector";
-import { UseSearchProduct } from "../../../hooks/useSearchProduct";
 import { searchPortalBookingSchema } from "../../../searchProduct.schema";
 import classNames from "classnames";
 import styled from "styled-components";
 import dayjs from "dayjs";
+import { UseSearchProduct } from "../../../hooks/useSearchProduct";
+import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
 
-export interface SearchBookingBoxProps<T> {
+
+type BaseBoxBookingProps = {
   departLocation?: string;
   departDate?: string;
   className?: string;
-  onSubmit?: <T>(
-    formData: T extends EProductType.EXTRA
-      ? SearchProductExtraFormData
-      : T extends EProductType.TOUR
-      ? SearchProductTourFormData
-      : never,
+  loading?: boolean;
+}
+export type SearchBookingBoxProps = BaseBoxBookingProps & ({
+  onSubmit?: (
+    formData: SearchProductExtraFormData,
     cb?: () => void,
   ) => void;
-  loading?: boolean;
-  type: T;
-}
+  type: EProductType.EXTRA;
+} | {
+  onSubmit?: (
+    formData: SearchProductTourFormData,
+    cb?: () => void,
+  ) => void;
+  type: EProductType.TOUR;
+})
 
-const SearchBookingBox = <T extends EProductType>({
+const SearchBookingBox: React.FC<SearchBookingBoxProps> = ({
   className = "",
   loading,
   onSubmit,
   type,
-}: SearchBookingBoxProps<T>) => {
+}) => {
   const initBookingSearchForm =
     type === EProductType.EXTRA
       ? new SearchProductExtraFormData(dayjs().locale("en").format(MONTH_FORMAT), "", [], [])
@@ -50,13 +57,7 @@ const SearchBookingBox = <T extends EProductType>({
   const pathname = usePathname();
   const router = useRouter();
 
-  const { handlerSubmit, errors } = useFormSubmit<
-    T extends EProductType.EXTRA
-      ? SearchProductExtraFormData
-      : T extends EProductType.TOUR
-      ? SearchProductTourFormData
-      : never
-  >({
+  const { handlerSubmit, errors } = useFormSubmit({
     schema: searchPortalBookingSchema,
   });
 
@@ -92,17 +93,11 @@ const SearchBookingBox = <T extends EProductType>({
     setFormData((prev) => ({ ...prev, byProductType: [type] }));
   };
 
-  const handleSubmitForm: HandleSubmit<
-    T extends EProductType.EXTRA
-      ? SearchProductExtraFormData
-      : T extends EProductType.TOUR
-      ? SearchProductTourFormData
-      : never
-  > = (data) => {
+  const handleSubmitForm: HandleSubmit<SearchProductExtraFormData | SearchProductTourFormData> = (data) => {
     let url = `${pathname}`;
     url = url.concat("?byMonth=", data.byMonth || "");
 
-    onSubmit?.<T>(data, () => {
+    onSubmit?.(data, () => {
       router.push(url);
     });
   };

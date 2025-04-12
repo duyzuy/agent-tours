@@ -7,7 +7,7 @@
         "dev:https": "next dev --experimental-https",
         "build": "next build",
         "start": "NODE_ENV=production node server.js",
-        "lint": "next lint",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "build:production": "cp .env.production .env.local && next build",
         "build:staging": "cp .env.development .env.local && next build",
         "dev:staging": "cp .env.development .env.local && next dev"
@@ -19,6 +19,7 @@
         "@dnd-kit/core": "^6.1.0",
         "@dnd-kit/sortable": "^8.0.0",
         "@hookform/resolvers": "^3.6.0",
+        "@next/eslint-plugin-next": "^15.3.0",
         "@tanstack/react-query": "^5.7.2",
         "@tanstack/react-query-devtools": "^5.7.4",
         "@tanstack/react-query-next-experimental": "^5.8.1",
@@ -29,6 +30,7 @@
         "crypto": "^1.0.1",
         "date-fns": "^2.30.0",
         "dayjs": "^1.11.10",
+        "eslint-plugin-react-hooks": "^5.2.0",
         "lodash": "^4.17.21",
         "lodash.chunk": "^4.2.0",
         "next": "^14.2.4",
@@ -46,17 +48,28 @@
         "zustand": "^4.4.6"
     },
     "devDependencies": {
+        "@eslint/js": "^9.24.0",
         "@tanstack/eslint-plugin-query": "^5.6.0",
         "@types/lodash": "^4.14.201",
         "@types/node": "^20",
         "@types/react": "^18",
         "@types/react-dom": "^18",
         "autoprefixer": "^10.0.1",
-        "eslint": "^8",
-        "eslint-config-next": "^14.2.4",
+        "eslint": "^9.24.0",
+        "eslint-config-next": "^14.2.28",
+        "eslint-config-prettier": "^10.1.2",
+        "eslint-config-standard": "^17.1.0",
+        "eslint-plugin-import": "^2.25.2",
+        "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+        "eslint-plugin-prettier": "^5.2.6",
+        "eslint-plugin-promise": "^6.0.0",
+        "eslint-plugin-react": "^7.37.5",
+        "globals": "^16.0.0",
         "postcss": "^8",
+        "prettier": "^3.5.3",
         "sass": "^1.69.5",
         "tailwindcss": "^3.3.0",
-        "typescript": "^5"
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.29.1"
     }
 }

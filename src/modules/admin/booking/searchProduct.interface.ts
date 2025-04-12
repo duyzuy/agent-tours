@@ -1,7 +1,6 @@
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { ILocalSearchDestination } from "@/models/management/localSearchDestination.interface";
-import { SearchProductPayload } from "@/models/management/booking/searchProduct.interface";
 export class SearchProductExtraFormData {
   byMonth?: string;
   byCode?: string;
@@ -12,7 +11,6 @@ export class SearchProductExtraFormData {
     byMonth: string | undefined,
     byCode: string | undefined,
     byDest: ILocalSearchDestination[] | undefined,
-
     byInventoryType: EInventoryType[] | undefined,
   ) {
     this.byMonth = byMonth;
@@ -33,7 +31,6 @@ export class SearchProductTourFormData {
     byMonth: string | undefined,
     byCode: string | undefined,
     byDest: ILocalSearchDestination[] | undefined,
-
     byInventoryType: EInventoryType[] | undefined,
   ) {
     this.byMonth = byMonth;
