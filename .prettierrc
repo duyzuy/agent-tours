@@ -16,5 +16,7 @@
   "requirePragma": false,
   "useTabs": false,
   "embeddedLanguageFormatting": "auto",
-  "tabWidth": 2
+  "tabWidth": 2,
+  "importOrder": ["^react", "^[a-zA-Z]", "^@/"],
+  "importOrderSeparation": true
 }

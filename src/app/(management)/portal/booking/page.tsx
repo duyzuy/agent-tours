@@ -9,7 +9,7 @@ import useSearchBookingInformation from "./modules/useSearchBookingInformation";
 import useSelectProductTour from "./modules/useSelectProductTour";
 
 const BookingPage = () => {
-  const [bookingInformation, _] = usePortalBookingManager();
+  const [bookingInformation] = usePortalBookingManager();
 
   const { onSearchBooking, isPending } = useSearchBookingInformation();
   const [selectedProduct, setSelectedProduct] = useState<IProductTour>();
