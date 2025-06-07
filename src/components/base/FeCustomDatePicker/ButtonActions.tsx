@@ -1,15 +1,9 @@
 "use client";
 import React, { memo } from "react";
 import classNames from "classnames";
-const NextButton: React.FC<{ onClick: (action: "next") => void }> = ({
-  onClick,
-}) => {
+const NextButton: React.FC<{ onClick: (action: "next") => void }> = ({ onClick }) => {
   return (
-    <button
-      className="btn-calendar btn-next"
-      onClick={() => onClick("next")}
-      type="button"
-    >
+    <button className="btn-calendar btn-next" onClick={() => onClick("next")} type="button">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -18,25 +12,15 @@ const NextButton: React.FC<{ onClick: (action: "next") => void }> = ({
         stroke="currentColor"
         style={{ width: 18 }}
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
       </svg>
     </button>
   );
 };
 
-const PrevButton: React.FC<{ onClick: (action: "prev") => void }> = ({
-  onClick,
-}) => {
+const PrevButton: React.FC<{ onClick: (action: "prev") => void }> = ({ onClick }) => {
   return (
-    <button
-      className="btn-calendar btn-prev"
-      type="button"
-      onClick={() => onClick("prev")}
-    >
+    <button className="btn-calendar btn-prev" type="button" onClick={() => onClick("prev")}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -45,11 +29,7 @@ const PrevButton: React.FC<{ onClick: (action: "prev") => void }> = ({
         stroke="currentColor"
         style={{ width: 18 }}
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
       </svg>
     </button>
   );

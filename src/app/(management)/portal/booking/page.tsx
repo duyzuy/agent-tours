@@ -13,7 +13,7 @@ import { SearchProductTourFormData } from "@/modules/admin/booking/searchProduct
 import { useSearchExtraProduct, useSearchTourProduct } from "@/modules/admin/booking/hooks/useSearchProduct";
 
 const BookingPage = () => {
-  const [bookingInformation, _] = usePortalBookingManager();
+  const [bookingInformation] = usePortalBookingManager();
 
   const { onSearchTourBooking, isPending } = useSearchBookingInformation();
 

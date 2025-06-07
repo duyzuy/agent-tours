@@ -113,10 +113,10 @@ const DrawerPassengerInformationForm: React.FC<DrawerPassengerInformationFormPro
           {paxType === PassengerType.ADULT
             ? t("input.dob.sublabel.adult")
             : paxType === PassengerType.CHILD
-            ? t("input.dob.sublabel.child")
-            : paxType === PassengerType.INFANT
-            ? t("input.dob.sublabel.infant")
-            : "--"}
+              ? t("input.dob.sublabel.child")
+              : paxType === PassengerType.INFANT
+                ? t("input.dob.sublabel.infant")
+                : "--"}
           )
         </span>
       </span>

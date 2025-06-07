@@ -91,12 +91,12 @@ const getRoomingColor = (type: RoomingType): TagProps["color"] => {
   return type === "DOUBLE"
     ? "volcano"
     : type === "TRIPLE"
-    ? "blue"
-    : type === "SINGLE"
-    ? "green"
-    : type === "TWIN"
-    ? "cyan"
-    : undefined;
+      ? "blue"
+      : type === "SINGLE"
+        ? "green"
+        : type === "TWIN"
+          ? "cyan"
+          : undefined;
 };
 
 type PassengerDeadlineRemarkItemProps = {

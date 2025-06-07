@@ -151,8 +151,8 @@ const Sellablepage = ({ params }: { params: { sellableTemplateId: number } }) =>
           templateDetail.type === EProductType.TOUR
             ? "Sản phẩm dịch vụ tour."
             : templateDetail.type === EProductType.EXTRA
-            ? "Sản phẩm dịch vụ."
-            : templateDetail.type
+              ? "Sản phẩm dịch vụ."
+              : templateDetail.type
         }
       />
       <ContentDetailList.Item

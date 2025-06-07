@@ -5,6 +5,6 @@ import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 export class FeInvoiceFormData extends InvoiceFormData {}
 export class FeCustomerInformationFormData extends CustomerInformation {}
 export interface IPaymentInformation {
-    customerInformation: FeCustomerInformationFormData;
-    invoice: FeInvoiceFormData;
+  customerInformation: FeCustomerInformationFormData;
+  invoice: FeInvoiceFormData;
 }

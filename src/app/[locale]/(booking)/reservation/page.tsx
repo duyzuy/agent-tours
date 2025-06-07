@@ -70,10 +70,10 @@ const ReservationPage = () => {
                 {bookingOrder?.paymentStatus === PaymentStatus.NOTPAID
                   ? "Chờ thanh toán"
                   : bookingOrder?.paymentStatus === PaymentStatus.PAID
-                  ? "Đã thanh toán"
-                  : bookingOrder?.paymentStatus === PaymentStatus.DEPOSITED
-                  ? "Đã thanh toán 1 phần"
-                  : "Unknown"}
+                    ? "Đã thanh toán"
+                    : bookingOrder?.paymentStatus === PaymentStatus.DEPOSITED
+                      ? "Đã thanh toán 1 phần"
+                      : "Unknown"}
               </Tag>
             }
           />

@@ -6,14 +6,15 @@ type FieldKeys<T> = keyof (T extends Array<infer U> ? U : T extends object ? T :
 
 type ErrorFields<T> = Partial<Record<FieldKeys<T>, string>>;
 
-type ErrorsMesssageType<T> = T extends Array<infer U>
-  ? Array<{
-      index: number;
-      data: ErrorFields<U>;
-    }>
-  : T extends object
-  ? ErrorFields<T>
-  : never;
+type ErrorsMesssageType<T> =
+  T extends Array<infer U>
+    ? Array<{
+        index: number;
+        data: ErrorFields<U>;
+      }>
+    : T extends object
+      ? ErrorFields<T>
+      : never;
 
 interface UseSubmitForm<T extends object | undefined> {
   schema?: Schema<T>;

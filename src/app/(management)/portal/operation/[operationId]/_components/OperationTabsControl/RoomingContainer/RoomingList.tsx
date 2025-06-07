@@ -56,12 +56,12 @@ const RoomingList: React.FC<RoomingListProps> = ({ items, value, onChange, editA
     return type === "DOUBLE"
       ? "volcano"
       : type === "TRIPLE"
-      ? "blue"
-      : type === "SINGLE"
-      ? "green"
-      : type === "TWIN"
-      ? "cyan"
-      : undefined;
+        ? "blue"
+        : type === "SINGLE"
+          ? "green"
+          : type === "TWIN"
+            ? "cyan"
+            : undefined;
   };
 
   return (

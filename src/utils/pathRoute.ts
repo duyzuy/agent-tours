@@ -1,7 +1,7 @@
 export const isPathRoute = (arr: string[], target: string) => {
-    if (arr.every((r) => target.includes(r))) {
-        return true;
-    }
+  if (arr.every((r) => target.includes(r))) {
+    return true;
+  }
 
-    return false;
+  return false;
 };

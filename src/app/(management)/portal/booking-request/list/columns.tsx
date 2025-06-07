@@ -81,28 +81,28 @@ export const columns: ColumnsType<IBookingRequest> = [
         status === "CONFIRMED"
           ? "green"
           : status === "CANCELLED"
-          ? "red"
-          : status === "LOST"
-          ? "magenta"
-          : status === "NEW"
-          ? "blue"
-          : status === "WIN"
-          ? "green"
-          : "";
+            ? "red"
+            : status === "LOST"
+              ? "magenta"
+              : status === "NEW"
+                ? "blue"
+                : status === "WIN"
+                  ? "green"
+                  : "";
 
       let label: string;
       label =
         status === "CONFIRMED"
           ? "Đã xác nhận"
           : status === "CANCELLED"
-          ? "Đã Huỷ"
-          : status === "LOST"
-          ? "Thua"
-          : status === "WIN"
-          ? "Thắng"
-          : status === "NEW"
-          ? "Mới"
-          : "Unknown";
+            ? "Đã Huỷ"
+            : status === "LOST"
+              ? "Thua"
+              : status === "WIN"
+                ? "Thắng"
+                : status === "NEW"
+                  ? "Mới"
+                  : "Unknown";
       return (
         <Tag color={color} bordered={false}>
           {label}

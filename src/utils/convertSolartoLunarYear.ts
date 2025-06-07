@@ -22,14 +22,7 @@ function jdFromDate(dd: number, mm: number, yy: number) {
   a = INT((14 - mm) / 12);
   y = yy + 4800 - a;
   m = mm + 12 * a - 3;
-  jd =
-    dd +
-    INT((153 * m + 2) / 5) +
-    365 * y +
-    INT(y / 4) -
-    INT(y / 100) +
-    INT(y / 400) -
-    32045;
+  jd = dd + INT((153 * m + 2) / 5) + 365 * y + INT(y / 4) - INT(y / 100) + INT(y / 400) - 32045;
   if (jd < 2299161) {
     jd = dd + INT((153 * m + 2) / 5) + 365 * y + INT(y / 4) - 32083;
   }
@@ -73,30 +66,15 @@ function NewMoon(k: number) {
   M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3; // Sun's mean anomaly
   Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3; // Moon's mean anomaly
   F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3; // Moon's argument of latitude
-  C1 =
-    (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
+  C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
   C1 = C1 - 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr);
   C1 = C1 - 0.0004 * Math.sin(dr * 3 * Mpr);
   C1 = C1 + 0.0104 * Math.sin(dr * 2 * F) - 0.0051 * Math.sin(dr * (M + Mpr));
-  C1 =
-    C1 -
-    0.0074 * Math.sin(dr * (M - Mpr)) +
-    0.0004 * Math.sin(dr * (2 * F + M));
-  C1 =
-    C1 -
-    0.0004 * Math.sin(dr * (2 * F - M)) -
-    0.0006 * Math.sin(dr * (2 * F + Mpr));
-  C1 =
-    C1 +
-    0.001 * Math.sin(dr * (2 * F - Mpr)) +
-    0.0005 * Math.sin(dr * (2 * Mpr + M));
+  C1 = C1 - 0.0074 * Math.sin(dr * (M - Mpr)) + 0.0004 * Math.sin(dr * (2 * F + M));
+  C1 = C1 - 0.0004 * Math.sin(dr * (2 * F - M)) - 0.0006 * Math.sin(dr * (2 * F + Mpr));
+  C1 = C1 + 0.001 * Math.sin(dr * (2 * F - Mpr)) + 0.0005 * Math.sin(dr * (2 * Mpr + M));
   if (T < -11) {
-    deltat =
-      0.001 +
-      0.000839 * T +
-      0.0002261 * T2 -
-      0.00000845 * T3 -
-      0.000000081 * T * T3;
+    deltat = 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3;
   } else {
     deltat = -0.000278 + 0.000265 * T + 0.000262 * T2;
   }
@@ -116,10 +94,7 @@ function SunLongitude(jdn: number) {
   M = 357.5291 + 35999.0503 * T - 0.0001559 * T2 - 0.00000048 * T * T2; // mean anomaly, degree
   L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2; // mean longitude, degree
   DL = (1.9146 - 0.004817 * T - 0.000014 * T2) * Math.sin(dr * M);
-  DL =
-    DL +
-    (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) +
-    0.00029 * Math.sin(dr * 3 * M);
+  DL = DL + (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) + 0.00029 * Math.sin(dr * 3 * M);
   L = L0 + DL; // true longitude, degree
   L = L * dr;
   L = L - PI * 2 * INT(L / (PI * 2)); // Normalize to (0, 2*PI)
@@ -173,21 +148,8 @@ function getLeapMonthOffset(a11: number, timeZone: number) {
 }
 
 /* Comvert solar date dd/mm/yyyy to the corresponding lunar date */
-export function convertSolar2Lunar(
-  dd: number,
-  mm: number,
-  yy: number,
-  timeZone: number
-) {
-  let k,
-    dayNumber,
-    monthStart,
-    a11,
-    b11,
-    lunarDay,
-    lunarMonth,
-    lunarYear,
-    lunarLeap;
+export function convertSolar2Lunar(dd: number, mm: number, yy: number, timeZone: number) {
+  let k, dayNumber, monthStart, a11, b11, lunarDay, lunarMonth, lunarYear, lunarLeap;
   dayNumber = jdFromDate(dd, mm, yy);
   k = INT((dayNumber - 2415021.076998695) / 29.530588853);
   monthStart = getNewMoonDay(k + 1, timeZone);
@@ -232,7 +194,7 @@ export function convertLunar2Solar(
   lunarMonth: number,
   lunarYear: number,
   lunarLeap: number,
-  timeZone: number
+  timeZone: number,
 ) {
   var k, a11, b11, off, leapOff, leapMonth, monthStart;
   if (lunarMonth < 11) {

@@ -67,15 +67,15 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
                 paymentStatus === PaymentStatus.PAID
                   ? "green"
                   : paymentStatus === PaymentStatus.DEPOSITED
-                  ? "blue"
-                  : "red"
+                    ? "blue"
+                    : "red"
               }
             >
               {paymentStatus === PaymentStatus.PAID
                 ? "Đã thanh toán"
                 : paymentStatus === PaymentStatus.DEPOSITED
-                ? "Thanh toán 1 phần"
-                : " Chưa thanh toán"}
+                  ? "Thanh toán 1 phần"
+                  : " Chưa thanh toán"}
             </Tag>
           </span>
         </div>
@@ -88,19 +88,19 @@ const OrderInformation: React.FC<OrderInformationProps> = ({
                 orderStatus === Status.XX
                   ? "red"
                   : orderStatus === Status.OK
-                  ? "green"
-                  : orderStatus === Status.QQ
-                  ? "orange"
-                  : "default"
+                    ? "green"
+                    : orderStatus === Status.QQ
+                      ? "orange"
+                      : "default"
               }
             >
               {orderStatus === Status.XX
                 ? "Đã Huỷ"
                 : orderStatus === Status.OK
-                ? "Xác nhận"
-                : orderStatus === Status.QQ
-                ? "Chờ duyệt"
-                : "Không xác định"}
+                  ? "Xác nhận"
+                  : orderStatus === Status.QQ
+                    ? "Chờ duyệt"
+                    : "Không xác định"}
             </Tag>
           </span>
         </div>

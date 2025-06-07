@@ -187,7 +187,7 @@ const SearchBookingBox: React.FC<SearchBookingBoxProps> = ({ className = "", loa
 };
 export default SearchBookingBox;
 
-const SearchBookingWrapper = styled(`div`)`
+const SearchBookingWrapper = styled("div")`
   .travel-form-large,
   .travel-form {
     .travel-form-item {

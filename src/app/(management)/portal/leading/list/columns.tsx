@@ -30,16 +30,16 @@ export const columns: ColumnsType<Leading> = [
         status === "BLACKLIST"
           ? "black"
           : status === "LOSS"
-          ? "red"
-          : status === "NEW"
-          ? "blue"
-          : status === "CALLBACKLATER"
-          ? "orange"
-          : status === "NORESPONSE"
-          ? "pink"
-          : status === "WIN"
-          ? "green"
-          : undefined;
+            ? "red"
+            : status === "NEW"
+              ? "blue"
+              : status === "CALLBACKLATER"
+                ? "orange"
+                : status === "NORESPONSE"
+                  ? "pink"
+                  : status === "WIN"
+                    ? "green"
+                    : undefined;
       return <Tag color={color}>{status}</Tag>;
     },
     width: 150,

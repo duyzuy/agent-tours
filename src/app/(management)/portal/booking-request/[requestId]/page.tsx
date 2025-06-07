@@ -77,28 +77,28 @@ const BookingRequestPageDetail = ({ params: { requestId } }: { params: { request
       status === "CONFIRMED"
         ? "gold"
         : status === "CANCELLED"
-        ? "red"
-        : status === "LOST"
-        ? "magenta"
-        : status === "NEW"
-        ? "blue"
-        : status === "WIN"
-        ? "success"
-        : "";
+          ? "red"
+          : status === "LOST"
+            ? "magenta"
+            : status === "NEW"
+              ? "blue"
+              : status === "WIN"
+                ? "success"
+                : "";
 
     let label: string;
     label =
       status === "CONFIRMED"
         ? "Đã xác nhận"
         : status === "CANCELLED"
-        ? "Đã Huỷ"
-        : status === "LOST"
-        ? "Thua"
-        : status === "WIN"
-        ? "Thắng"
-        : status === "NEW"
-        ? "Mới"
-        : "Unknown";
+          ? "Đã Huỷ"
+          : status === "LOST"
+            ? "Thua"
+            : status === "WIN"
+              ? "Thắng"
+              : status === "NEW"
+                ? "Mới"
+                : "Unknown";
     return (
       <Tag color={color} bordered={false}>
         {label}

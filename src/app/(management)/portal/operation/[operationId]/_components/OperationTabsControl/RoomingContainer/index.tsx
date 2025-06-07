@@ -35,20 +35,20 @@ const RoomingContainer: React.FC<RoomingContainerProps> = ({ operationId, editAb
               status === "WAITING_FOR_SALES"
                 ? "orange"
                 : status === "DONE"
-                ? "green"
-                : status === "IN_PROGRESS"
-                ? "blue"
-                : "default"
+                  ? "green"
+                  : status === "IN_PROGRESS"
+                    ? "blue"
+                    : "default"
             }
             bordered={false}
           >
             {status === "WAITING_FOR_SALES"
               ? "Đang chờ Sale bàn giao."
               : status === "DONE"
-              ? "Đã xong"
-              : status === "IN_PROGRESS"
-              ? "Điều hành sắp xếp"
-              : "Không xác định"}
+                ? "Đã xong"
+                : status === "IN_PROGRESS"
+                  ? "Điều hành sắp xếp"
+                  : "Không xác định"}
           </Tag>
         </Space>
       </div>

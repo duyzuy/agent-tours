@@ -1,5 +1,5 @@
 export interface ILocale {
-    name: string;
-    locale: string;
-    shortName: string;
+  name: string;
+  locale: string;
+  shortName: string;
 }

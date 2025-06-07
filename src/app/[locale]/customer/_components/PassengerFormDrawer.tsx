@@ -141,10 +141,10 @@ const PassengerFormDrawer: React.FC<PassengerFormDrawerProps> = ({
           {passengerType === PassengerType.ADULT
             ? t("input.dob.sublabel.adult")
             : passengerType === PassengerType.CHILD
-            ? t("input.dob.sublabel.child")
-            : passengerType === PassengerType.INFANT
-            ? t("input.dob.sublabel.infant")
-            : "--"}
+              ? t("input.dob.sublabel.child")
+              : passengerType === PassengerType.INFANT
+                ? t("input.dob.sublabel.infant")
+                : "--"}
           )
         </span>
       </span>

@@ -127,10 +127,10 @@ export const ButtonSecondary: React.FC<CustomButtonProps> = ({
     color === "danger"
       ? ButtonSecondaryDangerStyled
       : color === "primary"
-      ? ButtonSecondaryPrimaryStyled
-      : color === "success"
-      ? ButtonSecondarySuccessStyled
-      : ButtonSecondaryGreyStyled;
+        ? ButtonSecondaryPrimaryStyled
+        : color === "success"
+          ? ButtonSecondarySuccessStyled
+          : ButtonSecondaryGreyStyled;
   return (
     <CompStyled
       onClick={onClick}
@@ -155,10 +155,10 @@ export const ButtonPrimary: React.FC<CustomButtonProps> = ({
     color === "danger"
       ? ButtonPrimaryDangerOutlineStyled
       : color === "primary"
-      ? ButtonPrimarySuccessOutlineStyled
-      : color === "success"
-      ? ButtonPrimarySuccessOutlineStyled
-      : ButtonSecondaryGreyStyled;
+        ? ButtonPrimarySuccessOutlineStyled
+        : color === "success"
+          ? ButtonPrimarySuccessOutlineStyled
+          : ButtonSecondaryGreyStyled;
   return (
     <CompStyled
       onClick={onClick}

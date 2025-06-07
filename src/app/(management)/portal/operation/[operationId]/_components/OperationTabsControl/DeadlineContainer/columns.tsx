@@ -57,22 +57,22 @@ export const columns: ColumnsType<IOperationDeadline> = [
             status === "NEW"
               ? "blue"
               : status === "DONE"
-              ? "green"
-              : status === "EXPIRED"
-              ? "red"
-              : status === "PRE_DEADLINE"
-              ? "orange"
-              : "default"
+                ? "green"
+                : status === "EXPIRED"
+                  ? "red"
+                  : status === "PRE_DEADLINE"
+                    ? "orange"
+                    : "default"
           }
           bordered={false}
         >
           {status === "NEW"
             ? "Mới"
             : status === "DONE"
-            ? "Hoàn thành"
-            : status === "PRE_DEADLINE"
-            ? "Quá hạn đợt 1"
-            : "Không xác định"}
+              ? "Hoàn thành"
+              : status === "PRE_DEADLINE"
+                ? "Quá hạn đợt 1"
+                : "Không xác định"}
         </Tag>
       );
     },

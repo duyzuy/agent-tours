@@ -249,24 +249,24 @@ function DocumentCheckList({ documents, label }: DocumentCheckListProps) {
                   doc.status === "NEW"
                     ? "blue"
                     : doc.status === "FINISHED"
-                    ? "green"
-                    : doc.status === "HANDOVERED"
-                    ? "gold"
-                    : doc.status === "NOT_FINISHED"
-                    ? "red"
-                    : "default"
+                      ? "green"
+                      : doc.status === "HANDOVERED"
+                        ? "gold"
+                        : doc.status === "NOT_FINISHED"
+                          ? "red"
+                          : "default"
                 }
                 className="!mr-0"
               >
                 {doc.status === "NEW"
                   ? "Mới"
                   : doc.status === "FINISHED"
-                  ? "Đã nộp"
-                  : doc.status === "HANDOVERED"
-                  ? "Đã bàn giao"
-                  : doc.status === "NOT_FINISHED"
-                  ? "Chưa nộp"
-                  : "Unknown"}
+                    ? "Đã nộp"
+                    : doc.status === "HANDOVERED"
+                      ? "Đã bàn giao"
+                      : doc.status === "NOT_FINISHED"
+                        ? "Chưa nộp"
+                        : "Unknown"}
               </Tag>
             </div>
           </li>

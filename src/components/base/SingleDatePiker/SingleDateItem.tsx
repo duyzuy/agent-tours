@@ -11,22 +11,13 @@ const SingleDateItem: React.FC<{
   isSelected?: boolean;
   isDisabled?: boolean;
   width: number;
-}> = ({
-  date,
-  locale,
-  onClick,
-  isSelected = false,
-  isDisabled = false,
-  width,
-}) => {
+}> = ({ date, locale, onClick, isSelected = false, isDisabled = false, width }) => {
   return (
     <li
       key={format(date, "mm-dd-yyyy")}
       className={classNames({
-        "single-date-item block px-2 py-1 text-center relative rounded-md border cursor-pointertransition-colors":
-          true,
-        "is-selected bg-emerald-50 text-emerald-700 border-emerald-600":
-          isSelected,
+        "single-date-item block px-2 py-1 text-center relative rounded-md border cursor-pointertransition-colors": true,
+        "is-selected bg-emerald-50 text-emerald-700 border-emerald-600": isSelected,
         " bg-white border-transparent hover:bg-gray-50": !isSelected,
         "disable opacity-50 pointer-events-none": isDisabled,
       })}
@@ -42,13 +33,8 @@ const SingleDateItem: React.FC<{
             return onClick && onClick(date);
           }}
         >
-          <span className="day block">
-            {getDayNameOfWeek({ locale, dateFm: "EEEE" })[getDay(date)]}
-          </span>
-          <time
-            className="date-month text-xs"
-            dateTime={format(date, "yyyy-MM-dd")}
-          >
+          <span className="day block">{getDayNameOfWeek({ locale, dateFm: "EEEE" })[getDay(date)]}</span>
+          <time className="date-month text-xs" dateTime={format(date, "yyyy-MM-dd")}>
             {format(date, "dd MMMM", { locale })}
           </time>
         </button>

@@ -3,9 +3,9 @@ import { queryCore } from "../var";
 import { regionAPIs } from "@/services/management/cores/region";
 
 export const useGetRegionList = () => {
-    return useQuery({
-        queryKey: [queryCore.GET_LIST_REGION],
-        queryFn: () => regionAPIs.getCountryList(),
-        select: (data) => data.result,
-    });
+  return useQuery({
+    queryKey: [queryCore.GET_LIST_REGION],
+    queryFn: () => regionAPIs.getCountryList(),
+    select: (data) => data.result,
+  });
 };

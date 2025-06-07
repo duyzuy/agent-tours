@@ -43,22 +43,22 @@ const DocumentCheckListInfo: React.FC<DocumentCheckListInfoProps> = ({ items }) 
                             status === "FINISHED"
                               ? "green"
                               : status === "NOT_FINISHED"
-                              ? "red"
-                              : status === "NEW"
-                              ? "blue"
-                              : "default"
+                                ? "red"
+                                : status === "NEW"
+                                  ? "blue"
+                                  : "default"
                           }
                           bordered={false}
                         >
                           {status === "FINISHED"
                             ? "Đã nộp"
                             : status === "HANDOVERED"
-                            ? "Đã bàn giao"
-                            : status === "NEW"
-                            ? "Mới"
-                            : status === "NOT_FINISHED"
-                            ? "Chưa nộp"
-                            : "Unknown"}
+                              ? "Đã bàn giao"
+                              : status === "NEW"
+                                ? "Mới"
+                                : status === "NOT_FINISHED"
+                                  ? "Chưa nộp"
+                                  : "Unknown"}
                         </Tag>
                       </div>
                       <div className="flex-1 flex gap-x-1">

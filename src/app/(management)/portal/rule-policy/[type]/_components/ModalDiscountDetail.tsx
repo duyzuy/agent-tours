@@ -146,9 +146,7 @@ const ModalDiscountDetail: React.FC<ModalDiscountDetailProps> = ({ isOpen, onClo
                 {record?.isValidByTime === true ? (
                   <>
                     <Space wrap className="mb-2">
-                      {timeSlots?.map((timeSlot) => (
-                        <Tag key={timeSlot} color="blue">{`${timeSlot}h`}</Tag>
-                      ))}
+                      {timeSlots?.map((timeSlot) => <Tag key={timeSlot} color="blue">{`${timeSlot}h`}</Tag>)}
                     </Space>
                     <p>*Khung giờ áp dụng từ 0-59 phút cùng giờ</p>
                   </>
@@ -166,9 +164,7 @@ const ModalDiscountDetail: React.FC<ModalDiscountDetailProps> = ({ isOpen, onClo
                 {record?.isValidByDayofweek === true ? (
                   <>
                     <Space wrap className="mb-2">
-                      {daysOfWeek?.map((dayOfW) => (
-                        <Tag key={dayOfW.value} color="blue">{`${dayOfW.label}`}</Tag>
-                      ))}
+                      {daysOfWeek?.map((dayOfW) => <Tag key={dayOfW.value} color="blue">{`${dayOfW.label}`}</Tag>)}
                     </Space>
                   </>
                 ) : (
@@ -194,12 +190,12 @@ const ModalDiscountDetail: React.FC<ModalDiscountDetailProps> = ({ isOpen, onClo
                               {item.cat === "REGIONLIST"
                                 ? item.regionKey
                                 : item.cat === "SUBREGIONLIST"
-                                ? item.subRegionKey
-                                : item.cat === "COUNTRYLIST"
-                                ? item.countryName
-                                : item.cat === "STATEPROVINCELIST"
-                                ? item.stateProvinceKey
-                                : "Không xác định"}
+                                  ? item.subRegionKey
+                                  : item.cat === "COUNTRYLIST"
+                                    ? item.countryName
+                                    : item.cat === "STATEPROVINCELIST"
+                                      ? item.stateProvinceKey
+                                      : "Không xác định"}
                             </Tag>
                           ))}
                         </Space>

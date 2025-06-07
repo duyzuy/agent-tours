@@ -144,7 +144,9 @@ const getConfigLowestPrice = (prices: IProductTour["configs"]) => {
 const WrapTourBoxItem = styled("div")`
   & {
     background: white;
-    box-shadow: 0px 2px 4px -4px rgb(0 0 0 / 25%), 0px 0px 8px -6px rgb(0 0 0 / 15%);
+    box-shadow:
+      0px 2px 4px -4px rgb(0 0 0 / 25%),
+      0px 0px 8px -6px rgb(0 0 0 / 15%);
     padding: 16px 20px;
     border-radius: 3px;
     margin-bottom: 24px;
