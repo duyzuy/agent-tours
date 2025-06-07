@@ -47,7 +47,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({ className = "", pas
           <Spin tip="Đang tải" size="small">
             <div className="bg-slate-100 rounded-full w-24 h-24 mx-auto"></div>
           </Spin>
-        ) : !services || !services.length ? (
+        ) : !services?.length ? (
           <Empty image={<IconEmptyBox stroke="0" />} description="Hiện không có dịch vụ nào khả dụng." />
         ) : (
           <>

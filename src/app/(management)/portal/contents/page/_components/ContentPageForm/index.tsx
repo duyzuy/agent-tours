@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Form, Input, SwitchProps, Typography } from "antd";
 import dayjs from "dayjs";
 import { stringToSlug } from "@/utils/stringToSlug";
-import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from "@/constants/common";
+import { DATE_TIME_FORMAT } from "@/constants/common";
 import { mediaConfig } from "@/configs";
 
 import { IPageContentDetail } from "@/models/management/cms/pageContent.interface";
@@ -23,8 +23,6 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import MetaSeoBox, { MetaSeoBoxProps } from "@/components/admin/MetaSeoBox";
 import { stringToDate } from "@/utils/date";
-
-type RequirePageContentFormData = Required<PageContentFormData>;
 
 export interface ContentPageFormProps {
   lang: LangCode;

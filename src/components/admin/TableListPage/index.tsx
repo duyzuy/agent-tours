@@ -11,6 +11,7 @@ import {
 import Table, { ColumnsType, TableProps } from "antd/es/table";
 import CustomTable from "@/components/admin/CustomTable";
 import ModalDeleteConfirm from "./ModalDeleteConfirm";
+
 import classNames from "classnames";
 import { isUndefined } from "lodash";
 
@@ -60,22 +61,23 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
     fixedActionsColumn = true,
     ...restProps
   } = props;
-  const [showModalDelete, setShowModalDelete] = useState(false);
+  const modalDelete = ModalDeleteConfirm.useModal();
+
   const [record, setRecord] = useState<T>();
 
   const onShowModalConfirm = (record: T) => {
-    setShowModalDelete((prev) => !prev);
+    modalDelete.openModal();
     setRecord(() => record);
   };
-  const onCancelDelete = () => {
-    setShowModalDelete(false);
+  const onCancelDelete = useCallback(() => {
+    modalDelete.closeModal();
     setRecord(() => undefined);
-  };
-  const onConfirmDelete = () => {
+  }, []);
+  const onConfirmDelete = useCallback(() => {
     if (!record) return;
     onDelete?.(record);
-    setShowModalDelete(false);
-  };
+    modalDelete.closeModal();
+  }, []);
 
   const rowActions = [
     {
@@ -251,7 +253,7 @@ function TableListPage<T extends object>(props: ITableListPageProps<T>) {
         {...restProps}
       />
       <ModalDeleteConfirm
-        isShowModal={showModalDelete}
+        isShowModal={modalDelete.isOpen}
         title={`Xoá ${modelName}`}
         descriptions={`Bạn có chắc chắn muốn xoá ${modelName}!`}
         onCancel={onCancelDelete}

@@ -6,7 +6,7 @@ export default function ManageContentsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("./portal/contents/page");
+    router.push("/portal/contents/page");
   }, []);
   return null;
 }

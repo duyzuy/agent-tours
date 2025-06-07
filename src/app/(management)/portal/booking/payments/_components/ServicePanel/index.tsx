@@ -10,7 +10,7 @@ import BoxServiceItemByPax, { BoxServiceItemByPaxProps } from "./BoxServiceItemB
 import BoxServiceItemNoPax, { BoxServiceItemNoPaxProps } from "./BoxServiceItemNoPax";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { ESellChannel } from "@/constants/channel.constant";
-import { IProductService } from "@/models/management/booking/service.interface";
+import { IServiceItem } from "@/models/management/booking/service.interface";
 
 import { PortalBookingManagerFormData } from "../../../modules/bookingInformation.interface";
 interface ServicePanelProps {
@@ -36,7 +36,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ sellableId, bookingItems, o
   }, [bookingInformation]);
 
   const filterPriceConfigListByChannel = useCallback(
-    (configs: IProductService["configs"]) => {
+    (configs: IServiceItem["configs"]) => {
       return configs?.filter(
         (item) =>
           (channel === ESellChannel.B2B && item.channel === "AGENT") ||

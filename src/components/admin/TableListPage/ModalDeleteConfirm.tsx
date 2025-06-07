@@ -1,24 +1,23 @@
-import React, { memo } from "react";
+import React, { memo, useCallback, useState } from "react";
 import { Button, Modal } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
-interface Props {
+interface ModalDeleteConfirmProps {
   onConfirm?: () => void;
   onCancel?: () => void;
   isShowModal: boolean;
   title?: string;
-
   descriptions?: string;
   confirmLoading?: boolean;
 }
-const ModalDeleteConfirm: React.FC<Props> = ({
+const ModalDeleteConfirmComp = ({
   onConfirm,
   isShowModal,
   onCancel,
   title = "",
   descriptions = "",
   confirmLoading = false,
-}) => {
+}: ModalDeleteConfirmProps) => {
   const renderModalFooter = () => {
     return (
       <div className="px-2 flex items-center flex-1 justify-center">
@@ -47,4 +46,20 @@ const ModalDeleteConfirm: React.FC<Props> = ({
   );
 };
 
-export default memo(ModalDeleteConfirm);
+function useModalDeleteConfirm() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+  const closeModal = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+  return { isOpen, closeModal, openModal };
+}
+
+const ModalDeleteConfirm = Object.assign(memo(ModalDeleteConfirmComp), {
+  useModal: useModalDeleteConfirm,
+});
+
+export default ModalDeleteConfirm;

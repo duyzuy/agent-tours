@@ -13,6 +13,8 @@ import { getProductListByTemplateId } from "../../../../actions/searchProduct";
 import { getTemplateContentDetail } from "@/actions/product.action";
 import { ProductListRelatedContainer } from "../_components/ProductListRelatedContainer";
 import TourTabsContent from "../_components/TourTabsContent";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 const DynamicGalleries = dynamic(() => import("../_components/Galleries"), {
   loading: () => <ProductGalleries className="w-full mb-6" />,
@@ -35,6 +37,9 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
   /**
    * define the path: lang/templateId/sellableId/content-slug
    */
+
+  const session = await getServerSession(authOptions);
+
   const [templateId, sellableId, templateContentSlug] = slug;
 
   const cmsTemplateContent = await getTemplateContentDetail({
@@ -82,6 +87,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
           </div>
 
           <DynamicProductSummary
+            session={session}
             tourName={cmsTemplateContent.name}
             cmsTemplate={cmsTemplateContent}
             defaultProductItem={productItem}

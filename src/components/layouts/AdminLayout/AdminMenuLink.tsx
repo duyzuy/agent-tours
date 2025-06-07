@@ -58,6 +58,12 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
     rolepers: PATH_WITH_PERMISSION["booking"],
   },
   {
+    key: "booking-service",
+    icon: React.createElement(TagOutlined),
+    label: "Đặt dịch vụ",
+    rolepers: PATH_WITH_PERMISSION["booking"],
+  },
+  {
     key: "manage-booking",
     icon: React.createElement(ContainerOutlined),
     label: "Quản lý đặt chỗ",

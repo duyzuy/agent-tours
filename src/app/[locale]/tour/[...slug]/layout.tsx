@@ -5,7 +5,6 @@ import { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getTemplateContentDetail } from "@/actions/product.action";
 import { mediaConfig } from "@/configs";
-
 export const dynamic = "force-dynamic";
 
 type Props = {

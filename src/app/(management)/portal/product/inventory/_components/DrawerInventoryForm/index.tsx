@@ -52,15 +52,24 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
     "",
     "",
     undefined,
-    EProductType.TOUR,
-    undefined,
+    productType,
+    supplierId,
     true,
     Status.QQ,
   );
-  const { control, getValues, setValue, clearErrors, watch, handleSubmit } = useForm<InventoryFormData>({
+  const {
+    control,
+    getValues,
+    setValue,
+    clearErrors,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<InventoryFormData>({
     resolver: yupResolver(inventorySchema),
     defaultValues: { ...initFormData },
   });
+
   const [currentInventoriesTypeList, setCurrentInventoriesTypeList] = useState<EInventoryType[]>();
 
   const onClose = useCallback(() => {
@@ -78,40 +87,6 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
     return isEqual(initialValues?.name, getValues("name"));
   }, [watch()]);
 
-  useEffect(() => {
-    if (initialValues && actionType === "EDIT") {
-      const updateFormData = new InventoryFormData(
-        initialValues.recId,
-        initialValues.name,
-        initialValues.code,
-        initialValues.cmsIdentity,
-        initialValues.type,
-        initialValues.productType,
-        initialValues.supplier.recId,
-        initialValues.isStock,
-        initialValues.status,
-      );
-      Object.entries(updateFormData).forEach(([key, value]) => {
-        setValue(key as keyof InventoryFormData, value);
-      });
-    } else {
-      Object.entries(initFormData).forEach(([key, value]) => {
-        setValue(key as keyof InventoryFormData, value);
-      });
-    }
-    clearErrors();
-  }, [initialValues, actionType, isOpen]);
-
-  useEffect(() => {
-    productType && setValue("productType", productType);
-  }, [productType]);
-
-  useEffect(() => {
-    supplierId && setValue("supplierId", supplierId);
-  }, [supplierId]);
-  useEffect(() => {
-    setCurrentInventoriesTypeList(inventoriesType);
-  }, [inventoriesType, isOpen]);
   return (
     <Drawer
       title={actionType === "CREATE" ? "Tạo dịch vụ" : "Chỉnh sửa"}
@@ -120,6 +95,26 @@ const DrawerInventoryForm: React.FC<DrawerInventoryFormProps> = ({
       onClose={onClose}
       maskClosable={false}
       open={isOpen}
+      afterOpenChange={(open) => {
+        const formData = initialValues
+          ? new InventoryFormData(
+              initialValues.recId,
+              initialValues.name,
+              initialValues.code,
+              initialValues.cmsIdentity,
+              initialValues.type,
+              initialValues.productType,
+              initialValues.supplier.recId,
+              initialValues.isStock,
+              initialValues.status,
+            )
+          : initFormData;
+        Object.entries(formData).forEach(([key, value]) => {
+          setValue(key as keyof InventoryFormData, value);
+        });
+        setCurrentInventoriesTypeList(inventoriesType);
+        clearErrors();
+      }}
       footer={
         <Space className="py-2">
           {actionType === "CREATE" ? (

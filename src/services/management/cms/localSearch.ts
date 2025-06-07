@@ -3,13 +3,13 @@ import {
   LocalSearchPayload,
   LocalSearchDestinationListRs,
   LocalSearchQueryParams,
-  ILocalSeachDestination,
+  ILocalSearchDestination,
 } from "@/models/management/localSearchDestination.interface";
 import { client } from "@/services/api";
 
 export const localSearchAPIs = {
   create: async (payload: LocalSearchPayload) => {
-    return await client.post<BaseResponse<ILocalSeachDestination>>("local/LocalMisc_SearchConfig_Addnew", {
+    return await client.post<BaseResponse<ILocalSearchDestination>>("local/LocalMisc_SearchConfig_Addnew", {
       body: {
         requestObject: payload,
       },
@@ -17,7 +17,7 @@ export const localSearchAPIs = {
     });
   },
   update: async (payload: LocalSearchPayload & { id: number }) => {
-    return await client.post<BaseResponse<ILocalSeachDestination>>("local/LocalMisc_SearchConfig_Edit", {
+    return await client.post<BaseResponse<ILocalSearchDestination>>("local/LocalMisc_SearchConfig_Edit", {
       body: {
         requestObject: payload,
       },

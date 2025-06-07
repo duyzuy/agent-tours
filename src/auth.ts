@@ -63,7 +63,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV !== "production" ? true : false,
+  debug: process.env.NODE_ENV !== "production",
   logger: {
     error(code, metadata) {
       console.error(code, metadata);

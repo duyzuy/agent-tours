@@ -1,6 +1,6 @@
 import { BaseQueryParams, BaseResponse } from "../common.interface";
 
-export interface ILocalSeachDestination {
+export interface ILocalSearchDestination {
   id: number;
   cat: string;
   name: string;
@@ -13,7 +13,7 @@ export interface ILocalSeachDestination {
   order: number;
   status: "OK" | "OX" | "XX";
 }
-export interface LocalSearchDestinationListRs extends BaseResponse<ILocalSeachDestination[]> {}
+export interface LocalSearchDestinationListRs extends BaseResponse<ILocalSearchDestination[]> {}
 
 export interface LocalSearchPayload {
   name?: string;

@@ -1,8 +1,10 @@
 import { getUserCustomerProfile } from "./_actions/customer";
 import ProfileInformationBox from "./_components/ProfileInformationBox";
 import { getTranslations } from "next-intl/server";
+import { signOut } from "next-auth/react";
 export default async function CustomerPage() {
   const userProfile = await getUserCustomerProfile();
+
   const t = await getTranslations("String");
   const c = await getTranslations("Customer");
 

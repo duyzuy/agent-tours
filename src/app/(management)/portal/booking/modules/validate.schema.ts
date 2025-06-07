@@ -7,7 +7,7 @@ import { SearchBookingFormData } from "../modules/searchBooking.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { MONTH_FORMAT } from "@/constants/common";
-import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
+import { ILocalSearchDestination } from "@/models/management/localSearchDestination.interface";
 import dayjs from "dayjs";
 
 export const bookingInformationSchema: ObjectSchema<IBookingTourPayload> = object({
@@ -76,7 +76,7 @@ const isValidDateFormat = (value: string) => {
 
 export const searchPortalBookingSchema: ObjectSchema<SearchBookingFormData> = object({
   byMonth: string().required("Chọn thời gian đi").test("is-valid-date", "Ngày đi không hợp lệ", isValidDateFormat),
-  byDest: array<ILocalSeachDestination>(
+  byDest: array<ILocalSearchDestination>(
     object({
       regionKey: string(),
       countryKey: string(),

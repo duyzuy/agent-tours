@@ -1,7 +1,7 @@
 import { Status } from "../common.interface";
 import { BaseResponse } from "../common.interface";
 import { LangCode } from "../management/cms/language.interface";
-import { ILocalSeachDestination } from "../management/localSearchDestination.interface";
+import { ILocalSearchDestination } from "../management/localSearchDestination.interface";
 import { IThumbnail } from "../thumbnail.interface";
 
 export interface FeDestinationSearchConfig {
@@ -85,7 +85,7 @@ export interface FeDestinationContentDetail {
   slug: string;
   lang: LangCode;
   status: Status;
-  searchConfigs: ILocalSeachDestination[];
+  searchConfigs: ILocalSearchDestination[];
   languages: { lang: LangCode; slug: string; title: string }[];
 }
 export interface FeDestinationContentDetailResponse extends BaseResponse<FeDestinationContentDetail> {}

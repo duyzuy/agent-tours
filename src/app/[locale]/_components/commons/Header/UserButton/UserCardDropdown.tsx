@@ -4,7 +4,7 @@ import { Link } from "@/utils/navigation";
 import { Button } from "antd";
 import { IconAccount } from "@/assets/icons";
 import { LogoutOutlined } from "@ant-design/icons";
-import { useState, useRef, memo } from "react";
+import { useState, useRef, memo, useMemo } from "react";
 import { useClickOutSide } from "@/hooks/fe/useClickOutSide";
 import { useEffect } from "react";
 import { usePathname } from "@/utils/navigation";
@@ -26,6 +26,14 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ children }) => {
     { id: 1, label: t("myAccount"), link: "/customer" },
     { id: 2, label: t("order"), link: "/customer/order" },
   ];
+
+  const userName = useMemo(() => {
+    return userInfo?.profile?.fullname || userInfo?.profile?.user.username;
+  }, [userInfo.profile?.fullname, userInfo.profile?.user.username]);
+
+  const toggleDropdown = () => {
+    setShowDropdown((prev) => !prev);
+  };
   useClickOutSide(dropdownRef, () => {
     setShowDropdown(false);
   });
@@ -39,10 +47,10 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ children }) => {
       <Button
         type="text"
         icon={<IconAccount className="w-5 h-5" />}
-        onClick={() => setShowDropdown((prev) => !prev)}
-        className="!inline-flex items-center justify-center"
+        onClick={toggleDropdown}
+        className="!inline-flex items-center justify-center hover:!bg-slate-100 !px-3 font-semibold"
       >
-        {userInfo?.profile?.fullname}
+        {userName}
       </Button>
       {showDropdown ? (
         <div
@@ -52,7 +60,7 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ children }) => {
           <ul className="menu-list">
             {MENU_ITEMS.map((item) => (
               <li key={item.id}>
-                <Link href={item.link} className="block py-2 px-3 hover:bg-gray-100 rounded-md !text-gray-800">
+                <Link href={item.link} className="block py-2 px-3 hover:bg-slate-100 rounded-md !text-gray-800">
                   {item.label}
                 </Link>
               </li>
@@ -61,7 +69,7 @@ const UserCardDropdown: React.FC<UserCardDropdownProps> = ({ children }) => {
           <div className="border-t pt-3 mt-3">
             <Button
               type="text"
-              onClick={() => signOut()}
+              onClick={signOut}
               className="w-full !text-red-600 !hover:bg-gray-100"
               icon={<LogoutOutlined />}
             >

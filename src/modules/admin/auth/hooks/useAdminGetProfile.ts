@@ -5,7 +5,8 @@ import { ErrorResponse } from "@/models/common.interface";
 import { setAdminUserInformationStorage, setAdminUsername } from "@/utils/common";
 import { useTQuery } from "@/lib/reactQueryHooks";
 
-const useAdminGetProfile = ({ enabled }: { enabled: boolean }) => {
+const useAdminGetProfile = (options?: { enabled: boolean }) => {
+  const { enabled = false } = options || {};
   return useTQuery({
     queryKey: [ADMIN_AUTH.GET_ADMIN_PROFILE],
     queryFn: getAdminProfile,

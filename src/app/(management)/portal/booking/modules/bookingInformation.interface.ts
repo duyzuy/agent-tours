@@ -7,27 +7,7 @@ import { PassengerInformationFormData } from "./passenger.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { ESellChannel } from "@/constants/channel.constant";
-import { IProductService } from "@/models/management/booking/service.interface";
-
-// export interface IProductServiceBookingItem {
-//   bookingIndex: number;
-//   serviceItem: IProductService;
-//   configItem: IProductService["configs"][number];
-//   qty: number;
-//   type: PassengerType;
-// }
-// export interface IProductServiceBookingItemWithoutPax {
-//   serviceItem: IProductService;
-//   configItem: IProductService["configs"][number];
-//   qty: number;
-//   type: PassengerType.ADULT;
-// }
-// export interface IProductTourBookingItem {
-//   configItem: IProductTour["configs"][number];
-//   index: number;
-//   type: PassengerType;
-//   passengerInformation: PassengerInformationFormData;
-// }
+import { IServiceItem } from "@/models/management/booking/service.interface";
 
 export class PortalBookingInformation {
   product?: IProductTour;
@@ -40,15 +20,15 @@ export class PortalBookingInformation {
   customerInformation?: CustomerInformation;
   invoiceInfo?: Partial<IInvoice>;
   bookingSsr: {
-    serviceItem: IProductService;
-    configItem: IProductService["configs"][number];
+    serviceItem: IServiceItem;
+    configItem: IServiceItem["configs"][number];
     qty: number;
     type: PassengerType.ADULT;
   }[];
   bookingSsrWithPax: {
     bookingIndex: number;
-    serviceItem: IProductService;
-    configItem: IProductService["configs"][number];
+    serviceItem: IServiceItem;
+    configItem: IServiceItem["configs"][number];
     qty: number;
     type: PassengerType;
   }[];
@@ -63,15 +43,15 @@ export class PortalBookingInformation {
     customerInformation: CustomerInformation | undefined,
     invoiceInfo: Partial<IInvoice> | undefined,
     bookingSsr: {
-      serviceItem: IProductService;
-      configItem: IProductService["configs"][number];
+      serviceItem: IServiceItem;
+      configItem: IServiceItem["configs"][number];
       qty: number;
       type: PassengerType.ADULT;
     }[],
     bookingSsrWithPax: {
       bookingIndex: number;
-      serviceItem: IProductService;
-      configItem: IProductService["configs"][number];
+      serviceItem: IServiceItem;
+      configItem: IServiceItem["configs"][number];
       qty: number;
       type: PassengerType;
     }[],
@@ -103,7 +83,7 @@ export class PortalBookingManagerFormData {
   };
   searchBooking: SearchBookingFormData;
   productList?: IProductTour[];
-  serviceList?: IProductService[];
+  serviceList?: IServiceItem[];
   reservation?: IReservation;
   channel: ESellChannel;
   agentUserId?: number;
@@ -126,7 +106,7 @@ export class PortalBookingManagerFormData {
     },
     searchBooking: SearchBookingFormData,
     productList: IProductTour[],
-    serviceList: IProductService[] | undefined,
+    serviceList: IServiceItem[] | undefined,
     reservation: IReservation | undefined,
     channel: ESellChannel,
     agentUserId: number | undefined,

@@ -47,4 +47,8 @@ export type IProductTour = Pick<
   promotions: IPromotion[] | null;
 };
 
-export interface ProductTouListResponse extends BaseResponse<IProductTour[]> {}
+export type IProductService = Omit<IProductTour, "type"> & {
+  type: EProductType.EXTRA;
+};
+export interface ProductTourListResponse extends BaseResponse<IProductTour[]> {}
+export interface ProductServiceListResponse extends BaseResponse<IProductService[]> {}

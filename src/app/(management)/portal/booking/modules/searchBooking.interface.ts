@@ -1,27 +1,14 @@
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
-import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
+import { ILocalSearchDestination } from "@/models/management/localSearchDestination.interface";
 import { PassengerType } from "@/models/common.interface";
+import { SearchProductTourPayload } from "@/models/management/booking/searchProduct.interface";
 
-export interface SearchBookingPayload {
+export class SearchBookingFormData implements SearchProductTourPayload {
   byMonth?: string;
   byCode?: string;
-  byDest?: {
-    countryKey: string;
-    keyType: string;
-    regionKey: string;
-    stateProvinceKey: string;
-    subRegionKey: string;
-  }[];
-  byProductType?: EProductType[];
-  byInventoryType?: EInventoryType[];
-}
-
-export class SearchBookingFormData {
-  byMonth?: string;
-  byCode?: string;
-  byDest?: ILocalSeachDestination[];
-  byProductType?: EProductType[];
+  byDest?: ILocalSearchDestination[];
+  byProductType?: [EProductType.TOUR];
   byInventoryType?: EInventoryType[];
   passengers: {
     [PassengerType.ADULT]: number;
@@ -31,14 +18,13 @@ export class SearchBookingFormData {
   constructor(
     byMonth: string | undefined,
     byCode: string | undefined,
-    byDest: ILocalSeachDestination[] | undefined,
-    byProductType: EProductType[] | undefined,
+    byDest: ILocalSearchDestination[] | undefined,
     byInventoryType: EInventoryType[] | undefined,
   ) {
     this.byMonth = byMonth;
     this.byCode = byCode;
     this.byDest = byDest;
-    this.byProductType = byProductType;
+    this.byProductType = [EProductType.TOUR];
     this.byInventoryType = byInventoryType;
     this.passengers = {
       [PassengerType.ADULT]: 1,

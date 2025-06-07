@@ -4,7 +4,7 @@ import { IconChevronDown } from "@/assets/icons";
 
 import { isEmpty } from "lodash";
 import NavLink from "./NavLink";
-import { ICON_LIST } from "@/constants/icons.constant";
+import { getIcon, ICON_LIST } from "@/constants/icons.constant";
 import { MenuObjectType, MenuPositionType } from "@/models/management/cms/menu.interface";
 import { MenuItemType } from "@/utils/menu";
 
@@ -17,9 +17,6 @@ export type NavItemProps = {
   objectType?: MenuObjectType;
   items: MenuItemType[];
 };
-// export type MenuItemType = Omit<IMenuItem, "cat" | "type" | "menuPosition" | "children"> & {
-//   children: MenuItemType[];
-// };
 
 const NavItem = ({ className = "", name, slug, icon, items, objectType, navType }: Partial<NavItemProps>) => {
   const IconComp = ICON_LIST.find((item) => item.key === icon);
@@ -30,7 +27,7 @@ const NavItem = ({ className = "", name, slug, icon, items, objectType, navType 
         [className]: className,
       })}
     >
-      <span
+      <div
         className="flex items-center gap-x-1 font-[500] relative leading-6 cursor-pointer px-3 py-2"
         aria-expanded="false"
       >
@@ -39,13 +36,13 @@ const NavItem = ({ className = "", name, slug, icon, items, objectType, navType 
         ) : (
           <span>{name}</span>
         )}
-        {items && items.length ? (
+        {items?.length ? (
           <span className="group-hover/item:rotate-180">
             <IconChevronDown width={16} height={16} />
           </span>
         ) : null}
-      </span>
-      {items && items.length ? (
+      </div>
+      {items?.length ? (
         <NavItem.Dropdown className="invisible group-hover/item:visible right-0" items={items} navType={navType} />
       ) : null}
     </div>
@@ -55,15 +52,11 @@ export default memo(NavItem);
 
 interface NavItemDropdown {
   className?: string;
-  items?: MenuItemType[];
+  items: MenuItemType[];
   navType?: NavItemProps["navType"];
 }
 
 NavItem.Dropdown = function NavItemDropdown({ className = "", items }: NavItemDropdown) {
-  const getIconComp = (iconName: string) => {
-    return ICON_LIST.find((item) => item.key === iconName);
-  };
-
   return (
     <div
       className={classNames("rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 w-64 absolute z-100", {
@@ -71,12 +64,12 @@ NavItem.Dropdown = function NavItemDropdown({ className = "", items }: NavItemDr
       })}
     >
       <div className="p-3">
-        {items?.map((item, _index) => (
+        {items.map((item, _index) => (
           <div
             key={_index}
             className="group relative flex items-center gap-x-6 rounded-lg p-3 text-sm leading-6 hover:bg-gray-50"
           >
-            {item.icon && getIconComp(item.icon) ? <IconComp icon={getIconComp(item.icon)?.icon} /> : null}
+            <IconComp iconName={item.icon} />
             <div className="flex-auto">
               <NavLink
                 className="block"
@@ -94,15 +87,14 @@ NavItem.Dropdown = function NavItemDropdown({ className = "", items }: NavItemDr
   );
 };
 
-const IconComp = ({ icon }: { icon?: React.FC<React.SVGProps<SVGSVGElement>> }) => {
-  const Icon = icon;
+const IconComp = ({ iconName }: { iconName: string }) => {
+  const Icon = getIcon(iconName);
+
+  if (!Icon) return null;
+
   return (
-    <>
-      {Icon ? (
-        <div className="flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-          <Icon width={20} height={20} />
-        </div>
-      ) : null}
-    </>
+    <div className="flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+      <Icon.icon width={20} height={20} />
+    </div>
   );
 };

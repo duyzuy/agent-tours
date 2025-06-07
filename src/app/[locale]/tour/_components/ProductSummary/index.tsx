@@ -12,6 +12,8 @@ import useSelectProduct from "@/modules/fe/booking/product/useSelectProduct";
 import useCoupon from "@/modules/fe/booking/coupon/useCoupon";
 import useSelectPassengerQuantity from "@/modules/fe/booking/passenger/useSelectPassengerQuantity";
 import { useBookingSelector } from "@/store";
+import { Session } from "next-auth";
+import useAuthModal from "@/modules/fe/auth/hooks/useAuthModal";
 interface ProductSummaryProps {
   cmsTemplate: FeCMSTemplateContent;
   defaultProductItem: FeProductItem;
@@ -19,6 +21,7 @@ interface ProductSummaryProps {
   tourName?: string;
   productList?: FeProductItem[];
   isMobile: boolean;
+  session: Session | null;
 }
 const ProductSummary: React.FC<ProductSummaryProps> = ({
   className = "",
@@ -27,18 +30,17 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
   isMobile,
   tourName,
   cmsTemplate,
+  session,
 }) => {
-  console.log({ cmsTemplate, defaultProductItem });
+  const { showAuthModal } = useAuthModal();
   const t = useTranslations("String");
+  const { addCouponPolicy, removeCouponPolicy, couponPolicy } = useCoupon();
+  const { initTemplateAndProduct, setProductItem } = useSelectProduct();
+  const { initPassengerFormDataThenGoToNext, setQuantityPassenger } = useSelectPassengerQuantity();
+  const [isPendingInitBooking, startInitBooking] = useTransition();
   const bookingInformation = useBookingSelector();
   const productItem = bookingInformation.bookingInfo.product;
   const passengerAmounts = bookingInformation.bookingPassenger;
-
-  const { addCouponPolicy, removeCouponPolicy, couponPolicy } = useCoupon();
-
-  const { initTemplateAndProduct, setProductItem } = useSelectProduct();
-  const { initPassengerFormDataThenGoToNext, setQuantityPassenger } = useSelectPassengerQuantity();
-  const [isPendingInitBookingDetails, startTransitionInitBookingDetailItems] = useTransition();
 
   const handleChangeCoupon: ProductSummaryCardProps["onChangeCoupon"] = (value, coupon) => {
     couponPolicy?.code === value ? removeCouponPolicy() : addCouponPolicy(coupon);
@@ -49,19 +51,25 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     newProduct && setProductItem(newProduct);
   }, []);
 
-  const handleGotoPassengerInformation = () => {
-    startTransitionInitBookingDetailItems(() => {
+  const handleChangePassenger: Exclude<ProductSummaryCardProps["onChangePassenger"], undefined> = useCallback(
+    (type, quantity, action) => {
+      setQuantityPassenger({ type, quantity, action });
+    },
+    [initTemplateAndProduct],
+  );
+
+  const ensureUserLogedIn = (handler: Function) => () => {
+    if (!session) {
+      showAuthModal();
+      return;
+    }
+    handler();
+  };
+  const handleGotoPassengerInformation = useCallback(() => {
+    startInitBooking(() => {
       initPassengerFormDataThenGoToNext();
     });
-  };
-
-  const handleChangePassenger: Exclude<ProductSummaryCardProps["onChangePassenger"], undefined> = (
-    type,
-    quantity,
-    action,
-  ) => {
-    setQuantityPassenger({ type, quantity, action });
-  };
+  }, []);
 
   useEffect(() => {
     initTemplateAndProduct(defaultProductItem, cmsTemplate);
@@ -72,11 +80,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
     productItem: productItem,
     productList: productList,
     coupon: couponPolicy,
-    onChangeDepartDate: handleChangeDepartDate,
-    onChangePassenger: handleChangePassenger,
-    onNext: handleGotoPassengerInformation,
-    onChangeCoupon: handleChangeCoupon,
-    isLoading: isPendingInitBookingDetails,
+    isLoading: isPendingInitBooking,
     promotion: {
       promotionImage: cmsTemplate.promotionImage,
       promotionLabel: cmsTemplate.promotionLabel,
@@ -85,6 +89,10 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
       promotionValidFrom: cmsTemplate.promotionValidFrom,
       promotionValidTo: cmsTemplate.promotionValidTo,
     },
+    onChangeDepartDate: handleChangeDepartDate,
+    onChangePassenger: handleChangePassenger,
+    onNext: ensureUserLogedIn(handleGotoPassengerInformation),
+    onChangeCoupon: handleChangeCoupon,
   };
 
   return (

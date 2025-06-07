@@ -1,7 +1,5 @@
 import { bookingAPIs } from "@/services/management/booking/searchTour";
 import { IBookingTourPayload } from "@/app/(management)/portal/booking/modules/bookingInformation.interface";
-import { SearchBookingPayload } from "@/app/(management)/portal/booking/modules/searchBooking.interface";
-import { ProductTouListResponse } from "@/models/management/booking/product.interface";
 import { ReservationRs } from "@/models/management/booking/reservation.interface";
 import { manageBookingAPIs } from "@/services/management/booking/manageBooking";
 import { IBookingOrderInvoiceInfoPayload } from "@/app/(management)/portal/manage-booking/modules/bookingOrder.interface";
@@ -11,10 +9,11 @@ import {
   AddNewSSRNoPaxPayload,
   DeleteSSRPayload,
 } from "@/models/management/booking/order.interface";
+import { SearchProductPayload } from "@/models/management/booking/searchProduct.interface";
 
 export const useSearchBookingMutation = () => {
-  return useCustomMutation<ProductTouListResponse, SearchBookingPayload>({
-    mutationFn: (payload) => bookingAPIs.search(payload),
+  return useCustomMutation({
+    mutationFn: (payload: SearchProductPayload) => bookingAPIs.search(payload),
   });
 };
 

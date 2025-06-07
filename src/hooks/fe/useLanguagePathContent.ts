@@ -1,12 +1,6 @@
-"use client";
-import { memo, useMemo } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { localeDefault, locales } from "@/constants/locale.constant";
-import { LangCode, Locale } from "@/models/management/cms/language.interface";
-import { useLanguageSelector } from "@/store/language/hooks";
-import LanguageButton, { LanguageButtonProps } from "@/components/frontend/LanguageButton";
-
-import { useParams } from "next/navigation";
+import { useLanguageSelector } from "@/store";
+import { usePathname, useParams } from "next/navigation";
+import { Locale } from "@/models/management/cms/language.interface";
 import { isArray } from "lodash";
 
 enum PageContentType {
@@ -17,27 +11,15 @@ enum PageContentType {
   Post = "post",
   Category = "category",
 }
-interface LanguageSwitcherProps {
-  className?: string;
-  mode?: LanguageButtonProps["mode"];
-  hideLabel?: LanguageButtonProps["hideLabel"];
-}
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "", mode = "dropdown", hideLabel }) => {
+
+const useLanguagePathContent = () => {
   const { page: pageContent, tour: tourContent, category: categoryContent, post: postContent } = useLanguageSelector();
 
   const pathname = usePathname();
   const params = useParams();
-  const router = useRouter();
 
-  const currentLocale = useMemo(() => {
-    const langCode = pathname.split("/")[1] as LangCode;
-    return locales.find((lc) => lc.key === langCode) || localeDefault;
-  }, [locales]);
-
-  const handleChangeLanguage = (locale: Locale) => {
+  const getPathname = (locale: Locale): string => {
     const langCode = locale.key;
-
-    if (currentLocale.key === langCode) return;
 
     let newPathname = "";
     const pageContentType = pathname.split("/").slice(2, 3).join() as PageContentType;
@@ -75,19 +57,10 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "", mod
     }
 
     newPathname = langCode.concat("/", newPathname);
-
-    router.push(`/${newPathname}`);
+    return newPathname;
   };
-
-  return (
-    <LanguageButton
-      className={className}
-      locales={locales}
-      currentLocale={currentLocale}
-      onSelectLanguage={handleChangeLanguage}
-      mode={mode}
-      hideLabel={hideLabel}
-    />
-  );
+  return {
+    getPathname,
+  };
 };
-export default memo(LanguageSwitcher);
+export { useLanguagePathContent };

@@ -5,14 +5,15 @@ import classNames from "classnames";
 import CustomerAvatarInformation from "@/components/frontend/CustomerAvatarInformation";
 import { getTranslations } from "next-intl/server";
 import SignOutButton from "./SignOutButton";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 interface CustomerSidebarProps {
-  username?: string;
   className?: string;
 }
-export default async function CustomerSidebar({ username, className = "" }: CustomerSidebarProps) {
+export default async function CustomerSidebar({ className = "" }: CustomerSidebarProps) {
   // const t = useTranslations("String");
-
+  const session = await getServerSession(authOptions);
   const t = await getTranslations("Customer");
 
   const NAV_ITEMS = [
@@ -42,7 +43,7 @@ export default async function CustomerSidebar({ username, className = "" }: Cust
         [className]: className,
       })}
     >
-      <CustomerAvatarInformation rankingLabel="Silver" levelLabel="LV1" username={username} />
+      <CustomerAvatarInformation rankingLabel="Silver" levelLabel="LV1" username={session?.user.name || ""} />
       <div className="my-account__navs px-3 pt-6 pb-3 isolate">
         {NAV_ITEMS.map((item) => (
           <div className="py-3 px-3 hover:bg-gray-100 rounded-lg" key={item.key}>

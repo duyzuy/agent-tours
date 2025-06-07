@@ -1,6 +1,6 @@
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
-import { ILocalSeachDestination } from "@/models/management/localSearchDestination.interface";
+import { ILocalSearchDestination } from "@/models/management/localSearchDestination.interface";
 import { getTemplateProductList } from "../../../../actions/searchProduct";
 import { TourCardSkeleton } from "@/components/frontend/TourCard";
 
@@ -16,7 +16,7 @@ const DynamicTourCardItem = dynamic(() => import("@/components/frontend/TourCard
 });
 
 interface ProductListContainerProps {
-  destinations?: ILocalSeachDestination[];
+  destinations?: ILocalSearchDestination[];
 }
 export default async function ProductListContainer({ destinations }: ProductListContainerProps) {
   const locale = await getLocale();
