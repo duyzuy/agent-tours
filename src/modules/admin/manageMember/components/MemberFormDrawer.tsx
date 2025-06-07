@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Drawer, Space, Button, Form, Row, Col, Input } from "antd";
 
 import FormItem from "@/components/base/FormItem";
@@ -11,13 +11,13 @@ import { memberUpdateSchema } from "@/modules/admin/manageMember/validate.schema
 
 export interface MemberFormDrawerProps {
   isOpen?: boolean;
-  onCancel: () => void;
   initialValue?: Member;
   onSubmit?: (formData: MemberUpdateFormData) => void;
+  onCancel: () => void;
   loading?: boolean;
 }
 
-const MemberFormDrawer: React.FC<MemberFormDrawerProps> = ({ isOpen, onCancel, onSubmit, initialValue, loading }) => {
+const MemberFormDrawer = ({ isOpen, onCancel, onSubmit, initialValue, loading }: MemberFormDrawerProps) => {
   const initFormData = new MemberUpdateFormData(
     initialValue?.recId,
     initialValue?.username,
@@ -118,4 +118,19 @@ const MemberFormDrawer: React.FC<MemberFormDrawerProps> = ({ isOpen, onCancel, o
     </>
   );
 };
+
+const useMemberFormDrawer = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openDrawer = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+  const closeDrawer = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  return { isOpen, openDrawer, closeDrawer };
+};
+
+MemberFormDrawer.useDrawer = useMemberFormDrawer;
 export default MemberFormDrawer;

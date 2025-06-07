@@ -96,7 +96,7 @@ const Publishing: React.FC<PublishingProps> = ({
             <Switch
               checkedChildren={<CheckOutlined />}
               unCheckedChildren={<CloseOutlined />}
-              checked={status === PageContentStatus.PUBLISH ?? false}
+              checked={status === PageContentStatus.PUBLISH}
               onChange={onChangeStatus}
             />
           ) : null}

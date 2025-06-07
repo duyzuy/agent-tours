@@ -15,17 +15,17 @@ type SearhProductBasePayload = {
   byInventoryType?: EInventoryType[];
 };
 
-type SearchProductExtraPayload = SearhProductBasePayload & {
+export type SearchProductExtraPayload = SearhProductBasePayload & {
   byProductType?: [EProductType.EXTRA];
 };
-type SearchProductTourPayload = SearhProductBasePayload & {
+export type SearchProductTourPayload = SearhProductBasePayload & {
   byProductType?: [EProductType.TOUR];
 };
 
-export type SearchProductPayload = SearchProductTourPayload | SearchProductExtraPayload;
+export type SearchProductPayload = SearchProductExtraPayload | SearchProductTourPayload;
 
 export type ProductListResponse<T> = T extends SearchProductExtraPayload
   ? ProductServiceListResponse
   : T extends SearchProductTourPayload
-  ? ProductTourListResponse
-  : never;
+    ? ProductTourListResponse
+    : never;

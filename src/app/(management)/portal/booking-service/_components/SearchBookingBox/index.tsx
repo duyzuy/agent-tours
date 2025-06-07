@@ -12,7 +12,7 @@ import CustomDatePicker from "@/components/admin/CustomDatePicker";
 import ProductTypeSelector, { ProductTypeSelectorProps } from "./ProductTypeSelector";
 import DestinationSelector, { DestinationSelectorProps } from "./DestinationSelector";
 import InventoryTypeListSelector, { InventoryTypeListSelectorProps } from "./InventoryTypeListSelector";
-import { UseSearchBookingInformation } from "../../modules/useSearchBookingInformation";
+import { UseSearchBookingInformation } from "../../modules/useSearchBookingExtraInformation";
 import { searchPortalBookingSchema } from "../../modules/validate.schema";
 import classNames from "classnames";
 import styled from "styled-components";

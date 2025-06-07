@@ -24,7 +24,7 @@ export default async function UserButton({ isMobile }: UserButtonProps) {
   return isAuth ? <UserButtonAuthenticated isMobile={isMobile} /> : <UserButtonUnAuthenticated isMobile={isMobile} />;
 }
 
-function UserButtonAuthenticated({ isMobile }: { isMobile: boolean }) {
+async function UserButtonAuthenticated({ isMobile }: { isMobile: boolean }) {
   return isMobile ? (
     <Link href={CLIENT_LINKS.Customer} className="w-8 h-8 inline-flex items-center justify-center">
       <IconAccount className="w-5 h-5 !text-gray-800" />

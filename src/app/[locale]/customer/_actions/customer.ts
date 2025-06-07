@@ -9,7 +9,7 @@ import { FeOrderDetailResponse, FeOrderListResponse } from "@/models/fe/order.in
 
 export const getUserCustomerProfile = async (): Promise<CustomerProfileResponse["result"] | undefined> => {
   const session = await getServerSession(authOptions);
-
+  console.log({ session });
   const data = await serverRequest.post<CustomerProfileResponse, BaseResponse<null>>("localfront/getProfile", {
     next: { tags: ["customerProfile"] },
     headers: {

@@ -12,7 +12,6 @@ const BookingSteps: React.FC<BookingStepsProps> = ({ activeKey = 1 }) => {
     { index: 2, name: "Thanh toán", key: "payment", path: "" },
     { index: 3, name: "Hoàn thành", key: "reservation", path: "" },
   ];
-
   return (
     <div className="booking-step-wraper bg-white py-4">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">

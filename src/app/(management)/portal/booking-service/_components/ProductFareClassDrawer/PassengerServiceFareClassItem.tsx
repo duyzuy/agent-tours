@@ -4,7 +4,7 @@ import { PassengerType } from "@/models/common.interface";
 import classNames from "classnames";
 import { Card } from "antd";
 
-export interface PassengerTourClassItemProps {
+export interface PassengerServiceFareClassItemProps {
   channel: string;
   classChannel: string;
   open: number;
@@ -18,7 +18,7 @@ export interface PassengerTourClassItemProps {
   infantAmount: number;
   variant?: "horizontal" | "vertical";
 }
-const PassengerTourClassItem = ({
+const PassengerServiceFareClassItem = ({
   adultAmount,
   childAmount,
   infantAmount,
@@ -31,7 +31,7 @@ const PassengerTourClassItem = ({
   sold,
   onSelectPassenger,
   variant = "horizontal",
-}: PassengerTourClassItemProps) => {
+}: PassengerServiceFareClassItemProps) => {
   return (
     <Card className="tour__class-item" size="small">
       <div
@@ -60,7 +60,7 @@ const PassengerTourClassItem = ({
             "flex-col gap-3 pb-3": variant === "vertical",
           })}
         >
-          <PassengerTourClassItem.Pax
+          <PassengerServiceFareClassItem.Pax
             pricing={adultPricing}
             title="Người lớn"
             isOutOfOpenAmount={open === 0}
@@ -69,7 +69,7 @@ const PassengerTourClassItem = ({
             quantity={adultAmount}
           />
           {variant === "horizontal" ? <span className="w-[1px] block bg-gray-200 h-8 mx-2"></span> : null}
-          <PassengerTourClassItem.Pax
+          <PassengerServiceFareClassItem.Pax
             pricing={childPricing}
             title="Trẻ em"
             isOutOfOpenAmount={open === 0}
@@ -78,7 +78,7 @@ const PassengerTourClassItem = ({
             quantity={childAmount}
           />
           {variant === "horizontal" ? <span className="w-[1px] block bg-gray-200 h-8 mx-2"></span> : null}
-          <PassengerTourClassItem.Pax
+          <PassengerServiceFareClassItem.Pax
             pricing={infantPricing}
             title="Em bé"
             isOutOfOpenAmount={open === 0}
@@ -91,9 +91,9 @@ const PassengerTourClassItem = ({
     </Card>
   );
 };
-export default PassengerTourClassItem;
+export default PassengerServiceFareClassItem;
 
-interface PassengerTourClassItemPaxProps {
+interface PassengerServiceFareClassItemPaxProps {
   title: string;
   pricing: string;
   paxType: PassengerType;
@@ -102,7 +102,7 @@ interface PassengerTourClassItemPaxProps {
   isOutOfOpenAmount?: boolean;
   className?: string;
 }
-PassengerTourClassItem.Pax = function PassengerTourClassItemPax({
+PassengerServiceFareClassItem.Pax = function PassengerServiceFareClassItemPax({
   title,
   pricing,
   quantity,
@@ -110,7 +110,7 @@ PassengerTourClassItem.Pax = function PassengerTourClassItemPax({
   paxType,
   onQuantity,
   className = "",
-}: PassengerTourClassItemPaxProps) {
+}: PassengerServiceFareClassItemPaxProps) {
   return (
     <div
       className={classNames("flex justify-between items-center gap-6", {

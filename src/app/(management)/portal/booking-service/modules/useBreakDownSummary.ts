@@ -1,313 +1,56 @@
-import { usePortalBookingManagerSelector } from "./store/context";
+import { usePortalBookingServiceSelector } from "../store/bookingServiceContext";
 import { PassengerType } from "@/models/common.interface";
-import { PortalBookingInformation } from "./bookingInformation.interface";
-import { useCallback } from "react";
+import { PortalBookingServiceFormData } from "../store/bookingService.type";
+import { useCallback, useMemo } from "react";
 
-type BookingServiceItem = Exclude<PortalBookingInformation["bookingSsrWithPax"], undefined>[number];
+type BookingServiceItem = Exclude<PortalBookingServiceFormData["bookingInfo"], undefined>["bookingSsr"][number] & {
+  subTotal: number;
+};
 
 const useBreakDownSummary = () => {
-  const { bookingInfo } = usePortalBookingManagerSelector((state) => state);
-
-  const bookingItemList = bookingInfo?.bookingItems || [];
-
-  const bookingSsrWithPax = bookingInfo?.bookingSsrWithPax || [];
+  const { bookingInfo } = usePortalBookingServiceSelector((state) => state);
 
   const bookingSsr = bookingInfo?.bookingSsr || [];
 
-  const getTourBookingPriceByPassengerType = useCallback((paxType: PassengerType) => {
-    const passengerList = bookingItemList?.filter((pItem) => pItem.type === paxType) || [];
-    return passengerList.reduce<
-      | {
-          [key: string]: {
-            qty: number;
-            type: PassengerType;
-            price: number;
-            class: string;
-            subTotal: number;
-          };
-        }
-      | undefined
-    >((acc, item) => {
-      if (acc && acc[item.configItem.class]) {
-        const newQty = acc[item.configItem.class].qty + 1;
-        acc[item.configItem.class] = {
-          ...acc[item.configItem.class],
-          qty: newQty,
-          subTotal: item.configItem[paxType] * newQty,
-        };
-      } else {
-        acc = {
-          ...acc,
-          [item.configItem.class]: {
-            qty: 1,
-            type: paxType,
-            class: item.configItem.class,
-            subTotal: item.configItem[paxType],
-            price: item.configItem[paxType],
-          },
-        };
-      }
-      return acc;
-    }, undefined);
-  }, []);
+  const services = useMemo<{
+    [key in PassengerType]: BookingServiceItem[];
+  }>(() => {
+    let adult: BookingServiceItem[] = [],
+      child: BookingServiceItem[] = [],
+      infant: BookingServiceItem[] = [];
 
-  const getSummaryServicesByPax = () => {
-    const bookingSSRhasStock = bookingSsrWithPax.filter((item) => item.serviceItem.stock);
-    const ssrStockGroupByService = bookingSSRhasStock.reduce<{
-      [key: string]: {
-        serviceItem: BookingServiceItem["serviceItem"];
-        subTotal: number;
-        totalQty: number;
-        items: {
-          bookingIndex: number;
-          qty: BookingServiceItem["qty"];
-          type: BookingServiceItem["type"];
-          item: BookingServiceItem["configItem"];
-        }[];
+    bookingSsr.forEach((item) => {
+      const subtotalItem = {
+        ...item,
+        subTotal: item.configItem[item.type] * item.qty,
       };
-    }>((acc, bkItem) => {
-      if (bkItem.serviceItem.stock) {
-        const keyService = `${bkItem.serviceItem.inventory.recId}-${bkItem.serviceItem.stock.recId}`;
-        if (acc[keyService]) {
-          acc = {
-            ...acc,
-            [keyService]: {
-              ...acc[keyService],
-              subTotal: acc[keyService].subTotal + bkItem.configItem[bkItem.type] * bkItem.qty,
-              totalQty: acc[keyService].totalQty + bkItem.qty,
-              items: [
-                ...acc[keyService].items,
-
-                {
-                  bookingIndex: bkItem.bookingIndex,
-                  qty: bkItem.qty,
-                  type: bkItem.type,
-                  item: bkItem.configItem,
-                },
-              ],
-            },
-          };
-        } else {
-          acc = {
-            ...acc,
-            [keyService]: {
-              serviceItem: bkItem.serviceItem,
-              subTotal: bkItem.qty * bkItem.configItem[bkItem.type],
-              totalQty: bkItem.qty,
-              items: [
-                {
-                  bookingIndex: bkItem.bookingIndex,
-                  qty: bkItem.qty,
-                  type: bkItem.type,
-                  item: bkItem.configItem,
-                },
-              ],
-            },
-          };
-        }
+      if (item.type === PassengerType.ADULT) {
+        adult = [...adult, subtotalItem];
       }
-      return acc;
-    }, {});
-
-    const bookingSSRNoStock = bookingSsrWithPax.filter((item) => !item.serviceItem.stock);
-    const ssrNoStockGroupByService = bookingSSRNoStock.reduce<{
-      [key: string]: {
-        serviceItem: BookingServiceItem["serviceItem"];
-        subTotal: number;
-        totalQty: number;
-        items: {
-          bookingIndex: number;
-          qty: BookingServiceItem["qty"];
-          type: BookingServiceItem["type"];
-          item: BookingServiceItem["configItem"];
-        }[];
-      };
-    }>((acc, bkItem) => {
-      if (acc[bkItem.serviceItem.inventory.recId]) {
-        acc = {
-          ...acc,
-          [bkItem.serviceItem.inventory.recId]: {
-            ...acc[bkItem.serviceItem.inventory.recId],
-            subTotal: acc[bkItem.serviceItem.inventory.recId].subTotal + bkItem.configItem[bkItem.type] * bkItem.qty,
-            totalQty: acc[bkItem.serviceItem.inventory.recId].totalQty + bkItem.qty,
-            items: [
-              ...acc[bkItem.serviceItem.inventory.recId].items,
-
-              {
-                bookingIndex: bkItem.bookingIndex,
-                qty: bkItem.qty,
-                type: bkItem.type,
-                item: bkItem.configItem,
-              },
-            ],
-          },
-        };
-      } else {
-        acc = {
-          ...acc,
-          [bkItem.serviceItem.inventory.recId]: {
-            serviceItem: bkItem.serviceItem,
-            subTotal: bkItem.qty * bkItem.configItem[bkItem.type],
-            totalQty: bkItem.qty,
-            items: [
-              {
-                bookingIndex: bkItem.bookingIndex,
-                qty: bkItem.qty,
-                type: bkItem.type,
-                item: bkItem.configItem,
-              },
-            ],
-          },
-        };
+      if (item.type === PassengerType.CHILD) {
+        child = [...child, subtotalItem];
       }
-      return acc;
-    }, {});
+      if (item.type === PassengerType.INFANT) {
+        infant = [...infant, subtotalItem];
+      }
+    });
 
     return {
-      ssrStock: ssrStockGroupByService,
-      ssrNoStock: ssrNoStockGroupByService,
+      adult,
+      child,
+      infant,
     };
-  };
-
-  const getSummaryServicesNoPax = () => {
-    const bookingSSRhasStock = bookingSsr.filter((item) => item.serviceItem.stock);
-    const ssrStockGroupByService = bookingSSRhasStock.reduce<{
-      [key: string]: {
-        serviceItem: BookingServiceItem["serviceItem"];
-        subTotal: number;
-        totalQty: number;
-        items: {
-          qty: BookingServiceItem["qty"];
-          type: BookingServiceItem["type"];
-          item: BookingServiceItem["configItem"];
-        }[];
-      };
-    }>((acc, bkItem) => {
-      if (bkItem.serviceItem.stock) {
-        const keyService = `${bkItem.serviceItem.inventory.recId}-${bkItem.serviceItem.stock.recId}`;
-        if (acc[keyService]) {
-          acc = {
-            ...acc,
-            [keyService]: {
-              ...acc[keyService],
-              subTotal: acc[keyService].subTotal + bkItem.configItem[bkItem.type] * bkItem.qty,
-              totalQty: acc[keyService].totalQty + bkItem.qty,
-              items: [
-                ...acc[keyService].items,
-
-                {
-                  qty: bkItem.qty,
-                  type: bkItem.type,
-                  item: bkItem.configItem,
-                },
-              ],
-            },
-          };
-        } else {
-          acc = {
-            ...acc,
-            [keyService]: {
-              serviceItem: bkItem.serviceItem,
-              subTotal: bkItem.qty * bkItem.configItem[bkItem.type],
-              totalQty: bkItem.qty,
-              items: [
-                {
-                  qty: bkItem.qty,
-                  type: bkItem.type,
-                  item: bkItem.configItem,
-                },
-              ],
-            },
-          };
-        }
-      }
-      return acc;
-    }, {});
-
-    const bookingSSRNoStock = bookingSsr.filter((item) => !item.serviceItem.stock);
-    const ssrNoStockGroupByService = bookingSSRNoStock.reduce<{
-      [key: string]: {
-        serviceItem: BookingServiceItem["serviceItem"];
-        subTotal: number;
-        totalQty: number;
-        items: {
-          qty: BookingServiceItem["qty"];
-          type: BookingServiceItem["type"];
-          item: BookingServiceItem["configItem"];
-        }[];
-      };
-    }>((acc, bkItem) => {
-      if (acc[bkItem.serviceItem.inventory.recId]) {
-        acc = {
-          ...acc,
-          [bkItem.serviceItem.inventory.recId]: {
-            ...acc[bkItem.serviceItem.inventory.recId],
-            subTotal: acc[bkItem.serviceItem.inventory.recId].subTotal + bkItem.configItem[bkItem.type] * bkItem.qty,
-            totalQty: acc[bkItem.serviceItem.inventory.recId].totalQty + bkItem.qty,
-            items: [
-              ...acc[bkItem.serviceItem.inventory.recId].items,
-
-              {
-                qty: bkItem.qty,
-                type: bkItem.type,
-                item: bkItem.configItem,
-              },
-            ],
-          },
-        };
-      } else {
-        acc = {
-          ...acc,
-          [bkItem.serviceItem.inventory.recId]: {
-            serviceItem: bkItem.serviceItem,
-            subTotal: bkItem.qty * bkItem.configItem[bkItem.type],
-            totalQty: bkItem.qty,
-            items: [
-              {
-                qty: bkItem.qty,
-                type: bkItem.type,
-                item: bkItem.configItem,
-              },
-            ],
-          },
-        };
-      }
-      return acc;
-    }, {});
-
-    return {
-      ssrStock: ssrStockGroupByService,
-      ssrNoStock: ssrNoStockGroupByService,
-    };
-  };
-
-  const getTotal = () => {
-    const tourPrices = bookingItemList.reduce((acc, bkItem) => {
-      acc += bkItem.configItem[bkItem.type];
-      return acc;
-    }, 0);
-
-    const ssrSubTotalBypax = bookingSsrWithPax.reduce((acc, bkItem) => {
-      acc += bkItem.configItem[bkItem.type] * bkItem.qty;
-      return acc;
-    }, 0);
-
+  }, [bookingSsr]);
+  const totalPricingServices = useMemo(() => {
     const ssrSubTotalNoPax = bookingSsr.reduce((acc, bkItem) => {
       acc += bkItem.configItem[bkItem.type] * bkItem.qty;
       return acc;
     }, 0);
-
-    return tourPrices + ssrSubTotalBypax + ssrSubTotalNoPax;
-  };
+    return ssrSubTotalNoPax;
+  }, [bookingSsr]);
   return {
-    tourPrices: {
-      adult: getTourBookingPriceByPassengerType(PassengerType.ADULT),
-      child: getTourBookingPriceByPassengerType(PassengerType.CHILD),
-      infant: getTourBookingPriceByPassengerType(PassengerType.INFANT),
-    },
-    servicesByPax: getSummaryServicesByPax(),
-    servicesNoPax: getSummaryServicesNoPax(),
-    total: getTotal(),
+    services,
+    total: totalPricingServices,
   };
 };
 export default useBreakDownSummary;

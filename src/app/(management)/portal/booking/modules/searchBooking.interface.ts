@@ -2,34 +2,13 @@ import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { ILocalSearchDestination } from "@/models/management/localSearchDestination.interface";
 import { PassengerType } from "@/models/common.interface";
+import { SearchProductTourPayload } from "@/models/management/booking/searchProduct.interface";
 
-type SearBookingBasePayload = {
-  byMonth?: string;
-  byCode?: string;
-  byDest?: {
-    countryKey: string;
-    keyType: string;
-    regionKey: string;
-    stateProvinceKey: string;
-    subRegionKey: string;
-  }[];
-  byInventoryType?: EInventoryType[];
-};
-
-type SearchProductExtraPayload = SearBookingBasePayload & {
-  byProductType?: [EProductType.EXTRA];
-};
-type SearchProductTourPayload = SearBookingBasePayload & {
-  byProductType?: [EProductType.TOUR];
-};
-
-export type SearchBookingPayload = SearchProductTourPayload | SearchProductExtraPayload;
-
-export class SearchBookingFormData {
+export class SearchBookingFormData implements SearchProductTourPayload {
   byMonth?: string;
   byCode?: string;
   byDest?: ILocalSearchDestination[];
-  byProductType?: EProductType[];
+  byProductType?: [EProductType.TOUR];
   byInventoryType?: EInventoryType[];
   passengers: {
     [PassengerType.ADULT]: number;
@@ -40,13 +19,12 @@ export class SearchBookingFormData {
     byMonth: string | undefined,
     byCode: string | undefined,
     byDest: ILocalSearchDestination[] | undefined,
-    byProductType: EProductType[] | undefined,
     byInventoryType: EInventoryType[] | undefined,
   ) {
     this.byMonth = byMonth;
     this.byCode = byCode;
     this.byDest = byDest;
-    this.byProductType = byProductType;
+    this.byProductType = [EProductType.TOUR];
     this.byInventoryType = byInventoryType;
     this.passengers = {
       [PassengerType.ADULT]: 1,

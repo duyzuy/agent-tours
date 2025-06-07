@@ -72,7 +72,7 @@ LanguageButton.Dropdown = function LanguageButtonDropdown({
           type="text"
           icon={<currentLocale.icon className="w-5 h-5" />}
           onClick={() => setShowDropdown((prev) => !prev)}
-          className="!inline-flex items-center justify-center"
+          className="!inline-flex items-center justify-center hover:!bg-slate-100 !px-3"
         >
           {hideLabel ? null : <span>{currentLocale.name}</span>}
         </Button>
@@ -85,7 +85,7 @@ LanguageButton.Dropdown = function LanguageButtonDropdown({
             {locales.map((lc) => (
               <li
                 key={lc.key}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md cursor-pointer"
+                className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded-md cursor-pointer"
                 onClick={() => onClick?.(lc)}
               >
                 <lc.icon className="w-5 h-5" />
@@ -120,7 +120,7 @@ LanguageButton.Drawer = function LanguageButtonDrawer({
           type="text"
           icon={<currentLocale.icon className="w-5 h-5" />}
           onClick={() => setOpen((prev) => !prev)}
-          className="!inline-flex items-center justify-center"
+          className="!inline-flex items-center justify-center hover:!bg-slate-100 !px-3"
         >
           {hideLabel ? null : <span>{currentLocale.name}</span>}
         </Button>
@@ -132,7 +132,7 @@ LanguageButton.Drawer = function LanguageButtonDrawer({
           {locales?.map((lc) => (
             <li
               key={lc.key}
-              className={classNames("flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md cursor-pointer", {
+              className={classNames("flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded-md cursor-pointer", {
                 "bg-gray-100": currentLocale?.key === lc.key,
               })}
               onClick={() => onClick?.(lc)}

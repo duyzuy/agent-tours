@@ -1,19 +1,18 @@
 "use client";
 import { useMemo } from "react";
 import { usePathname, redirect } from "@/utils/navigation";
-import { useSession } from "next-auth/react";
 import { isUndefined } from "lodash";
 import { LangCode } from "@/models/management/cms/language.interface";
 import BookingSummary from "@/components/frontend/booking/BookingSummary";
 import BookingSteps from "@/components/frontend/booking/BookingSteps";
 import { useBookingSelector } from "@/store";
+import CustomerAuthorized from "../(auth)/CustomerAuthorized";
 interface Props {
   children: React.ReactNode;
   params: { locale: LangCode };
 }
 
 export default function FeBookingLayout({ children, params: { locale } }: Props) {
-  const session = useSession();
   const bookingInformation = useBookingSelector();
   const pathname = usePathname();
 
@@ -35,7 +34,7 @@ export default function FeBookingLayout({ children, params: { locale } }: Props)
     return pathname.startsWith("/reservation");
   }, [pathname]);
 
-  if (isUndefined(bookingInformation.bookingInfo.product) || session.status !== "authenticated") {
+  if (isUndefined(bookingInformation.bookingInfo.product)) {
     redirect("/");
   }
   return (

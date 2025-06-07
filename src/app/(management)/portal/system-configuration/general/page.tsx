@@ -8,6 +8,8 @@ import FormItem from "@/components/base/FormItem";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryCMS } from "@/queries/var";
 import useMessage from "@/hooks/useMessage";
+import ButtonMediaUpload from "../_components/ButtonMediaUpload";
+import Link from "next/link";
 const RuleAndPolicyPage = () => {
   const { data, isLoading } = useGetSettingEmailQuery();
   const { mutate: updateSettingEmail, isPending } = useUpdateSettingEmailMutation();
@@ -50,6 +52,10 @@ const RuleAndPolicyPage = () => {
             <span className="block font-[500] text-lg">Cấu hình SMTP Gmail</span>
           </div>
           <div className="form max-w-[450px]">
+            <div className="flex items-center gap-4">
+              <ButtonMediaUpload />
+              <Link href="/portal/media">Media</Link>
+            </div>
             <Form layout="vertical">
               <FormItem label="Email" required>
                 <Input

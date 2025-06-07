@@ -9,10 +9,11 @@ import {
   AddNewSSRNoPaxPayload,
   DeleteSSRPayload,
 } from "@/models/management/booking/order.interface";
+import { SearchProductPayload } from "@/models/management/booking/searchProduct.interface";
 
 export const useSearchBookingMutation = () => {
   return useCustomMutation({
-    mutationFn: bookingAPIs.search,
+    mutationFn: (payload: SearchProductPayload) => bookingAPIs.search(payload),
   });
 };
 

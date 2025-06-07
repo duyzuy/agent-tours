@@ -4,7 +4,7 @@ import { PortalBookingManagerFormData } from "./modules/bookingInformation.inter
 import dayjs from "dayjs";
 import { MONTH_FORMAT } from "@/constants/common";
 import { ESellChannel } from "@/constants/channel.constant";
-const initSearchFormData = new SearchBookingFormData(dayjs().locale("en").format(MONTH_FORMAT), undefined, [], [], []);
+const initSearchFormData = new SearchBookingFormData(dayjs().locale("en").format(MONTH_FORMAT), undefined, [], []);
 const initPortalBookingInformation = new PortalBookingInformation(undefined, [], undefined, undefined, [], []);
 
 const initPortalBookingManagerState = new PortalBookingManagerFormData(

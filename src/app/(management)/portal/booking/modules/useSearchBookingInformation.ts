@@ -1,4 +1,4 @@
-import { SearchBookingPayload, SearchBookingFormData } from "./searchBooking.interface";
+import { SearchBookingFormData } from "./searchBooking.interface";
 import { useSearchBookingMutation } from "@/mutations/managements/booking";
 import { usePortalBookingManager } from "../context";
 
@@ -7,23 +7,22 @@ import { MutateOptions } from "@tanstack/react-query";
 import { ProductTourListResponse } from "@/models/management/booking/product.interface";
 import { BaseResponse } from "@/models/common.interface";
 import { useMemo } from "react";
-
+import { useSearchTourProduct } from "@/modules/admin/booking/hooks/useSearchProduct";
+import { SearchProductTourPayload } from "@/models/management/booking/searchProduct.interface";
+import { SearchProductTourFormData } from "@/modules/admin/booking/searchProduct.interface";
 export interface UseSearchBookingInformation {
-  onSearch: (
-    formData: SearchBookingFormData,
-    options?: MutateOptions<ProductTourListResponse, BaseResponse<null>, SearchBookingPayload, unknown>,
-  ) => void;
+  onSearch: (formData: SearchProductTourFormData) => void;
 }
-const useSearchBookingInformation = () => {
-  const { mutate: searchProduct, isPending } = useSearchBookingMutation();
+const useSearchTourBookingInformation = () => {
+  const { mutate: searchProduct, isPending } = useSearchTourProduct();
   const [_, setBookingInformation] = usePortalBookingManager();
 
   const message = useMessage();
 
-  const onSearchBooking: UseSearchBookingInformation["onSearch"] = (searchData, options) => {
-    let searchBookingPayload: SearchBookingPayload = { ...searchData };
+  const onSearchTourBooking: UseSearchBookingInformation["onSearch"] = (searchData) => {
+    let searchBookingPayload: SearchProductTourPayload = { ...searchData };
 
-    const destinations = searchData.byDest?.reduce<Required<SearchBookingPayload>["byDest"]>(
+    const destinations = searchData.byDest?.reduce<Required<SearchProductTourPayload>["byDest"]>(
       (acc, item) => [
         ...acc,
         {
@@ -46,20 +45,25 @@ const useSearchBookingInformation = () => {
         setBookingInformation((prev) => ({
           ...prev,
           productList: response.result,
-          searchBooking: { ...searchData },
+          searchBooking: {
+            ...searchData,
+            passengers: {
+              adult: 1,
+              child: 0,
+              infant: 0,
+            },
+          },
         }));
-        options?.onSuccess?.(response, variables, ctx);
       },
       onError: (err, variables, ctx) => {
         message.error(err.message);
-        options?.onError?.(err, variables, ctx);
       },
     });
   };
 
   return {
-    onSearchBooking,
+    onSearchTourBooking,
     isPending,
   };
 };
-export default useSearchBookingInformation;
+export default useSearchTourBookingInformation;

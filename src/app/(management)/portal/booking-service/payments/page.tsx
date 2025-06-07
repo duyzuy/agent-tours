@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Card, Col, Divider, Row, Tabs } from "antd";
 import styled from "styled-components";
 
-import { usePortalBookingManagerSelector } from "../modules/store/context";
+import { usePortalBookingServiceSelector } from "../store/bookingServiceContext";
 
 import PortalBookingSummary from "../_components/PortalBookingSummary";
 import { ContentDetailList } from "@/components/admin/ContentDetailList";
@@ -18,17 +18,17 @@ import PaymentPanel from "./_components/PaymentPanel";
 
 const ServicePage = () => {
   const {
-    bookingInfo: { bookingItems, product },
-  } = usePortalBookingManagerSelector((state) => state);
+    bookingInfo: { product },
+  } = usePortalBookingServiceSelector((state) => state);
   const router = useRouter();
-  const [tabKey, setTabsKeys] = useState<"PASSENGER" | "SERVICE" | "PAYMENT">("PASSENGER");
+  const [tabKey, setTabsKeys] = useState<"PASSENGER" | "SERVICE" | "PAYMENT">("PAYMENT");
 
   const handleChangeTabPanel = (newTabKey: "PASSENGER" | "SERVICE" | "PAYMENT") => {
     setTabsKeys(newTabKey);
   };
 
   if (!product) {
-    router.push("/portal/booking");
+    router.push("/portal/booking-service");
   }
   return (
     <div className="services__page bg-slate-400/10 -mx-6 -my-6 p-6 min-h-full">
@@ -81,24 +81,24 @@ const ServicePage = () => {
             activeKey={tabKey}
             onChange={(activeKey) => handleChangeTabPanel(activeKey as "PASSENGER" | "SERVICE" | "PAYMENT")}
             items={[
-              {
-                label: "Thông tin hành khách",
-                key: "PASSENGER",
-                children: (
-                  <PassengerInformationPanel bookingItems={bookingItems || []} onNext={() => setTabsKeys("SERVICE")} />
-                ),
-              },
-              {
-                label: "Dịch vụ",
-                key: "SERVICE",
-                children: (
-                  <ServicePanel
-                    sellableId={product?.sellableId}
-                    bookingItems={bookingItems || []}
-                    onNext={() => setTabsKeys("PAYMENT")}
-                  />
-                ),
-              },
+              // {
+              //   label: "Thông tin hành khách",
+              //   key: "PASSENGER",
+              //   children: (
+              //     <PassengerInformationPanel bookingItems={bookingItems || []} onNext={() => setTabsKeys("SERVICE")} />
+              //   ),
+              // },
+              // {
+              //   label: "Dịch vụ",
+              //   key: "SERVICE",
+              //   children: (
+              //     <ServicePanel
+              //       sellableId={product?.sellableId}
+              //       bookingItems={bookingItems || []}
+              //       onNext={() => setTabsKeys("PAYMENT")}
+              //     />
+              //   ),
+              // },
               {
                 label: "Thanh toán",
                 key: "PAYMENT",

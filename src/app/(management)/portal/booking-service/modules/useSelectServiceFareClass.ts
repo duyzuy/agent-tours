@@ -1,18 +1,18 @@
 import useMessage from "@/hooks/useMessage";
 
-import { usePortalBookingServiceManager } from "./store/context";
+import { usePortalBookingServiceManager } from "../store/bookingServiceContext";
 import { PassengerType } from "@/models/common.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
 import { PortalBookingServiceFormData } from "./bookingInformation.interface";
 import { useRouter } from "next/navigation";
 import { ESellChannel } from "@/constants/channel.constant";
 import { IProductService } from "@/models/management/booking/product.interface";
-import { initPortalBookingServiceManagerState } from "./store/reducer";
+import { initPortalBookingServices } from "../store/bookingServiceReducer";
 
 type ProductItem = Exclude<PortalBookingServiceFormData["bookingInfo"], undefined>["bookingSsr"][number];
-const useSelectProductTour = () => {
+const useSelectServiceFareClass = () => {
   const message = useMessage();
-  const [portalBookingManagerInfo, setBookingInformation] = usePortalBookingServiceManager();
+  const [portalBookingManagerInfo, dispath] = usePortalBookingServiceManager();
   const router = useRouter();
 
   const onNext = () => {
@@ -63,39 +63,28 @@ const useSelectProductTour = () => {
     // router.push("/portal/booking/payments");
   };
 
-  const onSetProductItem = (productItem: IProductService) => {
-    setBookingInformation((prev) => ({
-      ...prev,
-      bookingInfo: {
-        ...prev.bookingInfo,
-        product: productItem,
-      },
-    }));
+  const onConfirmSelectFareClass = (data: {
+    product: IProductService;
+    channel: ESellChannel;
+    configItems: Exclude<PortalBookingServiceFormData["bookingInfo"], undefined>["bookingSsr"];
+  }) => {
+    dispath({ type: "SELECT_SERVICES_FARE_CLASS", payload: data });
+
+    router.push("/portal/booking-service/payments");
   };
 
-  const onChangeSellChannel = (newChannel: ESellChannel) => {
-    setBookingInformation((prev) => ({
-      ...initPortalBookingServiceManagerState,
-      productList: prev.productList,
-      searchBooking: prev.searchBooking,
-      channel: newChannel,
-    }));
-  };
+  const onSetProductItem = (productItem: IProductService) => {};
 
-  const onReselectProduct = () => {
-    setBookingInformation((prev) => ({
-      ...initPortalBookingServiceManagerState,
-      productList: prev.productList,
-      searchBooking: prev.searchBooking,
-      channel: prev.channel,
-    }));
-  };
+  const onChangeSellChannel = (newChannel: ESellChannel) => {};
+
+  const onReselectProduct = () => {};
 
   return {
     onSetProductItem,
     onNext,
     onReselectProduct,
     onChangeSellChannel,
+    onConfirmSelectFareClass,
   };
 };
-export default useSelectProductTour;
+export default useSelectServiceFareClass;

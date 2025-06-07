@@ -2,7 +2,7 @@ import { IProductService } from "@/models/management/booking/product.interface";
 import { Button, Table } from "antd";
 import React, { memo, useMemo } from "react";
 import { columns } from "./columns";
-import { usePortalBookingServiceManager } from "../../modules/store/context";
+import { usePortalBookingServiceManager } from "../../store/bookingServiceContext";
 
 export interface ServiceListSelectorProps {
   onSelect?: (data: IProductService) => void;
@@ -10,20 +10,16 @@ export interface ServiceListSelectorProps {
 }
 const ServiceListSelector: React.FC<ServiceListSelectorProps> = ({ onSelect, loading }) => {
   const [bookingInfo, _] = usePortalBookingServiceManager();
-  const productList = useMemo(() => bookingInfo?.productList, [bookingInfo.productList]);
+  const productList = useMemo(() => bookingInfo?.serviceList, [bookingInfo.serviceList]);
 
-  const isValidPriceConfig = (priceConfigs: IProductService["configs"]) => {
-    let isValid = true;
-
-    if (priceConfigs.length === 0) {
-      isValid = false;
+  const hasPriceConfigAvailable = (priceConfigs: IProductService["configs"]) => {
+    if (!priceConfigs.length || priceConfigs.every((item) => !item.open)) {
+      return false;
     }
-    if (priceConfigs.every((item) => item.open === 0)) {
-      isValid = false;
-    }
-
-    return isValid;
+    return true;
   };
+  const handleSelect = (record: IProductService) => () => onSelect?.(record);
+
   return (
     <Table
       size="large"
@@ -39,17 +35,12 @@ const ServiceListSelector: React.FC<ServiceListSelectorProps> = ({ onSelect, loa
           title: "Tác vụ",
           width: 200,
           render(value, record, index) {
-            return isValidPriceConfig(record.configs) ? (
-              <Button type="text" className="w-20 !bg-cyan-100 !text-cyan-600" onClick={() => onSelect?.(record)}>
+            return hasPriceConfigAvailable(record.configs) ? (
+              <Button type="text" className="w-20 !bg-cyan-100 !text-cyan-600" onClick={handleSelect(record)}>
                 Chọn
               </Button>
             ) : (
-              <Button
-                type="text"
-                className="w-20 !bg-gray-200 !text-gray-600 opacity-60"
-                disabled
-                onClick={() => onSelect?.(record)}
-              >
+              <Button type="text" className="w-20 !bg-gray-200 !text-gray-600 opacity-60" disabled>
                 Chọn
               </Button>
             );

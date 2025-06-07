@@ -6,8 +6,9 @@ import React from "react";
 export interface ProductTypeSelectorProps {
   value?: EProductType;
   onChange?: (type: EProductType) => void;
+  disabled?: boolean;
 }
-const ProductTypeSelector: React.FC<ProductTypeSelectorProps> = ({ value, onChange }) => {
+const ProductTypeSelector: React.FC<ProductTypeSelectorProps> = ({ value, onChange, disabled }) => {
   const { data: productType, isLoading: isLoadingProductType } = useGetProductTypeListCoreQuery({
     enabled: true,
   });
@@ -19,7 +20,7 @@ const ProductTypeSelector: React.FC<ProductTypeSelectorProps> = ({ value, onChan
           <div className="w-12 h-4 bg-slate-100"></div>
         </div>
       ) : (
-        <Radio.Group value={value} onChange={(evt) => onChange?.(evt.target.value as EProductType)}>
+        <Radio.Group value={value} onChange={(evt) => onChange?.(evt.target.value as EProductType)} disabled={disabled}>
           {productType?.map((type) => (
             <React.Fragment key={type}>
               <Radio value={type}>

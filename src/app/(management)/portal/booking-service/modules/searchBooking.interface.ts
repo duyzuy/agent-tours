@@ -1,7 +1,6 @@
 import { EProductType } from "@/models/management/core/productType.interface";
 import { EInventoryType } from "@/models/management/core/inventoryType.interface";
 import { ILocalSearchDestination } from "@/models/management/localSearchDestination.interface";
-import { PassengerType } from "@/models/common.interface";
 
 export interface SearchBookingPayload {
   byMonth?: string;

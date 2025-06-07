@@ -3,7 +3,7 @@ import { Button, Empty, Spin, Tabs } from "antd";
 import { isUndefined } from "lodash";
 import styled from "styled-components";
 
-import { usePortalBookingManager } from "../../../modules/store/context";
+import { usePortalBookingManager } from "../../../modules/store/bookingServiceContext";
 import { useGetBookingTourServicesCoreQuery } from "@/queries/core/bookingOrder";
 import useAddOnService from "../../../modules/servies/useAddOnService";
 import BoxServiceItemByPax, { BoxServiceItemByPaxProps } from "./BoxServiceItemByPax";

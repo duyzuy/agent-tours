@@ -6,13 +6,12 @@ import { IconSearch } from "@/assets/icons";
 import { Link, usePathname } from "@/utils/navigation";
 import { MenuItemType } from "@/utils/menu";
 
-const BOOKING_ROUTES = ["passenger", "payment", "reservation"];
-
 export interface PrimaryMenuHeaderProps {
   className?: string;
   children?: React.ReactNode;
   items?: MenuItemType[];
 }
+const BOOKING_ROUTES = ["passenger", "payment", "reservation"] as const;
 
 const PrimaryMenuHeader: React.FC<PrimaryMenuHeaderProps> = ({ children, className = "", items }) => {
   const pathname = usePathname();

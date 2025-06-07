@@ -8,7 +8,7 @@ import { CustomerInformation } from "@/models/management/booking/customer.interf
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 import { useAdminProfile } from "@/modules/admin/auth/store/AdminProfileContext";
 import useCreateBooking from "../../../modules/useCreateBooking";
-import { usePortalBookingManagerSelector } from "../../../modules/store/context";
+import { usePortalBookingServiceSelector } from "../../../store/bookingServiceContext";
 import { customerInformationSchema } from "../../../modules/validate.schema";
 import InvoiceForm from "./InvoiceForm";
 
@@ -17,7 +17,7 @@ import FormItem from "@/components/base/FormItem";
 import { ESellChannel } from "@/constants/channel.constant";
 
 const PaymentPanel = () => {
-  const { bookingInfo, channel: sellChannel } = usePortalBookingManagerSelector((state) => state);
+  const { bookingInfo, channel: sellChannel } = usePortalBookingServiceSelector((state) => state);
   const { createBooking, loading } = useCreateBooking();
   const userProfile = useAdminProfile();
   const [customerFormData, setCustomerFormData] = useState<CustomerInformation>(

@@ -4,15 +4,15 @@ import useMessage from "@/hooks/useMessage";
 import { useRouter } from "@/utils/navigation";
 import { FePassengerInformationFormData } from "./passegner.interface";
 import { FeBookingInformation } from "@/store/booking/booking.type";
-import { useSession } from "next-auth/react";
-import useAuthModal from "../../auth/hooks/useAuthModal";
+// import { useSession } from "next-auth/react";
+// import useAuthModal from "../../auth/hooks/useAuthModal";
 import { useCallback } from "react";
 
 const useSelectPassengerQuantity = () => {
   const bookingInformation = useBookingSelector();
   const dispatch = useAppDispatch();
-  const { showAuthModal } = useAuthModal();
-  const session = useSession();
+  // const { showAuthModal } = useAuthModal();
+  // const session = useSession();
   const message = useMessage();
   const router = useRouter();
 
@@ -94,20 +94,6 @@ const useSelectPassengerQuantity = () => {
   );
 
   const initPassengerFormDataThenGoToNext = () => {
-    if (session.status === "unauthenticated" || session.status === "loading") {
-      showAuthModal();
-      return;
-    }
-    const totalAmountPax = getTotalAmountPax();
-
-    if (!product) {
-      throw new Error("!Product invalid");
-    }
-    if (totalAmountPax > product.open || totalAmountPax <= 0) {
-      message.error("Số lượng không hợp lệ.");
-      return;
-    }
-
     let passengersFormList: Required<FeBookingInformation>["bookingInfo"]["passengers"] = [];
     let _indexPax = 0;
     Object.entries(bookingPassenger).forEach(([type, quantity]) => {

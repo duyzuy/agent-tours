@@ -6,7 +6,7 @@ export class SearchProductExtraFormData {
   byCode?: string;
   byDest?: ILocalSearchDestination[];
   byInventoryType?: EInventoryType[];
-  byProductType?: EProductType[];
+  byProductType?: [EProductType.EXTRA];
   constructor(
     byMonth: string | undefined,
     byCode: string | undefined,
@@ -26,7 +26,7 @@ export class SearchProductTourFormData {
   byCode?: string;
   byDest?: ILocalSearchDestination[];
   byInventoryType?: EInventoryType[];
-  byProductType?: EProductType[];
+  byProductType?: [EProductType.TOUR];
   constructor(
     byMonth: string | undefined,
     byCode: string | undefined,

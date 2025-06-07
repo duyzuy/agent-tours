@@ -14,29 +14,28 @@ const UserPage: React.FC = () => {
     () => new MemberQueryParamsFormData({ username: "", email: "", phoneNumber: "" }, 1, 10),
   );
   const { data: memberData, isLoading } = useGetMemberList({ queryParams: queryParams, enabled: true });
+  const drawer = MemberFormDrawer.useDrawer();
 
   const { mutate: updateMember, isPending: loadingUpdate } = useUpdateMember();
   const { mutate: resetPassword, isPending: loadingResetPassword } = useResetPasswordMember();
 
   type MemberItem = Exclude<typeof memberData, undefined>["list"][number];
 
-  const [openDrawer, setOpenDrawer] = useState(false);
-
   const [editRecord, setEditRecord] = useState<MemberItem>();
 
   const handleEdit = (record: MemberItem) => {
     setEditRecord(record);
-    setOpenDrawer(true);
+    drawer.openDrawer();
   };
 
   const handleCancel = () => {
     setEditRecord(undefined);
-    setOpenDrawer(false);
+    drawer.closeDrawer();
   };
   const handleSubmitFormData: MemberFormDrawerProps["onSubmit"] = (formData) => {
     updateMember(formData, {
       onSuccess(data, variables, context) {
-        setOpenDrawer(false);
+        drawer.closeDrawer();
         setEditRecord(undefined);
       },
     });
@@ -48,7 +47,7 @@ const UserPage: React.FC = () => {
   const mergedColumns: ColumnsType<Exclude<typeof memberData, undefined>["list"][number]> = [
     ...columns,
     {
-      title: "Reset mật khẩu",
+      title: "Hành động",
       render(value, record, index) {
         return (
           <Popconfirm
@@ -84,7 +83,7 @@ const UserPage: React.FC = () => {
         onEdit={(record) => handleEdit(record)}
       />
       <MemberFormDrawer
-        isOpen={openDrawer}
+        isOpen={drawer.isOpen}
         initialValue={editRecord}
         onCancel={handleCancel}
         onSubmit={handleSubmitFormData}

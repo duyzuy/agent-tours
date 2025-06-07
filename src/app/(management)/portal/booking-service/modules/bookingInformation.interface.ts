@@ -1,10 +1,10 @@
-import { SearchBookingFormData } from "./searchBooking.interface";
 import { PassengerType } from "@/models/common.interface";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
 import { IReservation } from "@/models/management/booking/reservation.interface";
 import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { ESellChannel } from "@/constants/channel.constant";
 import { IProductService } from "@/models/management/booking/product.interface";
+import { SearchProductExtraFormData } from "@/modules/admin/booking/searchProduct.interface";
 
 export class PortalBookingServiceFormData {
   bookingInfo: {
@@ -12,14 +12,12 @@ export class PortalBookingServiceFormData {
     customerInformation?: CustomerInformation;
     invoiceInfo?: Partial<IInvoice>;
     bookingSsr: {
-      serviceItem: IProductService;
       configItem: IProductService["configs"][number];
       qty: number;
-      type: PassengerType.ADULT;
+      type: PassengerType;
     }[];
   };
-  searchBooking: SearchBookingFormData;
-  productList?: IProductService[];
+  searchBooking: SearchProductExtraFormData;
   serviceList?: IProductService[];
   reservation?: IReservation;
   channel: ESellChannel;
@@ -31,14 +29,12 @@ export class PortalBookingServiceFormData {
       customerInformation?: CustomerInformation;
       invoiceInfo?: Partial<IInvoice>;
       bookingSsr: {
-        serviceItem: IProductService;
         configItem: IProductService["configs"][number];
         qty: number;
-        type: PassengerType.ADULT;
+        type: PassengerType;
       }[];
     },
-    searchBooking: SearchBookingFormData,
-    productList: IProductService[],
+    searchBooking: SearchProductExtraFormData,
     serviceList: IProductService[] | undefined,
     reservation: IReservation | undefined,
     channel: ESellChannel,
@@ -46,7 +42,6 @@ export class PortalBookingServiceFormData {
   ) {
     this.bookingInfo = bookingInfo;
     this.searchBooking = searchBooking;
-    this.productList = productList;
     this.serviceList = serviceList;
     this.reservation = reservation;
     this.channel = channel;

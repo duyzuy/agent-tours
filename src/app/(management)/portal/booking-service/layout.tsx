@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import { PortalBookingServiceProvider } from "./modules/store/context";
+import { PortalBookingServiceProvider } from "./store/bookingServiceContext";
 interface BookingServiceLayoutProps {
   children: React.ReactNode;
 }
