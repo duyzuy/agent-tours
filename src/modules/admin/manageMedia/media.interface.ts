@@ -50,15 +50,17 @@ export class MediaFileQueryParamsFormData implements MediaFilesQueryParams {
   requestObject: { objectType: "MEDIA"; mediaType: MediaTypes[]; mediaInFolderRecid: number };
   pageCurrent: number;
   pageSize: number;
-
+  orderBy?: { sortColumn?: string; direction?: "asc" | "desc" };
   constructor(
     requestObject: { mediaType: MediaTypes[]; mediaInFolderRecid: number },
     pageCurrent: number,
     pageSize: number,
+    orderBy?: { sortColumn?: string; direction?: "asc" | "desc" },
   ) {
     this.requestObject = { ...requestObject, objectType: "MEDIA" };
     this.pageCurrent = pageCurrent;
     this.pageSize = pageSize;
+    this.orderBy = orderBy;
   }
 }
 export class MediaFolderQueryParamsFormData implements MediaFolderQueryParams {

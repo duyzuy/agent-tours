@@ -1,33 +1,29 @@
 "use client";
 import React, { memo, Suspense, useEffect, useState } from "react";
-import { Layout, Button, theme, Avatar, MenuProps, Dropdown, Space, Breadcrumb, Menu } from "antd";
-import { UserOutlined, SwapRightOutlined, LogoutOutlined, SwapLeftOutlined } from "@ant-design/icons";
+import { Layout, theme, MenuProps } from "antd";
+import { SwapRightOutlined, SwapLeftOutlined } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import { originalLogo } from "@/assets";
 import Image from "next/image";
-import { LINKS } from "@/constants/links.constant";
 import AdminMenuLink from "./AdminMenuLink";
-import ThemeModeToggle from "@/components/ThemeModeToggle";
 import { useThemeMode } from "@/context";
 import classNames from "classnames";
-import useAdminAuth from "@/modules/admin/auth/hooks/useAdminAuth";
-import ThingTodoItemButton from "@/modules/admin/operation/components/ThingTodoItemButton";
 import { useAdminProfile } from "@/modules/admin/auth/store/AdminProfileContext";
+import AdminLoading from "./Loading";
+import { useTransition } from "react";
+import AdminHeader from "./Header";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const AdminLayout = ({ children }: Props) => {
-  const { Header, Sider, Content, Footer } = Layout;
-
+  const { Sider, Content, Footer } = Layout;
   const router = useRouter();
   const pathname = usePathname();
-  const userProfile = useAdminProfile();
   const [collapsed, setCollapsed] = useState(false);
   const [mode, _] = useThemeMode();
 
-  const { onLogout } = useAdminAuth();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -38,9 +34,7 @@ const AdminLayout = ({ children }: Props) => {
   const onOpenChange: MenuProps["onOpenChange"] = (data: any) => setOpenKeys(() => [...data]);
   const onMenuNavigation: MenuProps["onClick"] = (menuInfo) => {
     let fullPathname = "/portal";
-
     fullPathname = fullPathname.concat("/", menuInfo.key);
-
     router.push(fullPathname);
   };
 
@@ -56,10 +50,6 @@ const AdminLayout = ({ children }: Props) => {
     }
   }, [pathname]);
 
-  const onNavigation = (path: string) => {
-    router.push(`${path}`);
-  };
-
   return (
     <Layout className="min-h-screen">
       <div
@@ -72,7 +62,7 @@ const AdminLayout = ({ children }: Props) => {
           onCollapse={(collapsed) => setCollapsed(collapsed)}
           collapsible
           collapsed={collapsed}
-          width={240}
+          width={220}
           theme={mode}
           className="h-screen"
           style={{ background: colorBgContainer }}
@@ -99,48 +89,9 @@ const AdminLayout = ({ children }: Props) => {
           </div>
         </Sider>
       </div>
-      <Layout className="!min-h-screen transition-all" style={{ marginLeft: collapsed ? 80 : 240 }}>
-        <Header
-          style={{ background: colorBgContainer }}
-          className={classNames("flex border-b sticky top-0 ml-[1px] z-10 items-center !px-6", {
-            "border-[#303030]": mode === "dark",
-          })}
-        >
-          <div className="flex justify-between items-center flex-1">
-            <div className="font-semibold text-xl">Tour Management Platform</div>
-            <div className="inline-flex items-center gap-x-3">
-              <ThingTodoItemButton />
-              <ThemeModeToggle />
-              <Dropdown
-                menu={{
-                  items: [
-                    {
-                      label: "Thông tin cá nhân",
-                      key: "userInfo",
-                      icon: <UserOutlined />,
-                      onClick: () => onNavigation(LINKS.MyAccount),
-                    },
-                    {
-                      label: "Đăng xuất",
-                      key: "logout",
-                      icon: <LogoutOutlined />,
-                      onClick: onLogout,
-                    },
-                  ],
-                }}
-              >
-                <Space className="cursor-pointer">
-                  <Avatar shape="circle" size={28} icon={<UserOutlined />} className="!bg-orange-500" />
-                  <div className="text-sm leading-none">
-                    <span className="block text-xs">{userProfile?.userType}</span>
-                    <span className="text-xs">{userProfile?.fullname}</span>
-                  </div>
-                </Space>
-              </Dropdown>
-            </div>
-          </div>
-        </Header>
-        <Suspense fallback={<div>Admin loading...</div>}>
+      <Layout className="!min-h-screen transition-all" style={{ marginLeft: collapsed ? 80 : 220 }}>
+        <AdminHeader themeMode={mode} />
+        <Suspense fallback={<AdminLoading />}>
           <Content
             style={{
               background: colorBgContainer,
@@ -151,10 +102,10 @@ const AdminLayout = ({ children }: Props) => {
           </Content>
         </Suspense>
         <Footer
+          style={{ background: colorBgContainer }}
           className={classNames("border-t text-right !py-3", {
             "border-[#303030]": mode === "dark",
           })}
-          style={{ background: colorBgContainer }}
         >
           <p className="text-sm">Tour Management ©2023 Created by DVU</p>
         </Footer>

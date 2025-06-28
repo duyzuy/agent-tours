@@ -1,12 +1,4 @@
-import { format, compareAsc } from "date-fns";
-
-export const formatDate = (date: Date | string, strFm = "DD/MM/YYYY - HH:mm") => {
-  if (typeof date === "string") {
-    return stringToDate(date)?.format(strFm);
-  }
-  return dayjs(new Date(date)).format(strFm);
-};
-
+import { format } from "date-fns";
 import { eachDayOfInterval, endOfWeek, startOfWeek, startOfToday } from "date-fns";
 import dayjs from "dayjs";
 
@@ -35,19 +27,18 @@ export const getDayNameOfWeek = ({
 export const stringToDate = (dateTimeStr?: string) => {
   if (!dateTimeStr) return;
   const [dateStr, timeStr] = dateTimeStr.split(" ");
+  const dayStr = dateStr.slice(0, 2);
+  const monthStr = dateStr.slice(2, 5);
+  const yearStr = dateStr.slice(5);
+  const monthNumber = getMonthNumber(monthStr);
 
-  const dStr = dateStr.slice(0, 2);
-  const mStr = dateStr.slice(2, 5);
-  const yStr = dateStr.slice(5);
-  const mStrNum = getDateNum(mStr);
-
-  let newDateTimeStr = `${mStrNum}/${dStr}/${yStr}`;
+  let newDateTimeStr = `${monthNumber}/${dayStr}/${yearStr}`;
   newDateTimeStr = newDateTimeStr.concat(" ", timeStr ?? "00:00");
 
   return dayjs(newDateTimeStr, "MM/DD/YYYY HH:mm");
 };
 
-const getDateNum = (mStr: string) => {
+const getMonthNumber = (mStr: string) => {
   let mStrNum = "01";
   switch (mStr) {
     case "Jan":
@@ -88,4 +79,10 @@ const getDateNum = (mStr: string) => {
       break;
   }
   return mStrNum;
+};
+export const formatDate = (date: Date | string, strFm = "DD/MM/YYYY - HH:mm") => {
+  if (typeof date === "string") {
+    return stringToDate(date)?.format(strFm);
+  }
+  return dayjs(new Date(date)).format(strFm);
 };

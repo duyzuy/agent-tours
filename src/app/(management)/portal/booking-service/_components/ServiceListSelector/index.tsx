@@ -1,6 +1,6 @@
 import { IProductService } from "@/models/management/booking/product.interface";
 import { Button, Table } from "antd";
-import React, { memo, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { columns } from "./columns";
 import { usePortalBookingServiceManager } from "../../store/bookingServiceContext";
 
@@ -13,12 +13,9 @@ const ServiceListSelector: React.FC<ServiceListSelectorProps> = ({ onSelect, loa
   const productList = useMemo(() => bookingInfo?.serviceList, [bookingInfo.serviceList]);
 
   const hasPriceConfigAvailable = (priceConfigs: IProductService["configs"]) => {
-    if (!priceConfigs.length || priceConfigs.every((item) => !item.open)) {
-      return false;
-    }
-    return true;
+    return priceConfigs.length && priceConfigs.every((el) => el.open > 0);
   };
-  const handleSelect = (record: IProductService) => () => onSelect?.(record);
+  const handleSelect = useCallback((record: IProductService) => () => onSelect?.(record), []);
 
   return (
     <Table

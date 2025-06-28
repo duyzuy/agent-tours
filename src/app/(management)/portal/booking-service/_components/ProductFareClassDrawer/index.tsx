@@ -1,6 +1,5 @@
 import { memo, useCallback, useMemo, useState, useTransition } from "react";
 import { Button, Divider, Drawer, Empty, Space } from "antd";
-import { useForm } from "react-hook-form";
 import { ESellChannel } from "@/constants/channel.constant";
 import { IProductService } from "@/models/management/booking/product.interface";
 import useSelectServiceFareClass from "../../modules/useSelectServiceFareClass";
@@ -71,39 +70,37 @@ const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, o
     [selectedConfigItems],
   );
 
-  const handleSelectFareClass = (
-    type: PassengerType,
-    quantity: number,
-    priceConfig: PriceConfig,
-    action: "minus" | "plus",
-  ) => {
-    if (quantity < 0) return;
+  const handleSelectPassengerFareclass =
+    (priceConfig: PriceConfig) => (type: PassengerType, quantity: number, action: "minus" | "plus") => {
+      if (quantity < 0) return;
 
-    if (quantity > priceConfig.limitPerBooking) {
-      message.error(`Số lượng booking tối đa cho phép là ${priceConfig.limitPerBooking}`);
-      return;
-    }
-
-    if (quantity > priceConfig.open) {
-      message.error("Số lượng đã hết");
-      return;
-    }
-
-    setSelectedConfigItems((oldItems) => {
-      let newItems = [...oldItems];
-      const indexItem = newItems.findIndex((item) => item.configItem.recId === priceConfig.recId && item.type === type);
-      if (indexItem !== -1) {
-        if (quantity === 0) {
-          newItems.splice(indexItem, 1);
-        } else {
-          newItems.splice(indexItem, 1, { type, configItem: priceConfig, qty: quantity });
-        }
-      } else {
-        newItems = [...newItems, { type, configItem: priceConfig, qty: quantity }];
+      if (quantity > priceConfig.limitPerBooking) {
+        message.error(`Số lượng booking tối đa cho phép là ${priceConfig.limitPerBooking}`);
+        return;
       }
-      return newItems;
-    });
-  };
+
+      if (quantity > priceConfig.open) {
+        message.error("Số lượng đã hết");
+        return;
+      }
+
+      setSelectedConfigItems((oldItems) => {
+        let newItems = [...oldItems];
+        const indexItem = newItems.findIndex(
+          (item) => item.configItem.recId === priceConfig.recId && item.type === type,
+        );
+        if (indexItem !== -1) {
+          if (quantity === 0) {
+            newItems.splice(indexItem, 1);
+          } else {
+            newItems.splice(indexItem, 1, { type, configItem: priceConfig, qty: quantity });
+          }
+        } else {
+          newItems = [...newItems, { type, configItem: priceConfig, qty: quantity }];
+        }
+        return newItems;
+      });
+    };
 
   const handleDrawerAfterOpenChange = (open: boolean) => {
     if (!open) return;
@@ -197,7 +194,7 @@ const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, o
               adultAmount={getPassengerAmount(PassengerType.ADULT, config)}
               childAmount={getPassengerAmount(PassengerType.CHILD, config)}
               infantAmount={getPassengerAmount(PassengerType.INFANT, config)}
-              onSelectPassenger={(type, value, action) => handleSelectFareClass(type, value, config, action)}
+              onSelectPassenger={handleSelectPassengerFareclass(config)}
             />
           ))}
         </div>

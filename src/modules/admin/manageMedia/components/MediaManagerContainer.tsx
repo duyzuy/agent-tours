@@ -5,7 +5,7 @@ import { MediaTypes } from "@/models/management/media.interface";
 import classNames from "classnames";
 import { useAdminPermission } from "@/modules/admin/auth/store/AdminPermissionContext";
 import { ERolesFunctions } from "@/constants/permission.constant";
-import { MediaManagerProvider } from "../mediaContext";
+import { MediaManagerProvider } from "../store/media.context";
 export interface MediaManagerContainerProps {
   className?: string;
   onSelect?: MediaFilesWraperProps["onSelect"];

@@ -5,7 +5,7 @@ import useSelectProductTour from "../../modules/useSelectProductTour";
 import PassengerTourClassItem from "./PassengerTourClassItem";
 import { moneyFormatVND } from "@/utils/helper";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
-import { memo, useCallback, useMemo, useTransition } from "react";
+import { memo, useCallback, useMemo, useState, useTransition } from "react";
 import { PassengerType } from "@/models/common.interface";
 import { CheckCircleOutlined, SwapOutlined } from "@ant-design/icons";
 import { usePortalBookingManager } from "../../context";
@@ -13,16 +13,15 @@ import useMessage from "@/hooks/useMessage";
 import { formatDate } from "@/utils/date";
 import { getAdminUserInformationStorage } from "@/utils/common";
 
-export interface ProductFareClassDrawerProps {
+export interface ProductFareClassDrawerCompProps {
   open: boolean;
   onClose: () => void;
   onOk?: () => void;
   data?: IProductTour;
 }
-const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, onClose, onOk, data }) => {
-  const adminInfo = getAdminUserInformationStorage();
-
+const ProductFareClassDrawerComp: React.FC<ProductFareClassDrawerCompProps> = ({ open, onClose, onOk, data }) => {
   const [bookingInformation, _] = usePortalBookingManager();
+  const adminInfo = getAdminUserInformationStorage();
   const stocks = useMemo(() => data?.sellableDetails.stocks, [data]);
   const inventories = useMemo(() => data?.sellableDetails.inventories, [data]);
   const promotions = useMemo(() => data?.promotions, [data]);
@@ -236,4 +235,26 @@ const ProductFareClassDrawer: React.FC<ProductFareClassDrawerProps> = ({ open, o
     </Drawer>
   );
 };
-export default memo(ProductFareClassDrawer);
+const useDrawer = () => {
+  const [isOpen, setOpen] = useState(false);
+
+  const onOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const onClose = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  return {
+    isOpen,
+    onClose,
+    onOpen,
+  };
+};
+
+const ProductFareClassDrawer = Object.assign(ProductFareClassDrawerComp, {
+  useDrawer,
+});
+
+export default ProductFareClassDrawer;

@@ -1,12 +1,12 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Tabs, TabsProps, Spin, Empty, Pagination, Divider } from "antd";
 import { IMediaFileListRs, MediaTypes } from "@/models/management/media.interface";
 import { mediaConfig } from "@/configs";
 import MediaFileItem from "@/components/admin/media/MediaFileItem";
-import UploadFileForm, { UploadFileFormProps } from "./UploadFileForm";
+import UploadFileForm, { UploadFileFormProps, UploadFileFormRef } from "./UploadFileForm";
 import FilePreviewModal from "@/components/admin/media/FilePreviewModal";
 import { useGetMediaFiles } from "@/modules/admin/manageMedia/hooks/useGetMediaFiles";
-import { useMediaManager, useMediaManagerSelector } from "../mediaContext";
+import { useMediaManager, useMediaManagerSelector } from "../store/media.context";
 import { useUploadMediaFiles } from "@/modules/admin/manageMedia";
 import useMessage from "@/hooks/useMessage";
 import { RcFile } from "antd/es/upload";
@@ -22,15 +22,13 @@ type MediaFileTabPanel = "mediaFiles" | "upload";
 const MediaFilesWraper = ({ mediaTypes, onSelect, hasRoleCreate = false, selectedFiles }: MediaFilesWraperProps) => {
   const [mediaTab, setMediaTab] = useState<MediaFileTabPanel>("mediaFiles");
   const { mutate: uploadFiles, isPending: isUploading } = useUploadMediaFiles();
+  const uploadFormRef = useRef<UploadFileFormRef>(null);
 
-  const onResetTab = () => {
-    setMediaTab("mediaFiles");
-  };
-  const onChangeTab = (activeKey: string) => {
+  const handleChangeTab = (activeKey: string) => {
     setMediaTab(activeKey as MediaFileTabPanel);
   };
 
-  const handleUploadFiles: UploadFileFormProps["onUpload"] = (data, cb) => {
+  const handleUploadFiles: UploadFileFormProps["onUpload"] = (data) => {
     const { fileList, ...restData } = data;
     const formData = new FormData();
     data.fileList.forEach((file) => {
@@ -40,7 +38,8 @@ const MediaFilesWraper = ({ mediaTypes, onSelect, hasRoleCreate = false, selecte
 
     uploadFiles(formData, {
       onSuccess(data, variables, context) {
-        cb?.();
+        uploadFormRef.current?.reset();
+        setMediaTab("mediaFiles");
       },
     });
   };
@@ -59,7 +58,7 @@ const MediaFilesWraper = ({ mediaTypes, onSelect, hasRoleCreate = false, selecte
       {
         key: "upload",
         label: "Upload",
-        children: <UploadFileForm onUpload={handleUploadFiles} uploading={isUploading} onResetTab={onResetTab} />,
+        children: <UploadFileForm ref={uploadFormRef} onUpload={handleUploadFiles} uploading={isUploading} />,
       },
     ];
   }
@@ -68,7 +67,7 @@ const MediaFilesWraper = ({ mediaTypes, onSelect, hasRoleCreate = false, selecte
       destroyInactiveTabPane={true}
       defaultActiveKey={mediaTab}
       activeKey={mediaTab}
-      onChange={onChangeTab}
+      onChange={handleChangeTab}
       items={itemsTab}
       indicatorSize={(origin) => origin - 16}
     />
@@ -90,9 +89,9 @@ MediaFilesWraper.ItemList = function MediaFilesItemList({
   const message = useMessage();
 
   // const selectedFiles = useMediaManagerSelector((state) => state.files);
+  const [_, dispatch] = useMediaManager();
   const selectedFolder = useMediaManagerSelector((state) => state.selectedFolder);
   const mediaFileQueryParams = useMediaManagerSelector((state) => state.queryParams.file);
-  const [_, dispatch] = useMediaManager();
 
   const { data, isLoading } = useGetMediaFiles(mediaFileQueryParams);
   const [pagination, setPaginationInfo] = useState({ pageSize: 10, current: 1, total: 0 });
@@ -108,7 +107,9 @@ MediaFilesWraper.ItemList = function MediaFilesItemList({
       thumbnail: path,
     }));
   }, []);
-
+  const closePreviewModal = () => {
+    setPreview({ isShow: false, thumbnail: undefined });
+  };
   const handleCoppyText = (e: React.MouseEvent<HTMLElement, MouseEvent>, text: string) => {
     navigator.clipboard.writeText(text);
     message.success("Đã sao chép.");
@@ -140,6 +141,7 @@ MediaFilesWraper.ItemList = function MediaFilesItemList({
       },
     });
   }, [mediaTypes]);
+
   useEffect(() => {
     if (data) {
       setPaginationInfo({ current: data.pageCurrent, pageSize: data.pageSize, total: data.totalItems });
@@ -191,11 +193,7 @@ MediaFilesWraper.ItemList = function MediaFilesItemList({
           />
         )}
       </div>
-      <FilePreviewModal
-        isOpen={preview.isShow}
-        onClose={() => setPreview({ isShow: false, thumbnail: undefined })}
-        thumbUrl={preview.thumbnail}
-      />
+      <FilePreviewModal isOpen={preview.isShow} onClose={closePreviewModal} thumbUrl={preview.thumbnail} />
     </>
   );
 };

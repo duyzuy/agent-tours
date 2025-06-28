@@ -1,5 +1,8 @@
 import React, { memo } from "react";
+import { Menu, MenuProps } from "antd";
+import { useThemeMode } from "@/context";
 import { useAdminPermission } from "@/modules/admin/auth/store/AdminPermissionContext";
+import { PATH_WITH_PERMISSION, TRoleCondition } from "@/constants/permission.constant";
 import {
   DashboardOutlined,
   ContainerOutlined,
@@ -17,9 +20,6 @@ import {
   SnippetsOutlined,
   ControlOutlined,
 } from "@ant-design/icons";
-import { Menu, MenuProps } from "antd";
-import { PATH_WITH_PERMISSION, TRoleCondition } from "@/constants/permission.constant";
-import { useThemeMode } from "@/context";
 
 type MenuItem = Required<MenuProps>["items"][number] & {
   children?: MenuItem[];
@@ -344,7 +344,7 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
 
 const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
   const [_, checkPermession] = useAdminPermission();
-  const [mode, setThemeMode] = useThemeMode();
+  const [mode, __] = useThemeMode();
   const adminMenuMappingRule = ADMIN_MENU_ITEMS.reduce<MenuItem[]>((acc, item) => {
     const childItems = item.children?.reduce<MenuItem[]>((childItems, childItem) => {
       if (!childItem.rolepers) {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ColumnsType } from "antd/es/table";
-import { Space, Tag, Table } from "antd";
+import { Space, Tag } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import { formatDate } from "@/utils/date";
 import { Status } from "@/models/common.interface";
@@ -24,9 +24,9 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
         <div>
           <p className="text-xs text-gray-600">{code}</p>
           <p className="font-[500] mb-2">{name}</p>
-          <Link href={`/portal/product/template-sellable/${recId}`}>
-            Chi tiết
-            <RightOutlined className="ml-1 !text-xs" />
+          <Link href={`/portal/product/template-sellable/${recId}`} className="inline-flex items-center">
+            <span>Chi tiết</span>
+            <RightOutlined className="ml-1 !text-[0.75rem]" />
           </Link>
         </div>
       );
@@ -98,11 +98,32 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
       );
     },
   },
+
+  {
+    title: "Ngày tạo",
+    key: "sysLstUpdate",
+    width: 160,
+    render: (_, { sysLstUpdate }) => {
+      return (
+        <div>
+          <span>{formatDate(sysLstUpdate, "HH:mm")}</span>
+          <span>{formatDate(sysLstUpdate, "DD/MM/YYYY")}</span>
+        </div>
+      );
+    },
+  },
+  {
+    title: "Người tạo",
+    dataIndex: "sysFstUser",
+    key: "sysFstUser",
+    width: 150,
+  },
   {
     title: "Trạng thái",
     dataIndex: "status",
     key: "status",
     width: 150,
+    fixed: "right",
     render: (_, { status }) => {
       return (
         <Tag color={(status === Status.OK && "green") || (status === Status.QQ && "orange") || "red"} bordered={false}>
@@ -113,19 +134,5 @@ export const templateColums: ColumnsType<ITemplateSaleableListRs["result"][0]> =
         </Tag>
       );
     },
-  },
-  {
-    title: "Ngày tạo",
-    key: "sysLstUpdate",
-    width: 160,
-    render: (_, { sysLstUpdate }) => {
-      return formatDate(sysLstUpdate);
-    },
-  },
-  {
-    title: "Người tạo",
-    dataIndex: "sysFstUser",
-    key: "sysFstUser",
-    width: 150,
   },
 ];

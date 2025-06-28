@@ -1,6 +1,6 @@
 import { MediaTypes } from "@/models/management/media.interface";
-import { MediaManagerAction, MediaManagerState } from "./media.type";
-import { MediaFileQueryParamsFormData, MediaFolderQueryParamsFormData } from "./media.interface";
+import { MediaManagerAction, MediaManagerState } from "./media.actions";
+import { MediaFileQueryParamsFormData, MediaFolderQueryParamsFormData } from "../media.interface";
 
 export const initMediaManagerState: MediaManagerState = {
   files: [],
@@ -12,6 +12,7 @@ export const initMediaManagerState: MediaManagerState = {
       { mediaType: [MediaTypes.FILE, MediaTypes.ICON, MediaTypes.IMAGE], mediaInFolderRecid: 0 },
       1,
       20,
+      { sortColumn: "id", direction: "asc" },
     ),
     folder: new MediaFolderQueryParamsFormData(1, 20, { sortColumn: "id", direction: "desc" }),
   },

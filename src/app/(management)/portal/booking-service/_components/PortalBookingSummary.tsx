@@ -26,7 +26,6 @@ const PortalBookingSummary: React.FC<BookingBreakDownSummaryProps> = ({ label })
 
   const { total, services } = useBreakDownSummary();
 
-  console.log({ services });
   return (
     <div className="booking-summary rounded-md">
       <Card>

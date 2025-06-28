@@ -11,11 +11,11 @@ import { MediaFolderUpdateFormData } from "../media.interface";
 
 import CreateFolderForm, { CreateFolderFormProps } from "./CreateFolderForm";
 import { useGetMediaFolders } from "@/modules/admin/manageMedia/hooks/useGetMediaFolders";
-import { useMediaManager, useMediaManagerSelector } from "../mediaContext";
+import { useMediaManager, useMediaManagerSelector } from "../store/media.context";
 import { useCreateMediaFolder, useUpdateMediaFolder } from "@/modules/admin/manageMedia";
 
 export interface IMediaFolderProps {
-  onOpen?: (item: IMediaFolderListRs["result"][0]) => void;
+  onOpen?: (item: IMediaFolderListRs["result"][number]) => void;
   hasRoleCreate?: boolean;
 }
 type FolderTabKeys = "folderList" | "addFolder";
