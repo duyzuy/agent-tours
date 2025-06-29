@@ -20,6 +20,9 @@ const CustomCollapse: React.FC<CollapseProps> = (props) => {
 export default CustomCollapse;
 
 const StyledCollapse = styled(Collapse)`
+  && {
+    font-size: 1rem;
+  }
   .travel-collapse-content-box {
     margin-left: 24px;
   }
@@ -62,7 +65,7 @@ const StyledCollapse = styled(Collapse)`
   }
   .travel-collapse-header-text {
     padding-left: 16px;
-    font-size: 16px;
+    font-size: 1.25rem;
     font-weight: bold;
     color: #db2728;
     display: inline-block;
@@ -74,7 +77,7 @@ const StyledCollapse = styled(Collapse)`
   }
   .travel-collapse-content-box ul {
     list-style-type: disc;
-    padding-left: 20px;
+    padding-left: 18px;
     margin-bottom: 15px;
   }
   .travel-collapse-content-box ul > li ul {

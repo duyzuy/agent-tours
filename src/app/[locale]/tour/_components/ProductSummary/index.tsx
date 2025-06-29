@@ -119,13 +119,11 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
           })}
         >
           <ProductSummaryCard {...productCardProps}>
-            <div className="box-booking border min-h-[650px] lg:px-6 px-4 pt-4 pb-6 mb-4 rounded-md bg-white shadow-sm relative z-10 overflow-hidden">
-              <div className="header py-3 flex items-center justify-between">
-                <h3 className="font-semibold text-primary-default uppercase">{t("productSummary.title")}</h3>
-              </div>
+            <div className="box-booking border border-primary-default min-h-[650px] lg:p-6 p-4 mb-4 rounded-2xl bg-white shadow-xl relative z-10 overflow-hidden">
+              <h3 className="font-semibold text-primary-default uppercase mb-6">{t("productSummary.title")}</h3>
+              <ProductSummaryCard.Durations />
               <ProductSummaryCard.Badget />
               <ProductSummaryCard.CalendarSelector className="mb-6" />
-              <ProductSummaryCard.Durations />
               <ProductSummaryCard.Inventories className="mb-6" />
               <ProductSummaryCard.Promotion className="mb-6" />
               <ProductSummaryCard.CanBooking>
@@ -136,7 +134,6 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
               </ProductSummaryCard.CanBooking>
             </div>
           </ProductSummaryCard>
-          <HotlineBox label="Hotline" phoneNumber={"0982.013.089"} />
         </div>
       )}
     </>

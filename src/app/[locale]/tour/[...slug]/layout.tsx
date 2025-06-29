@@ -1,5 +1,4 @@
 import React from "react";
-
 import { unstable_setRequestLocale } from "next-intl/server";
 import { Metadata, ResolvingMetadata } from "next";
 import { LangCode } from "@/models/management/cms/language.interface";

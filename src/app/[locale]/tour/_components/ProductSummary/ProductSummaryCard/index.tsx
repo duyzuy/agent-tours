@@ -21,6 +21,8 @@ import ProductCardPrice from "./ProductCardPrice";
 import ProductCardBadget from "./ProductCardBadget";
 import ProductCardSubTotal from "./ProductCardSubTotal";
 import ProductCardInventories from "./ProductCardInventories";
+import ProductSummaryDepartInformation from "./ProductSummaryDepartInformation";
+import ButtonBookNow from "./ButtonBookNow";
 
 type ProductSummaryContextType = {
   productItem?: FeProductItem;
@@ -96,19 +98,6 @@ const ProductSummaryCard = ({ children, className = "", ...restProps }: ProductS
   );
 };
 
-const CardPromotion: ProductSummaryCardCompound["Promotion"] = ({ className }) => {
-  const { productItem, coupon, onChangeCoupon } = useProductSummaryCard();
-
-  return (
-    <PromotionSelector
-      items={productItem?.promotions}
-      value={coupon?.code}
-      onChange={onChangeCoupon}
-      className={className}
-    />
-  );
-};
-
 const CardCalendarSelector: ProductSummaryCardCompound["CalendarSelector"] = ({ className = "", isMobile }) => {
   const { productList, productItem, onChangeDepartDate } = useProductSummaryCard();
 
@@ -139,48 +128,6 @@ const CardCalendarSelector: ProductSummaryCardCompound["CalendarSelector"] = ({ 
   );
 };
 
-const CardSubmitButton: ProductSummaryCardCompound["SubmitButton"] = ({ className = "" }) => {
-  const t = useTranslations("String");
-  const { onNext, isLoading } = useProductSummaryCard();
-  return (
-    <Button type="primary" block className="bg-primary-default" onClick={onNext} size="large" loading={isLoading}>
-      {t("button.bookNow")}
-    </Button>
-  );
-};
-
-const ProductSummaryDepartInformation: ProductSummaryCardCompound["Durations"] = ({ className }) => {
-  const t = useTranslations("String");
-  const { productItem } = useProductSummaryCard();
-
-  const durationDay = useMemo(() => {
-    if (!productItem || !productItem.endDate || !productItem.startDate) return;
-    const dayNum = stringToDate(productItem.endDate)?.diff(stringToDate(productItem.startDate), "days");
-    return dayNum;
-  }, [productItem]);
-
-  return (
-    <ul className="mb-3">
-      {durationDay ? (
-        <li>
-          <Space>
-            <IconCalendarRange className="w-5 h-5" />
-            <span className="text-[16px]">
-              {t("card.durationDayValues", { day: durationDay, night: durationDay - 1 })}
-            </span>
-          </Space>
-        </li>
-      ) : null}
-      <li>
-        <Space>
-          <IconPlane className="w-5 h-5" />
-          <span className="text-[16px]">{productItem?.template.depart.name_vi}</span>
-        </Space>
-      </li>
-    </ul>
-  );
-};
-
 const CheckCanBooking: ProductSummaryCardCompound["CanBooking"] = ({ children }) => {
   const { productItem } = useProductSummaryCard();
 
@@ -204,10 +151,10 @@ ProductSummaryCard.Price = ProductCardPrice;
 ProductSummaryCard.Durations = ProductSummaryDepartInformation;
 ProductSummaryCard.Inventories = ProductCardInventories;
 ProductSummaryCard.Drawer = ProductSummaryDrawer;
-ProductSummaryCard.Promotion = CardPromotion;
+ProductSummaryCard.Promotion = PromotionSelector;
 ProductSummaryCard.Subtotal = ProductCardSubTotal;
 ProductSummaryCard.CalendarSelector = CardCalendarSelector;
-ProductSummaryCard.SubmitButton = CardSubmitButton;
+ProductSummaryCard.SubmitButton = ButtonBookNow;
 ProductSummaryCard.CanBooking = CheckCanBooking;
 ProductSummaryCard.Badget = ProductCardBadget;
 
