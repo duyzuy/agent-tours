@@ -119,7 +119,7 @@ const ProductSummary: React.FC<ProductSummaryProps> = ({
           })}
         >
           <ProductSummaryCard {...productCardProps}>
-            <div className="box-booking border border-primary-default min-h-[650px] lg:p-6 p-4 mb-4 rounded-2xl bg-white shadow-xl relative z-10 overflow-hidden">
+            <div className="box-booking border border-primary-default min-h-[650px] lg:p-6 p-4 mb-4 rounded-2xl bg-white  relative z-10 overflow-hidden">
               <h3 className="font-semibold text-primary-default uppercase mb-6">{t("productSummary.title")}</h3>
               <ProductSummaryCard.Durations />
               <ProductSummaryCard.Badget />

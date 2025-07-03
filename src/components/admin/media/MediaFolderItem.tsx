@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { MinusOutlined, PlusOutlined, FolderOpenFilled, FolderFilled, EditOutlined } from "@ant-design/icons";
 import classNames from "classnames";
 import { Button, Card, Form, Input, Space } from "antd";
@@ -43,47 +43,46 @@ const MediaFolderItem = ({
     });
   };
 
+  if (editing) {
+    return (
+      <MediaFolderItem.EditForm
+        value={item || undefined}
+        loading={loading}
+        disabled={loading}
+        onCancel={() => setEditing(false)}
+        onSubmit={handleSubmitForm}
+      />
+    );
+  }
   return (
-    <>
-      {editing ? (
-        <MediaFolderItem.EditForm
-          value={item || undefined}
-          loading={loading}
-          disabled={loading}
-          onCancel={() => setEditing(false)}
-          onSubmit={handleSubmitForm}
+    <div
+      className={classNames("flex items-center justify-between hover:bg-gray-100 px-2 py-1 rounded-md relative", {
+        "bg-gray-100": isSelected,
+      })}
+    >
+      <MediaFolderItem.Name
+        folderName={folderName}
+        onEdit={() => setEditing(true)}
+        onOpen={onOpen}
+        isSelected={isSelected}
+        className="group/item cursor-pointer"
+        editAble={editAble}
+        folderColor={folderColor}
+      />
+      {hasChildren ? (
+        <Button
+          type="text"
+          size="small"
+          shape="circle"
+          onClick={onExpand}
+          icon={isExpanded ? <MinusOutlined /> : <PlusOutlined />}
+          className="!flex !items-center justify-center ml-2"
         />
-      ) : (
-        <div
-          className={classNames("flex items-center justify-between hover:bg-gray-100 px-2 py-1 rounded-md relative", {
-            "bg-gray-100": isSelected,
-          })}
-        >
-          <MediaFolderItem.Name
-            folderName={folderName}
-            onEdit={() => setEditing(true)}
-            onOpen={onOpen}
-            isSelected={isSelected}
-            className="group/item cursor-pointer"
-            editAble={editAble}
-            folderColor={folderColor}
-          />
-          {hasChildren ? (
-            <Button
-              type="text"
-              size="small"
-              shape="circle"
-              onClick={onExpand}
-              icon={isExpanded ? <MinusOutlined /> : <PlusOutlined />}
-              className="!flex !items-center justify-center ml-2"
-            />
-          ) : null}
-        </div>
-      )}
-    </>
+      ) : null}
+    </div>
   );
 };
-export default MediaFolderItem;
+export default memo(MediaFolderItem);
 
 interface IFolderItemNameProps {
   folderName?: string;

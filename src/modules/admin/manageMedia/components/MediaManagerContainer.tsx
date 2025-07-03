@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import MediaFilesWraper, { MediaFilesWraperProps } from "./MediaFilesWraper";
 import MediaFolderWraper from "./MediaFolderWraper";
 import { MediaTypes } from "@/models/management/media.interface";
@@ -6,22 +6,19 @@ import classNames from "classnames";
 import { useAdminPermission } from "@/modules/admin/auth/store/AdminPermissionContext";
 import { ERolesFunctions } from "@/constants/permission.constant";
 import { MediaManagerProvider } from "../store/media.context";
+import { useGetMediaFolders } from "../hooks/useGetMediaFolders";
 export interface MediaManagerContainerProps {
   className?: string;
-  onSelect?: MediaFilesWraperProps["onSelect"];
   selectedFiles?: MediaFilesWraperProps["selectedFiles"];
   mediaTypes?: MediaTypes[];
-  selecAble?: boolean;
-  mode?: "container" | "drawer";
+  onSelect?: MediaFilesWraperProps["onSelect"];
 }
 
 const MediaManagerContainer: React.FC<MediaManagerContainerProps> = ({
   className = "",
-  selecAble,
-  onSelect,
   selectedFiles,
   mediaTypes = [MediaTypes.FILE, MediaTypes.ICON, MediaTypes.IMAGE],
-  mode = "container",
+  onSelect,
 }) => {
   const [_, checkPermission] = useAdminPermission();
   const hasRoleCreate = checkPermission?.([ERolesFunctions.MEDIA_CREATE]);
@@ -47,4 +44,4 @@ const MediaManagerContainer: React.FC<MediaManagerContainerProps> = ({
     </MediaManagerProvider>
   );
 };
-export default MediaManagerContainer;
+export default memo(MediaManagerContainer);

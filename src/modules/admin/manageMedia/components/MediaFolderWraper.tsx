@@ -35,7 +35,7 @@ const MediaFolderWraper = ({ onOpen, hasRoleCreate = false }: IMediaFolderProps)
       },
     });
   };
-  let tabFolderItems: TabsProps["items"] = [
+  let TAB_ITEMS: TabsProps["items"] = [
     {
       key: "folderList",
       label: "Thư mục",
@@ -44,8 +44,8 @@ const MediaFolderWraper = ({ onOpen, hasRoleCreate = false }: IMediaFolderProps)
   ];
 
   if (hasRoleCreate) {
-    tabFolderItems = [
-      ...tabFolderItems,
+    TAB_ITEMS = [
+      ...TAB_ITEMS,
       {
         key: "addFolder",
         label: "Thêm thư mục",
@@ -66,7 +66,7 @@ const MediaFolderWraper = ({ onOpen, hasRoleCreate = false }: IMediaFolderProps)
       defaultActiveKey="folderList"
       destroyInactiveTabPane={true}
       activeKey={folderTabKey}
-      items={tabFolderItems}
+      items={TAB_ITEMS}
       onChange={onChangeTab}
     />
   );
@@ -89,7 +89,7 @@ MediaFolderWraper.PanelList = function MediaFolderPanelList() {
   });
   const [state, dispatch] = useMediaManager();
 
-  const handleOpenFolder = (folder: IMediaFolder) => {
+  const handleClickOpenFolder = (folder: IMediaFolder) => {
     dispatch({ type: "SET_FOLDER", payload: folder });
     dispatch({
       type: "SET_QUERY_FILES",
@@ -106,7 +106,7 @@ MediaFolderWraper.PanelList = function MediaFolderPanelList() {
     dispatch({ type: "SET_ROOT_FOLDER" });
   };
 
-  const handleChangePage = (page: number, pageSize: number) => {
+  const handleChangeFolderPage = (page: number, pageSize: number) => {
     dispatch({
       type: "SET_QUERY_FOLDER",
       payload: {
@@ -142,7 +142,7 @@ MediaFolderWraper.PanelList = function MediaFolderPanelList() {
         size="small"
         defaultCurrent={1}
         defaultPageSize={10}
-        onChange={handleChangePage}
+        onChange={handleChangeFolderPage}
       />
       <Divider style={{ margin: "12px 0" }} />
       <MediaFolderItem
@@ -164,7 +164,7 @@ MediaFolderWraper.PanelList = function MediaFolderPanelList() {
           selectedId={selectedFolder?.id}
           isLoading={isLoadingUpdate}
           onSave={handleUpdateFolder}
-          onOpen={handleOpenFolder}
+          onOpen={handleClickOpenFolder}
         />
       ) : (
         <Empty

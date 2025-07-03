@@ -11,7 +11,7 @@ export const initMediaManagerState: MediaManagerState = {
     file: new MediaFileQueryParamsFormData(
       { mediaType: [MediaTypes.FILE, MediaTypes.ICON, MediaTypes.IMAGE], mediaInFolderRecid: 0 },
       1,
-      20,
+      30,
       { sortColumn: "id", direction: "asc" },
     ),
     folder: new MediaFolderQueryParamsFormData(1, 20, { sortColumn: "id", direction: "desc" }),

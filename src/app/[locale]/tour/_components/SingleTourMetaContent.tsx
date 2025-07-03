@@ -13,7 +13,8 @@ const SingleTourMetaContent: React.FC<SingleTourMetaContentProps> = ({ items, cl
 
   return (
     <div
-      className={classNames("meta-content", {
+      className={classNames("meta-content bg-blue-50 lg:p-6 p-4 rounded-2xl", {
+        hidden: !items?.length,
         [className]: className,
       })}
     >
@@ -21,12 +22,12 @@ const SingleTourMetaContent: React.FC<SingleTourMetaContentProps> = ({ items, cl
         {items?.map((item, _index) => (
           <li key={_index} className="feature-item flex">
             {getICon(item.icon) ? (
-              <span className="mr-2 w-8 h-8 bg-emerald-50 rounded-full inline-flex items-center justify-center !text-emerald-600 mt-1">
+              <span className="mr-3 w-8 h-8 bg-blue-100 rounded-full inline-flex items-center justify-center !text-blue-600 mt-1">
                 {renderIcon(getICon(item.icon))}
               </span>
             ) : null}
             <div className="flex-1">
-              <span className="flex-1 font-[500]">{item.key}</span>
+              <span className="flex-1 font-[500] lg:text-base text-sm">{item.key}</span>
               <p className="value text-xs">{item.value}</p>
             </div>
           </li>

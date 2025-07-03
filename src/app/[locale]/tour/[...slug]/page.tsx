@@ -82,7 +82,7 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
       <div className="h-12"></div>
       <div className="container mx-auto lg:px-8 md:px-6 px-4 text-[1rem]">
         <div className="flex flex-wrap items-start">
-          <div className="tour-contents w-full lg:w-8/12 lg:pr-8">
+          <div className="tour-contents w-full lg:w-8/12 lg:pr-20">
             <SingleTourMetaContent items={cmsTemplateContent.metaData} className="mb-8" />
             {/* <TourTabsContent data={cmsTemplateContent} locale={locale} templateId={Number(templateId)} /> */}
             <TourInformations data={cmsTemplateContent} locale={locale} templateId={Number(templateId)} />

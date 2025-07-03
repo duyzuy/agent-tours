@@ -42,7 +42,7 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ className = "" })
           type="text"
           icon={<IconTicketPercent className="w-5 h-5" />}
           onClick={showModal}
-          className="!inline-flex !items-center !text-emerald-600 !bg-emerald-50 !px-3"
+          className="!inline-flex !items-center !text-emerald-600 !bg-emerald-50 hover:!bg-emerald-100 !border-transparent !px-3 !h-auto !rounded-lg"
         >
           <span>{t("button.applyPromo")}</span>
         </Button>

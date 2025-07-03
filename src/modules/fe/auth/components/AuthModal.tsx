@@ -42,34 +42,32 @@ const AuthModal: React.FC = () => {
     }
   }, [pathname]);
   return (
-    <Modal centered open={authModal.open} onCancel={hideAuthModal} footer={null} width={420} destroyOnClose>
-      <div className="px-4 py-2">
-        <div className="modal-auth__head mb-3">
-          <Logo width={120} height={60} className="mb-3" />
-          <p>{t("modalAuth.slogan")}</p>
-        </div>
-        <div className="modal-auth__main mb-6">
-          <Tabs
-            activeKey={tabKey}
-            onChange={(newKey) => setTabKey(newKey as TabKeys)}
-            items={[
-              {
-                key: "signIn",
-                label: <span className="text-lg">{t("login")}</span>,
-                children: <LoginForm error={error} onSubmit={signIn} loading={loading} />,
-              },
-              {
-                key: "signUp",
-                label: <span className="text-lg">{t("register")}</span>,
-                children: <RegistrationForm onSubmit={handleSignUp} loading={isLoadingRegister} />,
-              },
-            ]}
-            tabPosition="top"
-          />
-        </div>
-        <div className="modal-auth__bottom">
-          <p className="text-xs text-gray-500 text-center">{t("modalAuth.privacy")}</p>
-        </div>
+    <Modal centered open={authModal.open} onCancel={hideAuthModal} footer={null} width={480} destroyOnClose>
+      <div className="modal-auth__head mb-3">
+        <Logo width={120} height={60} className="mb-3" />
+        <p>{t("modalAuth.slogan")}</p>
+      </div>
+      <div className="modal-auth__main mb-6">
+        <Tabs
+          activeKey={tabKey}
+          onChange={(newKey) => setTabKey(newKey as TabKeys)}
+          items={[
+            {
+              key: "signIn",
+              label: <span className="text-lg">{t("login")}</span>,
+              children: <LoginForm error={error} onSubmit={signIn} loading={loading} />,
+            },
+            {
+              key: "signUp",
+              label: <span className="text-lg">{t("register")}</span>,
+              children: <RegistrationForm onSubmit={handleSignUp} loading={isLoadingRegister} />,
+            },
+          ]}
+          tabPosition="top"
+        />
+      </div>
+      <div className="modal-auth__bottom">
+        <p className="text-xs text-gray-500 text-center">{t("modalAuth.privacy")}</p>
       </div>
     </Modal>
   );

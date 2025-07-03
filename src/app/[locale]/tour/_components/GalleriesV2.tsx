@@ -15,6 +15,7 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import classNames from "classnames";
+import ModalGallery from "./ModalGallery";
 
 interface GalleriesV2Props {
   images: IThumbnail[] | null;
@@ -50,11 +51,9 @@ interface GalleryGridProps {
   images: IThumbnail[];
 }
 const GalleryGrid: React.FC<GalleryGridProps> = ({ images }) => {
+  const [openModal, setOpenModal] = useState(false);
   const firstFiveImage = images.slice(0, 5);
 
-  const ButtonViewAll = () => {
-    return <div></div>;
-  };
   return (
     <div className="grid grid-cols-8 grid-rows-2 -mx-1">
       {firstFiveImage.map(({ id, original, small }, _index) => (
@@ -75,18 +74,25 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ images }) => {
               className="bg-slate-50 object-cover w-full h-full"
             />
             {_index === 4 && (
-              <div className="absolute z-[2] flex items-center justify-center inset-0 bg-gray-950/60">
-                <div className="text-white">
-                  <Button className="!bg-transparent !p-0 hover:!bg-transparent !border-none text-center !h-auto !text-white">
-                    <IconImage className="mx-auto" />
-                    <span>Xem tất cả</span>
-                  </Button>
-                </div>
-              </div>
+              <Button
+                onClick={() => setOpenModal(true)}
+                className={classNames(
+                  "!px-3 !py-2 !h-auto bottom-2 right-2 !absolute !rounded-lg hover:!border-white",
+                  {
+                    "!hidden lg:!inline-flex items-center": true,
+                  },
+                )}
+              >
+                <span className="!inline-flex text-gray-800 items-center gap-2 leading-none">
+                  <IconImage className="mx-auto !w-4 !h-4" />
+                  <span>Thư viện ảnh</span>
+                </span>
+              </Button>
             )}
           </div>
         </div>
       ))}
+      <ModalGallery images={images} open={openModal} onClose={() => setOpenModal(false)} />
     </div>
   );
 };
