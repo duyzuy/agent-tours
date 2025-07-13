@@ -59,11 +59,11 @@ export class CustomerLoginFormData implements ICustomerLoginPayload {
 }
 
 export class CustomerForgotPasswordFormData implements ICustomerForgotPasswordPayload {
-  email?: string | undefined;
-  username?: string | undefined;
+  email: string;
+  userName: string;
 
-  constructor(email: string, username: string) {
-    this.username = username;
+  constructor(email: string, userName: string) {
+    this.userName = userName;
     this.email = email;
   }
 }

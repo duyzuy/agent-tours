@@ -22,7 +22,7 @@ export const authAPIs = {
       },
     });
   },
-  resetPassword: async (payload?: ICustomerForgotPasswordPayload) => {
+  resetPassword: async (payload: ICustomerForgotPasswordPayload | undefined) => {
     return await client.post<CustomerForgotPasswordResponse>("localfront/resetPassword", {
       body: {
         requestObject: payload,

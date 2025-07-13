@@ -124,7 +124,7 @@ const BoxSearchBookingContainer = ({ className = "", onSubmit, isLoading }: BoxS
         [className]: className,
       })}
     >
-      <div className="search-box-inner bg-white px-3 md:px-4 py-3 rounded-md max-w-2xl mx-auto">
+      <div className="search-box-inner bg-white px-3 md:px-4 py-3 rounded-xl max-w-2xl mx-auto">
         <Form layout="vertical">
           <div className="flex flex-wrap md:flex-nowrap items-center gap-x-4">
             <div className="control mb-4 md:mb-0 w-full md:w-1/2">
@@ -153,9 +153,7 @@ const BoxSearchBookingContainer = ({ className = "", onSubmit, isLoading }: BoxS
                 <IconCalendar className="absolute" />
                 <CustomDatePicker
                   placeholder="Thời gian đi"
-                  disabledDate={(date) => {
-                    return date.isBefore(dayjs());
-                  }}
+                  disabledDate={(date) => date.isBefore(dayjs())}
                   allowClear={false}
                   inputReadOnly
                   format={"MMMM/YYYY"}
@@ -168,16 +166,16 @@ const BoxSearchBookingContainer = ({ className = "", onSubmit, isLoading }: BoxS
                 />
               </DatePickerControl>
             </div>
-            <ButtonSearch
+            <Button
               danger
               type="primary"
               icon={<IconSearch />}
               onClick={handleSubmit}
               loading={isSearchching || isLoading}
-              className="w-full md:w-auto"
+              className="w-full md:w-auto !h-12 !important justify-center !flex items-center !rounded-xl"
             >
               <span>{t("button.search")}</span>
-            </ButtonSearch>
+            </Button>
           </div>
         </Form>
       </div>
@@ -209,19 +207,9 @@ const objectToQueryString = (obj: { [key: string]: string }) => {
   }, "");
 };
 
-const ButtonSearch = styled(Button)`
-  && {
-    display: flex;
-    align-items: center;
-    height: 48px !important;
-    justify-content: center;
-  }
-`;
-
 const SelectorControl = styled("div")`
   & {
     height: 48px;
-
     .travel-select-single:not(.travel-select-customize-input) .travel-select-selector {
       padding-left: 32px;
       .travel-select-selection-search {

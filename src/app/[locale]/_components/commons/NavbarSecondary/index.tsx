@@ -1,10 +1,8 @@
-import { ICON_LIST } from "@/constants/icons.constant";
 import classNames from "classnames";
 import { getSecondaryMenu } from "@/actions/menu";
 import { getLocale } from "next-intl/server";
 import { LangCode } from "@/models/management/cms/language.interface";
 import { getMenuListFomatedTypes } from "@/utils/menu";
-import { MenuItemType } from "@/utils/menu";
 import SecondaryNavItem from "./SecondaryNavItem";
 
 interface NavbarSecondaryProps {
@@ -39,28 +37,6 @@ export default async function NavbarSecondary({ className = "" }: NavbarSecondar
           ))}
         </div>
       </div>
-    </div>
-  );
-}
-
-interface SecondaryListItemProps {
-  items: MenuItemType[];
-}
-function SecondaryListItem({ items }: SecondaryListItemProps) {
-  return (
-    <div className="menu-secondary-list flex flex-wrap items-center py-2">
-      {items?.map((item) => (
-        <SecondaryNavItem
-          key={item.id}
-          name={item.name}
-          iconName={item.icon}
-          items={item.children}
-          isMega={item.isMega}
-          slug={item.slug}
-          descriptions={item.description}
-          className="px-2"
-        />
-      ))}
     </div>
   );
 }

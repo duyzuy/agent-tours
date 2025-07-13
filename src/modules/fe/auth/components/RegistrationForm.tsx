@@ -5,10 +5,12 @@ import { useTranslations } from "next-intl";
 import { customerRegisterSchema } from "../customerAuth.schema";
 import { CustomerRegisterFormData } from "../customerAuth.interface";
 import { removeVietnameseTones } from "@/utils/helper";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormItem from "@/components/base/FormItem";
+import { useSignUp } from "../hooks/useSignUp";
+import { PropsWithChildren } from "react";
 
 enum EFieldType {
   TEXT = "TEXT",
@@ -24,20 +26,29 @@ type TFieldInputs = {
   type: EFieldType;
 };
 
-export interface RegistrationFormProps {
-  onSubmit?: (data: CustomerRegisterFormData, resetForm?: () => void) => void;
-  loading?: boolean;
-  children?: React.ReactNode;
+export interface RegistrationFormProps extends PropsWithChildren {
+  footer?: React.ReactNode;
+  onSubmitSuccess?: () => void;
 }
-const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading = false, children }) => {
+const RegistrationForm: React.FC<RegistrationFormProps> = ({ footer, onSubmitSuccess }) => {
   const t = useTranslations("String");
   const er = useTranslations("Error");
+  const { mutate: signUp, isPending: loading } = useSignUp();
   const {
     control,
     formState: { errors },
     handleSubmit,
     reset,
-  } = useForm({ resolver: yupResolver(customerRegisterSchema) });
+  } = useForm<CustomerRegisterFormData>({ resolver: yupResolver(customerRegisterSchema) });
+
+  const submitForm: SubmitHandler<CustomerRegisterFormData> = (data) => {
+    signUp(data, {
+      onSuccess(data, variables, context) {
+        reset();
+        onSubmitSuccess?.();
+      },
+    });
+  };
 
   const FIELDS_INPUT: TFieldInputs[] = [
     {
@@ -113,17 +124,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, loading =
         />
       ))}
       <FormItem>
-        <Button
-          type="primary"
-          block
-          size="large"
-          onClick={handleSubmit((data) => onSubmit?.(data, reset))}
-          loading={loading}
-        >
+        <Button type="primary" block size="large" onClick={handleSubmit((data) => submitForm(data))} loading={loading}>
           {t("button.register")}
         </Button>
       </FormItem>
-      {children}
+      <div className="footer">{footer}</div>
     </Form>
   );
 };

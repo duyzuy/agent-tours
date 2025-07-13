@@ -1,14 +1,13 @@
 "use client";
 import { useClickOutSide } from "@/hooks/fe/useClickOutSide";
-import { localeDefault } from "@/constants/locale.constant";
+import { localeDefault, locales } from "@/constants/locale.constant";
 import { LangCode, Locale } from "@/models/management/cms/language.interface";
 import classNames from "classnames";
-
 import { useRef, useState } from "react";
 import { Button, Drawer } from "antd";
+import { IconChevronDown } from "@/assets/icons";
 
 export interface LanguageButtonProps {
-  locales?: Locale[];
   langCode?: LangCode;
   className?: string;
   currentLocale?: Locale;
@@ -20,7 +19,6 @@ const LanguageButton = ({
   className = "",
   currentLocale = localeDefault,
   onSelectLanguage,
-  locales,
   mode = "dropdown",
   hideLabel = false,
 }: LanguageButtonProps) => {
@@ -32,6 +30,7 @@ const LanguageButton = ({
     >
       {mode === "dropdown" ? (
         <LanguageButton.Dropdown
+          label={currentLocale.shortName}
           hideLabel={hideLabel}
           locales={locales}
           currentLocale={currentLocale}
@@ -40,6 +39,7 @@ const LanguageButton = ({
       ) : (
         <LanguageButton.Drawer
           hideLabel={hideLabel}
+          label={currentLocale.shortName}
           locales={locales}
           currentLocale={currentLocale}
           onClick={onSelectLanguage}
@@ -51,16 +51,18 @@ const LanguageButton = ({
 export default LanguageButton;
 
 interface LanguageButtonDropdownProps {
-  locales?: Locale[];
+  locales: Locale[];
   onClick?: (locale: Locale) => void;
   currentLocale?: Locale;
   hideLabel?: boolean;
+  label: React.ReactNode | undefined;
 }
 LanguageButton.Dropdown = function LanguageButtonDropdown({
   locales,
   onClick,
   currentLocale,
   hideLabel,
+  label,
 }: LanguageButtonDropdownProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -72,20 +74,24 @@ LanguageButton.Dropdown = function LanguageButtonDropdown({
           type="text"
           icon={<currentLocale.icon className="w-5 h-5" />}
           onClick={() => setShowDropdown((prev) => !prev)}
-          className="!inline-flex items-center justify-center hover:!bg-slate-100 !px-3"
+          className="!inline-flex items-center justify-center hover:!bg-slate-100 !px-3 !rounded-full !py-2 !h-auto"
         >
-          {hideLabel ? null : <span>{currentLocale.name}</span>}
+          {hideLabel ? null : (
+            <div className="flex items-center leading-none">
+              <span>{label}</span> <IconChevronDown className="w-4 h-4 ml-1" />
+            </div>
+          )}
         </Button>
       ) : (
         "--"
       )}
-      {showDropdown && locales && locales.length ? (
+      {showDropdown && locales.length ? (
         <div className="lang-dropdown absolute z-10 right-0" ref={dropdownRef}>
-          <ul className="dropdown-inner bg-white rounded-md drop-shadow-lg w-36 p-3">
+          <ul className="dropdown-inner bg-white border rounded-xl w-36 p-3">
             {locales.map((lc) => (
               <li
                 key={lc.key}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded-md cursor-pointer"
+                className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded-xl cursor-pointer"
                 onClick={() => onClick?.(lc)}
               >
                 <lc.icon className="w-5 h-5" />
@@ -100,16 +106,18 @@ LanguageButton.Dropdown = function LanguageButtonDropdown({
 };
 
 interface LanguageButtonDrawerProps {
-  locales?: Locale[];
+  locales: Locale[];
   onClick?: (locale: Locale) => void;
   currentLocale?: Locale;
   hideLabel?: boolean;
+  label: React.ReactNode | undefined;
 }
 LanguageButton.Drawer = function LanguageButtonDrawer({
   locales,
   onClick,
   currentLocale,
   hideLabel,
+  label,
 }: LanguageButtonDrawerProps) {
   const [open, setOpen] = useState(false);
 
@@ -122,7 +130,11 @@ LanguageButton.Drawer = function LanguageButtonDrawer({
           onClick={() => setOpen((prev) => !prev)}
           className="!inline-flex items-center justify-center hover:!bg-slate-100 !px-3"
         >
-          {hideLabel ? null : <span>{currentLocale.name}</span>}
+          {hideLabel ? null : (
+            <div className="flex items-center leading-none">
+              <span>{label}</span> <IconChevronDown className="w-4 h-4 ml-1" />
+            </div>
+          )}
         </Button>
       ) : (
         "--"

@@ -11,11 +11,10 @@ import { useLocale } from "next-intl";
  * Customer login via next-Auth
  */
 
-export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string; callback?: () => void }) => {
-  const { redirect = false, callbackUrl, callback } = options || {};
+export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string; onSuccess?: () => void }) => {
+  const { redirect = false, callbackUrl, onSuccess } = options || {};
   const [error, setError] = useState<string | null>();
   const [loading, setLoading] = useState<boolean>(false);
-  const locale = useLocale() as LangCode;
   const message = useMessage();
   const router = useRouter();
 
@@ -37,7 +36,7 @@ export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string; 
           }
           router.refresh();
           message.success("Đăng nhập thành công.");
-          callback?.();
+          onSuccess?.();
         } else {
           setError(response?.error);
           message.error(response?.error);

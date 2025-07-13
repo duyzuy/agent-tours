@@ -1,15 +1,7 @@
 import { FeSearchTourQueryParams } from "@/models/fe/searchTour.interface";
 import { getTemplateProductList } from "../../../actions/searchProduct";
-
-import dynamic from "next/dynamic";
-import { TourCardSkeleton } from "@/components/frontend/TourCard";
 import { isMobile } from "@/utils/detectMobile";
-
-const DynamicTourCard = dynamic(() => import("@/components/frontend/TourCard"), {
-  loading: () => <TourCardSkeleton />,
-  ssr: false,
-});
-
+import TourCardV2 from "@/components/frontend/TourCardV2";
 interface TourCardListContainerProps {
   querySearch: FeSearchTourQueryParams;
   title?: string;
@@ -24,20 +16,15 @@ const TourCardListContainer: React.FC<TourCardListContainerProps> = async ({ que
           <h3 className="text-xl lg:text-2xl font-[500] uppercase">{title}</h3>
         </div>
         {productList ? (
-          <WraperDynamicDevice isMobile={isMobile()}>
+          <TourListWraper isMobile={isMobile()}>
             {productList.map((tourItem) => (
-              <DynamicTourCard
+              <TourCardV2
                 key={tourItem.recId}
-                templateId={tourItem.recId}
-                tourCode={tourItem.code}
-                sellables={tourItem.sellables}
-                depart={tourItem.depart}
-                cms={tourItem.cms}
-                bordered={false}
+                data={tourItem}
                 className={isMobile() ? "w-[280px] min-w-[280px]" : ""}
               />
             ))}
-          </WraperDynamicDevice>
+          </TourListWraper>
         ) : (
           <div>Không có tour nào khả dụng.</div>
         )}
@@ -47,7 +34,7 @@ const TourCardListContainer: React.FC<TourCardListContainerProps> = async ({ que
 };
 export default TourCardListContainer;
 
-const WraperDynamicDevice = ({ isMobile, children }: { isMobile: boolean; children?: React.ReactNode }) => {
+const TourListWraper = ({ isMobile, children }: { isMobile: boolean; children?: React.ReactNode }) => {
   return isMobile ? (
     <div className="flex gap-x-3 w-full overflow-x-auto pb-3">{children}</div>
   ) : (
