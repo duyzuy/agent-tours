@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, useContext } from "react";
+import { PropsWithChildren } from "react";
 import { ConfigProvider, App } from "antd";
 import StyledComponentsRegistry from "@/lib/AntRegistry";
 import { lightTheme, darkTheme } from "@/assets/styles/themes/antTheme";

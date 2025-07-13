@@ -6,7 +6,7 @@ import { isMobile } from "@/utils/detectMobile";
 import Logo from "@/components/frontend/partials/Logo";
 import HamburgerMenuButton from "./HamburgerMenuButton";
 import UserButton from "./UserButton";
-import LanguageSwitcher from "../../LanguageSwitcher";
+import LanguageSwitcher from "../LanguageSwitcher";
 import PrimaryMenuHeader from "./PrimaryMenuHeader";
 
 async function getMenuListByMobileOrDesktop(isMobile: boolean, locale: LangCode) {

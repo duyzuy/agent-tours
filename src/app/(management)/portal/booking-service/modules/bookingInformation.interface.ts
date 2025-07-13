@@ -16,6 +16,9 @@ export class PortalBookingServiceFormData {
       qty: number;
       type: PassengerType;
     }[];
+    passengers: {
+      [key in PassengerType]: { quantity: number };
+    };
   };
   searchBooking: SearchProductExtraFormData;
   serviceList?: IProductService[];
@@ -33,6 +36,9 @@ export class PortalBookingServiceFormData {
         qty: number;
         type: PassengerType;
       }[];
+      passengers: {
+        [key in PassengerType]: { quantity: number };
+      };
     },
     searchBooking: SearchProductExtraFormData,
     serviceList: IProductService[] | undefined,

@@ -5,15 +5,13 @@ import { DrawerMediaManagerProvider, DrawerMediaContainer } from "@/modules/admi
 interface Props {
   children: React.ReactNode;
   media_manager: React.ReactNode;
-  test: React.ReactNode;
 }
-export default function AdminPortalLayout({ children, media_manager, test }: Props) {
+export default function AdminPortalLayout({ children, media_manager }: Props) {
   return (
     <AdminAuthorized>
       <DrawerMediaManagerProvider>
         <AdminLayout>
           {media_manager}
-          {test}
           {children}
         </AdminLayout>
         <DrawerMediaContainer />

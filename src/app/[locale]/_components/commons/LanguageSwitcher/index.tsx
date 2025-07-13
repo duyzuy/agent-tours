@@ -24,14 +24,13 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "", mod
   }, [locales]);
 
   const handleChangeLanguage = (locale: Locale) => {
-    const newContent = getPathname(locale);
-    router.push(`/${newContent}`);
+    const newPathname = getPathname(locale);
+    router.push(`/${newPathname}`);
   };
 
   return (
     <LanguageButton
       className={className}
-      locales={locales}
       currentLocale={currentLocale}
       onSelectLanguage={handleChangeLanguage}
       mode={mode}

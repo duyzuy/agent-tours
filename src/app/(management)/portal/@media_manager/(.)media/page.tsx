@@ -1,35 +1,23 @@
 "use client";
-import { DrawerMediaContainer } from "@/modules/admin/drawerMedia";
-import { Modal } from "antd";
+import MediaManagerContainer from "@/modules/admin/manageMedia/components/MediaManagerContainer";
+import { Drawer, DrawerProps } from "antd";
+import { useState } from "react";
 
 const MediaDrawerPage = () => {
+  const [open, setOpen] = useState(true);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <>
-      <div>should show in parralel media slug</div>
-      {/* <DrawerMediaContainer /> */}
-      <Modal open={true}>
-        <p>
-          {" "}
-          asdf as <dfn>a selectedFiles asldkfjasdklfja sdf</dfn>
-        </p>
-        <p>
-          {" "}
-          asdf as <dfn>a selectedFiles asldkfjasdklfja sdf</dfn>
-        </p>
-        <p>
-          {" "}
-          asdf as <dfn>a selectedFiles asldkfjasdklfja sdf</dfn>
-        </p>
-        <p>
-          {" "}
-          asdf as <dfn>a selectedFiles asldkfjasdklfja sdf</dfn>
-        </p>
-        <p>
-          {" "}
-          asdf as <dfn>a selectedFiles asldkfjasdklfja sdf</dfn>
-        </p>
-      </Modal>
-    </>
+    <Drawer open={open} placement="bottom" onClose={onClose} height={"90vh"}>
+      <MediaManagerContainer />
+    </Drawer>
   );
 };
 export default MediaDrawerPage;

@@ -1,29 +1,15 @@
 import { Button, Space } from "antd";
-import { EditOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
-import classnames from "classnames";
+import { LeftOutlined } from "@ant-design/icons";
 import { useThemeMode } from "@/context";
+import classnames from "classnames";
 interface Props {
-  modelName?: string;
-  hideAddButton?: boolean;
-  onClickAdd?: () => void;
-  onEdit?: () => void;
   title?: string;
   between?: boolean;
   className?: string;
-  onCanel?: () => void;
   onBack?: () => void;
+  actions?: React.ReactNode;
 }
-const TitleRow: React.FC<Props> = ({
-  title,
-  modelName,
-  hideAddButton,
-  onClickAdd,
-  onEdit,
-  between = false,
-  className = "",
-  onCanel,
-  onBack,
-}) => {
+const TitleRow: React.FC<Props> = ({ title, actions, between = false, className = "", onBack }) => {
   const [mode, _] = useThemeMode();
   return (
     <Space
@@ -39,21 +25,22 @@ const TitleRow: React.FC<Props> = ({
             size="small"
             icon={<LeftOutlined className="!text-xs" />}
             onClick={onBack}
-            className={`mr-2 ${mode === "light" ? "text-gray-900 !bg-gray-100" : "!text-gray-400 !bg-gray-800"}`}
+            className={classnames("mr-2", {
+              "text-gray-900 !bg-gray-100": mode === "light",
+              "text-gray-400 !bg-gray-800": mode !== "light",
+            })}
           />
         )}
-        <div className={`font-semibold text-lg ${mode === "light" ? "text-gray-900" : "text-gray-300"}`}>{title}</div>
+        <div
+          className={classnames("font-semibold text-lg", {
+            "text-gray-900": mode === "light",
+            "text-gray-300": mode !== "light",
+          })}
+        >
+          {title}
+        </div>
       </div>
-      {!hideAddButton && (
-        <Button type="primary" size="small" ghost icon={<PlusOutlined />} onClick={onClickAdd}>
-          {`Thêm ${modelName}`}
-        </Button>
-      )}
-      {onEdit && (
-        <Button type="primary" size="small" ghost icon={<EditOutlined />} onClick={onEdit}>
-          {`Sửa ${modelName}`}
-        </Button>
-      )}
+      {actions}
     </Space>
   );
 };

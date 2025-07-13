@@ -2,20 +2,20 @@
 import { LockOutlined } from "@ant-design/icons";
 import { Button, Form, FormItemProps, Input, InputProps } from "antd";
 import { useTranslations } from "next-intl";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItemInputProps } from "antd/es/form/FormItemInput";
 import FormItem from "@/components/base/FormItem";
 import { CustomerLoginFormData } from "../customerAuth.interface";
 import { customerLoginSchema } from "../customerAuth.schema";
 import { PASSWORD_MIN_LENGTH } from "../customerAuth.schema";
+import { useSignIn } from "../hooks/useSignIn";
+import { PropsWithChildren } from "react";
 
-export interface LoginFormProps {
-  onSubmit?: (data: CustomerLoginFormData) => void;
+export interface LoginFormProps extends PropsWithChildren {
+  onSubmitSuccess?: () => void;
   onForgotPassword?: () => void;
-  error?: string | null;
-  loading?: boolean;
-  children?: React.ReactNode;
+  footer?: React.ReactNode;
 }
 enum EFieldType {
   TEXT = "TEXT",
@@ -31,7 +31,7 @@ type TFieldInputs = {
   type: EFieldType;
 };
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false, children, onForgotPassword }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ footer, onForgotPassword, onSubmitSuccess }) => {
   const t = useTranslations("String");
   const er = useTranslations("Error");
 
@@ -41,6 +41,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
     control,
   } = useForm<CustomerLoginFormData>({
     resolver: yupResolver(customerLoginSchema),
+  });
+
+  const { signIn, error, loading } = useSignIn({
+    redirect: false,
+    onSuccess: () => {
+      onSubmitSuccess?.();
+    },
   });
 
   const FIELDS_INPUT: TFieldInputs[] = [
@@ -72,7 +79,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
           name={name}
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <Form.Item label={label} help={help} validateStatus={validateStatus}>
+            <FormItem label={label} help={help} validateStatus={validateStatus}>
               {type === EFieldType.PASSWORD ? (
                 <Input.Password
                   {...field}
@@ -92,23 +99,21 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error, loading = false,
                   suffix={suffix}
                 />
               )}
-            </Form.Item>
+            </FormItem>
           )}
         />
       ))}
-      <FormItem style={{ marginBottom: 0 }}>
-        <div className="text-right mb-6">
-          <span className="text-gray-400 hover:text-primary-default cursor-pointer" onClick={onForgotPassword}>
-            {t("forgotPassword")}
-          </span>
-        </div>
-      </FormItem>
-      <div>
-        <Button type="primary" block size="large" onClick={handleSubmit((data) => onSubmit?.(data))} loading={loading}>
+      <div className="text-right mb-6">
+        <span className="text-gray-600 hover:text-blue-600 cursor-pointer !text-xs" onClick={onForgotPassword}>
+          {t("forgotPassword")}
+        </span>
+      </div>
+      <FormItem>
+        <Button type="primary" block size="large" onClick={handleSubmit(signIn)} loading={loading}>
           {t("button.login")}
         </Button>
-      </div>
-      {children}
+      </FormItem>
+      <div className="signin-form__footer">{footer}</div>
     </Form>
   );
 };

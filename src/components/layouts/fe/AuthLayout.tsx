@@ -19,7 +19,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
   return (
     <div className="login-page py-8 lg:py-16 bg-slate-50">
-      <div className="container mx-auto lg:px-8 md:px-6 px-4">
+      <div className="container max-w-6xl mx-auto lg:px-8 md:px-6 px-4">
         <div className="flex flex-wrap lg:flex-row bg-white drop-shadow-sm rounded-lg overflow-hidden">
           <div className="w-full lg:w-1/2 px-8 py-8 lg:px-16 lg:py-16">
             <div className="login-form">

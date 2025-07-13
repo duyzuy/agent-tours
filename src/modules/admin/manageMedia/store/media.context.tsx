@@ -1,5 +1,5 @@
 import { createContext, useReducer, useContext } from "react";
-import { MediaManagerAction, MediaManagerState } from "./media.type";
+import { MediaManagerAction, MediaManagerState } from "./media.actions";
 import { initMediaManagerState, mediaManagerReducer } from "./reducer";
 
 const MediaManagerContext = createContext<[MediaManagerState, React.Dispatch<MediaManagerAction>] | undefined>(

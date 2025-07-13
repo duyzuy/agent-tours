@@ -1,6 +1,6 @@
 import { useMemo, useRef, useEffect, useCallback } from "react";
 
-const channelInstances: { [key: string]: BroadcastChannel } = {};
+const channelInstances: Record<string, BroadcastChannel> = {} as const;
 
 export const getSingletonChannel = (name: string): BroadcastChannel => {
   if (!channelInstances[name]) {
@@ -14,17 +14,16 @@ export default function useBroadcastChannel<T>(channelName: string, onMessageRec
   const isSubscribed = useRef(false);
 
   useEffect(() => {
-    // || process.env.NODE_ENV !== "development"
-    if (!isSubscribed.current) {
-      channel.onmessage = (event) => onMessageReceived(event.data);
-    }
+    if (isSubscribed.current) return;
+
+    channel.onmessage = (event) => onMessageReceived(event.data);
+
     return () => {
-      if (isSubscribed.current) {
-        channel.close();
-        isSubscribed.current = true;
-      }
+      if (!isSubscribed.current) return;
+      channel.close();
+      isSubscribed.current = false;
     };
-  }, []);
+  }, [isSubscribed]);
 
   const postMessage = useCallback(
     (message: T) => {

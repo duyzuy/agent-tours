@@ -25,6 +25,7 @@
     "login": "Đăng nhập",
     "register": "Đăng ký",
     "edit": "Chỉnh sửa",
+
     "label": {
       "phoneNumber": "Số điện thoại",
       "email": "Email",
@@ -51,6 +52,8 @@
       "related": {
         "title": "Bài viết liên quan"
       }
-    }
+    },
+    "myAccount": "Thông tin tài khoản",
+    "order": "Đơn hàng"
   }
 }

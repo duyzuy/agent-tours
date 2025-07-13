@@ -1,5 +1,5 @@
 import { Button, Modal } from "antd";
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { IconTicketPercent } from "@/assets/icons";
 import { IPromotion } from "@/models/management/core/promotion.interface";
@@ -7,14 +7,17 @@ import CouponCard from "@/components/frontend/CouponCard";
 import { moneyFormatVND } from "@/utils/helper";
 import { formatDate } from "@/utils/date";
 import classNames from "classnames";
+import { useProductSummaryCard } from ".";
 
 interface PromotionSelectorProps {
-  items?: IPromotion[];
-  value?: string;
   className?: string;
-  onChange?: (value: string, data: IPromotion) => void;
 }
-const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className = "", value, onChange }) => {
+const PromotionSelector: React.FC<PromotionSelectorProps> = ({ className = "" }) => {
+  const { productItem, coupon, onChangeCoupon } = useProductSummaryCard();
+
+  const promotions = useMemo(() => {
+    return productItem?.promotions;
+  }, [productItem]);
   const t = useTranslations("String");
 
   const [openModal, setShowModal] = useState(false);
@@ -25,7 +28,7 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className 
     setShowModal(false);
   };
   const handleSelect = (item: IPromotion) => {
-    onChange?.(item.code, item);
+    onChangeCoupon?.(item.code, item);
     setShowModal(false);
   };
   return (
@@ -39,7 +42,7 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className 
           type="text"
           icon={<IconTicketPercent className="w-5 h-5" />}
           onClick={showModal}
-          className="!inline-flex !items-center !text-emerald-600 !bg-emerald-50 !px-3"
+          className="!inline-flex !items-center !text-emerald-600 !bg-emerald-50 hover:!bg-emerald-100 !border-transparent !px-3 !h-auto !rounded-lg"
         >
           <span>{t("button.applyPromo")}</span>
         </Button>
@@ -49,18 +52,27 @@ const PromotionSelector: React.FC<PromotionSelectorProps> = ({ items, className 
           <p className="text-center text-lg">{t("modalPromotion.title")}</p>
         </div>
         <div>
-          {items?.map((promo, _index) => (
-            <CouponCard
-              key={_index}
-              className={_index !== 0 ? "mt-3" : ""}
-              isSelecting={value === promo.code}
-              code={promo.code}
-              price={moneyFormatVND(promo.discountAmount)}
-              validFrom={formatDate(promo.validFrom, "DD/MM/YYYY")}
-              validTo={formatDate(promo.validTo, "DD/MM/YYYY")}
-              onClick={() => handleSelect(promo)}
-            />
-          ))}
+          {promotions?.length ? (
+            promotions.map((promo, _index) => (
+              <CouponCard
+                key={_index}
+                className={_index !== 0 ? "mt-3" : ""}
+                isSelecting={coupon?.code === promo.code}
+                code={promo.code}
+                price={moneyFormatVND(promo.discountAmount)}
+                validFrom={formatDate(promo.validFrom, "DD/MM/YYYY")}
+                validTo={formatDate(promo.validTo, "DD/MM/YYYY")}
+                onClick={() => handleSelect(promo)}
+              />
+            ))
+          ) : (
+            <div className="flex items-center justify-center flex-col py-6">
+              <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-2">
+                <IconTicketPercent />
+              </div>
+              <p className="text-gray-600">Không có mã giảm giá.</p>
+            </div>
+          )}
         </div>
       </Modal>
     </div>

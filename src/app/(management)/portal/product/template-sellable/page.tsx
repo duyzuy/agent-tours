@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Divider, Space, Tag, Form, Radio, TablePaginationConfig } from "antd";
+import { Divider, Form, Radio, TablePaginationConfig } from "antd";
 
 import PageContainer from "@/components/admin/PageContainer";
 import {
@@ -15,7 +15,6 @@ import { useGetTemplateSellableListCoreQuery } from "@/queries/core/templateSell
 import FormItem from "@/components/base/FormItem";
 import { useGetProductTypeListCoreQuery } from "@/queries/core/productType";
 import { FilterValue } from "antd/es/table/interface";
-import { Status } from "@/models/common.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import { useRouter } from "next/navigation";
 

@@ -1,5 +1,5 @@
 import { IMediaFile, IMediaFolder } from "@/models/management/media.interface";
-import { MediaFileQueryParamsFormData, MediaFolderQueryParamsFormData } from "./media.interface";
+import { MediaFileQueryParamsFormData, MediaFolderQueryParamsFormData } from "../media.interface";
 
 export type MediaManagerState = {
   files: IMediaFile[];

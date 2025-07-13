@@ -12,11 +12,12 @@ import ProductGalleries from "@/components/frontend/skeletons/ProductGalleries";
 import { getProductListByTemplateId } from "../../../../actions/searchProduct";
 import { getTemplateContentDetail } from "@/actions/product.action";
 import { ProductListRelatedContainer } from "../_components/ProductListRelatedContainer";
-import TourTabsContent from "../_components/TourTabsContent";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import TourInformations from "../_components/TourInfomations";
+import SocialsShare from "@/components/frontend/SocialsShare";
 
-const DynamicGalleries = dynamic(() => import("../_components/Galleries"), {
+const DynamicGalleries = dynamic(() => import("../_components/GalleriesV2"), {
   loading: () => <ProductGalleries className="w-full mb-6" />,
   ssr: false,
 });
@@ -63,25 +64,30 @@ export default async function PageTourDetail({ params: { locale, slug } }: PageP
 
   return (
     <div className="page-detail">
-      <BreadCrumb
-        items={[{ title: "Tour" }, { title: cmsTemplateContent?.name }]}
-        classname="container mx-auto py-4 lg:px-8 md:px-6 px-4"
-      />
-
-      <div className="container mx-auto pt-3 lg:py-6 lg:px-8 md:px-6 px-3">
-        <ProductHeader name={cmsTemplateContent.name} tourCode={productItem.sellableTemplateCode}>
-          <h1 className="text-xl lg:text-2xl text-primary-default font-bold">{cmsTemplateContent.name}</h1>
-        </ProductHeader>
+      <div className="bg-gray-50">
+        <BreadCrumb
+          items={[{ title: "Tour" }, { title: cmsTemplateContent?.name }]}
+          classname="container mx-auto py-4 lg:px-8 md:px-6 px-4"
+        />
+        <div className="container mx-auto lg:px-8 md:px-6 px-4 py-8">
+          <div className="flex justify-between flex-wrap mb-6 gap-3">
+            <ProductHeader name={cmsTemplateContent.name} tourCode={productItem.sellableTemplateCode}>
+              <h1 className="text-xl lg:text-2xl text-primary-default font-bold">{cmsTemplateContent.name}</h1>
+            </ProductHeader>
+            <SocialsShare hideLabel />
+          </div>
+          <DynamicGalleries images={cmsTemplateContent.images} />
+        </div>
+      </div>
+      <div className="h-12"></div>
+      <div className="container mx-auto lg:px-8 md:px-6 px-4 text-[1rem]">
         <div className="flex flex-wrap items-start">
-          <div className="tour-contents w-full lg:w-8/12 lg:pr-8">
-            <DynamicGalleries images={cmsTemplateContent.images} />
-
-            <SingleTourMetaContent items={cmsTemplateContent.metaData} />
-
-            <TourTabsContent data={cmsTemplateContent} locale={locale} templateId={Number(templateId)} />
+          <div className="tour-contents w-full lg:w-8/12 lg:pr-20">
+            <SingleTourMetaContent items={cmsTemplateContent.metaData} className="mb-8" />
+            {/* <TourTabsContent data={cmsTemplateContent} locale={locale} templateId={Number(templateId)} /> */}
+            <TourInformations data={cmsTemplateContent} locale={locale} templateId={Number(templateId)} />
 
             <div className="space h-8"></div>
-
             <ProductListRelatedContainer cmsIdentityCode={cmsTemplateContent.code} />
             {/* <TourReviews /> */}
           </div>

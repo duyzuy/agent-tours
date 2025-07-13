@@ -1,30 +1,43 @@
 "use client";
-import FormItem from "@/components/base/FormItem";
+import React, { PropsWithChildren } from "react";
 import { Button, Form, Input } from "antd";
-import { useForm, Controller } from "react-hook-form";
+import FormItem from "@/components/base/FormItem";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CustomerForgotPasswordFormData } from "../customerAuth.interface";
 import { customerForgotPasswordSchema } from "../customerAuth.schema";
 import { useTranslations } from "next-intl";
-import { SubmitHandler } from "react-hook-form";
 import classNames from "classnames";
+import { useResetPassword } from "../hooks/useResetPassword";
+import { CustomerForgotPasswordResponse } from "@/models/customerAuth.interface";
 
-export interface ForgotPasswordFormProps {
-  children?: React.ReactNode;
-  onSubmit?: SubmitHandler<CustomerForgotPasswordFormData>;
+export interface ForgotPasswordFormProps extends PropsWithChildren {
+  footer: React.ReactNode;
   className?: string;
-  isLoading?: boolean;
+  onSuccess?: (data: CustomerForgotPasswordResponse) => void;
+  onError?: () => void;
 }
-const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ children, onSubmit, className = "", isLoading }) => {
+const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ className = "", onSuccess, onError, footer }) => {
   const t = useTranslations("String");
   const er = useTranslations("Error");
   const initData = new CustomerForgotPasswordFormData("", "");
 
-  const { handleSubmit, control } = useForm<CustomerForgotPasswordFormData>({
+  const { handleSubmit, control, reset } = useForm<CustomerForgotPasswordFormData>({
     resolver: yupResolver(customerForgotPasswordSchema),
     defaultValues: initData,
   });
 
+  const { mutate: resetPassword, isPending: isLoading } = useResetPassword();
+
+  const onResetPassword: SubmitHandler<CustomerForgotPasswordFormData> = (formData) => {
+    resetPassword(formData, {
+      onSuccess(data) {
+        onSuccess?.(data);
+        reset();
+      },
+      onError,
+    });
+  };
   return (
     <>
       <div
@@ -34,7 +47,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ children, onSub
       >
         <Form layout="vertical">
           <Controller
-            name="username"
+            name="userName"
             control={control}
             render={({ field, fieldState: { error } }) => (
               <FormItem
@@ -64,15 +77,15 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ children, onSub
               size="large"
               type="primary"
               className="w-full"
-              onClick={onSubmit && handleSubmit(onSubmit)}
+              onClick={handleSubmit(onResetPassword)}
               loading={isLoading}
             >
               {t("button.resetPassword")}
             </Button>
           </FormItem>
         </Form>
+        <div className="forgot-password__footer">{footer}</div>
       </div>
-      <>{children}</>
     </>
   );
 };

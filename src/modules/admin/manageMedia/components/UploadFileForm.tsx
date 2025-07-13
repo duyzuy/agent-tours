@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useImperativeHandle, useRef, useState } from "react";
 import { Upload, Button, Form } from "antd";
 import { UploadProps } from "antd/es/upload";
 import { UploadOutlined } from "@ant-design/icons";
@@ -8,11 +8,7 @@ import { isArray, isEmpty } from "lodash";
 import { mediaConfig } from "@/configs";
 import FolderTreeSelector, { FolderTreeSelectorProps } from "./CreateFolderForm/FolderTreeSelector";
 import { MediaUploadFormData } from "../media.interface";
-export interface UploadFileFormProps {
-  uploading?: boolean;
-  onUpload: (data: MediaUploadFormData, cb?: () => void) => void;
-  onResetTab?: () => void;
-}
+
 export type FolderItemTree = {
   title: string;
   slug: string;
@@ -23,8 +19,14 @@ export type FolderItemTree = {
   value: string;
   children: FolderItemTree[];
 };
-
-const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, onResetTab }) => {
+export interface UploadFileFormProps {
+  uploading?: boolean;
+  onUpload: (data: MediaUploadFormData) => void;
+}
+export interface UploadFileFormRef {
+  reset: () => void;
+}
+const UploadFileForm = React.forwardRef<UploadFileFormRef, UploadFileFormProps>(({ uploading, onUpload }, ref) => {
   const message = useMessage();
   const initFormData = new MediaUploadFormData(
     mediaConfig.rootFolder,
@@ -66,10 +68,6 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
       fileList: [...newFiles],
     }));
   };
-  const onResetFiles = () => {
-    onResetTab?.();
-    setFormData(initFormData);
-  };
   const handleSelectFolder: FolderTreeSelectorProps["onSelect"] = (value, option) => {
     const folderItem = isArray(option) ? option[0] : option;
 
@@ -88,10 +86,17 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
       };
     });
   };
+  const handleUpload = () => onUpload(formData);
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setFormData(initFormData);
+    },
+  }));
   return (
     <React.Fragment>
       <div className="upload-area mb-8 flex items-center justify-center">
-        <div className="upload-form w-96">
+        <div className="upload-form" style={{ width: 480 }}>
           <Upload
             multiple={true}
             listType="picture-card"
@@ -114,12 +119,7 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
             <FormItem label="Chọn thư mục lưu trữ" required>
               <FolderTreeSelector value={formData.folderSlug} onSelect={handleSelectFolder} disabled={uploading} />
             </FormItem>
-            <Button
-              type="primary"
-              onClick={() => onUpload(formData, onResetFiles)}
-              disabled={isEmpty(formData.fileList)}
-              loading={uploading}
-            >
+            <Button type="primary" onClick={handleUpload} disabled={isEmpty(formData.fileList)} loading={uploading}>
               {uploading ? "Uploading" : "Upload"}
             </Button>
           </Form>
@@ -127,7 +127,7 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ uploading, onUpload, on
       </div>
     </React.Fragment>
   );
-};
+});
 export default UploadFileForm;
 
 const checkValidFileType = (fileType: string) => {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
 import { Space, Button, Tag } from "antd";
-import { usePortalBookingManagerSelector } from "../modules/store/bookingServiceContext";
+import { usePortalBookingManagerSelector } from "../../booking/context";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";

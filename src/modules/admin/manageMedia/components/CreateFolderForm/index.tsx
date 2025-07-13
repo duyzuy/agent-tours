@@ -78,7 +78,6 @@ const CreateFolderForm: React.FC<CreateFolderFormProps> = ({ onCancel, onSubmit,
       <FormItem label="Thư mục cha" required>
         <FolderTreeSelector value={formData.parentSlug} onSelect={(value, item) => handleSelectFolder(value, item)} />
       </FormItem>
-
       <Space>
         <Button
           onClick={() => handlerSubmit(formData, onSubmitForm)}

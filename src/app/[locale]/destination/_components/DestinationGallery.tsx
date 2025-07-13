@@ -5,7 +5,9 @@ import { IThumbnail } from "@/models/thumbnail.interface";
 import classNames from "classnames";
 import Image from "next/image";
 import React, { useMemo, useRef, useState } from "react";
-import PopupGalleries from "./PopupGalleries";
+import PopupGalleries from "./CarouselGallery";
+import CustomModal from "@/components/base/CustomModal";
+import CarouselGallery from "./CarouselGallery";
 
 interface DestionationGalleryProps {
   images: IThumbnail[] | null;
@@ -15,7 +17,7 @@ const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => 
   const windowRef = useRef(0);
 
   const thirdImageFirst = useMemo(() => {
-    return images?.slice(0, 3);
+    return images?.slice(0, 5);
   }, [images]);
 
   const handleClickOpen = () => {
@@ -42,15 +44,16 @@ const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => 
   }
   return (
     <>
-      <div className="gallery grid grid-rows-3 grid-cols-3 grid-flow-dense gap-2 rounded-lg overflow-hidden mb-6">
+      <div className="gallery grid grid-rows-3 grid-cols-8 grid-flow-dense gap-1 rounded-xl overflow-hidden mb-6">
         {thirdImageFirst?.map((item, _index) => (
           <div
-            className={classNames("relative w-full h-full", {
-              "col-span-2 row-span-3": _index === 0,
-              "col-span-1 row-span-2": _index === 1,
-              "col-span-1": _index !== 0 && _index !== 1,
-            })}
             key={_index}
+            className={classNames("relative w-full h-full", {
+              "col-span-5 row-span-3": _index === 0,
+              "col-span-3 row-span-2": _index === 1,
+              "col-span-3 row-span-1": _index === 2,
+              "col-span-4": _index !== 0 && _index !== 1 && _index !== 2,
+            })}
           >
             <div className="thumb h-16 lg:h-32">
               <Image src={`${mediaConfig.rootApiPath}/${item.original}`} fill className=" object-cover" alt="" />
@@ -72,7 +75,9 @@ const DestionationGallery: React.FC<DestionationGalleryProps> = ({ images }) => 
           </div>
         ))}
       </div>
-      {open ? <PopupGalleries images={images} onClose={handleClose} /> : null}
+      <CustomModal open={open} onClose={handleClose}>
+        <CarouselGallery images={images} />
+      </CustomModal>
     </>
   );
 };

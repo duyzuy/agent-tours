@@ -50,7 +50,7 @@ async function applyCustomerAuthMiddleware(
     return NextResponse.redirect(options.redirectUrl);
   }
 
-  return response;
+  return intlMiddleware(request);
 }
 
 export default async function middleware(request: NextRequest) {

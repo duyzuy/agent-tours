@@ -31,39 +31,3 @@ export const searchPortalBookingSchema: ObjectSchema<SearchProductExtraFormData 
     EInventoryType.AIR,
   ]),
 });
-
-// export const searchPortalBookingSchemaa = <T extends EProductType>(
-//   type: T,
-// ): ObjectSchema<
-//   T extends EProductType.EXTRA
-//     ? SearchProductExtraFormData
-//     : T extends EProductType.TOUR
-//     ? SearchProductTourFormData
-//     : never
-// > => {
-//   return type === EProductType.EXTRA || type === EProductType.TOUR
-//     ? object({
-//         byMonth: string()
-//           .required("Chọn thời gian đi")
-//           .test("is-valid-date", "Ngày đi không hợp lệ", isValidDateFormat),
-//         byDest: array<ILocalSearchDestination>(
-//           object({
-//             regionKey: string(),
-//             countryKey: string(),
-//             stateProvinceKey: string(),
-//             subRegionKey: string(),
-//             keyType: string(),
-//           }),
-//         )
-//           .required("Chọn điểm đến")
-//           .default([]),
-//         byCode: string().default(""),
-//         byProductType: array(
-//           mixed<EProductType>().oneOf(Object.values(EProductType)).required("Không bỏ trống type."),
-//         ).default([EProductType.EXTRA]),
-//         byInventoryType: array(mixed<EInventoryType>().oneOf(Object.values(EInventoryType)).required()).default([
-//           EInventoryType.AIR,
-//         ]),
-//       })
-//     : undefined;
-// };

@@ -1,14 +1,16 @@
 import { IProductTour } from "@/models/management/booking/product.interface";
 import { Button, Table } from "antd";
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { columns } from "./columns";
+import { usePortalBookingManager } from "../../context";
 
 interface ProductListProps {
-  items?: IProductTour[];
   onSelect?: (data: IProductTour) => void;
   loading?: boolean;
 }
-const ProductList: React.FC<ProductListProps> = ({ items, onSelect, loading }) => {
+const ProductList: React.FC<ProductListProps> = ({ onSelect, loading }) => {
+  const [bookingInformation] = usePortalBookingManager();
+  const productList = useMemo(() => bookingInformation?.productList, [bookingInformation.productList]);
   const isValidPriceConfig = (priceConfigs: IProductTour["configs"]) => {
     let isValid = true;
 
@@ -24,7 +26,7 @@ const ProductList: React.FC<ProductListProps> = ({ items, onSelect, loading }) =
   return (
     <Table
       size="large"
-      dataSource={items}
+      dataSource={productList}
       rowKey={"sellableId"}
       loading={loading}
       columns={[

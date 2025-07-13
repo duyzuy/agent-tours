@@ -11,6 +11,7 @@ interface SecondaryNavItemProps {
   isMega: boolean;
   slug: string;
   className?: string;
+  dropdown?: React.ReactNode;
 }
 
 const getMenuIcon = (name: string) => {
@@ -40,14 +41,14 @@ export default function SecondaryNavItem({
         <span className="nav-link-text text-white font-[500]">{name}</span>
       </Link>
       {isMega ? (
-        <SecondaryNavItem.MegaDropdown
+        <DropdownMegaItem
           name={name}
           descriptions={descriptions}
           items={items}
           className="w-full left-0 right-0 pt-4 absolute invisible group-hover/item:visible"
         />
       ) : (
-        <SecondaryNavItem.Dropdown
+        <DropdownItem
           name={name}
           items={items}
           className="w-[260px] pt-4 absolute invisible group-hover/item:visible"
@@ -57,12 +58,12 @@ export default function SecondaryNavItem({
   );
 }
 
-interface MenuDropdownItemProps {
+interface DropdownItem {
   name?: string;
   items?: SecondaryNavItemProps["items"];
   className?: string;
 }
-function Dropdown({ name, items, className = "" }: MenuDropdownItemProps) {
+const DropdownItem: React.FC<DropdownItem> = ({ name, items, className = "" }) => {
   return items && items.length ? (
     <div
       className={classNames("dropdown", {
@@ -80,14 +81,14 @@ function Dropdown({ name, items, className = "" }: MenuDropdownItemProps) {
       </div>
     </div>
   ) : null;
-}
-interface MegaMenuDropdownProps {
+};
+interface DropdownMegaItemProps {
   name?: string;
   descriptions?: string;
   items?: SecondaryNavItemProps["items"];
   className?: string;
 }
-function MegaMenuDropdown({ name, items, className = "", descriptions }: MegaMenuDropdownProps) {
+const DropdownMegaItem: React.FC<DropdownMegaItemProps> = ({ name, items, className = "", descriptions }) => {
   return items && items.length ? (
     <div
       className={classNames("mega-dropdown", {
@@ -121,6 +122,4 @@ function MegaMenuDropdown({ name, items, className = "", descriptions }: MegaMen
       </div>
     </div>
   ) : null;
-}
-SecondaryNavItem.Dropdown = Dropdown;
-SecondaryNavItem.MegaDropdown = MegaMenuDropdown;
+};

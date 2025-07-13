@@ -17,12 +17,9 @@ import AuthModal from "@/modules/fe/auth/components/AuthModal";
 import LocalizationContainer from "@/modules/fe/localization/LocalizationContainer";
 import Header from "./_components/commons/Header";
 import Footer from "./_components/commons/Footer";
+import HeaderV2 from "./_components/commons/HeaderV2";
 
 const timeZone = "Asia/Bangkok";
-interface Props {
-  children: React.ReactNode;
-  params: { locale: LangCode };
-}
 
 export async function generateStaticParams() {
   return locales.map((locale) => ({ locale: locale.key }));
@@ -33,8 +30,13 @@ export async function generateMetadata({ params: { locale } }: Props) {
     title: `Agent Hub | ${SITE_NAME}`,
   };
 }
-
-export default async function RootClientLayout({ children, params: { locale } }: Props) {
+interface Props {
+  children: React.ReactNode;
+  params: Record<string, any> & { locale: LangCode };
+  customer_auth: React.ReactNode;
+}
+export default async function RootClientLayout({ children, params, customer_auth }: Props) {
+  const { locale } = params;
   unstable_setRequestLocale(locale);
 
   let messages: AbstractIntlMessages | undefined;
@@ -64,8 +66,10 @@ export default async function RootClientLayout({ children, params: { locale } }:
             <RQClientProvider>
               <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
                 <NextSessionProvider session={session}>
-                  <Header />
+                  {/* <Header /> */}
+                  <HeaderV2 params={params} />
                   {children}
+                  {customer_auth}
                   <Footer />
                   <AuthModal />
                   <LocalizationContainer />

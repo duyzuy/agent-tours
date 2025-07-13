@@ -1,45 +1,40 @@
-import React, { useMemo } from "react";
-import { Breadcrumb } from "antd";
+import React, { memo, PropsWithChildren, useMemo } from "react";
+import { Breadcrumb, Button } from "antd";
 import TitleRow from "../TitleRow";
 import classNames from "classnames";
 import Link from "next/link";
 import { LINKS } from "@/constants/links.constant";
-interface Props {
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
+interface PageContainerProps extends PropsWithChildren {
   name: string;
   modelName?: string;
-  render?: React.ReactNode;
-  onClick?: () => void;
-  onEdit?: () => void;
-  onCanel?: () => void;
-  onBack?: () => void;
   hideAddButton?: boolean;
   hideBreadcrumb?: boolean;
   breadCrumItems?: { title?: string; href?: string }[];
   children?: React.ReactNode;
   className?: string;
+  onClick?: () => void;
+  onEdit?: () => void;
+  onBack?: () => void;
 }
-const PageContainer: React.FC<Props> = ({
+const PageContainer: React.FC<PageContainerProps> = ({
   name,
-  render,
-  onClick,
-  onEdit,
-  onCanel,
-  onBack,
   children,
   modelName = "",
   hideAddButton = false,
   hideBreadcrumb = false,
   className = "",
   breadCrumItems = [],
+  onClick,
+  onEdit,
+  onBack,
 }) => {
   const items = useMemo(() => {
     return breadCrumItems.reduce<{ title?: React.JSX.Element | string }[]>(
       (acc, item) => {
-        if (item.href) {
-          acc = [...acc, { title: <Link href={item.href}>{item.title}</Link> }];
-        } else {
-          return [...acc, { title: item.title }];
-        }
+        acc = item.href
+          ? [...acc, { title: <Link href={item.href}>{item.title}</Link> }]
+          : [...acc, { title: item.title }];
         return acc;
       },
       [{ title: <Link href={LINKS.DashBoard}>Dashboard</Link> }],
@@ -56,12 +51,22 @@ const PageContainer: React.FC<Props> = ({
         {hideBreadcrumb ? null : <Breadcrumb items={items} className="!mb-6" />}
         <TitleRow
           title={name}
-          onClickAdd={onClick}
-          onCanel={onCanel}
+          between
           onBack={onBack}
-          onEdit={onEdit}
-          modelName={modelName}
-          hideAddButton={hideAddButton}
+          actions={
+            <div className="mr-auto">
+              {!hideAddButton && (
+                <Button type="primary" icon={<PlusOutlined />} onClick={onClick} className="!shadow-none !border-none">
+                  {`Thêm ${modelName}`}
+                </Button>
+              )}
+              {onEdit && (
+                <Button type="primary" size="small" ghost icon={<EditOutlined />} onClick={onEdit}>
+                  {`Sửa ${modelName}`}
+                </Button>
+              )}
+            </div>
+          }
         />
       </div>
       <div className="page-body" style={{ height: "calc(100% - 62px)" }}>
@@ -70,4 +75,4 @@ const PageContainer: React.FC<Props> = ({
     </div>
   );
 };
-export default PageContainer;
+export default memo(PageContainer);

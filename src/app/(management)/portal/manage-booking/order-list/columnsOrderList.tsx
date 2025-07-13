@@ -8,7 +8,7 @@ import { formatDate } from "@/utils/date";
 import Link from "next/link";
 import { ArrowRightOutlined, RightOutlined } from "@ant-design/icons";
 
-export const columnsOrderList: ColumnsType<IOrderListRs["result"][0]> = [
+export const columnsOrderList: ColumnsType<IOrderListRs["result"][number]> = [
   {
     title: "#ID",
     dataIndex: "recId",

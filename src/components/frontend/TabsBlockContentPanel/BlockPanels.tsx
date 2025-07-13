@@ -1,7 +1,6 @@
 "use client";
 import CustomCollapse from "@/components/frontend/CustomCollapse";
 import { CollapseProps } from "antd";
-import { isEmpty } from "lodash";
 import AreaContentHtml from "../AreaContentHtml";
 
 export interface BlockPanelsProps {
@@ -22,12 +21,8 @@ const BlockPanels: React.FC<BlockPanelsProps> = ({ items = [], descriptions }) =
   );
   return (
     <div className="panel-wrappers">
-      <AreaContentHtml className="descriptions py-4" content={descriptions} />
-      {items ? (
-        <div className="block-content">
-          <CustomCollapse defaultActiveKey={["1", "2"]} ghost bordered={false} items={panelItems} />
-        </div>
-      ) : null}
+      {descriptions ? <AreaContentHtml className="descriptions" content={descriptions} /> : null}
+      {items.length ? <CustomCollapse defaultActiveKey={["1", "2"]} ghost bordered={false} items={panelItems} /> : null}
     </div>
   );
 };

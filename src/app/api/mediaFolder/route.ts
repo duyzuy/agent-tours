@@ -43,7 +43,9 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
-  if (isEmpty(payload.folderPath) || !payload.folderPath.startsWith(`uploads`)) {
+  const folderPath = payload.folderPath.startsWith(`/`) ? payload.folderPath.slice(1) : payload.folderPath;
+
+  if (isEmpty(payload.folderPath) || !folderPath.startsWith(`uploads`)) {
     return NextResponse.json(
       {
         message: `Đường dẫn thư mục không hợp lệ.`,
@@ -53,9 +55,9 @@ export async function POST(request: NextRequest) {
     );
   }
   const folderSlugName = stringToSlug(payload.folderSlug);
-  const folderPath = path.join(`${process.cwd()}/public/${payload.folderPath}`, folderSlugName);
+  const folderRelativePath = path.join(`${process.cwd()}/public/${folderPath}`, folderSlugName);
 
-  if (existsSync(folderPath)) {
+  if (existsSync(folderRelativePath)) {
     return NextResponse.json(
       {
         message: `Thư mục "${payload.folderName}" đã tồn tại.`,
@@ -66,12 +68,6 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    /**
-     *
-     * Save to custom Database
-     *
-     */
-
     const response = await fetch(`${process.env.API_ROOT}/local/Cms_MediaFolder_Addnew`, {
       method: "POST",
       headers: {
@@ -89,7 +85,7 @@ export async function POST(request: NextRequest) {
 
     const data = (await response.json()) as IMediaFolderRs;
 
-    await mkdir(folderPath);
+    await mkdir(folderRelativePath);
 
     return NextResponse.json(
       {

@@ -6,9 +6,9 @@ import { authOptions } from "@/auth";
 import { IconAccount } from "@/assets/icons";
 import { Link } from "@/utils/navigation";
 import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
-import { UserCardDropdownSkeleton } from "./UserCardDropdown";
+import UserCardDropdown, { UserCardDropdownSkeleton } from "./UserCardDropdown";
 
-const UserCardDropdown = dynamic(() => import("./UserCardDropdown"), {
+const DynamicUserCardDropdown = dynamic(() => import("./UserCardDropdown"), {
   ssr: false,
   loading: () => <UserCardDropdownSkeleton />,
 });
@@ -25,12 +25,25 @@ export default async function UserButton({ isMobile }: UserButtonProps) {
 }
 
 async function UserButtonAuthenticated({ isMobile }: { isMobile: boolean }) {
+  const t = await getTranslations("String");
+
+  const MENU_ITEMS = [
+    { id: 1, label: t("myAccount"), link: "/customer" },
+    { id: 2, label: t("order"), link: "/customer/order" },
+  ];
+
   return isMobile ? (
     <Link href={CLIENT_LINKS.Customer} className="w-8 h-8 inline-flex items-center justify-center">
       <IconAccount className="w-5 h-5 !text-gray-800" />
     </Link>
   ) : (
-    <UserCardDropdown />
+    <DynamicUserCardDropdown>
+      {MENU_ITEMS.map((item) => (
+        <Link key={item.id} href={item.link} className="block py-2 px-3 hover:bg-slate-100 rounded-md !text-gray-800">
+          {item.label}
+        </Link>
+      ))}
+    </DynamicUserCardDropdown>
   );
 }
 

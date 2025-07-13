@@ -19,7 +19,7 @@ const ProductPassengersQuantity: ProductSummaryCardCompound["PassengerSelector"]
       })}
     >
       <div className="label mb-3 border-b pb-3">
-        <span className="font-semibold">{t("productSummary.passengerQuantity.title")}</span>
+        <span className="font-[500] text-gray-600">{t("productSummary.passengerQuantity.title")}</span>
       </div>
       <div
         className={classNames("flex gap-y-3", {
@@ -70,7 +70,7 @@ const ProductPassengersQuantity: ProductSummaryCardCompound["PassengerSelector"]
           })}
         >
           <div className="label">
-            <span>{t("infant")}</span>
+            <p>{t("infant")}</p>
             <p className="text-xs text-gray-600">{`Dưới 2 tuổi`}</p>
           </div>
           <Quantity

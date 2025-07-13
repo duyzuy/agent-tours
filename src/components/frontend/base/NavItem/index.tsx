@@ -1,50 +1,52 @@
-import React, { memo, SVGProps } from "react";
+import React, { memo } from "react";
 import classNames from "classnames";
 import { IconChevronDown } from "@/assets/icons";
-
 import { isEmpty } from "lodash";
 import NavLink from "./NavLink";
-import { getIcon, ICON_LIST } from "@/constants/icons.constant";
-import { MenuObjectType, MenuPositionType } from "@/models/management/cms/menu.interface";
+import { getIcon } from "@/constants/icons.constant";
 import { MenuItemType } from "@/utils/menu";
 
 export type NavItemProps = {
   className?: string;
-  navType?: MenuPositionType;
   name?: string;
   icon?: string;
   slug?: string;
-  objectType?: MenuObjectType;
   items: MenuItemType[];
+  dropdownAlign?: "left" | "right";
 };
 
-const NavItem = ({ className = "", name, slug, icon, items, objectType, navType }: Partial<NavItemProps>) => {
-  const IconComp = ICON_LIST.find((item) => item.key === icon);
-
+const NavItem = ({ className = "", name, slug, icon, items = [], dropdownAlign = "left" }: Partial<NavItemProps>) => {
+  const IconComp = getIcon(icon);
   return (
     <div
       className={classNames("relative group/item", {
         [className]: className,
       })}
     >
-      <div
-        className="flex items-center gap-x-1 font-[500] relative leading-6 cursor-pointer px-3 py-2"
-        aria-expanded="false"
-      >
+      <div className="flex items-center gap-x-1 relative leading-6 cursor-pointer px-3 py-2" aria-expanded="false">
         {slug ? (
-          <NavLink prefix={IconComp?.icon ? <IconComp.icon /> : undefined} href={slug} title={name} />
+          <NavLink
+            prefix={IconComp?.icon ? <IconComp.icon /> : undefined}
+            href={slug}
+            title={name}
+            className="font-[500]"
+          />
         ) : (
-          <span>{name}</span>
+          <span className="font-[500]">{name}</span>
         )}
         {items?.length ? (
-          <span className="group-hover/item:rotate-180">
+          <span className="transition-all group-hover/item:rotate-180">
             <IconChevronDown width={16} height={16} />
           </span>
         ) : null}
       </div>
-      {items?.length ? (
-        <NavItem.Dropdown className="invisible group-hover/item:visible right-0" items={items} navType={navType} />
-      ) : null}
+      <NavItem.Dropdown
+        className={classNames("invisible group-hover/item:visible", {
+          "right-0": dropdownAlign === "right",
+          "left-0": dropdownAlign === "left",
+        })}
+        items={items}
+      />
     </div>
   );
 };
@@ -53,22 +55,19 @@ export default memo(NavItem);
 interface NavItemDropdown {
   className?: string;
   items: MenuItemType[];
-  navType?: NavItemProps["navType"];
 }
 
 NavItem.Dropdown = function NavItemDropdown({ className = "", items }: NavItemDropdown) {
+  if (!items.length) return null;
   return (
     <div
-      className={classNames("rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 w-64 absolute z-100", {
+      className={classNames("rounded-xl bg-white border backdrop-blur-md w-56 absolute z-100", {
         [className]: className,
       })}
     >
       <div className="p-3">
         {items.map((item, _index) => (
-          <div
-            key={_index}
-            className="group relative flex items-center gap-x-6 rounded-lg p-3 text-sm leading-6 hover:bg-gray-50"
-          >
+          <div key={_index} className="group relative flex gap-x-3 rounded-lg p-3 text-sm leading-6 hover:bg-slate-100">
             <IconComp iconName={item.icon} />
             <div className="flex-auto">
               <NavLink
