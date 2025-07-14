@@ -29,9 +29,9 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FLEX_MAIN_SERVER }}
-          username: ${{ secrets.FLEX_MAIN_USERNAME }}
-          password: ${{ secrets.FLEX_MAIN_PASSWORD }}
+          server: ${{ secrets.SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           exclude: |
             **/.git*
