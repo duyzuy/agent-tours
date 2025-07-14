@@ -15,7 +15,6 @@ import { NextSessionProvider } from "@/lib/NextSessionProvider";
 import { AppProvider } from "@/store/appContext";
 import AuthModal from "@/modules/fe/auth/components/AuthModal";
 import LocalizationContainer from "@/modules/fe/localization/LocalizationContainer";
-import Header from "./_components/commons/Header";
 import Footer from "./_components/commons/Footer";
 import HeaderV2 from "./_components/commons/HeaderV2";
 
@@ -33,9 +32,8 @@ export async function generateMetadata({ params: { locale } }: Props) {
 interface Props {
   children: React.ReactNode;
   params: Record<string, any> & { locale: LangCode };
-  customer_auth: React.ReactNode;
 }
-export default async function RootClientLayout({ children, params, customer_auth }: Props) {
+export default async function RootClientLayout({ children, params }: Props) {
   const { locale } = params;
   unstable_setRequestLocale(locale);
 
@@ -69,7 +67,6 @@ export default async function RootClientLayout({ children, params, customer_auth
                   {/* <Header /> */}
                   <HeaderV2 params={params} />
                   {children}
-                  {customer_auth}
                   <Footer />
                   <AuthModal />
                   <LocalizationContainer />

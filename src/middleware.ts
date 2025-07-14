@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { CLIENT_LINKS } from "./constants/client/clientRouter.constant";
-import { serverRequest } from "./services/serverApi";
-import { CustomerProfileResponse } from "./models/fe/profile.interface";
-import { BaseResponse } from "./models/common.interface";
-import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { decode, JWT } from "next-auth/jwt";
 
 const intlMiddleware = createMiddleware({
   locales: ["vi", "en"],
@@ -21,30 +18,12 @@ const intlMiddleware = createMiddleware({
  */
 async function applyCustomerAuthMiddleware(
   request: NextRequest,
-  options: { authRoutes: string[]; redirectUrl: URL; coockie: RequestCookie },
+  options: { authRoutes: string[]; redirectUrl: URL; session: JWT },
 ) {
-  const response = NextResponse.next();
   const { pathname } = request.nextUrl;
-
-  const [_, locale, pathStr] = pathname.split("/");
+  const [_, __, pathStr] = pathname.split("/");
 
   const isAuthRoute = options.authRoutes.includes(pathStr);
-
-  // const userProfile = await serverRequest.post<CustomerProfileResponse, BaseResponse<null>>("localfront/getProfile", {
-  //   next: { tags: ["customerProfile"] },
-  //   headers: {
-  //     Authorization: `Bearer ${encodeURIComponent(options.coockie.value)}`,
-  //   },
-  //   params: {
-  //     requestObject: {},
-  //   },
-  // });
-
-  // if (!userProfile) {
-  //   // response.cookies.delete("next-auth.session-token");
-  //   // response.cookies.delete("__Secure-next-auth.session-token");
-  //   return response;
-  // }
 
   if (isAuthRoute) {
     return NextResponse.redirect(options.redirectUrl);
@@ -64,8 +43,19 @@ export default async function middleware(request: NextRequest) {
   request.headers.set("x-pathname", pathname);
 
   const [_, locale, pathStr] = pathname.split("/");
+  let COOCKIE_NAME = "next-auth.session-token";
 
-  const sessionToken = cookies.get("next-auth.session-token");
+  if (process.env.NODE_ENV === "production") {
+    COOCKIE_NAME = "__Secure-" + COOCKIE_NAME;
+  }
+  const token = cookies.get(COOCKIE_NAME)?.value;
+  const secret = process.env.NEXTAUTH_SECRET;
+
+  let session = null;
+
+  if (token && secret) {
+    session = await decode({ token, secret });
+  }
 
   /**
    * Ignore if is Admin portal
@@ -76,11 +66,14 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (sessionToken) {
+  if (session) {
+    const newUrl = request.nextUrl.clone();
+    newUrl.pathname = `/${locale}/customer`;
+
     return await applyCustomerAuthMiddleware(request, {
-      coockie: sessionToken,
+      session: session,
       authRoutes: [CLIENT_LINKS.CustomerLogin, CLIENT_LINKS.CustomerRegister],
-      redirectUrl: new URL(`/${locale}/customer`, request.url),
+      redirectUrl: newUrl,
     });
   }
 

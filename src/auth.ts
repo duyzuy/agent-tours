@@ -1,9 +1,34 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { CustomerLoginResponse, ICustomerAuthInformation } from "@/models/customerAuth.interface";
+import { ICustomerAuthInformation } from "@/models/customerAuth.interface";
 import { BaseResponse, Status } from "@/models/common.interface";
 import { parseJWT } from "@/utils/jwt";
+import { authAPIs } from "./services/fe/auth";
 
+const customerLogin = async ({
+  username,
+  password,
+}: {
+  username: string | undefined;
+  password: string | undefined;
+}) => {
+  try {
+    const response = await fetch(`${process.env.API_ROOT}/localfront/Login`, {
+      body: JSON.stringify({
+        requestObject: { username, password },
+      }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = (await response.json()) as BaseResponse<string>;
+    return data;
+  } catch (e) {
+    console.error("Login API failed", e);
+    throw new Error("NETWORK_ERROR");
+  }
+};
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -23,16 +48,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         const { username, password } = credentials || {};
 
-        const response = await fetch(`${process.env.API_ROOT}/localfront/Login`, {
-          body: JSON.stringify({
-            requestObject: { username, password },
-          }),
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = (await response.json()) as BaseResponse<string>;
+        const data = await customerLogin({ username, password });
 
         if (data.status === Status.OK) {
           const dataParse = parseJWT<{
@@ -43,7 +59,7 @@ export const authOptions: NextAuthOptions = {
           }>(data.result);
 
           const userInfo = JSON.parse(dataParse.result) as ICustomerAuthInformation;
-          console.log({ data });
+
           return {
             id: userInfo.recId.toString(),
             email: userInfo.email,

@@ -2,6 +2,8 @@ import { getUserCustomerProfile } from "./_actions/customer";
 import ProfileInformationBox from "./_components/ProfileInformationBox";
 import { getTranslations } from "next-intl/server";
 import { signOut } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 export default async function CustomerPage() {
   const userProfile = await getUserCustomerProfile();
 

@@ -31,10 +31,10 @@ export const useSignIn = (options?: { redirect?: boolean; callbackUrl?: string; 
     )
       .then((response) => {
         if (response?.status === 200) {
-          if (redirect && redirect === true) {
+          if (redirect) {
             router.push(callbackUrl ? `/${callbackUrl}` : `/`);
           }
-          router.refresh();
+
           message.success("Đăng nhập thành công.");
           onSuccess?.();
         } else {

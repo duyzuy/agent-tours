@@ -11,6 +11,7 @@ import { customerLoginSchema } from "../customerAuth.schema";
 import { PASSWORD_MIN_LENGTH } from "../customerAuth.schema";
 import { useSignIn } from "../hooks/useSignIn";
 import { PropsWithChildren } from "react";
+import { useTransition } from "react";
 
 export interface LoginFormProps extends PropsWithChildren {
   onSubmitSuccess?: () => void;
@@ -35,6 +36,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ footer, onForgotPassword, onSubmi
   const t = useTranslations("String");
   const er = useTranslations("Error");
 
+  const [isStartTransition, startTransition] = useTransition();
   const {
     handleSubmit,
     formState: { errors },
@@ -45,9 +47,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ footer, onForgotPassword, onSubmi
 
   const { signIn, error, loading } = useSignIn({
     redirect: false,
-    onSuccess: () => {
-      onSubmitSuccess?.();
-    },
+    onSuccess: () =>
+      startTransition(() => {
+        onSubmitSuccess?.();
+      }),
   });
 
   const FIELDS_INPUT: TFieldInputs[] = [
@@ -109,7 +112,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ footer, onForgotPassword, onSubmi
         </span>
       </div>
       <FormItem>
-        <Button type="primary" block size="large" onClick={handleSubmit(signIn)} loading={loading}>
+        <Button type="primary" block size="large" onClick={handleSubmit(signIn)} loading={loading || isStartTransition}>
           {t("button.login")}
         </Button>
       </FormItem>

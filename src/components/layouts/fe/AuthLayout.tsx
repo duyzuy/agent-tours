@@ -1,7 +1,12 @@
 "use client";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import React from "react";
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
+import { useRouter } from "@/utils/navigation";
+import { CLIENT_LINKS } from "@/constants/client/clientRouter.constant";
 
 interface AuthLayoutProps {
   title?: string;
@@ -16,7 +21,15 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   bgUrl = "/assets/images/bg-auth.png",
 }) => {
   const t = useTranslations("String");
+  const router = useRouter();
+  const { status } = useSession();
 
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push(CLIENT_LINKS.Customer);
+      router.refresh();
+    }
+  }, [status]);
   return (
     <div className="login-page py-8 lg:py-16 bg-slate-50">
       <div className="container max-w-6xl mx-auto lg:px-8 md:px-6 px-4">

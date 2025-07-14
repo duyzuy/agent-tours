@@ -7,9 +7,10 @@ import {
   ICustomerLoginPayload,
   ICustomerSetPasswordPayload,
 } from "@/models/customerAuth.interface";
+import { BaseResponse } from "@/models/common.interface";
 export const authAPIs = {
   login: async (payload?: ICustomerLoginPayload) => {
-    return await client.post<any>("localfront/Login", {
+    return await client.post<BaseResponse<string>>("localfront/Login", {
       body: {
         requestObject: payload,
       },

@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { Modal } from "antd";
 import { useTranslations } from "next-intl";
 import { useModalSelector } from "@/store/modal/hooks";
@@ -25,6 +25,10 @@ const AuthModal: React.FC<AuthModalProps> = ({}) => {
     setModalAction("signIn");
   };
 
+  const onSignInSuccess = useCallback(() => {
+    router.refresh();
+    hideAuthModal();
+  }, []);
   useEffect(() => {
     if (authModal.open) {
       hideAuthModal();
@@ -48,7 +52,7 @@ const AuthModal: React.FC<AuthModalProps> = ({}) => {
           </div>
           {modalAction === "signIn" ? (
             <LoginForm
-              onSubmitSuccess={hideAuthModal}
+              onSubmitSuccess={onSignInSuccess}
               onForgotPassword={() => router.push(`/${CLIENT_LINKS.CustomerForgotPassword}`)}
               footer={
                 <div className="text-center text-xs">
