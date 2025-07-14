@@ -1,16 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { set } from "lodash";
 
 import { Form, Input, Row, Col, Button, DatePickerProps, Card, Divider } from "antd";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { SearchOutlined } from "@ant-design/icons";
-import { SearchProductExtraFormData, SearchProductTourFormData } from "../../searchProduct.interface";
+import { SearchProductFormData } from "../../searchProduct.interface";
 import { EProductType } from "@/models/management/core/productType.interface";
 import FormItem from "@/components/base/FormItem";
 import { MONTH_FORMAT } from "@/constants/common";
 import CustomDatePicker from "@/components/admin/CustomDatePicker";
-import ProductTypeSelector, { ProductTypeSelectorProps } from "./ProductTypeSelector";
+import ProductTypeSelector from "./ProductTypeSelector";
 import DestinationSelector, { DestinationSelectorProps } from "./DestinationSelector";
 import InventoryTypeListSelector, { InventoryTypeListSelectorProps } from "./InventoryTypeListSelector";
 import { searchPortalBookingSchema } from "../../searchProduct.schema";
@@ -20,37 +19,26 @@ import dayjs from "dayjs";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-type BaseBoxBookingProps = {
+export type BoxSearchProductProps = {
   departLocation?: string;
   departDate?: string;
   className?: string;
   loading?: boolean;
+  type: EProductType;
+  onSubmit: (formData: SearchProductFormData) => void;
 };
-export type BoxSearchProductProps = BaseBoxBookingProps &
-  (
-    | {
-        onSubmit?: (formData: SearchProductExtraFormData) => void;
-        type: EProductType.EXTRA;
-      }
-    | {
-        onSubmit?: (formData: SearchProductTourFormData) => void;
-        type: EProductType.TOUR;
-      }
-  );
 
 const BoxSearchProduct: React.FC<BoxSearchProductProps> = ({ className = "", loading, onSubmit, type }) => {
   const searchParams = useSearchParams();
 
   const byMonth = searchParams.get("byMonth") ?? dayjs().locale("en").format(MONTH_FORMAT);
-  const initBookingSearchForm =
-    type === EProductType.TOUR
-      ? new SearchProductTourFormData(byMonth, "", [], [])
-      : new SearchProductExtraFormData(byMonth, "", [], []);
+  const initBookingSearchForm = new SearchProductFormData(byMonth, "", [], type, []);
 
-  const { handleSubmit, setValue, getValues, control } = useForm<
-    SearchProductTourFormData | SearchProductExtraFormData
-  >({
-    defaultValues: initBookingSearchForm,
+  const { handleSubmit, setValue, getValues, control } = useForm<SearchProductFormData & { searchType: EProductType }>({
+    defaultValues: {
+      ...initBookingSearchForm,
+      searchType: type,
+    },
     resolver: yupResolver(searchPortalBookingSchema),
   });
 
@@ -70,19 +58,9 @@ const BoxSearchProduct: React.FC<BoxSearchProductProps> = ({ className = "", loa
     setValue("byDest", [destination]);
   };
 
-  const onChangeProductType: ProductTypeSelectorProps["onChange"] = (type) => {
-    if (type === EProductType.TOUR) {
-      setValue("byProductType", [type]);
-    }
-  };
-
-  const onSubmitForm: SubmitHandler<SearchProductTourFormData | SearchProductExtraFormData> = (data) => {
-    if (type === EProductType.TOUR) {
-      onSubmit?.(data as SearchProductTourFormData);
-    }
-    if (type === EProductType.EXTRA) {
-      onSubmit?.(data as SearchProductExtraFormData);
-    }
+  const onSubmitForm: SubmitHandler<SearchProductFormData> = (data) => {
+    console.log(data);
+    onSubmit?.(data);
   };
 
   return (
@@ -91,9 +69,7 @@ const BoxSearchProduct: React.FC<BoxSearchProductProps> = ({ className = "", loa
         <Controller
           name="byProductType"
           control={control}
-          render={({ field, fieldState }) => (
-            <ProductTypeSelector value={field.value?.[0]} onChange={onChangeProductType} disabled={true} />
-          )}
+          render={({ field, fieldState }) => <ProductTypeSelector value={field.value} disabled={true} />}
         />
 
         <Divider style={{ margin: "8px 0" }} />

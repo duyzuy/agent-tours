@@ -2,10 +2,17 @@ import dayjs from "dayjs";
 import { PortalBookingServiceFormData } from "./bookingService.type";
 import { MONTH_FORMAT } from "@/constants/common";
 import { ESellChannel } from "@/constants/channel.constant";
-import { SearchProductExtraFormData } from "@/modules/admin/booking/searchProduct.interface";
+import { SearchProductFormData } from "@/modules/admin/booking/searchProduct.interface";
 import { PortalBookingServiceActions } from "./bookingServiceAction";
+import { EProductType } from "@/models/management/core/productType.interface";
 
-const initSearchFormData = new SearchProductExtraFormData(dayjs().locale("en").format(MONTH_FORMAT), undefined, [], []);
+const initSearchFormData = new SearchProductFormData(
+  dayjs().locale("en").format(MONTH_FORMAT),
+  undefined,
+  [],
+  EProductType.EXTRA,
+  [],
+);
 const initPortalBookingServices = new PortalBookingServiceFormData(
   {
     bookingSsr: [],
@@ -63,7 +70,17 @@ const portalBookingServiceReducer = (
         channel,
       };
     }
-
+    case "SET_RESERVATION": {
+      const { customerInformation, reservation } = action.payload;
+      return {
+        ...state,
+        bookingInfo: {
+          ...state.bookingInfo,
+          customerInformation,
+        },
+        reservation: reservation,
+      };
+    }
     default:
       return state;
   }

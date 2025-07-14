@@ -7,6 +7,7 @@ import { PaymentStatus, Status } from "@/models/common.interface";
 import { formatDate } from "@/utils/date";
 import Link from "next/link";
 import { ArrowRightOutlined, RightOutlined } from "@ant-design/icons";
+import dayjs from "@/lib/dayjs";
 
 export const columnsOrderList: ColumnsType<IOrderListRs["result"][number]> = [
   {
@@ -26,10 +27,10 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][number]> = [
           <div className="text-xs text-gray-600">{record.sellable.code}</div>
           <div className="block mb-2">{record.template.name}</div>
           <Link href={`/portal/manage-booking/${record.recId}`} className="block">
-            <Space>
+            <span className="flex items-center !gap-2">
               Chi tiết
-              <RightOutlined className="!w-3 !h-3" />
-            </Space>
+              <RightOutlined className="!w-3 !h-3 !text-[10px]" />
+            </span>
           </Link>
         </div>
       );
@@ -135,7 +136,12 @@ export const columnsOrderList: ColumnsType<IOrderListRs["result"][number]> = [
     key: "sysFstUpdate",
     width: 160,
     render: (sysFstUpdate, record) => {
-      return <>{formatDate(sysFstUpdate)}</>;
+      return (
+        <>
+          <div>{formatDate(sysFstUpdate, "HH:ss")}</div>
+          <div>{formatDate(sysFstUpdate, "DD/MM/YYYY")}</div>
+        </>
+      );
     },
   },
 ];

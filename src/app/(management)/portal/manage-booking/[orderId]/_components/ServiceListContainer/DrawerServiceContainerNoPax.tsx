@@ -7,7 +7,7 @@ import { WarningOutlined } from "@ant-design/icons";
 
 import Quantity from "@/components/base/Quantity";
 
-import { IProductService } from "@/models/management/booking/service.interface";
+import { IServiceItem } from "@/models/management/booking/service.interface";
 import { PassengerType } from "@/models/common.interface";
 import { ESellChannel } from "@/constants/channel.constant";
 import { moneyFormatVND } from "@/utils/helper";
@@ -26,7 +26,6 @@ export interface DrawerServiceContainerNoPaxProps {
 const DrawerServiceContainerNoPax: React.FC<DrawerServiceContainerNoPaxProps> = ({
   label,
   isOpen = false,
-
   sellableId,
   orderId,
   channel,
@@ -233,11 +232,11 @@ const ModalCancelService: React.FC<ModalCancelServiceProps> = ({ open, onCancel,
 
 interface ServiceBoxItemProps {
   serviceName?: string;
-  consfigItems: IProductService["configs"];
+  consfigItems: IServiceItem["configs"];
   onChangeQuantity?: (data: {
     action: "minus" | "plus";
     qty: number;
-    configItem: IProductService["configs"][number];
+    configItem: IServiceItem["configs"][number];
   }) => void;
   selectedItems?: EditBookingSSRNoPassenger["ssrList"];
   passengerType: PassengerType.ADULT;
@@ -249,7 +248,7 @@ const ServiceBoxItem: React.FC<ServiceBoxItemProps> = ({
   consfigItems,
   selectedItems,
 }) => {
-  const getQuantityValueItem = (record: IProductService["configs"][number]) => {
+  const getQuantityValueItem = (record: IServiceItem["configs"][number]) => {
     const configItem = selectedItems?.find((item) => item.configItem.recId === record.recId);
     return configItem ? configItem.qty : 0;
   };

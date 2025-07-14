@@ -163,7 +163,7 @@ const NoticeInformationForm: React.FC<NoticeInformationFormProps> = ({
               onApproval={() => onPublish?.(initData?.id)}
               onChangeStatus={handleChangeStatus}
               onDelete={() => initData?.id && onDelete?.(initData.id)}
-              hideSaveForApproval={action === "update" ?? false}
+              hideSaveForApproval={action === "update"}
               hideApproval={getValues("status") !== PageContentStatus.PENDING || action === "create"}
               action={action}
               status={getValues("status")}

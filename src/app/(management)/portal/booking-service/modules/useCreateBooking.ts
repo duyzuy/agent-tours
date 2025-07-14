@@ -7,13 +7,14 @@ import useMessage from "@/hooks/useMessage";
 import { CustomerInformation } from "@/models/management/booking/customer.interface";
 import { InvoiceFormData } from "@/models/management/booking/invoice.interface";
 import { usePortalBookingServiceManager } from "../store/bookingServiceContext";
-
+import { PassengerType } from "@/models/common.interface";
+import { useTransition } from "react";
 const useCreateBooking = () => {
   const { mutate: makeCreateBooking, isPending } = useCreateBookingMutation();
-  const [bookingInformation, setBookingInformation] = usePortalBookingServiceManager();
+  const [bookingInformation, dispatch] = usePortalBookingServiceManager();
 
   const bookingSsr = bookingInformation.bookingInfo?.bookingSsr;
-
+  const [isPushing, startPushReservation] = useTransition();
   const message = useMessage();
   const router = useRouter();
 
@@ -26,114 +27,62 @@ const useCreateBooking = () => {
     invoiceInfo: InvoiceFormData;
     agentUserId?: number;
   }) => {
-    // let bookingPayload: BookingServicePayload = { bookingDetails: [] };
-    // const bookingDetails = getBookingDetailsItems(bookingInformation.bookingInfo?.bookingItems);
-    // const bookingSSRNoPax = bookingSsr?.reduce<BookingServicePayload["bookingSsr"]>((acc, item) => {
-    //   acc = [
-    //     ...(acc || []),
-    //     {
-    //       amount: item.configItem["adult"],
-    //       qty: item.qty,
-    //       type: item.type,
-    //       sellableConfigId: item.configItem.recId,
-    //     },
-    //   ];
-    //   return acc;
-    // }, []);
-    // bookingPayload = {
-    //   bookingDetails: bookingDetails,
-    //   sellableId: bookingInformation.bookingInfo?.product?.sellableId,
-    //   custAddress: customerInfo.custAddress,
-    //   custEmail: customerInfo.custEmail,
-    //   custName: customerInfo.custName,
-    //   custPhoneNumber: customerInfo.custPhoneNumber,
-    //   invoiceAddress: invoiceInfo.invoiceAddress,
-    //   invoiceCompanyName: invoiceInfo.invoiceCompanyName,
-    //   invoiceEmail: invoiceInfo.invoiceEmail,
-    //   invoiceName: invoiceInfo.invoiceName,
-    //   invoiceTaxCode: invoiceInfo.invoiceTaxCode,
-    //   rmk: customerInfo.rmk,
-    //   referenceId: customerInfo.referenceId,
-    //   agentUserId: agentUserId,
-    //   channel: bookingInformation.channel,
-    //   bookingSsr: bookingSSRNoPax,
-    // };
-    // makeCreateBooking(bookingPayload, {
-    //   onSuccess: (response) => {
-    //     setBookingInformation((prev) => ({
-    //       ...prev,
-    //       bookingInfo: {
-    //         ...prev.bookingInfo,
-    //         customerInformation: {
-    //           ...customerInfo,
-    //         },
-    //       },
-    //       reservation: response["result"],
-    //     }));
-    //     router.push("/portal/booking/reservation");
-    //   },
-    //   onError(error, variables, context) {
-    //     message.error(error.message);
-    //   },
-    // });
+    console.log({ customerInfo, invoiceInfo, agentUserId, bookingInformation });
+    let bookingPayload: BookingServicePayload = { bookingSsr: [] };
+
+    const ssrItems = bookingSsr?.reduce<BookingServicePayload["bookingSsr"]>((acc, item) => {
+      acc = [
+        ...(acc || []),
+        {
+          amount: item.configItem["adult"],
+          qty: item.qty,
+          type: PassengerType.ADULT,
+          sellableConfigId: item.configItem.recId,
+        },
+      ];
+      return acc;
+    }, []);
+    bookingPayload = {
+      sellableId: bookingInformation.bookingInfo?.product?.sellableId,
+      custAddress: customerInfo.custAddress,
+      custEmail: customerInfo.custEmail,
+      custName: customerInfo.custName,
+      custPhoneNumber: customerInfo.custPhoneNumber,
+      invoiceAddress: invoiceInfo.invoiceAddress,
+      invoiceCompanyName: invoiceInfo.invoiceCompanyName,
+      invoiceEmail: invoiceInfo.invoiceEmail,
+      invoiceName: invoiceInfo.invoiceName,
+      invoiceTaxCode: invoiceInfo.invoiceTaxCode,
+      rmk: customerInfo.rmk,
+      referenceId: customerInfo.referenceId,
+      agentUserId: agentUserId,
+      channel: bookingInformation.channel,
+      bookingSsr: ssrItems,
+    };
+
+    console.log({ bookingPayload });
+    makeCreateBooking(
+      { ...bookingPayload, bookingDetails: undefined },
+      {
+        onSuccess: (response) => {
+          dispatch({
+            type: "SET_RESERVATION",
+            payload: {
+              reservation: response["result"],
+              customerInformation: customerInfo,
+            },
+          });
+          startPushReservation(() => {
+            router.push("/portal/booking/reservation");
+          });
+        },
+        onError(error, variables, context) {
+          message.error(error.message);
+        },
+      },
+    );
   };
 
-  // const getServiceItemsByPassenger = (
-  //   bookingIndex: number,
-  // ): BookingServicePayload['bookingSsr'] => {
-  //   const serviceItemByPassenger = bookingSSRWithPax?.filter((item) => item.bookingIndex === bookingIndex);
-  //   return serviceItemByPassenger?.reduce<Exclude<BookingServicePayload["ssr"], undefined>>(
-  //     (acc, { configItem, type, qty }) => {
-  //       const indexConfigItem = acc.findIndex((ssrItem) => ssrItem.sellableConfigId === configItem.recId);
-  //       if (indexConfigItem !== -1) {
-  //         acc.splice(indexConfigItem, 1, {
-  //           ...acc[indexConfigItem],
-  //           qty: acc[indexConfigItem].qty + qty,
-  //         });
-  //       } else {
-  //         acc = [
-  //           ...acc,
-  //           {
-  //             sellableConfigId: configItem.recId,
-  //             qty: qty,
-  //             amount: configItem[type],
-  //             type: type,
-  //           },
-  //         ];
-  //       }
-  //       return acc;
-  //     },
-  //     [],
-  //   );
-  // };
-
-  // const getBookingDetailsItems = (
-  //   items?: PortalBookingManagerFormData["bookingInfo"]["bookingItems"],
-  // ): IBookingTourPayload["bookingDetails"] => {
-  //   if (isUndefined(items)) {
-  //     throw new Error("Missing booking information bookingItems");
-  //   }
-
-  //   let bookingDetails: IBookingTourPayload["bookingDetails"] = [];
-
-  //   bookingDetails = items?.reduce<IBookingTourPayload["bookingDetails"]>((acc, bkItem) => {
-  //     const ssrItems = getServiceItemsByPassenger(bkItem.index);
-
-  //     acc = [
-  //       ...acc,
-  //       {
-  //         sellableConfigId: bkItem.configItem.recId,
-  //         index: bkItem.index,
-  //         amount: bkItem.configItem[bkItem.type],
-  //         type: bkItem.type,
-  //         pax: { ...bkItem.passengerInformation },
-  //         ssr: ssrItems,
-  //       },
-  //     ];
-  //     return acc;
-  //   }, []);
-  //   return bookingDetails;
-  // };
-  return { createBooking, loading: isPending };
+  return { createBooking, loading: isPending || isPushing };
 };
 export default useCreateBooking;

@@ -1,12 +1,7 @@
 import { PassengerType } from "@/models/common.interface";
 import { IOrderDetail } from "@/models/management/booking/order.interface";
 import { PriceConfig } from "@/models/management/core/priceConfig.interface";
-import {
-  AddNewSSRByPaxPayload,
-  AddNewSSRNoPaxPayload,
-  DeleteSSRPayload,
-} from "@/models/management/booking/order.interface";
-import { IProductService } from "@/models/management/booking/service.interface";
+import { IServiceItem } from "@/models/management/booking/service.interface";
 export type BookingDetailItemType = Exclude<IOrderDetail["ssrBookings"], null>[number];
 export type BookingDetailSSRItemType = Exclude<IOrderDetail["ssrBookings"], null>[number];
 
@@ -48,7 +43,7 @@ export class EditBookingSSRByPassenger {
   bookingOrderId: number;
   ssrList: {
     paxId: number;
-    configItem: IProductService["configs"][number];
+    configItem: IServiceItem["configs"][number];
     qty: number;
     amount: number;
     type: PassengerType;
@@ -57,7 +52,7 @@ export class EditBookingSSRByPassenger {
     bookingOrderId: number,
     ssrList: {
       paxId: number;
-      configItem: IProductService["configs"][number];
+      configItem: IServiceItem["configs"][number];
       qty: number;
       amount: number;
       type: PassengerType;
@@ -71,7 +66,7 @@ export class EditBookingSSRByPassenger {
 export class EditBookingSSRNoPassenger {
   bookingOrderId: number;
   ssrList: {
-    configItem: IProductService["configs"][number];
+    configItem: IServiceItem["configs"][number];
     qty: number;
     amount: number;
     type: PassengerType.ADULT;
@@ -79,7 +74,7 @@ export class EditBookingSSRNoPassenger {
   constructor(
     bookingOrderId: number,
     ssrList: {
-      configItem: IProductService["configs"][number];
+      configItem: IServiceItem["configs"][number];
       qty: number;
       amount: number;
       type: PassengerType.ADULT;
@@ -89,25 +84,3 @@ export class EditBookingSSRNoPassenger {
     this.ssrList = ssrList;
   }
 }
-
-// export interface IEditOrderSSRPayload {
-//   bookingOrder?: {
-//     recId?: number;
-//   };
-//   bookingDetails?: {
-//     booking: {
-//       recId: number;
-//       bookingRefId: number;
-//       ssr: {
-//         sellableConfigId: number;
-//         qty: number;
-//         amount: number;
-//         type: PassengerType;
-//       }[];
-//     };
-//   }[];
-//   bookingSsrDelete?: {
-//     bookingId: number;
-//     sellableConfigId: number;
-//   }[];
-// }

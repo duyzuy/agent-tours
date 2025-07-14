@@ -30,7 +30,7 @@ export const customerLoginSchema: ObjectSchema<CustomerLoginFormData> = object({
 });
 
 export const customerForgotPasswordSchema: ObjectSchema<CustomerForgotPasswordFormData> = object({
-  username: string().required("username.required"),
+  userName: string().required("username.required"),
   email: string().required("email.required").email("email.invalid"),
 });
 
