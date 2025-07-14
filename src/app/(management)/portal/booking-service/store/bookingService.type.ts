@@ -4,7 +4,7 @@ import { IReservation } from "@/models/management/booking/reservation.interface"
 import { IInvoice } from "@/models/management/booking/invoice.interface";
 import { ESellChannel } from "@/constants/channel.constant";
 import { IProductService } from "@/models/management/booking/product.interface";
-import { SearchProductExtraFormData } from "@/modules/admin/booking/searchProduct.interface";
+import { SearchProductFormData } from "@/modules/admin/booking/searchProduct.interface";
 
 export class PortalBookingServiceFormData {
   bookingInfo: {
@@ -17,7 +17,7 @@ export class PortalBookingServiceFormData {
       type: PassengerType;
     }[];
   };
-  searchBooking: SearchProductExtraFormData;
+  searchBooking: SearchProductFormData;
   serviceList?: IProductService[];
   reservation?: IReservation;
   channel: ESellChannel;
@@ -34,7 +34,7 @@ export class PortalBookingServiceFormData {
         type: PassengerType;
       }[];
     },
-    searchBooking: SearchProductExtraFormData,
+    searchBooking: SearchProductFormData,
     serviceList: IProductService[] | undefined,
     reservation: IReservation | undefined,
     channel: ESellChannel,

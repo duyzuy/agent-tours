@@ -124,7 +124,7 @@ export class PortalBookingManagerFormData {
 
 export interface IBookingTourPayload {
   sellableId?: number;
-  bookingDetails: {
+  bookingDetails?: {
     index?: number;
     sellableConfigId?: number;
     qty?: number;

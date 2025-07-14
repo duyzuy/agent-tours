@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
 import { Space, Button, Tag } from "antd";
-import { usePortalBookingManagerSelector } from "../../booking/context";
+import { usePortalBookingServiceSelector } from "../store/bookingServiceContext";
 import IconSuccess from "@/assets/icons/IconSuccess";
 import { useRouter } from "next/navigation";
 import { isUndefined } from "lodash";
@@ -10,7 +10,7 @@ import { formatDate } from "@/utils/date";
 import { useTransition } from "react";
 
 const ReservationPage = () => {
-  const { reservation } = usePortalBookingManagerSelector((state) => state);
+  const { reservation } = usePortalBookingServiceSelector((state) => state);
   const router = useRouter();
   const bookingOrder = useMemo(() => reservation?.bookingOrder, [reservation]);
   const templateProduct = useMemo(() => reservation?.bookingOrder.template, [reservation]);

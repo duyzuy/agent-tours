@@ -74,29 +74,29 @@ const isValidDateFormat = (value: string) => {
   return dayjs(value, { format: MONTH_FORMAT }, true).isValid(); // Adjust the format as needed
 };
 
-export const searchPortalBookingSchema: ObjectSchema<SearchBookingFormData> = object({
-  byMonth: string().required("Chọn thời gian đi").test("is-valid-date", "Ngày đi không hợp lệ", isValidDateFormat),
-  byDest: array<ILocalSearchDestination>(
-    object({
-      regionKey: string(),
-      countryKey: string(),
-      stateProvinceKey: string(),
-      subRegionKey: string(),
-      keyType: string(),
-    }),
-  )
-    .required("Chọn điểm đến")
-    .default([]),
-  byCode: string().default(""),
-  byProductType: array(
-    mixed<EProductType>().oneOf(Object.values(EProductType)).required("Không bỏ trống type."),
-  ).default([EProductType.EXTRA]),
-  byInventoryType: array(mixed<EInventoryType>().oneOf(Object.values(EInventoryType)).required()).default([
-    EInventoryType.AIR,
-  ]),
-  passengers: object({
-    [PassengerType.ADULT]: number().default(1),
-    [PassengerType.CHILD]: number().default(0),
-    [PassengerType.INFANT]: number().default(0),
-  }),
-});
+// export const searchPortalBookingSchema: ObjectSchema<SearchBookingFormData> = object({
+//   byMonth: string().required("Chọn thời gian đi").test("is-valid-date", "Ngày đi không hợp lệ", isValidDateFormat),
+//   byDest: array<ILocalSearchDestination>(
+//     object({
+//       regionKey: string(),
+//       countryKey: string(),
+//       stateProvinceKey: string(),
+//       subRegionKey: string(),
+//       keyType: string(),
+//     }),
+//   )
+//     .required("Chọn điểm đến")
+//     .default([]),
+//   byCode: string().default(""),
+//   byProductType: array(
+//     mixed<EProductType>().oneOf(Object.values(EProductType)).required("Không bỏ trống type."),
+//   ).default([EProductType.EXTRA]),
+//   byInventoryType: array(mixed<EInventoryType>().oneOf(Object.values(EInventoryType)).required()).default([
+//     EInventoryType.AIR,
+//   ]),
+//   passengers: object({
+//     [PassengerType.ADULT]: number().default(1),
+//     [PassengerType.CHILD]: number().default(0),
+//     [PassengerType.INFANT]: number().default(0),
+//   }),
+// });

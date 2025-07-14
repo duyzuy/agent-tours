@@ -30,14 +30,7 @@ const PrimaryMenuHeader: React.FC<PrimaryMenuHeaderProps> = ({ children, classNa
       {items ? (
         <div className="flex items-center">
           {items.map((item, _index) => (
-            <NavItem
-              key={_index}
-              name={item.name}
-              slug={`${item.slug}`}
-              objectType={item.objectType}
-              items={item.children}
-              navType="primary"
-            />
+            <NavItem key={_index} name={item.name} slug={`${item.slug}`} items={item.children} />
           ))}
         </div>
       ) : null}

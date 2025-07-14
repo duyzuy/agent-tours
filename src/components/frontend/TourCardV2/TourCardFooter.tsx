@@ -1,7 +1,7 @@
 "use client";
-import { TourCardCompound } from ".";
+
 import { IconStar, IconHeart, IconShare } from "@/assets/icons";
-const TourCardFooter: TourCardCompound["Footer"] = () => {
+const TourCardFooter: React.FC = () => {
   return (
     <div className="article-bottom py-2 text-[11px] border-t mt-2">
       <div className="flex items-center justify-between">

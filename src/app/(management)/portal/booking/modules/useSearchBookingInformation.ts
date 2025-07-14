@@ -1,16 +1,17 @@
 import { usePortalBookingManager } from "../context";
 import { useSearchTourProduct } from "@/modules/admin/booking/hooks/useSearchProduct";
 import { SearchProductTourPayload } from "@/models/management/booking/searchProduct.interface";
-import { SearchProductTourFormData } from "@/modules/admin/booking/searchProduct.interface";
+import { SearchProductFormData } from "@/modules/admin/booking/searchProduct.interface";
+import { EProductType } from "@/models/management/core/productType.interface";
 export interface UseSearchBookingInformation {
-  onSearch: (formData: SearchProductTourFormData) => void;
+  onSearch: (formData: SearchProductFormData) => void;
 }
 const useSearchTourBookingInformation = () => {
   const { mutate: searchProduct, isPending } = useSearchTourProduct();
   const [_, setBookingInformation] = usePortalBookingManager();
 
   const onSearchTourBooking: UseSearchBookingInformation["onSearch"] = (searchData) => {
-    let searchBookingPayload: SearchProductTourPayload = { ...searchData };
+    let searchBookingPayload: SearchProductTourPayload = { ...searchData, byProductType: [EProductType.TOUR] };
 
     const destinations = searchData.byDest?.reduce<Required<SearchProductTourPayload>["byDest"]>(
       (acc, item) => [
@@ -37,6 +38,7 @@ const useSearchTourBookingInformation = () => {
           productList: response.result,
           searchBooking: {
             ...searchData,
+            byProductType: [EProductType.TOUR],
             passengers: {
               adult: 1,
               child: 0,

@@ -85,31 +85,30 @@ const useCreateBooking = () => {
 
   const getServiceItemsByPassenger = (
     bookingIndex: number,
-  ): IBookingTourPayload["bookingDetails"][number]["ssr"] | undefined => {
+  ): Exclude<IBookingTourPayload["bookingDetails"], undefined>[number]["ssr"] | undefined => {
     const serviceItemByPassenger = bookingSSRWithPax?.filter((item) => item.bookingIndex === bookingIndex);
-    return serviceItemByPassenger?.reduce<Exclude<IBookingTourPayload["bookingDetails"][number]["ssr"], undefined>>(
-      (acc, { configItem, type, qty }) => {
-        const indexConfigItem = acc.findIndex((ssrItem) => ssrItem.sellableConfigId === configItem.recId);
-        if (indexConfigItem !== -1) {
-          acc.splice(indexConfigItem, 1, {
-            ...acc[indexConfigItem],
-            qty: acc[indexConfigItem].qty + qty,
-          });
-        } else {
-          acc = [
-            ...acc,
-            {
-              sellableConfigId: configItem.recId,
-              qty: qty,
-              amount: configItem[type],
-              type: type,
-            },
-          ];
-        }
-        return acc;
-      },
-      [],
-    );
+    return serviceItemByPassenger?.reduce<
+      Exclude<Exclude<IBookingTourPayload["bookingDetails"], undefined>[number]["ssr"], undefined>
+    >((acc, { configItem, type, qty }) => {
+      const indexConfigItem = acc.findIndex((ssrItem) => ssrItem.sellableConfigId === configItem.recId);
+      if (indexConfigItem !== -1) {
+        acc.splice(indexConfigItem, 1, {
+          ...acc[indexConfigItem],
+          qty: acc[indexConfigItem].qty + qty,
+        });
+      } else {
+        acc = [
+          ...acc,
+          {
+            sellableConfigId: configItem.recId,
+            qty: qty,
+            amount: configItem[type],
+            type: type,
+          },
+        ];
+      }
+      return acc;
+    }, []);
   };
 
   const getBookingDetailsItems = (
@@ -121,9 +120,8 @@ const useCreateBooking = () => {
 
     let bookingDetails: IBookingTourPayload["bookingDetails"] = [];
 
-    bookingDetails = items?.reduce<IBookingTourPayload["bookingDetails"]>((acc, bkItem) => {
+    bookingDetails = items?.reduce<Exclude<IBookingTourPayload["bookingDetails"], undefined>>((acc, bkItem) => {
       const ssrItems = getServiceItemsByPassenger(bkItem.index);
-
       acc = [
         ...acc,
         {

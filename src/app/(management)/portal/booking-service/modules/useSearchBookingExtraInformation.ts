@@ -4,12 +4,12 @@ import { usePortalBookingServiceManager } from "../store/bookingServiceContext";
 
 import useMessage from "@/hooks/useMessage";
 import { EProductType } from "@/models/management/core/productType.interface";
-import { SearchProductExtraFormData } from "@/modules/admin/booking/searchProduct.interface";
+import { SearchProductFormData } from "@/modules/admin/booking/searchProduct.interface";
 import { useRouter } from "next/navigation";
 import { SearchProductExtraPayload } from "@/models/management/booking/searchProduct.interface";
 
 export interface useSearchBookingExtraInformation {
-  onSearch: (formData: SearchProductExtraFormData) => void;
+  onSearch: (formData: SearchProductFormData) => void;
 }
 const useSearchBookingExtraInformation = () => {
   const { mutate: searchExtraProduct, isPending } = useSearchExtraProduct();
@@ -18,7 +18,7 @@ const useSearchBookingExtraInformation = () => {
   const message = useMessage();
 
   const onSearchBooking: useSearchBookingExtraInformation["onSearch"] = (searchData) => {
-    let searchBookingPayload: SearchProductExtraPayload = { ...searchData };
+    let searchBookingPayload: SearchProductExtraPayload = { ...searchData, byProductType: [EProductType.EXTRA] };
 
     const destinations = searchData.byDest?.reduce<Required<SearchBookingPayload>["byDest"]>(
       (acc, item) => [
@@ -38,7 +38,6 @@ const useSearchBookingExtraInformation = () => {
       {
         ...searchBookingPayload,
         byDest: destinations,
-        byProductType: [EProductType.EXTRA],
       },
       {
         onSuccess: (response, variables, ctx) => {

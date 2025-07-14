@@ -22,19 +22,22 @@ import CancelBookingButton from "./_components/CancelBookingButton";
 import CommentButton from "./_components/CommentButton";
 import { getAdminUserInformationStorage } from "@/utils/common";
 import { useGetOperationOrderStatusQuery } from "../modules/useGetOperationOrderStatusQuery";
+import ServiceListExtraContainer from "./_components/ServiceListExtraContainer";
 
 interface OrderDetailPageProps {
   params: { orderId: number };
 }
 
 const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ params }) => {
-  const { data: operationStatus } = useGetOperationOrderStatusQuery({ enabled: true, orderId: Number(params.orderId) });
   const router = useRouter();
-  const orderInformation = useSelectorManageBooking((state) => state.order);
 
+  const { data: operationStatus } = useGetOperationOrderStatusQuery({ enabled: true, orderId: Number(params.orderId) });
+  const orderInformation = useSelectorManageBooking((state) => state.order);
   const adminInfo = getAdminUserInformationStorage();
 
   const bookingOrder = useMemo(() => orderInformation?.bookingOrder, [orderInformation]);
+  const sellable = useMemo(() => bookingOrder?.sellable, [bookingOrder]);
+
   const couponAppliedList = useMemo(() => {
     return orderInformation?.fops.filter(
       (item) => item.type === EFopType.DISCOUNT_COUPON || item.type === EFopType.DISCOUNT_POLICY,
@@ -70,7 +73,7 @@ const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ params }) => {
       {isBookingCanceled ? null : (
         <Space>
           <CommentButton orderId={params.orderId} comments={orderInformation.comments} />
-          <SplitBookingButton orderId={params.orderId} />
+          {sellable?.type === "TOUR" ? <SplitBookingButton orderId={params.orderId} /> : null}
           {allowDeleteOrder ? <CancelBookingButton orderId={params.orderId} /> : null}
         </Space>
       )}
@@ -165,25 +168,43 @@ const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ params }) => {
         coupons={couponAppliedList}
         rulesAndPolicies={orderInformation?.rulesAndPolicies}
       />
-      <Divider style={{ margin: "16px 0" }} />
-      <div className="h-12"></div>
-      <PassengerListContainer
-        orderId={bookingOrder.recId}
-        sellableId={bookingOrder.sellableId}
-        passengers={orderInformation.passengers}
-        tourBookings={orderInformation.tourBookings}
-        isBookingCanceled={isBookingCanceled}
-      />
-      <Divider />
-      <ServiceListContainer
-        includedItems={orderInformation?.bookingOrder.sellableDetails}
-        serviceList={orderInformation?.ssrBookings}
-        sellableId={orderInformation?.bookingOrder.sellableId}
-        passengerList={orderInformation?.passengers || []}
-        orderId={params.orderId}
-        channel={bookingOrder.channel}
-        isBookingCanceled={isBookingCanceled}
-      />
+
+      {sellable?.type === "TOUR" && (
+        <>
+          <Divider style={{ margin: "16px 0" }} />
+          <div className="h-12"></div>
+          <PassengerListContainer
+            orderId={bookingOrder.recId}
+            sellableId={bookingOrder.sellableId}
+            passengers={orderInformation.passengers}
+            tourBookings={orderInformation.tourBookings}
+            isBookingCanceled={isBookingCanceled}
+          />
+          <Divider />
+          <ServiceListContainer
+            includedItems={orderInformation?.bookingOrder.sellableDetails}
+            serviceList={orderInformation?.ssrBookings}
+            sellableId={orderInformation?.bookingOrder.sellableId}
+            passengerList={orderInformation?.passengers || []}
+            orderId={params.orderId}
+            channel={bookingOrder.channel}
+            isBookingCanceled={isBookingCanceled}
+          />
+        </>
+      )}
+      {sellable?.type === "EXTRA" && (
+        <>
+          <Divider />
+          <ServiceListExtraContainer
+            includedItems={orderInformation?.bookingOrder.sellableDetails}
+            serviceList={orderInformation?.ssrBookings}
+            sellableId={orderInformation?.bookingOrder.sellableId}
+            orderId={params.orderId}
+            channel={bookingOrder.channel}
+            isBookingCanceled={isBookingCanceled}
+          />
+        </>
+      )}
     </PageContainer>
   );
 };
