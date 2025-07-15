@@ -33,17 +33,15 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           passive: true
-          protocol: ftps
+          protocol: ftp
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
-            **/.next/**
           server-dir:
-            "flexis/httpdocs/"
+            flexis/httpdocs/
             # timeout: 300000
             #exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
-          continue-on-error: true
       - name: Retry deploy if failed
         if: failure()
         run: echo "Retry deploy manually or implement retry logic"
