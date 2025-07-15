@@ -19,7 +19,7 @@ const PromotionCarousel: React.FC<PromotionCarouselProps> = ({ children }) => {
     <div className="container mx-auto px-3 md:px-6 lg:px-8">
       <div className="slider-container relative">
         <Swiper
-          slidesPerView={1}
+          slidesPerView={2}
           spaceBetween={12}
           autoplay={{
             delay: 8000,
@@ -27,12 +27,12 @@ const PromotionCarousel: React.FC<PromotionCarouselProps> = ({ children }) => {
           }}
           breakpoints={{
             640: {
-              slidesPerView: 3,
-              spaceBetween: 12,
+              slidesPerView: 2,
+              spaceBetween: 16,
             },
             1024: {
               slidesPerView: 3,
-              spaceBetween: 12,
+              spaceBetween: 24,
             },
           }}
           modules={[Autoplay, Navigation]}
@@ -68,10 +68,9 @@ const ButtonNavigation = function (props: ButtonNavigationProps) {
   return (
     <button
       onClick={props.onClick}
-      className={classNames(
-        "z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center absolute drop-shadow-md border",
-        { [className]: className },
-      )}
+      className={classNames("z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center absolute border", {
+        [className]: className,
+      })}
     >
       {props.children}
     </button>

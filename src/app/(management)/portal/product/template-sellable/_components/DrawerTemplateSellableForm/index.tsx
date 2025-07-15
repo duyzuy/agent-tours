@@ -18,6 +18,7 @@ import { Status } from "@/models/common.interface";
 import { isEmpty, isUndefined } from "lodash";
 import MiscDocumentSelector, { MiscDocumentSelectorProps } from "../MiscDocumentSelector";
 import MiscDepartSelector, { MiscDepartSelectorProps } from "../MiscDepartSelector";
+import CMSVisaSelector from "../CMSVisaSelector";
 
 export type DrawerAction = "CREATE" | "EDIT";
 type TDestinationOption = {
@@ -289,11 +290,22 @@ const DrawerTemplateSellableForm: React.FC<DrawerTemplateSellableFormProps> = ({
         <FormItem label="Hồ sơ giấy tờ yêu cầu">
           <MiscDocumentSelector values={documentSelectedValues} onChange={onChangeDocument} />
         </FormItem>
-        <CMSTemplateSelectorContainer
-          errors={errors?.cmsIdentity}
-          onChange={(value) => onChangeSellableFormData("cmsIdentity", value)}
-          value={isEmpty(templateSellableFormData.cmsIdentity) ? undefined : templateSellableFormData.cmsIdentity}
-        />
+        {templateSellableFormData.type === EProductType.TOUR && (
+          <CMSTemplateSelectorContainer
+            label="Chi tiết nội dung - Tour"
+            errors={errors?.cmsIdentity}
+            onChange={(value) => onChangeSellableFormData("cmsIdentity", value)}
+            value={isEmpty(templateSellableFormData.cmsIdentity) ? undefined : templateSellableFormData.cmsIdentity}
+          />
+        )}
+        {templateSellableFormData.type === EProductType.EXTRA && (
+          <CMSVisaSelector
+            label="Chi tiết nội dung - dịch vụ"
+            errors={errors?.cmsIdentity}
+            onChange={(value) => onChangeSellableFormData("cmsIdentity", value)}
+            value={isEmpty(templateSellableFormData.cmsIdentity) ? undefined : templateSellableFormData.cmsIdentity}
+          />
+        )}
       </Form>
     </Drawer>
   );

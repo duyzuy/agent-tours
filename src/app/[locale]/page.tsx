@@ -90,17 +90,17 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
 
         <DynamicSlider title="Tour khuyến mại" />
 
-        <div className="lg:h-12 h-4"></div>
+        <div className="lg:h-12 h-8"></div>
         <TourCardListContainer querySearch={travelTour} title="Chương trình du lịch hấp dẫn" />
-        <div className="lg:h-12 h-4"></div>
+        <div className="lg:h-12 h-8"></div>
         <ServiceListContainer querySearch={extraProductQuery} title="Dịch vụ" />
-        <div className="lg:h-12 h-4"></div>
+        <div className="lg:h-12 h-8"></div>
         <VisaSection label="Dịch vụ thị thực nhập cảnh (Visa)" />
-        <div className="lg:h-12 h-4"></div>
+        <div className="lg:h-12 h-8"></div>
         <DestinationsList label="Vòng quanh thế giới" />
-        {/* <div className="lg:h-12 h-4"></div>
+        {/* <div className="lg:h-12 h-8"></div>
         <PostsSection /> */}
-        <div className="lg:h-12 h-4"></div>
+        <div className="lg:h-12 h-8"></div>
         <PostListContainer />
       </div>
     </div>

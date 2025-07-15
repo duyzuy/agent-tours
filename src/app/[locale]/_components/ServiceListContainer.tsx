@@ -9,6 +9,7 @@ interface ServiceListContainerProps {
 const ServiceListContainer: React.FC<ServiceListContainerProps> = async ({ querySearch, title }) => {
   const productList = await getTemplateServiceList(querySearch);
 
+  console.log({ productList, querySearch: JSON.stringify(querySearch) });
   if (!productList?.length) return null;
 
   return (
