@@ -3,10 +3,9 @@ import Image from "next/image";
 import { Link } from "@/utils/navigation";
 import PromotionCarousel from "./PromotionCarousel";
 interface PromotionSliderProps {
-  items: { id: number; thumb?: string; title: string; slug: string; date: string; description: string }[];
   title?: string;
 }
-const PromotionSlider: React.FC<PromotionSliderProps> = ({ items, title }) => {
+const PromotionSlider: React.FC<PromotionSliderProps> = ({ title }) => {
   const ITEMS = [
     {
       id: 1,

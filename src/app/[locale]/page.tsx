@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 import NavbarSecondary from "./_components/commons/NavbarSecondary";
 import BoxSearchBookingContainer, { BoxSearchBookingSkeleton } from "./_components/BoxSearchBookingContainer";
 import HeroBanner from "./_components/HeroBanner";
+import ServiceListContainer from "./_components/ServiceListContainer";
 
 // const DynamicBoxSearchContainer = dynamic(() => import("./_components/BoxSearchBookingContainer"), {
 //   ssr: false,
@@ -27,33 +28,6 @@ const DynamicSlider = dynamic(() => import("./_components/PromotionSlider"), {
   ssr: false,
 });
 
-const ITEMS = [
-  {
-    id: 1,
-    name: "Banner 1",
-    slug: "/post/chill-he-cuc-nhiet-voi-loat-uu-dai-qua-tang-tu-vietravel-va-enchanteur",
-    thumb: "/assets/images/banner-n1.jpg",
-  },
-  {
-    id: 2,
-    name: "Banner 2",
-    slug: "/post/vui-he-cuc-tiet-kiem-voi-voucher-giam-gia-len-den-60-tu-vietravel-va-mykingdom",
-    thumb: "/assets/images/banner-n2.jpg",
-  },
-  {
-    id: 3,
-    name: "Banner 3",
-    slug: "/post/du-lich-tha-ga-thoa-suc-rinh-uu-dai-tu-anthai-va-ocb",
-    thumb: "/assets/images/banner-n3.jpg",
-  },
-  {
-    id: 4,
-    name: "Banner 4",
-    slug: "/post/deal-sieu-hot-tu-vietravel-x-momo-giam-den-250-000-dong-khi-thanh-toan-tour-du-lich-tron-goi",
-    thumb: "/assets/images/banner-n4.jpg",
-  },
-];
-
 export default async function FeHomePage({ params }: { params: { locale: LangCode } }) {
   const { locale } = params;
 
@@ -61,6 +35,19 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
 
   const travelTour = new FeSearchTourQueryParams({
     byProductType: [EProductType.TOUR],
+    // byDest: [
+    //   {
+    //     regionKey: "ASIA",
+    //     subRegionKey: "EASTERN_ASIA",
+    //     countryKey: "TW",
+    //     stateProvinceKey: "",
+    //     keyType: "COUNTRYLIST",
+    //   },
+    // ],
+  });
+
+  const extraProductQuery = new FeSearchTourQueryParams({
+    byProductType: [EProductType.EXTRA],
     // byDest: [
     //   {
     //     regionKey: "ASIA",
@@ -101,10 +88,12 @@ export default async function FeHomePage({ params }: { params: { locale: LangCod
       >
         {/* <FlashSale /> */}
 
-        <PromotionSlider items={[]} title="Tour khuyến mại" />
+        <DynamicSlider title="Tour khuyến mại" />
 
         <div className="lg:h-12 h-4"></div>
         <TourCardListContainer querySearch={travelTour} title="Chương trình du lịch hấp dẫn" />
+        <div className="lg:h-12 h-4"></div>
+        <ServiceListContainer querySearch={extraProductQuery} title="Dịch vụ" />
         <div className="lg:h-12 h-4"></div>
         <VisaSection label="Dịch vụ thị thực nhập cảnh (Visa)" />
         <div className="lg:h-12 h-4"></div>

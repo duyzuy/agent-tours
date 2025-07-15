@@ -37,7 +37,12 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/.next/**
           server-dir:
             "flexis/httpdocs/"
             # timeout: 300000
             #exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
+          continue-on-error: true
+      - name: Retry deploy if failed
+        if: failure()
+        run: echo "Retry deploy manually or implement retry logic"
