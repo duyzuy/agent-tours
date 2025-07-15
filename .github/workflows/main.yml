@@ -34,13 +34,14 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           passive: true
           protocol: ftps
+          imeout: 600000
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
           server-dir:
             flexis/httpdocs/
-            # timeout: 300000
+
             #exclude: "[**/.git*/**, **/node_modules/**, **/build/, .README.MD, .gitignore]"
       - name: Retry deploy if failed
         if: failure()
