@@ -34,7 +34,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           passive: true
           protocol: ftps
-          imeout: 600000
+          timeout: 600000
           exclude: |
             **/.git*
             **/.git*/**
