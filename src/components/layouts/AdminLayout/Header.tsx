@@ -1,3 +1,4 @@
+"use client";
 import ThemeModeToggle from "@/components/ThemeModeToggle";
 import { LINKS } from "@/constants/links.constant";
 import useAdminAuth from "@/modules/admin/auth/hooks/useAdminAuth";
@@ -8,13 +9,12 @@ import { Layout, theme, Avatar, MenuProps, Space, Dropdown } from "antd";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { useThemeMode } from "@/context";
 
-interface AdminHeaderProps {
-  themeMode?: "dark" | "light";
-}
-const AdminHeader: React.FC<AdminHeaderProps> = ({ themeMode = "light" }) => {
+interface AdminHeaderProps {}
+const AdminHeader: React.FC<AdminHeaderProps> = () => {
   const { onLogout } = useAdminAuth();
-
+  const [themeMode, _] = useThemeMode();
   const { Header, Sider, Content, Footer } = Layout;
   const [isTransition, startTransition] = useTransition();
   const router = useRouter();

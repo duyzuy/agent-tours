@@ -62,7 +62,6 @@ const PermissionWrapper: React.FC<Props> = ({ children, rolePers }) => {
 export default PermissionWrapper;
 
 const checkOnePermission = (roles: ERolesFunctions[], condition: TRoleCondition[number]): boolean => {
-  if (!condition) return true;
   if (typeof condition === "object" && condition.$or) {
     return (
       isEmpty(condition.$or) ||
@@ -70,5 +69,8 @@ const checkOnePermission = (roles: ERolesFunctions[], condition: TRoleCondition[
     );
   }
 
-  return roles.includes(condition as ERolesFunctions);
+  if (typeof condition === "string") {
+    return roles.includes(condition);
+  }
+  return true;
 };

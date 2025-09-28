@@ -1,7 +1,5 @@
-import React, { memo } from "react";
-import { Menu, MenuProps } from "antd";
-import { useThemeMode } from "@/context";
-import { useAdminPermission } from "@/modules/admin/auth/store/AdminPermissionContext";
+import React from "react";
+import { MenuProps } from "antd";
 import { PATH_WITH_PERMISSION, TRoleCondition } from "@/constants/permission.constant";
 import {
   DashboardOutlined,
@@ -21,15 +19,11 @@ import {
   ControlOutlined,
 } from "@ant-design/icons";
 
-type MenuItem = Required<MenuProps>["items"][number] & {
+export type MenuItem = Required<MenuProps>["items"][number] & {
   children?: MenuItem[];
   group?: string;
   pathname?: string;
   rolepers?: TRoleCondition;
-};
-
-type AdminMenuProps = MenuProps & {
-  onNavigation?: MenuProps["onClick"];
 };
 
 const ADMIN_MENU_ITEMS: MenuItem[] = [
@@ -342,43 +336,4 @@ const ADMIN_MENU_ITEMS: MenuItem[] = [
   },
 ];
 
-const AdminMenuLink: React.FC<AdminMenuProps> = ({ onNavigation, ...rest }) => {
-  const [_, checkPermession] = useAdminPermission();
-  const [mode, __] = useThemeMode();
-  const adminMenuMappingRule = ADMIN_MENU_ITEMS.reduce<MenuItem[]>((acc, item) => {
-    const childItems = item.children?.reduce<MenuItem[]>((childItems, childItem) => {
-      if (!childItem.rolepers) {
-        childItems = [...childItems, childItem];
-      }
-      if (childItem.rolepers && checkPermession(childItem.rolepers)) {
-        childItems = [...childItems, childItem];
-      }
-      return childItems;
-    }, []);
-
-    if (!item.rolepers) {
-      acc = [...acc, { ...item, children: childItems }];
-    }
-
-    if (item.rolepers && checkPermession(item.rolepers)) {
-      acc = [...acc, { ...item, children: childItems }];
-    }
-    return acc;
-  }, []);
-
-  return (
-    <Menu
-      theme={mode}
-      mode="inline"
-      selectable
-      onClick={onNavigation}
-      defaultSelectedKeys={["dashboard"]}
-      items={adminMenuMappingRule}
-      style={{
-        borderWidth: 0,
-      }}
-      {...rest}
-    />
-  );
-};
-export default memo(AdminMenuLink);
+export { ADMIN_MENU_ITEMS };

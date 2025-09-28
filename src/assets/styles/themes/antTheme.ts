@@ -1,7 +1,7 @@
 import { Select, ThemeConfig, theme } from "antd";
 
 const baseTheme: ThemeConfig = {
-  hashed: true,
+  hashed: false,
   token: {
     fontFamily: "Google Sans",
     fontSize: 14,
@@ -17,8 +17,9 @@ const baseTheme: ThemeConfig = {
     fontSizeHeading4: 16,
     fontSizeHeading5: 14,
     borderRadiusSM: 3,
-    borderRadius: 4,
+    borderRadius: 6,
     borderRadiusLG: 6,
+    controlHeight: 38,
   },
   components: {
     Button: {

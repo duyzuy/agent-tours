@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import config from "@/configs";
 import ThemeProvider from "@/lib/ThemeProvider";
 import { RQClientProvider } from "@/lib/RQClientProvider";
-import dynamic from "next/dynamic";
-
-const ThemeProviderDynamic = dynamic(() => import("@/lib/ThemeProvider"), { ssr: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(config.DOMAIN_ROOT),
