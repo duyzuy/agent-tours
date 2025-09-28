@@ -3,7 +3,7 @@ import { originalLogo } from "@/assets";
 import Image from "next/image";
 import classNames from "classnames";
 import AdminLoading from "./Loading";
-import AdminHeader from "./Header";
+import Header from "./Header";
 import LayoutWraper from "./LayoutWraper";
 import MenuContent from "./MenuContent";
 import { ADMIN_MENU_ITEMS } from "./menuConfig";
@@ -14,7 +14,7 @@ interface Props {
 const AdminLayout = ({ children }: Props) => {
   return (
     <LayoutWraper
-      header={<AdminHeader />}
+      header={<Header />}
       sidebar={
         <>
           <div className={classNames("h-16 flex items-center px-4")}>

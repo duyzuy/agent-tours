@@ -19,14 +19,16 @@ import {
   ControlOutlined,
 } from "@ant-design/icons";
 
-export type MenuItem = Required<MenuProps>["items"][number] & {
-  children?: MenuItem[];
+type MenuItemTypeNoRole = Required<MenuProps>["items"][number];
+
+export type MenuItemTypeWithRole = MenuItemTypeNoRole & {
+  children?: MenuItemTypeWithRole[] | undefined;
   group?: string;
   pathname?: string;
   rolepers?: TRoleCondition;
 };
 
-const ADMIN_MENU_ITEMS: MenuItem[] = [
+const ADMIN_MENU_ITEMS: MenuItemTypeWithRole[] = [
   {
     key: "dashboard",
     icon: React.createElement(DashboardOutlined),

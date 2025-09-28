@@ -1,11 +1,11 @@
 import React, { memo, useEffect, useState } from "react";
 import { Menu, MenuProps } from "antd";
 import { useThemeMode } from "@/context";
-import { MenuItem } from "../menuConfig";
+import { MenuItemTypeWithRole } from "../menuConfig";
 import { usePathname, useRouter } from "next/navigation";
 type AdminMenuProps = MenuProps & {
   onNavigation?: MenuProps["onClick"];
-  items: MenuItem[];
+  items: MenuItemTypeWithRole[];
 };
 
 const MenuList: React.FC<AdminMenuProps> = ({ onNavigation, items, ...rest }) => {

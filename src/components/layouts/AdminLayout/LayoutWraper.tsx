@@ -6,7 +6,7 @@ import { useThemeMode } from "@/context";
 import classNames from "classnames";
 import styled from "styled-components";
 
-const { Sider, Content, Footer } = Layout;
+const { Sider, Content, Footer, Header } = Layout;
 
 const StyledSider = styled(Sider)``;
 interface LayoutWraper {
@@ -45,7 +45,14 @@ const LayoutWraper = ({ children, header, sidebar, footer }: LayoutWraper) => {
         </Sider>
       </div>
       <Layout className="!min-h-screen transition-all" style={{ marginLeft: collapsed ? 80 : 220 }}>
-        {header}
+        <Header
+          style={{ background: colorBgContainer }}
+          className={classNames("flex border-b sticky top-0 ml-[1px] z-10 items-center !px-6", {
+            "border-[#303030]": mode === "dark",
+          })}
+        >
+          {header}
+        </Header>
         <Content
           style={{
             background: colorBgContainer,

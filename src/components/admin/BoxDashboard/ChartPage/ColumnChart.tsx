@@ -1,15 +1,15 @@
 import dynamic from "next/dynamic";
-// const DynamicColumn = dynamic(
-//   () =>
-//     import("@ant-design/plots")
-//       .then((module) => module.Column)
-//       .catch((err) => {
-//         throw new Error("Error");
-//       }),
-//   {
-//     ssr: false,
-//   },
-// );
+const DynamicColumn = dynamic(
+  () =>
+    import("@ant-design/plots")
+      .then((module) => module.Column)
+      .catch((err) => {
+        throw new Error("Error");
+      }),
+  {
+    ssr: false,
+  },
+);
 import { Column } from "@ant-design/plots";
 
 interface PropsColumn {
@@ -54,7 +54,7 @@ const ColumnChart = ({ dataItem }: { dataItem: PropsColumn[] }) => {
     },
   };
 
-  return <Column {...config} />;
+  return <DynamicColumn {...config} />;
 };
 
 export default ColumnChart;

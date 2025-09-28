@@ -1,7 +1,8 @@
-import { Select, ThemeConfig, theme } from "antd";
+import { ThemeConfig, theme } from "antd";
 
 const baseTheme: ThemeConfig = {
   hashed: false,
+  // cssVar: true,
   token: {
     fontFamily: "Google Sans",
     fontSize: 14,

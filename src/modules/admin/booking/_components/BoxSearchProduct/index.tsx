@@ -15,7 +15,8 @@ import InventoryTypeListSelector, { InventoryTypeListSelectorProps } from "./Inv
 import { searchPortalBookingSchema } from "../../searchProduct.schema";
 import classNames from "classnames";
 import styled from "styled-components";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
+import { Dayjs } from "dayjs";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -156,6 +157,8 @@ const BoxSearchProduct: React.FC<BoxSearchProductProps> = ({ className = "", loa
                 <FormItem>
                   <Button
                     type="primary"
+                    color="blue"
+                    variant="solid"
                     icon={<SearchOutlined />}
                     loading={loading}
                     onClick={handleSubmit(onSubmitForm)}

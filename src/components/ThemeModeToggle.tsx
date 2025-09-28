@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "antd";
 import { useContext } from "react";
 import { ThemeModeContext } from "@/context/ThemeModeContext";
