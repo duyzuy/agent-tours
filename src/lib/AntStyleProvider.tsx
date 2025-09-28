@@ -5,7 +5,7 @@ import { createCache, extractStyle, StyleProvider, legacyLogicalPropertiesTransf
 import type Entity from "@ant-design/cssinjs/es/Cache";
 import { useServerInsertedHTML } from "next/navigation";
 
-const StyledComponentsRegistry = ({ children }: React.PropsWithChildren) => {
+const AntStyleProvider = ({ children }: React.PropsWithChildren) => {
   const cache = React.useMemo<Entity>(() => createCache(), []);
   const isServerInserted = React.useRef<boolean>(false);
 
@@ -24,4 +24,4 @@ const StyledComponentsRegistry = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-export default StyledComponentsRegistry;
+export default AntStyleProvider;
